@@ -1,0 +1,87 @@
+[debug htdocs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut5-mdtx_md
+[debug users.sh] USERS_disease_group: ut5-mdtx_md
+[info users.sh] ut5-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut5-mdtx
+[debug users.sh] USERS_disease_group: ut5-mdtx
+[info users.sh] ut5-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug htdocs.sh] USERS_coll_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut5-mdtx-hello
+[info users.sh] ut5-mdtx-hello user already removed from ut5-mdtx_md group
+[debug users.sh] USERS_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_disease_group: ut5-mdtx-hello
+[info users.sh] ut5-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut5-mdtx-hello
+[debug htdocs.sh] USERS_root_populate
+[debug htdocs.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut5-mdtx /var/cache/mediatex/ut5-mdtx
+[debug users.sh] USERS_add_to_group: ut5-mdtx cdrom
+Ajout de l'utilisateur « ut5-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut5-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx
+Fait.
+[debug users.sh] USERS_create_group: ut5-mdtx_md
+[debug users.sh] USERS_add_to_group: ut5-mdtx ut5-mdtx_md
+Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx_md
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug htdocs.sh] HTDOCS_configure_mdtx_apache2:
+[debug htdocs.sh] HTDOCS_configure_mdtx_viewvc:
+[debug htdocs.sh] USERS_coll_create_user: ut5-mdtx-hello
+[debug users.sh] USERS_create_user: ut5-mdtx-hello /var/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello
+[debug users.sh] USERS_add_to_group: ut5-mdtx-hello ut5-mdtx_md
+Ajout de l'utilisateur « ut5-mdtx-hello » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur ut5-mdtx-hello au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut5-mdtx ut5-mdtx-hello
+Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx-hello »...
+Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut5-mdtx-hello
+[debug htdocs.sh] HTDOCS_configure_coll_apache2: ut5-mdtx-hello
+[debug htdocs.sh] HTDOCS_configure_coll_viewvc: ut5-mdtx-hello
+[debug htdocs.sh] USERS_coll_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut5-mdtx-hello
+Suppression de l'utilisateur « ut5-mdtx-hello » du groupe « ut5-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_disease_group: ut5-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx » du groupe « ut5-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx-hello »...
+Attention ! Le groupe « ut5-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut5-mdtx-hello
+[debug htdocs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut5-mdtx_md
+[debug users.sh] USERS_disease_group: ut5-mdtx_md
+Suppression de l'utilisateur « ut5-mdtx » du groupe « ut5-mdtx_md »...
+Fait.
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx_md »...
+Fait.
+Suppression du groupe « ut5-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut5-mdtx
+[debug users.sh] USERS_disease_group: ut5-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx »...
+Attention ! Le groupe « ut5-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+[info htdocs.sh] success

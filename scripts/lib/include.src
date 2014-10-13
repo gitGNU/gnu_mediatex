@@ -1,0 +1,91 @@
+#!/bin/bash
+#set -x
+set -e
+#=======================================================================
+# * Version: $Id: include.src,v 1.1 2014/10/13 19:38:39 nroche Exp $
+# * Project: MediaTex
+# * Module : script libs
+# *
+# * Execute non-regression tests on modules :
+#   "module.out" output is match against "module.exp" expected outpout
+#
+# MediaTex is an Electronic Records Management System
+# Copyright (C) 2014  Nicolas Roche
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=======================================================================
+
+# includes
+MDTX_SH_INCLUDE=1
+[ -z $srcdir ] && srcdir=.
+[ -z $libdir ] && libdir=$srcdir
+[ ! -z $MDTX_SH_UNIT ] || source $libdir/unitTest.sh
+[ ! -z $MDTX_SH_LOG ]  || source $libdir/log.sh
+
+Debug "include"
+
+# set global variables from config.h
+MEDIATEX=CONF_MEDIATEXDIR
+BINDIR=CONF_BINDIR
+DATAROOTDIR=CONF_DATAROOTDIR
+EXEC_PREFIX=CONF_EXEC_PREFIX
+LIBDIR=CONF_LIBDIR
+LOCALSTATEDIR=CONF_LOCALSTATEDIR
+PREFIX=CONF_PREFIX
+SYSCONFDIR=CONF_SYSCONFDIR
+
+# set global variables from env
+DRY_RUN=${MDTX_DRY_RUN-0}
+MDTX=${MDTX_MDTXUSER}
+
+# global path variables by scripts
+ETCDIR="${SYSCONFDIR}${MEDIATEX}"
+DATADIR="${DATAROOTDIR}${MEDIATEX}"
+STATEDIR="${LOCALSTATEDIR}/lib${MEDIATEX}"
+CACHEDIR="${LOCALSTATEDIR}/cache${MEDIATEX}"
+PIDDIR="${LOCALSTATEDIR}/run${MEDIATEX}"
+
+FALSE=1
+TRUE=0
+
+# unitary tests
+if UNIT_TEST_start "include"; then
+    MDTX="ut-mdtx"
+
+    echo -e "\n* Autotools inputs:"
+    echo "MEDIATEX=$MEDIATEX"
+    echo "BINDIR=$BINDIR"
+    echo "DATAROOTDIR=$DATAROOTDIR"
+    echo "EXEC_PREFIX=$EXEC_PREFIX"
+    echo "LIBDIR=$LIBDIR"
+    echo "LOCALSTATEDIR=$LOCALSTATEDIR"
+    echo "PREFIX=$PREFIX"
+    echo "SYSCONFDIR=$SYSCONFDIR"
+
+    echo -e "\n* Command line inputs:"
+    echo "LOG_FILE=$LOG_FILE"
+    echo "LOG_FACILITY=$LOG_FACILITY"
+    echo "LOG_SEVERITY=$LOG_SEVERITY"
+    echo "DRY_RUN=$DRY_RUN"
+    echo "MDTX=$MDTX"
+ 
+    echo -e "\n * New variables:"
+    echo "ETCDIR=$ETCDIR"
+    echo "DATADIR=$DATADIR"
+    echo "STATEDIR=$STATEDIR"
+    echo "CACHEDIR=$CACHEDIR"
+    echo "PIDDIR=$PIDDIR"
+
+    UNIT_TEST_stop "include"
+fi

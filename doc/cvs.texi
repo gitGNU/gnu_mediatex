@@ -1,0 +1,59 @@
+@cindex cvs
+@cindex meta-data
+
+@sc{Cvs} 
+(@pxref{Top,,, cvs, Concurrent Versions System})
+is used to publish meta-data and to log operations 
+performed on these files.
+There is one @file{cvsroot} repository for each server one each host.
+This repository handle one module for the local server's meta-data,
+and one for each collection on ``master'' servers.
+Remote servers access the ``master'' @sc{cvs} collection's repository
+by using @procToolsSsh{}.
+The @procToolsApache{} configuration files and the @process{Ssh}'s 
+public keys are also distributed along servers using @sc{Cvs}.
+The @sc{cvs} modules are setup by @procScriptsInitRemovePurge{} 
+and @procScriptsNewFreeClean{} scripts.
+
+Process conceptual model:
+
+@image{mediatex-figures/cvs,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventToolsCvsInit 
+from @procScriptsInitRemovePurge
+@item @eventToolsCvsImport
+@item @eventToolsCvsCheckout
+from @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean
+@item @eventToolsCvsUpdate 
+@item @eventToolsCvsCommit 
+from @procScriptsUpdateCommit
+@end table
+
+@item Events out
+@table @code
+@item @eventToolsSshConnect
+to @procToolsSsh
+@end table
+
+@item Data
+@table @file
+@item /var/lib/mediatex/mdtx/CVSROOT
+@itemx /var/lib/mediatex/mdtx/mdtx
+@itemx /var/lib/mediatex/mdtx/mdtx-COLL
+The @sc{Cvs} repository and its modules
+
+@item ~/mdtx/cvs/mdtx
+@itemx ~/mdtx/cvs/mdtx-COLL
+@itemx ~/mdtx/cvs/mdtx-COLL/CVS/Root
+The @sc{Cvs} checkout modules
+@end table
+
+@end itemize
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/lib/cvs.sh
+@end table

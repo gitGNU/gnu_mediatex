@@ -1,0 +1,102 @@
+@cindex init
+@cindex remove
+@cindex purge
+
+These 3 scripts deal with installation and may only be call
+by @actorAdmin{} so as to install/upgrade/purge the @sc{Mediatex}
+software. Indeed, @code{remove.sh} only uninstall the software but 
+do not touch to the collection's meta-data so as to ease an upgrade 
+by installing a new software version 
+(called by @acronym{DEBIAN}'s @code{postrm} script for instance).
+
+They add/del a new system user and 2 system groups:
+@table @code
+@item mdtx
+server's user and group
+@item mdtx_md
+common group for all collections related to the server
+@end table
+
+Process conceptual model:
+
+@image{mediatex-figures/init-remove-purge,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsInit 
+@item @eventScriptsRemove 
+@item @eventScriptsPurge 
+from @activityClient
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsUnBindCall
+to @procScriptsBind
+@item @eventScriptsInitdStart 
+@itemx @eventScriptsInitdStop
+to @procScriptsInitd
+@item @eventToolsCvsInit 
+@item @eventToolsCvsImport 
+@item @eventToolsCvsCheckout
+to @procToolsCvs
+@item eventToolsApacheReload
+@itemx eventToolsApacheRestart
+to @procToolsApache
+@end table
+
+@item Data out
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@end itemize
+
+@item Other files involved:
+@example
+/
+|- etc/
+|  +- mediatex/
+|     + mdtx.conf             (symlink -> 3)
+|- var/
+   +- lib/
+    |  +- mediatex/
+    |     +- mdtx/                       (1)
+    |       |- CVSROOT/
+    |       +- mdtx/
+    |          |- mdtx.conf,v 
+    |          +- supports.txt,v
+    +- cache/
+       +- mediatex/
+          +- mdtx/
+             |- cache/                   (2)
+             |- cvs/
+             |  +- mdtx/
+             |     |- mdtx.conf          (3)
+             |     +- supports.txt
+             |- jail/
+             |  +- etc/
+             |  |  |- group
+             |  |  +- passwd
+             |  +- usr/
+             |  |  +- bin/
+             |  |     |- cvs
+             |  |     +- scp
+             |  +- var/
+             |     |- lib        (bind -> 1)
+             |     |- cache      (bind -> 2)
+             |- md5sums/
+             |- public_html
+             |  |- index.html
+             |  +- viewvc.cgi
+             |- tmp/
+             +- viewvc.conf
+@end example
+@end itemize
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/init.sh
+@itemx /usr/share/mediatex/scripts/remove.sh
+@itemx /usr/share/mediatex/scripts/purge.sh
+@end table

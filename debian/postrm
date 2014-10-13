@@ -1,0 +1,61 @@
+#!/bin/sh
+# $Id: postrm,v 1.1 2014/10/13 19:37:43 nroche Exp $
+#set -x
+set -e
+#. /usr/share/debconf/confmodule
+
+# postrm script
+if [ "$1" = "purge" ]
+then 
+    # copy/paste from /usr/share/mediatex/scripts/purge.sh
+    /usr/sbin/update-rc.d -f mediatexd remove
+
+    # unbind 
+    JAIL=/var/cache/mediatex/mdtx/jail
+    [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
+    umount $JAIL/var/cache
+    [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] ||
+    umount $JAIL/var/lib/cvsroot
+
+    # disable ssh login into chroot
+    PATTERN="mdtx-*"
+    TMP_STRING="/# <<<$PATTERN/,/# $PATTERN>>>/ d"
+    SED_STRING=$(echo $TMP_STRING | sed -e 's/*/\\\*/g')
+    sed -i -e "$SED_STRING" /etc/ssh/sshd_config
+    invoke-rc.d ssh reload
+
+    # del users
+    USERS=$(grep "^mdtx-" /etc/passwd | cut -d':' -f1) || true
+    for _USER in $USERS mdtx; do
+	MEMBERS=$(grep "^mdtx_md:" /etc/group | cut -d : -f 4-)
+	if [ ! -z "$(echo ",$MEMBERS," | grep ",$_USER,")" ]; then
+	    /usr/sbin/deluser $_USER mdtx_md
+	fi
+	if [ -z "$(grep ^$_USER: /etc/group)" ]; then
+	    /usr/sbin/delgroup $_USER >/dev/null 2>&1 || true
+	fi
+	if [ -z "$(grep ^$_USER: /etc/passwd)" ]; then
+	    /usr/sbin/deluser $_USER >/dev/null 2>&1 || true
+	fi
+    done
+
+    # clean directories 
+    STATEDIR=/var/lib/mediatex
+    CACHEDIR=/var/cache/mediatex
+    ETCDIR=/etc/mediatex 
+    PIDDIR=/var/run/mediatex
+
+    rm -fr $STATEDIR/mdtx
+    rm -fr $CACHEDIR/mdtx
+    rm -f $ETCDIR/mdtx*
+    rm -f $PIDDIR/mdtxd.pid
+    for DIR in $STATEDIR $CACHEDIR $ETCDIR $PIDDIR; do
+	if [ -d "$DIR" ]; then
+	    [ $(ls $DIR | wc -l) -gt 0 ] || rmdir $DIR
+	fi
+    done    
+
+    invoke-rc.d apache2 reload
+fi
+
+exit 0

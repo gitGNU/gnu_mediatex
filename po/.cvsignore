@@ -1,0 +1,21 @@
+# gettextize (via autoreconf -i)
+boldquot.sed
+en@boldquot.header
+en@quot.header
+insert-header.sin
+Makefile.in.in
+Makevars.template
+quot.sed  
+remove-potcdate.sin
+Rules-quot
+# configure
+Makefile.in
+Makefile
+# make
+fr.gmo
+stamp-po
+POTFILES
+# xgettext
+messages.po
+# unknown
+remove-potcdate.sed

@@ -1,0 +1,135 @@
+@cindex scripts
+
+The @activity{Scripts} activity is diveded into 10 process:
+@menu
+* init.d::               @process{init.d}
+* cgiClient::            @process{cgiClient}
+* cronHourly-cronDaily:: @process{cronHourly-cronDaily}
+* init-remove-purge::    @process{init-remove-purge}
+* addUser-delUser::      @process{addUser-delUser}
+* new-free-clean::       @process{new-free-clean}
+* update-commit::        @process{update-commit}
+* bind-unbind::          @process{bind-unbind}
+* mount-umount::         @process{mount-umount}
+* deliver::              @process{deliver}
+@end menu
+
+Flood diagram:
+
+@image{mediatex-figures/scripts,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsInitdStart
+@itemx @eventScriptsInitdStop
+@itemx @eventScriptsInitdStatus
+@itemx @eventScriptsInitdReload
+from @actorAdmin{} to @procScriptsInitd
+@item @eventScriptsCgiGetQuery
+@itemx @eventScriptsCgiPostQuery 
+from @procToolsApache{} to @procScriptsCgi
+@item @eventScriptsCronHourly
+@itemx @eventScriptsCronDaily
+from @procToolsCron{} to @procScriptsCron
+@item @eventScriptsInit 
+@itemx @eventScriptsRemove 
+@itemx @eventScriptsPurge 
+from @procClientMisc{} to @procScriptsInitRemovePurge
+@item @eventScriptsAddUser
+@itemx @eventScriptsDelUser
+from @procClientServ{} to @procScriptsAddDelUser
+@item @eventScriptsNew
+@itemx @eventScriptsFree
+from @procClientConf{} to @procScriptsNewFreeClean
+@item @eventScriptsClean
+from @procClientMisc{} to @procScriptsNewFreeClean
+@item @eventScriptsUpdate
+@itemx @eventScriptsCommit
+from @activityClient{} to @procScriptsUpdateCommit
+@item @eventScriptsBind
+@itemx @eventScriptsUnBind
+from @procClientMisc{} to @procScriptsBind
+@item @eventScriptsMount
+@itemx @eventScriptsUmount
+from @procClientSupp{} to  @procScriptsMount
+@item @eventScriptsDeliver
+from @procServerDeliver{} to @procScriptsDeliver
+@end table
+
+@item Events out
+@table @code
+@item @eventServerStart
+@itemx @eventServerStop
+@itemx @eventServerReload
+from @procScriptsInitd{} or @procScriptsInitRemovePurge{} to @activityServer
+@item @eventToolsApacheRestart
+from @procScriptsInitRemovePurge{} to @procToolsApache
+@item @eventToolsApacheReload
+from @procScriptsNewFreeClean{} to @procToolsApache
+@item @eventServerCgiQuery
+from @procScriptsCgi{} to @procServerCgiSrv
+@item @eventToolsCvsInit 
+@itemx @eventToolsCvsImport
+@itemx @eventToolsCvsUpdate 
+from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean to @procToolsCvs
+@item @eventToolsCvsUpdate
+@itemx @eventToolsCvsCommit
+from @procScriptsUpdateCommit{} to @procToolsCvs
+@item @eventToolsEximSendMail 
+from @procScriptsDeliver{} to @procToolsExim
+@item @eventClientExtract
+@itemx @eventClientNotify
+@itemx @eventClientMiscMake
+@itemx @eventClientMotd
+from @procScriptsCron{} respectively to @procClientMotd{}: generate the message of the day.
+@item @eventActorPublisherMotd
+from @procScriptsCron{} to @actorPublisher{}: update the (above generated) message of the day.
+@end table
+@end itemize
+
+Codes:
+@table @file
+@item /usr/share/mediatex/scripts/*.sh
+@item src/common/cgi.c
+@end table
+
+@node init.d
+@subsection init.d
+@include initd.texi
+
+@node cgiClient
+@subsection cgiClient
+@include cgiClient.texi
+
+@node cronHourly-cronDaily
+@subsection cronHourly-cronDaily
+@include cronHourly-cronDaily.texi
+
+@node init-remove-purge
+@subsection init-remove-purge
+@include init-remove-purge.texi
+
+@node addUser-delUser
+@subsection addUser-delUser
+@include addUser-delUser.texi
+
+@node new-free-clean
+@subsection new-free-clean
+@include new-free-clean.texi
+
+@node update-commit
+@subsection update-commit
+@include update-commit.texi
+
+@node bind-unbind
+@subsection bind-unbind
+@include bind-unbind.texi
+
+@node mount-umount
+@subsection mount-umount
+@include mount-umount.texi
+
+@node deliver
+@subsection deliver
+@include deliver.texi

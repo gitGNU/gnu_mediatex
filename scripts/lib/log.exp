@@ -1,0 +1,7 @@
+[info log.sh] indirection level=0
+[info log.sh] indirection level=1
+[info log.sh] indirection level=2
+[info log.sh] indirection level=3
+[warn log.sh] warning message
+[info log.sh] info message
+[debug log.sh] debug message

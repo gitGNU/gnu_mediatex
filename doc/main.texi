@@ -1,0 +1,104 @@
+@cindex api
+@cindex oais
+
+@sc{Mediatex} focus on providing an @sc{api} to ask for, and retrieve 
+archives from where they are stocked.
+It doesn't cover the ingestion process as precisely as @sc{oais} do
+as it should be used to implement the ``storage'''s @sc{oais} layer.
+
+This following specifications use the @sc{Merise} conception method.
+Here are the typographical conventions used:
+
+@itemize @bullet
+@item 
+Caps are use for @actor{Actor}s and @activity{activitie}s,
+@item 
+Bold is use for @process{processing}s,
+@item 
+``<>'' are use for object's @state{states},
+@item 
+Verbatim is used for @code{@event{event}}s, which may be:
+@itemize @bullet
+@item @code{@event{# command}} : @actor{Admin} or @actor{Date} command line
+@item @code{@event{$ command}} : @actor{Publisher} command line
+@item @code{@event{(message)}} : final message like mail and motd
+@item @code{@event{<message>}} : synchronous message using a socket
+@item @code{@event{[register]}} : asynchronous message using signal
+@item @code{@event{function()}} : internal call
+@end itemize
+@end itemize
+
+Communication model:
+
+@image{mediatex-figures/main,,,,}
+
+@itemize @bullet
+@item 4 actors interact with the @sc{mediatex} activity
+@itemize @minus
+@item @actorUser
+@item @actorPublisher
+@item @actorAdmin
+@item @actorDate
+@item @mediatex
+@end itemize
+
+@item Events in
+@table @code
+@item @eventToolsApacheHttpGet 
+@itemx @eventToolsApacheHttpPost 
+@itemx @eventToolsApacheStartDownload
+from @actorUserO
+@item @eventClientServAddKey
+@itemx @eventClientServDelKey
+@itemx @eventClientServUpgrade
+@itemx @eventClientMiscSuppAdd
+@itemx @eventClientMiscSuppDel
+@itemx @eventClientMiscSuppNote
+@itemx @eventClientMiscSuppCheck
+@itemx @eventClientMiscSuppList
+@itemx @eventClientConfList
+@itemx @eventClientConfShareSupport
+@itemx @eventClientConfWithdrawSupp
+@itemx @eventClientMiscMake
+@itemx @eventClientMiscClean
+@itemx @eventServerCacheUpload
+from @actorPublisherO
+@item @eventScriptsInitdStart 
+@itemx @eventScriptsInitdStop
+@itemx @eventScriptsInitdStatus
+@itemx @eventScriptsInitdReload
+@itemx @eventClientMiscInit
+@itemx @eventClientMiscRemove
+@itemx @eventClientMiscPurge
+@itemx @eventClientMiscAddUser
+@itemx @eventClientMiscDelUser
+@itemx @eventClientConfAddColl
+@itemx @eventClientConfDelColl
+from @actorAdminO
+@item @eventToolsCronDate
+from @actorDateO
+@end table
+
+Commands are detailed into the @mediatex{} specifications.
+
+@item Events out
+@table @code
+@item @eventActorUserHtmlForm 
+@itemx @eventActorUserHtmlRedirect 
+@itemx @eventActorUserMail 
+to @actorUserO
+@item @eventActorPublisherMotd
+to @actorPublisherO
+@item @eventActorAdminMail
+to @actorAdminO
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@item @dataServers
+@item @dataCatalog
+@item @dataExtract
+@end itemize
+@end itemize

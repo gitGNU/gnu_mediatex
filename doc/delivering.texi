@@ -1,0 +1,35 @@
+@cindex mail
+
+@process{Delivering} process call a script in order 
+to warm-up an @actorUser{} that an archive he ask for is now available.
+
+Process conceptual model:
+
+@image{mediatex-figures/delivering,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerDeliver
+      from @procServerExtract or @procServerHave
+@item @eventServerDeliverReg
+      from @procClientMisc
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsDeliver
+      to @procScriptsDeliver
+@end table
+
+@item Input data
+@itemize @bullet
+@item @dataConf
+@item @dataChecksum
+@end itemize
+@end itemize
+
+Code:
+@table @file
+@item src/server/deliver.c
+@end table

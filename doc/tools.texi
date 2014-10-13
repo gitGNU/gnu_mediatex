@@ -1,0 +1,88 @@
+@cindex tools
+
+The @activity{Tools} activity is diveded into 6 process:
+@menu
+* Syslog::       @process{Syslog}
+* Apache::       @process{Apache}
+* Exim::         @process{Exim}
+* Ssh::          @process{Ssh}
+* Cvs::          @process{Cvs}
+* Cron::         @process{Cron}
+@end menu
+
+Flood diagram:
+
+@image{mediatex-figures/tools,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventToolsSyslogMessage 
+from @activityClient{}, @activityServer{} and @activityScripts{} to @procToolsSyslog
+@item @eventToolsApacheHttpGet 
+@itemx @eventToolsApacheHttpPost 
+@itemx @eventToolsApacheStartDownload
+from @actorUser{} to @procToolsApache
+@item @eventToolsApacheReload
+@itemx @eventToolsApacheRestart
+from @procScriptsInitRemovePurge{} to @procToolsApache
+@item @eventToolsEximSendMail 
+from @procScriptsDeliver{} to @procToolsExim
+@item @eventToolsSshCopy 
+from @procClientMisc{} to @procToolsSsh{}: copy file from one server's cache to one other.
+@item @eventToolsCvsInit 
+from @procScriptsInitRemovePurge{} to @procToolsCvs{}: initialize the local server's repository.
+@item @eventToolsCvsImport
+@itemx @eventToolsCvsCheckout
+from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsCvs{}: respectively create and join a new collection.
+@item @eventToolsCvsUpdate 
+@itemx @eventToolsCvsCommit 
+from @procScriptsUpdateCommit{} to @procToolsCvs{}: synchronize meta-data.
+@item @eventToolsCronDate
+from @actorDate{} to @procToolsCron
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsCgiGetQuery
+@itemx @eventScriptsCgiPostQuery
+from @procToolsApache{} to @procScriptsCgi
+@item @eventActorUserHtmlForm 
+(if archive is not available) ...
+@itemx @eventActorUserHtmlRedirect 
+(if archive is available) @*
+from @procToolsApache{} to @actorUser 
+@item @eventActorUserMail 
+from @procToolsExim{} to @actorUserO
+@item @eventActorAdminMail
+from @procToolsCron{} to @actorAdmin
+@item @eventScriptsCronHourly
+@itemx @eventScriptsCronDaily
+from @procToolsCron{} to @procScriptsCron
+@end table
+
+@end itemize
+
+@node Syslog
+@subsection Syslog
+@include syslog.texi
+
+@node Apache
+@subsection Apache
+@include apache.texi
+
+@node Exim
+@subsection Exim
+@include exim.texi
+
+@node Ssh
+@subsection Ssh
+@include ssh.texi
+
+@node Cvs
+@subsection Cvs
+@include cvs.texi
+
+@node Cron 
+@subsection Cron
+@include cron.texi

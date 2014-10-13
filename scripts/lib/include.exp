@@ -1,0 +1,24 @@
+
+* Autotools inputs:
+MEDIATEX=/mediatex
+BINDIR=/usr/bin
+DATAROOTDIR=/usr/share
+EXEC_PREFIX=/usr
+LIBDIR=/usr/lib
+LOCALSTATEDIR=/var
+PREFIX=/usr
+SYSCONFDIR=/etc
+
+* Command line inputs:
+LOG_FILE=
+LOG_FACILITY=file
+LOG_SEVERITY=debug
+DRY_RUN=0
+MDTX=ut-mdtx
+
+ * New variables:
+ETCDIR=/etc/mediatex
+DATADIR=/usr/share/mediatex
+STATEDIR=/var/lib/mediatex
+CACHEDIR=/var/cache/mediatex
+PIDDIR=/var/run/mediatex

@@ -1,0 +1,70 @@
+@cindex supports
+
+The @process{Supp} process handle @actor{Publisher} queries about supports.
+A score is computed for each local support, based on its age (@math{t}).@*
+
+@image{mediatex-figures/score1,,,,}
+
+@math{t <= T: score = ({T-t \over T})^{-a} *(M-b))+b} @*
+@math{t > T: score = ({1 + c*(t - T)}^{-1}) * b} @*
+
+where: (default value)
+@table @math
+@item T 
+is the support time to live (10 years)
+@itemx t
+is the current support age
+@itemx a 
+power that reduce score from age of supports (2)
+@itemx M 
+the maximum score (10)
+@itemx b
+maximum score for outdated supports (1)
+@itemx c
+factor that reduce score of out-dated supports (2)
+@end table
+
+@note{} with the default values this gives: @*
+@math{t <= T: score = (\sqrt{T-t \over T} *(19))+1} @*
+@math{t > T: score = {1 \over 1 + 2*(t - T)}} @*
+
+Process conceptual model:
+
+@image{mediatex-figures/supp,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventClientMiscSuppList
+@itemx @eventClientMiscSuppAdd
+@itemx @eventClientMiscSuppDel
+@itemx @eventClientMiscSuppNote
+@itemx @eventClientMiscSuppCheck
+from @actorPublisher
+@end table
+
+@item Events out
+@table @code
+@item @eventClientConfWithdrawSuppCall
+to @procClientConf
+@item @eventScriptsMount
+@itemx @eventScriptsUmount
+to @procScriptsMount
+@item @eventServerHaveQuery
+to @procServerHave
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataSupp
+@end itemize
+@end itemize
+
+Examples:
+see Scenarios (@ref{Scenario 1})
+
+Code:
+@table @file
+@item src/common/upgrade.c
+@itemx src/client/supp.c
+@end table

@@ -1,0 +1,172 @@
+@cindex client
+
+@activity{Client} is the front-end for the @sc{Mediatex} system.
+It runs as @code{setuid root} so as to switch between the different
+collection contents, but also to do some administrative works such
+as mounting and binding directories, create new system accounts...
+Before performing any collection works, @activity{Client} update
+the meta-data using @procToolsCvs{}. And before leaving, it commit 
+modification performed into the configuration and meta-data files.
+
+There is 2 ways @activity{Client} comunicate with @activity{Server}
+@itemize @bullet
+@item 
+Such as @procScriptsCgi{}, @activity{Client} send queries to the 
+@activityServer{} over @acronym{TCP} sockets.
+@item
+@activity{Client} also share a virtual register with the 
+@activity{Server}, using share memory and signals.
+@end itemize
+
+The @activity{Client} activity is divided into 5 process:
+@menu
+* conf::        @process{conf}
+* supp::        @process{supp}
+* serv::        @process{serv}
+* misc::        @process{misc}
+* motd::        @process{motd}
+@end menu
+
+Flood diagram:
+
+@image{mediatex-figures/client,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventClientMiscInit
+@itemx @eventClientMiscRemove
+@itemx @eventClientMiscPurge
+@itemx @eventClientMiscAddUser
+@itemx @eventClientMiscDelUser
+from @actorAdmin{} to @procClientMisc
+@item @eventClientConfAddColl
+@itemx @eventClientConfDelColl
+from @actorAdmin{} to @procClientConf
+@item @eventClientServAddKey
+@itemx @eventClientServDelKey
+from @actorPublisher{} to @procClientServ
+@item @eventClientConfList
+@itemx @eventClientConfShareSupport
+@itemx @eventClientConfWithdrawSupp
+from @actorPublisher{} to @procClientConf
+@item @eventClientMiscSuppList
+@itemx @eventClientMiscSuppAdd
+@itemx @eventClientMiscSuppDel
+@itemx @eventClientMiscSuppNote
+@itemx @eventClientMiscSuppCheck
+from @actorPublisher{} to @procClientSupp
+@item @eventClientExtract
+@itemx @eventClientNotify
+from @procScriptsCron{}
+@item @eventClientMotd
+from @procScriptsCron{} to @procClientMotd
+@item @eventClientMiscSu
+@itemx @eventClientMiscMake
+@itemx @eventClientMiscClean
+@itemx @eventClientMiscUpload
+@itemx @eventClientServUpgrade
+from @actorPublisher{} to @procClientMisc
+@item @eventClientMiscBind
+@itemx @eventClientMiscUnBind
+from @activityServer{} to @procClientMisc
+@item @eventClientMiscGet
+from @procServerExtract{} to @procClientMisc
+@item @eventClientMiscSuppMount
+@itemx @eventClientMiscSuppUMount
+from @procServerExtract{} to @procClientSupp
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsUpdate
+@item @eventScriptsCommit
+from @procClientServ{} to @procScriptsUpdateCommit
+@item @eventScriptsNew 
+@itemx @eventScriptsFree
+from @procClientConf{} to @procScriptsNewFreeClean
+@item @eventScriptsMount
+@itemx @eventScriptsUmount
+from @procClientSupp{} to @procScriptsMount
+@item @eventServerSaveReg 
+from @procClientMotd{} to @activityServer
+@item @eventServerHaveQuery
+from @procClientSupp{} to @procServerHave
+@item @eventServerCacheUpload
+from @procClientMisc{} to @procServerCache
+@item @eventScriptsInit
+@itemx @eventScriptsRemove
+@itemx @eventScriptsPurge
+from @procClientMisc{} to @procScriptsInitRemovePurge
+@item @eventScriptsAddUser
+@itemx @eventScriptsDelUser
+from @procClientMisc{} to @procScriptsAddDelUser
+@item @eventScriptsClean
+from @procClientMisc{} to @procScriptsNewFreeClean
+@item @eventToolsSshCopy 
+from @procClientMisc{} to @procToolsSsh
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataConf
+@item @dataServers
+@item @dataCatalog
+@item @dataExtract
+@end itemize
+
+Catalog and extraction rules meta-data files are:
+@itemize @bullet
+@item
+splitted into 10 Mo numbered files by @activityClientO{} in order to ease
+@procToolsCvs{} to work on them,
+@item
+only re-serialized and upgraded if the last @file{NN.txt} file was present when loading (except if using the @code{upgrade} query).
+@end itemize
+@end itemize
+
+Options:
+@table @option
+@itemx -n
+@itemx --dry-run
+do a dry run
+@itemx -m
+@itemx --nice-limit
+Amount of RAM in Mo the soft try to run bellow
+@itemx -M
+@itemx --soft-limit
+Amount of RAM in Mo the soft may reach
+@itemx -c
+@itemx --conf-label
+Allow to manage several configurations (default is mdtx)
+@itemx -w
+@itemx --no-www-cvs
+Do not synchronise meta-data with master server
+@end table
+
+Code:
+@table @file
+@item src/common/connect.h
+@item src/common/connect.c
+@item src/common/register.h
+@item src/common/register.c
+@item src/client/shellQuery.l
+@item src/client/shellQuery.y
+@item src/client/mdtx.c
+@end table
+
+@node conf
+@subsection conf
+@include conf.texi
+@node supp
+@subsection supp
+@include supp.texi
+@node serv
+@subsection serv
+@include serv.texi
+@node misc
+@subsection misc
+@include misc.texi
+@node motd
+@subsection motd
+@include motd.texi

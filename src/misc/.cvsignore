@@ -1,0 +1,17 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+.deps
+Makefile
+# make
+.libs
+*.lo
+libmisc.la
+# make check
+ut[a-z]*
+ut.out*
+ut.txt
+key 
+key.pub
+ut.html
+ut.css

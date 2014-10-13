@@ -1,0 +1,114 @@
+#!/bin/bash
+#set -x
+set -e
+#=======================================================================
+# * Version: $Id: new.sh,v 1.1 2014/10/13 19:38:35 nroche Exp $
+# * Project: MediaTex
+# * Module : scripts
+# *
+# * This script setup a new MediaTex collection
+#
+# MediaTex is an Electronic Records Management System
+# Copyright (C) 2014  Nicolas Roche
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=======================================================================
+
+[ -z $srcdir ] && srcdir=.
+[ -z $libdir ] && libdir=$srcdir/lib
+[ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
+[ ! -z $MDTX_SH_USERS ]    || source $libdir/users.sh
+[ ! -z $MDTX_SH_SSH ]      || source $libdir/ssh.sh
+[ ! -z $MDTX_SH_CVS ]      || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_JAIL ]     || source $libdir/jail.sh
+[ ! -z $MDTX_SH_HTDOCS ]   || source $libdir/htdocs.sh
+
+Debug "new"
+[ $(id -u) -eq 0 ] || Error "need to be root"
+[ ! -z "$MDTX_MDTXUSER" ] || 
+Error "expect MDTX_MDTXUSER variable to be set by the environment"
+[ ! -z $1 ] || Error "expect a label as first parameter"
+
+SERV=$(echo $1 | cut -s -d "-" -f1)
+TMP=$(echo $1 | cut -d "-" -f2)
+COLL=$(echo $TMP | cut -d "@" -f1)
+TMP=$(echo $1 | cut -s -d "@" -f2)
+HOST=$(echo $TMP | cut -d ":" -f1)
+PORT=$(echo $TMP | cut -s -d ":" -f2)
+[ "$COLL" = "mdtx" ] && Error "collection cannot be labeled mdtx"
+[ -z "$SERV" ] && SERV=$MDTX
+[ -z "$HOST" ] && HOST="localhost"
+[ -z "$PORT" ] && PORT=22
+USER=$MDTX-$COLL
+MUSER=$SERV-$COLL
+
+# echo "PARAM= $1"
+# echo "COLL=$COLL"
+# echo "HOST=$HOST"
+# echo "PORT=$PORT"
+
+# new user and his key
+USERS_coll_create_user $USER
+SSH_build_key $USER
+HTDOCS_configure_coll_apache2 $USER
+
+# setup a new DB if hosted localy
+if [ \( "$SERV" = "$MDTX" \) -a \( "$HOST" = "localhost" \) ]; then
+
+    # assert we are not already using this collection remotely
+    CVS=$CACHEDIR/$MDTX/cvs/$USER
+    if [ -d $CVS/CVS ]; then
+	TMP=$(cat $CVS/CVS/Root | head -n1 | cut -d"@" -f2 | cut -d":" -f1)
+	if [ "$TMP" != "localhost" ]; then
+	    Error "To create $COLL collection locally, you must \
+remove the already set remotely one first"
+	fi
+    fi
+
+    CVS_coll_import $USER
+    SSH_bootstrapKeys $USER
+    HTDOCS_configure_coll_viewvc $USER
+    JAIL_bind
+fi
+
+# setup connexion
+SSH_configure_client $USER $HOST $PORT
+JAIL_add_user $USER
+JAIL_bind
+
+# test the connection
+set +e
+su $USER <<EOF 
+ssh -o PasswordAuthentication=no $MUSER@$HOST ls >/dev/null
+EOF
+RC=$?
+set -e
+if [ $RC -ne 0 ]; then
+    if [ $MDTX_KEY_HAVE_CHANGE -eq 1 ]; then
+	Warning "New public key."
+    fi
+    Warning "You have to send your public key to the $HOST administrator"
+    Warning " $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub:"
+    cat $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub >&2
+    exit 0
+fi
+
+# checkout the collection
+CVS_coll_checkout $USER $SERV $COLL $HOST
+
+# reload daemons as there configuration have changed
+/usr/sbin/invoke-rc.d apache2 reload
+/usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
+
+Info "done"

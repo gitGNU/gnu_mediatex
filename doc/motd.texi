@@ -1,0 +1,38 @@
+@cindex motd
+
+The @process{Motd} process display the list of supports
+the @activity{Mediatex} system wants to check or extract for.
+
+Process conceptual model:
+
+@image{mediatex-figures/motd,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventClientMotd
+from @procScriptsCron
+@end table
+
+@item Events out
+@table @code
+@item @eventServerSaveReg 
+to @activityServer
+@end table
+
+@item Data in
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@item @dataServers
+@item @dataChecksum
+@end itemize
+@end itemize
+
+Examples:
+see Scenarios (@ref{Scenario 2})
+
+Code:
+@table @file
+@item src/client/motd.c
+@end table

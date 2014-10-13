@@ -1,0 +1,220 @@
+[debug users.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut1-mdtx_md
+[debug users.sh] USERS_disease_group: ut1-mdtx_md
+[info users.sh] ut1-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut1-mdtx
+[debug users.sh] USERS_disease_group: ut1-mdtx
+[info users.sh] ut1-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug users.sh] USERS_coll_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
+[info users.sh] ut1-mdtx-hello user already removed from ut1-mdtx_md group
+[debug users.sh] USERS_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_disease_group: ut1-mdtx-hello
+[info users.sh] ut1-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut1-mdtx-hello
+[debug users.sh] USERS_root_populate
+[debug users.sh] USERS_root_populate
+[debug users.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut1-mdtx /var/cache/mediatex/ut1-mdtx
+[debug users.sh] USERS_add_to_group: ut1-mdtx cdrom
+Ajout de l'utilisateur « ut1-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut1-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut1-mdtx
+Fait.
+[debug users.sh] USERS_create_group: ut1-mdtx_md
+[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx_md
+Ajout de l'utilisateur « ut1-mdtx » au groupe « ut1-mdtx_md »...
+Ajout de l'utilisateur ut1-mdtx au groupe ut1-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx_md
+Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx_md »...
+Ajout de l'utilisateur www-data au groupe ut1-mdtx_md
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut1-mdtx /var/cache/mediatex/ut1-mdtx
+[warn users.sh] reuse the existing ut1-mdtx's home
+[info users.sh] ut1-mdtx user already exists
+[debug users.sh] USERS_add_to_group: ut1-mdtx cdrom
+[info users.sh] ut1-mdtx user already beyong to cdrom group
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx
+[info users.sh] www-data user already beyong to ut1-mdtx group
+[debug users.sh] USERS_create_group: ut1-mdtx_md
+[info users.sh] ut1-mdtx_md group already exists
+[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx_md
+[info users.sh] ut1-mdtx user already beyong to ut1-mdtx_md group
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx_md
+[info users.sh] www-data user already beyong to ut1-mdtx_md group
+[debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_coll_create_user: ut1-mdtx-hello
+[debug users.sh] USERS_create_user: ut1-mdtx-hello /var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
+[debug users.sh] USERS_add_to_group: ut1-mdtx-hello ut1-mdtx_md
+Ajout de l'utilisateur « ut1-mdtx-hello » au groupe « ut1-mdtx_md »...
+Ajout de l'utilisateur ut1-mdtx-hello au groupe ut1-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut1-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx-hello
+Ajout de l'utilisateur « ut1-mdtx » au groupe « ut1-mdtx-hello »...
+Ajout de l'utilisateur ut1-mdtx au groupe ut1-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut1-mdtx-hello
+[debug users.sh] USERS_coll_create_user: ut1-mdtx-hello
+[debug users.sh] USERS_create_user: ut1-mdtx-hello /var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
+[warn users.sh] reuse the existing ut1-mdtx-hello's home
+[info users.sh] ut1-mdtx-hello user already exists
+[debug users.sh] USERS_add_to_group: ut1-mdtx-hello ut1-mdtx_md
+[info users.sh] ut1-mdtx-hello user already beyong to ut1-mdtx_md group
+[debug users.sh] USERS_add_to_group: www-data ut1-mdtx-hello
+[info users.sh] www-data user already beyong to ut1-mdtx-hello group
+[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx-hello
+[info users.sh] ut1-mdtx user already beyong to ut1-mdtx-hello group
+[debug users.sh] USERS_coll_populate: ut1-mdtx-hello
+home :
+          root           root drwxr-xr-x .
+          root           root drwxr-xr-x ./etc
+          root           root drwxr-xr-x ./etc/apache2
+          root           root drwxr-xr-x ./etc/apache2/conf.d
+          root           root drwxr-xr-x ./etc/cron.d
+          root           root -rw-r----- ./etc/cron.d/mediatex_cron
+          root           root drwxr-xr-x ./etc/mediatex
+          root           root lrwxrwxrwx ./etc/mediatex/ut1-mdtx.conf
+          root           root drwxr-xr-x ./usr
+          root           root drwxr-xr-x ./usr/share
+          root           root drwxr-xr-x ./usr/share/mediatex
+          root           root drwxr-xr-x ./usr/share/mediatex/examples
+          root           root -r--r--r-- ./usr/share/mediatex/examples/apache-mdtx.conf
+          root           root -r--r--r-- ./usr/share/mediatex/examples/cache.htaccess
+          root           root -r--r--r-- ./usr/share/mediatex/examples/catalog00.txt
+          root           root -r--r--r-- ./usr/share/mediatex/examples/cgi.htaccess
+          root           root -r--r--r-- ./usr/share/mediatex/examples/extract00.txt
+          root           root -r--r--r-- ./usr/share/mediatex/examples/floppy-icon.png
+          root           root -r--r--r-- ./usr/share/mediatex/examples/header.ezt
+          root           root -r--r--r-- ./usr/share/mediatex/examples/home.htaccess
+          root           root -r--r--r-- ./usr/share/mediatex/examples/htgroup
+          root           root -r--r--r-- ./usr/share/mediatex/examples/index.htaccess
+          root           root -r--r--r-- ./usr/share/mediatex/examples/logo.png
+          root           root -r--r--r-- ./usr/share/mediatex/examples/mediatex.conf
+          root           root -r--r--r-- ./usr/share/mediatex/examples/mediatex_cron
+          root           root -r--r--r-- ./usr/share/mediatex/examples/mediatex.css
+          root           root -r--r--r-- ./usr/share/mediatex/examples/score.htaccess
+          root           root -r--r--r-- ./usr/share/mediatex/examples/servers.txt
+          root           root -r--r--r-- ./usr/share/mediatex/examples/supports.txt
+          root           root -r--r--r-- ./usr/share/mediatex/examples/viewvc.conf
+          root           root drwxr-xr-x ./var
+          root           root drwxr-xr-x ./var/cache
+          root           root drwxr-xr-x ./var/cache/mediatex
+          root           root drwxr-xr-x ./var/cache/mediatex/ut1-mdtx
+      ut1-mdtx    ut1-mdtx_md drwxr-x--- ./var/cache/mediatex/ut1-mdtx/cache
+      ut1-mdtx ut1-mdtx-hello drwxr-s--- ./var/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello
+      ut1-mdtx ut1-mdtx-hello drwxr-s--- ./var/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello/toKeep
+      ut1-mdtx    ut1-mdtx_md drwxr-x--- ./var/cache/mediatex/ut1-mdtx/cvs
+      ut1-mdtx       ut1-mdtx drwxrws--- ./var/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx
+      ut1-mdtx ut1-mdtx-hello drwxrws--- ./var/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello
+          root           root drwxr-xr-x ./var/cache/mediatex/ut1-mdtx/home
+ut1-mdtx-hello       ut1-mdtx drwxr-x--- ./var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
+          root           root lrwxrwxrwx ./var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/cache
+          root           root lrwxrwxrwx ./var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/cvs
+      ut1-mdtx ut1-mdtx-hello drwxr-s--- ./var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/public_html
+ut1-mdtx-hello ut1-mdtx-hello drwx------ ./var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/.ssh
+          root           root drwxr-xr-x ./var/cache/mediatex/ut1-mdtx/jail
+      ut1-mdtx       ut1-mdtx drwxr-x--- ./var/cache/mediatex/ut1-mdtx/md5sums
+      ut1-mdtx       ut1-mdtx drwxr-x--- ./var/cache/mediatex/ut1-mdtx/public_html
+      ut1-mdtx       ut1-mdtx drwx------ ./var/cache/mediatex/ut1-mdtx/.ssh
+      ut1-mdtx    ut1-mdtx_md drwxr-x--- ./var/cache/mediatex/ut1-mdtx/tmp
+      ut1-mdtx ut1-mdtx-hello drwxrws--- ./var/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello
+          root           root drwxr-xr-x ./var/lib
+          root           root drwxr-xr-x ./var/lib/mediatex
+      ut1-mdtx    ut1-mdtx_md drwxr-x--- ./var/lib/mediatex/ut1-mdtx
+      ut1-mdtx    ut1-mdtx_md drwxrws--- ./var/lib/mediatex/ut1-mdtx/CVSROOT
+      ut1-mdtx       ut1-mdtx drwxr-s--- ./var/lib/mediatex/ut1-mdtx/ut1-mdtx
+ut1-mdtx-hello ut1-mdtx-hello drwxr-s--- ./var/lib/mediatex/ut1-mdtx/ut1-mdtx-hello
+[debug users.sh] USERS_coll_disease: ut1-mdtx-hello
+[debug users.sh] USERS_coll_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
+Suppression de l'utilisateur « ut1-mdtx-hello » du groupe « ut1-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_disease_group: ut1-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut1-mdtx » du groupe « ut1-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut1-mdtx-hello »...
+Attention ! Le groupe « ut1-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut1-mdtx-hello
+[debug users.sh] USERS_coll_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
+[info users.sh] ut1-mdtx-hello user already removed from ut1-mdtx_md group
+[debug users.sh] USERS_remove_user: ut1-mdtx-hello
+[debug users.sh] USERS_disease_group: ut1-mdtx-hello
+[info users.sh] ut1-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut1-mdtx-hello
+[debug users.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut1-mdtx_md
+[debug users.sh] USERS_disease_group: ut1-mdtx_md
+Suppression de l'utilisateur « ut1-mdtx » du groupe « ut1-mdtx_md »...
+Fait.
+Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx_md »...
+Fait.
+Suppression du groupe « ut1-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut1-mdtx
+[debug users.sh] USERS_disease_group: ut1-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut1-mdtx »...
+Attention ! Le groupe « ut1-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+[debug users.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut1-mdtx_md
+[debug users.sh] USERS_disease_group: ut1-mdtx_md
+[info users.sh] ut1-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut1-mdtx
+[debug users.sh] USERS_disease_group: ut1-mdtx
+[info users.sh] ut1-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+cleanup :
+drwxr-xr-x .
+drwxr-xr-x ./etc
+drwxr-xr-x ./etc/apache2
+drwxr-xr-x ./etc/apache2/conf.d
+drwxr-xr-x ./etc/cron.d
+drwxr-xr-x ./etc/mediatex
+drwxr-xr-x ./usr
+drwxr-xr-x ./usr/share
+drwxr-xr-x ./usr/share/mediatex
+drwxr-xr-x ./usr/share/mediatex/examples
+drwxr-xr-x ./var
+drwxr-xr-x ./var/cache
+drwxr-xr-x ./var/cache/mediatex
+drwxr-xr-x ./var/lib
+drwxr-xr-x ./var/lib/mediatex
+-r--r--r-- ./usr/share/mediatex/examples/apache-mdtx.conf
+-r--r--r-- ./usr/share/mediatex/examples/cache.htaccess
+-r--r--r-- ./usr/share/mediatex/examples/catalog00.txt
+-r--r--r-- ./usr/share/mediatex/examples/cgi.htaccess
+-r--r--r-- ./usr/share/mediatex/examples/extract00.txt
+-r--r--r-- ./usr/share/mediatex/examples/floppy-icon.png
+-r--r--r-- ./usr/share/mediatex/examples/header.ezt
+-r--r--r-- ./usr/share/mediatex/examples/home.htaccess
+-r--r--r-- ./usr/share/mediatex/examples/htgroup
+-r--r--r-- ./usr/share/mediatex/examples/index.htaccess
+-r--r--r-- ./usr/share/mediatex/examples/logo.png
+-r--r--r-- ./usr/share/mediatex/examples/mediatex.conf
+-r--r--r-- ./usr/share/mediatex/examples/mediatex_cron
+-r--r--r-- ./usr/share/mediatex/examples/mediatex.css
+-r--r--r-- ./usr/share/mediatex/examples/score.htaccess
+-r--r--r-- ./usr/share/mediatex/examples/servers.txt
+-r--r--r-- ./usr/share/mediatex/examples/supports.txt
+-r--r--r-- ./usr/share/mediatex/examples/viewvc.conf
+-rw-r----- ./etc/cron.d/mediatex_cron
+[info users.sh] success

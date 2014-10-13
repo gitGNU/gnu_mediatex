@@ -1,0 +1,9 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+Makefile
+# make
+mediatex.cgi.1
+mediatex.1
+mediatexd.1
+# make check

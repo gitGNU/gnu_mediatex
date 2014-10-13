@@ -1,0 +1,162 @@
+@cindex servers list file
+
+The @dataServersO{} file is used to share information between servers 
+including connectivity keys.
+
+Relational schema:
+
+@image{mediatex-figures/servers.txt,,,,}
+
+@itemize @bullet
+@item Proper entities
+@itemize @bullet
+@item 
+The @sc{Server} entity lists all the servers participating to a collection.
+@item 
+The @sc{Image} entity lists all the images files known by the collection.
+@item 
+The @sc{Network} entity lists public and private networks we logically defined.
+@end itemize
+
+@item Relations
+@itemize @bullet
+@item The @sc{imageFiles} relationhip list all the image files hosted by a server.
+@item 
+The @sc{networks} relationship lists all the networks a server belongs to. 
+@item 
+The @sc{gateways} relationship lists all the networks for which a server 
+act as a @acronym{NAT} gateway.
+@end itemize
+@end itemize
+
+Exemple:
+@example
+# MediaTeX coll1@@host1.mediatex.org:22 servers list:
+collKey    1234567890abcdef
+
+# score parameters
+suppTTL    5 Year
+maxScore   10.00
+badScore   1.00
+powSupp    2.00
+factSupp   2.00
+minGeoDup  2
+
+Server 746d6ceeb76e05cfa2dea92a1c5753cd
+	comment   "this is server1"
+	host      host1
+	mdtxPort  11111
+	sshPort   22
+	networks  www
+	cacheSize 100 Mo
+	cacheTTL  15 Day
+	queryTTL  1 Week
+	provide	  de5008799752552b7963a2670dc5eb18:391168=2.00
+#	keys:
+	userKey   "@dots{}"
+	hostKey   "@dots{}"
+end
+
+Server 6b18ed0194b0fbadd08e0a13cccda00e
+	comment   "this is server2"
+	host      localhost
+	mdtxPort  6560
+	sshPort   22
+	networks  private, www
+	gateways  private
+	cacheSize 200 Mo
+	cacheTTL  1 Month
+	queryTTL  2 Week
+	provide	  022a34b2f9b893fba5774237e1aa80ea:24075=7.50,
+		  de5008799752552b7963a2670dc5eb18:391168=10.00
+#	keys:
+	userKey   "@dots{}"
+	hostKey   "@dots{}"
+end
+
+Server bedac32422739d7eced624ba20f5912e
+	comment   "this is server3"
+	host      127.0.0.2
+	mdtxPort  33333
+	sshPort   2222
+	networks  private
+	cacheSize 300 Mo
+	cacheTTL  45 Day
+	queryTTL  3 Week
+	provide	  022a34b2f9b893fba5774237e1aa80ea:24075=14.00,
+		  0a7ecd447ef2acb3b5c6e4c550e6636f:374784=17.50,
+		  de5008799752552b7963a2670dc5eb18:391168=12.00
+#	keys:
+	userKey   "@dots{}"
+	hostKey   "@dots{}"
+end
+@end example
+
+Grammar:
+@example
+file: //empty file 
+    | headers
+    | headers stanzas
+
+headers: headers header
+       | header
+
+header: COLLKEY string
+      | SUPPTTL number TIME
+      | MAXSCORE score
+      | BADSCORE score
+      | POWSUPP score
+      | POWIMAGE score
+      | FACTSUPP score
+      | MINGEODUPP number
+
+stanzas: stanzas stanza
+       | stanza
+
+stanza: SERVER server lines ENDBLOCK
+
+server: HASH
+
+lines: lines line
+     | line
+
+line: LABEL string
+    | COMMENT string
+    | HOST string
+    | MDTXPORT number
+    | SSHPORT number
+    | NETWORKS networks
+    | GATEWAYS gateways
+    | USERKEY string
+    | HOSTKEY string
+    | CACHESIZE number size
+    | CACHETTL number time
+    | QUERYTTL number time
+    | PROVIDE images
+
+networks: networks , string
+          | string
+
+gateways: gateways , string
+        | string
+
+images: images , image
+      | image
+
+image: hash : number = score
+
+size:    GO | MO | KO | O
+time:    MONTH | WEEK | DAY | HOUR | MINUTE
+score:   [[:digit:]]+\.[[:digit:]]+
+number:  [[:digit:]]+
+string:  \"[^\n\"]*\"|[^[:blank:]:,=\r\n]+
+hash:    [[:xdigit:]]@{32@}
+@end example
+
+Code:
+@table @file
+@item src/memory/serverTree.h
+@itemx src/memory/serverTree.c
+@itemx src/parser/serverFile.l
+@itemx src/parser/serverFile.y
+@end table

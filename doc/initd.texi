@@ -1,0 +1,36 @@
+@cindex init.d
+
+@process{init.d} is the daemon launcher for the @activityServerO{}.
+
+Process conceptual model:
+
+@image{mediatex-figures/initd,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsInitdStart 
+@itemx @eventScriptsInitdStop
+@itemx @eventScriptsInitdStatus
+@itemx @eventScriptsInitdReload
+from @actorAdmin
+@end table
+
+@item Events out
+@table @code
+@item @eventServerStart
+@itemx @eventServerStop
+@itemx @eventServerReload
+to @activityServer
+@end table
+
+@item Data in/out
+@table @file
+@item /var/run/mediatex/mdtxd.pid
+@end table
+@end itemize
+
+Code:
+@table @file
+@item /etc/init.d/mediatexd 
+@end table

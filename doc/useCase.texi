@@ -1,0 +1,233 @@
+@cindex use case
+@cindex api
+@cindex oais
+
+@sc{Mediatex} should help building a whole @sc{oais} system.
+@itemize @bullet
+@item 
+It divides the application complexity nearly by two,
+as the ``Administration'' and ``Preservation planing'' functionalities
+are already taken into account for many features.
+@item 
+It make the application modulable: we can easily replace a
+layer since the API beween them remains clear.
+@end itemize
+
+@unnumberedsec CakePhp
+
+A minimal @sc{cakePhp} application is provided with the sources
+(@file{/usr/@/share/@/mediatex/@/useCases/@/cake.tgz}),
+showing how to use the @sc{Mediatex} system as a storage layer.
+
+@image{mediatex-figures/useCase,,,,}
+
+There are only 4 interactions from the @acronym{CAKE}'s models and view:
+@table @file
+@item cake/models/user.php
+Add a user 
+@example
+function beforeSave() @{
+  $cmd = "/var/www/cake/ingest.sh user ".
+    $this->data['User']['username']." ".
+    $this->data['User']['passwd'];
+  system($cmd, $retval);
+  return ($retval == 0);
+@}
+@end example
+@item cake/models/node.php
+Add a directory or a file
+@example
+function beforeSave() @{
+  $father = $this->find('first', 
+     array('conditions' => array('Node.id' => 
+      $this->data['Node']['node_id'])));
+
+  switch($this->data['Node']['type']) @{
+  case 1:
+    $cmd = "/var/www/cake/ingest.sh dir ".
+      $this->data['Node']['name']." ".
+      $father['Node']['name'];
+    break;
+
+  case 2:
+@dots{}
+    $cmd = "/var/www/cake/ingest.sh file ".
+      $this->data['Node']['username']." ".
+      $this->data['Node']['name']." ".
+      $father['Node']['name']." ".
+      $path;
+    break;
+@dots{}
+  @}
+  
+  system($cmd, $retval);
+  return ($retval == 0);
+@} 
+@end example
+@item cake/views/nodes/view.ctp
+@acronym{CAKE} view points on the @mediatexO{} @acronym{URL}.
+@example
+@dots{}
+echo $html->link($fils['name'], 
+                 'https://@var{HOSTNAME}/~mdtx-cake/cgi/get.cgi'.
+                 $fils['url']);
+@dots{}
+@end example
+@end table
+
+The @file{cake/ingest.sh} manage theses 3 ingestion's actions
+@example
+function addUser()
+@{
+  CYPHER=$(printf "$LOGIN:$COLLECTION:$PASSWD" | md5sum | cut -d' ' -f1)
+  LINE="$LOGIN:$COLLECTION:$CYPHER"
+  echo $LINE >> $PWD_FILE
+  sed $GRP_FILE -i -e "s/^\(.*\)$/\1 $LOGIN/"
+
+  cat >>$CAT_FILE <<EOF
+Human    "$LOGIN" ""
+EOF
+@}
+
+function addDir()
+@{
+  cat >>$CAT_FILE <<EOF
+top Category "$NAME": "$FATHER"
+EOF
+  mediatex upgrade coll $COLL
+@}
+
+function addFile()
+@{
+  HASH=$(md5sum $TEMP | cut -d' ' -f1)
+  SIZE=$(ls -l $TEMP | awk '@{print $5@}')
+
+  mediatex upload $TEMP to coll $COLL
+
+  cat >>$CAT_FILE <<EOF
+Document "$NAME": "$FATHER"
+  with "uploader" = "$LOGIN" ""
+  $HASH:$SIZE
+EOF
+
+  mediatex upgrade coll $COLL
+@}
+@end example
+
+@unnumberedsec C library
+
+@cindex library
+@cindex linking
+One other possibility is to link with the @mediatexO{}'s library,
+using the parsers in order to write your own serializer that
+converts @mediatexO{}'s input to your @acronym{OAIS}'s data management
+input format:
+@itemize @bullet
+@item for the ingestion process
+@item in order to give back all the meta-data
+@end itemize
+
+The @file{/usr/@/share/@/mediatex/@/useCases/@/txt2sql.c} 
+file is provided as an example.
+It convert all the collection's meta-data to an @acronym{SQL} script:
+@example
+#include "mediatex.h"
+#include "misc/log.h"
+#include "misc/command.h"
+#include "memory/confTree.h"
+#include "common/openClose.h"
+
+#include <locale.h>
+
+GLOBAL_STRUCT_DEF_BIN;
+
+/*==================================================================
+ * Function   : usage
+ * Description: Print the usage.
+ * Synopsis   : static void usage(char* programName)
+ * Input      : programName = the name of the program; usually
+ *                                  argv[0].
+ * Output     : N/A
+ ==================================================================*/
+static void 
+usage(char* programName)
+@{
+  mdtxUsage(programName);
+  fprintf(stderr, "\n\t\tlabel");
+  mdtxOptions();
+  fprintf(stderr, "  ---\n  label:\t\tcollection's label");
+  return;
+@}
+
+/*==================================================================
+ * Function   : main 
+ * Author     : Nicolas ROCHE
+ * modif      : 2010/12/10
+ * Description: Entry point for mdtx wrapper
+ * Synopsis   : ./mdtx
+ * Input      : stdin
+ * Output     : rtfm
+ ==================================================================*/
+int 
+main(int argc, char** argv)
+@{
+  Collection* coll = NULL;
+  // ---
+  int rc = 0;
+  int cOption = EOF;
+  char* programName = *argv;
+  char* options = MDTX_SHORT_OPTIONS;
+  struct option longOptions[] = @{
+    MDTX_LONG_OPTIONS,
+    @{0, 0, 0, 0@}
+  @};
+
+  setlocale (LC_ALL, "");
+  // so as printf do not write comma in float
+  setlocale(LC_NUMERIC, "C"); 
+
+  // import mdtx environment
+  env.allocNiceLimit = 256;
+  env.allocSoftLimit = 512;
+  getEnv(&env);
+
+  // parse the command line
+  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+        != EOF) @{
+    switch(cOption) @{
+      
+      GET_MDTX_OPTIONS; // generic options
+    @}
+    if (rc) goto optError;
+  @}
+
+  // export mdtx environment
+  env.allocDiseaseCallBack = clientDiseaseAll;
+  if (!setEnv(programName, &env)) goto optError;
+ 
+  /*******************************************************************/
+  if (argc == optind) @{
+    usage; // expect a collection label as first parameter
+    goto optError;
+  @}
+
+  logEmit(LOG_INFO, "** txt2sql: %s **", argv[optind]);
+
+  if (!(coll = mdtxGetCollection(argv[optind]))) goto error;
+  if (!loadCollection(coll, SERV|CTLG|EXTR)) goto error;
+  // DO YOUR EXPORT HERE
+  if (!releaseCollection(coll, SERV|CTLG|EXTR)) goto error;
+  /*******************************************************************/
+
+  freeConfiguration();
+  rc = TRUE;
+ error:
+  logEmit(LOG_INFO, "** exit on %s **", rc?"success":"error");
+  DefaultLog = logClose(DefaultLog);
+  rc=!rc;
+ optError:
+  exit(rc);
+@}
+@end example
+
+

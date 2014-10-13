@@ -1,0 +1,30 @@
+@cindex exim
+@cindex mail
+
+@sc{Mediatex} uses @sc{Exim4} 
+(@pxref{Top,,, spec, Specification of the Exim Mail Transfer Agent})
+to send mails so as to warm @actorUserO{}
+the archives he was looking for is available.
+Please configure Exim (or any other mail agent) so as your host will 
+relay local mails to the outside ; at least as a ``smart-host'' do.
+
+Process conceptual model:
+
+@image{mediatex-figures/exim,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventToolsEximSendMail 
+from @procScriptsDeliver
+@end table
+
+@item Events out
+@table @code
+@item @eventActorUserMail 
+to @actorUser{}: when an archive becomes available into the cache.
+@item @eventActorAdminMail
+to @actorAdmin{}: when @procToolsCron{} complains
+@end table
+
+@end itemize

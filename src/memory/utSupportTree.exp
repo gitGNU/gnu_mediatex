@@ -1,0 +1,14 @@
+# This file is managed by MediaTeX software.
+# Version: $Id: utSupportTree.exp,v 1.1 2014/10/13 19:39:22 nroche Exp $
+# Local Supports:
+
+#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP13_logo.png
+2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP21_logo.part1
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP22_logo.part1
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP31_logo.part2
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2

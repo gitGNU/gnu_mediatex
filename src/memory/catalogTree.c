@@ -1,0 +1,2329 @@
+/*=======================================================================
+ * Version: $Id: catalogTree.c,v 1.1 2014/10/13 19:39:08 nroche Exp $
+ * Project: MediaTeX
+ * Module : admCatalogTree
+ *
+ * Catalog producer interface
+
+ MediaTex is an Electronic Records Management System
+ Copyright (C) 2014  Nicolas Roche
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ =======================================================================*/
+
+#include "../mediatex.h"
+#include "../misc/log.h"
+#include "catalogTree.h"
+
+#include <avl.h>
+
+
+/*=======================================================================
+ * Function   : caracType2string
+ * Description: get the type as a string to be displayed
+ * Synopsis   : char* caracType2string(CType type)
+ * Input      : CaracType type: type of carac
+ * Output     : The correspondaing string
+ =======================================================================*/
+char*
+strCType(CType self)
+{
+  static char* typeLabels[CTYPE_MAX] =
+    {"CATE", "DOC", "HUM", "ARCH", "ROLE"};
+
+  if (self < 0 || self >= CTYPE_MAX) {
+    logEmit(LOG_WARNING, "unknown catalog type %i", self);
+    return "???";
+  }
+
+  return typeLabels[self];
+}
+
+
+/*=======================================================================
+ * Function   : createCarac
+ * Description: Create, by memory allocation a Carac
+ * Synopsis   : Carac* createCarac(void)
+ * Input      : CaracType type: type of carac
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+Carac* 
+createCarac()
+{
+  Carac* rc = NULL;
+
+  if ((rc = (Carac*)malloc(sizeof(Carac))) == NULL) {
+    logEmit(LOG_ERR, "%s", "malloc: cannot create a Carac");
+    goto error;
+  }
+
+  memset(rc, 0, sizeof(Carac));
+
+  return rc;  
+ error:  
+  return destroyCarac(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyCarac
+ * Description: Destroy a Carac by freeing all the allocate memory.
+ * Synopsis   : void destroyCarac(Carac* self)
+ * Input      : Carac* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a Carac.
+ =======================================================================*/
+Carac* 
+destroyCarac(Carac* self)
+{
+  Carac* rc = NULL;
+
+  if(self != NULL) {
+    self->label = destroyString(self->label);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpCarac
+ * Description: compare two caracs
+ * Synopsis   : int cmpCarac(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Carac
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int 
+cmpCarac(const void *p1, const void *p2)
+{
+  /* p1 and p2 are pointers on &items */
+  Carac* v1 = *((Carac**)p1);
+  Carac* v2 = *((Carac**)p2);
+
+  return strcmp(v1->label, v2->label);
+}
+
+
+/*=======================================================================
+ * Function   : createAssoCarac
+ * Description: Create, by memory allocation a AssoCarac
+ * Synopsis   : AssoCarac* createAssoCarac(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+AssoCarac* 
+createAssoCarac()
+{
+  AssoCarac* rc = NULL;
+
+  if ((rc = (AssoCarac*)malloc(sizeof(AssoCarac))) == NULL) {
+    logEmit(LOG_ERR, "%s", "malloc: cannot create AssoCarac");
+    goto error;
+  }
+
+  memset(rc, 0, sizeof(AssoCarac));
+  return rc;
+  
+ error:  
+  return destroyAssoCarac(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyAssoCarac
+ * Description: Destroy a AssoCarac by freeing all the allocate memory.
+ * Synopsis   : void destroyAssoCarac(AssoCarac* self)
+ * Input      : AssoCarac* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a AssoCarac.
+ =======================================================================*/
+AssoCarac* 
+destroyAssoCarac(AssoCarac* self)
+{
+  AssoCarac* rc = NULL;
+
+  if(self != NULL) {
+    self->value = destroyString(self->value);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpAssoCarac
+ * Description: compare two assoCaracs
+ * Synopsis   : int cmpAssoCarac(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on AssoCarac
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int 
+cmpAssoCarac(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on &items */
+  AssoCarac* v1 = *((AssoCarac**)p1);
+  AssoCarac* v2 = *((AssoCarac**)p2);
+
+  rc = cmpCarac(&v1->carac, &v2->carac);
+  if (!rc) rc = strcmp(v1->value, v2->value);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : serializeAssoCarac
+ * Description: Serialize a AssoCarac.
+ * Synopsis   : int serializeAssoCarac(AssoCarac* self, CvsFile* fd)
+ * Input      : AssoCarac* self = what to serialize
+ *              FILE fd = where to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeAssoCarac(AssoCarac* self, CvsFile* fd)
+{
+  int rc = FALSE;
+
+  if(self == NULL) goto error;
+  logEmit(LOG_DEBUG, "serialize AssoCarac: %s/%s", 
+	  self->carac->label, self->value);
+
+  cvsPrint(fd, "  \"%s\" = \"%s\"\n", self->carac->label, self->value);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "cannot serialize empty AssoCarac");
+  }
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpAssoRole
+ * Description: compare two assoRoles
+ * Synopsis   : int cmpAssoRole(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on AssoRole*
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int 
+cmpAssoRole(const void *p1, const void *p2)
+{
+  int rc = 0;
+  
+  /* p1 and p2 are pointers on &items */
+  AssoRole* v1 = *((AssoRole**)p1);
+  AssoRole* v2 = *((AssoRole**)p2);
+
+  rc = cmpRole(&v1->role, &v2->role);
+  if (!rc) rc = cmpHuman(&(v1->human), &(v2->human));
+  if (!rc) rc = cmpDocument(&(v1->document), &(v2->document));
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : createRole
+ * Description: Create, by memory allocation a Role
+ * Synopsis   : Role* createRole(void)
+ * Input      : RoleType type: type of role
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+Role* 
+createRole(void)
+{
+  Role* rc = NULL;
+
+  if ((rc = (Role*)malloc(sizeof(Role))) == NULL) {
+    logEmit(LOG_ERR, "%s", "malloc: cannot create a Role");
+    goto error;
+  }
+
+  memset(rc, 0, sizeof(Role));
+  if ((rc->assos = createRing()) == NULL) goto error;
+  
+  return rc;  
+ error:  
+  return destroyRole(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyRole
+ * Description: Destroy a Role by freeing all the allocate memory.
+ * Synopsis   : void destroyRole(Role* self)
+ * Input      : Role* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a Role.
+ =======================================================================*/
+Role* 
+destroyRole(Role* self)
+{
+  Role* rc = NULL;
+
+  if(self != NULL) {
+    self->label = destroyString(self->label);
+    
+    // we destroy the assoRole too
+    self->assos
+      = destroyRing(self->assos,
+		    (void*(*)(void*)) destroyAssoRole);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpRole
+ * Description: compare two roles
+ * Synopsis   : int cmpRole(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Role
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int 
+cmpRole(const void *p1, const void *p2)
+{
+  /* p1 and p2 are pointers on &items */
+  Role* v1 = *((Role**)p1);
+  Role* v2 = *((Role**)p2);
+
+  return strcmp(v1->label, v2->label);
+}
+
+
+/*=======================================================================
+ * Function   : createAssoRole
+ * Description: Create, by memory allocation a AssoRole
+ * Synopsis   : AssoRole* createAssoRole(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+AssoRole* 
+createAssoRole()
+{
+  AssoRole* rc = NULL;
+
+  if ((rc = (AssoRole*)malloc(sizeof(AssoRole))) == NULL) {
+    logEmit(LOG_ERR, "%s", "malloc: cannot create AssoRole");
+    goto error;
+  }
+
+  memset(rc, 0, sizeof(AssoRole));
+  return rc;
+
+ error:  
+  return destroyAssoRole(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyAssoRole
+ * Description: Destroy a AssoRole by freeing all the allocate memory.
+ * Synopsis   : void destroyAssoRole(AssoRole* self)
+ * Input      : AssoRole* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a AssoRole.
+ =======================================================================*/
+AssoRole* 
+destroyAssoRole(AssoRole* self)
+{
+  AssoRole* rc = NULL;
+
+  if(self != NULL) {
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : serializeAssoRole
+ * Description: Serialize a AssoRole.
+ * Synopsis   : int serializeAssoRole(AssoRole* self, CvsFile* fd)
+ * Input      : AssoRole* self = what to serialize
+ *              FILE fd = where to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeAssoRole(AssoRole* self, CvsFile* fd)
+{
+  int rc = FALSE;
+
+  logEmit(LOG_DEBUG, "serialize AssoRole: %s", self->role->label);
+  if(self == NULL) goto error;
+
+  cvsPrint(fd, "  With \"%s\" = \"%s\" \"%s\"\n", 
+	  self->role->label, 
+	  self->human->firstName, self->human->secondName);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "cannot serialize empty AssoRole");
+  }
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : serializeCatalogArchive
+ * Description: Serialize an archive.
+ * Synopsis   : int serializeCatalogArchive(CRecord* self, CvsFile* fd)
+ * Input      : Archive* self = what to serialize
+ *              FILE fd = where to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeCatalogArchive(Archive* self, CvsFile* fd)
+{
+  int rc = FALSE;
+  AssoCarac *assoCarac = NULL;
+
+  checkArchive(self);
+  logEmit(LOG_DEBUG, "serialize archive: %s:%lli", self->hash, self->size);
+
+  cvsPrint(fd, "Archive\t %s:%lli\n", self->hash, self->size);
+  fd->doCut = FALSE;
+
+  // serialize assoCaracs
+  if (!isEmptyRing(self->assoCaracs)) {
+    rgSort(self->assoCaracs, cmpAssoCarac);
+    rgRewind(self->assoCaracs);
+    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+      if (!serializeAssoCarac(assoCarac, fd)) goto error;
+    }
+  }
+
+  fd->doCut = TRUE;
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "cannot serialize empty CRecord");
+  }
+  return(rc);
+}
+
+
+/*=======================================================================
+ * Function   : createHuman
+ * Description: Create, by memory allocation a Human
+ * Synopsis   : Human* createHuman(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+Human*
+createHuman(void)
+{
+  Human* rc = NULL;
+
+  if ((rc = (Human*)malloc(sizeof(Human))) == NULL) goto error;
+  memset(rc, 0, sizeof(Human));
+
+  if ((rc->categories = createRing()) == NULL ||
+      (rc->assoCaracs = createRing()) == NULL ||
+      (rc->assoRoles = createRing()) == NULL)
+    goto error;
+
+  return rc;
+ error:
+  logEmit(LOG_ERR, "%s", "malloc: cannot create Human");
+  return destroyHuman(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyHuman
+ * Description: Destroy a Human by freeing all the allocate memory.
+ * Synopsis   : void destroyHuman(Human* self)
+ * Input      : Human* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a Human.
+ =======================================================================*/
+Human*
+destroyHuman(Human* self)
+{
+  Human* rc = NULL;
+
+  if(self != NULL) {
+    self->firstName  = destroyString(self->firstName);
+    self->secondName = destroyString(self->secondName);
+
+    // delete assoCarac associations
+    self->assoCaracs
+      = destroyRing(self->assoCaracs,
+		    (void*(*)(void*)) destroyAssoCarac);
+
+    // do not destroy childs
+    self->categories = destroyOnlyRing(self->categories);
+    self->assoRoles = destroyOnlyRing(self->assoRoles);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpHuman
+ * Description: compare two Humans alphabetically
+ * Synopsis   : int cmpHuman(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Human
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int cmpHuman(const void *p1, const void *p2)
+{
+  int rc = 0;
+  
+  /* p1 and p2 are pointers on &items */
+  Human* v1 = *((Human**)p1);
+  Human* v2 = *((Human**)p2);
+
+  rc = strcmp(v1->firstName, v2->firstName);
+  if (!rc) rc = strcmp(v1->secondName, v2->secondName);
+
+  return rc;
+}
+
+int cmpHuman2(const void *p1, const void *p2)
+{
+  int rc = 0;
+  
+  /* p1 and p2 are pointers on items */
+  Human* v1 = (Human*)p1;
+  Human* v2 = (Human*)p2;
+
+  rc = strcmp(v1->firstName, v2->firstName);
+  if (!rc) rc = strcmp(v1->secondName, v2->secondName);
+
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : serializeHuman
+ * Description: Serialize a Human.
+ * Synopsis   : int serializeHuman(Human* self, CvsFile* fd)
+ * Input      : Human* self = what to serialize
+ *              CvsFile* fd = where to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeHuman(Human* self, CvsFile* fd)
+{
+  int rc = FALSE;
+  AssoCarac *assoCarac = NULL;
+  Category *cathegory = NULL;
+  int i = -1;
+
+  if(self == NULL) goto error;
+  logEmit(LOG_DEBUG, "serialize Human %i: %s %s",
+	  self->id, self->firstName, self->secondName);
+
+  cvsPrint(fd, "Human\t \"%s\" \"%s\"", self->firstName, self->secondName);
+  fd->doCut = FALSE;
+  
+  // serialize categories
+  if (!isEmptyRing(self->categories)) {
+    rgSort(self->categories, cmpCategory);
+    rgRewind(self->categories);
+    while ((cathegory = rgNext(self->categories)) != NULL) {
+      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+    }
+  }
+  cvsPrint(fd, "\n");
+
+  // serialize assoCaracs
+  if (!isEmptyRing(self->assoCaracs)) {
+    rgSort(self->assoCaracs, cmpAssoCarac);
+    rgRewind(self->assoCaracs);
+    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+      serializeAssoCarac(assoCarac, fd);
+    }
+  }
+
+  ++env.progBar.cur;
+  fd->doCut = TRUE;
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "cannot serialize empty Human");
+  }
+  return(rc);
+}
+
+
+/*=======================================================================
+ * Function   : createDocument
+ * Description: Create, by memory allocation a Document
+ * Synopsis   : Document* createDocument(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+Document*
+createDocument(void)
+{
+  Document* rc = NULL;
+
+  if ((rc = (Document*)malloc(sizeof(Document))) == NULL) goto error;
+  memset(rc, 0, sizeof(Document));
+
+  if ((rc->categories = createRing()) == NULL ||
+      (rc->assoCaracs = createRing()) == NULL ||
+      (rc->assoRoles = createRing()) == NULL ||
+      (rc->archives = createRing()) == NULL)
+    goto error;
+
+  return rc;
+ error:
+  logEmit(LOG_ERR, "%s", "malloc: cannot create Document");
+  return destroyDocument(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyDocument
+ * Description: Destroy a Document by freeing all the allocate memory.
+ * Synopsis   : void destroyDocument(Document* self)
+ * Input      : Document* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a Document.
+ =======================================================================*/
+Document*
+destroyDocument(Document* self)
+{
+  Document* rc = NULL;
+
+  if(self != NULL) {
+    self->label = destroyString(self->label);
+ 
+    // delete assoCarac associations
+    self->assoCaracs
+      = destroyRing(self->assoCaracs,
+		    (void*(*)(void*)) destroyAssoCarac);
+
+    // do not destroy childs
+    self->archives = destroyOnlyRing(self->archives);
+    self->assoRoles = destroyOnlyRing(self->assoRoles);
+    self->categories = destroyOnlyRing(self->categories);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpDocument
+ * Description: compare two Documents alphabetically
+ * Synopsis   : int cmpDocument(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Document
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int
+cmpDocument(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on &items */
+  Document* v1 = *((Document**)p1);
+  Document* v2 = *((Document**)p2);
+
+  rc = strcmp(v1->label, v2->label);
+  return rc;
+}
+
+int
+cmpDocument2(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on items */
+  Document* v1 = (Document*)p1;
+  Document* v2 = (Document*)p2;
+
+  rc = strcmp(v1->label, v2->label);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : serializeDocument
+ * Description: Serialize a Document.
+ * Synopsis   : int serializeDocument(Document* self, CvsFile* fd)
+ * Input      : ioHandler* stdout = where to serialize
+ *              Document* self = what to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeDocument(Document* self, CvsFile* fd)
+{
+  int rc = FALSE;
+  AssoCarac *assoCarac = NULL;
+  Archive *archive = NULL;
+  AssoRole *assoRole = NULL;
+  Category *cathegory = NULL;
+  int i=-1;
+ 
+  if(self == NULL) goto error;
+  logEmit(LOG_DEBUG, "serialize Document %s", self->label);
+
+  cvsPrint(fd, "Document \"%s\"", self->label);
+  fd->doCut = FALSE;
+
+  // serialize categories
+  if (!isEmptyRing(self->categories)) {
+    rgSort(self->categories, cmpCategory);
+    rgRewind(self->categories);
+    while ((cathegory = rgNext(self->categories)) != NULL) {
+      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+    }
+  }
+  cvsPrint(fd, "\n");
+  
+  // serialize assoRoles
+  if (!isEmptyRing(self->assoRoles)) {
+    rgSort(self->assoRoles, cmpAssoRole);
+    rgRewind(self->assoRoles);
+    while ((assoRole = rgNext(self->assoRoles)) != NULL) {
+      if (!serializeAssoRole(assoRole, fd)) goto error;
+    }
+  }
+
+  // serialize assoCaracs
+  if (!isEmptyRing(self->assoCaracs)) {
+    rgSort(self->assoCaracs, cmpAssoCarac);
+    rgRewind(self->assoCaracs);
+    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+      if (!serializeAssoCarac(assoCarac, fd)) goto error;
+    }
+  }
+
+  // serialize archives
+  if (!isEmptyRing(self->archives)) {
+    rgSort(self->archives, cmpArchive);
+    rgRewind(self->archives);
+    while ((archive = rgNext(self->archives)) != NULL) {
+      cvsPrint(fd, "  %s:%lli\n", archive->hash, archive->size);
+    }
+  }
+
+  ++env.progBar.cur;
+  fd->doCut = TRUE;
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "serializeDocument fails");
+  }
+  return(rc);
+}
+
+
+/*=======================================================================
+ * Function   : createCategory
+ * Description: Create, by memory allocation a Category
+ * Synopsis   : Category* createCategory(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+Category*
+createCategory(void)
+{
+  Category* rc = NULL;
+
+  if ((rc = (Category*)malloc(sizeof(Category))) == NULL) goto error;
+  memset(rc, 0, sizeof(Category));
+
+  if ((rc->fathers = createRing()) == NULL ||
+      (rc->childs = createRing()) == NULL ||
+      (rc->assoCaracs = createRing()) == NULL ||
+      (rc->humans = createRing()) == NULL ||
+      (rc->documents = createRing()) == NULL)
+    goto error;
+
+  return rc;
+ error:
+  logEmit(LOG_ERR, "%s", "malloc: cannot create Category");
+  return destroyCategory(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyCategory
+ * Description: Destroy a Category by freeing all the allocate memory.
+ * Synopsis   : void destroyCategory(Category* self)
+ * Input      : Category* self = the address of the configuration to
+ *              destroy.
+ * Output     : Nil address of a Category.
+ =======================================================================*/
+Category*
+destroyCategory(Category* self)
+{
+  Category* rc = NULL;
+
+  if(self != NULL) {
+    self->label = destroyString(self->label);
+    
+    // delete assoCarac associations
+    self->assoCaracs
+      = destroyRing(self->assoCaracs,
+		    (void*(*)(void*)) destroyAssoCarac);
+    
+    /* do not destroy objects */
+    self->humans = destroyOnlyRing(self->humans);
+    self->documents = destroyOnlyRing(self->documents);
+    self->childs = destroyOnlyRing(self->childs);
+    self->fathers = destroyOnlyRing(self->fathers);
+    free(self);
+  }
+
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : cmpCategory
+ * Description: compare two Category on (fatherId, Id)
+ * Synopsis   : int orderCategory(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Category
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int
+cmpCategory(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on &items */
+  Category* v1 = *((Category**)p1);
+  Category* v2 = *((Category**)p2);
+
+  rc = strcmp(v1->label, v2->label);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : serializeCategory
+ * Description: Serialize a Category.
+ * Synopsis   : int serializeCategory(ioHandler* stdout, Category* self)
+ * Input      : CvsFile* fd = where to serialize
+ *              Category* self = what to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeCategory(Category* self, CvsFile* fd)
+{
+  int rc = FALSE;
+  Category *cathegory = NULL;
+  AssoCarac  *assoCarac  = NULL;
+  int i=-1;
+
+  if(self == NULL) goto error;
+  logEmit(LOG_DEBUG, "serialize Category %s", self->label);
+
+  cvsPrint(fd, "%sCategory \"%s\"", self->show?"Top ":"", self->label);
+  fd->doCut = FALSE;
+
+  // serialize father's
+  if (!isEmptyRing(self->fathers)) {
+    //rgSort(self->fathers, cmpCategory);
+    rgRewind(self->fathers);
+    while ((cathegory = rgNext(self->fathers)) != NULL) {
+      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+    }
+  }
+  cvsPrint(fd, "\n");
+
+  // serialize assoCaracs
+  if (!isEmptyRing(self->assoCaracs)) {
+    rgSort(self->assoCaracs, cmpAssoCarac);
+    rgRewind(self->assoCaracs);
+    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+      if (!serializeAssoCarac(assoCarac, fd)) goto error;
+    }
+  }
+
+  fd->doCut = TRUE;
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "serializeCategory fails");
+  }
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : createCatalogTree
+ * Description: Create, by memory allocation a CatalogTree projection.
+ * Synopsis   : CatalogTree* createCatalogTree(void)
+ * Input      : N/A
+ * Output     : The address of the create empty configuration.
+ =======================================================================*/
+CatalogTree*
+createCatalogTree(void)
+{
+  CatalogTree* rc = NULL;
+  //int i = 0;
+
+  if((rc = (CatalogTree*)malloc(sizeof(CatalogTree))) == NULL)
+    goto error;
+    
+  memset(rc, 0, sizeof(CatalogTree));
+
+  /* entities */
+  if ((rc->roles = createRing()) == NULL
+      || (rc->categories = createRing()) == NULL)
+    goto error;
+
+  if (!(rc->documents = 
+	avl_alloc_tree(cmpDocument2, (avl_freeitem_t)destroyDocument))
+      || !(rc->humans = 
+	   avl_alloc_tree(cmpHuman2, (avl_freeitem_t)destroyHuman)))
+      goto error;
+
+  if ((rc->caracs = createRing()) == NULL) goto error;
+
+  return rc;
+ error:
+  logEmit(LOG_ERR, "%s", "malloc: cannot create CatalogTree");
+  return destroyCatalogTree(rc);
+}
+
+
+/*=======================================================================
+ * Function   : destroyCatalogTree
+ * Description: Destroy a CatalogTree by freeing all the allocate memory.
+ * Synopsis   : void destroyCatalogTree(CatalogTree* self)
+ * Input      : CatalogTree* self = the address of the CatalogTree to
+ *              destroy.
+ * Output     : Nil address of a CatalogTree.
+ =======================================================================*/
+CatalogTree*
+destroyCatalogTree(CatalogTree* self)
+{
+  CatalogTree* rc = NULL;
+  //int i = 0;
+
+  if(self != NULL) {
+
+    /* entities */
+    /* do not destroy archives (owned by the collection) */
+
+    self->roles
+      = destroyRing(self->roles,
+		    (void*(*)(void*)) destroyRole);
+
+    avl_free_tree(self->humans);
+    avl_free_tree(self->documents);
+
+    self->categories
+      = destroyRing(self->categories,
+		    (void*(*)(void*)) destroyCategory);
+
+    self->caracs
+      = destroyRing(self->caracs,
+		    (void*(*)(void*)) destroyCarac);
+
+    free(self);
+  }
+  return(rc);
+}
+
+
+/*=======================================================================
+ * Function   : serializeCatalogTree
+ * Description: Serialize a catalog to latex working place
+ * Synopsis   : int serializeCatalogTree(Collection* coll)
+ * Input      : Collection* coll = what to serialize
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+serializeCatalogTree(Collection* coll)
+{
+  int rc = FALSE;
+  CvsFile fd = {NULL, 0, NULL, FALSE, 0};
+  Human* human = NULL;
+  Archive* archive = NULL;
+  Document* document = NULL;
+  Category* category = NULL;
+  CatalogTree* self = NULL;
+  AVLNode *node = NULL;
+  int uid = getuid();
+
+  checkCollection(coll);
+  if (!(self = coll->catalogTree)) goto error;
+  logEmit(LOG_DEBUG, "serialize %s document tree", coll->label);
+
+  // we neeed to use the cvs collection directory
+  if (!coll->memoryState & EXPANDED) {
+    logEmit(LOG_ERR, "%s", "collection must be expanded first");
+    goto error;
+  }
+  
+  if (!becomeUser(coll->user, TRUE)) goto error;
+
+  // output file
+  if (env.dryRun) fd.fd = stdout;
+  fd.path = coll->catalogDB;
+  if (!cvsOpenFile(&fd)) goto error;
+
+  cvsPrint(&fd, "# MediaTeX collection catalog: %s\n", coll->label);
+  //cvsPrint(&fd, "# Version: $" "Id" "$\n");
+
+  cvsPrint(&fd, "\n# Categories:\n\n");
+  if (!isEmptyRing(self->categories)) {
+    //rgSort(self->categories, cmpCategory);
+    rgRewind(self->categories);
+    while((category = rgNext(self->categories)) != NULL) {
+      if (!serializeCategory(category, &fd)) goto error;
+    }
+    cvsPrint(&fd, "\n");
+  }
+
+  cvsPrint(&fd, "# Humans:\n\n");
+  if (avl_count(self->humans)) {
+    for(node = self->humans->head; node; node = node->next) {
+      human = (Human*)node->item;
+      if (!serializeHuman(human, &fd)) goto error;
+    }
+    cvsPrint(&fd, "\n");
+  }
+
+  cvsPrint(&fd, "# Archives:\n\n");
+  if (avl_count(coll->archives)) {
+    for(node = coll->archives->head; node; node = node->next) {
+      archive = (Archive*)node->item;
+      if (!isEmptyRing(archive->assoCaracs)) {
+	if (!serializeCatalogArchive(archive, &fd)) goto error;
+      }
+    }
+    cvsPrint(&fd, "\n");
+  }
+
+  cvsPrint(&fd, "# Documents:\n\n");
+  if (avl_count(self->documents)) {
+    for(node = self->documents->head; node; node = node->next) {
+      document = (Document*)node->item;
+      if (!serializeDocument(document, &fd)) goto error;
+    }
+    cvsPrint(&fd, "\n");
+  }
+
+  rc = TRUE;
+ error:
+  if (!cvsCloseFile(&fd)) rc = FALSE;
+  if (!logoutUser(uid)) rc = FALSE;
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "serializeCatalogTree fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getCarac
+ * Description: Search or may create a Carac
+ * Synopsis   : Carac* getCarac(Collection* coll, 
+ *                                           CaracType type, char* label)
+ * Input      : Collection* coll: where to find
+ *              CaracType type: type of carac
+ *              char* label: id of the carac
+ * Output     : The address of the Carac.
+ =======================================================================*/
+Carac* 
+getCarac(Collection* coll, char* label)
+{
+  Carac* rc = NULL;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+ 
+  // look for carac
+  while ((rc = rgNext_r(coll->catalogTree->caracs, &curr)))
+    if (!strcmp(rc->label, label)) break;
+
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addCarac
+ * Description: Search or may create a Carac
+ * Synopsis   : Carac* addCarac(Collection* coll, 
+ *                                           CaracType type, char* label)
+ * Input      : Collection* coll: where to find
+ *              CaracType type: type of carac
+ *              char* label: id of the carac
+ * Output     : The address of the Carac.
+ =======================================================================*/
+Carac* 
+addCarac(Collection* coll, char* label)
+{
+  Carac* rc = NULL;
+  Carac* carac = NULL;
+
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "create the %s carac", label);
+
+  // already there
+  if ((carac = getCarac(coll, label))) goto end;
+
+  // add new one if not already there
+  if (!(carac = createCarac())) goto error;
+  if (!(carac->label = createString(label))) goto error;
+  if (!rgInsert(coll->catalogTree->caracs, carac)) goto error; 
+
+ end:
+  rc = carac;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addCarac fails");
+    carac = destroyCarac(carac);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delCarac
+ * Description: Del a carac
+ * Synopsis   : int delCarac(Collection* coll, Carac* self)
+ * Input      : Collection* coll : where to del
+ *              Carac* self : the carac to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delCarac(Collection* coll, Carac* self)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+  
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "delCarac %s", self->label);
+
+  // delete carac from catalogTree rings
+  if ((curr = rgHaveItem(coll->catalogTree->caracs, self))) {
+    rgRemove_r(coll->catalogTree->caracs, &curr);
+  }
+
+  // free the carac
+  destroyCarac(self);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delCarac fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getAssoCarac
+ * Description: Search or may create an AssoCarac
+ * Synopsis   : AssoCarac* getAssoCarac(Collection* coll, 
+ *                            Carac* carac, void* entity, char* value)
+ * Input      : Collection* coll: where to find
+ *              Carac* carac: related carac
+ *              Entity* entity: related entity
+ *              char* value: ie
+ * Output     : The address of the AssoCarac.
+ =======================================================================*/
+AssoCarac* 
+getAssoCarac(Collection* coll, Carac* carac, CType type, 
+	     void* entity, char* value)
+{
+  AssoCarac* rc = NULL;
+  RG* ring = NULL;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  if (!carac || !entity || !value) goto error;
+  logEmit(LOG_DEBUG, "getAssoCarac %s %s=%s", 
+	  strCType(type), carac->label, value);
+
+  switch (type) {
+  case CATE:
+    ring = ((Category*)entity)->assoCaracs;
+    break;
+  case DOC:
+    ring = ((Document*)entity)->assoCaracs;
+    break;
+  case HUM:
+    ring = ((Human*)entity)->assoCaracs;
+    break;
+  case ARCH:
+    ring = ((Archive*)entity)->assoCaracs;
+    break;
+  default:
+    logEmit(LOG_ERR, "unknown type %i", type);
+    goto error;
+  }
+
+  // look for assoCarac
+  while((rc = rgNext_r(ring, &curr)) != NULL) {
+    if (carac == rc->carac && !strcmp(rc->value, value)) break;
+  }
+  
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addAssoCarac
+ * Description: Search or may create an AssoCarac
+ * Synopsis   : AssoCarac* addAssoCarac(Collection* coll, 
+ *                            Carac* carac, void* entity, char* value)
+ * Input      : Collection* coll: where to find
+ *              Carac* carac: related carac
+ *              Entity* entity: related entity
+ *              char* value: ie
+ * Output     : The address of the AssoCarac.
+ =======================================================================*/
+AssoCarac* 
+addAssoCarac(Collection* coll, Carac* carac, CType type, 
+	     void* entity, char* value)
+{
+  AssoCarac* rc = NULL;
+  AssoCarac* asso = NULL;
+  RG* ring = NULL;
+
+  checkCollection(coll);
+  if (!carac || !entity || !value) goto error;
+  logEmit(LOG_DEBUG, "addAssoCarac %s %s=%s", 
+	  strCType(type), carac->label, value);
+
+  // already there
+  if ((asso = getAssoCarac(coll, carac, type, entity, value))) goto end;
+
+  // add new one if not already there
+  if ((asso = createAssoCarac()) == NULL) goto error;
+  if (!(asso->value = createString(value))) goto error; 
+  asso->carac = carac;
+
+  // add it to the entity tree
+  switch (type) {
+  case CATE:
+    ring = ((Category*)entity)->assoCaracs;
+    break;
+  case DOC:
+    ring = ((Document*)entity)->assoCaracs;
+    break;
+  case HUM:
+    ring = ((Human*)entity)->assoCaracs;
+    break;
+  case ARCH:
+    ring = ((Archive*)entity)->assoCaracs;
+    break;
+  default:
+    logEmit(LOG_INFO, "unknown carac type %i", type);
+    goto error;
+  }
+  if (!rgInsert(ring, asso)) goto error;
+
+ end:
+  rc = asso;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addAssoCarac fails");
+    asso = destroyAssoCarac(asso);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getRole
+ * Description: Search or may create a Role
+ * Synopsis   : Role* getRole(Collection* coll, 
+ *                                           RoleType type, char* label)
+ * Input      : Collection* coll: where to find
+ *              RoleType type: type of role
+ *              char* label: id of the role
+ * Output     : The address of the Role.
+ =======================================================================*/
+Role* 
+getRole(Collection* coll, char* label)
+{
+  Role* rc = NULL;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "getRole %s", label);
+
+  // look for role
+  while ((rc = rgNext_r(coll->catalogTree->roles, &curr)))
+    if (!strcmp(rc->label, label)) break;
+
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addRole
+ * Description: Search or may create a Role
+ * Synopsis   : Role* addRole(Collection* coll, 
+ *                                           RoleType type, char* label)
+ * Input      : Collection* coll: where to find
+ *              RoleType type: type of role
+ *              char* label: id of the role
+ * Output     : The address of the Role.
+ =======================================================================*/
+Role* 
+addRole(Collection* coll, char* label)
+{
+  Role* rc = NULL;
+  Role* role = NULL;
+
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "create the %s role", label);
+
+  // already there
+  if ((role = getRole(coll, label))) goto end;
+
+  // add new one if not already there
+  if (!(role = createRole())) goto error;
+  if (!(role->label = createString(label))) goto error;
+
+  if (!rgInsert(coll->catalogTree->roles, role)) goto error;
+   role->id = coll->catalogTree->maxId[ROLE]++;
+ end:
+  rc = role;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addRole fails");
+    role = destroyRole(role);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delRole
+ * Description: Del a role
+ * Synopsis   : int delRole(Collection* coll, Role* self)
+ * Input      : Collection* coll : where to del
+ *              Role* self : the role to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delRole(Collection* coll, Role* self)
+{
+  int rc = FALSE;
+  AssoRole* aR = NULL;
+  RGIT* curr = NULL;
+  
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "delRole %s", self->label);
+
+  // delete related assossiations
+  while((aR = rgHead(self->assos)) != NULL) {
+    if (!delAssoRole(coll, aR)) goto error;
+  }
+
+  // delete role from catalogTree rings
+  if ((curr = rgHaveItem(coll->catalogTree->roles, self))) {
+    rgRemove_r(coll->catalogTree->roles, &curr);
+  }
+
+  // free the role
+  destroyRole(self);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delRole fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getAssoRole
+ * Description: Search or may create an AssoRole
+ * Synopsis   : AssoRole* getAssoRole(Collection* coll, Role* role, 
+ *                 Human* human, Document* document)
+ * Input      : Collection* coll: where to find
+ *              Role* role: related role
+ *              Human* human: related human
+ *              Document* document: related document
+ * Output     : The address of the AssoRole.
+ =======================================================================*/
+AssoRole* 
+getAssoRole(Collection* coll, 
+	    Role* role, Human* human, Document* document)
+{
+  AssoRole* rc = NULL;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  if (!role || !human || !document) goto error;
+  logEmit(LOG_DEBUG, "getAssoRole %s, %s-%s, %s", role->label, 
+	  human->firstName, human->secondName, document->label);
+
+  // look for assoRole
+  while((rc = rgNext_r(document->assoRoles, &curr)) != NULL) {
+    if (rc->human == human && rc->role == role) break;
+  }
+  
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addAssoRole
+ * Description: Add an AssoRole if not already there
+ * Synopsis   : AssoRole* addAssoRole(Collection* coll, Role* role, 
+ *                 Human* human, Document* document)
+ * Input      : Collection* coll: where to find
+ *              Role* role: related role
+ *              Human* human: related human
+ *              Document* document: related document
+ * Output     : The address of the AssoRole.
+ =======================================================================*/
+AssoRole* 
+addAssoRole(Collection* coll, 
+	    Role* role, Human* human, Document* document)
+{
+  AssoRole* rc = NULL;
+  AssoRole* asso = NULL;
+ 
+  checkCollection(coll);
+  if (!role || !human || !document) goto error;
+  logEmit(LOG_DEBUG, "addAssoRole %s, %s-%s, %s", role->label, 
+	  human->firstName, human->secondName, document->label);
+
+  // already there
+  if ((asso = getAssoRole(coll, role, human, document))) goto end;
+
+  // add new one if not already there
+  if ((asso = createAssoRole()) == NULL) goto error;
+  asso->role = role;
+  asso->human = human;
+  asso->document = document;
+  
+  // add it to the role ring
+  if (!rgInsert(role->assos, asso)) goto error;
+
+  // add it to the human ring
+  if (!rgInsert(human->assoRoles, asso)) goto error;
+  
+  // add it to the document tree
+  if (!rgInsert(document->assoRoles, asso)) goto error;
+
+ end:
+  rc = asso;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "cannot add an assoRole");
+    if (asso) delAssoRole(coll, asso);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delAssoRole
+ * Description: Del a assoRole
+ * Synopsis   : int delAssoRole(Collection* coll, AssoRole* self)
+ * Input      : Collection* coll : where to del
+ *              AssoRole* self : the assoRole to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delAssoRole(Collection* coll, AssoRole* self)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+  
+  checkCollection(coll);
+  if (!self) goto error;
+  logEmit(LOG_DEBUG, "delAssoRole %s, %s-%s, %s", self->role->label, 
+	  self->human->firstName, self->human->secondName, 
+	  self->document->label);
+
+  // delete from human ring
+  if ((curr = rgHaveItem(self->human->assoRoles, self))) {
+    rgRemove_r(self->human->assoRoles, &curr);
+  }
+
+  // delete from document ring
+  if ((curr = rgHaveItem(self->document->assoRoles, self))) {
+    rgRemove_r(self->document->assoRoles, &curr);
+  }
+
+  if ((curr = rgHaveItem(self->role->assos, self))) {
+    rgRemove_r(self->role->assos, &curr);
+  }
+
+  // free the assoRole
+  destroyAssoRole(self);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delAssoRole fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addHumanToCategory
+ * Description: Add a human to a category
+ * Synopsis   : int addHumanToCategory(Collection* coll, 
+ *                                    Human* human, Category* category)
+ * Input      : Collection* coll: where to find
+ *              Human* human
+ *              Category* category
+ * Output     : TRUE on success
+ =======================================================================*/
+int addHumanToCategory(Collection* coll, Human* human, Category* category)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  if (!human || !category) goto error;
+  logEmit(LOG_DEBUG, "addHumanToCategory %s-%s, %s",
+	  human->firstName, human->secondName, category->label);
+
+  // add human to category ring
+  if (!rgHaveItem(category->humans, human) &&
+      !rgInsert(category->humans, human)) goto error;
+  
+  // add human to category ring
+  if (!rgHaveItem(human->categories, category) &&
+      !rgInsert(human->categories, category)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addHumanToCategory fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delHumanToCategory
+ * Description: Del a human to a category
+ * Synopsis   : int delHumanToCategory(Collection* coll, 
+ *                                    Human* human, Category* category)
+ * Input      : Collection* coll: where to find
+ *              Human* human
+ *              Category* category
+ * Output     : TRUE on success
+ =======================================================================*/
+int delHumanToCategory(Collection* coll, Human* human, Category* category)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  if (!human || !category) goto error;
+  logEmit(LOG_DEBUG, "delHumanToCategory %s-%s, %s",
+	  human->firstName, human->secondName, category->label);
+
+  // del human to category ring
+  if ((curr = rgHaveItem(category->humans, human))) {
+    rgRemove_r(category->humans, &curr);
+  }
+  
+  // del human to category ring
+  if ((curr = rgHaveItem(human->categories, category))) {
+    rgRemove_r(human->categories, &curr);
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delHumanToCategory fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getHuman
+ * Description: Search or may create a Human
+ * Synopsis   : Human* getHuman(Collection* coll, 
+ *                              char* firstName, char* secondName)
+ * Input      : Collection* coll: where to find
+ *             char* firstName: id
+ *             char* secondName: id
+ * Output     : The address of the Human.
+ =======================================================================*/
+Human* 
+getHuman(Collection* coll, char* firstName, char* secondName)
+{
+  Human* rc = NULL;
+  Human human;
+  AVLNode* node = NULL;
+
+  checkCollection(coll);
+  checkLabel(firstName);
+  //checkLabel(secondName); may be null
+  logEmit(LOG_DEBUG, "getHuman %s-%s", firstName, secondName);
+
+  // look for human
+  human.firstName = firstName;
+  human.secondName = secondName;
+  if ((node = avl_search(coll->catalogTree->humans, &human))) {
+    rc = (Human*)node->item;
+  }
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addHuman
+ * Description: Search or may create a Human
+ * Synopsis   : Human* addHuman(Collection* coll, 
+ *                              char* firstName, char* secondName)
+ * Input      : Collection* coll: where to find
+ *             char* firstName: id
+ *             char* secondName: id
+ * Output     : The address of the Human.
+ =======================================================================*/
+Human* 
+addHuman(Collection* coll, char* firstName, char* secondName)
+{
+  Human* rc = NULL;
+  Human* human = NULL;
+
+  checkCollection(coll);
+  checkLabel(firstName);
+  //checkLabel(secondName); may be null
+  logEmit(LOG_DEBUG, "addHuman %s-%s", firstName, secondName);
+
+  // already there
+  if ((human = getHuman(coll, firstName, secondName))) goto end;
+
+  // add new one if not already there
+  if ((human = createHuman()) == NULL) goto error;
+  if (!(human->firstName = createString(firstName))) goto error;
+  if (!(human->secondName = createString(secondName))) goto error;
+  human->id = coll->catalogTree->maxId[HUM]++;
+  if (!avl_insert(coll->catalogTree->humans, human)) goto error;
+
+ end:
+  rc = human;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addHuman fails");
+    human = destroyHuman(human);
+  }	    
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delHuman
+ * Description: Del a carac
+ * Synopsis   : int delHuman(Collection* coll, Human* self)
+ * Input      : Collection* coll : where to del
+ *              Human* self : the carac to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delHuman(Collection* coll, Human* self)
+{
+  int rc = FALSE;
+  Category* cat = NULL;
+  AssoRole* aR = NULL;
+  RGIT* curr = NULL;
+  RGIT* curr2 = NULL;
+  
+  checkCollection(coll);
+  if (!self) goto error;
+  logEmit(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
+
+  // delete assoRole associations
+  while((aR = rgHead(self->assoRoles)) != NULL)
+    if (!delAssoRole(coll, aR)) goto error;
+
+  // delete human from categories rings
+  curr = NULL;
+  while((cat = rgNext_r(self->categories, &curr)) != NULL) {
+    if ((curr2 = rgHaveItem(cat->humans, self))) {
+      rgRemove_r(cat->humans, &curr2);
+    }
+  }
+
+  // delete human from document tree and free it
+  avl_delete(coll->catalogTree->humans, self);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delHuman fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addArchiveToDocument
+ * Description: Add a archive to a document
+ * Synopsis   : int addArchiveToDocument(Collection* coll, 
+ *                                    Archive* archive, Document* document)
+ * Input      : Collection* coll: where to find
+ *              Archive* archive
+ *              Document* document
+ * Output     : TRUE on success
+ =======================================================================*/
+int addArchiveToDocument(Collection* coll, 
+			 Archive* archive, Document* document)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  checkArchive(archive);
+  if (!archive) goto error;
+  logEmit(LOG_DEBUG, "addArchiveToDocument %s:%lli, %s",
+	  archive->hash, (long long int)archive->size, document->label);
+
+  // add archive to document ring
+  if (!rgHaveItem(document->archives, archive) &&
+      !rgInsert(document->archives, archive)) goto error;
+  
+  // add document to archive ring
+  if (!rgHaveItem(archive->documents, document) &&
+      !rgInsert(archive->documents, document)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addArchiveToDocument fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delArchiveFromDocument
+ * Description: Del a archive to a document
+ * Synopsis   : int delArchiveFromDocument(Collection* coll, 
+ *                                    Archive* archive, Document* document)
+ * Input      : Collection* coll: where to find
+ *              Archive* archive
+ *              Document* document
+ * Output     : TRUE on success
+ =======================================================================*/
+int delArchiveFromDocument(Collection* coll, 
+			   Archive* archive, Document* document)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  checkArchive(archive);
+  if (!archive) goto error;
+  logEmit(LOG_DEBUG, "delArchiveFromDocument %s:%lli, %s",
+	  archive->hash, (long long int)archive->size, document->label);
+
+  // del archive to document ring
+  if ((curr = rgHaveItem(document->archives, archive))) {
+    rgRemove_r(document->archives, &curr);
+  }
+
+  // del document to archive ring
+  if ((curr = rgHaveItem(archive->documents, document))) {
+    rgRemove_r(archive->documents, &curr);
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delArchiveFromDocument fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addDocumentToCategory
+ * Description: Add a document to a category
+ * Synopsis   : int addDocumentToCategory(Collection* coll, 
+ *                             Document* document, Category* category)
+ * Input      : Collection* coll: where to find
+ *              Document* document
+ *              Category* category
+ * Output     : TRUE on success
+ =======================================================================*/
+int addDocumentToCategory(Collection* coll, Document* document, 
+			  Category* category)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  if (!document || !category) goto error;
+  logEmit(LOG_DEBUG, "addDocumentToCategory %s, %s",
+	  document->label, category->label);
+
+  // add document to category ring
+  if (!rgHaveItem(category->documents, document) &&
+      !rgInsert(category->documents, document)) goto error;
+  
+  // add document to category ring
+  if (!rgHaveItem(document->categories, category) &&
+      !rgInsert(document->categories, category)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addDocumentToCategory fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delDocumentToCategory
+ * Description: Del a document to a category
+ * Synopsis   : int delDocumentToCategory(Collection* coll, 
+ *                          Document* document, Category* category)
+ * Input      : Collection* coll: where to find
+ *              Document* document
+ *              Category* category
+ * Output     : TRUE on success
+ =======================================================================*/
+int delDocumentToCategory(Collection* coll, Document* document, 
+			  Category* category)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  if (!document || !category) goto error;
+  logEmit(LOG_DEBUG, "delDocumentToCategory %s, %s",
+	  document->label, category->label);
+
+  // del document to category ring
+  if ((curr = rgHaveItem(category->documents, document))) {
+    rgRemove_r(category->documents, &curr);
+  }
+  
+  // del document to category ring
+  if ((curr = rgHaveItem(document->categories, category))) {
+    rgRemove_r(document->categories, &curr);
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delDocumentToCategory fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getDocument
+ * Description: Search or may create a Document
+ * Synopsis   : Document* getDocument(Collection* coll, int id);
+ * Input      : Collection* coll: where to find
+ *             int id: ie
+ * Output     : The address of the Document.
+ * Note       : several document may have the same label
+ =======================================================================*/
+Document* 
+getDocument(Collection* coll, char* label)
+{
+  Document* rc = NULL;
+  Document document;
+  AVLNode* node = NULL;
+
+  checkCollection(coll);
+  logEmit(LOG_DEBUG, "getDocument %s", label);
+
+  // look for document
+  document.label = label;
+  if ((node = avl_search(coll->catalogTree->documents, &document))) {
+    rc = (Document*)node->item;
+  }
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addDocument
+ * Description: Search or may create a Document
+ * Synopsis   : Document* addDocument(Collection* coll)
+ * Input      : Collection* coll: where to find
+ *              char* label: label
+ * Output     : The address of the Document.
+ *
+ * Note       : here we decided not to have a key on label
+ =======================================================================*/
+Document* 
+addDocument(Collection* coll, char* label)
+{
+  Document* rc = NULL;
+  Document* document = NULL;
+
+  checkCollection(coll);
+  checkLabel(label);
+  logEmit(LOG_DEBUG, "addDocument %s", label);
+
+  // already there
+  if ((document = getDocument(coll, label))) goto end;
+
+  // add new one if not already there
+  if ((document = createDocument()) == NULL) goto error;
+  if (!(document->label = createString(label))) goto error; 
+  document->id = coll->catalogTree->maxId[DOC]++;
+  if (!avl_insert(coll->catalogTree->documents, document)) goto error;
+
+ end:
+  rc = document;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addDocument fails");
+    document = destroyDocument(document);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delDocument
+ * Description: Del a document
+ * Synopsis   : int delDocument(Collection* coll, Document* self)
+ * Input      : Collection* coll : where to del
+ *              Document* self : the carac to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delDocument(Collection* coll, Document* self)
+{
+  int rc = FALSE;
+  AssoRole* aR = NULL;
+  Category* cat = NULL;
+  Archive* arch = NULL;
+  RGIT* curr = NULL;
+  RGIT* curr2 = NULL;
+  
+  checkCollection(coll);
+  if (!self) goto error;
+  logEmit(LOG_DEBUG, "delDocument %i (%s)", self->id, self->label);
+
+  // delete assoRole associations
+  curr = NULL;
+  while((aR = rgNext_r(self->assoRoles, &curr)) != NULL) {
+    if (!delAssoRole(coll, aR)) goto error;
+  }
+
+  // delete document from categories rings
+  curr = curr2 = NULL;
+  while((cat = rgNext_r(self->categories, &curr)) != NULL) {
+    if ((curr2 = rgHaveItem(cat->documents, self))) {
+      rgRemove_r(cat->documents, &curr2);
+    }
+  }
+
+  // delete document from archive rings
+  curr = curr2 = NULL;
+  while((arch = rgNext_r(self->archives, &curr)) != NULL) {
+    if ((curr2 = rgHaveItem(arch->documents, self))) {
+      rgRemove_r(arch->documents, &curr2);
+    }
+  }
+
+  // delete document from document tree rings and free it
+  avl_delete(coll->catalogTree->documents, self);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delDocument fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delArchiveCatalog
+ * Description: Del an archive from catalog
+ * Synopsis   : int delArchiveCatalog(Collection* coll, Archive* self)
+ * Input      : Collection* coll : where to del
+ *              Archive* self : the archive to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delArchiveCatalog(Collection* coll, Archive* self)
+{
+  int rc = FALSE;
+  AssoCarac* aC = NULL;
+  Document* doc = NULL;
+  //RGIT* curr = NULL;
+  
+  checkCollection(coll);
+  checkArchive(self);
+  logEmit(LOG_DEBUG, "delArchiveCatalog %s:%lli",
+	  self->hash, (long long int)self->size);
+
+  // delete assoCarac associations
+  while((aC = rgHead(self->assoCaracs)) != NULL) {
+    rgRemove(self->assoCaracs);
+    destroyAssoCarac(aC);
+  }
+
+  // delete from document rings
+  while((doc = rgHead(self->documents)) != NULL) {
+    if (!delArchiveFromDocument(coll, self, doc)) goto error;
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delArchiveCatalog fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addCategoryLink
+ * Description: Search or may create a Category link
+ * Synopsis   : Category* addCategory(Collection* coll,
+ *                  Collection* coll, Category* father, Category* child)
+ * Input      : Collection* coll: where to find
+ *              Category* father
+ *              Category* child
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+addCategoryLink(Collection* coll, Category* father, Category* child)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  if (!father || !child) goto error;
+  logEmit(LOG_DEBUG, "addCategoryLink %s -> %s", 
+	  child->label, father->label);
+
+  // add link to father
+  if (!rgHaveItem(father->childs, child) &&
+      !rgInsert(father->childs, child)) goto error;
+
+  // add link to child
+  if (!rgHaveItem(child->fathers, father) &&
+      !rgInsert(child->fathers, father)) goto error;
+  
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "addCategoryLink fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delCategoryoLink
+ * Description: Search or may create a Category link
+ * Synopsis   : Category* delCategory(Collection* coll,
+ *                  Collection* coll, Category* father, Category* child)
+ * Input      : Collection* coll: where to find
+ *              Category* father
+ *              Category* child
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delCategoryLink(Collection* coll, Category* father, Category* child)
+{
+  int rc = FALSE;
+  RGIT* curr = NULL;
+
+  checkCollection(coll);
+  if (!father || !child) goto error;
+  logEmit(LOG_DEBUG, "delCategoryLink %s -> %s", 
+	  child->label, father->label);
+  
+  // delete father link
+  if ((curr = rgHaveItem(father->childs, child))) {
+    rgRemove_r(father->childs, &curr);
+  }
+
+  // delete child link
+  if ((curr = rgHaveItem(child->fathers, father))) {
+    rgRemove_r(child->fathers, &curr);
+  }
+  
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delCategoryLink fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : getCategory
+ * Description: Search or may create a Category
+ * Synopsis   : Category* getCategory(Collection* coll, char* label)
+ * Input      : Collection* coll: where to find
+ *              char* label: category name
+ * Output     : The address of the Category.
+ =======================================================================*/
+Category* 
+getCategory(Collection* coll, char* label)
+{
+  Category* rc = NULL;
+  RGIT* curr = NULL;
+  
+  checkCollection(coll);
+  checkLabel(label);
+  logEmit(LOG_DEBUG, "getCategory %s", label);
+  
+  // look for category
+  while((rc = rgNext_r(coll->catalogTree->categories, &curr)) 
+	!= NULL)
+    if (!strcmp(rc->label, label)) break;
+  
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : addCategory
+ * Description: Search or may create a Category
+ * Synopsis   : Category* addCategory(Collection* coll, char* label)
+ * Input      : Collection* coll: where to find
+ *             char* label: id
+ * Output     : The address of the Category.
+ =======================================================================*/
+Category* 
+addCategory(Collection* coll, char* label, int show)
+{
+  Category* rc = NULL;
+  Category* cat = NULL;
+
+  checkCollection(coll);
+  checkLabel(label);
+  logEmit(LOG_DEBUG, "addCategory %s", label);
+
+  // already there
+  if ((cat = getCategory(coll, label))) goto end;
+
+  // add new one if not already there
+  if (!(cat = createCategory())) goto error;
+  if (!(cat->label = createString(label))) goto error;
+  if (!rgInsert(coll->catalogTree->categories, cat)) goto error;
+  cat->id = coll->catalogTree->maxId[CATE]++;
+
+ end:
+  if (show) cat->show = TRUE;
+  rc = cat;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "cannot add %s category", label);
+    cat = destroyCategory(cat);
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delCategory
+ * Description: Del a category
+ * Synopsis   : int delCategory(Collection* coll, Category* self)
+ * Input      : Collection* coll : where to del
+ *              Category* self : the carac to del
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+delCategory(Collection* coll, Category* self)
+{
+  int rc = FALSE;
+  Category* cat = NULL;
+  Human* hum = NULL;
+  Document* doc = NULL;
+  RGIT* curr = NULL;
+  RGIT* curr2 = NULL;
+  
+  checkCollection(coll);
+  if (!self) goto error;
+  logEmit(LOG_DEBUG, "delCategory %s", self->label);
+
+  // delete category from fathers ring
+  while((cat = rgHead(self->fathers)) != NULL)
+    if (!delCategoryLink(coll, cat, self)) goto error;
+
+  // delete category from childs ring  curr = NULL;
+  while((cat = rgHead(self->childs)) != NULL)
+    if (!delCategoryLink(coll, self, cat)) goto error;
+
+  // delete category from humans rings
+  curr = NULL;
+  curr2 = NULL;
+  while((hum = rgNext_r(self->humans, &curr)) != NULL) {
+    if ((curr2 = rgHaveItem(hum->categories, self))) {
+      rgRemove_r(hum->categories, &curr2);
+    }
+  }
+
+  // delete category from documents rings
+  curr = NULL;
+  curr2 = NULL;
+  while((doc = rgNext_r(self->documents, &curr)) != NULL) {
+    if ((curr2 = rgHaveItem(doc->categories, self))) {
+      rgRemove_r(doc->categories, &curr2);
+    }
+  }
+
+  // delete category from document tree rings
+  // O(n2) when call by diseaseCatalogTree !
+  if ((curr = rgHaveItem(coll->catalogTree->categories, self))) {
+    rgRemove_r(coll->catalogTree->categories, &curr);
+  }
+
+  // free the category
+  destroyCategory(self);
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "delCategory fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : diseaseCatalogTree
+ * Description: Disease a CatalogTree by freeing all the allocate memory.
+ * Synopsis   : void diseaseCatalogTree(CatalogTree* self)
+ * Input      : CatalogTree* self = the address of the CatalogTree to
+ *              disease.
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+diseaseCatalogTree(Collection* coll)
+{
+  int rc = FALSE;
+  CatalogTree* self = NULL;
+  Category* category = NULL;
+  Carac* carac = NULL;
+  Role* role = NULL;
+  AVLNode *node = NULL;
+  //int i = 0;
+
+  if(coll == NULL) goto error;
+  if((self = coll->catalogTree) == NULL) goto error;
+  logEmit(LOG_DEBUG, "diseaseCatalogTree %s", coll);
+ 
+  // disease roles
+  while((role = rgHead(self->roles))) 
+    if (!delRole(coll, role)) goto error;
+
+ // diseases categories
+  while((category = rgHead(self->categories)))
+    if (!delCategory(coll, category)) goto error;
+
+  // disease humans
+  while ((node = self->humans->head))
+    if (!delHuman(coll, node->item)) goto error;
+
+  // disease documents
+  while ((node = self->documents->head))
+    if (!delDocument(coll, node->item)) goto error;
+
+  // disease archives
+  if (avl_count(coll->archives)) {
+    for(node = coll->archives->head; node; node = node->next) {
+      if (!delArchiveCatalog(coll, node->item)) goto error;
+    }
+  }
+
+  // disease caracs
+  while((carac = rgHead(self->caracs)))
+    if (!delCarac(coll, carac)) goto error;
+
+  // try to disease archives
+  if (!diseaseArchives(coll)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "diseaseCatalogTree fails");
+  }
+  return rc;
+}
+
+/************************************************************************/
+
+#ifdef utMAIN
+#include "../misc/command.h"
+#include "utFunc.h"
+GLOBAL_STRUCT_DEF;
+
+/*=======================================================================
+ * Function   : usage
+ * Description: Print the usage.
+ * Synopsis   : static void usage(char* programName)
+ * Input      : programName = the name of the program; usually argv[0].
+ * Output     : N/A
+ =======================================================================*/
+static void 
+usage(char* programName)
+{
+  memoryUsage(programName);
+
+  memoryOptions();
+  //fprintf(stderr, "\t\t---\n");
+  return;
+}
+
+/*=======================================================================
+ * Function   : main 
+ * Author     : Nicolas ROCHE
+ * modif      : 2012/05/01
+ * Description: Unit test for confTree module.
+ * Synopsis   : utconfTree
+ * Input      : N/A
+ * Output     : N/A
+ =======================================================================*/
+int 
+main(int argc, char** argv)
+{
+  Collection* coll = NULL;
+  // ---
+  int rc = 0;
+  int cOption = EOF;
+  char* programName = *argv;
+  char* options = MEMORY_SHORT_OPTIONS;
+  struct option longOptions[] = {
+    MEMORY_LONG_OPTIONS,
+    {0, 0, 0, 0}
+  };
+
+  // import mdtx environment
+  env.dryRun = FALSE;
+  getEnv(&env);
+
+  // parse the command line
+  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+	!= EOF) {
+    switch(cOption) {
+      
+      GET_MEMORY_OPTIONS; // generic options
+    }
+    if (rc) goto optError;
+  }
+
+  // export mdtx environment
+  if (!setEnv(programName, &env)) goto optError;
+
+  /************************************************************************/
+  if (!createExempleConfiguration()) goto error;
+  if (!(coll = getCollection("coll1"))) goto error;
+  if (!createExempleCatalogTree(coll)) goto error;
+  
+  // test serializing
+  if (!serializeCatalogTree(coll)) {
+    logEmit(LOG_ERR, "%s", "Error while serializing the catalog exemple");
+    goto error;
+  }
+
+  // test disease
+  if (!diseaseCatalogTree(coll)) goto error;
+  env.dryRun = TRUE;
+  if (!serializeCatalogTree(coll)) goto error;
+  if (coll->catalogTree->roles->nbItems != 0) goto error;
+  if (avl_count(coll->catalogTree->humans) != 0) goto error;
+  if (avl_count(coll->catalogTree->documents) != 0) goto error;
+  if (coll->catalogTree->categories->nbItems != 0) goto error;
+  if (coll->catalogTree->caracs->nbItems != 0) goto error;
+  /************************************************************************/
+
+  freeConfiguration();
+  rc = TRUE;
+ error:
+  ENDINGS;
+  rc=!rc;
+ optError:
+  exit(rc);
+}
+
+#endif // utMAIN
+
+/* Local Variables: */
+/* mode: c */
+/* mode: font-lock */
+/* mode: auto-fill */
+/* End: */

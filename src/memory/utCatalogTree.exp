@@ -1,0 +1,37 @@
+# MediaTeX collection catalog: coll1
+
+# Categories:
+
+Top Category "media"
+  "topo" = "Welcome !"
+Top Category "image": "media"
+Top Category "drawing": "image"
+Top Category "animal"
+Category "hand": "drawing", "animal"
+
+# Humans:
+
+Human	 "Me" "": "drawing"
+  "another thing?" = "no"
+
+# Archives:
+
+Archive	 022a34b2f9b893fba5774237e1aa80ea:24075
+  "format" = "PNG"
+Archive	 b281449c229bcc4a3556cdcc0d3ebcec:815
+  "format" = "XPM"
+  "licence" = "GPLv3"
+
+# Documents:
+
+Document "panthere": "animal", "drawing", "hand"
+  With "designer" = "Me" ""
+  "info" = "[P]erenial [A]rchive [N]etwork [There]"
+  022a34b2f9b893fba5774237e1aa80ea:24075
+  b281449c229bcc4a3556cdcc0d3ebcec:815
+
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:

@@ -1,0 +1,70 @@
+@cindex supports file
+
+The @dataSuppO{} file 
+is enterly managed by the @activityClient{}. 
+No other process access to it, not even for reading.
+
+Relational schema:
+
+@image{mediatex-figures/supports.txt,,,,}
+
+@itemize @bullet
+@item Proper entities
+@itemize @bullet
+@item The @sc{Support} entity list all the local supports.
+@end itemize
+
+@item Linked entities
+@itemize @bullet
+@item The @sc{Collection} entity, from @dataConf{}, lists all the collections the server share.
+@end itemize
+
+@item Relations
+@itemize @bullet
+@item 
+The @sc{collections} relationship list all the collection a specific support is use for. This relation is not record into this file but into 
+@dataConfO{}.
+@end itemize
+@end itemize
+
+Example: (line is cut into 3 parts to display it here) 
+@example
+#         firstSeen           lastCheck            lastSeen@dots{}
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00@dots{}
+
+@dots{}                       quickHash                         fullHash@dots{}
+@dots{}de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18@dots{}
+
+@dots{}size       status name
+@dots{}391168         ok ex-cd1
+@end example
+
+Grammar:
+@example
+YEAR    [[:digit:]]@{4@}
+MONTH   [[:digit:]]@{2@}
+DAY     [[:digit:]]@{2@}
+HOUR    [[:digit:]]@{2@}
+MIN     [[:digit:]]@{2@}
+SEC     [[:digit:]]@{2@}
+DATE    @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
+
+HASH    [[:xdigit:]]@{32@}      
+STATUS  [^[:blank:]\r\n]@{1,10@} 
+NAME    [^[:blank:]\r\n]@{1,64@} 
+
+file: lines
+
+lines: lines line
+     | line
+
+line: DATE DATE DATE HASH HASH [[:digit:]]+ STATUS NAME
+@end example
+
+Code:
+@table @file
+@item src/memory/supportTree.h
+@itemx src/memory/supportTree.c
+@itemx src/parser/supportFile.l
+@itemx src/parser/supportFile.y
+@end table

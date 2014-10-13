@@ -1,0 +1,8 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+Makefile
+# make
+.deps
+# make check
+

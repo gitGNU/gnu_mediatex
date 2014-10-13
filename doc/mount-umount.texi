@@ -1,0 +1,24 @@
+@cindex mount
+
+These 2 scripts mount/unmount an @sc{iso} disk or file.
+Here we decided to use a script to do it quickly
+(@code{mount (3)} function and the @code{loop} device related to @code{ioctl} may do the same job).
+
+Process conceptual model:
+
+@image{mediatex-figures/mount-umount,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsMount
+@item @eventScriptsUmount
+from @procClientSupp
+@end table
+@end itemize
+
+Code:
+@table @code
+@item /usr/share/mediatex/scripts/mount.sh
+@itemx /usr/share/mediatex/scripts/umount.sh
+@end table

@@ -1,0 +1,28 @@
+# autoreconf -i
+Makefile.in
+texinfo.texi
+mdate-sh
+# ./configure
+Makefile
+stamp-vti
+# make
+texinfo.tex
+version.texi
+mediatex.info
+mediatex.html
+# make all
+mediatex.aux
+mediatex.cp
+mediatex.cps
+mediatex.dvi
+mediatex.fn
+mediatex.ky
+mediatex.log
+mediatex.op
+mediatex.pg
+mediatex.toc
+mediatex.tp
+mediatex.vr
+mediatex.pdf
+mediatex.ps
+# make check

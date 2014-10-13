@@ -1,0 +1,12 @@
+# ./configure
+# autoreconf -i
+# make
+mediatexd
+cron_hourly.sh
+cron_daily.sh
+# make check
+*.out
+.deps
+Makefile
+Makefile.in
+upgradeKnownHost.sh

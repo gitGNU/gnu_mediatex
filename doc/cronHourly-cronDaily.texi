@@ -1,0 +1,41 @@
+@cindex cron
+
+This 2 scripts are run fron @procToolsCron{}.
+
+Process conceptual model:
+
+@image{mediatex-figures/cronHourly-cronDaily,,,,}
+
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventScriptsCronHourly
+@itemx @eventScriptsCronDaily
+from @procToolsCron
+@end table
+
+@item Events out
+@table @code
+@item @eventClientExtract
+@itemx @eventClientNotify
+to @activityClient
+@item @eventClientMotd
+to @procClientMotd
+@item @eventActorPublisherMotd
+to @actorPublisher
+@end table
+
+@item Data out
+@table @file
+@item /etc/motd
+@end table
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/cronHourly.sh
+@itemx /usr/share/mediatex/scripts/cronDaily.sh
+@end table
+
+@end itemize
+

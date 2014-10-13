@@ -1,0 +1,448 @@
+@cindex howto
+@cindex tests
+
+The goal of this section is to help to install @sc{mediatex} software 
+and to test it by setting an ``hello world'' collection example. 
+
+@menu
+* Install::             Compile and install.
+* Scenario 1::	        Manage supports.
+* Scenario 2::	        Manage collections.
+* Scenario 3::          Extract an archive.
+* Scenario 4::          Adding meta-data.
+* Scenario 5::          Adding a server.
+* Scenario 6::          Adding a nat server.
+@end menu
+
+@note{} the scenario must be run sequentially (6 depends on 5...).
+
+@node Install
+@section Install
+@cindex install
+Software requirements.
+@itemize @bullet
+@item Compilation:
+automake gettext libtool make flex bison texinfo transfig help2man libssl-dev libavl-dev 
+@item Documentation (others format than texinfo and man) :
+imagemagick texlive
+@item Installation:
+ssh apache2 cvs viewvc initramfs-tools libavl1 tar cpio gzip bzip2 unzip rar bc findutils
+@end itemize
+
+Here are the steps used to build the project from scratch:
+@example
+$ autoscan
+$ autoreconf -i
+$ ./configure
+$ make
+$ make check
+$ make distcheck
+$ make dist
+@end example
+
+However this have to be adapt to be really functional for installation 
+or to enable debuging: @*
+(from @file{/usr/share/perl5/Debian/Debhelper/Buildsystem/autoconf.pm}) 
+@example
+$ ./configure \
+  --prefix=/usr \
+  --includedir=/usr/include \
+  --mandir=/usr/share/man \
+  --infodir=/usr/share/info \
+  --sysconfdir=/etc \
+  --localstatedir=/var
+$ make CFLAGS="-Wall -O0 -g"
+# make install
+@end example
+
+Someone may also prefers to build and install a @acronym{DEBIAN} package:
+@example
+$ make dist
+$ cp mediatex-0.1.tar.gz mediatex_0.1.orig.tar.gz
+$ tar -zxf mediatex-0.1.tar.gz
+$ cd mediatex-0.1
+$ cp -fr ../debian .
+$ dpkg-buildpackage -us -uc
+$ ls ..
+@end example
+
+The fully @acronym{DEBIAN} build process should finish using @code{pbuilder}:
+@example
+# pbuilder create --distribution squeeze \
+  --basetgz ../wheezy.tgz \
+  --mirror http://ftp.fr.debian.org/debian
+# cd mediatex-0.1
+# pdebuild --use-pdebuild-internal \
+  --debbuildopts -sa -- \
+  --basetgz ../wheezy.tgz
+@end example
+
+Next, a script may automate the 6 following scenarios
+@example
+# /usr/share/mediatex/useCases/tests.sh
+@end example
+
+@node Scenario 1
+@section Scenario 1: manage supports
+@cindex supports
+First of all, initialise the default @code{mdtx} server.
+@note{} this is already done by the @acronym{DEBIAN} package.
+You now have local access to the meta-data history using 
+this @acronym{url}: @*
+@url{http://localhost/~mdtx}
+@example
+# mediatex adm init
+@end example
+
+Add a new @actorPublisher{} user using an already existing user login.
+Then, reload the Xsession or use @command{su} to re-login in order 
+the @actor{Publisher} belongs effectively to his new @code{mdtx} group.
+@example
+# mediatex adm add user @var{username1}
+# su @var{username1}
+$ id
+@end example
+
+When initialising, @command{mediatex} 
+has added an out-dated example support.
+As @sc{Publisher}, please check the ``message of the day'' 
+and provide the wanted support. @*
+@note{} here we use an @sc{iso} file (so as not to wast a @sc{cd}),
+but real supports also works instead.
+@example
+$ mediatex motd
+$ mediatex check supp ex-cd1 on /usr/share/mediatex/examples/logoP1.iso
+@end example
+
+This is what @sc{Mediatex} is mainly designed for: 
+to provide a simple @sc{api} to load supports on demand.
+
+Now @sc{motd} will not complain any more about this support 
+as it was seen recently and own a good score.
+@example
+$ mediatex motd
+$ mediatex ls supp
+@end example
+
+Add a new support. @*
+@note{} There is a 10 chars string you can use to put what you want in order to record a state for each support.
+@example
+$ mediatex add supp ex-cd2 on /usr/share/mediatex/examples/logoP2.iso
+$ mediatex note supp ex-cd2 as what_you_want
+$ mediatex ls supp
+@end example
+
+@node Scenario 2
+@section Scenario 2: manage collections
+@cindex collection
+Collections are using support's contents, exposing them to the
+rest of the world.
+
+Add the new ``hello'' collection. 
+You will be asked for the ``mdtx'' password that will gives you 
+full access next, on the @acronym{Html} catalogue.
+Once again you will need to re-login so as 
+the @actorPublisher{} belongs to the new @code{mdtx-hello} group.
+@example
+# mediatex adm add coll hello@@localhost
+# su @var{username1}
+@end example
+
+Set the server's hostname on @file{/etc/mediatex/mdtx.conf} 
+so as remote servers from latter scenario 5 and 6 may acces to the
+collection too.
+@example
+<<<
+host    localhost
+---
+host    @var{hostname1}
+>>>
+@end example
+
+Build the ``hello'' @acronym{Html} catalogue.
+@example
+$ mediatex make coll hello
+@end example
+
+Add a new @actorUser{} to the collection's @sc{apache} users.
+@example
+$ htdigest /etc/mediatex/mdtx-hello/apache2/htpasswd \
+           mdtx-hello @var{username2}
+@end example
+
+Give him permissions on some of the @sc{html} sections by editing 
+the following file: @*
+@file{/etc/mediatex/mdtx-hello/apache2/htgroup}
+@example
+index: mdtx @var{usename2}
+cache: mdtx @var{usename2}
+score: mdtx
+history: mdtx
+@end example
+
+Browses the collection via this @sc{url}: @*
+@url{https://@var{hostname1}/~mdtx-hello}
+
+Change the logo:
+@example
+$ cp yourLogo.png /etc/mediatex/mdtx-hello/logo.png
+$ mediatex make coll hello
+@end example
+
+@node Scenario 3
+@section Scenario 3: extract an archive
+@cindex extraction rules
+First share supports with the collection
+@example
+$ mediatex add supp ex-cd1 to coll hello
+$ mediatex add supp ex-cd2 to coll hello
+@end example
+
+As a @sc{User}, browse the collection via this @sc{url}:
+@url{https://@/@sc{hostname1}/@/~mdtx-hello} and ask for a content 
+(by clicking on the floppy disk picture).
+
+As the cache is empty, you will be prompt to give your email address.
+Please do it.
+
+As @sc{Publisher}, please check the ``message of the day''
+and provide wanted supports.
+@example
+$ mediatex motd
+$ mediatex check supp ex-cd1 on /usr/share/mediatex/examples/logoP1.iso
+$ mediatex check supp ex-cd2 on /usr/share/mediatex/examples/logoP2.iso
+@end example
+
+Now you should receive an email telling the previous link you try
+is now be available. 
+
+@node Scenario 4
+@section Scenario 4: adding new archives
+@cindex archive
+@cindex upload
+Add a new support to the catalogue using its @sc{md5} hash sum and its size.
+@example
+$ md5sum yourFile.dat
+$ ls -l yourFile.dat
+
+$ cat > /etc/mediatex/mdtx-hello/catalogNN.txt <<EOF
+Document "your file"
+  fe232064504e7889b6aa15670c2ff210:25455
+EOF
+
+$ cat > /etc/mediatex/mdtx-hello/extractNN.txt <<EOF
+(REC fe232064504e7889b6aa15670c2ff210:25455)
+EOF
+
+$ chmod g+w /etc/mediatex/mdtx-hello/*NN.txt
+@end example
+
+Then, the @actor{publisher} have to provide the 
+new support to the collection
+@example
+$ mediatex add supp ex-new-doc on yourFile.dat
+$ mediatex add supp ex-new-doc to coll hello
+$ mediatex check supp ex-new-doc on yourFile.dat
+@end example
+
+As the upper method is dedicated for already burned supports, 
+one other way is to upload files into the cache (waiting we have
+so many files to burn them on a new support).
+This will automatically add the extraction rule, but you still 
+have to edit the catalogue file by hand.
+@example
+$ mdtx upload yourFile.dat to coll hello
+
+$ cat > /etc/mediatex/mdtx-hello/catalogNN.txt <<EOF
+Document "your file"
+  fe232064504e7889b6aa15670c2ff210:25455
+EOF
+@end example
+
+After rebuild the @acronym{html} catalogue, 
+you should now access the new archive through it
+as we seen previously (@ref{Scenario 3}).
+@example
+$ mediatex make coll hello
+@end example
+
+@node Scenario 5
+@section Scenario 5: add a second server
+@cindex servers list file
+On another (second) host, initialise the server. 
+As we seen before (@ref{Scenario 1}), @var{username1} is an already 
+existing user login (on this server).
+@example
+ @var{hostname2}# mediatex adm init
+ @var{hostname2}# mediatex adm add user @var{username1}
+ @var{hostname2}# su @var{username1}
+@end example
+
+Change the hostname in @file{/etc/mediatex/mdtx.conf} configuration file
+@example
+<<<
+host    localhost
+---
+host    @var{hostname2}
+>>>
+@end example
+
+Try to join the ``hello'' collection. The host fingerprint
+should match with the one given in @var{hostname1} configuration file.
+@example
+ @var{hostname2}# mediatex adm add coll hello@@@var{hostname1}
+@end example
+
+This has created your local collection key.
+Send it to a @actorPublisher{} already managing this collection.
+@example
+ @var{hostname2}# cat ~mdtx-hello/.ssh/id_dsa.pub
+@end example
+
+@sc{Publisher} has to add your key to the collection.
+@example
+@var{hostname1}$ mediatex add key @sc{keyFile} to coll hello
+@end example
+
+Finally, retry to join the collection.
+@example
+ @var{hostname2}# mediatex adm add coll hello@@@var{hostname1}
+ @var{hostname2}# su @var{username1}
+@end example
+
+Now the second server should be connected. We will check it. 
+@sp 1
+First, empty the @var{hostname1} cache and reload the daemon.
+@example
+@var{hostname1}# rm -fr ~mdtx/cache/mdtx-hello/logo*
+@var{hostname1}$ mediatex upgrade
+@end example
+
+Secondly, share the @code{ex-cd1} support with the collection on
+@var{hostname2}.
+@example
+ @var{hostname2}$ mediatex add supp ex-cd1 on \
+                           /usr/share/mediatex/examples/logoP1.iso
+ @var{hostname2}$ mediatex add supp ex-cd1 to coll hello
+@end example
+
+As a @sc{User}, browse the collection on the first server via this @sc{url}:
+@url{https://@/@var{hostname1}/@/~mdtx-hello} and ask once again for the logo image's archive, providing your @acronym{email} address.
+
+When first server reload (scheduled by @sc{cron}),
+it will notify the second server.
+@example
+@var{hostname1}$ mediatex srv notify
+@end example
+
+@sc{Publisher} on @var{hostname2} is now asked to provide the supports it shares
+@example
+ @var{hostname2}$ mediatex motd
+ @var{hostname2}$ mediatex check supp ex-cd1 on \
+                           /usr/share/mediatex/examples/logoP1.iso
+@end example
+
+Once second server notify, first server will copy back the file it needs, to serve the @sc{User} query.
+@example
+ @var{hostname2}$ mediatex srv notify
+@var{hostname1}$ mediatex srv extract
+@var{hostname1}$ ls ~mdtx/cache/mdtx-hello
+@end example
+
+@note{} as for every supports that have a bad score, the uploaded files
+((@ref{Scenario 4}) are duplicated too.
+@example
+ @var{hostname2}$ mediatex srv extract
+ @var{hostname2}$ ls ~mdtx/cache/mdtx-hello
+@end example
+
+
+@node Scenario 6
+@section Scenario 6: add a @sc{nat} server
+@cindex nat
+
+@note{} By @sc{nat} we mean this third server should be located 
+on a private network.
+It access the internet via the second server as gateway,
+but cannot be accessed from outside of his private network.
+@sp 1
+
+Network configuration example:
+@example
+ @var{hostname2}$ cat /proc/net/dev
+ eth0 ... (internet)
+ eth1 ... (private network)
+ @var{hostname2}# echo 1 > /proc/sys/net/ipv4/ip_forward
+ @var{hostname2}# iptables -t nat -A POSTROUTING -s 192.168.1.0/8 -o eth0 \
+                           -j MASQUERADE
+  @var{hostname3}# ping gnu.org (ok)
+@var{hostname1}# ping @sc{hostname3} (ko: Destination Host Unreachable)
+@end example
+
+Join collection with the third server 
+as we seen previously (@ref{Scenario 5}).
+
+Edit the configuration on both second and third server:
+@example
+ @var{hostname2}$ cat /etc/mediatex/mdtx.conf
+...
+networks   private1, www
+gateways   private1
+...
+ @var{hostname2}$ mediatex upgrade
+  @var{hostname3}$ cat /etc/mediatex/mdtx.conf
+...
+networks   private1
+...
+  @var{hostname3}$ mediatex upgrade
+@end example
+
+With this settings, the second server will relay queries and contents
+between the first and the third server:
+@itemize @bullet
+@item
+messages from @var{hostname1} are forwarded to @var{hostname3}
+@item
+@var{hostname3} do not send messages to @var{hostname1} as its contents 
+is sent back to @var{hostname2}
+@end itemize
+
+Checking it:
+@sp 1
+First, share the @code{ex-cd2} support with the collection on
+@var{hostname3}.
+@example
+  @var{hostname3}$ mediatex add supp ex-cd2 on \
+                            /usr/share/mediatex/examples/logoP2.iso
+  @var{hostname3}$ mediatex add supp ex-cd2 to coll hello
+@end example
+
+Once first server have reloaded, it will notify queries to the second 
+server (via @sc{cron}) which will relay them to the third one.
+@example
+@var{hostname1}$ mediatex upgrade
+@var{hostname1}$ mediatex srv notify
+@end example
+
+@sc{Publisher} on @var{hostname3} is now asked 
+to provide the supports it shares.
+@example
+  @var{hostname3}$ mediatex motd
+  @var{hostname3}$ mediatex check supp ex-cd2 on \
+                            /usr/share/mediatex/examples/logoP2.iso
+@end example
+
+Once third server notify, second server will copy (and extract) the files 
+needed by server 1.
+@example
+  @var{hostname3}$ mediatex srv notify
+ @var{hostname2}$ mediatex srv extract
+ @var{hostname2}$ ls ~mdtx/cache/mdtx-hello
+@end example
+
+Finally second server notify and then first server copies the requested 
+file and delivers a mail to advice the @sc{User} it becomes available.
+@example
+ @var{hostname2}$ mediatex srv notify
+@var{hostname1}$ mediatex srv extract
+@end example

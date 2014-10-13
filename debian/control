@@ -1,0 +1,13 @@
+Source: mediatex
+Section: misc
+Priority: extra
+Maintainer: Nicolas Roche <nroche@prologue.fr>
+Build-Depends: debhelper (>= 8), libssl-dev, libavl-dev, flex, bison, help2man, texinfo, transfig, gettext, libtool
+Standards-Version: 3.9.1
+Homepage: http://narval.tk/mediatexi
+
+Package: mediatex
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, cvs, viewvc, initramfs-tools, libavl1, tar, cpio, gzip, bzip2, unzip
+Description: MediaTeX archivage software
+ MediaTeX is a framework providing perenial archivage on CD

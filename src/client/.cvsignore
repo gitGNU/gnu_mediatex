@@ -1,0 +1,17 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+.deps
+Makefile
+# make
+.libs
+*.lo
+shellQuery*.[hc]
+shellQuery.output
+mediatex
+# make check
+ut[a-z]*
+ut.out
+ut.out2
+ut.txt
+user*.pub

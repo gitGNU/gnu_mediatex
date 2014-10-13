@@ -1,0 +1,25 @@
+@cindex deliver
+
+This script finalize the delivering process, 
+by sending a mail to the @actorUser{}.
+
+Process conceptual model:
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventScriptsDeliver
+from @procServerDeliver
+@end table
+
+@item Events out
+@table @code
+@item @eventToolsEximSendMail
+to @procToolsExim
+@end table
+
+@end itemize
+Code:
+@table @code
+@item /usr/share/mediatex/scripts/deliver.sh
+@end table

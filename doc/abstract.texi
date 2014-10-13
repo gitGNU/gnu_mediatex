@@ -1,0 +1,49 @@
+
+Perennial archives.
+Briefly, this means we provide the resources to overcomes the technological obsolescence of supports and drives we use.
+
+@subheading Objectives
+The perennial archival comes with 3 main objectives: conserve the document,
+make it accessible and preserve it's understanding.
+@itemize @bullet
+@item Supports reliability:
+On numeric ages, time life of hard drive and optical supports is 5 years.
+The numerical archives on hard drives or tapes are sensitive to the earth's magnetic field.
+Burning WORM supports and store them in good conditions provides a compromise (norme NF-Z-42-013).
+Persons prefer do not export data on support and let them on redundant servers, but is-it responsible ?
+
+@item Identify:
+The document understanding shall be linked to other documents defining a context.
+Consequently, it is important to provide a way to identify references from documents to others.
+Grouping documents on collection make index easier and provide a means to determine the scale of data to preserve.
+
+@item Other datas:
+Just as supports need a compatible drive, crude data need software to read them.
+It is important to memorise the software and format versions, if not possible store software's source codes and/or format specifications.
+In order to do so, we need meta-data.
+@end itemize
+
+@subheading Geographical duplication
+In order to mitigate natural and technological disasters, archives must be duplicated on several sites.
+@itemize @bullet
+@item Technical solutions:
+Computer science offer several means for redundancy but finally, the meta-data management will remains centralised.
+The NICT mainly based on databases are using "hight availability" to offer crash recovering. Is-it the real purpose ?
+Programmers use revision control system to share their source codes.
+Although using a centralised deposit, this solution offer the advantage to desynchronise updates, that is a way to anticipate crash recoveries.
+
+@item Distribute meta-data as source code:
+Using a revision control system is not so obvious:
+meta-data files must be split into acceptable size so as to be merged in memory,
+meta-data must be human readable as automatic merge may fails,
+and we need enough memory to load Meta-data.
+Nevertheless, revision control system not only provides an elegant solution for geographical duplications and crash recovery, but also the change history.
+@end itemize
+
+@subheading Archive reversibility
+A significant effort will be require to extract archives in order to return them:
+need to compact archives to send them using a media (support or network)
+and need to extract and export meta-data consequently.
+However, we shall consider that the ERMS becomes obsolete itself and we need to change it.
+Archiving on supports make sense here as we just have to bring them back.
+Parsers designed to load the meta-data offer a software library to export them into the wanted format.

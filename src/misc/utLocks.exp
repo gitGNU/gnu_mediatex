@@ -1,0 +1,17 @@
+=========== 1 ============
+[notice locks.c] please send me HUP, USR1 or TERM signals:
+[info locks.c] exit on success
+=========== 2 ============
+[notice locks.c] please send me HUP, USR1 or TERM signals:
+[info locks.c] exit on success
+=========== 3 ============
+[err locks.c] fcntl(F_SETLK) lock fails: Resource temporarily unavailable
+[err locks.c] lock fails
+[info locks.c] exit on error
+=========== 4 ============
+[notice locks.c] please send me HUP, USR1 or TERM signals:
+[info locks.c] exit on success
+=========== 5 ============
+[err locks.c] fcntl(F_SETLK) lock fails: Resource temporarily unavailable
+[err locks.c] lock fails
+[info locks.c] exit on error

@@ -1,0 +1,38 @@
+#!/bin/sh
+#set -x
+#=======================================================================
+# * Version: $Id: cron_daily.src,v 1.1 2014/10/13 19:38:33 nroche Exp $
+# * Project: MediaTex
+# * Module : scripts
+# *
+# * This script is call by cron
+#
+# MediaTex is an Electronic Records Management System
+# Copyright (C) 2014  Nicolas Roche
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=======================================================================
+
+CACHEDIR="CONF_LOCALSTATEDIR/cacheCONF_MEDIATEX"
+BINDIR=CONF_BINDIR
+LOGFILE=$(mktemp)
+
+SERVERS=$(ls $CACHEDIR)
+for SERVER in $SERVERS; do
+    $BINDIR/mediatex -swarning -ffile make >/dev/null 2>$LOGFILE
+    $BINDIR/mediatex -swarning -ffile motd >CONF_SYSCONFDIR/motd 2>>$LOGFILE
+done
+
+cat $LOGFILE | sort | uniq
+rm -f $LOGFILE

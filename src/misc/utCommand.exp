@@ -1,0 +1,8 @@
+** This script show the MediaTex environment variables:
+* Parameters:
+MDTX_MDTXUSER      = mdtx1
+MDTX_LOG_FILE      = 
+MDTX_LOG_FACILITY  = file
+MDTX_LOG_SEVERITY  = err
+MDTX_DRY_RUN       = 1
+PARAMETER_1        = parameter1

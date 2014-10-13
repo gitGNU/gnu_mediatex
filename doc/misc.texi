@@ -1,0 +1,75 @@
+@cindex html catalog
+
+The @process{Misc} process:
+@itemize @bullet
+@item mainly build the @sc{html} catalog,
+@item but also wraps queries from @actorAdminO{}, @actorPublisherO{} 
+and @activityServerO{} to @activityScriptsO{}.
+@end itemize
+
+Process conceptual model:
+
+@image{mediatex-figures/misc,,,,}
+
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventClientMiscInit
+@itemx @eventClientMiscRemove
+@itemx @eventClientMiscPurge
+from @actorAdmin
+@item @eventClientMiscSu
+@itemx @eventClientMiscMake
+@itemx @eventClientMiscUpload
+from @actorPublisher
+@item @eventClientMiscClean
+from @actorPublisher
+@item @eventClientMiscBind
+@itemx @eventClientMiscUnBind
+from @activityServer
+@item @eventClientMiscGet
+from @procServerExtract
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsInit
+@itemx @eventScriptsRemove
+@itemx @eventScriptsPurge
+to @procScriptsInitRemovePurge
+@item @eventScriptsClean
+to @procScriptsNewFreeClean
+@item @eventScriptsBind
+@itemx @eventScriptsUnBind
+to @procScriptsBind
+@item @eventToolsSshCopy 
+to @procToolsSsh
+@item @eventServerCacheUpload
+to @procServerCache
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@end itemize
+
+@item Data out
+@table @file
+@item ~mdtx-COLL/public_html/
+@end table
+@end itemize
+
+Examples:
+see Scenarios (@ref{Scenario 1})
+
+Code:
+@table @file
+@item src/misc/html.h
+@item src/misc/html.c
+@item src/client/catalogHtml.c
+@item src/client/extractHtml.c
+@item src/client/serverHtml.c
+@item src/client/misc.c
+@end table

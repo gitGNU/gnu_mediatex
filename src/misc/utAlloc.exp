@@ -1,0 +1,38 @@
+[notice alloc.c] allocating slot 1...
+[notice alloc.c] ...slot 1 allocated
+[notice alloc.c] allocating slot 2...
+[notice alloc.c] ...slot 2 allocated
+[notice alloc.c] allocating slot 3...
+[notice alloc.c] ...slot 3 allocated
+[notice alloc.c] allocating slot 4...
+[notice alloc.c] ...slot 4 allocated
+[notice alloc.c] allocating slot 5...
+[notice alloc.c] ...slot 5 allocated
+[notice alloc.c] allocating slot 6...
+[alloc alloc.c] try to free some memory
+[info alloc.c] disease callback: 600
+[info alloc.c] free slot 1
+[info alloc.c] free slot 2
+[info alloc.c] free slot 3
+[notice alloc.c] ...slot 6 allocated
+[notice alloc.c] allocating slot 7...
+[alloc alloc.c] try to free some memory
+[info alloc.c] disease callback: 700
+[info alloc.c] free slot 4
+[info alloc.c] free slot 5
+[notice alloc.c] ...slot 7 allocated
+[notice alloc.c] allocating slot 8...
+[alloc alloc.c] try to free some memory
+[info alloc.c] disease callback: 800
+[info alloc.c] free slot 6
+[notice alloc.c] ...slot 8 allocated
+[notice alloc.c] allocating slot 9...
+[alloc alloc.c] try to free some memory
+[info alloc.c] disease callback: 900
+[info alloc.c] free slot 7
+[info alloc.c] free slot 8
+[notice alloc.c] ...slot 9 allocated
+[notice alloc.c] freeing slot 9...
+[notice alloc.c] ...slot 9 is free
+[notice alloc.c] sumAllocated = 0
+[info alloc.c] exit on success

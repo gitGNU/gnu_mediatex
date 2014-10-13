@@ -1,0 +1,92 @@
+@cindex serv
+
+The @process{Serv} maintains the integrity of the data files,
+by calculating a perennial score on archives.
+
+@itemize @bullet
+@item 
+A local image's score is updated into @dataServers{} by each servers.
+It is computed by summing the local support's scores computed by @procClientSupp{}.
+
+@image{mediatex-figures/score2,,,,}
+
+@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)} , M)} @*
+The sum may be greater than the maximum score (default is 10) 
+if there are several local supports burn from the same image, 
+so we truncate it.
+
+@item
+The server score equals the worst local image's score on the server. @*
+@math{serverScore(x) = \min_{i=1..N} imageScore(x_i)}
+
+@item
+An archive score is computed from all local and remote images:
+
+@image{mediatex-figures/score3,,,,}
+
+@math{archiveScore(x) = \min {({\sum_{i=1}^N imageScore(x_i) \over d}}, M)}
+@*
+where: (default value)
+@table @math
+@item d
+the minimum number of support's geopraphical duplications we want to be safe (2)
+@item M
+is the maximum score (10)
+@end table
+
+Summing image's scores may provide a score greater than the maximum score 
+(default is 10) if there are more than the wanted number of supports 
+geographically duplicated, so we truncate it. @*
+Next, archive scores are computed recursively:
+@itemize @bullet
+@item 
+using @math{\max} when archive is provided by concurrent containers ,
+@item 
+or @math{\min} when archive comes from combined containers.
+@end itemize
+
+@item
+Finally, the global collection score equals to the worst 
+archive score. @*
+@math{collectionScore = \min_{i=1..N} archiveScore(x_i)}
+@end itemize
+
+Process conceptual model:
+
+@image{mediatex-figures/serv,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventClientServAddKey
+@itemx @eventClientServDelKey
+@itemx @eventClientServUpgrade
+from @actorPublisher
+@item @eventClientServUpgradeCall
+from @procClientConf
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataConf
+@item @dataServers
+@end itemize
+
+@item Data out
+@table @file
+@item /var/cache/mediatex/mdtx/COLL/.ssh/authorized_keys
+@itemx /var/cache/mediatex/mdtx/COLL/.ssh/known_host
+@itemx /var/cache/mediatex/mdtx/COLL/.ssh/config
+@end table
+@end itemize
+
+Examples:
+see Scenarios (@ref{Scenario 4})
+
+Code:
+@table @file
+@item src/common/ssh.c
+@itemx src/common/upgrade.c
+@itemx src/common/extractScore.c
+@itemx src/client/serv.c
+@end table

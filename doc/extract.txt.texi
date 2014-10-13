@@ -1,0 +1,100 @@
+@cindex extraction rules file
+
+The @dataExtractO{} files handle the extraction rules for a collection.
+
+Relational schema:
+
+@image{mediatex-figures/extract.txt,,,,}
+
+@itemize @bullet
+@item Proper entities
+@itemize @bullet
+@item 
+The @sc{Container} entity lists all the container files from where archives are extracted. Containes are identified by there type (@sc{iso},@sc{tar}...) and the first file needed for extraction (@file{archive-part1.rar}), also called its first parent.
+@end itemize
+
+@item Linked entities
+@itemize @bullet
+@item 
+The @sc{Archive} entity lists the archive's data files
+@end itemize
+
+@item Relations
+@itemize @bullet
+@item 
+The @sc{fromAsso} relationhip enumerate the content of a container. For instance, all files we have in a tarball archive: @code{tar -tf archive.tar}.
+@item
+The @sc{parents} relationhip gives all the parts a container is using to perform extraction. (@file{archive-part1.rar}@dots{} @file{archive-part@var{N}.rar}). 
+@item 
+@sc{toContainer} relationship gives the container object an Archive may provides. @note{} we cannot have several containers for an archive: in the case of a compressed tarball for instance, we have to choose between the 2 possibility (@sc{gz} or @sc{tgz}).
+@end itemize
+@end itemize
+
+Exemple:
+@example
+(ISO
+de5008799752552b7963a2670dc5eb18:391168
+=>
+1a167d608e76a6a4a8b16d168580873c:20480 logoP1.cat
+)
+
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+c0c055a0829982bd646e2fafff01aaa6:4066  logoP2.cat
+)
+
+(CAT
+1a167d608e76a6a4a8b16d168580873c:20480,
+c0c055a0829982bd646e2fafff01aaa6:4066
+=>
+0387eee9820fa224525ff8b2e0dfa9be:24546  logo.tgz
+)
+
+(TGZ
+0387eee9820fa224525ff8b2e0dfa9be:24546
+=>
+022a34b2f9b893fba5774237e1aa80ea:24075  logo/logo.png,
+b281449c229bcc4a3556cdcc0d3ebcec:815    logo/logo.xpm
+)
+@end example
+
+Grammar:
+@example
+file: stanzas
+    | //empty file
+
+stanzas: stanzas stanza
+       | stanza
+
+stanza: ( container parents => childs )
+      | ( container => childs )
+      | ( container )
+
+container: type archive
+
+parents: parents parent
+       | parent
+
+childs: childs child
+      | child
+
+parent: archive 
+
+child: archive string
+
+archive: hash : size
+
+type: REC | ISO | CAT | TGZ | TAR | ZIP
+size: [[:digit:]]+
+hash: [[:xdigit:]]@{32@} 
+string: [^[:blank:]:,\n\r]*
+@end example
+
+Code:
+@table @file
+@item src/memory/extractTree.h
+@itemx src/memory/extractTree.c
+@itemx src/parser/extractFile.l
+@itemx src/parser/extractFile.y
+@end table

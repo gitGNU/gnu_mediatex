@@ -1,0 +1,88 @@
+@cindex collection
+
+Theses 2 scripts manage collection subscription/ensubsciption.
+@note{} if local host is the collection master host, theses script also manage the creation/destruction of the collection.
+
+@image{mediatex-figures/new-free-clean,,,,}
+
+Process conceptual model:
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventScriptsNew
+@itemx @eventScriptsFree
+from @procClientConf
+@item @eventScriptsClean
+from @procClientMisc
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsBindCall
+to @procScriptsBind
+@item @eventToolsCvsImport
+@itemx @eventToolsCvsCheckout
+to @procToolsCvs
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataConf
+@end itemize
+
+@item Data out
+@itemize @bullet
+@item @dataServers
+@item @dataCatalog
+@item @dataExtract
+@end itemize
+
+@item Other files involved:
+@example
+/
+|- etc/
+|  +- mediatex/
+|     + mdtx-COLL             (symlink -> 1)
+|- var/
+   +- lib/
+   |  +- mediatex/
+   |     +- mdtx/                       
+   |       |- CVSROOT/
+   |       +- mdtx-COLL/                
+   |          |- apache2/
+   |          |- catalog00.txt,v
+   |          |- extract00.txt,v
+   |          +- servers.txt,v
+   +- cache/
+      +- mediatex/
+         +- mdtx/
+            |- cache/                   
+            |  +- mdtx-COLL/
+            |- cvs/
+            |  +- mdtx-COLL/             (1)
+            |     |- apache2/
+            |     |- catalog00.txt
+            |     |- extract00.txt
+            |     +- servers.txt
+            |- jail/
+            |  +- var/
+            |     |- lib        
+            |     |  +- mdtx-COLL/
+            |     |- cache      
+            |        +- mdtx-COLL/
+            |- md5sums/
+            |  +- mdtx-COLL.md5
+            |- tmp/
+            +- home/
+               +- mdtx-COLL/
+                  |- .ssh/
+                  +- public_html/
+@end example
+@end itemize
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/new.sh
+@itemx /usr/share/mediatex/scripts/free.sh
+@end table

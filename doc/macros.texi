@@ -1,0 +1,602 @@
+
+@c Facilities
+
+@macro note
+@strong{Notice:}
+@end macro
+
+@macro todo
+@strong{TODO:}
+@end macro
+
+@c Meta
+
+@macro actor{label}
+@sc{\label\}
+@end macro
+
+@macro activity{label}
+@sc{\label\}
+@end macro
+
+@macro process{label}
+@strong{\label\}
+@end macro
+
+@macro state{label}
+@emph{<\label\>}
+@end macro
+
+@macro event{label}
+\label\
+@end macro
+
+@c Actors
+
+@macro actorAdminO
+@actor{Admin}
+@end macro
+@macro actorAdmin
+@cindex admin user
+@actorAdminO{} (@pxref{Who})
+@end macro
+
+@macro actorPublisherO
+@actor{Publisher}
+@end macro
+@macro actorPublisher
+@cindex publisher user
+@actorPublisherO{} (@pxref{Who})
+@end macro
+
+@macro actorUserO
+@actor{User}
+@end macro
+@macro actorUser
+@cindex web user 
+@actorUserO{} (@pxref{Who})
+@end macro
+
+@macro actorDateO
+@actor{Date}
+@end macro
+@macro actorDate
+@cindex date
+@actorDateO{} (@pxref{Who})
+@end macro
+
+@c Data
+
+@macro dataConfO
+@file{/etc/@/mediatex/@/mdtx.conf}
+@end macro
+@macro dataConf
+@cindex configuration file
+@dataConfO{} (@pxref{mdtx.conf})
+@end macro
+
+@macro dataSuppO
+@file{~mdtx/@/cvs/@/mdtx/@/supports.txt}
+@end macro
+@macro dataSupp
+@cindex supports list file
+@dataSuppO{} (@pxref{supports.txt})
+@end macro
+
+@macro dataChecksumO
+@file{~mdtx/@/md5sums/@/mdtx-COLL.md5}
+@end macro
+@macro dataChecksum
+@cindex cache's checksums file
+@dataChecksumO{} (@pxref{mdtxCOLL.md5})
+@end macro
+
+@macro dataCatalogO
+@file{/etc/@/mediatex/@/mdtx-COLL/@/catalogXX.txt}
+@end macro
+@macro dataCatalog
+@cindex index catalog file
+@dataCatalogO{} (@pxref{catalog.txt})
+@end macro
+
+@macro dataExtractO
+@file{/etc/@/mediatex/@/mdtx-COLL/@/extractXX.txt}
+@end macro
+@macro dataExtract
+@cindex extraction rules file
+@dataExtractO{} (@pxref{extract.txt})
+@end macro
+
+@macro dataServersO
+@file{/etc/@/mediatex/@/mdtx-@var{COLL}/@/servers.txt}
+@end macro
+@cindex servers list file
+@macro dataServers
+@dataServersO{} (@pxref{servers.txt})
+@end macro
+
+@c Activities
+
+@macro mediatexO
+@activity{Mediatex}
+@cindex mediatex
+@end macro
+@macro mediatex
+@mediatexO{} (@pxref{Conceptual model})
+@end macro
+
+@macro activityToolsO
+@activity{Tools}
+@cindex tools
+@end macro
+@macro activityTools
+@activityToolsO{} (@pxref{Tools})
+@end macro
+
+@macro activityScriptsO
+@activity{Scripts}
+@cindex scripts
+@end macro
+@macro activityScripts
+@activityScriptsO{} (@pxref{Scripts})
+@end macro
+
+@macro activityServerO
+@activity{Server}
+@cindex server
+@end macro
+@macro activityServer
+@activityServerO{} (@pxref{Server})
+@end macro
+
+@macro activityClientO
+@activity{Client}
+@end macro
+@macro activityClient
+@activityClientO{} (@pxref{Client})
+@end macro
+
+@c Processings
+@c - tools
+
+@macro procToolsSyslog
+@process{Syslog} (@pxref{Syslog})
+@end macro
+
+@macro procToolsApache
+@process{Apache} (@pxref{Apache})
+@end macro
+
+@macro procToolsExim
+@process{Exim} (@pxref{Exim})
+@end macro
+
+@macro procToolsSsh
+@process{Ssh} (@pxref{Ssh})
+@end macro
+
+@macro procToolsCvs
+@process{Cvs} (@pxref{Cvs})
+@end macro
+
+@macro procToolsCron
+@process{Cron} (@pxref{Cron})
+@end macro
+
+@c - scripts
+@macro procScriptsInitd
+@process{init.d} (@pxref{init.d})
+@end macro
+
+@macro procScriptsCgi
+@process{cgiClient} (@pxref{cgiClient})
+@end macro
+
+@macro procScriptsCron
+@process{conrHourly-cronDaily} (@pxref{cronHourly-cronDaily})
+@end macro
+
+@macro procScriptsInitRemovePurge
+@process{init-remove-purge} (@pxref{init-remove-purge})
+@end macro
+
+@macro procScriptsAddDelUser
+@process{addUser-delUser} (@pxref{addUser-delUser})
+@end macro
+
+@macro procScriptsNewFreeClean
+@process{new-free-clean} (@pxref{new-free-clean})
+@end macro
+
+@macro procScriptsUpdateCommit
+@process{update-commit} (@pxref{update-commit})
+@end macro
+
+@macro procScriptsBind
+@process{bind-unbind} (@pxref{bind-unbind})
+@end macro
+
+@macro procScriptsMount
+@process{mount-umount} (@pxref{mount-umount})
+@end macro
+
+@macro procScriptsDeliver
+@process{deliver} (@pxref{deliver})
+@end macro
+
+@c - server
+@macro procServerCache
+@process{cache} (@pxref{cache})
+@end macro
+
+@macro procServerExtract
+@process{extract} (@pxref{extract})
+@end macro
+
+@macro procServerCgiSrv
+@process{cgiServer} (@pxref{cgiServer})
+@end macro
+
+@macro procServerHave
+@process{have} (@pxref{have})
+@end macro
+
+@macro procServerNotify
+@process{notify} (@pxref{notify})
+@end macro
+
+@macro procServerDeliver
+@process{delivering} (@pxref{delivering})
+@end macro
+
+@c - client
+@macro procClientServ
+@process{serv} (@pxref{serv})
+@end macro
+
+@macro procClientConf
+@process{conf} (@pxref{conf})
+@end macro
+
+@macro procClientSupp
+@process{supp} (@pxref{supp})
+@end macro
+
+@macro procClientMisc
+@process{misc} (@pxref{misc})
+@end macro
+
+@macro procClientMotd
+@process{motd} (@pxref{motd})
+@end macro
+
+@c in Events (manadged by mdtx)
+@c - tools
+@c   - syslog
+@macro eventToolsSyslogMessage
+@event{log_message()}
+@end macro
+@c   - ssh
+@macro eventToolsSshConnect
+@event{$ ssh}
+@end macro
+@macro eventToolsSshCopy
+@event{$ scp}
+@end macro
+@c   - cvs
+@macro eventToolsCvsInit
+@event{$ cvs init}
+@end macro
+@macro eventToolsCvsImport
+@event{$ cvs import}
+@end macro
+@macro eventToolsCvsCheckout
+@event{$ cvs checkout}
+@end macro
+@macro eventToolsCvsUpdate
+@event{$ cvs update}
+@end macro
+@macro eventToolsCvsCommit
+@event{$ cvs commit}
+@end macro
+@c   - apache
+@macro eventToolsApacheReload
+@event{# /etc/init.d/apache2 reload}
+@end macro
+@macro eventToolsApacheRestart
+@event{# /etc/init.d/apache2 restart}
+@end macro
+@macro eventToolsApacheHttpGet
+@event{<http-get-query>}
+@end macro
+@macro eventToolsApacheHttpPost
+@event{<http-post-query>}
+@end macro
+@macro eventToolsApacheStartDownload
+@event{<http-get-file>}
+@end macro
+@c   - exim
+@macro eventToolsEximSendMail
+@event{$ mail}
+@end macro
+@c   - cron
+@macro eventToolsCronDate
+@event{(date)}
+@end macro
+
+@c - scripts
+@c   - init.d
+@macro eventScriptsInitdStart
+@event{# /etc/init.d/mediatexd start}
+@end macro
+@macro eventScriptsInitdStop
+@event{# /etc/init.d/mediatexd stop}
+@end macro
+@macro eventScriptsInitdStatus
+@event{# /etc/init.d/mediatexd status}
+@end macro
+@macro eventScriptsInitdReload
+@event{# /etc/init.d/mediatexd reload}
+@end macro
+@c   - cgi-script
+@macro eventScriptsCgiGetQuery
+@event{<cgiClt-get-query>}
+@end macro
+@macro eventScriptsCgiPostQuery
+@event{<cgiClt-post-query>}
+@end macro
+@c   - cronHourly-cronDaily
+@macro eventScriptsCronHourly
+@event{# bash -i /usr/share/mediatex/scripts/cron_hourly.sh}
+@end macro
+@macro eventScriptsCronDaily
+@event{# bash -i /usr/share/mediatex/scripts/cron_daily.sh}
+@end macro
+@c   - init-remove-purge
+@macro eventScriptsInit
+@event{# /usr/share/mediatex/scripts/init.sh}
+@end macro
+@macro eventScriptsRemove
+@event{# /usr/share/mediatex/scripts/remove.sh}
+@end macro
+@macro eventScriptsPurge
+@event{# /usr/share/mediatex/scripts/purge.sh}
+@end macro
+@c   - addUser-delUser
+@macro eventScriptsAddUser
+@event{# /usr/share/mediatex/scripts/add-user.sh}
+@end macro
+@macro eventScriptsDelUser
+@event{# /usr/share/mediatex/scripts/del-user.sh}
+@end macro
+@c   - new-free-clean
+@macro eventScriptsNew
+@event{# /usr/share/mediatex/scripts/new.sh}
+@end macro
+@macro eventScriptsFree
+@event{# /usr/share/mediatex/scripts/free.sh}
+@end macro
+@macro eventScriptsClean
+@event{# /usr/share/mediatex/scripts/clean.sh}
+@end macro
+@c   - updateCommit
+@macro eventScriptsUpdate
+@event{$ /usr/share/mediatex/scripts/update.sh}
+@end macro
+@macro eventScriptsCommit
+@event{$ /usr/share/mediatex/scripts/commit.sh}
+@end macro
+@c   - bind-unbind
+@macro eventScriptsBind
+@event{# /usr/share/mediatex/scripts/bind.sh}
+@end macro
+@macro eventScriptsUnBind
+@event{# /usr/share/mediatex/scripts/unbind.sh}
+@end macro
+@macro eventScriptsBindCall
+@event{bind()}
+@end macro
+@macro eventScriptsUnBindCall
+@event{unbind()}
+@end macro
+@c   - mount-unmount
+@macro eventScriptsMount
+@event{# /usr/share/mediatex/scripts/mount.sh}
+@end macro
+@macro eventScriptsUmount
+@event{# /usr/share/mediatex/scripts/umount.sh}
+@end macro
+@c   - deliver
+@macro eventScriptsDeliver
+@event{$ /usr/share/mediatex/scripts/deliver.sh}
+@end macro
+
+@c - Server
+@macro eventServerStart
+@event{# nohup mediatexd}
+@end macro
+@macro eventServerStop
+@event{# kill -s TERM @var{PID}}
+@end macro
+@macro eventServerReload
+@event{# kill -s HUP @var{PID}}
+@end macro
+@macro eventServerSaveReg
+@event{[save]}
+@end macro
+@c   - deliver
+@macro eventServerDeliver
+@event{deliver()}
+@end macro
+@macro eventServerDeliverReg
+@event{[deliver]}
+@end macro
+@c   - cache
+@macro eventServerCacheAlloc
+@event{cache-alloc()}
+@end macro
+@macro eventServerCacheUpload
+@event{<upload>}
+@end macro
+@c   - cgiSrv
+@macro eventServerCgiQuery
+@event{<cgiSrv-query>}
+@end macro
+@c   - extract
+@macro eventServerExtract
+@event{extract()}
+@end macro
+@macro eventServerExtractReg
+@event{[extract]}
+@end macro
+@c   - have
+@macro eventServerHaveQuery
+@event{<have>}
+@end macro
+@c   - notify
+@macro eventServerNotifyReg
+@event{[notify]}
+@end macro
+@macro eventServerNotifyQuery
+@event{<notify>}
+@end macro
+
+@c - Client
+@macro eventClientSave
+@event{$ mediatex srv save}
+@end macro
+@macro eventClientExtract
+@event{$ mediatex srv extract}
+@end macro
+@macro eventClientNotify
+@event{$ mediatex srv notify}
+@end macro
+@macro eventClientReload
+@event{$ mediatex srv reload}
+@end macro
+@macro eventClientDeliver
+@event{$ mediatex srv deliver}
+@end macro
+
+@c     - serv
+@macro eventClientServUpdate
+@event{$ mediatex adm update [coll @var{coll}]}
+@end macro
+@macro eventClientServCommit
+@event{$ mediatex adm commit [coll @var{coll}]}
+@end macro
+@macro eventClientServUpgrade
+@event{$ mediatex adm upgrade [coll @var{coll}]}
+@end macro
+@macro eventClientServUpgradeCall
+@event{upgrade()}
+@end macro
+@macro eventClientServAddKey
+@event{$ mediatex add key @var{file} to coll @var{coll}}
+@end macro
+@macro eventClientServDelKey
+@event{$ mediatex del key @var{hash} from coll @var{coll}}
+@end macro
+@c     - conf
+@macro eventClientConfList
+@event{$ mediatex ls coll}
+@end macro
+@macro eventClientConfAddColl
+@event{# mediatex adm add coll [@var{serv}-]@var{coll}[@@@var{host}[:@var{port}]]}
+@end macro
+@macro eventClientConfDelColl
+@event{# mediatex adm del coll @var{coll}}
+@end macro
+@macro eventClientConfShareSupport
+@event{$ mediatex add supp @var{supp} to (ALL|coll @var{coll})}
+@end macro
+@macro eventClientConfWithdrawSupp
+@event{$ mediatex del supp @var{supp} from (ALL|coll @var{coll})}
+@end macro
+@macro eventClientConfWithdrawSuppCall
+@event{withdraw_supp()}
+@end macro
+@c     - supp
+@macro eventClientMiscSuppList
+@event{$ mediatex ls supp}
+@end macro
+@macro eventClientMiscSuppNote
+@event{$ mediatex note supp @var{supp} as @var{text}}
+@end macro
+@macro eventClientMiscSuppAdd
+@event{$ mediatex add supp @var{supp} on @var{path}}
+@end macro
+@macro eventClientMiscSuppDel
+@event{$ mediatex del supp @var{supp}}
+@end macro
+@macro eventClientMiscSuppCheck
+@event{$ mediatex check supp @var{supp} on @var{file}}
+@end macro
+@macro eventClientMiscSuppMount
+@event{$ mediatex adm mount @var{iso} on @var{path}}
+@end macro
+@macro eventClientMiscSuppUMount
+@event{$ mediatex adm umount @var{path}}
+@end macro
+@c     - motd
+@macro eventClientMotd
+@event{$ mediatex motd}
+@end macro
+@c     - misc
+@macro eventClientMiscMake
+@event{$ mediatex make [coll @var{coll}]}
+@end macro
+@macro eventClientMiscClean
+@event{$ mediatex clean [coll @var{coll}]}
+@end macro
+@macro eventClientMiscInit
+@event{# mediatex adm init}
+@end macro
+@macro eventClientMiscRemove
+@event{# mediatex adm remove}
+@end macro
+@macro eventClientMiscPurge
+@event{# mediatex adm purge}
+@end macro
+@macro eventClientMiscSu
+@event{$ mediatex su [coll @var{coll}]}
+@end macro
+@macro eventClientMiscAddUser
+@event{# mediatex adm add user @var{user}}
+@end macro
+@macro eventClientMiscDelUser
+@event{# mediatex adm del user @var{user}}
+@end macro
+@macro eventClientMiscBind
+@event{$ mediatex adm bind}
+@end macro
+@macro eventClientMiscUnBind
+@event{$ mediatex adm unbind}
+@end macro
+@macro eventClientMiscGet
+@event{$ mediatex adm get @var{path} as @var{coll} on @var{path}}
+@end macro
+@macro eventClientMiscUpload
+@event{$ mediatex upload @var{file} to coll @var{coll}}
+@end macro
+
+@c out Events
+
+@c   - to admin
+@macro eventActorAdminMail
+@event{(mail)}
+@end macro
+@c   - to publisher
+@macro eventActorPublisherMotd
+@event{(motd)}
+@end macro
+@c   - to user
+@macro eventActorUserHtmlForm
+@event{<html-form>}
+@end macro
+@macro eventActorUserHtmlRedirect
+@event{<html-redirect>}
+@end macro
+@macro eventActorUserMail
+@event{(mail)}
+@end macro

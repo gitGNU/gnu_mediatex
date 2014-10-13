@@ -1,0 +1,6 @@
+[notice tcp.c] client mode
+[info address.c] build socket address 127.0.0.1:65000
+[info tcp.c] connecting to 127.0.0.1:65000
+[notice tcp.c] client write> .PCT morf olleH
+[notice tcp.c] client read>  Hello from TCP.
+[info tcp.c] exit on success

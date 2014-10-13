@@ -1,0 +1,10 @@
+#!/bin/sh
+# $Id: prerm,v 1.1 2014/10/13 19:37:44 nroche Exp $
+#set -x
+set -e
+#. /usr/share/debconf/confmodule
+
+# prerm script
+[ ! -f /usr/bin/mediatex ] || mediatex adm remove || true
+
+exit 0

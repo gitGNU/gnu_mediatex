@@ -1,0 +1,27 @@
+[notice setuid.c] ** first layer
+[notice setuid.c] ** API for wrapper
+- user: ut-mdtx-user1
+- group: ut-mdtx-user1
+- groups: ut-mdtx-user1 ut-mdtx-user2
+- user: ut-mdtx-user2
+- group: ut-mdtx-user2
+- groups: ut-mdtx-user2
+- user: ut-mdtx-user1
+- group: ut-mdtx-user1
+- groups: ut-mdtx-user1 ut-mdtx-user2
+- user: ut-mdtx-user2
+- group: ut-mdtx-user2
+- groups: ut-mdtx-user2
+[notice setuid.c] ** API for thread
+- user: ut-mdtx-user2
+- group: ut-mdtx-user2
+- groups: ut-mdtx-user2
+- user: ut-mdtx-user1
+- group: ut-mdtx-user1
+- groups: ut-mdtx-user1 ut-mdtx-user2
+- user: ut-mdtx-user2
+- group: ut-mdtx-user2
+- groups: ut-mdtx-user2
+- user: ut-mdtx-user1
+- group: ut-mdtx-user1
+- groups: ut-mdtx-user1 ut-mdtx-user2

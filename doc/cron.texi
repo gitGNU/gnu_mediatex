@@ -1,0 +1,42 @@
+@cindex cron
+
+@process{Cron} periodicaly run queries. 
+It implement the @actorDateO{} actor.
+
+Process conceptual model:
+
+@image{mediatex-figures/cron,,,,}
+
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventToolsCronDate
+from @actorDate
+@end table
+
+@item Events out
+@table @code
+@item @eventScriptsCronHourly
+@itemx @eventScriptsCronDaily
+to @procScriptsCron
+@item @eventActorAdminMail
+to @actorAdmin{} when the above scripts fails (or generate outputs)
+@end table
+
+@item Data in
+@table @file
+@item /etc/cron.d/mediatex
+@end table
+@example
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# m h dom mon dow user	command
+50 *    * * *   root   /usr/share/mediatex/scripts/cron_hourly.sh
+10 18   * * *   root   /usr/share/mediatex/scripts/cron_daily.sh
+@end example
+
+@end itemize
+

@@ -1,0 +1,177 @@
+#  * Version: $Id: Make-rules,v 1.1 2014/10/13 19:37:40 nroche Exp $
+#  * Project: MediaTex
+#  * Module:  Makefile's common varaibles
+#  *
+#  * Process this file with configure to produce a Makefile.
+# 
+#  MediaTex is an Electronic Records Management System
+#  Copyright (C) 2014  Nicolas Roche
+# 
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  any later version.
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+misc_headers = \
+	../misc/getcgivars.h \
+	../misc/log.h \
+	../misc/alloc.h \
+	../misc/command.h \
+	../misc/setuid.h \
+	../misc/signals.h \
+	../misc/progbar.h \
+	../misc/device.h \
+	../misc/md5sum.h \
+	../misc/address.h \
+	../misc/tcp.h \
+	../misc/perm.h \
+	../misc/keys.h \
+	../misc/cypher.h \
+	../misc/shm.h \
+	../misc/locks.h \
+	../misc/html.h
+
+memory_headers = \
+	../memory/strdsm.h \
+	../memory/extractTree.h \
+	../memory/serverTree.h \
+	../memory/cvsPrint.h \
+	../memory/ardsm.h \
+	../memory/supportTree.h \
+	../memory/catalogTree.h \
+	../memory/archive.h \
+	../memory/confTree.h \
+	../memory/cacheTree.h \
+	../memory/recordTree.h
+
+parser_headers = \
+	../parser/supportFile.h \
+	../parser/supportFile.tab.h \
+	../parser/confFile.h \
+	../parser/confFile.tab.h \
+	../parser/serverFile.h \
+	../parser/serverFile.tab.h \
+	../parser/catalogFile.h \
+	../parser/catalogFile.tab.h \
+	../parser/extractFile.h \
+	../parser/extractFile.tab.h \
+	../parser/recordList.h \
+	../parser/recordList.tab.h
+
+common_headers = \
+	../common/register.h \
+	../common/connect.h \
+	../common/ssh.h \
+	../common/upgrade.h \
+	../common/openClose.h \
+	../common/extractScore.h
+
+client_headers = \
+	../client/serv.h \
+	../client/supp.h \
+	../client/conf.h \
+	../client/motd.h \
+	../client/commonHtml.h \
+	../client/catalogHtml.h \
+	../client/extractHtml.h \
+	../client/misc.h \
+	../client/shellQuery.tab.h \
+	../client/shellQuery.h
+
+server_headers = \
+	../server/cache.h \
+	../server/deliver.h \
+	../server/extract.h \
+	../server/cgiSrv.h \
+	../server/have.h \
+	../server/notify.h \
+	../server/threads.h
+
+misc_sources = \
+	../misc/getcgivars.c \
+	../misc/log.c \
+	../misc/alloc.c \
+	../misc/command.c \
+	../misc/setuid.c \
+	../misc/signals.c \
+	../misc/progbar.c \
+	../misc/device.c \
+	../misc/md5sum.c \
+	../misc/address.c \
+	../misc/tcp.c \
+	../misc/cypher.c \
+	../misc/shm.c \
+	../misc/perm.c \
+	../misc/keys.c \
+	../misc/locks.c \
+	../misc/html.c
+
+memory_sources = \
+	../memory/strdsm.c \
+	../memory/ardsm.c \
+	../memory/cvsPrint.c \
+	../memory/confTree.c \
+	../memory/archive.c \
+	../memory/supportTree.c \
+	../memory/catalogTree.c \
+	../memory/serverTree.c \
+	../memory/extractTree.c \
+	../memory/recordTree.c \
+	../memory/cacheTree.c
+
+parser_sources = \
+	../parser/supportFile.tab.c \
+	../parser/supportFile.c \
+	../parser/confFile.tab.c \
+	../parser/confFile.c \
+	../parser/serverFile.tab.c \
+	../parser/serverFile.c \
+	../parser/extractFile.tab.c \
+	../parser/extractFile.c \
+	../parser/catalogFile.tab.c \
+	../parser/catalogFile.c \
+	../parser/recordList.tab.c \
+	../parser/recordList.c
+
+common_sources = \
+	../common/register.c \
+	../common/connect.c \
+	../common/ssh.c \
+	../common/upgrade.c \
+	../common/openClose.c \
+	../common/extractScore.c
+
+client_sources = \
+	../client/serv.c \
+	../client/supp.c \
+	../client/conf.c \
+	../client/motd.c \
+	../client/commonHtml.c \
+	../client/catalogHtml.c \
+	../client/extractHtml.c \
+	../client/misc.c \
+	../client/shellQuery.tab.c \
+	../client/shellQuery.c
+
+server_sources = \
+	../server/cache.c \
+	../server/deliver.c \
+	../server/extract.c \
+	../server/cgiSrv.c \
+	../server/have.c \
+	../server/notify.c \
+	../server/threads.c
+
+/* Local Variables: */
+/* mode: makefile */
+/* mode: font-lock */
+/* mode: auto-fill */
+/* End: */

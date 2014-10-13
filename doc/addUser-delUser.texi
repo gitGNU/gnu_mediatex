@@ -1,0 +1,36 @@
+@cindex group
+@cindex publisher user
+
+Theses 2 scripts manage @actorPublisher{} users by adding/removing
+them from the @code{mdtx} system group and collection's groups too.
+
+Process conceptual model:
+
+@image{mediatex-figures/addUser-delUser,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsAddUser
+@item @eventScriptsDelUser
+from @activityClient
+@end table
+
+@item Data in/out
+@table @file
+@item @file{/etc/group}
+@example
+mdtx:x:120:www-data,@var{USERNAME1}
+mdtx_md:x:123:mdtx,www-data,mdtx-@var{COLL1},mdtx-@var{COLL2},@var{USERNAME1}
+mdtx-@var{COLL1}:x:124:www-data,mdtx,@var{USERNAME1}
+mdtx-@var{COLL2}:x:125:www-data,mdtx,@var{USERNAME1}
+@end example
+@end table
+@end itemize
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/lib/users.sh
+@itemx /usr/share/mediatex/scripts/addUser.sh
+@itemx /usr/share/mediatex/scripts/delUser.sh
+@end table

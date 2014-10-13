@@ -1,0 +1,13 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+.deps
+Makefile
+# make
+.libs
+*.lo
+libmemory.la
+# make check
+ut[a-z]*
+ut.out
+ut.txt

@@ -1,0 +1,122 @@
+@cindex log
+@cindex parser
+@cindex lexer
+
+@process{syslog} is used by all @activity{mediatex}'s binaries and scripts.
+Actually, it use @sc{rsyslog}: see @code{man rsyslogd (8)}.
+All binaries and scripts are sending log events. 
+The verbosity of log events is set on the command line 
+or via the environment variables:
+@itemize @bullet
+@item @activityClient{}
+@example
+$ mediatex --sdebug -ffile @var{QUERY}
+@end example
+@item @activityServer{} set by @procScriptsInitd{}
+@example
+DAEMON_ARGS="--conf-label $USER --severity notice --facility local2"
+@end example
+@item @procScriptsCgi{} set by @procToolsApache{} 
+(@file{~mdtx-COLL/public_html/cgi/.htaccess}). 
+@note{} by default @process{apache} push the @acronym{cgi} standard output 
+into its own log file: @file{/var/log/apache2/error}.
+@example
+<Files get.cgi>
+       # set log severity
+       SetEnv MDTX_LOG_FACILITY local2 
+       SetEnv MDTX_LOG_SEVERITY notice 
+       @dots{}
+</Files>
+@end example
+@end itemize
+
+@image{mediatex-figures/syslog,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventToolsSyslogMessage
+from all @process{processes}
+@end table
+
+@item Data in
+@table @file
+@item /etc/rsyslog.d/mediatex_log.conf
+@example
+local2.notice /var/log/mediatex.log
+@end example
+@note{} Here we do not display anymore the @code{info} 
+and @code{debug} messages.
+The higher the level is, the less messages you get:
+@example
+err > warning > notice > info > debug
+@end example
+
+@end table
+
+@item Data out
+@table @file
+@item /var/log/mediatex.log
+@end table
+@end itemize
+
+
+@activityScripts{} (but also @activity{client} and @activity{daemon}) are 
+using 3 environment variables set by the @activity{Client}:
+@example
+LOG_FILE=$@{MDTX_LOG_FILE-""@}
+LOG_FACILITY=$@{MDTX_LOG_FACILITY-file@}
+LOG_SEVERITY=$@{MDTX_LOG_SEVERITY-info@}
+@end example
+
+However, this will be overwritten and the verbosity may be moreover 
+increased on @activity{client} and @activity{server} using the options.
+@table @option
+@itemx -f
+@itemx --facility
+There are 2 main facilities or target for the log:
+@table @code
+@item file
+log to file (to @code{stdout}, the standard output by default)
+@item local2
+log to syslog (@code{man 3 syslog}) 
+@end table
+@itemx -l
+@itemx --log-file
+In the case the @code{file} facility is used, specify which file to log into
+@itemx -s
+@itemx --severity
+There are 5 levels of verbosity:
+@table @code
+@item debug
+trace all function calls
+@item info 
+low level informations that may interest the @actor{Admin}
+@item notice
+ informations useful for @actor{Publisher}
+@item warning
+ configuration's errors
+@item err
+ internal errors
+@end table
+@end table
+
+There are also 3 functional modes that can be added to the default one:
+@table @option
+@item --debug-script
+@itemx -X
+display the scripts outputs
+@item --debug-lexer
+@itemx -L
+display debugging informations from lexers
+@item --debug-parser
+@itemx -P
+enable logs from parsers
+@end table
+
+Code:
+@table @file
+@item /usr/share/mediatex/scripts/lib/log.sh
+@item /src/misc/log.h
+@item /src/misc/log.c
+@end table

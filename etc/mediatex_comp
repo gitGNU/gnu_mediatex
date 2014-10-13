@@ -1,0 +1,223 @@
+#  * Version: $Id: mediatex_comp,v 1.1 2014/10/13 19:38:17 nroche Exp $
+#  * Project: MediaTex
+#  * Module:  configuration files
+#  *
+#  * This file is process by bash_completion.
+# 
+#  MediaTex is an Electronic Records Management System
+#  Copyright (C) 2014  Nicolas Roche
+# 
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  any later version.
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+LONG_OPTION="\
+--help \	
+--version \	
+--facility \	
+--severity \	
+--log-file \	
+--dry-run \	
+--debug-lexer \
+--debug-parser \
+--debug-script \
+--conf-label \
+--no-www-cvs"
+SHORT_OPTION="-h -v -f -s -l -n -L -P -X -c -w"
+FACILITY="file local2"
+SEVERITY="err warning notice info debug"
+
+#_mediatex_adm_add_coll()
+
+_mediatexd()
+{
+    local cur=${COMP_WORDS[COMP_CWORD]}
+        
+    case "$cur" in
+	--)
+	    COMPREPLY=( $( compgen -W "$LONG_OPTION" -- $cur ) )
+	    return 0
+	    ;;
+	-)
+	    COMPREPLY=( $( compgen -W "$SHORT_OPTION" -- $cur ) )
+	    return 0
+	    ;;
+    esac
+}
+
+_mediatex()
+{
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local prev=${COMP_WORDS[COMP_CWORD-1]}
+        
+    case "$cur" in
+	--)
+	    COMPREPLY=( $( compgen -W "$LONG_OPTION" -- $cur ) )
+	    return 0
+	    ;;
+	-)
+	    COMPREPLY=( $( compgen -W "$SHORT_OPTION" -- $cur ) )
+	    return 0
+	    ;;
+    esac
+	    
+    case "$prev" in
+	-f)
+	    COMPREPLY=( $( compgen -W "$FACILITY" -- $cur ) )
+	    return 0
+	    ;;
+	-s)
+	    COMPREPLY=( $( compgen -W "$SEVERITY" -- $cur ) )
+	    return 0
+	    ;;
+	-l)
+	    COMPREPLY=( $( compgen -W "file" -- $cur ) )
+	    return 0
+	    ;;
+	-c)
+	    COMPREPLY=( $( compgen -W "file" -- $cur ) )
+	    return 0
+	    ;;
+	adm)
+	    WORDS="init remove purge add del update commit bind \
+unbind mount umount get"
+	    COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
+	    return 0
+	    ;;
+	note|check)
+	    COMPREPLY=( $( compgen -W "supp" -- $cur ) )
+	    return 0
+	    ;;
+	add|del)
+	    case "${COMP_WORDS[COMP_CWORD-2]}" in
+		adm)
+		    COMPREPLY=( $( compgen -W "user coll" -- $cur ) )
+		    return 0
+		    ;;
+		mediatex)
+		    WORDS="supp key natClt natSrv"
+		    COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
+		    return 0
+		    ;;
+		esac
+	    return 0
+	    ;;
+	user)
+	    COMPREPLY=( $( compgen -u -- $cur ) )
+	    return 0
+	    ;;
+	update|commit|upgrade|make|clean)
+	    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
+	    return 0
+	    ;;
+	mount)
+	    _cd_devices
+	    return 0
+	    ;;
+	umount|get|on|upload|key)
+	    _filedir
+	    return 0
+	    ;;
+	list)
+	    COMPREPLY=( $( compgen -W "coll supp" -- $cur ) )
+	    return 0
+	    ;;
+	to|from)
+	    [ $COMP_CWORD -gt 2 ] || return 0;
+	    case "${COMP_WORDS[COMP_CWORD-3]}" in
+		supp) # add/del supp SUPP to/from
+		    COMPREPLY=( $( compgen -W "coll ALL" -- $cur ) )
+		    return 0
+		    ;;
+		upload|key|natClt|natSrv)
+		    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
+		    return 0
+		    ;;
+	    esac
+	    return 0
+	    ;;
+    esac
+
+    if [ $COMP_CWORD -eq 1 ]; then
+	WORDS="adm serv list new add del note check upload motd upgrade \
+make clean su"
+	COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
+	return 0;
+    fi
+
+    case "${COMP_WORDS[COMP_CWORD-2]}" in
+	mount)
+	    COMPREPLY=( $( compgen -W "on" -- $cur ) )
+	    return 0
+	    ;;
+	get)
+	    COMPREPLY=( $( compgen -W "as" -- $cur ) )
+	    return 0
+	    ;;
+	    upload)
+	    COMPREPLY=( $( compgen -W "to" -- $cur ) )
+	    return 0
+	    ;;
+	supp)
+	    [ $COMP_CWORD -gt 2 ] || return 0;
+	    case "${COMP_WORDS[COMP_CWORD-3]}" in
+		new|check) # new supp SUPP
+		    COMPREPLY=( $( compgen -W "on" -- $cur ) )
+		    return 0
+		    ;;
+		add) # add supp SUPP
+		    COMPREPLY=( $( compgen -W "on to" -- $cur ) )
+		    return 0
+		    ;;
+		del) # del supp SUPP
+		    COMPREPLY=( $( compgen -W "from" -- $cur ) )
+		    return 0
+		    ;;
+		note) # note supp SUPP
+		    COMPREPLY=( $( compgen -W "as" -- $cur ) )
+		    return 0
+		    ;;
+	    esac
+	    return 0
+	    ;;
+	natClt|natSrv)
+	    [ $COMP_CWORD -gt 2 ] || return 0;
+	    case "${COMP_WORDS[COMP_CWORD-3]}" in
+		add) # add natXXX XXX
+		    COMPREPLY=( $( compgen -W "to" -- $cur ) )
+		    return 0
+		    ;;
+		del) # del natXXX XXX
+		    COMPREPLY=( $( compgen -W "from" -- $cur ) )
+		    return 0
+		    ;;
+	    esac
+    esac
+    
+    
+    [ $COMP_CWORD -gt 3 ] || return 0;
+    case "${COMP_WORDS[COMP_CWORD-4]}" in
+	get) # get PATH1 as COLL 
+	    COMPREPLY=( $( compgen -W "on" -- $cur ) )
+	    return 0
+	    ;;
+    esac
+}
+
+complete -F _mediatexd mediatexd
+complete -F _mediatex mediatex
+
+# Local Variables:
+# mode: shell-script
+# mode: font-lock
+# mode: auto-fill
+# End:

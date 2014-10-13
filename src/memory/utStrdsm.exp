@@ -1,0 +1,29 @@
+concatenate 1/1 prefix/suffix
+concatenate 1/0 prefix/
+concatenate 0/1 /suffix
+Enter items, one per line.
+End the list by EOF (ctl-d)
+content = Hello
+created = Hello
+copied  = Hello
+content = world
+created = world
+copied  = world
+content = !!
+created = !!
+copied  = !!
+Enter items, one per line.
+End the list by EOF (ctl-d)
+Only the first 4 characters are used for the creation
+Only the first 2 characters are copied
+content = Hello
+created = Hell
+copied  = He
+content = world
+created = worl
+copied  = wo
+content = !!
+created = !!
+
+copied  = !!
+[info strdsm.c] exit on success

@@ -1,0 +1,3 @@
+[notice alloc.c:153] soft memory limit set to 32 MB
+[notice alloc.c:154] nice memory limit set to 16 MB 
+[info html.c:551] exit on success

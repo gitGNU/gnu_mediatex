@@ -1,0 +1,77 @@
+@cindex extraction rules
+@cindex nat
+
+@process{Extract} process extracts file into the local server cache 
+by using the extraction rules. @acronym{NAT} servers brings back available
+files wanted by other severs from its clients.
+
+@cindex cat
+12 extraction rules are implemented: 
+@itemize @bullet
+@item @acronym{SCP}, @acronym{ISO}, @acronym{CAT}: multi OS containers
+@item @acronym{TGZ}, @acronym{TBZ}, @acronym{AFIO}: @acronym{GNU/Linux} combined containers 
+@item @acronym{TAR}, @acronym{CPIO}, @acronym{GZ}, @acronym{BZ}: @acronym{GNU/Linux} simple containers
+@item @acronym{ZIP}, @acronym{RAR}: @acronym{Windows} combined containers
+@end itemize
+Other should be added if necessary. 
+
+@note{} The native multi-volumes archives are only handle for @acronym{RAR}.
+Other containers must be cut using @code{split} and re-assembled with @code{cat}. However, native multi-volumes archives extraction may still be implement for each format if necessary.
+@table @code
+@item cpio
+      GNU multi-volume archives are not supported. (no compression)
+@item tar
+      Multi-volume support is a GNU extension 
+and the archives created in this mode should be read only using GNU tar.
+@example
+$ tar -cM -L1000 -f multi1 -f multi2 -f multi3  data 
+@end example
+@item afio
+      compressed archives that are fault tolerant:
+thanks to the individual files compression,
+if there is a single byte error you will only loose one or two files.
+@end table
+
+Process conceptual model:
+
+@image{mediatex-figures/extract,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerExtractReg
+from @procClientMisc
+@item @eventServerExtract
+from @procServerCgiSrv{} or @procServerHave
+@end table
+
+@item Events out
+@table @code
+@item @eventServerCacheAlloc 
+to @procServerCache
+@item @eventServerDeliver
+to @procServerDeliver
+@itemx @eventClientMiscGet
+to @procClientMisc
+@item @eventClientMiscSuppMount
+@itemx @eventClientMiscSuppUMount
+to @procClientSupp
+@item @eventServerCacheAlloc
+to @procServerCache
+@item @eventServerDeliver 
+to @procServerDeliver
+
+@end table
+
+@item Input data
+@itemize @bullet
+@item @dataConf
+@item @dataServers
+@item @dataExtract
+@end itemize
+@end itemize
+
+Code:
+@table @file
+@item src/server/extract.c
+@end table

@@ -1,0 +1,166 @@
+@cindex index catalog file
+
+The @dataCatalogO{} files handle the descriptive meta-datas of a collection.
+
+Relational schema:
+
+@image{mediatex-figures/catalog.txt,,,,}
+
+@itemize @bullet
+@item Entities
+@itemize @bullet
+@item 
+The @sc{Archive} entity lists all archive's data files.
+@item 
+The @sc{Document} entity groups records (parts or versions of a same document for instance).
+@item 
+The @sc{Category} entity groups document by themes.
+@item 
+The @sc{Human} entity lists all the document's contributors.
+@item 
+The @sc{Role} entity lists all titles a human contributing to a document may have.
+The @sc{*_Carac} entities are not truly implemented in order to consume less memory.
+@end itemize
+
+@item Relations
+@itemize @bullet
+@item 
+The @sc{asso_role} relationship matches human, roles and document.
+@item 
+The @sc{contains} relationship matches ether humans and containers,
+documents and containers or documents and records.
+@end itemize
+@end itemize
+
+Exemple:
+@example
+# Categories:
+
+Top Category "media"
+  "topo" = "Welcome !"
+Top Category "image": "media"
+Top Category "drawing": "image"
+Top Category "animal"
+Category "hand": "drawing", "animal"
+
+# Humans:
+
+Human	 "Me" "": "drawing"
+  "another thing?" = "no"
+
+# Archives:
+
+Archive	 022a34b2f9b893fba5774237e1aa80ea:24075
+  "format" = "PNG"
+Archive	 b281449c229bcc4a3556cdcc0d3ebcec:815
+  "format" = "XPM"
+  "licence" = "GPLv3"
+
+# Documents:
+
+Document "panthere": "animal", "drawing", "hand"
+  With "designer" = "Me" ""
+  "info" = "[P]erenial [A]rchive [N]etwork [There]"
+  022a34b2f9b893fba5774237e1aa80ea:24075
+  b281449c229bcc4a3556cdcc0d3ebcec:815
+@end example
+
+Grammar:
+@example
+stanzas: stanzas stanza
+       | stanza
+
+stanza: defContainer
+      | defHuman
+      | defDocument
+      | defRecord
+
+/* Carac */
+
+contCaracs: contCaracs contCarac
+          | contCarac
+
+contCarac: string = string
+
+docCaracs: docCaracs docCarac
+         | docCarac
+
+docCarac: string = string
+
+humCaracs: humCaracs humCarac
+         | humCarac
+
+humCarac: string = string
+
+recCaracs: recCaracs recCarac
+         | recCarac
+
+recCarac: string = string
+
+/* defContainer */
+
+defContainer: CATEGORY container : container contCaracs
+            | CATEGORY container : container
+            | CATEGORY container contCaracs
+            | CATEGORY container
+
+container: string
+
+containers: containers COMMA container
+          | container
+
+/* defHuman */
+
+defHuman: HUMAN human : containers humCaracs
+        | HUMAN human : containers
+        | HUMAN human humCaracs
+        | HUMAN human
+
+human: string string
+
+/* defRecord */
+
+defRecord: RECORD record recCaracs
+         | RECORD record
+
+record: hash : number
+
+/* defDocument */
+
+defDocument: DOCUMENT document docContainers \
+             docWiths docCaracs2 docRecords 
+
+document: string
+
+docContainers: : containers
+             | 
+
+docCaracs2: docCaracs
+          | 
+
+docWiths: roles
+        | 
+
+roles: roles role
+     | role
+
+role: WITH string = human
+
+docRecords: records
+          | 
+
+records: records record
+       | record
+
+hash: [[:xdigit:]]+[:blank:]  
+string: \"[^\n\"]*\"
+number: [[:digit:]]+
+@end example
+
+Code:
+@table @file
+@item src/memory/catalogTree.h
+@itemx src/memory/catalogTree.c
+@itemx src/parser/catalogFile.l
+@itemx src/parser/catalogFile.y
+@end table

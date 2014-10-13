@@ -1,0 +1,15 @@
+#!/bin/sh
+# $Id: postinst,v 1.1 2014/10/13 19:37:43 nroche Exp $
+#set -x
+set -e
+#. /usr/share/debconf/confmodule
+
+# postinstall script
+
+# if packaging do not already provide it
+# (for instance, if package was build as non root)
+chmod 4755 /usr/bin/mediatex
+
+# strange behaviour on wheezy when build on squeeze
+/usr/bin/mediatex adm init
+exit 0

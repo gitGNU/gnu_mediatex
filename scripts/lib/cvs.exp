@@ -1,0 +1,219 @@
+[debug cvs.sh] USERS_coll_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut2-mdtx-hello
+[info users.sh] ut2-mdtx-hello user already removed from ut2-mdtx_md group
+[debug users.sh] USERS_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_disease_group: ut2-mdtx-hello
+[info users.sh] ut2-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut2-mdtx-hello
+[debug cvs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut2-mdtx_md
+[debug users.sh] USERS_disease_group: ut2-mdtx_md
+[info users.sh] ut2-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut2-mdtx
+[debug users.sh] USERS_disease_group: ut2-mdtx
+[info users.sh] ut2-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug cvs.sh] USERS_root_populate
+[debug cvs.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut2-mdtx /var/cache/mediatex/ut2-mdtx
+[debug users.sh] USERS_add_to_group: ut2-mdtx cdrom
+Ajout de l'utilisateur « ut2-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut2-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx
+Fait.
+[debug users.sh] USERS_create_group: ut2-mdtx_md
+[debug users.sh] USERS_add_to_group: ut2-mdtx ut2-mdtx_md
+Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx_md
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug cvs.sh] CVS_mdtx_setup:
+[debug cvs.sh] CVS_init_cvsroot
+[debug cvs.sh] CVS_mdtx_import 
+[info cvs.sh] CVSUMASK=027 cvs -d /var/lib/mediatex/ut2-mdtx import -m 'Mediatex initial setup' ut2-mdtx ut2-mdtx v1
+
+
+No conflicts created by this import
+N ut2-mdtx/supports.txt
+N ut2-mdtx/ut2-mdtx.conf
+[debug cvs.sh] CVS_mdtx_checkout:
+[info cvs.sh] su MDTX -c "cvs -d /var/lib/mediatex/ut2-mdtx co ut2-mdtx"
+cvs checkout: Updating ut2-mdtx
+U ut2-mdtx/supports.txt
+U ut2-mdtx/ut2-mdtx.conf
+[debug cvs.sh] CVS_update: ut2-mdtx
+[info cvs.sh] cvs update -d
+cvs update: Updating .
+[debug cvs.sh] CVS_commit: ut2-mdtx cvs.sh
+[info cvs.sh].txt icons/*.*
+cvs add: nothing known about `*[0-9][0-9].txt'
+cvs [add aborted]: could not chdir to `icons': No such file or directory
+[info cvs.sh] cvs commit -m "cvs.sh"
+cvs commit: Examining .
+cvs commit: Examining .
+new revision: 1.2; previous revision: 1.1
+/var/lib/mediatex/ut2-mdtx/ut2-mdtx/ut2-mdtx.conf,v  <--  ut2-mdtx.conf
+cvs update: Updating .
+
+RCS file: /var/lib/mediatex/ut2-mdtx/ut2-mdtx/ut2-mdtx.conf,v
+Working file: ut2-mdtx.conf
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+	v1: 1.1.1.1
+	ut2-mdtx: 1.1.1
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.2
+date: XXX;  author: ut2-mdtx;  state: Exp;  lines: +4 -1;  commitid: XXX;
+unit-test
+----------------------------
+revision 1.1
+date: XXX;  author: ut2-mdtx;  state: Exp;  commitid: XXX;
+branches:  1.1.1;
+Initial revision
+----------------------------
+revision 1.1.1.1
+date: XXX;  author: ut2-mdtx;  state: Exp;  lines: +0 -0;  commitid: XXX;
+Mediatex initial setup
+=============================================================================
+[debug cvs.sh] USERS_coll_create_user: ut2-mdtx-hello
+[debug users.sh] USERS_create_user: ut2-mdtx-hello /var/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
+[debug users.sh] USERS_add_to_group: ut2-mdtx-hello ut2-mdtx_md
+Ajout de l'utilisateur « ut2-mdtx-hello » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur ut2-mdtx-hello au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut2-mdtx ut2-mdtx-hello
+Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx-hello »...
+Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut2-mdtx-hello
+[debug cvs.sh] CVS_coll_import: ut2-mdtx-hello
+[info cvs.sh] CVSUMASK=007 cvs -d /var/lib/mediatex/ut2-mdtx import -m 'Mediatex exemple files' ut2-mdtx-hello ut2-mdtx-hello v1
+
+
+cvs import: Importing /var/lib/mediatex/ut2-mdtx/ut2-mdtx-hello/apache2
+cvs import: Importing /var/lib/mediatex/ut2-mdtx/ut2-mdtx-hello/icons
+No conflicts created by this import
+N ut2-mdtx-hello/apache2/cache.htaccess
+N ut2-mdtx-hello/apache2/cgi.htaccess
+N ut2-mdtx-hello/apache2/home.htaccess
+N ut2-mdtx-hello/apache2/htgroup
+N ut2-mdtx-hello/apache2/index.htaccess
+N ut2-mdtx-hello/apache2/score.htaccess
+N ut2-mdtx-hello/catalog00.txt
+N ut2-mdtx-hello/.cvsignore
+N ut2-mdtx-hello/extract00.txt
+N ut2-mdtx-hello/icons/floppy-icon.png
+N ut2-mdtx-hello/logo.png
+N ut2-mdtx-hello/mediatex.css
+N ut2-mdtx-hello/servers.txt
+[debug cvs.sh] SSH_build_key: ut2-mdtx-hello
+[debug cvs.sh] SSH_bootstrapKeys ut2-mdtx-hello 
+known_hosts updated.
+Original contents retained as known_hosts.old
+WARNING: known_hosts.old contains unhashed entries
+Delete this file to ensure privacy of hostnames
+[debug cvs.sh] SSH_configure_client ut2-mdtx-hello localhost 22
+[info cvs.sh] su USER -c "ssh -o PasswordAuthentication=no ut2-mdtx-hello@localhost ls"
+cache
+cvs
+public_html
+cvs checkout: Updating ut2-mdtx-hello
+cvs checkout: Updating ut2-mdtx-hello/apache2
+cvs checkout: Updating ut2-mdtx-hello/icons
+U ut2-mdtx-hello/apache2/cache.htaccess
+U ut2-mdtx-hello/apache2/cgi.htaccess
+U ut2-mdtx-hello/apache2/home.htaccess
+U ut2-mdtx-hello/apache2/htgroup
+U ut2-mdtx-hello/apache2/index.htaccess
+U ut2-mdtx-hello/apache2/score.htaccess
+U ut2-mdtx-hello/catalog00.txt
+U ut2-mdtx-hello/.cvsignore
+U ut2-mdtx-hello/extract00.txt
+U ut2-mdtx-hello/icons/floppy-icon.png
+U ut2-mdtx-hello/logo.png
+U ut2-mdtx-hello/mediatex.css
+U ut2-mdtx-hello/servers.txt
+cvs commit: Examining .
+cvs commit: Examining apache2
+cvs commit: Examining icons
+new revision: 1.2; previous revision: 1.1
+/var/lib/mediatex/ut2-mdtx/ut2-mdtx-hello/catalog00.txt,v  <--  catalog00.txt
+cvs update: Updating .
+cvs update: Updating apache2
+cvs update: Updating icons
+
+RCS file: /var/lib/mediatex/ut2-mdtx/ut2-mdtx-hello/catalog00.txt,v
+Working file: catalog00.txt
+head: 1.2
+branch:
+locks: strict
+access list:
+symbolic names:
+	v1: 1.1.1.1
+	ut2-mdtx-hello: 1.1.1
+keyword substitution: kv
+total revisions: 3;	selected revisions: 3
+description:
+----------------------------
+revision 1.2
+date: XXX;  author: ut2-mdtx-hello;  state: Exp;  lines: +3 -0;  commitid: XXX;
+unit-test
+----------------------------
+revision 1.1
+date: XXX;  author: ut2-mdtx-hello;  state: Exp;  commitid: XXX;
+branches:  1.1.1;
+Initial revision
+----------------------------
+revision 1.1.1.1
+date: XXX;  author: ut2-mdtx-hello;  state: Exp;  lines: +0 -0;  commitid: XXX;
+Mediatex exemple files
+=============================================================================
+[debug cvs.sh] USERS_coll_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut2-mdtx-hello
+Suppression de l'utilisateur « ut2-mdtx-hello » du groupe « ut2-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_disease_group: ut2-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx » du groupe « ut2-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx-hello »...
+Attention ! Le groupe « ut2-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut2-mdtx-hello
+[debug cvs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut2-mdtx_md
+[debug users.sh] USERS_disease_group: ut2-mdtx_md
+Suppression de l'utilisateur « ut2-mdtx » du groupe « ut2-mdtx_md »...
+Fait.
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx_md »...
+Fait.
+Suppression du groupe « ut2-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut2-mdtx
+[debug users.sh] USERS_disease_group: ut2-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx »...
+Attention ! Le groupe « ut2-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+[info cvs.sh] success

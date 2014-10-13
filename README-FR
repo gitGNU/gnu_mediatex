@@ -1,0 +1,76 @@
+
+Archivage pérenne.
+D'une façon concise, le terme ``archives pérennes'' sous-entend que l'on se 
+donne les moyens de dépasser le cycle d'obsolescence des lecteurs et des 
+supports utilisés.
+
+1. l’archivage pérenne des documents numériques a 3 objectifs principaux :
+- conserver le document,
+- le rendre accessible,
+- en préserver l’intelligibilité. 
+
+1.1. Supports de plus en plus fragiles.
+Avec le numérique, la durée de vie des disques durs et supports optiques 
+est de 4 ans. Les archives numériques sur disques ou bandes sont sensibles 
+au rayonnement magnétique terrestre. Graver des supports non 
+ré-inscriptible rangés dans de bonnes conditions offre un compromis (norme 
+NF-Z-42-013). D'autant préfèrent ne pas exporter les données sur un support 
+en les laissant sur des serveurs redondés, mais ne serait-ce pas une fuite 
+en avant ?
+
+1.2. Identification
+La compréhension du document est souvent liée à d'autres documents 
+définissant un contexte. Aussi il est important de fournir un moyen 
+d'identification pour faciliter les références d'un document à l'autre. Un 
+groupement sous forme de collection facilite l'indexation et permet de 
+mieux cerner l'étendue des données à préserver.
+
+1.3. D'autres données
+Tout comme les supports nécessite un lecteur compatible, les donnée brutes 
+nécessitent un logiciel pour les lire. Il est donc important de mémoriser 
+les versions des logiciels et des formats, a défaut de conserver les 
+sources du logiciel et/ou les spécifications du format des données. Pour ce 
+faire, des méta-données sont nécessaires.
+
+2. Duplication géographique et reprise sur erreur.
+Afin de pallier aux catastrophes, il faut dupliquer les archives sur 
+plusieurs sites.
+
+2.1. Solutions techniques 
+L'informatique offre divers moyen de le faire de la redondance mais au 
+final, la gestion des méta-donnée restera centralisée. Les NTIC qui 
+se basent sur les bases de données utilise la ``haute disponibilité'' pour 
+offrir la reprise sur erreur. Ici encore, il peut sembler s'agir d'une 
+fuite en avant. Les développeurs utilisent les systèmes de gestion de 
+version pour partager leurs codes source. Bien qu'utilisant un dépôt 
+centralisé, cette solution offre le net avantage de désynchroniser les 
+mises à jours, ce qui est en soit une façon d'anticiper les reprises sur 
+erreur.
+
+2.2. Distribuer les méta-données comme du code source.
+L'utilisation d'un système de gestion de version n'est pas une alternative 
+évidente à première vue:
+- Le merge se fait en mémoire vive, il faut découper les méta-données en 
+fichiers de taille raisonnable.
+- Le merge automatique pouvant échouer, il faut que les méta-données soient 
+suffisamment lisibles pour permettre à l'utilisateur d'arbitrer.
+- L'ensemble des méta-données étant distribuées via fichiers, on devra les 
+charger en mémoire et par conséquent disposer de suffisamment de mémoire 
+vive.
+Néanmoins, en plus d'offrir une solution élégante pour la duplication 
+géographique et la reprise sur erreur, la distribution des méta-données via 
+un système de gestion de version permet d'avoir l'historique des 
+modifications.
+
+3. Réversibilité des archives.
+Extraire les archives pour les retourner demande un effort non négligeable :
+- il faut compiler les archives et les envoyer via un média (support ou 
+réseau)
+- il faut extraire et reformuler en conséquence les méta-données
+Pourtant, on devrait envisager que le SAE devienne lui même obsolète et 
+qu'il faille en changer.
+L'utilisation des supports prend ici tout son sens puisqu'il suffit de les 
+retourner en l'état pour extraire les archives. Les parsers requis pour 
+charger les méta-données offrent quand à eux une libraire logicielle pour 
+les exporter dans un format ad-hoc.
+

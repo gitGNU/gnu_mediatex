@@ -1,0 +1,287 @@
+@cindex overview
+
+The GNU @mediatexO{} project intends to make easier as possible 
+archives management by spreading and accessing @acronym{WORM} supports 
+(as compact disks) and dedicated metadata.
+It is named @mediatexO{} because it aims to provide perennial
+@acronym{URL} on electronic documents.
+
+@cindex oais
+@cindex nf-z42013
+@mediatexO{} is inspired by @acronym{OAIS} archive system description
+(@url{http://public.ccsds.org/@/publications/@/archive/@/650x0m2.pdf})
+and aims to provide the @acronym{OAIS}'s archival storage entity. 
+However, it focus on already burned support ingestion 
+(where @acronym{OAIS} ingest documents), as its goal is to provide tools 
+that help to manage a @acronym{NF Z 42-013} compliant supports collection.
+
+@menu
+* Who::		Who is it about?
+* What::	What is happened?
+* Where::	Where did it take place?
+* When::	When did it take place?
+* How::         How?
+* How much::	How much?
+* Why::         Why, why not?
+@end menu
+
+@node Who
+@section Who
+
+@image{mediatex-figures/who,,,,}
+@cindex admin user
+@cindex publisher user
+@cindex web user
+@cindex date
+
+The @mediatexO{} system interacts with 3 kind of users:
+@itemize @bullet
+@item 
+@actorAdminO{} or @verb{!root!} system user configures and start services 
+on a given host. He also creates or joins collections.
+@item
+@actorPublisherO{} provides supports and meta-data for collection. (@procScriptsAddDelUser{})
+@item 
+@actorUserO{} use an internet browser to login, 
+browse and download archives. (@procToolsApache{})
+@item 
+@actor{Date} schedules the @mediatexO{} system's maintenance operations.
+@end itemize
+
+@node What
+@section What
+@cindex supports 
+@cindex iso
+@cindex server
+@cindex collection
+
+The @mediatexO{} system allow several Server to share data and meta-data
+related to a collection of archives.
+
+@image{mediatex-figures/what,,,,}
+
+@itemize @bullet
+@item 
+Supports, mainly optical disks are spreads geographically. 
+They are duplicated using the @acronym{ISO} image format. 
+Only the data disks are manage, not the audio ones for instance.
+
+@itemize @bullet
+@item 
+A single support may be used on several host, 
+for instance if we send it or if servers are located in the same place.
+@item
+A support may be share locally around several collections.
+@item
+Information on the @acronym{ISO} image (what it contains and which servers 
+provide it) is shared by all servers around the related collections.
+@end itemize
+
+@item 
+Servers are connected together via the internet public network or only 
+paired with hosts located on private networks (so as to deal with 
+@acronym{NAT}).
+@itemize @bullet
+@item 
+A server may participates to several collections.
+@item
+A server manages a local set of private supports including copies.
+@item 
+Each @mediatexO{} system instance is located on a given host. 
+On a so call server, the @actorPublisher{} decides which support 
+are shared by which collection. 
+This association remains private and not accessible remotely.
+@end itemize
+
+@item 
+Collections groups archives contained on supports 
+and make them available around the hosts that share the collection.
+@itemize @bullet
+@item 
+A collection should be shared by several servers, 
+at less 2 to prevent from a site crash. 
+All access parameters are shared around all the hosts belonging 
+to a collection.
+A collection share support's content using there @acronym{ISO} image, 
+the extraction metadata and the content's description as a catalogue index.
+@item
+The @mediatexO{} system uses the collection concept to allow several 
+hosts to manage together their local supports in order to manage them 
+as -so called- perennial archives.
+@end itemize
+@end itemize
+
+What it is not
+@itemize @bullet
+@item A web programming project based on a @acronym{SGBD}.
+@end itemize
+
+@node Where
+@section Where
+@cindex cvs
+@cindex meta-data
+
+@itemize @bullet
+@item
+Information about supports (support name, status, number of copies) 
+is locally hold by each server keeping it private.
+@item
+Collection's meta-data files are duplicated on all servers,
+but versions are managed by a uniq @acronym{CVS} ``master'' server.
+
+@image{mediatex-figures/where1,,,,}
+
+@item
+Archive's data files are stored in a cache for each collection by each server.
+@item
+A @actorUser{} query is distributed to all servers. 
+If none of them can serve the query, the server which receive 
+the initial query ask for the @actor{User}'s mail. 
+The @actor{User} mail address is never sent to the other servers.
+
+@image{mediatex-figures/where2,,,,}
+
+@end itemize
+
+@node When
+@section When
+@cindex date
+@cindex cron
+
+@itemize @bullet
+@item
+When @actorPublisher{} modifies the meta-data on a given server,
+the other servers update there own copies later using the centralised 
+@acronym{CVS} server.
+@item 
+When @actorUser{} queries for a file that no server have in cache, 
+the first requested server provides an @acronym{HTML} form 
+in order to recall the @actor{User} latter, when the file becomes available.
+
+@image{mediatex-figures/when,,,,}
+
+@item
+@actorDate{} is implement by the @procToolsCron{} daemon.
+@item 
+By reading the ``message of the day'', the @actorPublisherO{} 
+is asked to provide supports needed for extraction
+or needed to perform a periodic checkup.
+@end itemize
+
+@node How
+@section How
+@cindex gnu
+@cindex syslog
+@cindex apache
+@cindex cat
+@cindex motd
+@cindex sendmail
+@cindex motd
+
+@mediatexO{} system is build around other @acronym{GNU} @activityTools{}:
+@itemize @bullet
+@item 
+Trace-ability is done by @sc{Syslog} for binaries messages 
+and by @sc{Cvs} for changes in the meta-data.
+@item 
+Access is granted by @sc{Apache} but when archives need to retrieved, 
+the @actorUser{} will be recall later using @sc{Sendmail}.
+@item 
+Catalogue index and extraction rules have to be edited by hand by the 
+@actorPublisher{} using a text editor like @sc{emacs} or
+by concatenating them using @sc{cat}.
+@item 
+Servers tasks are driven by @sc{Cron}. 
+@item
+@actor{Publisher} is asked to provide local supports 
+via the host's @sc{Motd}.
+@item 
+The support index and servers list files are internally managed 
+by the @mediatex{} system.
+@end itemize
+
+@node How much
+@section How much
+@cindex cvs
+@cindex parser
+@cindex collection
+
+In order to prevent from deny of services, 
+we do not use a centralise database but text files spread on all servers
+using @sc{Cvs}. 
+
+Consequently parsers needs a proportional amount of @acronym{CPU} and 
+memory in regards to these files size (whereas database do not).
+The generated @acronym{HTML} catalogue also requires much more place than
+a database do (moreover, limitation should comes from the number of 
+available inodes on the @acronym{HTML} catalogue partition).
+
+All in all, the @mediatexO{} system is designed to handle collections 
+having less than a million archives, but may handle (who knows) numbers 
+of such ``little'' collections.
+
+@multitable @columnfractions .20 .14 .10 .10 .10 .10
+@headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
+@item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
+@item 27k  @tab 12M  @tab 40M  @tab 377M @tab 90k  @tab 20''
+@item 55k  @tab 21M  @tab 67M  @tab 638M @tab 151k @tab 32''
+@item 82k  @tab 31M  @tab 94M  @tab 913M @tab 212k @tab 51''
+@item 110k @tab 40M  @tab 122M @tab 1.2G @tab 273k @tab 1'3
+@item 137k @tab 50M  @tab 145M @tab 1.4G @tab 334k @tab 1'20
+@end multitable
+
+@note{} @acronym{ADM64} systems use double of memory.
+
+Roughly this should gives about:
+
+@multitable @columnfractions .20 .14 .10 .10 .10 .10
+@headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
+@item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
+@item 50k  @tab 20M  @tab 65M  @tab 600M @tab 150k @tab 30''
+@item 100k @tab 35M  @tab 120M @tab 1.1G @tab 250k @tab 1'
+@item 300k @tab 100M @tab 500M @tab 3.3G @tab 750k @tab 5'
+@item 1M   @tab 333M @tab 1.5G @tab 10G  @tab 2.5M @tab 25'
+@end multitable
+
+@note{} The 2 last lines are extrapolated (should be @math{O(n*log(n)}).
+
+@node Why
+@section Why
+
+Objective is to conserve, offer access and preserve intelligibility 
+of electronic archives.
+@itemize @bullet
+@item 
+Conception was made in order to provides redundancy, trace-ability 
+and a shared @acronym{HTML} access.
+@item 
+@mediatexO{} make possible to rebuild the system mainly from its optical 
+supports (@note{} according that catalogue and extraction meta-data are 
+available on supports too).
+@item 
+It aims to provide a strong ``storage'' layer on which to build a whole 
+@acronym{OAIS} system. In that sense, it should provide a positive context 
+for preservation operations, when actual storage technologies will become 
+outdated.
+@item 
+It tries to provide a dedicated workaround for the CAP theorem, 
+due to low data volume.
+The also known as Brewer's theorem states that it is impossible 
+for a distributed computer system to simultaneously provide all three 
+of the following guarantees: Consistency, Availability and Partition 
+tolerance.
+@end itemize
+
+Why not
+@itemize @bullet
+@item
+Presently, it seems we all prefer to use the @acronym{RAID} technology 
+to keep data on running computers and make effort to distribute 
+a big database.
+@item 
+Must not occult the forgetting right. 
+As data are burned on optical disks, it is complicated to erase only a
+part of them.
+@end itemize
+
+@c  LocalWords:  osolete

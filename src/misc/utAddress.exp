@@ -1,0 +1,5 @@
+[info address.c] build socket address 127.0.0.1:7
+[info address.c] build socket address 127.0.0.1:7
+[info address.c] exit on success
+IP of localhost is: 127.0.0.1
+host name of 0x7f000001 is: localhost

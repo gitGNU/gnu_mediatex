@@ -1,0 +1,35 @@
+@cindex bind
+
+These 2 scripts mount and unmount both cvsroot and cache directories 
+into the chroot jail, using the bind option (see @code{man 8 mount}).
+It allow @activityServer{} to respectively enable/disable remote 
+meta-data upgrades and data copies when starting/stoping,
+without beeing setuid @code{root}.
+
+Process conceptual model:
+
+@image{mediatex-figures/bind-unbind,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsBind
+@item @eventScriptsUnBind
+from @procClientMisc
+@end table
+
+@note{} bellow calls are directly made to the jail's script library:
+@table @code
+@item @eventScriptsBindCall
+from @procScriptsNewFreeClean
+@item @eventScriptsUnBindCall
+from @procScriptsInitRemovePurge
+@end table
+@end itemize
+
+Code:
+@table @code
+@item /usr/share/mediatex/scripts/lib/jail.sh
+@itemx /usr/share/mediatex/scripts/bind.sh
+@itemx /usr/share/mediatex/scripts/unbind.sh
+@end table

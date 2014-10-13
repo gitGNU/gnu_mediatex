@@ -1,0 +1,18 @@
+Nicolas Roche <nroche@narval.tk>
+
+Copy/paste code from:
+---------------------
+
+Peter Felecan <peter@felecan.org>
+- misc/log, memory/ardsm, memory/strdsm (GPLv2)
+
+Ilya G. Goldberg <igg@nih.gov> 
+- misc/getcgivars (LGPLv2.1+)
+
+Theodore Ts'o <tytso@mit.edu> 
+- misc/progbar (GPLv2)
+
+Linked with:
+----------
+- libssl (BSD)
+- libavl (LGPLv2.1+)

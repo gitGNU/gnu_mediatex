@@ -1,0 +1,108 @@
+@cindex checksums file
+
+@dataChecksumO{} files are
+internally managed by the @activityServer{} activity for each collections.
+@activity{Client} may asks @activity{Server} to refresh this file in order
+to read the last cache status into.
+Messages the @procScriptsCgi{}, @procClientSupp{} and 
+@procServerNotify{} processes send are very close to this file as
+they are using the same format: an header and a list of records.
+
+Relational schema:
+
+@image{mediatex-figures/mdtx-COLL.md5,,,,}
+
+@itemize @bullet
+@item Proper entities
+@itemize @bullet
+@item The @sc{Record} entity lists all informations we need to load/save and exchange about archive in the local cache for each collection.
+@end itemize
+
+There is 8 macro type of records
+@multitable @columnfractions .25 .15 .15 .25
+@headitem Type @tab type @tab host @tab extra 
+@item @code{FINALE_SUPPLY} @tab S @tab local  @tab absolute path
+@item @code{MALLOC_SUPPLY} @tab S @tab local  @tab @code{!malloc} 
+@item @code{LOCALE_SUPPLY} @tab S @tab local  @tab relative path 
+@item @code{REMOTE_SUPPLY} @tab S @tab remote @tab relative path
+@item @code{FINALE_DEMAND} @tab D @tab local  @tab mail
+@item @code{LOCALE_DEMAND} @tab D @tab local  @tab @code{!wanted}
+@item @code{TOKEEP_DEMAND} @tab D @tab local  @tab @code{!to-keep}
+@item @code{REMOTE_DEMAND} @tab D @tab remote @tab @code{!wanted}
+@end multitable
+
+@item Linked entities
+@itemize @bullet
+@item 
+The @sc{Archive} entity reminds all archives the programm is currently using per collection.
+@cindex archive
+@item 
+The @sc{Server} entity, from @dataServers{}, lists all the remote servers per collection.
+@end itemize
+
+@item Relations
+@itemize @bullet
+@item 
+The @sc{demands} relationhip lists all demand for an archive
+@item 
+The @sc{remoteSupplies} relationhip lists all remotly available archives
+@item 
+The @sc{finaleSupplies} relationhip lists all supports actually mounted.
+@item 
+The @sc{localSupply} relationhip points on an archive occurancy available on the local cache.
+@end itemize
+@end itemize
+
+When cache is loaded, archive objects are never free but marked as deleted.
+A reader/writer lock is used next to unload cache and then free archive object. 3 other locks are also used:
+@enumerate
+@item MUTEX_ALLOC: when modifying the cache size
+@item MUTEX_COMPUTE: when computing archive state
+@item MUTEX_KEEP: when adjusting the archive time to live in cache
+@end enumerate
+
+Grammar:
+@example
+YEAR  [[:digit:]]@{4@}
+MONTH [[:digit:]]@{2@}
+DAY   [[:digit:]]@{2@}
+HOUR  [[:digit:]]@{2@}
+MIN   [[:digit:]]@{2@}
+SEC   [[:digit:]]@{2@}
+DATE  @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
+
+IP [[:digit:]]@{1,3@}\.[[:digit:]]@{1,3@}\.\
+   [[:digit:]]@{1,3@}\.[[:digit:]]@{1,3@}
+
+ /* MAX_SIZE_HASH = 32 */
+HASH    [[:xdigit:]]+     
+
+ /* MAX_SIZE_COLL = 20 */
+COLL    [^[:blank:]\r\n]+
+
+file: lines
+
+lines: lines newLine
+     | newLine
+
+newLine: line
+
+line: vanillaLine extraLine
+    | vanillaLine
+
+vanillaLine: (-?[Ss]|-?[Dd]) DATE IP HASH [[:digit:]]+ COLL
+
+extraLine: [^[:blank:]\r\n]+
+@end example
+
+Code:
+@table @file
+@item src/memory/archiveTree.h
+@itemx src/memory/archiveTree.c
+@itemx src/memory/recordTree.h
+@itemx src/memory/recordTree.c
+@itemx src/parser/recordFile.l
+@itemx src/parser/recordFile.y
+@itemx src/memory/openClose.c
+@itemx src/server/cache.c
+@end table

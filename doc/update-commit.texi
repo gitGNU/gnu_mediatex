@@ -1,0 +1,46 @@
+@cindex cvs
+
+Theses 2 scripts manage collections update from remote @sc{Cvs}
+modules.
+However, @process{commit} is also used by @activityClient{} to 
+log changes in the local meta-data.
+
+Process conceptual model:
+
+@image{mediatex-figures/update-commit,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventScriptsUpdate
+@item @eventScriptsCommit
+from @activityClient
+@end table
+
+@item Events out
+@table @code
+@item @eventToolsCvsUpdate
+@item @eventToolsCvsCommit
+to @procToolsCvs
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataServers
+@item @dataCatalog
+@item @dataExtract
+@end itemize
+
+@item Data out
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@end itemize
+@end itemize
+
+Code:
+@table @code
+@item /usr/share/mediatex/scripts/lib/cvs.sh
+@itemx /usr/share/mediatex/scripts/update.sh
+@itemx /usr/share/mediatex/scripts/commit.sh
+@end table

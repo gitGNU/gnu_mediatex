@@ -1,0 +1,157 @@
+@cindex meta-data
+
+There are 6 main meta-data files share between 3 categories.
+@itemize @bullet
+@item 2 Local server files
+@item 1 Local collection file
+@item 3 Remotely shared collection files
+@end itemize
+All of theses file are locked by the kernel when parsing and serializing using the reader/writer algorithm.
+This ensure the different process will not read and modify the same ressource at same time. 
+
+The 3 shared collection files are processed to build a browsable @acronym{HTML} index (@pxref{misc}).
+
+@menu
+Local server files:
+* mdtx.conf::    @file{mdtx.conf}
+* supports.txt:: @file{supports.txt}
+
+Local collection file to index the cache content:
+* mdtxCOLL.md5:: @file{mdtx-COLL.md5}
+
+Remotely shared collection files:
+* catalog.txt::  @file{catalog.txt}
+* extract.txt::  @file{extract.txt}
+* servers.txt::  @file{servers.txt}
+@end menu
+
+Relational schema:
+
+@image{mediatex-figures/data1,,,,}
+
+@itemize @bullet
+@item Entities
+@itemize @bullet
+@item The @sc{Support} entity lists all the local supports
+@item The @sc{Collection} entity lists all the collections the local serve belongs to
+@end itemize
+Below entities are all dupplicated for each collection:
+@itemize @bullet
+@item The @sc{Server} entity lists all the server (for an unique collection)
+@item The @sc{Image} entity lists on @sc{iso} images hold by a server
+@item The @sc{Archive} entity lists all archives known at running time
+@cindex archive
+@item The @sc{Containter} entity gives rule to extract archives from each others
+@item The @sc{Document} entity groups archives in order to describe them in a catalog
+@item The @sc{Record} entity lists archives we works with
+@end itemize
+
+@item Data in/out
+@multitable @columnfractions .20 .14 .10 .10 .10
+@headitem File @tab @actor{Publisher} @tab @activity{client} @tab @process{cgi} @tab @activity{server} 
+@item mediatex.conf @tab rw @tab rw @tab r @tab r
+@item supports.txt  @tab -  @tab rw @tab - @tab -  
+@item md5sums.txt   @tab -  @tab r  @tab - @tab rw 
+@item catalog.txt   @tab rw @tab rw @tab - @tab -
+@item extract.txt   @tab rw @tab rw @tab - @tab r 
+@item servers.txt   @tab -  @tab rw @tab r @tab r
+@end multitable
+
+@item Life cycle for local files:
+
+@image{mediatex-figures/data2,,,,}
+
+@itemize @bullet
+@item States
+@table @state
+@item diseased
+data remains on disk file which is up to date
+@item loaded
+the file is loaded in memory
+@item modified
+the last change on data remains in memory
+@end table
+
+@item Events in
+@table @event
+@item load
+from @state{diseased} to @state{loaded}:@*
+a @process{Process} tells it need the file to be load
+@item modify
+from @state{loaded} to @state{modified}:@*
+a @process{Process} tells it had modified the data
+@item save
+from @state{modified} to @state{loaded}:@*
+an @activity{Activity} save all modifications on disk
+@item free
+from @state{loaded} to @state{diseased}:@*
+@activity{Server} reload the configuration
+@end table
+@end itemize
+
+@item Life cycle for shared files:
+
+@image{mediatex-figures/data3,,,,}
+
+@itemize @bullet
+@note{} The @state{loaded} and @state{modified} states are group
+into the @state{inUse} meta-state.
+@item States
+@table @state
+@item diseased
+data remains on disk file which is up to date
+@item loaded
+the file is loaded in memory
+@item modified
+the last change on data remains in memory
+@end table
+
+@item Events in
+@note{} the number of threads using the data (n) is registered in 
+order to know if we may or not release memory.
+@table @event
+@item load (n+=1)
+a @process{Process} tells it need the file to be load@*
+from @state{diseased} to @state{loaded} if n==0 or@*
+from @state{inUse} to @state{inUse} if n>0
+@item release (n-=1)
+from @state{inUse} to @state{inUse}:@*
+a @process{Process} tells it need the file to be load
+@item modify
+from @state{loaded} to @state{modified}:@*
+a @process{Process} tells it had modified the data
+@item save
+from @state{modified} to @state{loaded} if n==0:@*
+an @activity{Activity} save all modifications on disk
+@item disease
+from @state{loaded} to @state{diseased} if n==0:@*
+an @activity{Activity} which need place on memory unload the data
+@end table
+@end itemize
+@end itemize
+
+Code:
+@table @file
+@item src/misc/locks.c
+@itemx src/memory/archive.h
+@itemx src/common.openClose.c
+@end table
+
+@node mdtx.conf
+@section mdtx.conf
+@include mdtx.conf.texi
+@node supports.txt
+@section supports.txt
+@include supports.txt.texi
+@node mdtxCOLL.md5
+@section mdtx-COLL.md5
+@include mdtx-COLL.md5.texi
+@node catalog.txt
+@section catalog.txt
+@include catalog.txt.texi
+@node extract.txt
+@section extract.txt
+@include extract.txt.texi
+@node servers.txt
+@section servers.txt
+@include servers.txt.texi

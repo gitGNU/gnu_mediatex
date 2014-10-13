@@ -1,0 +1,5 @@
+src/mediatex.h
+src/common/extractScore.c
+src/client/catalogHtml.c
+src/client/extractHtml.c
+src/client/commonHtml.c

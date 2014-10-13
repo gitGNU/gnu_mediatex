@@ -1,0 +1,41 @@
+@cindex cache
+
+@process{Cache} process manage the local server storage place. Files into cache's directories called @file{toKeep} will never be deleted. Symlink are not followed.
+
+@process{Cache} use 3 options define into the @dataConf{} file:
+@table @code
+@item cacheSize
+the maximum size that limit growing operations into the cache
+@item cacheTTL
+the minimum time a file notifyed to @actorUser{} has to be keept into the cache
+@item queryTTL
+the time to live of a @actorUserO{} query is keept into the
+@dataChecksum{} file
+@end table
+
+Process conceptual model:
+
+@image{mediatex-figures/cache,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerCacheUpload
+from @actorPublisher
+@item @eventServerCacheAlloc 
+from @procServerExtract
+@end table
+
+@item Data
+@itemize @bullet
+@item in: @dataConf
+@item in: @dataChecksum
+@item in: @dataServers
+@item in: @dataExtract
+@end itemize
+@end itemize
+
+Code:
+@table @file
+@item src/server/cache.c
+@end table

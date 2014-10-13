@@ -1,0 +1,50 @@
+@cindex notify
+
+@process{Notify} process exchanges information on cache supplies and demand with other @activity{Mediatex} servers.
+The policy is, servers tells each others:
+@itemize @bullet
+@item local pending demands they records from @actorUser{},
+@item files presently in local cache that may be useful to others,
+@cindex nat
+@item @acronym{NAT} servers forward messages unchanged to its clients
+@end itemize
+
+@note{} messages only contains records related the original sender servers.
+When receiving a message, server forgives and replace all records previously sends by the related server. Consequently, empty message are used too.
+
+Process conceptual model:
+
+@image{mediatex-figures/notify,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerNotifyReg 
+from @procClientMisc
+@item @eventServerNotifyQuery 
+from a remote @process{notify} process.
+@end table
+
+@item Events out
+@table @code
+@item @eventServerNotifyQuery
+to a remote @process{notify} process.
+@end table
+
+@item Input data
+@itemize @bullet
+@item @dataConf
+@item @dataChecksum
+@item @dataServers
+@end itemize
+@end itemize
+
+Example:
+@example
+...
+@end example
+
+Code:
+@table @file
+@item src/server/notify.c
+@end table

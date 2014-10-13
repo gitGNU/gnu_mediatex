@@ -1,0 +1,29 @@
+#  * Version: $Id: mediatex_cron,v 1.1 2014/10/13 19:38:27 nroche Exp $
+#  * Project: MediaTex
+#  * Module:  exemples files
+#  *
+#  * This file is process by cron.
+# 
+#  MediaTex is an Electronic Records Management System
+#  Copyright (C) 2014  Nicolas Roche
+# 
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  any later version.
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# m h dom mon dow user	command
+#XX  *   * * *   root    DATADIR/scripts/cron_hourly.sh
+#YY ZZ   * * *   root    DATADIR/scripts/cron_daily.sh

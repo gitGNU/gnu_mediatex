@@ -1,0 +1,109 @@
+@cindex server
+
+The @activity{Server} manage local cache integrity and 
+exchange files with other @sc{Mediatex}'s @activity{Server}s.
+@activityClient{} may ask it to updates the @dataChecksum{} file
+that gives the local cache's status.
+
+The @activity{server} activity is diveded into 6 process:
+@menu
+* cache::       @process{cache}
+* extract::     @process{extract}
+* cgiServer::   @process{cgiServer}
+* have::        @process{have}
+* notify::      @process{notify}
+* delivering::  @process{delivering}
+@end menu
+
+Flood diagram:
+
+@image{mediatex-figures/server,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerStart 
+@itemx @eventServerStop
+@item @eventServerReload
+from @procScriptsInitd
+@itemx @eventServerSaveReg
+from @procClientMisc
+@item @eventServerExtractReg
+@itemx @eventServerNotifyReg 
+@itemx @eventServerDeliverReg
+from @procClientMisc{} respectively to 
+@procServerExtract{}, @procServerNotify{} and @procServerDeliver
+@item @eventServerCgiQuery 
+from @procScriptsCgi{} to @procServerCgiSrv
+@item @eventServerHaveQuery 
+from @procClientSupp{} to @procServerHave
+@item @eventServerCacheUpload
+from @procClientMisc{} to @procServerCache
+@end table
+
+@item Events out
+@table @code
+@item @eventClientMiscBind
+@itemx @eventClientMiscUnBind
+to @procClientMisc
+@item @eventClientMiscSuppMount
+@itemx @eventClientMiscSuppUMount
+@itemx @eventClientMiscGet
+from @procServerExtract{} to @procClientSupp
+@item @eventScriptsDeliver 
+from @procServerDeliver{} to @procScriptsDeliver
+@end table
+
+@item Data in
+@table @code
+@item @dataConf
+@item @dataServers
+@end table
+
+@item Data in/out
+@table @code
+@item @dataChecksum
+@end table
+@end itemize
+
+Options:
+@table @option
+@itemx -n
+@itemx --dry-run
+do a dry run
+@itemx -m
+@itemx --nice-limit
+Amount of RAM in Mo the soft try to run bellow
+@itemx -M
+@itemx --soft-limit
+Amount of RAM in Mo the soft may reach
+@itemx -c
+@itemx --conf-label
+Allow to manage several configurations (default is mdtx)
+@end table
+
+Code:
+@table @file
+@item /etc/init.d/mediatex/mdtxd
+@itemx src/server/threads.c
+@itemx src/server/mdtx.c
+@end table
+
+@node cache
+@subsection cache
+@include cache.texi
+@node extract
+@subsection extract
+@include extract.texi
+@node cgiServer
+@subsection cgiServer
+@include cgiServer.texi
+@node have
+@subsection have
+@include have.texi
+@node notify
+@subsection notify
+@include notify.texi
+@node delivering
+@subsection delivering
+@include delivering.texi

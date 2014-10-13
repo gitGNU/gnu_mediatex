@@ -1,0 +1,16 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+.deps
+Makefile
+# make
+utShellQuery.tmp
+*.[hc]
+*.output
+.libs
+*.lo
+libparser.la
+# make check
+ut[a-z]*
+ut*.out
+ut*.txt

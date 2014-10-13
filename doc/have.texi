@@ -1,0 +1,40 @@
+@cindex supports
+
+@process{Have} process is call when @actorPublisher provide a support. 
+
+Process conceptual model:
+
+@image{mediatex-figures/have,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerHaveQuery 
+from @procClientSupp
+@end table
+
+@item Events out
+@table @code
+@item @eventServerExtract 
+to @procServerExtract
+@item @eventServerDeliver 
+to @procServerDeliver
+@end table
+
+@item Input data
+@itemize @bullet
+@item @dataConf
+@item @dataServers
+@item @dataExtract
+@end itemize
+@end itemize
+
+Example:
+@example
+...
+@end example
+
+Code:
+@table @file
+@item src/server/cgiSrv.c
+@end table

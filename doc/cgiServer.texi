@@ -1,0 +1,57 @@
+@cindex cgi
+
+This process handle queries from the cgi script.
+
+Process conceptual model:
+
+@image{mediatex-figures/cgiServer,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+@item @eventServerCgiQuery 
+from @procScriptsCgi
+@end table
+
+@item Events out
+@table @code
+@item @eventServerExtract 
+to @procServerExtract
+@item @eventServerDeliver 
+to @procServerDeliver
+@end table
+
+@item Input data
+@itemize @bullet
+@item @dataConf
+@item @dataServers
+@end itemize
+@end itemize
+
+Example:
+@example
+$ telnet localhost 6560
+# Collection's records:
+Headers
+	Collection	hello
+	Type		DISK
+	DoCypher	FALSE
+Body
+#                date                             host @dots{}
+D 2013-12-10,10:24:24 fbc144f6da753a9a4288e2915df14edd @dots{}
+
+@dots{}                             hash                size extra
+@dots{} 365acad0657b0113990fe669972a65de               15106 test@@test.org
+^]quit
+
+$ tail -f /var/log/mediatex.log
+[info mdtxd.c:384] socketJob
+...
+[notice mdtxd.c:400] hello: DISK message from \
+                   fbc144f6da753a9a4288e2915df14edd server (localhost)
+@end example
+
+Code:
+@table @file
+@item src/server/cgiSrv.c
+@end table

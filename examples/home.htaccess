@@ -1,0 +1,15 @@
+# force https
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} !^443$
+RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [QSA,R=301,L]
+
+# Server side includes
+Options +Includes
+DirectoryIndex index.shtml
+
+# login/password
+AuthType Digest
+AuthName "MDTX-COLL"
+AuthDigestProvider file
+AuthUserFile  /etc/mediatex/MDTX-COLL/apache2/htpasswd
+AuthGroupFile /etc/mediatex/MDTX-COLL/apache2/htgroup

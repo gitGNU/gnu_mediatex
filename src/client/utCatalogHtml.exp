@@ -1,0 +1,421 @@
+[info catalogHtml.c] have 1 documents
+[info catalogHtml.c] have 1 humans
+<!--#set var='HOME' value='../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Document</SPAN> : <SMALL>PANTHERE</SMALL>
+</P>
+
+<P>
+(<A HREF="../../categories/003/0000/000.shtml">animal</A>, <A HREF="../../categories/002/0000/000.shtml">drawing</A>, <A HREF="../../categories/004/0000/000.shtml">hand</A>)
+</P>
+
+<BR>
+<P>
+Characteristics:
+<UL>
+<LI>info = [P]erenial [A]rchive [N]etwork [There]</LI>
+</UL>
+
+</P>
+
+<P>
+
+Parteners:
+<UL>
+<LI><A HREF="../../roles/000/0000/000.shtml">designer</A> : <A HREF="../../humans/0000/000.shtml">Me </A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Records:
+<UL>
+<LI><A HREF="../../../cgi/get.cgi?hash=022a34b2f9b893fba5774237e1aa80ea&size=24075">
+<IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
+</A><A HREF="../../../score/archives/0000/000.shtml">(-1.00)</A><UL>
+<LI>format = PNG</LI>
+</UL>
+</LI>
+<LI><A HREF="../../../cgi/get.cgi?hash=b281449c229bcc4a3556cdcc0d3ebcec&size=815">
+<IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
+</A><A HREF="../../../score/archives/0000/001.shtml">(-1.00)</A><UL>
+<LI>format = XPM</LI>
+<LI>licence = GPLv3</LI>
+</UL>
+</LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../footer.html' -->
+[info catalogHtml.c] serialize: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/humans/0000/000.shtml
+<!--#set var='HOME' value='../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Person</SPAN> : <SMALL>ME </SMALL>
+</P>
+
+<P>
+(<A HREF="../../categories/002/0000/000.shtml">drawing</A>)
+</P>
+
+<BR>
+<P>
+Characteristics:
+<UL>
+<LI>another thing? = no</LI>
+</UL>
+
+</P>
+
+<P>
+
+Roles :
+<UL>
+<LI><A HREF="../../roles/000/0000/000.shtml">designer</A><UL>
+<LI>for <A HREF="../../documents/0000/000.shtml">panthere</A></LI>
+</UL>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/roles/000/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Role </SPAN><SMALL>DESIGNER</SMALL> : 1
+<BR>
+</P>
+[info catalogHtml.c] have 1 human, so 1 lists for role designer
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../../humans/0000/000.shtml">Me </A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/categories/003/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Class</SPAN> : <SMALL>ANIMAL</SMALL>
+<BR>
+</P>
+
+<BR>
+<P>
+
+Sub-classes:
+<UL>
+<LI><A HREF="../../../categories/004/0000/000.shtml">hand</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Documents: 1
+[info catalogHtml.c] have 1 doc, so 1 lists for category animal
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../../documents/0000/000.shtml">panthere</A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/categories/002/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Class</SPAN> : <SMALL>DRAWING</SMALL>
+<BR>
+</P>
+
+<BR>
+<P>
+
+Parent classes: <UL>
+<LI><A HREF="../../../categories/001/0000/000.shtml">image</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Sub-classes:
+<UL>
+<LI><A HREF="../../../categories/004/0000/000.shtml">hand</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Parteners:
+<UL>
+<LI><A HREF="../../../humans/0000/000.shtml">Me </A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Documents: 1
+[info catalogHtml.c] have 1 doc, so 1 lists for category drawing
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../../documents/0000/000.shtml">panthere</A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/categories/004/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Class</SPAN> : <SMALL>HAND</SMALL>
+<BR>
+</P>
+
+<BR>
+<P>
+
+Parent classes: <UL>
+<LI><A HREF="../../../categories/002/0000/000.shtml">drawing</A></LI>
+<LI><A HREF="../../../categories/003/0000/000.shtml">animal</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Documents: 1
+[info catalogHtml.c] have 1 doc, so 1 lists for category hand
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../../documents/0000/000.shtml">panthere</A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/categories/001/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Class</SPAN> : <SMALL>IMAGE</SMALL>
+<BR>
+</P>
+
+<BR>
+<P>
+
+Parent classes: <UL>
+<LI><A HREF="../../../categories/000/0000/000.shtml">media</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Sub-classes:
+<UL>
+<LI><A HREF="../../../categories/002/0000/000.shtml">drawing</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Documents: 0
+<!--#include virtual='../header.shtml' -->
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/categories/000/header.shtml
+<!--#set var='HOME' value='../../../..' -->
+<!--#include virtual='../../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Class</SPAN> : <SMALL>MEDIA</SMALL>
+<BR>
+</P>
+
+<BR>
+<P>
+
+Sub-classes:
+<UL>
+<LI><A HREF="../../../categories/001/0000/000.shtml">image</A></LI>
+</UL>
+
+</P>
+
+<P>
+
+Characteristics:
+<UL>
+<LI>topo = Welcome !</LI>
+</UL>
+
+</P>
+
+<P>
+
+Documents: 0
+<!--#include virtual='../header.shtml' -->
+<!--#include virtual='../../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/docLists/header.shtml
+<!--#set var='HOME' value='../../..' -->
+<!--#include virtual='../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">All documents </SPAN> : 1
+<BR>
+</P>
+[info catalogHtml.c] have 1 document lists
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../documents/0000/000.shtml">panthere</A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../footer.html' -->
+[info catalogHtml.c] Serialize LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html/index/humLists/header.shtml
+<!--#set var='HOME' value='../../..' -->
+<!--#include virtual='../../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">All parteners </SPAN> : 1
+<BR>
+</P>
+[info catalogHtml.c] have 1 human lists
+<!--#include virtual='../header.shtml' -->
+<P>
+<UL>
+<LI><A HREF="../../humans/0000/000.shtml">Me </A></LI>
+</UL>
+
+</P>
+
+<!--#include virtual='../../../footer.html' -->
+<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.1//EN'>
+
+<!--Inspired from LaTeX2HTML 2008 (1.71)
+ Generated by MediaTeX software
+ Nicolas Roche -->
+<HTML>
+<HEAD>
+<TITLE>Index</TITLE>
+<META NAME='description' CONTENT='MediaTeX catalog'>
+<META NAME='keywords' CONTENT='Index'>
+<META NAME='resource-type' CONTENT='data files'>
+<META NAME='distribution' CONTENT='private content'>
+
+<META HTTP-EQUIV='Content-Type' CONTENT='text/html; charset=utf-8'>
+<META NAME='Generator' CONTENT='MediaTeX v2013'>
+<META HTTP-EQUIV='Content-Style-Type' CONTENT='text/css'>
+
+<LINK REL='STYLESHEET' HREF='<!--#echo var='HOME' -->/mediatex.css'>
+
+</HEAD>
+
+<BODY >
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
+<TR><TD>
+<A NAME='tex2html1'
+HREF='<!--#echo var='HOME' -->/index'><IMG
+ALIGN='BOTTOM' BORDER='0' SRC='<!--#echo var='HOME' -->/logo.png'
+ALT='top'></A>
+<P>
+
+<P>
+<A HREF="<!--#echo var='HOME' -->/index/docLists/0000/000.shtml">All documents</A>
+</P>
+
+<P>
+
+Classes:
+<UL>
+<LI><A HREF="<!--#echo var='HOME' -->/index/categories/003/0000/000.shtml">animal</A><UL>
+</UL>
+</LI>
+<LI><A HREF="<!--#echo var='HOME' -->/index/categories/000/0000/000.shtml">media</A><UL>
+<LI><A HREF="<!--#echo var='HOME' -->/index/categories/001/0000/000.shtml">image</A><UL>
+<LI><A HREF="<!--#echo var='HOME' -->/index/categories/002/0000/000.shtml">drawing</A><UL>
+</UL>
+</UL>
+</UL>
+</LI>
+</UL>
+
+</P>
+
+<P>
+<A HREF="<!--#echo var='HOME' -->/index/humLists/0000/000.shtml">Parteners:</A><UL>
+<LI><A HREF="<!--#echo var='HOME' -->/index/roles/000/0000/000.shtml">designer</A></LI>
+</UL>
+
+</P>
+
+<P>
+</TD></TR>
+</TABLE></TD>
+<TD ALIGN='LEFT' VALIGN='TOP'><TABLE>
+<TR><TD>
+<TABLE CELLPADDING=3>
+<TR><TD ALIGN='CENTER'><A NAME='tex2html7'
+HREF='<!--#echo var='HOME' -->/index'>Index</A></TD>
+<TD ALIGN='CENTER'><A NAME='tex2html8'
+HREF='<!--#echo var='HOME' -->/cache'>Cache</A></TD>
+<TD ALIGN='CENTER'><A NAME='tex2html9'
+HREF='<!--#echo var='HOME' -->/score'>Score</A></TD>
+<TD ALIGN='CENTER'><A NAME='tex2html10'
+HREF='https://host1.mediatex.org/~mdtx1-coll1/cgi/viewvc.cgi'>Version</A></TD>
+</TR>
+</TABLE>
+<DIV ALIGN='CENTER'>
+
+</DIV>
+
+<!--#set var='HOME' value='..' -->
+<!--#include virtual='../indexHeader.shtml' -->
+
+<P>
+
+<SPAN  CLASS="textbf">Welcome!</SPAN> on collection <SMALL>COLL1</SMALL>
+<BR>(you are on <SMALL>MDTX1</SMALL> server)
+<BR>
+</P>
+
+<!--#include virtual='../footer.html' -->
+[info confTree.c] free configuration
+[info catalogHtml.c] exit on success

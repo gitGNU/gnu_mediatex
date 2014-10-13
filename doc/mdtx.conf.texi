@@ -1,0 +1,161 @@
+The @dataConfO{} file is used locally as the main
+configuration file. It is read by the 3 binaries:
+@itemize @bullet
+@item @activityClient
+@item @procScriptsCgi
+@item @activityServer
+@end itemize
+Both @actorPublisher{} and @activity{client} may modify it.
+
+Relational schema:
+
+@image{mediatex-figures/mdtx.conf,,,,}
+
+@itemize @bullet
+@item Proper entities
+@itemize @bullet
+@item
+The @sc{Configuration} entity is the single main contexte.
+@item 
+The @sc{Collection} entity lists all the collections.
+@item 
+The @sc{Network} entity lists public and private networks we logically defined.
+@end itemize
+
+@item Linked entities
+@itemize @bullet
+@item 
+The @sc{Support} entity lists all the local supports.
+@item 
+The @sc{Server} entity lists all the remote servers per collection.
+@end itemize
+
+@item Proper relations
+@itemize @bullet
+@item 
+The @sc{manage} relationship lists all the collections our local server managed.
+@item 
+The @sc{networks} relationship lists all the networks we belongs to. 
+The configuration relationship may be overwriten by each collection.
+@item 
+The @sc{gateways} relationship lists all the networks for which our local 
+server act as a @acronym{NAT} gateway.
+The configuration relationship may be overwriten by each collection.
+@item 
+The @sc{localhost} relationship gives our local server related to the
+collection context.
+@item 
+The @sc{localImages} relationship lists all the supports shared within a
+specific collections.
+@end itemize
+@end itemize
+
+@note{} The @sc{imageFiles}, @sc{networks} and @sc{gateways} relationship 
+from @dataServers{} file are obtains by concatening all local associations
+we have from the configuration of each remote servers.
+
+Example:
+@example
+# comment: greeter for this server
+comment    "Put your personal greeting here"
+
+# host: hostname use in urls
+host       localhost
+
+# port: listening port for incoming requests
+mdtxPort   6561
+
+# port: listening port for SSHd
+sshPort    22
+
+# networks: networks the host belongs to
+networks   www
+
+# default cache parameters
+cacheSize  100 Mo
+cacheTTL   15 Day
+queryTTL   1 Week
+
+# local support parameters
+checkTTL   1 Year
+suppTTL    10 Year
+maxScore   20.00
+badScore   1.00
+powSupp    2.00
+powImage   2.00
+factSupp   2.00
+
+# The below section is managed by MediaTeX software.
+# You should not edit it by hand.
+# (host fingerprint: bf8d1517c68ef484b47af68c57d06da9)
+
+Collection mdtx-hello@@localhost:22
+	localhost 8a34048c4d9428b07b8d67e91deed9ed
+	share	  ex-cd1,
+		  ex-cd2,
+		  ex-new-doc
+end
+@end example
+
+Grammar:
+@example
+stanzas: stanzas confLine
+       | stanzas collectionStanza
+       | confLine
+       | collectionStanza
+
+confLine: HOST string
+       | COMMENT string
+       | MDTXPORT number
+       | SSHPORT number
+       | NETWORKS networks
+       | GATEWAYS gateways
+       | CACHESIZE number size
+       | CACHETTL number time
+       | QUERYTTL number time
+       | CHECKTTL number time
+       | SUPPTTL number time
+       | MAXSCORE SCORE
+       | BADSCORE SCORE
+       | POWSUPP SCORE
+       | POWIMAGE SCORE
+       | FACTSUPP SCORE
+
+collectionStanza: newCollection collectionLines ENDBLOCK
+
+newCollection: COLLECTION string - string @@ string : number
+
+collectionLines: collectionLines collectionLine
+               | collectionLine
+ 
+collectionLine: SHARE supports
+              | LOCALHOST string
+              | NETWORKS networks
+              | GATEWAYS gateways
+              | CACHESIZE number size
+              | CACHETTL number time
+              | QUERYTTL number time
+
+size: GO | MO | KO | O
+time: MONTH | WEEK | DAY | HOUR | MINUTE
+
+networks: networks , string
+        | string
+
+gateways: gateways , string
+        | string
+
+supports: supports , string
+        | string
+
+string: [^[:blank:],\r\n]+
+number: [+-]?[[:digit:]]
+@end example
+
+Code:
+@table @file
+@item src/memory/confTree.h
+@itemx src/memory/confTree.c
+@itemx src/parser/confFile.l
+@itemx src/parser/confFile.y
+@end table

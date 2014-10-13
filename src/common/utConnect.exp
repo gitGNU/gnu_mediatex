@@ -1,0 +1,34 @@
+*** no server:
+[info address.c] build socket address 127.0.0.1:12345
+[info tcp.c] connecting to 127.0.0.1:12345
+[info tcp.c] connect fails: Connection refused
+[info connect.c] cannot reach localhost:12345
+[info tcp.c] connecting to 127.0.0.1:12345
+[info tcp.c] connect fails: Connection refused
+[info connect.c] cannot reach localhost:12345
+[info tcp.c] connecting to 127.0.0.1:12345
+[info tcp.c] connect fails: Connection refused
+[info connect.c] cannot reach localhost:12345
+[info confTree.c] free configuration
+[info connect.c] exit on success
+*** with server:
+[info address.c] build socket address 127.0.0.1:12345
+[info tcp.c] connecting to 127.0.0.1:12345
+[info connect.c] connected to localhost (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
+[info connect.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1
+[info connect.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash2                 456 path2
+[info confTree.c] free configuration
+[info connect.c] exit on success
+*** server receive:
+# Collection's records:
+Headers
+	Collection	coll1               
+	Type		UNKNOWN
+	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1
+D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash2                 456 path2
+          

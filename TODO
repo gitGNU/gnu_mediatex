@@ -1,0 +1,102 @@
+*** Dependencies (find a place where to put that list)
+
+                 name, license, website
+
+- Copy/past codes
+getcgivar, MIT/NCSA?, no sure but shall be find into NCSA sever exemples
+log-ardsm-strdsm, (none yet), http://www.felecan.org/ (Peter Felecan agree me to put this code into GPL)
+e2fsck (progbar), GPLv2, http://e2fsprogs.sourceforge.net/ (Theodore Ts'o agree to relicense e2fsck's progress bar code under the LGPLv2)
+
+- Compilation
+automake,   GPLv2+,  http://www.gnu.org/software/automake/
+bison,      GPLv3+,  http://www.gnu.org/software/bison/
+gettext,    GPLv3+,  http://www.gnu.org/software/gettext/
+flex,       BSD,     http://flex.sourceforge.net/
+help2man,   GPLv3+,  http://www.gnu.org/software/help2man/
+libavl,     LGPLv2+, http://adtinfo.org/
+libtool,    GPLv2+,  http://www.gnu.org/software/libtool/
+make,       GPLv3+,  http://www.gnu.org/software/make/
+texinfo,    GPLv3+,  http://www.gnu.org/software/texinfo/
+transfig,   MIT,     http://www.xfig.org/ ?
+libssl-dev, BSD,     http://www.openssl.org/
+
+- Documentation (others format than texinfo and man) :
+imagemagick, Apache2, http://www.imagemagick.org/
+texlive,     LPPL,    https://www.tug.org/texlive/
+
+- Installation:
+apache2,        Apache2,  http://httpd.apache.org/
+bc,              GPLv3+,   http://www.gnu.org/software/bc/
+bzip2,           GPLv3?,   http://www.bzip.org/
+cpio,            GPLv3+,   http://www.gnu.org/software/cpio/
+cvs,             GPLv2+,   http://cvs.nongnu.org/
+findutils,       GPLv3+,   http://www.gnu.org/software/findutils/
+gzip,            GPLv2+,   http://www.gnu.org/software/gzip/
+initramfs-tools, GPLv2+,   https://wiki.debian.org/initramfs-tools
+ssh,             BSD,      http://www.openssh.com/
+tar,             GPLv3+,   http://www.gnu.org/software/tar/
+unzip,           BSD,      http://info-zip.org/
+viewvc,          BSD,      http://www.viewvc.org/
+
+- Optionnal: (and non-free)
+rar,             EULA,     http://www.rarlab.com/
+afio, not a standard OSI/FSF approved free software, http://members.chello.nl/~k.holtman/afio.html
+
+*** Reminder for copy/paste
+
+** debian options
+
+$ ./configure \
+  --prefix=/usr \
+  --includedir=/usr/include \
+  --mandir=/usr/share/man \
+  --infodir=/usr/share/info \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --libexecdir=/usr/lib/mediatex
+
+** investigate memory leaks on setuid binary (valgring refusing)
+
+$ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
+$ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
+
+*** TO TEST
+
+- pgrof: test with more than 100k entries
+
+*** TO CORRECT
+
+- licence headers (lacks into 213 files)
+find . -type f -exec grep -L Copyright {} \; | grep -v texi | grep -v CVS | wc -l
+
+- add supp: wait CD doors is locked (cf v3)
+- i10n for french
+- allocate/freeing cache policy (optimize ; assert no diseases)
+- address.c: use gethostbyaddr_r
+- cache.c: use readdir_r
+
+*** TODO
+
+- do not allocate string within conf, record and server lexers
+- deliver: use a lock (mail send twice if bad luck)
+- connect: use a lock (sigalrm)
+- save/restore CVSROOT
+- manage ECDSA key too
+- plugin system (sql,xml) and hooks (mail) with defaults overidable
+
+*** TODO MAYBE
+
+- replace openssl by libgcrypt (md5sum and cypher socket)
+- replaced Peter's code by mqueue
+- add thread ID to the log
+- shouldn't we use absolute link for cgi? (catalog copy)
+- notify: do not notify bad archive when nbGeo remote copies exists ?
+- follow simlinks into the cache (... not very secure)
+- sort categories on serializer (... no silver bullet order)
+- replace cvs+viewvc by git+cgit (no debian package available yet)
+- upload from cgi (not really the USER purpose => www-data as publisher)
+
+*** FEATURES (to document)
+
+- compatible with DNS round robin
+
