@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.1 2014/10/13 19:39:26 nroche Exp $
+ * Version: $Id: command.c,v 1.2 2014/10/24 11:17:12 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -50,12 +50,12 @@ void
 version()
 {
   fprintf(stderr, 
-	  "\nGNU " PACKAGE_STRING " Copyright (C) 2014 <Nicolas Roche>\n"
+	  "\n" PACKAGE_STRING " Copyright (C) 2014 <Nicolas Roche>\n"
 	  "\n<http://www.gnu.org/licenses/gpl.html>\n"
 	  "This program comes with ABSOLUTELY NO WARRANTY\n"
 	  "This is free software, and you are welcome to redistribute it\n"
 	  "\nPlease report bugs to: <" PACKAGE_BUGREPORT ">\n"
-	  PACKAGE_NAME " home page: <http://www.narval.tk/mediatexi/>.\n"
+	  PACKAGE_NAME " home page: <http://www.nongnu.org/mediatex>.\n"
 	  "General help using GNU software: "
 	  "<http://www.gnu.org/gethelp/>\n\n");
 }

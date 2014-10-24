@@ -10,4 +10,4 @@ Package: mediatex
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, cvs, viewvc, initramfs-tools, libavl1, tar, cpio, gzip, bzip2, unzip
 Description: MediaTeX archivage software
- MediaTeX is a framework providing perenial archivage on CD
+ MediaTeX is an light ERMS providing perenial archivage on CD.
