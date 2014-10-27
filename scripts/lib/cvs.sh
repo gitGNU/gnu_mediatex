@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.1 2014/10/13 19:38:38 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.2 2014/10/27 12:39:40 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -222,7 +222,7 @@ function CVS_update()
     cd - > /dev/null 2>&1 || true
 }
 
-# this function commit change into the mdtx module
+# this function commit change into a module
 # $1: cvs module to commit
 # $2: message for this commit
 function CVS_commit()
@@ -230,22 +230,27 @@ function CVS_commit()
     Debug "$FUNCNAME: $1 $2" 2
     [ $# -eq 2 ] || Error "expect 2 parameters"
     CVS=$CACHEDIR/$MDTX/cvs/$1
+    QUERY2="cvs commit -m \"$2\""
 
     cd $CVS ||
     Error "cannot cd to cvs working directory: $CVS"
     UMASK=$(umask -p)
     umask 0007
 
-    # add meta-data parts
-    if [ "$USER" != "$MDTX" ]; then
-	QUERY="cvs add *[0-9][0-9].txt icons/*.*"
-	Info "$QUERY"
-	eval $QUERY 2>&1 || /bin/true
+    # su to mdtx user when call from init.sh
+    if [ $(id -u) -eq 0 ]; then
+	QUERY2="su $MDTX -c '$QUERY'"
+    else
+        # add meta-data parts to collections modules
+	if [ "$USER" != "$MDTX" ]; then
+	    QUERY1="cvs add *[0-9][0-9].txt icons/*.*"
+	    Info "$QUERY1"
+	    eval $QUERY1 2>&1 || /bin/true
+	fi
     fi
 
-    QUERY="cvs commit -m \"$2\""
-    Info "$QUERY"
-    eval $QUERY 2>&1 ||
+    Info "$QUERY2"
+    eval $QUERY2 2>&1 ||
     Error "cannot commit cvs working directory: $CVS"
 
     eval $UMASK
