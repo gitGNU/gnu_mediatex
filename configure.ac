@@ -1,4 +1,4 @@
-dnl  * Version: $Id: configure.ac,v 1.1 2014/10/13 19:37:42 nroche Exp $
+dnl  * Version: $Id: configure.ac,v 1.2 2014/11/13 16:36:06 nroche Exp $
 dnl  * Project: MediaTex
 dnl  * Module:  root
 dnl  *

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: connect.h,v 1.1 2014/10/13 19:38:57 nroche Exp $
+ * Version: $Id: connect.h,v 1.2 2014/11/13 16:36:23 nroche Exp $
  * Project: MediaTeX
  * Module : server/connect
  *

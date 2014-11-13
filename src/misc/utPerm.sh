@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utPerm.sh,v 1.1 2014/10/13 19:39:43 nroche Exp $
+# * Version: $Id: utPerm.sh,v 1.2 2014/11/13 16:36:53 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

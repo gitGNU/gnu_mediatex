@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.1 2014/10/13 19:37:40 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:05 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  root
 #  *

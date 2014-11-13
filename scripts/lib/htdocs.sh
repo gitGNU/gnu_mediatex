@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: htdocs.sh,v 1.1 2014/10/13 19:38:38 nroche Exp $
+# * Version: $Id: htdocs.sh,v 1.2 2014/11/13 16:36:12 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

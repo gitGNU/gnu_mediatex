@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.1 2014/10/13 19:38:56 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:22 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  common modules (both used by clients and server)
 #  *

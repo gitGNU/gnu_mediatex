@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.2 2014/10/24 11:17:12 nroche Exp $
+ * Version: $Id: command.c,v 1.3 2014/11/13 16:36:38 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -54,7 +54,7 @@ version()
 	  "\n<http://www.gnu.org/licenses/gpl.html>\n"
 	  "This program comes with ABSOLUTELY NO WARRANTY\n"
 	  "This is free software, and you are welcome to redistribute it\n"
-	  "\nPlease report bugs to: <" PACKAGE_BUGREPORT ">\n"
+	  "\nPlease report bugs to: <" PACKAGE_BUGREPORT ">.\n"
 	  PACKAGE_NAME " home page: <http://www.nongnu.org/mediatex>.\n"
 	  "General help using GNU software: "
 	  "<http://www.gnu.org/gethelp/>\n\n");
@@ -100,7 +100,7 @@ void
 parserUsage(char* programName)
 {
   memoryUsage(programName);
-  fprintf(stderr, " [ -L ] [ -P ]");
+  fprintf(stderr, "\n\t\t[ -L ] [ -P ]");
 }
 
 /*=======================================================================
@@ -114,7 +114,7 @@ void
 mdtxUsage(char* programName)
 {
   parserUsage(programName);
-  fprintf(stderr, " [ -X ] [ -c confFile ]");
+  fprintf(stderr, "\n\t\t[ -X ] [ -c confFile ]");
 }
 
 /*=======================================================================

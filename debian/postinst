@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: postinst,v 1.1 2014/10/13 19:37:43 nroche Exp $
+# $Id: postinst,v 1.2 2014/11/13 16:36:06 nroche Exp $
 #set -x
 set -e
 #. /usr/share/debconf/confmodule

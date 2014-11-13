@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utExtractFile.sh,v 1.1 2014/10/13 19:39:50 nroche Exp $
+# * Version: $Id: utExtractFile.sh,v 1.2 2014/11/13 16:37:03 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: register.c,v 1.1 2014/10/13 19:38:59 nroche Exp $
+ * Version: $Id: register.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
  * Project: MediaTeX
  * Module : bus/register
  
@@ -215,7 +215,7 @@ return rc;
  *              wait until this register is unset by the daemon.
  * 
  * Synopsis   : int mdtxSignal(int flag)
- * Input      : int flag = 
+ * Input      : int flag = register number
  * Output     : N/A
  =======================================================================*/
 int mdtxSyncSignal(int flag)
@@ -237,7 +237,7 @@ int mdtxSyncSignal(int flag)
   }
 
   // Read register
-  if (!shmRead(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE, 
+  if (!shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE, 
 	       mdtxShmRead, (void*)&param))
       goto error;
 
@@ -247,7 +247,7 @@ int mdtxSyncSignal(int flag)
   // Set register
   logEmit(LOG_INFO, "setting %i register", flag);
   param.flag = flag;
-  if (!shmWrite(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE, 
+  if (!shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE, 
 		mdtxShmEnable, (void*)&param))
     goto error;
 
@@ -259,7 +259,7 @@ int mdtxSyncSignal(int flag)
   logEmit(LOG_INFO, "waiting for %i register unset", flag);
   do {
     usleep(200000);
-    rc = shmRead(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE, 
+    rc = shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE, 
 		 mdtxShmRead, (void*)&param);
   }
   while (rc && (param.buf[flag] == MDTX_QUERY));

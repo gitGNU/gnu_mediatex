@@ -6,13 +6,12 @@ coll1 coll2 coll3 coll4
 [notice conf.c] *** Del collection coll 4:
 [info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
-# Version:  XXX
 
 # comment: greeter for this server
-comment    "mdtx1 configuration file"
+comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx1
+host       host1.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -68,13 +67,12 @@ end
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
-# Version:  XXX
 
 # comment: greeter for this server
-comment    "mdtx1 configuration file"
+comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx1
+host       host1.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -132,13 +130,12 @@ end
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
-# Version:  XXX
 
 # comment: greeter for this server
-comment    "mdtx1 configuration file"
+comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx1
+host       host1.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -196,13 +193,12 @@ end
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
-# Version:  XXX
 
 # comment: greeter for this server
-comment    "mdtx1 configuration file"
+comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx1
+host       host1.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -260,13 +256,12 @@ end
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
-# Version:  XXX
 
 # comment: greeter for this server
-comment    "mdtx1 configuration file"
+comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx1
+host       host1.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560

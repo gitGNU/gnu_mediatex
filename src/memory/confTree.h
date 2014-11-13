@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.1 2014/10/13 19:39:09 nroche Exp $
+ * Version: $Id: confTree.h,v 1.2 2014/11/13 16:36:28 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -72,7 +72,7 @@ struct Collection {
   char   label[MAX_SIZE_COLL+1]; // ie: "COLL"
   char  *masterLabel;            // ie: "MDTX2
   char   masterHost[MAX_SIZE_HOST+1]; // CVS server host name
-  int    masterPort; // SSH server port
+  int    masterPort; // SSH server port, also used by CVS
 
   /* cache parameters */
   off_t  cacheSize; // maximum size for cache

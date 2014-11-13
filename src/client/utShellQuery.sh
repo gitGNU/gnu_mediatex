@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utShellQuery.sh,v 1.1 2014/10/13 19:38:55 nroche Exp $
+# * Version: $Id: utShellQuery.sh,v 1.2 2014/11/13 16:36:22 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *

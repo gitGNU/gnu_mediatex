@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.1 2014/10/13 19:39:30 nroche Exp $
+ * Version: $Id: keys.c,v 1.2 2014/11/13 16:36:40 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *

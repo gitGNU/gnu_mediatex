@@ -486,7 +486,7 @@
 @event{$ mediatex adm commit [coll @var{coll}]}
 @end macro
 @macro eventClientServUpgrade
-@event{$ mediatex adm upgrade [coll @var{coll}]}
+@event{$ mediatex upgrade [coll @var{coll}]}
 @end macro
 @macro eventClientServUpgradeCall
 @event{upgrade()}
@@ -543,6 +543,9 @@
 @event{$ mediatex motd}
 @end macro
 @c     - misc
+@macro eventClientMiscAdmMake
+@event{$ mediatex adm make [coll @var{coll}]}
+@end macro
 @macro eventClientMiscMake
 @event{$ mediatex make [coll @var{coll}]}
 @end macro
@@ -558,9 +561,6 @@
 @macro eventClientMiscPurge
 @event{# mediatex adm purge}
 @end macro
-@macro eventClientMiscSu
-@event{$ mediatex su [coll @var{coll}]}
-@end macro
 @macro eventClientMiscAddUser
 @event{# mediatex adm add user @var{user}}
 @end macro
@@ -572,6 +572,9 @@
 @end macro
 @macro eventClientMiscUnBind
 @event{$ mediatex adm unbind}
+@end macro
+@macro eventClientMiscSu
+@event{$ mediatex su [coll @var{coll}]}
 @end macro
 @macro eventClientMiscGet
 @event{$ mediatex adm get @var{path} as @var{coll} on @var{path}}

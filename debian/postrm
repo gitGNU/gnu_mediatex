@@ -1,8 +1,77 @@
 #!/bin/sh
-# $Id: postrm,v 1.1 2014/10/13 19:37:43 nroche Exp $
+# $Id: postrm,v 1.2 2014/11/13 16:36:06 nroche Exp $
 #set -x
 set -e
 #. /usr/share/debconf/confmodule
+
+# this function add a user to a group
+# $1: the user name
+# $2: the group name
+USERS_del_from_group()
+{
+    MEMBERS=$(grep "^$2:" /etc/group | cut -d : -f 4-)
+    if [ ! -z "$(echo ",$MEMBERS," | grep ",$1,")" ]; then
+	deluser $1 $2
+    fi
+}
+
+# this function disease a group
+# $1: the group name
+USERS_disease_group()
+{
+    MEMBERS=$(grep "^$1:" /etc/group | cut -d : -f 4- | sed "s/,/ /g")
+    if [ ! -z "MEMBERS" ]; then
+	for _USERS in $MEMBERS; do
+	    [ "$_USERS" != "$1" ] || continue
+	    if [ "$(grep ^$_USERS: /etc/passwd)" ]; then
+		deluser $_USERS $1
+	    fi
+	done
+    fi
+}
+
+# Remove a group
+# $1: the group name
+USERS_remove_group()
+{
+    # remove users from the user group
+    USERS_disease_group $1
+
+    # remove group
+    if [ "$(grep ^$1: /etc/group)" ]; then
+	delgroup $1 || Error "delgroup $1 failed"
+    fi
+}
+
+# this function remove a user
+# $1: the user name (MDTX-COLL)
+USERS_remove_user()
+{
+    # remove groups
+    USERS_disease_group $1
+
+    # remove user
+    if [ "$(grep ^$1: /etc/passwd)" ]; then
+	if [ -z "$(ps --no-headers U $1)" ]; then
+	    deluser $1 
+	fi
+    fi
+}
+
+# this function remove a coll user
+# $1: user
+USERS_coll_remove_user()
+{
+    USERS_del_from_group $1 ${MDTX}_md
+    USERS_remove_user $1
+}
+
+# this function remove the mdtx user
+USERS_mdtx_remove_user()
+{
+    USERS_remove_group ${MDTX}_md
+    USERS_remove_user $MDTX
+}
 
 # postrm script
 if [ "$1" = "purge" ]
@@ -10,7 +79,7 @@ then
     # copy/paste from /usr/share/mediatex/scripts/purge.sh
     /usr/sbin/update-rc.d -f mediatexd remove
 
-    # unbind 
+    # unbind (should already be done)
     JAIL=/var/cache/mediatex/mdtx/jail
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
     umount $JAIL/var/cache
@@ -25,19 +94,14 @@ then
     invoke-rc.d ssh reload
 
     # del users
-    USERS=$(grep "^mdtx-" /etc/passwd | cut -d':' -f1) || true
-    for _USER in $USERS mdtx; do
-	MEMBERS=$(grep "^mdtx_md:" /etc/group | cut -d : -f 4-)
-	if [ ! -z "$(echo ",$MEMBERS," | grep ",$_USER,")" ]; then
-	    /usr/sbin/deluser $_USER mdtx_md
-	fi
-	if [ -z "$(grep ^$_USER: /etc/group)" ]; then
-	    /usr/sbin/delgroup $_USER >/dev/null 2>&1 || true
-	fi
-	if [ -z "$(grep ^$_USER: /etc/passwd)" ]; then
-	    /usr/sbin/deluser $_USER >/dev/null 2>&1 || true
-	fi
+    MDTX=mdtx
+    USERS=$(grep "^$MDTX-" /etc/passwd | cut -d':' -f1) || true
+    for _USER in $USERS; do
+	USERS_coll_remove_user $_USER
     done
+
+    # del mdtx user
+    USERS_mdtx_remove_user
 
     # clean directories 
     STATEDIR=/var/lib/mediatex

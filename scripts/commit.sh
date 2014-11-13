@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: commit.sh,v 1.1 2014/10/13 19:38:32 nroche Exp $
+# * Version: $Id: commit.sh,v 1.2 2014/11/13 16:36:10 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -33,8 +33,12 @@ set -e
 Debug "commit"
 
 MODULE=$1
-COMMENT="$2"
-[ -z $3 ] || COMMENT="$COMMENT by $3"
+COMMENT=$2
+FINGERPRINT=$3
+HOST=$4
+
+[ -z $3 ] || COMMENT="$COMMENT by $FINGERPRINT"
+[ -z $4 ] || COMMENT="$COMMENT ($HOST)"
 [ -z $1 ] && Error "please provide a module"
 [ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
  

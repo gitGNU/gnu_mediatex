@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.1 2014/10/13 19:38:48 nroche Exp $
+ * Version: $Id: motd.c,v 1.2 2014/11/13 16:36:19 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/motd
  *
@@ -75,11 +75,11 @@ updateMotdFromSupportDB()
 
 /*=======================================================================
  * Function   : motdContainer
- * Description: Single container motdion
+ * Description: Find image related to a container
  * Synopsis   : int motdContainer
  * Input      : Collection* coll = context
  *              Container* container = what to motd
- * Output     : int *found = TRUE if motded
+ * Output     : int *found = TRUE when image is already available
  *              FALSE on error
  =======================================================================*/
 int motdContainer(MotdData* data, Container* container)
@@ -114,11 +114,11 @@ int motdContainer(MotdData* data, Container* container)
 
 /*=======================================================================
  * Function   : motdArchive
- * Description: Single archive motdion
+ * Description: Find image related to an archive
  * Synopsis   : int motdArchive
  * Input      : Collection* coll = context
  *              Archive* archive = what to motd
- * Output     : int *found = TRUE if motded
+ * Output     : int *found = TRUE image is already available
  *              FALSE on error
  =======================================================================*/
 int motdArchive(MotdData* data, Archive* archive)
@@ -145,7 +145,8 @@ int motdArchive(MotdData* data, Archive* archive)
   }
 
   // continue searching as we stop at the first container already there
-  while(!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
+  while(!data->found && 
+	(asso = rgNext_r(archive->fromContainers, &curr))) {
     if (!motdContainer(data, asso->container)) goto error;
   }
 
@@ -187,7 +188,7 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= NULL) {
 
-    // look if archive is already supplyed or if we have demand on it
+    // scan wanted archives
     if (archive->state != WANTED) continue;
     if (!motdArchive(&data, archive)) goto error2;
   }
@@ -276,6 +277,7 @@ updateMotdFromAllMd5sumsDB()
  * Synopsis   : int updateMotd()
  * Input      : N/A
  * Output     : TRUE on success
+ * TODO       : show sharable supports ?
  =======================================================================*/
 int 
 updateMotd()
@@ -327,8 +329,6 @@ updateMotd()
       prev = support;
     }
   }
-  
-  // todo: show sharable supports ?
 
   // display collections global status 
   printf("Looking for content to burn:\n"); 

@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: ssh.sh,v 1.1 2014/10/13 19:38:41 nroche Exp $
+# * Version: $Id: ssh.sh,v 1.2 2014/11/13 16:36:13 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -45,6 +45,7 @@ function SSH_build_key()
 {
     Debug "$FUNCNAME: $1" 2
     [ ! -z "$1" ] || error "need a collection label"
+    SSH_KNOWNHOSTS=$CACHEDIR/$MDTX/home/$1/.ssh/known_hosts
     COMMENT="$USER@$(hostname -f)"
     cd $CACHEDIR/$MDTX/home/$1/.ssh
 
@@ -59,6 +60,9 @@ function SSH_build_key()
     chmod 600 id_dsa
     chown $1:$1 *
     cd - >/dev/null
+
+    # reset known servers keys
+    rm -f $SSH_KNOWNHOSTS
 }
 
 # bootstrap ssh configuration with local keys

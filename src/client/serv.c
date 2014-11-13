@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.1 2014/10/13 19:38:48 nroche Exp $
+ * Version: $Id: serv.c,v 1.2 2014/11/13 16:36:19 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/serv
  *
@@ -210,25 +210,25 @@ int clientWriteUnlock()
   return rc;
 }
 
-
 /*=======================================================================
  * Function   : mdtxUpdate
- * Description: call update.sh
+ * Description: inderectely call update.sh
  * Synopsis   : int mdtxUpdate(char* label)
  * Input      : char* label: the collection to update
  * Output     : TRUE on success
+
+ * Note       : workaround as it should be implicitly done 
+ *              (see common/openClose.h::loadCollection)
  =======================================================================*/
 int
 mdtxUpdate(char* label)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
   Collection* coll = NULL;
 
   checkLabel(label);
   logEmit(LOG_DEBUG, "%s", "update collection");
 
-  if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!callUpdate(coll->user)) goto error;
 
@@ -242,10 +242,13 @@ mdtxUpdate(char* label)
 
 /*=======================================================================
  * Function   : mdtxCommit
- * Description: call commit.sh
+ * Description: inderectely call commit.sh
  * Synopsis   : int mdtxCommit(char* label)
  * Input      : char* label: the collection to commit
  * Output     : TRUE on success
+
+ * Note       : workaround as it should be implicitly done 
+ *              (see common/openClose.h::loadCollection)
  =======================================================================*/
 int
 mdtxCommit(char* label)
@@ -259,7 +262,9 @@ mdtxCommit(char* label)
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
-  if (!callCommit(coll->user, coll->userFingerPrint)) goto error;
+
+  if (!callCommit(coll->user, coll->userFingerPrint, conf->host)) 
+    goto error;
 
   rc = TRUE;
  error:
@@ -276,6 +281,12 @@ mdtxCommit(char* label)
  * Synopsis   : int mdtxUpgrade(char* label)
  * Input      : char* label = collection to upgrade
  * Output     : TRUE on success
+
+ * Note       : This fonction has to be used to rewrite CTLG and EXTR 
+ *              metadata files.
+ *              Else, so a to save CPU, these files will rewritten
+ *              only when a new last file (ending with NN instead of a
+ *              number) is provided.
  =======================================================================*/
 int 
 mdtxUpgrade(char* label)
@@ -310,8 +321,10 @@ mdtxUpgrade(char* label)
  * Description: add a proxy
  * Synopsis   : int addKey(char* label, char* proxy)
  * Input      : char* label = collection to modify
- *              char* proxy = fingerprint to add
+ *              char* path = fingerprint to add
  * Output     : TRUE on success
+
+ * Note       : used to accept a server subscription to a collection
  =======================================================================*/
 int 
 addKey(char* label, char* path)
@@ -357,7 +370,10 @@ addKey(char* label, char* path)
   if (!(server = addServer(coll, hash))) goto error2;
   server->userKey = key;
   key = NULL;
+
+  // needed a second time
   if (!upgradeSshConfiguration(coll)) goto error2;
+
   if (!wasModifiedCollection(coll, SERV)) goto error2;
 
   rc = TRUE;
@@ -379,6 +395,8 @@ addKey(char* label, char* path)
  * Input      : char* label = collection to modify
  *              char* proxy = fingerprint to add
  * Output     : TRUE on success
+
+ * Note       : used to revoke a server from a collection
  =======================================================================*/
 int 
 delKey(char* label, char* key)
@@ -423,7 +441,10 @@ delKey(char* label, char* key)
    
   // we delete the server
   if (!delServer(coll, server)) goto error2;
-  if (!upgradeSshConfiguration(coll)) goto error2;
+
+  // needed a second time
+  if (!upgradeSshConfiguration(coll)) goto error2; 
+
   if (!wasModifiedCollection(coll, SERV)) goto error2;
 
   rc = TRUE;

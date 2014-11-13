@@ -134,7 +134,6 @@ ut1-mdtx-hello ut1-mdtx-hello drwx------ ./var/cache/mediatex/ut1-mdtx/home/ut1-
       ut1-mdtx    ut1-mdtx_md drwxr-x--- ./var/lib/mediatex/ut1-mdtx
       ut1-mdtx    ut1-mdtx_md drwxrws--- ./var/lib/mediatex/ut1-mdtx/CVSROOT
       ut1-mdtx       ut1-mdtx drwxr-s--- ./var/lib/mediatex/ut1-mdtx/ut1-mdtx
-ut1-mdtx-hello ut1-mdtx-hello drwxr-s--- ./var/lib/mediatex/ut1-mdtx/ut1-mdtx-hello
 [debug users.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug users.sh] USERS_coll_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_del_from_group: ut1-mdtx-hello

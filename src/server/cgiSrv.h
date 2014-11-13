@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.h,v 1.1 2014/10/13 19:39:53 nroche Exp $
+ * Version: $Id: cgiSrv.h,v 1.2 2014/11/13 16:37:07 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *

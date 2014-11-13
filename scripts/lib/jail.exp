@@ -54,11 +54,8 @@ U ut4-mdtx/ut4-mdtx.conf
 [info cvs.sh] cvs update -d
 cvs update: Updating .
 [debug cvs.sh] CVS_commit: ut4-mdtx jail.sh
-[info cvs.sh].txt icons/*.*
-cvs add: nothing known about `*[0-9][0-9].txt'
-cvs [add aborted]: could not chdir to `icons': No such file or directory
-[info cvs.sh] cvs commit -m "jail.sh"
-cvs commit: Examining .
+[info cvs.sh] su ut4-mdtx -c 'cvs update -d'
+cvs update: Updating .
 [debug jail.sh] SSH_chroot_login: yes
 Reloading OpenBSD Secure Shell server's configuration: sshd.
 [debug jail.sh] JAIL_build:

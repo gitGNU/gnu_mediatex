@@ -7,7 +7,8 @@
 [info serverTree.c] bedac32422739d7eced624ba20f5912e may reach 6b18ed0194b0fbadd08e0a13cccda00e
 [info serverTree.c] Serializing the server tree file: stdout
 # This file is managed by MediaTeX software.
-# MediaTeX coll1@host1.mediatex.org:22 servers list:
+# MediaTeX (null)@:0 servers list:
+
 master     6b18ed0194b0fbadd08e0a13cccda00e
 collKey    1234567890abcdef
 

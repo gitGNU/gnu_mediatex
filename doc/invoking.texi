@@ -26,7 +26,7 @@ automake gettext libtool make flex bison texinfo transfig help2man libssl-dev li
 @item Documentation (others format than texinfo and man) :
 imagemagick texlive
 @item Installation:
-ssh apache2 cvs viewvc initramfs-tools libavl1 tar cpio gzip bzip2 unzip rar bc findutils
+ssh apache2 cvs viewvc initramfs-tools libavl1 tar cpio gzip bzip2 unzip bc findutils
 @end itemize
 
 Here are the steps used to build the project from scratch:

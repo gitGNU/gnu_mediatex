@@ -1,6 +1,6 @@
-[notice shellQuery.y] initializing mdtx software
-[notice shellQuery.y] removing mdtx software
-[notice shellQuery.y] purging mdtx software
+[notice shellQuery.y] initializing mediatex software
+[notice shellQuery.y] removing mediatex software
+[notice shellQuery.y] purging mediatex software
 [notice shellQuery.y] add USER user to groups
 [notice shellQuery.y] del USER user from groups
 [notice shellQuery.y] create/join new COLL collection
@@ -12,8 +12,8 @@
 [notice shellQuery.y] update collection
 [notice shellQuery.y] commit all
 [notice shellQuery.y] commit collection
-[notice shellQuery.y] bind mdtx directories
-[notice shellQuery.y] unbind mdtx directories
+[notice shellQuery.y] bind mediatex directories
+[notice shellQuery.y] unbind mediatex directories
 [notice shellQuery.y] mount ISO on PATH
 [notice shellQuery.y] umount PATH
 [notice shellQuery.y] get PATH1 as COLL on PATH2
@@ -41,5 +41,5 @@
 [notice shellQuery.y] build a HTML catalog
 [notice shellQuery.y] clean all
 [notice shellQuery.y] clean an HTML catalog
-[notice shellQuery.y] change to mdtx user
+[notice shellQuery.y] change to mediatex user
 [notice shellQuery.y] change to collection user

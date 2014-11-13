@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.h,v 1.1 2014/10/13 19:38:58 nroche Exp $
+ * Version: $Id: openClose.h,v 1.2 2014/11/13 16:36:24 nroche Exp $
  * Project: MediaTeX
  * Module : bus/openClose
  
@@ -26,7 +26,7 @@
 #define MDTX_BUS_OPEN_CLOSE_H 1
 
 int callUpdate(char* user);
-int callCommit(char* user, char* signature);
+int callCommit(char* user, char* signature1, char* signature2);
 
 int loadConfiguration(int confFiles); // logical OR on confFiles
 int loadRecords(Collection* coll);

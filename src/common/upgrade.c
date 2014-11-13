@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.1 2014/10/13 19:39:00 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.2 2014/11/13 16:36:25 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/upgrade
  *
@@ -52,6 +52,7 @@
 int 
 scoreSupport(Support* supp, ScoreParam *p)
 {
+  Configuration* conf = NULL;
   time_t now = 0;
   time_t laps = 0;
   int rc = FALSE;
@@ -59,6 +60,8 @@ scoreSupport(Support* supp, ScoreParam *p)
   checkSupport(supp);
   logEmit(LOG_INFO, "compute support score for %s:%lli (%s)", 
 	  supp->fullHash, supp->size, supp->name);
+
+  if (!(conf = getConfiguration())) goto error;
 
   // date
   if ((now = currentTime()) == -1) goto error;
@@ -82,9 +85,9 @@ scoreSupport(Support* supp, ScoreParam *p)
 
   // check support validity
   laps = now - supp->lastCheck;
-  if (getConfiguration()->checkTTL < 0 ||
-      (getConfiguration()->checkTTL >= 0 &&
-       laps > getConfiguration()->checkTTL)) {
+  if (conf->checkTTL < 0 ||
+      (conf->checkTTL >= 0 &&
+       laps > conf->checkTTL)) {
     logEmit(LOG_WARNING, "\"%s\" support have expired since %d days",
     	    supp->name, laps/(60*60*24));
     // score = 0: unchecked support for too many time (may be broken)
@@ -363,9 +366,14 @@ scanCvsClientDirectory(Collection* coll, char* path)
  * Input      : Collection* coll = collection to upgrade              
  * Output     : TRUE on success 
 
- * Note       : should not be called by the server (to save memory):
- *              this function upgrade the localhost server by using the
- *              configuration values and by re-compute the image scores
+ * Note       : Should not be called by the server (to save memory).
+ *              This function do almost all the consistency job:
+ *              - re-compute the locale image's score
+ *              - update own configuration values into servers.txt
+ *              - update ssh configuration files (config, key and auth)
+ *              - update master collection host values into:
+ *                - configuration file (mdtx.conf)
+ *                - CVS/Root files
  =======================================================================*/
 int 
 upgradeCollection(Collection* coll)
@@ -377,6 +385,7 @@ upgradeCollection(Collection* coll)
   char* string = NULL;
   RG* ring = NULL;
   RGIT* curr = NULL;
+  int isMaster = FALSE;
 
   checkCollection(coll);
   logEmit(LOG_DEBUG, "upgradeCollection %s", coll->label);
@@ -386,7 +395,8 @@ upgradeCollection(Collection* coll)
   // get the host and user keys and update the fingerprints
   if (!populateCollection(coll)) goto error;
 
-  // delete and rebuild own server entry
+  // delete and rebuild own server entry (update own values)
+  // note: server.localhost := conf
   if (!(localhost = getLocalHost(coll))) goto error; 
   if (!diseaseServer(coll, localhost)) goto error;
 
@@ -425,22 +435,54 @@ upgradeCollection(Collection* coll)
   // add local images to serverTree
   if (!scoreLocalImages(coll)) goto error;
 
-  // upgrade master host into CVS/Root files for remote collection (only)
-  if ((master = coll->serverTree->master) && localhost != master) {
-    // ...and the information only values into configuration
-    strncpy(coll->masterHost,  master->host, MAX_SIZE_HOST);
-    coll->masterHost[MAX_SIZE_HOST] = 0;
-    if (master->label) {
-      destroyString(coll->masterLabel);
-      if (!(coll->masterLabel = createString(master->label))) goto error;
-    }
-    coll->masterPort = master->sshPort;
-    if (!scanCvsClientDirectory(coll, coll->cvsDir)) goto error;
-    conf->fileState[iCONF] = MODIFIED;
+  // check if we are the collection master host
+  isMaster = 
+    (!strcmp(coll->masterLabel, env.confLabel) &&
+     (!strcmp(coll->masterHost, "localhost") ||
+      !strcmp(coll->masterHost, conf->host)));
+  
+  // if master change his collection key, we need
+  // to look first to the master prefix into mdtx.conf file
+  if (isMaster) {
+    coll->serverTree->master = coll->localhost;
   }
 
-  // upgrade SSH settings
+  // else we trust the servers.txt file
+  if (!(master = coll->serverTree->master)) {
+    logEmit(LOG_ERR, "loose master server for %s collection", 
+	    coll->label);
+    goto error;
+  }
+
+  // upgrade master ids on collection stanza into configuration
+  // note: this is also valuable for master server
+  // conf.coll := server.master
+  if (strncmp(coll->masterHost, master->host, MAX_SIZE_HOST)) {
+    strncpy(coll->masterHost, master->host, MAX_SIZE_HOST);
+    coll->masterHost[MAX_SIZE_HOST] = 0;
+    conf->fileState[iCONF] = MODIFIED;
+  }
+  if (strcmp(coll->masterLabel, master->label)) {
+    destroyString(coll->masterLabel);
+    if (!(coll->masterLabel = createString(master->label))) goto error;
+    conf->fileState[iCONF] = MODIFIED;
+  }
+  if (strcmp(coll->masterUser, master->user)) {
+    destroyString(coll->masterUser);
+    if (!(coll->masterUser = createString(master->user))) goto error;
+    conf->fileState[iCONF] = MODIFIED;
+  }
+  if (coll->masterPort != master->sshPort) {
+    coll->masterPort = master->sshPort;
+    conf->fileState[iCONF] = MODIFIED;
+  } 
+
+  // upgrade SSH settings (using servers)
   if (!env.noRegression && !upgradeSshConfiguration(coll)) goto error;
+
+  // upgrade CVS/Root files (using conf.coll)
+  if (!env.noRegression && !scanCvsClientDirectory(coll, coll->cvsDir)) 
+    goto error;
 
   rc = TRUE;
 error:

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.1 2014/10/13 19:39:19 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.2 2014/11/13 16:36:34 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -451,15 +451,17 @@ createExempleConfiguration()
   Support* supp = NULL;
   RGIT* curr = NULL;
   char* string = NULL;
+  char host[] = "hostX.mediatex.org";
   int i = 0, j = 0;
 
   logEmit(LOG_DEBUG, "%s", "build the configuration exemple.");
 
   if (!(self = getConfiguration())) goto error;
-  if (!(self->comment = createString(env.confLabel))) goto error;
+  host[4] = env.confLabel[4]; // same host numder as conf label number
+  strncpy(self->host, host, MAX_SIZE_HOST);
+  if (!(self->comment = createString(host))) goto error;
   if (!(self->comment = catString(self->comment, " configuration file")))
     goto error;
-  strncpy(self->host, env.confLabel, MAX_SIZE_HOST);
 
   /* test1 collection */
   if (!(coll = addCollection("coll1"))) goto error;
@@ -536,13 +538,16 @@ createExempleServerTree(Collection* coll)
   char* string = NULL;
   int i=0, j=0;
 
+  char* labels[] = {
+    "mdtx1", "mdtx2", "mdtx3"};
+  char* users[3];
   char* comments[] = {
     "this is server1", "this is server2", "this is server3"};
   char hosts[][MAX_SIZE_HOST+1] = {
     "host1", "localhost", "127.0.0.2"};
   int mdtxPorts[] = {11111, 6560, 33333};
   int sshPorts[] = {22, 22, 2222};
-  char serverId[][MAX_SIZE_HASH+1] = {
+  char serverId[][MAX_SIZE_HASH+1] = { // fingerprints
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "6b18ed0194b0fbadd08e0a13cccda00e",
     "bedac32422739d7eced624ba20f5912e"};
@@ -594,16 +599,22 @@ createExempleServerTree(Collection* coll)
     "ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze"};
 
   if (!(coll->serverTree)) goto error;
-  if (!(coll->serverTree->master = addServer(coll, serverId[1]))) goto error;
+  if (!(coll->serverTree->master = addServer(coll, serverId[1]))) 
+    goto error;
   strncpy(coll->serverTree->aesKey, "1234567890abcdef", MAX_SIZE_AES);
 
   for (i=0; i<3; ++i) {
     if (!(server = addServer(coll, serverId[i]))) goto error;
-	  
+    if (!(server->label = createString(labels[i]))) goto error;
+    if (!(server->user = createString(labels[i])) ||
+	!(server->user = catString(server->user, "-")) ||
+	!(server->user = catString(server->user, coll->label))) goto error;
     strncpy(server->host, hosts[i], MAX_SIZE_HOST);
     if (!(server->comment = createString(comments[i]))) goto error;
     server->mdtxPort = mdtxPorts[i];
     server->sshPort = sshPorts[i];
+
+    // keys
     if (!(server->userKey = createString(userKeys[i]))) goto error;
     if (!(server->hostKey = createString(hostKeys[i]))) goto error;
 

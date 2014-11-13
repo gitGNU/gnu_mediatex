@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.1 2014/10/13 19:38:43 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.2 2014/11/13 16:36:13 nroche Exp $
  * Project: MediaTex
  * Module : mediatex pre-configuration output file
  *

@@ -67,7 +67,8 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 * Communication model::	        Main specifications.
 * Relational schema::           Data files descriptions.
 * Conceptual model::	        Details specifications.
-* Simple use case::             Simple use case
+* Simple use case::             Simple use case.
+* Consistency howto::           Consistency howto.
 * Reporting bugs::              Sending bug reports and feature suggestions.
 * Documentation License::       Copying and sharing this documentation.
 * Concept index::	        Index of concepts.
@@ -96,6 +97,10 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @node Simple use case
 @chapter Simple use case
 @include useCase.texi
+
+@node Consistency howto
+@chapter Consistency howto
+@include consistency.texi
 
 @node Reporting bugs
 @chapter Reporting bugs
@@ -203,7 +208,7 @@ $ gprof /usr/bin/mediatex > gprof.txt
 reload the info page into emacs
 @example
 in a new buffer use the M-x org-mode :
-info:/home/nroche/cvs/mediatex/doc/mediatex.info
+info:/home/user/cvs/mediatex/doc/mediatex.info
 info:/usr/share/info/mediatex.info
 place cursor on a line and type C-c C-o
 @end example

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.1 2014/10/13 19:39:53 nroche Exp $
+ * Version: $Id: deliver.c,v 1.2 2014/11/13 16:37:07 nroche Exp $
  * Project: MediaTeX
  *
  * Manage delivering mail
@@ -96,6 +96,8 @@ callMail(Collection* coll, Record* record, char* address)
  * Input      : Collection* coll
  *              RecordTree* records
  * Output     : TRUE on success
+
+ * TODO:      : use a lock to prevent mail to be sent twice (if bad luck)
  =======================================================================*/
 int 
 deliverMail(Collection* coll, Archive* archive)
@@ -123,7 +125,7 @@ deliverMail(Collection* coll, Archive* archive)
     if (getRecordType(record2) == FINALE_DEMAND &&
 	!(record2->type & REMOVE)) {
       record2->type |= REMOVE;
-      // TODO: use a lock to prevent mail to be sent twice (if bad luck)
+      // we should use a lock to prevent mail to be sent twice
       if (!callMail(coll, record, record2->extra)) goto error;
       if (!delCacheEntry(coll, record2)) goto error;
     }

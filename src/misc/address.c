@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.1 2014/10/13 19:39:24 nroche Exp $
+ * Version: $Id: address.c,v 1.2 2014/11/13 16:36:36 nroche Exp $
  * Project: 
  * Module : socket address
 
@@ -59,34 +59,42 @@ getHostNameByAddr(struct in_addr* inAddr)
   sHost = gethostbyaddr(inAddr, sizeof(struct in_addr), AF_INET);
 
   if (sHost == (struct hostent*)0) {
-    logEmit(LOG_ERR, "gethostbyaddr: cannot retrieve host name for %s: %s",
+    logEmit(LOG_NOTICE, 
+	    "gethostbyaddr: cannot retrieve host name for %s: %s",
 	    inet_ntoa(*inAddr), strerror(errno));
     switch (h_errno) {
     case HOST_NOT_FOUND:
-      logEmit(LOG_ERR, "gethostbyaddr: %s", "HOST_NOT_FOUND");
-      break;
+      logEmit(LOG_INFO, "gethostbyaddr: %s", "HOST_NOT_FOUND");
+      
+      // do not found an hostname: use IP instead
+      if ((rc = (char*)malloc(16)) == NULL) {
+	logEmit(LOG_ERR, "%s", "malloc cannot allocate string for IP");
+	goto error;
+      }
+      memset(rc, 0, 16);
+      strcpy(rc, inet_ntoa(*inAddr));
+      goto end;
     case NO_ADDRESS:
+      /* case NO_DATA: // same case value as NO_ADDRESS */
       logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_ADDRESS");
       break;
-      /* case NO_DATA: print ("NO_DATA\n"); break; */
     case NO_RECOVERY:
       logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_RECOVERY");
-      break;
+      goto error;
     case TRY_AGAIN:
       logEmit(LOG_ERR, "gethostbyaddr: %s", "TRY_AGAIN");
-      break;
+      goto error;
     }
-    
-    goto error;
   }
 
+  // normal case (found a hostname)
   if ((rc = (char*)malloc(strlen(sHost->h_name)+1)) == NULL) {
     logEmit(LOG_ERR, "malloc cannot allocate string of len %i+1",
 	    strlen(sHost->h_name));
     goto error;
   }
-
   strcpy(rc, sHost->h_name);
+ end:
  error:
   return rc;
 }

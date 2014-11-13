@@ -1,7 +1,7 @@
 /* prologue: =======================================================*/
 %{
   /*=======================================================================
-   * Version: $Id: shellQuery.y,v 1.1 2014/10/13 19:38:49 nroche Exp $
+   * Version: $Id: shellQuery.y,v 1.2 2014/11/13 16:36:20 nroche Exp $
    * Project: Mediatex
    * Module : shell parser
    *
@@ -205,76 +205,77 @@ queries: query
 ;
 
 query: shellADMIN admConfQuery
-	  /* mdtx adm init
-	     mdtx adm remove
-	     mdtx adm purge 
-	     mdtx adm add coll COLL@HOST:PORT
-	     mdtx adm del coll COLL
-	     mdtx adm update coll COLL
-	     mdtx adm update all
-	     mdtx adm commit coll COLL
-	     mdtx adm commit all
-	     mdtx adm make coll COLL
-	     mdtx adm make all
-	     mdtx adm bind 
-	     mdtx adm unbind
-	     mdtx adm mount ISO on PATH
-	     mdtx adm umount PATH
-	     mdtx get LOGIN@HOST:/PATH as PATH */
+	  /* mediatex adm init
+	     mediatex adm remove
+	     mediatex adm purge 
+	     mediatex adm add user
+	     mediatex adm del user
+	     mediatex adm add coll COLL@HOST:PORT
+	     mediatex adm del coll COLL
+	     mediatex adm update coll COLL
+	     mediatex adm update
+	     mediatex adm commit coll COLL
+	     mediatex adm commit
+	     mediatex adm make coll COLL
+	     mediatex adm make
+	     mediatex adm bind 
+	     mediatex adm unbind
+	     mediatex adm mount ISO on PATH
+	     mediatex adm umount PATH
+	     mediatex get PATH as COLL on FINGERPRINT */
      | shellSERVER srvQuery
-          /* mdtx srv save
-	     mdtx src scan
-	     mdtx srv extract
-	     mdtx srv notify */
+          /* mediatex srv save
+	     mediatex srv extract
+	     mediatex srv notify 
+	     mediatex src deliver */
      | apiQuery
 ;
         
 apiQuery: apiSuppQuery
-	  /* mdtx new supp SUPP on PATH
-	     mdtx del supp SUPP
-	     mdtx add supp SUPP to coll COLL
-	     mdtx del supp SUPP from COLL
-	     mdtx note supp as TEXT
-	     mdtx check supp on PATH 
-             mdtx upload PATH to coll COLL */
+	  /* mediatex add supp SUPP to all
+	     mediatex del supp SUPP from all
+	     mediatex add supp SUPP to coll COLL
+	     mediatex del supp SUPP from coll COLL
+	     mediatex add supp SUPP on PATH
+	     mediatex del supp SUPP
+	     mediatex list supp
+	     mediatex note supp as TEXT
+	     mediatex check supp on PATH 
+             mediatex upload PATH to coll COLL */
         | apiCollQuery
-	  /* mdtx add key PATH to coll COLL
-	     mdtx del key FINGERPRINT from coll COLL
-	     mdtx add proxy FINGERPRINT to coll COLL
-	     mdtx del proxy FINGERPRINT from coll COLL 
-	     mdtx list coll
-	     mdtx list supp
-	     mdtx motd
-	     mdtx deliver
-	     mdtx upgrade coll COLL 
-	     mdtx upgrade
-	     mdtx make coll COLL
-	     mdtx make
-	     mdtx clean coll COLL
-	     mdtx clean
-	     mdtx su
-	     mdtx su coll COLL */
+	  /* mediatex add key PATH to coll COLL
+	     mediatex del key FINGERPRINT from coll COLL
+	     mediatex list coll
+	     mediatex motd
+	     mediatex upgrade
+	     mediatex upgrade coll COLL 
+	     mediatex make coll COLL
+	     mediatex make
+	     mediatex clean coll COLL
+	     mediatex clean
+	     mediatex su
+	     mediatex su coll COLL */
 
 
  /* to call scripts directely (for daemon, admin or expert user) */
 
 admConfQuery: shellINIT shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "initializing mdtx software");
+  logParser(LOG_NOTICE, "%s", "initializing mediatex software");
 #ifndef utMAIN
   if (!mdtxInit()) YYABORT;
 #endif
 }
             | shellREMOVE shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "removing mdtx software");
+  logParser(LOG_NOTICE, "%s", "removing mediatex software");
 #ifndef utMAIN
   if (!mdtxRemove()) YYABORT;
 #endif
 }
             | shellPURGE shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "purging mdtx software");
+  logParser(LOG_NOTICE, "%s", "purging mediatex software");
 #ifndef utMAIN
   if (!mdtxPurge()) YYABORT;
 #endif
@@ -368,7 +369,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellBIND shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "bind mdtx directories");
+  logParser(LOG_NOTICE, "%s", "bind mediatex directories");
 #ifndef utMAIN
   if (!allowedUser(env.confLabel)) YYABORT;
   if (!mdtxBind()) YYABORT;
@@ -376,7 +377,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellUNBIND shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "unbind mdtx directories");
+  logParser(LOG_NOTICE, "%s", "unbind mediatex directories");
 #ifndef utMAIN
   if (!allowedUser(env.confLabel)) YYABORT;
   if (!mdtxUnbind()) YYABORT;
@@ -448,32 +449,7 @@ srvQuery: shellSAVE shellEOL
 
  /* support queries API */
 
-apiSuppQuery: shellADD support shellON shellSTRING shellEOL
-{
-  logParser(LOG_NOTICE, "add %s support on %s", $2, $4);
-#ifndef utMAIN
-  if (!clientWriteLock()) YYABORT;
-  if (!mdtxAddSupport($2, $4)) YYABORT;
-  if (!clientWriteUnlock()) YYABORT;
-#endif
-}
-            | shellDEL support shellEOL
-{
-  logParser(LOG_NOTICE, "%s", "remove a support");
-#ifndef utMAIN
-  if (!clientWriteLock()) YYABORT;
-  if (!mdtxDelSupport($2)) YYABORT;
-  if (!clientWriteUnlock()) YYABORT;
-#endif
-}
-            | shellLIST shellSUPP shellEOL
-{
-  logParser(LOG_NOTICE, "%s", "list local supports");
-#ifndef utMAIN
-  if (!mdtxLsSupport()) YYABORT;
-#endif
-}
-            | shellADD support shellTO shellALL shellEOL
+apiSuppQuery: shellADD support shellTO shellALL shellEOL
 {
   logParser(LOG_NOTICE, "%s", "add a support to all collection");
 #ifndef utMAIN
@@ -509,18 +485,47 @@ apiSuppQuery: shellADD support shellON shellSTRING shellEOL
   if (!clientWriteUnlock()) YYABORT;
 #endif
 }
+            | shellADD support shellON shellSTRING shellEOL
+{
+  logParser(LOG_NOTICE, "add %s support on %s", $2, $4);
+#ifndef utMAIN
+  if (!clientWriteLock()) YYABORT;
+  if (!mdtxAddSupport($2, $4)) YYABORT;
+  if (!clientWriteUnlock()) YYABORT;
+#endif
+}
+            | shellDEL support shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "remove a support");
+#ifndef utMAIN
+  if (!clientWriteLock()) YYABORT;
+  if (!mdtxDelSupport($2)) YYABORT;
+  if (!clientWriteUnlock()) YYABORT;
+#endif
+}
+            | shellLIST shellSUPP shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "list local supports");
+#ifndef utMAIN
+  if (!mdtxLsSupport()) YYABORT;
+#endif
+}
            | shellNOTE support shellAS shellSTRING shellEOL
 {
   logParser(LOG_NOTICE, "note a support as \"%s\"", $4);
 #ifndef utMAIN
+  if (!clientWriteLock()) YYABORT;
   if (!mdtxUpdateSupport($2, $4)) YYABORT;
+  if (!clientWriteUnlock()) YYABORT;
 #endif
 }
            | shellCHECK support shellON shellSTRING shellEOL
 {
   logParser(LOG_NOTICE, "check content located at %s", $4);
 #ifndef utMAIN
+  if (!clientWriteLock()) YYABORT;
   if (!mdtxHaveSupport($2, $4)) YYABORT;
+  if (!clientWriteUnlock()) YYABORT;
 #endif
 }
             | shellUPLOAD shellSTRING shellTO collection shellEOL
@@ -573,6 +578,11 @@ apiCollQuery: shellADD key shellTO collection shellEOL
   logParser(LOG_NOTICE, "%s", "upgrade all");
 #ifndef utMAIN
   if (!clientWriteLock()) YYABORT;
+
+  // needed if there is still no collection
+  if (!loadConfiguration(CONF)) YYABORT;
+  getConfiguration()->fileState[iCONF] = MODIFIED; 
+
   if (!clientLoop(mdtxUpgrade)) YYABORT;
   if (!clientWriteUnlock()) YYABORT;
 #endif
@@ -622,7 +632,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 ;
             | shellSU shellEOL
 {
-  logParser(LOG_NOTICE, "%s", "change to mdtx user");
+  logParser(LOG_NOTICE, "%s", "change to mediatex user");
 #ifndef utMAIN
   if (!mdtxSu(NULL)) YYABORT;
 #endif
@@ -659,7 +669,7 @@ shellQuery_error(const char* message)
 
 /*=======================================================================
  * Function   : parseShellQuery
- * Description: Parse the mdtx shell query
+ * Description: Parse the mediatex shell query
  * Synopsis   : int parseShellQuery(int argc, char** argv, int optind)
  * Input      : int argc, char** argv, int optind
  * Output     : TRUE on success
@@ -752,7 +762,7 @@ main(int argc, char** argv)
     {0, 0, 0, 0}
   };
        
-  // import mdtx environment
+  // import mediatex environment
   getEnv(&env);
   env.logSeverity = "notice";
 
@@ -766,7 +776,7 @@ main(int argc, char** argv)
     if (rc) goto optError;
   }
 
-  // export mdtx environment
+  // export mediatex environment
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/

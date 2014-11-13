@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.1 2014/10/13 19:39:55 nroche Exp $
+ * Version: $Id: notify.c,v 1.2 2014/11/13 16:37:09 nroche Exp $
  * Project: MediaTeX
  * Module : server/notify
 
@@ -224,11 +224,13 @@ int addFinalDemands(NotifyData* data)
 } 
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Function   : addBadTopLocalSupplies
+ * Description: Check for top containers having bad score (as iso)
+ * Synopsis   : int addBadTopLocalSupplies(NotifyData* data)
+ * Input      : NotifyData* data
  * Output     : TRUE on success
+
+ * TODO       : check minGeoDup and nb REMOTE_SUPPLY
  =======================================================================*/
 int addBadTopLocalSupplies(NotifyData* data)
 {
@@ -241,14 +243,15 @@ int addBadTopLocalSupplies(NotifyData* data)
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "addBadTopLocalSupplies");
 
-  // add local iso if do not own a good score
+  // add local iso (or other top containers) if it own a bad score
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= NULL) {
     if (archive->state < AVAILABLE) continue;
     if (archive->fromContainers->nbItems != 0) continue;
     if (archive->extractScore > 10) 
       continue;
-    /* TODO: check minGeoDup and nb REMOTE_SUPPLY
+
+    /* check minGeoDup and nb REMOTE_SUPPLY
        if (archive->extractScore <
        coll->serverTree->scoreParam.badScore && ...) continue
     */
@@ -458,7 +461,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   checkServer(source);
   logEmit(LOG_DEBUG, "%s", "acceptRemoteNotify");
 
-  if (!loadCollection(tree->collection, CACH|SERV)) goto error;
+  if (!loadCollection(tree->collection, CACH)) goto error;
 
   if (!(localhost = getLocalHost(coll))) goto error2; 
   
@@ -547,6 +550,8 @@ usage(char* programName)
  * Synopsis   : ./utcache
  * Input      : N/A
  * Output     : N/A
+
+ * TODO       : unit test for the receive case
  =======================================================================*/
 int 
 main(int argc, char** argv)
@@ -628,7 +633,7 @@ main(int argc, char** argv)
   if (!sendRemoteNotify(coll)) goto error;
   
   //utLog("%s", "here we receive", NULL);
-  // todo: copy the ring and clean the cache
+  // ... need to copy the ring and clean the cache
   //if (!acceptRemoteNotify(diff, LOCALHOST)) goto error;
 
   utLog("%s", "Clean the cache:", NULL);

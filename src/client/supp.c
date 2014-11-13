@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.1 2014/10/13 19:38:50 nroche Exp $
+ * Version: $Id: supp.c,v 1.2 2014/11/13 16:36:20 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/supp
  *
@@ -282,7 +282,7 @@ doCheckSupport(Support *supp, char* path)
  * Synopsis   : int lsSupport()
  * Input      : N/A
  * Output     : stdout
- * Note       : supoorts validity is updated and indeed the database too
+ * Note       : supports validity is updated and indeed the database too
  =======================================================================*/
 int 
 mdtxLsSupport()
@@ -293,13 +293,13 @@ mdtxLsSupport()
   Support *supp = NULL;
 
   logEmit(LOG_DEBUG, "%s", "mdtxLsSupport");
-  if (!loadConfiguration(CONF | SUPP)) goto error;
   if (!(conf = getConfiguration())) goto error;
+  if (!loadConfiguration(CONF | SUPP)) goto error;
   supports = conf->supports;
 
   rgRewind(supports);
   while((supp = rgNext(supports)) != NULL) {
-    if (!scoreSupport(supp, &getConfiguration()->scoreParam)) goto error;
+    if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
   
   printf("%5s %*s %s\n", 

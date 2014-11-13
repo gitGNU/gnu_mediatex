@@ -723,6 +723,8 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
  * Note       : as tar cannot rename a file, and in order not to have
  *              collisions, we extract files in a temporary place 
  *              and next rename them
+
+ * TODO       : remove extract dirs ~/tmp/... (if empty)
  =======================================================================*/
 int
 cacheSet(ExtractData* data, Record* record, char* path) 
@@ -749,7 +751,7 @@ cacheSet(ExtractData* data, Record* record, char* path)
     goto error;
   }
 
-  // TODO: remove extract dirs ~/tmp/... (if empty)
+  // here we should remove extract dirs ~/tmp/... (if empty)
 
   // toggle !malloc record to local-supply...
   record->extra = destroyString(record->extra);

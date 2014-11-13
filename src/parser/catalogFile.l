@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.1 2014/10/13 19:39:47 nroche Exp $
+ * Version: $Id: catalogFile.l,v 1.2 2014/11/13 16:36:57 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -66,7 +66,7 @@
 
 %top{
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.1 2014/10/13 19:39:47 nroche Exp $
+ * Version: $Id: catalogFile.l,v 1.2 2014/11/13 16:36:57 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 

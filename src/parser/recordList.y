@@ -1,7 +1,7 @@
 /* prologue: =======================================================*/
 %{
   /*=======================================================================
-   * Version: $Id: recordList.y,v 1.1 2014/10/13 19:39:49 nroche Exp $
+   * Version: $Id: recordList.y,v 1.2 2014/11/13 16:36:59 nroche Exp $
    * Project: MediaTeX
    * Module : recordList parser
    *
@@ -127,8 +127,11 @@ hLine: recordCOLL recordSTRING
   destroyString($2);
   RECORD_TREE->collection = coll;
 #ifndef utMAIN
+  // read the socket key
+  if (!loadCollection(coll, SERV)) YYERROR;
   aesInit(&RECORD_TREE->aes, coll->serverTree->aesKey, DECRYPT);
 #else
+  // unit test key
   aesInit(&RECORD_TREE->aes, "1000000000000000", DECRYPT);
 #endif
 }
@@ -189,7 +192,7 @@ line: recordTYPE recordDATE recordHASH recordHASH recordSIZE recordPATH
   Archive* archive = NULL;
   logParser(LOG_DEBUG, "%s", "new record");
 
-  /* TODO: do we refuse unknown servers or not ?
+  /* maybe we should refuse unknown servers ?
   if (!(server = getServer(RECORD_TREE->collection, $3))) {
     logEmit(LOG_ERR, "unknown server: %s", $3);
     YYERROR;
@@ -285,7 +288,7 @@ RecordTree* parseRecordList(int fd)
 
   // call the parser
   if (record_parse(&parser)) {
-    logEmit(LOG_ERR, "catalog file parser error on line %i",
+    logEmit(LOG_ERR, "record file parser error on line %i",
 	    ((RecordExtra*)record_get_extra(parser.scanner))->lineNo);
     goto error2;
   }
@@ -407,8 +410,8 @@ main(int argc, char** argv)
 	if ((outputPath = (char*)malloc(sizeof(char) * strlen(optarg) + 1))
 	    == NULL) {
 	  fprintf(stderr, 
-		  "%s: cannot allocate memory for the output stream name\n", 
-		  programName);
+		  "%s: cannot allocate memory for the output stream name\n"
+		  , programName);
 	  rc = 3;
 	}
 	else {

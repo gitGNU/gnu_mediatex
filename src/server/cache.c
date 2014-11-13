@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.1 2014/10/13 19:39:52 nroche Exp $
+ * Version: $Id: cache.c,v 1.2 2014/11/13 16:37:05 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -196,104 +196,13 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
  * Input      : RecordTree* self = the record tree to update
  *              Collection* collection = the related collection
  *              const char* path = the directory path
- * Output     : RecordTree* self = the record tree updated
- *              TRUE on success
- * Note       : readdir_r ?
- *              scandir garanty the order
- =======================================================================*/
-int 
-scanRepositoryBackup(Collection* coll, const char* path, int toKeep) 
-{
-  int rc = FALSE;
-  DIR* dir  = NULL;
-  struct dirent* entry;
-  char* absolutePath = NULL;
-  char* relativePath = NULL;
-  char* absolutePath2= NULL;
-
-  if (path == NULL) {
-    logEmit(LOG_ERR, "%s", 
-	    "please provide at least an empty string for path");
-    goto error;
-  }
-
-  if ((absolutePath = createString(coll->cacheDir)) == NULL ||
-      (absolutePath = catString(absolutePath, "/")) == NULL ||
-      (absolutePath = catString(absolutePath, path)) == NULL)
-    goto error;
-
-  logEmit(LOG_INFO, "scaning directory: %s", absolutePath);
-
-  if ((dir = opendir(absolutePath)) == NULL) {
-    logEmit(LOG_ERR, "cannot open cache directory \'%s\'", absolutePath);
-    goto error;
-  }
-
-  rc = FALSE;
-  errno = 0;
-  while ((entry = readdir(dir)) != NULL) {
-    if (!strcmp(entry->d_name, ".")) continue;
-    if (!strcmp(entry->d_name, "..")) continue;
-    if (!strcmp(entry->d_name, "toKeep")) toKeep = TRUE;
-
-    if ((relativePath = createString(path)) == NULL ||
-	(relativePath = catString(relativePath, entry->d_name)) == NULL)
-      goto error;
-  
-    //logEmit(LOG_INFO, "scaning '%s'", relativePath);
-
-    switch (entry->d_type) {
-    case DT_DIR: 
-      if ((relativePath = catString(relativePath, "/")) == NULL ||
-	  !scanRepositoryBackup(coll, relativePath, toKeep)) goto error;
-      errno = 0;
-      break;
-
-    case DT_REG: 
-      if ((absolutePath2 = createString(absolutePath)) == NULL ||
-	  (absolutePath2 = catString(absolutePath2, entry->d_name)) 
-	  == NULL) goto error;
-      if (!scanFile(coll, absolutePath2, relativePath, toKeep)) goto error;
-      break;
-
-    case DT_UNKNOWN:
-    default: 
-      logEmit(LOG_INFO, "ignore not regular file \'%s%s\'", 
-	      absolutePath, entry->d_name);
-      break;
-    }   
-    errno = 0; // see man readdir: return values
-  }
-  if (errno) {
-    logEmit(LOG_ERR, "cannot read directory %s: %s", 
-	    absolutePath, strerror(errno));
-    goto error;
-  }
-  
-  rc = TRUE;
- error:
-  if (dir != NULL && closedir(dir) != 0) {
-    logEmit(LOG_ERR, "cannot close directory: %s", strerror(errno)); 
-  }
-  if (!rc) {
-    logEmit(LOG_ERR, "fails scaning directory: %s", absolutePath);
-  }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : scanRepository
- * Description: Recursively scan a cache directory 
- * Synopsis   : int scanRepository(RecordTree* self, 
- *                  Collection* collection, time_t now, const char* path) 
- * Input      : RecordTree* self = the record tree to update
- *              Collection* collection = the related collection
- *              const char* path = the directory path
  *              int toKeep = tels the directory is to read-only
  * Output     : RecordTree* self = the record tree updated
  *              TRUE on success
- * Note       : readdir_r ?
- *              scandir garanty the order
+ * Note       : scandir assert the order (readdir_r do not)
+
+ * MAYBE       : use symlinkTarget from device.c but scanRepository
+	        is relative to the collection cache which is more secure
  =======================================================================*/
 int 
 scanRepository(Collection* coll, const char* path, int toKeep) 
@@ -356,8 +265,6 @@ scanRepository(Collection* coll, const char* path, int toKeep)
 	
       case DT_LNK:
 	logEmit(LOG_INFO, "%s", "do not handle simlink up today"); 
-	/* todo: use symlinkTarget from device.c but scanRepository
-	   is relative to the collection cache whichnis more secure */
 	break;
 
       case DT_UNKNOWN:
@@ -701,6 +608,8 @@ callAccess(char* path)
  * Input      : char* base = directory path already there
  *              char* path = directory path to build
  * Output     : TRUE on success
+
+ * TODO       : check mode of new created directory
  =======================================================================*/
 int
 makeDir(char* base, char* path, mode_t mode) 
@@ -728,7 +637,7 @@ makeDir(char* base, char* path, mode_t mode)
 	  goto error;
 	}
 	else {
-	  // already there. TODO: check mode
+	  // already there. We should check mode.
 	  if (callAccess(path)) goto error;
 	}
       }

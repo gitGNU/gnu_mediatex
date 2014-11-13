@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ssh.c,v 1.1 2014/10/13 19:38:59 nroche Exp $
+ * Version: $Id: ssh.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.1 2014/10/13 19:39:08 nroche Exp $
+ * Version: $Id: confTree.c,v 1.2 2014/11/13 16:36:28 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -443,8 +443,8 @@ serializeCollection(Collection* self, FILE* fd)
 
   if(self == NULL) goto error;
   logEmit(LOG_DEBUG, "serialize the %s collection", self->label);
+  if (!(conf = getConfiguration())) goto error;
 
-  /* collection stanza */
   fprintf(fd, "\nCollection %s-%s@%s:%i\n", 
 	  self->masterLabel, self->label, 
 	  self->masterHost, self->masterPort);
@@ -475,7 +475,6 @@ serializeCollection(Collection* self, FILE* fd)
   }
 
   /* cache parameters (maccro need to be protected by {}) */
-  if (!(conf = getConfiguration())) goto error;
   if (self->cacheSize > 0 && self->cacheSize != conf->cacheSize) {
     printCacheSize(fd, "\t%s", "cacheSize", self->cacheSize);
   }
@@ -836,7 +835,10 @@ serializeConfiguration(Configuration* self)
   }
 
   fprintf(fd, "# This is the MediaTeX software configuration file.\n");
-  fprintf(fd, "# Version: $" "Id" "$\n");
+
+  // do not add the CVS version as it implies a commit evry time we
+  // rebuild the file (because we de not parse the version id)
+  //fprintf(fd, "# Version: $" "Id" "$\n");
 
   fprintf(fd, "\n# comment: greeter for this server\n");
   fprintf(fd, "%-10s \"%s\"\n", "comment", self->comment);
@@ -1352,7 +1354,7 @@ main(int argc, char** argv)
   // Here, the collection's server keys are the sames for each server
   // on every collection. This should never append, but remains possible.
 
-  env.confLabel = "mdtx2";
+  env.confLabel="mdtx2";
   if (!createExempleConfiguration()) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(string = addNetwork("www"))) goto error;
@@ -1360,6 +1362,7 @@ main(int argc, char** argv)
   if (!(string = addNetwork("private1"))) goto error;
   if (!rgInsert(conf->networks, string)) goto error;
   if (!rgInsert(conf->gateways, string)) goto error;
+
   // overwrite gateway on collection settings
   if (!(coll = getCollection("coll3"))) goto error;
   if (!(string = addNetwork("private2"))) goto error;
@@ -1372,7 +1375,7 @@ main(int argc, char** argv)
   if (!serializeConfiguration(getConfiguration())) goto error;
   freeConfiguration();
 
-  env.confLabel = "mdtx3";
+  env.confLabel="mdtx3";
   if (!createExempleConfiguration()) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(string = addNetwork("private1"))) goto error;

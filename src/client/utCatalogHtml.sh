@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utCatalogHtml.sh,v 1.1 2014/10/13 19:38:51 nroche Exp $
+# * Version: $Id: utCatalogHtml.sh,v 1.2 2014/11/13 16:36:20 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *

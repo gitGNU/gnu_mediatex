@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.1 2014/10/13 19:40:02 nroche Exp $
+# * Version: $Id: tests.sh,v 1.2 2014/11/13 16:37:14 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -184,7 +184,7 @@ fi
 ############################################
 if [ $TEST_NB -le 4 ]; then
     topo "Registering mail"
-    /etc/init.d/mediatexd start serv1
+    /etc/init.d/mediatexd status serv1
     yourMail
     mdtxP "srv save"
     finalQuestion "do the server get it ?" \
@@ -226,7 +226,7 @@ if [ $TEST_NB -le 7 ]; then
     sedInPlace "s/6561/6002/" /etc/mediatex/serv2.conf
     sedInPlace "s/www/www, private/" /etc/mediatex/serv2.conf
     echo "Gateways private" >> /etc/mediatex/serv2.conf
-    /etc/init.d/mediatexd start serv2
+    /etc/init.d/mediatexd status serv2
     finalQuestion "is 2nd server running ?" \
 	"/etc/init.d/mediatexd status serv2"
 fi
@@ -268,7 +268,7 @@ if [ $TEST_NB -le 9 ]; then
     if /etc/init.d/mediatexd status serv1; then
 	/etc/init.d/mediatexd reload serv1
     else
-	/etc/init.d/mediatexd start serv1
+	/etc/init.d/mediatexd status serv1
     fi
     yourMail
     mdtxP "srv save" serv1
@@ -311,7 +311,7 @@ if [ $TEST_NB -le 11 ]; then
     mdtxA "adm init" serv3
     sedInPlace "s/6561/6003/" /etc/mediatex/serv3.conf
     sedInPlace "s/www/private/" /etc/mediatex/serv3.conf
-    /etc/init.d/mediatexd start serv3
+    /etc/init.d/mediatexd status serv3
     finalQuestion "is 3rd server running ?" \
 	"/etc/init.d/mediatexd status serv3"
 fi
@@ -390,6 +390,26 @@ if [ $TEST_NB -le 15 ]; then
     mdtxP "srv save" serv2
     finalQuestion "part2 remotely copied by serv2 ?" \
 	"cat /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
+fi
+
+############################################
+if [ $TEST_NB -le 16 ]; then
+    topo "move repository from serv1 to serv2"
+    if [ -d /var/lib/mediatex/serv1/serv1-hello ]; then
+	rm -fr /var/lib/mediatex/serv2/serv2-hello
+	mv /var/lib/mediatex/serv1/serv1-hello \
+	    /var/lib/mediatex/serv2/serv2-hello
+    fi
+    notice "you will be ask for localhost fingerprint..."
+    mdtxA "adm add coll hello" serv2
+    question "connected to serv2 cvsroot ?" \
+	"cat /var/cache/mediatex/serv2/cvs/serv2-hello/CVS/Root"
+    mdtxA "adm add coll serv2-hello" serv1
+    question "connected to serv2 cvsroot ?" \
+	"cat /var/cache/mediatex/serv1/cvs/serv1-hello/CVS/Root"
+    mdtxA "adm add coll serv2-hello" serv3
+    finalQuestion "connected to serv2 cvsroot ?" \
+	"cat /var/cache/mediatex/serv3/cvs/serv3-hello/CVS/Root"
 fi
 
 ############################################

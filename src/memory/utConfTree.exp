@@ -1,11 +1,10 @@
 # This is the MediaTeX software configuration file.
-# Version: $Id: utConfTree.exp,v 1.1 2014/10/13 19:39:17 nroche Exp $
 
 # comment: greeter for this server
-comment    "mdtx2 configuration file"
+comment    "host2.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       mdtx2
+host       host2.mediatex.org
 
 # port: listening port for incoming requests
 mdtxPort   6560

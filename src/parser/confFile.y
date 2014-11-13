@@ -1,7 +1,7 @@
 /* prologue: =======================================================*/
 %{
   /*=======================================================================
-   * Version: $Id: confFile.y,v 1.1 2014/10/13 19:39:48 nroche Exp $
+   * Version: $Id: confFile.y,v 1.2 2014/11/13 16:36:58 nroche Exp $
    * Project: Mediatex
    * Module : conf parser
    *
@@ -103,6 +103,7 @@ typedef struct ConfBisonSelf {
 %token <score>  confSCORE
 %token <size>   confSIZE
 %token <time>   confTIME
+
   
 %%
 
@@ -115,7 +116,7 @@ stanzas: stanzas confLine
        | confERROR {YYABORT;}
 ;
  
-collectionStanza: newCollection collectionLines confENDBLOCK
+collectionStanza: collection collectionLines confENDBLOCK
 {
   logParser(LOG_DEBUG, "line %-3i %s", CONF_LINE_NO, 
 	    "collectionStanza: newCollection collectionLines confENDBLOCK");
@@ -123,15 +124,20 @@ collectionStanza: newCollection collectionLines confENDBLOCK
 }
 ;
 
-newCollection: confCOLL confSTRING confMINUS confSTRING confAROBASE confSTRING confCOLON confNUMBER
+collection: confCOLL confSTRING confMINUS confSTRING confAROBASE confSTRING confCOLON confNUMBER
 {
   logParser(LOG_DEBUG, "line %-3i %s", CONF_LINE_NO, 
 	    "newCollection: confCOLL confSTRING confAROBASE confSTRING"
 	    " confCOLON confNUMBER");
   if (!(CONF_COLL = addCollection($4))) YYERROR;
-  CONF_COLL->masterLabel = $2;
-  strncpy(CONF_COLL->masterHost, $6, MAX_SIZE_HOST);
-  CONF_COLL->masterPort = $8;
+
+  // do not overide master parameters set by mdtxAddCollection
+  if (!CONF_COLL->masterLabel) {
+    CONF_COLL->masterLabel = $2;
+    strncpy(CONF_COLL->masterHost, $6, MAX_SIZE_HOST);
+    CONF_COLL->masterPort = $8;
+  }
+
   destroyString($4);
   destroyString($6);
 }

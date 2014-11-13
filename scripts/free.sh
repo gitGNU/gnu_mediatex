@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: free.sh,v 1.1 2014/10/13 19:38:34 nroche Exp $
+# * Version: $Id: free.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -39,10 +39,9 @@ USER="$MDTX-$1"
 # changes into /var/lib and /var/cache
 USERS_coll_remove_user $USER
 
-# purge the collection
+# do not purge the collection
 if [ -d $STATEDIR/$MDTX/$USER ]; then
-    Warning "Purge need to remove $STATEDIR/$MDTX-cvsroot/$USER directory."
-    Warning "Cowardly refusing to remove it :/"
+    Warning "note: do not purge $STATEDIR/$MDTX/$USER directory."
     chown -R root.root $STATEDIR/$MDTX/$USER
 fi
 

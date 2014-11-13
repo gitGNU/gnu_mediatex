@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.1 2014/10/13 19:39:11 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.2 2014/11/13 16:36:30 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *

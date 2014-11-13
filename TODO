@@ -66,37 +66,30 @@ $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq 
 
 *** TO CORRECT
 
-- licence headers (lacks into 213 files)
-find . -type f -exec grep -L Copyright {} \; | grep -v texi | grep -v CVS | wc -l
+*** TODO
 
+- find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
+- do not allocate string within conf, record and server lexers
+- manage ECDSA key too
 - add supp: wait CD doors is locked (cf v3)
 - i10n for french
 - allocate/freeing cache policy (optimize ; assert no diseases)
-- address.c: use gethostbyaddr_r
-- cache.c: use readdir_r
-
-*** TODO
-
-- do not allocate string within conf, record and server lexers
-- deliver: use a lock (mail send twice if bad luck)
-- connect: use a lock (sigalrm)
-- save/restore CVSROOT
-- manage ECDSA key too
-- plugin system (sql,xml) and hooks (mail) with defaults overidable
 
 *** TODO MAYBE
 
+- find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- plugin system (sql,xml) and hooks (mail) with defaults overidable
 - replace openssl by libgcrypt (md5sum and cypher socket)
 - replaced Peter's code by mqueue
 - add thread ID to the log
 - shouldn't we use absolute link for cgi? (catalog copy)
 - notify: do not notify bad archive when nbGeo remote copies exists ?
-- follow simlinks into the cache (... not very secure)
 - sort categories on serializer (... no silver bullet order)
 - replace cvs+viewvc by git+cgit (no debian package available yet)
 - upload from cgi (not really the USER purpose => www-data as publisher)
 
 *** FEATURES (to document)
 
+- ease SSH/CVS configuration
 - compatible with DNS round robin
 

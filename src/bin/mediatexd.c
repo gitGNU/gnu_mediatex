@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.1 2014/10/13 19:38:44 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.2 2014/11/13 16:36:16 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -344,10 +344,10 @@ socketJob(void* arg)
   Connexion* connexion = NULL;
   RecordTree* tree = NULL;
 
-  connexion = (Connexion*)arg;
+  connexion = (Connexion*)arg; // to be free as we own it as a thread
   logEmit(LOG_DEBUG, "socketJob %i", me);
   
-  // reading the socket
+  // read the socket
   if ((tree = parseRecordList(connexion->sock))
       == NULL) {
     logEmit(LOG_ERR, "%s", "fail to parse RecordTree");
@@ -404,11 +404,14 @@ socketJob(void* arg)
     logEmit(LOG_ERR, "socketJob %i: fails", me);
   }
   tree = destroyRecordTree(tree);
+  
+  // connexion variable is manage by this thread
   if (connexion) {
     if (connexion->sock) close(connexion->sock);
     if (connexion->host) free(connexion->host);
     free(connexion);
   }
+  
   socketJobEnds();
   return (void*)rc;
 }

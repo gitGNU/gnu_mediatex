@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.1 2014/10/13 19:38:57 nroche Exp $
+ * Version: $Id: connect.c,v 1.2 2014/11/13 16:36:23 nroche Exp $
  * Project: MediaTeX
  * Module : server/connect
  *
@@ -96,7 +96,10 @@ sigalarmManager(int unused)
  * Synopsis   : int connectServer(char* host, int port)
  * Input      : char* host = host to connect (may be an IP)
  *              int port   = port to connect
- * Output     : socket descriptor or -1 on error; 
+ * Output     : socket descriptor or -1 on error;
+
+ * TODO       : do we not should use a lock to prevent 2 threads to
+ *              access the signal manager ?
  =======================================================================*/
 int 
 connectServer(Server* server)

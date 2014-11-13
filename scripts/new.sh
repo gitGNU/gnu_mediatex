@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: new.sh,v 1.1 2014/10/13 19:38:35 nroche Exp $
+# * Version: $Id: new.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -53,29 +53,13 @@ PORT=$(echo $TMP | cut -s -d ":" -f2)
 USER=$MDTX-$COLL
 MUSER=$SERV-$COLL
 
-# echo "PARAM= $1"
-# echo "COLL=$COLL"
-# echo "HOST=$HOST"
-# echo "PORT=$PORT"
-
 # new user and his key
 USERS_coll_create_user $USER
 SSH_build_key $USER
 HTDOCS_configure_coll_apache2 $USER
 
-# setup a new DB if hosted localy
+# setup a new repository if hosted localy (master host)
 if [ \( "$SERV" = "$MDTX" \) -a \( "$HOST" = "localhost" \) ]; then
-
-    # assert we are not already using this collection remotely
-    CVS=$CACHEDIR/$MDTX/cvs/$USER
-    if [ -d $CVS/CVS ]; then
-	TMP=$(cat $CVS/CVS/Root | head -n1 | cut -d"@" -f2 | cut -d":" -f1)
-	if [ "$TMP" != "localhost" ]; then
-	    Error "To create $COLL collection locally, you must \
-remove the already set remotely one first"
-	fi
-    fi
-
     CVS_coll_import $USER
     SSH_bootstrapKeys $USER
     HTDOCS_configure_coll_viewvc $USER

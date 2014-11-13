@@ -81,7 +81,7 @@ Body
 [info cacheTree.c] state: AVAILABLE -> TOKEEP
 [info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice cgiSrv.c] query for logo.png
-200 https://mdtx1/~mdtx1-coll3/cache/logo.png
+200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
@@ -152,7 +152,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cacheTree.c] state: TOKEEP -> AVAILABLE
 [info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice cgiSrv.c] query for logo/logo.png
-200 https://mdtx1/~mdtx1-coll3/cache/logo/logo.png
+200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
@@ -307,7 +307,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cacheTree.c] state: TOKEEP -> AVAILABLE
 [info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice cgiSrv.c] query for logo/logo.png
-200 https://mdtx1/~mdtx1-coll3/cache/logo/logo.png
+200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................

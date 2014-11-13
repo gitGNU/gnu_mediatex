@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utTcp.sh,v 1.1 2014/10/13 19:39:45 nroche Exp $
+# * Version: $Id: utTcp.sh,v 1.2 2014/11/13 16:36:56 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

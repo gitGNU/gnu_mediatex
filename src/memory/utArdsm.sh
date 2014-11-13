@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utArdsm.sh,v 1.1 2014/10/13 19:39:16 nroche Exp $
+# * Version: $Id: utArdsm.sh,v 1.2 2014/11/13 16:36:32 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *

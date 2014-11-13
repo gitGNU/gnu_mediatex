@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.1 2014/10/13 19:39:31 nroche Exp $
+ * Version: $Id: log.c,v 1.2 2014/11/13 16:36:41 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *

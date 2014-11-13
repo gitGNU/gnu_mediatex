@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utHave.sh,v 1.1 2014/10/13 19:39:59 nroche Exp $
+# * Version: $Id: utHave.sh,v 1.2 2014/11/13 16:37:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

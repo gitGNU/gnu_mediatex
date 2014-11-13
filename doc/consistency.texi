@@ -1,0 +1,291 @@
+@cindex consistency
+
+@sc{Mediatex} should ease managing server changes.
+
+@menu
+* Client queries::      Impact of client's queries.
+* Scenario A::	        Address's change.
+* Scenario B::	        Socket key's change.
+* Scenario C::          Collection user key's change.
+* Scenario D::          Host key's change.
+* Scenario E::          Server's change.
+@end menu
+
+First section details all queries to the @activityClient{} and
+show how are affected the meta-data files.
+
+Some usual cases of typology modifications will follows.
+They should induce connectivity troubles shown by the following queries @dots{}
+@itemize
+@item Test @acronym{SSH} and @acronym{CVS} connectivity:
+@example
+$ mediatex adm update
+[error message]
+@end example
+@item Test daemon socket's connectivity:
+@example
+client$ mediatex srv notify 
+server# tail -f /var/log/mediatex.log
+[error message]
+@end example
+@end itemize
+@dots{} and offer some help to repair both master and slaves servers.
+
+@node Client queries
+@section Impact of client's queries
+Update and commit operation are done implicitly when loading and serialising files.
+This may be view like a stack model ensuring consistency on meta-data files (@pxref{Relational schema}).
+The so-called meta-data files are mentioned bellow into the arrays using the followings numbers:
+@enumerate 1
+@item @dataConf
+@item @dataSupp
+@item @dataChecksum
+@item @dataCatalog
+@item @dataExtract
+@item @dataServers
+@end enumerate
+
+All calls to @activityClientO{} follow the same operations:
+@multitable @columnfractions .05 .95
+@headitem Stage @tab Description
+@item A1 @tab Scripting, which do not need to load the metadata
+@item B1 @tab Parse local meta-data (1, 2)
+@item C1 @tab @acronym{CVS} update collection (remote) meta-data
+@item D1 @tab Parse collection meta-data files (3, 4, 5, 6)
+@item E1 @tab Generic upgrade works: @*
+      read keys so as to upgrade @acronym{SSH} and @acronym{CVS} settings @*
+      and re-compute the local image's score
+@item E2 @tab Working on meta-data
+@item D2 @tab Serialize meta-data files (3, 4, 5, 6)
+@item C2 @tab @acronym{CVS} commit collection meta-data 
+@item B2 @tab Serialize local meta-data (1, 2) @*
+ and @acronym{CVS} commit local meta-data
+@item A2 @tab Send @code{HUP} message to @activityServer{}
+@end multitable
+
+Bellow is the exhaustive list of @activityClient{} queries:
+@itemize
+@item @actorAdmin queries:
+@multitable @columnfractions .50 .03     .05     .03     .07     .03     .03     .07     .03     .05      .03
+@headitem Query                  @tab A1 @tab B1 @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2  @tab A2
+@item @eventClientMiscInit       @tab y  @tab    @tab    @tab    @tab    @tab    @tab    @tab    @tab 1,2 @tab y
+@item @eventClientMiscRemove     @tab y  @tab    @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscPurge      @tab y  @tab    @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscAddUser    @tab y  @tab    @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscDelUser    @tab y  @tab    @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientConfAddColl    @tab y  @tab 1  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1   @tab y
+@item @eventClientConfDelColl    @tab y  @tab 1  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 1   @tab y
+@end multitable
+
+@item @activityClientO{} to himself queries (or debugging queries):
+@multitable @columnfractions .50 .03     .05     .03     .07        .03     .03     .07     .03     .05     .03
+@headitem Query                  @tab A1 @tab B1 @tab C1 @tab D1    @tab E1 @tab E2 @tab D2 @tab C2 @tab B2 @tab A1
+@item @eventClientServUpdate     @tab    @tab 1  @tab y  @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientServCommit     @tab    @tab 1  @tab y  @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscAdmMake    @tab    @tab 1  @tab    @tab 4,5,6 @tab    @tab y  @tab    @tab    @tab    @tab
+@item @eventClientMiscBind       @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscUnBind     @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscSuppMount  @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscSuppUMount @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscGet        @tab    @tab 1  @tab    @tab 6     @tab    @tab y  @tab    @tab    @tab    @tab
+@end multitable
+
+@item Queries to operate on @activityServerO{}:
+@multitable @columnfractions .50 .03 .05 .03 .07 .03 .03 .07 .03 .05 .03
+@headitem Client query     @tab A1 @tab B1 @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2 @tab A2 
+@item @eventClientSave     @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
+@item @eventClientExtract  @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
+@item @eventClientNotify   @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
+@item @eventClientDeliver  @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
+@end multitable
+
+@item @actorUserO{} data management's queries:
+@multitable @columnfractions  .50  .03     .05       .03     .07     .03     .03     .07     .03     .05       .03 
+@headitem Client query             @tab A1 @tab B1   @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2  @tab A2
+@item @eventClientConfShareSupport @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
+@item @eventClientConfWithdrawSupp @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
+@item @eventClientMiscSuppAdd      @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientMiscSuppDel      @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
+@item @eventClientMiscSuppList     @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab     @tab
+@item @eventClientMiscSuppNote     @tab    @tab 1,2  @tab    @tab    @tab y  @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientMiscSuppCheck    @tab    @tab 1,2  @tab y  @tab 5  @tab    @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientMiscUpload       @tab    @tab 1    @tab y  @tab 5  @tab    @tab y  @tab 5  @tab y  @tab     @tab y
+@end multitable
+
+@item @actorUserO{} meta-data management's queries:
+@multitable @columnfractions .50 .03     .05      .03     .07        .03     .03     .07        .03     .05     .03
+@headitem Client query           @tab A1 @tab B1  @tab C1 @tab D1    @tab E1 @tab E2 @tab D2    @tab C2 @tab B2 @tab A2
+@item @eventClientServAddKey     @tab    @tab 1   @tab y  @tab 6     @tab y  @tab y  @tab 6     @tab y  @tab    @tab y
+@item @eventClientServDelKey     @tab    @tab 1   @tab y  @tab 6     @tab y  @tab y  @tab 6     @tab y  @tab    @tab y
+@item @eventClientConfList       @tab    @tab 1   @tab    @tab       @tab    @tab y  @tab       @tab    @tab    @tab
+@item @eventClientMotd           @tab    @tab 1,2 @tab y  @tab 3,5,6 @tab    @tab y  @tab       @tab    @tab    @tab
+@item @eventClientServUpgrade    @tab    @tab 1   @tab y  @tab 4,5,6 @tab y  @tab    @tab 4,5,6 @tab y  @tab 1  @tab y
+@item @eventClientMiscMake       @tab    @tab 1   @tab y  @tab 4,5,6 @tab y  @tab y  @tab 4,5,6 @tab y  @tab 1  @tab y
+@item @eventClientMiscClean      @tab y  @tab     @tab    @tab       @tab    @tab    @tab       @tab    @tab    @tab
+@item @eventClientMiscSu         @tab    @tab 1   @tab    @tab       @tab    @tab y  @tab       @tab    @tab    @tab
+@end multitable
+@end itemize
+
+@note
+@itemize
+@item Stage E1 (Generic upgrade works) 
+is only processed if the @dataServersO{} file is loaded.
+This stage insure connection consistency between remote servers :
+@example
+MASTER         commun           SLAVES
+-----------------------------------------
+mdtx.conf <--> servers.txt <--> mdtx.conf
+                  |
+.ssh/     <-------+-----------> .ssh/
+CVS/Root  <-------+-----------> CVS/Root
+@end example
+
+@item On stage D2 (Serialise meta-data files), 
+the default behaviour is to not serialise @dataCatalog{} and @dataExtract{} unless they provide a new @file{NN.txt} post-fixed file.
+This intents to speed-up some queries ending (as @code{make}).
+In order to force serialising theses files you have to use the @code{upgrade} query.
+@end itemize
+
+@node Scenario A
+@section Address's change
+
+In this section we change the @acronym{IP} on @file{/etc/network/interfaces}.
+
+@itemize
+@item If we change the @acronym{IP} address a server is currently using within its @code{host} parameter from @dataConfO{},
+we lost the socket connection from other servers.
+The correction consist to update the @code{host} parameter with the new @acronym{IP} and to upgrade this host.
+@example
+$ vi /etc/mediatex/@var{MDTX}.conf 
+<<<
+host       @var{OLD_IP}
+---
+host       @var{NEW_IP}
+>>>
+$ mediatex upgrade
+@end example
+Other hosts will get the new address as soon as when they will upgrade too.
+
+@item If we change @acronym{IP} on master server,
+we also lost @acronym{CVS} queries from all servers.
+The correction consist in the same as upper, plus re-subscribing to the collection on every slaves.
+@example
+slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW_IP}
+@end example
+
+@c To be more precise: 
+@c change @code{host} parameter into @dataConfO{}'s master file and upgrade the master hosts. 
+@c change @code{host} parameter into @dataServersO{} on every slaves and upgrade them.
+@end itemize
+
+@note By using an hostname (configured in @file{/etc/hosts} for instance)
+instead of an @acronym{IP} address into @code{host} parameter from @dataConfO{}, 
+changing the @acronym{IP} number has no incidence on @mediatexO{}'s configuration.
+
+@node Scenario B
+@section Socket key's change
+
+If we change the @code{collKey} value into @dataServersO{} on one host, 
+we will loose the socket connection to him and later to others until 
+every hosts have upgraded. No mater we are on master or slaves.
+@example
+$ mediatex upgrade
+@end example
+
+@node Scenario C
+@section Collection user key's change
+
+In this section we change the collection's @acronym{SSH} keys pair.
+@example
+# su @var{MDTX}-@var{COLL}
+$ ssh-keygen -t dsa
+The key fingerprint is:
+@var{NEW_FINGERPRINT}
+@end example
+
+This public key is shared and used by servers to identify themselves under the collection context. 
+In fact, we re-use the @acronym{ssh} connections keys that was first dedicated to login from servers to others under the collection context (or account). 
+
+@itemize
+@item 
+Changing the collection's keys on a slave server make the @acronym{cvs} connection no more available. The new keys need to be send via another media, in the same way we first connect a new server to the collection:
+@example
+(s1)# scp ~/@var{MDTX}-@var{COLL}/.ssh/id_dsa.pub @var{MASTER}:@var{PATH}
+(s2)$ mediatex add key @var{PATH} to coll @var{COLL}
+(s1)$ mediatex upgrade
+@end example
+
+@item On the master host you need to update the master fingerprint into the @dataServersO{} file.
+@example
+$ mediatex upgrade
+@end example
+@end itemize
+
+Until the new id (the fingerprint of the public key) is not known by servers 
+and so they cannot match an @acronym{IP} address to a known server,
+they will refuse daemon socket's incoming connection.
+
+@node Scenario D
+@section Host key's change
+
+In this section we change the host @acronym{SSH} keys pair.
+@example
+# ssh-keygen -f /etc/ssh/ssh_host_rsa_key
+The key fingerprint is:
+@var{NEWFINGERPRINT}
+@end example
+
+This public host key is shared and matched by remote servers when they connect using @acronym{ssh} to the current host.
+
+@itemize
+@item
+On slave servers, upgrading is sufficient to propagate the new host's public key.
+@item 
+However, upgrade is not sufficient on the master host and every slaves will have to re-subscribe in order to validate its new fingerprint manually:
+@example
+slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{MASTER}
+@c or:
+@c # rm ~/.ssh/known_hosts
+@c # rm ~/.ssh/config 
+@c $ mediatex upgrade
+The authenticity of host '@var{MASTER}' can't be established.
+Are you sure you want to continue connecting (yes/no)? 
+@end example
+@end itemize
+
+@note Master host's fingerprint is written into its @dataConfO{} file or
+may be obtains using:
+@example
+# ssh-keygen -lf /etc/ssh/ssh_host_rsa_key 
+@end example
+
+@node Scenario E
+@section Server's change
+
+In this section we move the @acronym{CVS}'s root collection's repository from one master host to one other. The same procedurer may also be used to backup and restore a collection on the current master host.
+
+First we backup the collection on master host:
+@example
+# tar -C /var/lib/mediatex/@var{MDTX}/ @var{MDTX}-@var{COLL} -zcf backup.tgz
+@end example
+
+Next we restore it on the host we choose to act as the new master and we re-add the collection so as to force a fresh checkout:
+@example
+# rm -fr /var/lib/mediatex/@var{MDTX}/@var{MDTX}-@var{COLL}
+# tar -C /var/lib/mediatex/@var{MDTX}/ -zxf backup.tgz
+# mediatex adm add collection article
+@end example
+
+@itemize
+@item 
+On same host (so as to restore an old state of the collection), it enough.
+@item 
+If we move master to a new host or one other host from the collection, all slaves will have to re-subscribe :
+@example
+# mediatex adm add coll @var{MDTX}-@var{COLL}@var{NEW-MASTER}
+@end example
+@c modify confFile parser to not overide mdtxAddCollection settings
+@end itemize
+
+Finally to be short, when ``upgrade'' fails we should use ``adm add coll''
+to re-synchronise collection.

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.1 2014/10/13 19:38:44 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.2 2014/11/13 16:36:16 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -50,35 +50,39 @@ usage(char* programName)
   fprintf(stderr, "\n\t\t[ -w ] query");
   mdtxOptions();
   fprintf(stderr, "  -w, --no-www-cvs\tdo not call cvs for collections\n");
-  fprintf(stderr, "  ---\n  query:\n"
-	  "   * adm (init|remove|purge)\n\n"
-	  "   * adm (update|commit) [coll COLL]\n\n"
-	  "   * adm (bind|unbind)\n\n"
-	  "   * adm mount ISO on PATH\n\n"
-	  "   * adm umount PATH\n\n"
-	  "   * adm get PATH1 as COLL on PATH2\n\n"
+  fprintf(stderr, "  ---\n\n"
+	  "Admin queries:\n\n"
+	  "  adm (init|remove|purge)\n\n"
+	  "  adm (add|del) user USER\n\n"
+	  "  adm add coll COLL[@HOST[:PORT]]\n\n"
+	  "  adm del coll COLL\n\n"
+
+	  "Debugging queries:\n\n"
+	  "  adm (update|commit|make) [coll COLL]\n\n"
+	  "  adm (bind|unbind)\n\n"
+	  "  adm mount ISO on PATH\n\n"
+	  "  adm umount PATH\n\n"
+	  "  adm get PATH as COLL on HASH\n\n"
+
+	  "Queries to daemon:\n\n"
+	  "  srv (save|extract|notify|deliver)\n\n"
+
+	  "Data management:\n\n"
+	  "  add supp SUPP to (all|coll COLL)\n\n"
+	  "  del supp SUPP from (all|coll COLL)\n\n"
+	  "  add supp SUPP on PATH\n\n"
+	  "  del supp SUPP\n\n"
+	  "  note supp SUPP as TEXT\n\n"
+	  "  check supp SUPP on PATH\n\n"
+	  "  upload PATH to coll COLL\n\n"
 	  
-	  "   * (add|del) user USER\n\n"
-	  "   * add coll COLL[@HOST[:PORT]]\n\n"
-	  "   * del coll COLL\n\n"
-	  "   * add key PATH to coll COLL\n\n"
-	  "   * del key HASH from coll COLL\n\n"
-	  "   * add (natClt|natSrv) HASH to coll COLL\n\n"
-	  "   * del (natClt|natSrv) HASH from coll COLL\n\n"
-	  
-	  "   * new supp SUPP on PATH\n\n"
-	  "   * del supp SUPP\n\n"
-	  "   * add supp SUPP to (ALL|coll COLL)\n\n"
-	  "   * del supp SUPP from (ALL|coll COLL)\n\n"
-	  "   * note supp SUPP as TEXT\n\n"
-	  "   * check supp SUPP on PATH\n\n"
-	  
-	  "   * su [coll COLL]\n\n"
-	  "   * (upgrade|make) [coll COLL]\n\n"
-	  "   * upload PATH to coll COLL\n\n"
-	  "   * motd\n\n"
-	  "   * list (supp|coll)\n\n"
-	  "   * srv (save|extract|notify|deliver)\n\n"
+	  "Meta-data management:\n\n"
+	  "  add key PATH to coll COLL\n\n"
+	  "  del key HASH from coll COLL\n\n"
+	  "  list (supp|coll)\n\n"	  
+	  "  motd\n\n"
+	  "  (upgrade|make) [coll COLL]\n\n"
+	  "  su [coll COLL]\n\n"
 	  );
   return;
 }

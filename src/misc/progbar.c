@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.c,v 1.1 2014/10/13 19:39:33 nroche Exp $
+ * Version: $Id: progbar.c,v 1.2 2014/11/13 16:36:43 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

@@ -1,7 +1,7 @@
 /* prologue: =======================================================*/
 %{
   /*=======================================================================
-   * Version: $Id: serverFile.y,v 1.1 2014/10/13 19:39:49 nroche Exp $
+   * Version: $Id: serverFile.y,v 1.2 2014/11/13 16:37:00 nroche Exp $
    * Project: MediaTeX
    * Module : serverFile parser
    *

@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: users.sh,v 1.1 2014/10/13 19:38:42 nroche Exp $
+# * Version: $Id: users.sh,v 1.2 2014/11/13 16:36:13 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -132,7 +132,7 @@ function USERS_coll_populate()
     install -o $MDTX -g $1    -m 2750 -d $CACHE
     install -o $MDTX -g $1    -m 2750 -d $TOKEEP
     install -o $MDTX -g $1    -m 2770 -d $TMP
-    install -o $1    -g $1    -m 2750 -d $CVSROOT
+    #install -o $1    -g $1    -m 2750 -d $CVSROOT (not on slave)
     install -o $MDTX -g $1    -m 2770 -d $CVS
     install -o $1    -g $MDTX -m 750  -d $HOME
     install -o $1    -g $1    -m 700  -d $HOME/.ssh

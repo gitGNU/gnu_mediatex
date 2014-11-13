@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.h,v 1.1 2014/10/13 19:39:55 nroche Exp $
+ * Version: $Id: have.h,v 1.2 2014/11/13 16:37:09 nroche Exp $
  * Project: MediaTeX
  * Module : server/have
  *

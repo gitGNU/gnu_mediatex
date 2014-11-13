@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.1 2014/10/13 19:38:46 nroche Exp $
+ * Version: $Id: conf.c,v 1.2 2014/11/13 16:36:17 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/conf
  *
@@ -62,14 +62,14 @@ mdtxAddCollection(Collection* coll)
   checkCollection(coll);
   checkLabel(coll->label);
   logEmit(LOG_DEBUG, "%s", "add a new collection (or re-add it)");
-
-  //if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
   
-  // default values if not provided
-  if (isEmptyString(coll->masterLabel) &&
-      !(coll->masterLabel = createString(env.confLabel)))
-    goto error;
+  // default value to mdtx if not provided
+  if (isEmptyString(coll->masterLabel)) {
+    if (!(coll->masterLabel = createString(env.confLabel))) goto error;
+  }
+
+  // default value to localhost (first) if not provided
   if (isEmptyString(coll->masterHost)) {
     strncpy(coll->masterHost, "localhost", MAX_SIZE_HOST);
   }
@@ -115,10 +115,8 @@ mdtxAddCollection(Collection* coll)
   conf->fileState[iCONF] = MODIFIED; // upgrade conf
 
   // register collection into servers.txt file
+  if (!(self->serverTree->master = getLocalHost(self))) goto error;
   if (!loadCollection(self, SERV)) goto error; // upgrade keys
-  if (!strncpy(self->masterHost, "localhost", MAX_SIZE_HOST)) {
-    if (!(self->serverTree->master = getLocalHost(self))) goto error;
-  }
   if (!releaseCollection(self, SERV)) goto error;
 
  end:

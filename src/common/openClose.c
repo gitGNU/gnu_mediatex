@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.1 2014/10/13 19:38:58 nroche Exp $
+ * Version: $Id: openClose.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
  * Project: MediaTeX
  * Module : bus/openClose
  
@@ -46,10 +46,10 @@ static char* CollFiles[] = {
 };
 
 /*=======================================================================
- * Function   : mdtxUpdate
+ * Function   : callUpdate
  * Description: call update.sh
- * Synopsis   : int mdtxUpdate(char* label)
- * Input      : char* label: the collection to update
+ * Synopsis   : int callUpdate(char* user)
+ * Input      : char* user: the collection module to update
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -81,18 +81,20 @@ callUpdate(char* user)
 }
 
 /*=======================================================================
- * Function   : mdtxCommit
+ * Function   : callCommit
  * Description: call commit.sh
- * Synopsis   : int mdtxCommit(char* label)
- * Input      : char* label: the collection to commit
+ * Synopsis   : int callCommit(char* user, char* signature)
+ * Input      : char* label: the collection module to commit
+ *              char* signature1: the commit's author fingerprint
+ *              char* signature2: the commit's author hostname
  * Output     : TRUE on success
  =======================================================================*/
 int 
-callCommit(char* user, char* signature)
+callCommit(char* user, char* signature1, char* signature2)
 { 
   int rc = FALSE;  
   Configuration* conf = NULL;
-  char *argv[] = {NULL, NULL, NULL, NULL, NULL};
+  char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL};
 
   checkLabel(user);
   logEmit(LOG_DEBUG, "callCommit %s: %s", user, env.commandLine);
@@ -102,7 +104,8 @@ callCommit(char* user, char* signature)
   if (!(argv[0] = catString(argv[0], "/commit.sh"))) goto error;
   argv[1] = user;
   argv[2] = env.commandLine;
-  argv[3] = signature;
+  argv[3] = signature1;
+  argv[4] = signature2;
   
   if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
     if (!execScript(argv, user, NULL, FALSE)) goto error;
@@ -332,11 +335,11 @@ loadCvsFiles(Collection* coll, int fileIdx)
 }
 
 /*=======================================================================
- * Function   : loadCollection
+ * Function   : loadColl
  * Description: Call the parser on shared files
- * Synopsis   : int loadCollection(Collection* coll, int collFiles)
+ * Synopsis   : int loadColl(Collection* coll, int fileIdx)
  * Input      : Collection* coll: collection to load
- *              int collFiles: OR from CollFiles (CTLG,EXTR,SERV)
+ *              int fileIdx: CTLG,EXTR or SERV
  * Output     : TRUE on success
  =======================================================================*/
 static int 
@@ -366,7 +369,7 @@ loadColl(Collection* coll, int fileIdx)
       break;
     case iSERV:
       if (!parseServerFile(coll, coll->serversDB)) goto error2;
-      coll->fileState[fileIdx] = LOADED;
+      coll->fileState[iSERV] = LOADED;
 
       // cgi and server only read the meta-data
       if (!env.noCollCvs) {
@@ -377,7 +380,7 @@ loadColl(Collection* coll, int fileIdx)
       break;
     case iCACH:
       if (!loadRecords(coll)) goto error2;	
-      coll->fileState[fileIdx] = LOADED;
+      coll->fileState[iCACH] = LOADED;
       break;
     default:
       goto error2;
@@ -689,7 +692,7 @@ saveConfiguration()
 
   // commit changes
   if (change && !env.noCollCvs) {
-    callCommit(env.confLabel, NULL);
+    callCommit(env.confLabel, conf->hostFingerPrint, conf->host);
   }
 
   rc = TRUE;
@@ -853,7 +856,7 @@ saveCollection(Collection* coll, int collFiles)
 
   // commit changes
   if (coll->toCommit && !env.noCollCvs) {
-    if (callCommit(coll->user, coll->userFingerPrint)) {
+    if (callCommit(coll->user, coll->userFingerPrint, conf->host)) {
       conf->toHup = TRUE;
       coll->toCommit = FALSE;
       coll->toUpdate = TRUE;
@@ -874,6 +877,7 @@ saveCollection(Collection* coll, int collFiles)
  * Synopsis   : int clientSaveAll(char* cmdLine)
  * Input      : N/A
  * Output     : TRUE on success
+ * TODO       : save collection before configuration (as a stack) ?
  =======================================================================*/
 int 
 clientSaveAll()
@@ -884,12 +888,13 @@ clientSaveAll()
   RGIT* curr = NULL;
   
   logEmit(LOG_DEBUG, "%s", "clientSaveAll");
-  if (!(conf = env.confTree)) goto end;
-  if (!saveConfiguration(env.commandLine)) goto error;
+  if (!(conf = env.confTree)) goto end; // nothing was loaded
 
   while ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
   }
+
+  if (!saveConfiguration(env.commandLine)) goto error;
 
   // tell the server we have upgrade files
   if (!env.noRegression && !env.dryRun && conf->toHup) {
@@ -921,7 +926,7 @@ int serverSaveAll()
   RGIT* curr = NULL;
   
   logEmit(LOG_DEBUG, "%s", "server save all");
-  if (!(conf = env.confTree)) goto end;
+  if (!(conf = env.confTree)) goto end; // nothing was loaded
 
   while ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
     if (!saveCollection(coll, CACH)) goto error;

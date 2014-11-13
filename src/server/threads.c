@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.1 2014/10/13 19:39:55 nroche Exp $
+ * Version: $Id: threads.c,v 1.2 2014/11/13 16:37:10 nroche Exp $
  * Project: MediaTeX
  * Module : server/threads
 
@@ -331,6 +331,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
     goto error;
   }
 
+  // thread consume the connexion variables
   connexion = NULL;
   sock = 0;
  end:

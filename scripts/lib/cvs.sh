@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.2 2014/10/27 12:39:40 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.3 2014/11/13 16:36:12 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -88,8 +88,12 @@ function CVS_coll_import()
     EXAMPLE=$DATADIR/examples
     CVS=$CACHEDIR/$MDTX/cvs/$1
 
+    # create CVSROOT dir (or re-use it)
+    install -o $1 -g $1 -m 2750 -d $CVSROOT/$1
+
     if [ -f $CVSROOT/$1/logo.png,v ]; then
 	Warning "re-use already imported collection module"
+	chown -R $1.$1 $CVSROOT/$1
     else 
 	cd $CVS
 
@@ -178,11 +182,16 @@ function CVS_coll_checkout()
     MODULE="$2-$3"
     CVSROOT=":ext:${2}-${3}@${4}:/var/lib/cvsroot"
 
-    if [ -d $CVS/$1/CVS ]; then
-	Warning "re-use already checkout cvs module: $1"
-    else
+#    if [ -d $CVS/$1/CVS ]; then
+#	Warning "re-use already checkout cvs module: $1"
+#    else
 	cd $CVS || Error "cannot cd to cvs working directory: $CVS"
 	[ "$MODULE" = "$1" ] ||  mv $1 $MODULE
+
+	# force checkout
+	rm -fr $CVS/$MODULE/*
+	rm -f $CVS/$MODULE/.cvsignore
+
 	UMASK=$(umask -p)
 	umask 0007
 
@@ -194,7 +203,7 @@ function CVS_coll_checkout()
 	eval $UMASK
 	[ "$MODULE" = "$1" ] || mv $MODULE $1
 	cd - > /dev/null || true
-    fi
+#    fi
 }
 
 # this function update a module
@@ -237,16 +246,16 @@ function CVS_commit()
     UMASK=$(umask -p)
     umask 0007
 
+    # add meta-data parts to collections modules
+    if [ "$1" != "$MDTX" ]; then
+	QUERY1="cvs add *[0-9][0-9].txt icons/*.*"
+	Info "$QUERY1"
+	eval $QUERY1 2>&1 || /bin/true
+    fi
+
     # su to mdtx user when call from init.sh
     if [ $(id -u) -eq 0 ]; then
 	QUERY2="su $MDTX -c '$QUERY'"
-    else
-        # add meta-data parts to collections modules
-	if [ "$USER" != "$MDTX" ]; then
-	    QUERY1="cvs add *[0-9][0-9].txt icons/*.*"
-	    Info "$QUERY1"
-	    eval $QUERY1 2>&1 || /bin/true
-	fi
     fi
 
     Info "$QUERY2"

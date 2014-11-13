@@ -21,9 +21,9 @@
 [info upgrade.c] exit on success
 
 Server 746d6ceeb76e05cfa2dea92a1c5753cd
-	comment   "mdtx1 configuration file"
+	comment   "host1.mediatex.org configuration file"
 	label     mdtx1
-	host      mdtx1
+	host      host1.mediatex.org
 	mdtxPort  6560
 	sshPort   22
 	networks  www

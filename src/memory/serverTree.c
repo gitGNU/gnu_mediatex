@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.1 2014/10/13 19:39:11 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.2 2014/11/13 16:36:30 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -444,18 +444,25 @@ serializeServerTree(Collection* coll)
     }
     if (!lock(fileno(fd), F_WRLCK)) goto error;
   }
-      
+
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
-  fprintf(fd, "# MediaTeX %s@%s:%i servers list:\n", coll->label, 
-	  coll->masterHost, coll->masterPort);
 
   // do not add the CVS version as it implies a commit evry time we
-  // rebuild the file (because we de not parse the version ID)
-  //fprintf(fd, "# Version: $" "Id" "$\n\n");
-
-  if (self->master) {
-    fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
+  // rebuild the file (because we de not parse the version id)
+  //fprintf(fd, "# Version: $" "Id" "$\n");
+  
+  if (!self->master) {
+    logEmit(LOG_ERR, "loose master server for %s collection", 
+	    coll->label);
+    goto error;
   }
+
+  // tel which is the master collection server
+  fprintf(fd, "# MediaTeX %s@%s:%i servers list:\n\n", 
+	  self->master->user, self->master->host, 
+	  self->master->sshPort);
+  fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
+  
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
 
   fprintf(fd, "\n# score parameters\n");

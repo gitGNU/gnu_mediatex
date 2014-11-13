@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.1 2014/10/13 19:39:48 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.2 2014/11/13 16:36:58 nroche Exp $
  * Project: Mediatex
  * Module : extraction meta-data scanner
 
@@ -66,7 +66,7 @@
 
 %top{
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.1 2014/10/13 19:39:48 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.2 2014/11/13 16:36:58 nroche Exp $
  * Project: Mediatex
  * Module : extraction meta-data scanner
 
