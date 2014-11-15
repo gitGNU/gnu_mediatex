@@ -66,6 +66,8 @@ $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq 
 
 *** TO CORRECT
 
+- md5sums/coll.md5 should be 640 (instead of 600)
+
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
