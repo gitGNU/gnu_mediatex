@@ -1408,16 +1408,16 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "Try rar container:", NULL);
-  if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"test@test.com")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.part1.rar")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.part2.rar")) goto error;
-  if (!quickScan(coll)) goto error;
-  utLog("%s", "Scan before unrar:", coll);
-  if (!extractArchives(coll)) goto error;
-  utLog("%s", "Now we have :", coll);
+  /* utLog("%s", "Try rar container:", NULL); */
+  /* if (!utCleanCaches()) goto error; */
+  /* if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,  */
+  /* 		"test@test.com")) goto error; */
+  /* if (!utCopyFileOnCache(coll, inputRep, "logo.part1.rar")) goto error; */
+  /* if (!utCopyFileOnCache(coll, inputRep, "logo.part2.rar")) goto error; */
+  /* if (!quickScan(coll)) goto error; */
+  /* utLog("%s", "Scan before unrar:", coll); */
+  /* if (!extractArchives(coll)) goto error; */
+  /* utLog("%s", "Now we have :", coll); */
 
   utLog("%s", "Try tar container:", NULL);
   if (!utCleanCaches()) goto error;

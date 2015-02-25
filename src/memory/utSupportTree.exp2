@@ -1,5 +1,3 @@
-[notice supportTree.c] type off_t is store into 8 bytes
-[notice supportTree.c] type time_t is store into 4 bytes
 [notice supportTree.c] off_t max value is: 18446744073709551615
 [notice supportTree.c] time_t max value is: 2147483647
 [info supportTree.c] Serializing the supports list file: LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt

@@ -10,7 +10,7 @@ Body
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
           
-[err address.c] gethostbyname host1.mediatex.org: Connection timed out
+[err address.c] gethostbyname host1.mediatex.org: Success
 [err address.c] buildSocketAddress fails
 [err connect.c] buildServerAddress fails
 [err connect.c] connectServer fails

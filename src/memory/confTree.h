@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.2 2014/11/13 16:36:28 nroche Exp $
+ * Version: $Id: confTree.h,v 1.3 2015/02/25 17:37:54 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -84,6 +84,7 @@ struct Collection {
 
   /* avl tree */
   AVLTree* archives; // all archives share by trees (Archive*)
+  int maxId; // id used to serialize archives on html pages
 
   /* -rings */
   RG* networks;

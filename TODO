@@ -60,6 +60,10 @@ $ ./configure \
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
 
+** Diff between 2 arbos
+
+$ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah/mediatex/{} \; \)
+
 *** TO TEST
 
 - pgrof: test with more than 100k entries

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.2 2014/11/13 16:36:31 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.3 2015/02/25 17:37:54 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -390,9 +390,9 @@ main(int argc, char** argv)
   // test types on this architecture:
   off_t offset = 0xFFFFFFFFFFFFFFFFULL; // 2^64
   time_t timer = 0x7FFFFFFF; // 2^32
-  logEmit(LOG_NOTICE, "type off_t is store into %u bytes", 
+  logEmit(LOG_DEBUG, "type off_t is store into %u bytes", 
 	  (unsigned int)sizeof(off_t));
-  logEmit(LOG_NOTICE, "type time_t is store into %u bytes", 
+  logEmit(LOG_DEBUG, "type time_t is store into %u bytes", 
 	  (unsigned int) sizeof(time_t));
   logEmit(LOG_NOTICE,  "off_t max value is: %llu", 
 	  (unsigned long long int)offset);

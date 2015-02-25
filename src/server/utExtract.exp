@@ -484,136 +484,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e d79581b67ec1932fd276dcf3b
                
 [notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] ----------------------------------------------------------
-[notice utFunc.c] Try rar container:
-[notice utFunc.c] ..........................................................
-[notice utFunc.c] clean the cache
-[notice utFunc.c] clean cache for all collections
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
-[info command.c] /bin/bash execution returns 0
-[info cacheTree.c] state: TOKEEP -> UNUSED
-[info cacheTree.c] state: AVAILABLE -> UNUSED
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
-[info command.c] /bin/bash execution returns 0
-[notice utFunc.c] ask for 022a34b2f9b893fba5774237e1aa80ea file
-[notice utFunc.c] add a generic demand for
-[info cacheTree.c] state: UNUSED -> WANTED
-[notice utFunc.c] copy logo.part1.rar to the coll3 cache
-[info command.c] execScript: /bin/cp
-[info command.c]  arg1: -f
-[info command.c]  arg2: ./../../examples/logo.part1.rar
-[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
-[info command.c] /bin/cp execution returns 0
-[notice utFunc.c] copy logo.part2.rar to the coll3 cache
-[info command.c] execScript: /bin/cp
-[info command.c]  arg1: -f
-[info command.c]  arg2: ./../../examples/logo.part2.rar
-[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
-[info command.c] /bin/cp execution returns 0
-[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
-[info md5sum.c] 7808473c7db9a9e3493a6b61f44f8805 quick md5sum computed on 20480 bytes
-[info md5sum.c] 7808473c7db9a9e3493a6b61f44f8805  full md5sum computed on 20480 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
-[info md5sum.c] db8b80896f7202b656913f99d438075c quick md5sum computed on 4090 bytes
-[info md5sum.c] db8b80896f7202b656913f99d438075c  full md5sum computed on 4090 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
-[notice utFunc.c] ..........................................................
-[notice utFunc.c] Scan before unrar:
-[notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 7808473c7db9a9e3493a6b61f44f8805               20480 logo.part1.rar
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e db8b80896f7202b656913f99d438075c                4090 logo.part2.rar
-              
-[notice utFunc.c] ----------------------------------------------------------
-[info extract.c] not found archive de5008799752552b7963a2670dc5eb18:391168
-[info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
-[info extract.c] not found archive 1a167d608e76a6a4a8b16d168580873c:20480
-[info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extract.c] not found container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extract.c] not found archive c0c055a0829982bd646e2fafff01aaa6:4066
-[info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
-[info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
-[info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
-[info extract.c] not found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
-[info extract.c] not found archive 65f1464142f405dbbeeea4830c95ddd3:25600
-[info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
-[info extract.c] not found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
-[info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
-[info extract.c] not found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
-[info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
-[info extract.c] not found archive fa2b0b536bf61f61617528c474e0bf61:24973
-[info extract.c] not found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
-[info extract.c] not found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info extract.c] not found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
-[info extract.c] not found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
-[info cacheTree.c] state: AVAILABLE -> TOKEEP
-[info extract.c] found archive 7808473c7db9a9e3493a6b61f44f8805:20480
-[info cacheTree.c] state: AVAILABLE -> TOKEEP
-[info extract.c] found archive db8b80896f7202b656913f99d438075c:4090
-[info extract.c] found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24570
-[info cache.c] free   =    104833030
-[info cache.c] frozen = 18446744073709359511
-[info cache.c] avail  =    105049705
-[info cacheTree.c] state: WANTED -> ALLOCATED
-[info command.c] execScript: /usr/bin/rar
-[info command.c]  arg1: x
-[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.part1.rar
-[info command.c]  arg3: logo/logo.png
-[info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
-[info command.c] /usr/bin/rar execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
-[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cacheTree.c] state: ALLOCATED -> TOKEEP
-[notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
-[info extract.c] del to-keep on 7808473c7db9a9e3493a6b61f44f8805:20480
-[info cacheTree.c] state: TOKEEP -> AVAILABLE
-[info extract.c] del to-keep on db8b80896f7202b656913f99d438075c:4090
-[info cacheTree.c] state: TOKEEP -> AVAILABLE
-[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[notice utFunc.c] ..........................................................
-[notice utFunc.c] Now we have :
-[notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-16,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 7808473c7db9a9e3493a6b61f44f8805               20480 logo.part1.rar
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e db8b80896f7202b656913f99d438075c                4090 logo.part2.rar
-              
-[notice utFunc.c] ----------------------------------------------------------
-[notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] Try tar container:
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] clean the cache
@@ -627,7 +497,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e db8b80896f7202b656913f99d
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
 [info cacheTree.c] state: TOKEEP -> UNUSED
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [info cacheTree.c] state: AVAILABLE -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
@@ -682,8 +551,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e f54fba7d2e070d48051ac3f8f
 [info cache.c] total  =    104857600
 [info cache.c] use    =        30720
 [info cache.c] free   =    104826880
-[info cache.c] frozen = 18446744073709293436
-[info cache.c] avail  =    105115780
+[info cache.c] frozen = 18446744073709365661
+[info cache.c] avail  =    105043555
 [info cacheTree.c] state: WANTED -> ALLOCATED
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
@@ -790,8 +659,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info cache.c] total  =    104857600
 [info cache.c] use    =        24457
 [info cache.c] free   =    104833143
-[info cache.c] frozen = 18446744073709214948
-[info cache.c] avail  =    105194268
+[info cache.c] frozen = 18446744073709287173
+[info cache.c] avail  =    105122043
 [info cacheTree.c] state: UNUSED -> ALLOCATED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
@@ -810,8 +679,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info cache.c] total  =    104857600
 [info cache.c] use    =        49545
 [info cache.c] free   =    104808055
-[info cache.c] frozen = 18446744073709215579
-[info cache.c] avail  =    105193637
+[info cache.c] frozen = 18446744073709287804
+[info cache.c] avail  =    105121412
 [info cacheTree.c] state: WANTED -> ALLOCATED
 [info command.c] execScript PWD=LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3: /bin/cpio
 [info command.c]  arg1: -i
@@ -922,8 +791,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info cache.c] total  =    104857600
 [info cache.c] use    =        24973
 [info cache.c] free   =    104832627
-[info cache.c] frozen = 18446744073709143239
-[info cache.c] avail  =    105265977
+[info cache.c] frozen = 18446744073709215464
+[info cache.c] avail  =    105193752
 [info cacheTree.c] state: UNUSED -> ALLOCATED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
@@ -942,8 +811,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info cache.c] total  =    104857600
 [info cache.c] use    =        50061
 [info cache.c] free   =    104807539
-[info cache.c] frozen = 18446744073709143354
-[info cache.c] avail  =    105265862
+[info cache.c] frozen = 18446744073709215579
+[info cache.c] avail  =    105193637
 [info cacheTree.c] state: WANTED -> ALLOCATED
 [info command.c] execScript PWD=LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3: /bin/cpio
 [info command.c]  arg1: -i

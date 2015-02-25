@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.2 2014/11/13 16:36:27 nroche Exp $
+ * Version: $Id: archive.c,v 1.3 2015/02/25 17:37:53 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -58,7 +58,6 @@ createArchive(void)
   rc->extractScore = -1; // still not computed
   rc->imageScore = -1;   // still not computed
   rc->state = UNUSED;
-  rc->id = id++;
 
   return rc;
  error:
@@ -288,6 +287,8 @@ addArchive(Collection* coll, char* hash, off_t size)
   archive->hash[MAX_SIZE_HASH] = (char)0; // developpement code
 #endif
   archive->size = size;
+  archive->id = coll->maxId++;
+
   if (!avl_insert(coll->archives, archive)) goto error;
 
  end:

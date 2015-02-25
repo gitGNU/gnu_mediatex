@@ -1,10 +1,10 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.2 2014/11/13 16:36:36 nroche Exp $
+ * Version: $Id: address.c,v 1.3 2015/02/25 17:37:54 nroche Exp $
  * Project: 
  * Module : socket address
 
  * affect socket address
- * note:
+ * note: 
  * The  gethostbyname*()  and  gethostbyaddr*()  functions  are  obsolete.
  * Applications should use getaddrinfo(3) and getnameinfo(3) instead.
 
@@ -108,7 +108,7 @@ getHostNameByAddr(struct in_addr* inAddr)
  * Input      : char* hostname = the hostname
  *              struct in_addr *ipv4 = structure to fill
  * Output     : TRUE on success
- * Note       : The  gethostbyname*() and gethostbyaddr*() functions are
+ * TODO       : The  gethostbyname*() and gethostbyaddr*() functions are
  *              obsolete. Applications should use getaddrinfo(3) and 
  *              getnameinfo(3) instead.
  =======================================================================*/
@@ -186,7 +186,7 @@ buildSocketAddressEasy(struct sockaddr_in* rc,
  *              const char* service:  the service
  * Output     : struct sockaddr_in* address: the resulting socket address
                 True on success
- * Note       : The  gethostbyname*() and gethostbyaddr*() functions 
+ * TODO       : The  gethostbyname*() and gethostbyaddr*() functions 
  *              are obsolete. Applications should use getaddrinfo(3) 
  *              and getnameinfo(3) instead.
  =======================================================================*/
