@@ -6,7 +6,7 @@
  * Manage remote extraction
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ mdtxCall(int nbArgs, ...)
   va_list args;
   char *argv[] = {
     CONF_BINDIR CONF_MEDIATEXDIR,
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    0, 0, 0, 0, 0, 0, 0, 0};
   int i = 0;
 
   logEmit(LOG_DEBUG, "%s", "call mdtx client");
@@ -70,7 +70,7 @@ mdtxCall(int nbArgs, ...)
   va_end(args);
 
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, NULL, NULL, TRUE)) goto error;
+    if (!execScript(argv, 0, 0, TRUE)) goto error;
   }
 
   rc = TRUE;
@@ -87,12 +87,12 @@ mdtxCall(int nbArgs, ...)
  * Synopsis   : char* getAbsExtractPath(Collection* coll, char* path) 
  * Input      : Collection* coll = the related collection
  *              char* path = the relative path
- * Output     : absolute path, NULL on failure
+ * Output     : absolute path, 0 on failure
  =======================================================================*/
 char*
 getAbsExtractPath(Collection* coll, char* path) 
 {
-  char* rc = NULL;
+  char* rc = 0;
 
   checkCollection(coll);
   checkLabel(path);
@@ -143,13 +143,13 @@ thereIs(Collection* coll, char* path)
  * Synopsis   : char* uniqueCachePath(Collection* coll, FromAsso* asso) 
  * Input      : Collection* coll = the related collection
  *              char* path = the relative path
- * Output     : path not use into the cache, NULL on failure
+ * Output     : path not use into the cache, 0 on failure
  =======================================================================*/
 char*
 getUniqCachePath(Collection* coll, char* path) 
 {
-  char* rc = NULL;
-  char* res = NULL;
+  char* rc = 0;
+  char* res = 0;
   int err = 0;
   char i=(char)0, j=(char)0;
   int l;
@@ -193,13 +193,13 @@ getUniqCachePath(Collection* coll, char* path)
  * Synopsis   : 
  * Input      : Collection* coll = the related collection
  *              Archive* archive = the releted archive
- * Output     : absolute path, NULL on failure
+ * Output     : absolute path, 0 on failure
  =======================================================================*/
 char*
 getArchivePath(Collection* coll, Archive* archive) 
 {
-  char* rc = NULL;
-  Record* record = NULL;
+  char* rc = 0;
+  Record* record = 0;
 
   checkCollection(coll);
   checkArchive(archive);
@@ -238,7 +238,7 @@ int
 extractDd(Collection* coll, char* device, char* target, off_t size)
 {
   int rc = FALSE;
-  char* argv[] = {"/bin/dd", NULL, NULL, "bs=2048", NULL, NULL};
+  char* argv[] = {"/bin/dd", 0, 0, "bs=2048", 0, 0};
   char count[MAX_SIZE_SIZE+7];
 
   checkCollection(coll);
@@ -258,7 +258,7 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
   sprintf(count, "count=%lli", (long long int)size>>11);
   argv[4] = count;
 
-  if (!env.dryRun && !execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
 
   rc = TRUE;
  error:
@@ -314,9 +314,9 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
 {
   int rc = FALSE;
   Archive* archive = (Archive*)0;
-  char* iso = NULL;
-  char* mnt = NULL;
-  char* path = NULL;
+  char* iso = 0;
+  char* mnt = 0;
+  char* path = 0;
   int i,j,l;
 
   logEmit(LOG_DEBUG, "%s", "isoExtract");
@@ -347,7 +347,7 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
   goto error;
 
  next:
-  if (!mdtxCall(6, "adm", "mount", iso, "on", mnt, "-X")) goto error;
+  if (!mdtxCall(6, "adm", "mount", iso, "on", mnt, "-S")) goto error;
 
   // copy the asso file
   if (!(path = createString(mnt))
@@ -383,11 +383,11 @@ int
 extractCat(Collection* coll, FromAsso* asso, char* path)
 {
   int rc = FALSE;
-  char *cmd = NULL;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
-  char* argv[] = {"/bin/bash", "-c", NULL, NULL};
-  char* path2 = NULL;
+  char *cmd = 0;
+  Archive* archive = 0;
+  RGIT* curr = 0;
+  char* argv[] = {"/bin/bash", "-c", 0, 0};
+  char* path2 = 0;
 
   logEmit(LOG_DEBUG, "%s", "do cat");
   if (!(cmd = createString("/bin/cat "))) goto error;
@@ -405,7 +405,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
   if (!(cmd = catString(cmd, path))) goto error;
   argv[2] = cmd;
 
-  if (!env.dryRun && !execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
 
   rc = TRUE;
  error:  
@@ -430,8 +430,8 @@ int
 extractTar(Collection* coll, FromAsso* asso, char* options)
 {
   int rc = FALSE;
-  char *argv[] = {"/bin/tar", "-C", NULL, NULL, NULL, NULL, NULL};
-  Archive* archive = NULL;
+  char *argv[] = {"/bin/tar", "-C", 0, 0, 0, 0, 0};
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "do tar %s", options);
 
@@ -444,7 +444,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
     if (!(argv[4] = getArchivePath(coll, archive))) goto error;
     argv[5] = asso->path;
 
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -472,10 +472,10 @@ int
 extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
 {
   int rc = FALSE;
-  char* argv[] = {"/bin/bash", "-c", NULL, NULL};
-  char *cmd = NULL;
-  char* path = NULL;
-  Archive* archive = NULL;
+  char* argv[] = {"/bin/bash", "-c", 0, 0};
+  char *cmd = 0;
+  char* path = 0;
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "do Xunzip %s", bin);
 
@@ -491,7 +491,7 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
   if (!(cmd = catString(cmd, tmpPath))) goto error;
   argv[2] = cmd;
 
-  if (!env.dryRun && !execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
 
   rc = TRUE;
  error:
@@ -515,8 +515,8 @@ int
 extractAfio(Collection* coll, FromAsso* asso)
 {
   int rc = FALSE;
-  char *argv[] = {"/bin/afio", "-i", "-y", NULL, NULL, NULL};
-  Archive* archive = NULL;
+  char *argv[] = {"/bin/afio", "-i", "-y", 0, 0, 0};
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "%s", "do afio -i");
 
@@ -527,7 +527,7 @@ extractAfio(Collection* coll, FromAsso* asso)
       goto error;
     if (!(argv[4] = getArchivePath(coll, archive))) goto error;
 
-    if (!execScript(argv, NULL, coll->extractDir, FALSE)) goto error;
+    if (!execScript(argv, 0, coll->extractDir, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -551,9 +551,9 @@ int
 extractCpio(Collection* coll, FromAsso* asso)
 {
   int rc = FALSE;
-  char *argv[] = {"/bin/cpio", "-i", "--file", NULL, 
-		  "--make-directories", NULL, NULL};
-  Archive* archive = NULL;
+  char *argv[] = {"/bin/cpio", "-i", "--file", 0, 
+		  "--make-directories", 0, 0};
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "%s", "do cpio -i");
 
@@ -564,7 +564,7 @@ extractCpio(Collection* coll, FromAsso* asso)
     if (!(argv[3] = getArchivePath(coll, archive))) goto error;
     argv[5] = asso->path;
 
-    if (!execScript(argv, NULL, coll->extractDir, TRUE)) goto error;
+    if (!execScript(argv, 0, coll->extractDir, TRUE)) goto error;
   }
 
   rc = TRUE;
@@ -588,8 +588,8 @@ int
 extractZip(Collection* coll, FromAsso* asso)
 {
   int rc = FALSE;
-  char *argv[] = {"/usr/bin/unzip", "-d", NULL, NULL, NULL, NULL};
-  Archive* archive = NULL;
+  char *argv[] = {"/usr/bin/unzip", "-d", 0, 0, 0, 0};
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "%s", "do unzip");
 
@@ -601,7 +601,7 @@ extractZip(Collection* coll, FromAsso* asso)
     if (!(argv[3] = getArchivePath(coll, archive))) goto error;
     argv[4] = asso->path; 
 
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -625,8 +625,8 @@ int
 extractRar(Collection* coll, FromAsso* asso)
 {
   int rc = FALSE;
-  char *argv[] = {"/usr/bin/rar", "x", NULL, NULL, NULL, NULL};
-  Archive* archive = NULL;
+  char *argv[] = {"/usr/bin/rar", "x", 0, 0, 0, 0};
+  Archive* archive = 0;
 
   logEmit(LOG_DEBUG, "%s", "do rar x");
 
@@ -638,7 +638,7 @@ extractRar(Collection* coll, FromAsso* asso)
     argv[3] = asso->path; 
     argv[4] = coll->extractDir; 
 
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -661,7 +661,7 @@ int
 extractAddToKeep(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
+  Collection* coll = 0;
 
   coll = data->coll;
   checkCollection(coll);
@@ -691,8 +691,8 @@ int
 extractDelToKeeps(Collection* coll, RG* toKeeps)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "del toKeeps"); 
@@ -730,9 +730,9 @@ int
 cacheSet(ExtractData* data, Record* record, char* path) 
 {
   int rc = FALSE;
-  char* source = NULL;
-  char* target = NULL;
-  Collection* coll = NULL;
+  char* source = 0;
+  char* target = 0;
+  Collection* coll = 0;
 
   coll = data->coll;
   checkCollection(coll);
@@ -788,13 +788,13 @@ int
 extractRecord(ExtractData* data, Record* record)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  char* tmpBasename = NULL;
-  char* tmpPath = NULL;
-  FromAsso* asso = NULL;
-  Record* record2 = NULL;
-  char* device = NULL;
-  char* source = NULL;
+  Collection* coll = 0;
+  char* tmpBasename = 0;
+  char* tmpPath = 0;
+  FromAsso* asso = 0;
+  Record* record2 = 0;
+  char* device = 0;
+  char* source = 0;
   int isBlockDev = FALSE;
   int i = 0;
 
@@ -857,8 +857,8 @@ extractRecord(ExtractData* data, Record* record)
   if (!cacheSet(data, record2, tmpBasename)) goto error;
   if (!removeDir(coll->extractDir, tmpPath)) goto error;
 
-  tmpBasename = NULL;
-  record2 = NULL;
+  tmpBasename = 0;
+  record2 = 0;
   rc = TRUE;
  error:
   if (!rc) {
@@ -883,9 +883,9 @@ int
 extractFromAsso(ExtractData* data, FromAsso* asso)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Record* record = NULL;
-  char* tmpPath = NULL;
+  Collection* coll = 0;
+  Record* record = 0;
+  char* tmpPath = 0;
 
   coll = data->coll;
   checkCollection(coll);
@@ -953,7 +953,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   if (!cacheSet(data, record, asso->path)) goto error;
   if (!removeDir(coll->extractDir, tmpPath)) goto error;
 
-  record = NULL;
+  record = 0;
   rc = TRUE;
  error:
   if (!rc) {
@@ -978,10 +978,10 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
 int extractContainer(ExtractData* data, Container* container)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  Archive* archive = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   int found = FALSE;
 
   checkCollection(data->coll);
@@ -992,7 +992,7 @@ int extractContainer(ExtractData* data, Container* container)
   if (isEmptyRing(container->parents)) goto end;
 
   // we extract all parents (only one for TGZ, several for CAT...)
-  curr = NULL;
+  curr = 0;
   found = TRUE;
   while((archive = rgNext_r(container->parents, &curr))) {
     if (!extractArchive(data, archive)) goto error;
@@ -1003,7 +1003,7 @@ int extractContainer(ExtractData* data, Container* container)
   if (!found) {
 
     // for each part we have on final supply
-    curr = NULL;
+    curr = 0;
     while((archive = rgNext_r(container->parents, &curr))) {
       if (archive->state < AVAILABLE &&
   	  archive->finaleSupplies->nbItems > 0) {
@@ -1048,12 +1048,12 @@ int extractContainer(ExtractData* data, Container* container)
 int extractArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  Record* record = NULL;
-  char* path = NULL;
-  RGIT* curr = NULL;
-  RG* toKeepsBck = NULL;
-  RG* toKeepsTmp = NULL;
+  FromAsso* asso = 0;
+  Record* record = 0;
+  char* path = 0;
+  RGIT* curr = 0;
+  RG* toKeepsBck = 0;
+  RG* toKeepsTmp = 0;
 
   logEmit(LOG_DEBUG, "extract an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -1087,7 +1087,7 @@ int extractArchive(ExtractData* data, Archive* archive)
 
   // prefix: scp. Else (postfix) we will scp containers first.
   if (data->context != X_CGI) {
-    curr = NULL;
+    curr = 0;
     while(!data->found && 
 	  (record = rgNext_r(archive->remoteSupplies, &curr))) {
       if (record->type & REMOVE) continue;
@@ -1110,7 +1110,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   toKeepsBck = data->toKeeps;
   if (!(data->toKeeps = createRing())) goto error;
 
-  curr = NULL;
+  curr = 0;
   while(!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
     if (!extractContainer(data, asso->container)) goto error;
   }
@@ -1143,15 +1143,15 @@ int extractArchive(ExtractData* data, Archive* archive)
  * Description: copy all wanted archives into a ring
  * Synopsis   : RG* getWantedArchives(Collection* coll)
  * Input      : Collection* coll
- * Output     : a ring of arhives, NULL o error
+ * Output     : a ring of arhives, 0 o error
  =======================================================================*/
 RG* 
 getWantedArchives(Collection* coll)
 {
-  RG* rc = NULL;
-  RG* ring = NULL;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  RG* rc = 0;
+  RG* ring = 0;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "getWantedArchives");
@@ -1159,7 +1159,7 @@ getWantedArchives(Collection* coll)
   if (!(ring = createRing())) goto error;
 
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= NULL) {
+	!= 0) {
     if (archive->state != WANTED) continue;
     if (!rgInsert(ring, archive)) goto error;
   }
@@ -1167,7 +1167,7 @@ getWantedArchives(Collection* coll)
   // add top archives with bad score
   if (!computeExtractScore(coll)) goto error;
    while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= NULL) {
+	!= 0) {
      if (archive->state < USED) continue;
      if (archive->state > WANTED) continue;
      if (archive->fromContainers->nbItems != 0) continue;
@@ -1197,11 +1197,11 @@ getWantedArchives(Collection* coll)
 int extractArchives(Collection* coll)
 {
   int rc = FALSE;
-  RG* archives = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  RG* archives = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   ExtractData data;
   int deliver = FALSE;
 
@@ -1215,7 +1215,7 @@ int extractArchives(Collection* coll)
   if (!(archives = getWantedArchives(coll))) goto error3;
 
   // for each cache entry
-  while((archive = rgNext_r(archives, &curr)) != NULL) {
+  while((archive = rgNext_r(archives, &curr)) != 0) {
 
     // define extraction context : X_MAIN or X_STEP (ie: scp or not)
     data.context = X_STEP;
@@ -1224,7 +1224,7 @@ int extractArchives(Collection* coll)
     if (archive->extractScore <= 10) data.context = X_MAIN;
 
     // ... or locally wanted
-    curr2 = NULL;
+    curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) == FINALE_DEMAND) {
 	data.context = X_MAIN;
@@ -1241,8 +1241,8 @@ int extractArchives(Collection* coll)
     if (data.found) {
 
       // adjuste to-keep date
-      curr2 = NULL;
-      while((record = rgNext_r(archive->demands, &curr2)) != NULL) {
+      curr2 = 0;
+      while((record = rgNext_r(archive->demands, &curr2)) != 0) {
 	if (!keepArchive(coll, archive, getRecordType(record)))
 	  goto error3;
 	if (getRecordType(record) == FINALE_DEMAND &&
@@ -1263,7 +1263,7 @@ int extractArchives(Collection* coll)
   if (!rc) {
     logEmit(LOG_ERR, "%s", "remote extraction fails");
   }
-  curr = NULL;
+  curr = 0;
   destroyOnlyRing(archives);
   destroyOnlyRing(data.toKeeps);
   return rc;
@@ -1309,7 +1309,7 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -1317,7 +1317,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -1326,12 +1326,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -1353,32 +1353,32 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   
-  utLog("%s", "add a demand for logo.png:", NULL);
+  utLog("%s", "add a demand for logo.png:", 0);
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"test@test.com")) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "try to extract the demand (1)", NULL);
+  utLog("%s", "try to extract the demand (1)", 0);
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "Put some files:", NULL);
+  utLog("%s", "Put some files:", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
   
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan gives :", coll);
   
-  utLog("%s", "try to extract the demand (2)", NULL);
+  utLog("%s", "try to extract the demand (2)", 0);
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
   /////////////////////////////////////////////////////////////
 
-  utLog("%s", "Try tar-bzip2 container:", NULL);
+  utLog("%s", "Try tar-bzip2 container:", 0);
   if (!utCleanCaches()) goto error;
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"test@test.com")) goto error;
@@ -1388,7 +1388,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  /* utLog("%s", "Try afio container:", NULL); */
+  /* utLog("%s", "Try afio container:", 0); */
   /* if (!utCleanCaches()) goto error; */
   /* if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,  */
   /* 		"test@test.com")) goto error; */
@@ -1398,7 +1398,7 @@ main(int argc, char** argv)
   /* if (!extractArchives(coll)) goto error; */
   /* utLog("%s", "Now we have :", coll); */
 
-  utLog("%s", "Try zip container:", NULL);
+  utLog("%s", "Try zip container:", 0);
   if (!utCleanCaches()) goto error;
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"test@test.com")) goto error;
@@ -1408,7 +1408,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  /* utLog("%s", "Try rar container:", NULL); */
+  /* utLog("%s", "Try rar container:", 0); */
   /* if (!utCleanCaches()) goto error; */
   /* if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,  */
   /* 		"test@test.com")) goto error; */
@@ -1419,7 +1419,7 @@ main(int argc, char** argv)
   /* if (!extractArchives(coll)) goto error; */
   /* utLog("%s", "Now we have :", coll); */
 
-  utLog("%s", "Try tar container:", NULL);
+  utLog("%s", "Try tar container:", 0);
   if (!utCleanCaches()) goto error;
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"test@test.com")) goto error;
@@ -1429,7 +1429,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "Try cpio+gz container:", NULL);
+  utLog("%s", "Try cpio+gz container:", 0);
   if (!utCleanCaches()) goto error;
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,
   		"test@test.com")) goto error;
@@ -1439,7 +1439,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "Try cpio+bz2 container:", NULL);
+  utLog("%s", "Try cpio+bz2 container:", 0);
   if (!utCleanCaches()) goto error;
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,
   		"test@test.com")) goto error;
@@ -1449,7 +1449,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   /************************************************************************/
 

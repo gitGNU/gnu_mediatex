@@ -1,7 +1,8 @@
 @cindex checksums file
 
 @dataChecksumO{} files are
-internally managed by the @activityServer{} activity for each collections.
+internally managed by the 
+@activityServer{} activity for each collections.
 @activity{Client} may asks @activity{Server} to refresh this file in order
 to read the last cache status into.
 Messages the @procScriptsCgi{}, @procClientSupp{} and 

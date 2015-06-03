@@ -1,13 +1,13 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.2 2014/11/13 16:36:17 nroche Exp $
+ * Version: $Id: conf.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/conf
  *
  * Manage mediatex.conf configuration file
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -52,11 +52,11 @@ int
 mdtxAddCollection(Collection* coll)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* self = NULL;
+  Configuration* conf = 0;
+  Collection* self = 0;
   char buf[MAX_SIZE_COLL + MAX_SIZE_HOST + 8];
-  char* argv[3] = {NULL, NULL, NULL};
-  char* cvsFile = NULL;
+  char* argv[3] = {0, 0, 0};
+  char* cvsFile = 0;
   struct stat sb;
 
   checkCollection(coll);
@@ -83,7 +83,7 @@ mdtxAddCollection(Collection* coll)
   argv[1] = buf;
   
 #ifndef utMAIN
-  if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argv, 0, 0, FALSE)) goto error;
 #endif
 
   // check if script realy success
@@ -107,7 +107,7 @@ mdtxAddCollection(Collection* coll)
   // register collection into configuration file
   if (!(self = addCollection(coll->label))) goto error;
   self->masterLabel = coll->masterLabel;
-  coll->masterLabel = NULL; // consume it
+  coll->masterLabel = 0; // consume it
   strncpy(self->masterHost, coll->masterHost, MAX_SIZE_HOST);
   self->masterPort = coll->masterPort;
   if (!expandCollection(self)) goto error;
@@ -146,9 +146,9 @@ int
 mdtxDelCollection(char* label)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  char* argv[3] = {NULL, NULL, NULL};
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  char* argv[3] = {0, 0, 0};
 
   logEmit(LOG_DEBUG, "%s", "del a collection");
 
@@ -161,7 +161,7 @@ mdtxDelCollection(char* label)
   argv[0] = catString(argv[0], "/free.sh");
   argv[1] = label;
 #ifndef utMAIN
-  if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argv, 0, 0, FALSE)) goto error;
 #endif
 
   // upgrade configuration file
@@ -196,23 +196,23 @@ int
 mdtxListCollection()
 {
   int rc = FALSE; 
-  Configuration* conf = NULL;
-  Collection* collection = NULL;
+  Configuration* conf = 0;
+  Collection* collection = 0;
   int nb = 0;
 
   // search into the configuration
   if (!loadConfiguration(CONF)) goto error;
   if (!(conf = getConfiguration())) goto error;
-  if (conf->collections != NULL) {
+  if (conf->collections != 0) {
 
-    if (conf->collections != NULL) {
+    if (conf->collections != 0) {
       if (!rgSort(conf->collections, cmpCollection)) {
 	logEmit(LOG_ERR, "%s", "fails to sort collections ring");
 	goto error;
       }
     }
     
-    while((collection = rgNext(conf->collections)) != NULL) {
+    while((collection = rgNext(conf->collections)) != 0) {
       printf("%s%s", nb++?" ":"", collection->label);
     }
   }
@@ -229,16 +229,16 @@ mdtxListCollection()
  * Description: add support's label into collection's support ring(s)
  * Synopsis   : int shareSupport(char* sLabel, char* cLabel)
  * Input      : char* sLabel = support to share
- *              char* cLabel = collection to share with, NULL for all
+ *              char* cLabel = collection to share with, 0 for all
  * Output     : TRUE on success
  =======================================================================*/
 int 
 mdtxShareSupport(char* sLabel, char* cLabel)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support* supp = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Support* supp = 0;
+  Collection* coll = 0;
 
   checkLabel(sLabel);
   if (!loadConfiguration(CONF)) goto error;
@@ -246,15 +246,15 @@ mdtxShareSupport(char* sLabel, char* cLabel)
   if (!(supp = mdtxGetSupport(sLabel))) goto error;
 
   // for all collections
-  if (cLabel == NULL) {
-    if (conf->collections != NULL) {
+  if (cLabel == 0) {
+    if (conf->collections != 0) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections)) != NULL) {
+      while((coll = rgNext(conf->collections)) != 0) {
 	if (!addSupportToCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }
     }
-    coll = NULL;
+    coll = 0;
   }
   else {
     // for the provided collection
@@ -279,32 +279,32 @@ mdtxShareSupport(char* sLabel, char* cLabel)
  * Description: remove support's label from collection's support ring(s)
  * Synopsis   : int withdrawSupport(char* sLabel, char* cLabel)
  * Input      : char* sLabel = support to withdraw
- *              char* cLabel = collection to withdraw from ; NULL for all
+ *              char* cLabel = collection to withdraw from ; 0 for all
  * Output     : TRUE on success
  =======================================================================*/
 int 
 mdtxWithdrawSupport(char* sLabel, char* cLabel)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support* supp = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Support* supp = 0;
+  Collection* coll = 0;
 
   if (!loadConfiguration(CONF)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(sLabel))) goto error;
 
   // for all collections
-  if (cLabel == NULL) {
-    if (conf->collections != NULL) {
+  if (cLabel == 0) {
+    if (conf->collections != 0) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections)) != NULL) {
+      while((coll = rgNext(conf->collections)) != 0) {
 	if (!delSupportFromCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }
     }
-    coll = NULL;
-    coll = NULL;
+    coll = 0;
+    coll = 0;
   }
   else {
     // for the provided collection
@@ -361,8 +361,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll3 = NULL;
-  Collection* coll4 = NULL;
+  Collection* coll3 = 0;
+  Collection* coll4 = 0;
   char* supp = "SUPP21_logo.part1";
   // ---
   int rc = 0;
@@ -378,7 +378,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -418,7 +418,7 @@ main(int argc, char** argv)
   if (!mdtxShareSupport(supp, "coll3")) goto error;
   
   logEmit(LOG_NOTICE, "%s", "*** Share support with all collections:");
-  if (!mdtxShareSupport(supp, NULL)) goto error;
+  if (!mdtxShareSupport(supp, 0)) goto error;
   if (!saveConfiguration("topo")) goto error;
 
   logEmit(LOG_NOTICE, "%s", "*** Withdraw a support:");
@@ -429,7 +429,7 @@ main(int argc, char** argv)
   if (!mdtxWithdrawSupport(supp, "coll3")) goto error;
 
   logEmit(LOG_NOTICE, "%s", "*** Withdraw support from all collections:");
-  if (!mdtxWithdrawSupport(supp, NULL)) goto error;
+  if (!mdtxWithdrawSupport(supp, 0)) goto error;
   if (!saveConfiguration("topo")) goto error;
   /************************************************************************/
   

@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: ssh.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
+ * Version: $Id: ssh.c,v 1.3 2015/06/03 14:03:34 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
 * SSH producer interface
 
 MediaTex is an Electronic Records Management System
-Copyright (C) 2014  Nicolas Roche
+Copyright (C) 2014 2015 Nicolas Roche
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,34 +44,34 @@ static int
 serializeAuthKeys(Collection* coll)
 { 
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout; 
-  ServerTree* self = NULL;
-  Server* server = NULL;
-  RGIT* curr = NULL;
+  ServerTree* self = 0;
+  Server* server = 0;
+  RGIT* curr = 0;
   mode_t mask;
 
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
-  logEmit(LOG_DEBUG, "%s", "serialize authorized_keys file");
+  logCommon(LOG_DEBUG, "%s", "serialize authorized_keys file");
 
   path = coll->sshAuthKeys;
-  logEmit(LOG_INFO, "Serializing the authorized_keys file: %s", 
+  logCommon(LOG_INFO, "Serializing the authorized_keys file: %s", 
 	  path?path:"stdout");
       
   // output file
   mask = umask(0177);
   if (!env.dryRun) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    if ((fd = fopen(path, "w")) == 0) {
+      logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
       goto error;
     }
   }
       
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
 
-  if (self->servers != NULL) {
-    while((server = rgNext_r(self->servers, &curr)) != NULL) {
+  if (self->servers != 0) {
+    while((server = rgNext_r(self->servers, &curr)) != 0) {
       fprintf(fd, "%s\n", server->userKey);
     }
   }
@@ -80,11 +80,11 @@ serializeAuthKeys(Collection* coll)
   rc = TRUE;  
  error:  
   if (fd != stdout && fclose(fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
     rc = FALSE;
   }
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to serialize authorized_keys file");
+    logCommon(LOG_ERR, "%s", "fail to serialize authorized_keys file");
   }
   umask(mask);
   return(rc);
@@ -101,38 +101,41 @@ static int
 serializeSshConfig(Collection* coll)
 { 
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout; 
-  ServerTree* self = NULL;
-  Server* server = NULL;
-  Server* previous = NULL;
-  RGIT* curr = NULL;
+  ServerTree* self = 0;
+  Server* server = 0;
+  Server* previous = 0;
+  RGIT* curr = 0;
   mode_t mask = 0;
 
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
-  logEmit(LOG_DEBUG, "%s", "serialize ssh's config file");
+  logCommon(LOG_DEBUG, "%s", "serialize ssh's config file");
 
   path = coll->sshConfig;
-  logEmit(LOG_INFO, "Serializing the ssh's config file: %s", 
+  logCommon(LOG_INFO, "Serializing the ssh's config file: %s", 
 	  path?path:"stdout");
       
   // output file
   mask = umask(0177);
   if (!env.dryRun) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    if ((fd = fopen(path, "w")) == 0) {
+      logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
       goto error;
     }
   }
       
   fprintf(fd, "%s", "# This file is managed by MediaTeX software.\n\n");
   fprintf(fd, "%s", "# Do not ask for password\n"); 
-  fprintf(fd, "%s", "BatchMode yes\n\n");
+  fprintf(fd, "%s", "BatchMode yes\n");
+  fprintf(fd, "%s", "Compression yes\n");
+  fprintf(fd, "%s", "#LogLevel DEBUG3\n\n");
+
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext_r(self->servers, &curr)) != NULL) {
+    while((server = rgNext_r(self->servers, &curr)) != 0) {
       if (isEmptyString(server->host) ||
 	  (previous && !strcmp(server->host, previous->host))) 
 	continue;
@@ -145,11 +148,11 @@ serializeSshConfig(Collection* coll)
   rc = TRUE;  
  error:
   if (fd != stdout && fclose(fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
     rc = FALSE;
   }
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to serialize ssh's config file");
+    logCommon(LOG_ERR, "%s", "fail to serialize ssh's config file");
   }
   umask(mask);
   return(rc);
@@ -168,29 +171,29 @@ static int
 serializeKnownHosts(Collection* coll)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  char* path = NULL;
+  Configuration* conf = 0;
+  char* path = 0;
   FILE* fd = stdout; 
-  ServerTree* self = NULL;
-  Server* server = NULL;
-  RGIT* curr = NULL;
+  ServerTree* self = 0;
+  Server* server = 0;
+  RGIT* curr = 0;
   mode_t mask = 0;
 
   checkCollection(coll);
   if (!(conf = getConfiguration())) goto error;
   if (!(populateConfiguration())) goto error;
   if (!(self = coll->serverTree)) goto error;
-  logEmit(LOG_DEBUG, "%s", "serialize known_hosts file");
+  logCommon(LOG_DEBUG, "%s", "serialize known_hosts file");
 
   path = coll->sshKnownHosts;
-  logEmit(LOG_INFO, "Serializing the known_host file: %s", 
+  logCommon(LOG_INFO, "Serializing the known_host file: %s", 
 	  path?path:"stdout");
       
   // output file
   mask = umask(0177);
   if (!env.dryRun) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "Cannot open known_host file for write: %s", path);
+    if ((fd = fopen(path, "w")) == 0) {
+      logCommon(LOG_ERR, "Cannot open known_host file for write: %s", path);
       goto error;
     }
   }
@@ -201,17 +204,27 @@ serializeKnownHosts(Collection* coll)
   // here using "localhost" name for local connexions
   fprintf(fd, "localhost %s\n", conf->hostKey);
   if (!strcmp(conf->host, "localhost")) {
-    logEmit(LOG_WARNING, "%s", 
+    logCommon(LOG_WARNING, "%s", 
 	    "Please avoid using localhost in the configuration");
   }
 
   // add all keys using the host name provided by servers.txt
-  if (self->servers != NULL) {
-    while((server = rgNext_r(self->servers, &curr)) != NULL) {
-      if (server->hostKey != NULL) {
-	fprintf(fd, "%s %s\n", server->host, server->hostKey);
+  if (self->servers != 0) {
+    while((server = rgNext_r(self->servers, &curr)) != 0) {
+      if (server->hostKey != 0) {
+
+	// must add port != 22 given by .ssh/config file
+	if (server->sshPort == 22) {
+	  fprintf(fd, "%s %s\n", server->host, server->hostKey);
+	}
+	else {
+	  fprintf(fd, "[%s]:%i %s\n", server->host, server->sshPort,
+		  server->hostKey);
+	}
+
+	// warning message as you cannot be reach from the outside
 	if (!strcmp(server->host, "localhost")) {
-	  logEmit(LOG_WARNING, "%s", 
+	  logCommon(LOG_WARNING, "%s", 
 		  "Please avoid having localhost in the servers list");
 	}
       }
@@ -223,14 +236,14 @@ serializeKnownHosts(Collection* coll)
   }
   else {
     if (fclose(fd)) {
-      logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+      logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
       goto error;
     }
   }
   rc = TRUE;  
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to serialize known_host file");
+    logCommon(LOG_ERR, "%s", "fail to serialize known_host file");
   }
   umask(mask);
   return(rc);
@@ -248,10 +261,10 @@ static int
 sshKeygen(Collection* coll)
 {
   int rc = FALSE;
-  char* argv[] = {"/usr/bin/ssh-keygen", "-Hf", NULL, NULL};
-  char *path = NULL;
+  char* argv[] = {"/usr/bin/ssh-keygen", "-Hf", 0, 0};
+  char *path = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do ssh-keygen -H");
+  logCommon(LOG_DEBUG, "%s", "do ssh-keygen -H");
   argv[2] = coll->sshKnownHosts;
 
 
@@ -260,11 +273,11 @@ sshKeygen(Collection* coll)
 
   if (!env.noRegression && !env.dryRun) {
     // do $ ssh-keygen -H -f $CACHEDIR/home/$LABEL/.ssh/known_hosts
-    if (!execScript(argv, NULL, NULL, TRUE)) goto error;
-
+    if (!execScript(argv, 0, 0, TRUE)) goto error;
+    
     // do $ rm -f $CACHEDIR/home/$LABEL/.ssh/known_hosts.old
     if (unlink(path) == -1) {
-      logEmit(LOG_ERR, "error with unlink %s: %s", path, strerror(errno));
+      logCommon(LOG_ERR, "error with unlink %s: %s", path, strerror(errno));
       goto error;
     }
   }
@@ -272,7 +285,7 @@ sshKeygen(Collection* coll)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do ssh-keygen -H");
+    logCommon(LOG_ERR, "%s", "fails to do ssh-keygen -H");
   }
   path = destroyString(path);
   return(rc);
@@ -295,7 +308,7 @@ upgradeSshConfiguration(Collection* coll)
 
   checkCollection(coll);
   if (!coll->serverTree) goto error;
-  logEmit(LOG_DEBUG, "upgrade %s ssh configuration", coll->label);
+  logCommon(LOG_DEBUG, "upgrade %s ssh configuration", coll->label);
   if (!rgSort(coll->serverTree->servers, cmpServer)) goto error;
 
   if (!becomeUser(coll->user, TRUE)) goto error;
@@ -308,7 +321,7 @@ upgradeSshConfiguration(Collection* coll)
  error:  
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to upgrade ssh configuration");
+    logCommon(LOG_ERR, "%s", "fail to upgrade ssh configuration");
   }
   return(rc);
 }
@@ -350,8 +363,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -363,10 +376,11 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

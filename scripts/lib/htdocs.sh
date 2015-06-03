@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: htdocs.sh,v 1.2 2014/11/13 16:36:12 nroche Exp $
+# * Version: $Id: htdocs.sh,v 1.3 2015/06/03 14:03:26 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
 # * This module manage the apache and viewvc configuration
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@ function HTDOCS_configure_mdtx_apache2()
 {
     Debug "$FUNCNAME:" 2
 
-    # adapt apache2 coonfiguration 
-    HTCONF=$SYSCONFDIR/apache2/conf.d$MEDIATEX-$MDTX.conf
+    # adapt apache2 configuration 
+    HTCONF=$SYSCONFDIR/apache2/conf-available$MEDIATEX-$MDTX.conf
     cp $DATADIR/examples/apache-mdtx.conf $HTCONF
     sed $HTCONF -i -e "s!MEDIATEX!$MEDIATEX!"    
     sed $HTCONF -i -e "s!CACHEDIR!$CACHEDIR!"
@@ -52,6 +52,16 @@ function HTDOCS_configure_mdtx_apache2()
 <body>
 </html>
 EOF
+}
+
+# un-Configure apache2 for mdtx 
+function HTDOCS_unconfigure_mdtx_apache2()
+{
+    Debug "$FUNCNAME:" 2
+
+    # adapt apache2 configuration 
+    HTCONF=$SYSCONFDIR/apache2/conf-available$MEDIATEX-$MDTX.conf
+    rm -f $HTCONF
 }
 
 # Configure viewvc for mdtx 

@@ -1,39 +1,24 @@
 [info serv.c] client ipc key: {LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf, 6562}
 [notice serv.c] please send me HUP, USR1 or TERM signals:
 [notice serv.c] *** upgrade:
-[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
+[notice confFile.y] parse configuration
+[notice supportFile.y] parse supports
 [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
-[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP31_logo.part2)
-[info upgrade.c] laps < suppTTL: pow ( 0.199452, 1/2.00 ) * 9.00 + 1.00 = 5.02
-[info upgrade.c] compute image score for 022a34b2f9b893fba5774237e1aa80ea:24075
-[info upgrade.c]    0.00
-[info upgrade.c] -------
-[info upgrade.c] =  0.00
-[info upgrade.c] compute image score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info upgrade.c]    5.02
-[info upgrade.c] -------
-[info upgrade.c] =  5.02
-[info upgrade.c] compute image score for de5008799752552b7963a2670dc5eb18:391168
-[info upgrade.c]    0.33
-[info upgrade.c] -------
-[info upgrade.c] =  0.33
 [notice serv.c] *** refuse to del localhost key: 
 [info serv.c] del 746d6ceeb76e05cfa2dea92a1c5753cd key from coll1 collection
 [warning serv.c] key "746d6ceeb76e05cfa2dea92a1c5753cd" is our coll1 collection key
 [err serv.c] cannot del 746d6ceeb76e05cfa2dea92a1c5753cd key to coll1 collection
 [notice serv.c] *** del a key: 
 [info serv.c] del bedac32422739d7eced624ba20f5912e key from coll1 collection
-[info ssh.c] Serializing the authorized_keys file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/authorized_keys
 # This file is managed by MediaTeX software.
 ssh-dss AAAAB3NzaC1kc3MAAACBANTUb46yvsV3bL8AX7oSg48oyN2MPqVCLWL8GiGADVzX71dZmYiqFeTJ5v3vBgk/7rEiaUzfAIZ0ebXhKB1TSc17Vqbdx2DfHm3/IbgBgrBe47VAkbPX+iW2n1zC9fBY5bc/819V0Szf7qvUyzZUkJ/9Vsi79Ikbq7rWu8r3VBeVAAAAFQDTyYPXMe1NzSrUHagG4BLlEQEx7QAAAIEAmYWtuhy0uuoLsoZu96ECnD6Se+buik4WhEi6xuAMPe+/RR7z3IHTh7Xvg56PyfqlFNReFnlc1s23ZZMmWsSAtNYFWqGrir/rddfisDm9Esk5aqPuwi8ToEFikGpthbJZYHjz4PpB2jfWDyLax2HpzFx4vmd1LcrCCM5PtuJ1sEAAAACBALPb55K2CZT3etbLgJ0rfoYDMnutNl38kK5rxf5Ps7Qfq2Uayv1BSKh8arOoMi94qoGKmBDLmwy99raNL4UhVly6YcnOPZ1yhVMfSGy2B1bFHIxh4qhxulm6VsVcPxIQpfwjQCRPImo57jkIjVk49o+K6DY7pDuy60MOmkXPr/sC mdtx@host
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlnF3vIn3ad3kMTMdqLa/Q7WK0F2Lm1LbUPTh58ZYcCevtB0Eh4nyEuglApyu0d44/PfcUBAUEBVn3TOwPH6PIU0s7UmiiZpNHSO1cRWuULts8ebE2ePPbKiNj8rcqmTTuoxXB3nnbWtbqJAu4ld6s1P5Rtm84B53dltlkZijCbtBa3FFPpShiRJQ8mIdQBKn5GXg5FDZ6xj9DUVcWAYxmkZXH3Wa2Uy1fSGMhhvSkvzDWJI/m3bBcQQZVJzrrr3Z+KG4MxO2qe1IhOa5Vjlf20PdRy0oB25NU09OfeV+LhfEdDadWvf2lRvcR60RhAf9C4GJOtRSjpO2xo8FNBnjB
-[info ssh.c] Serializing the ssh's config file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/config
 # This file is managed by MediaTeX software.
 
 # Do not ask for password
 BatchMode yes
+Compression yes
+#LogLevel DEBUG3
 
 Host localhost
 	Port 22
@@ -41,8 +26,6 @@ Host localhost
 Host host1.mediatex.org
 	Port 22
 
-[info confTree.c] configuration already populated
-[info ssh.c] Serializing the known_host file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/known_hosts
 [warning ssh.c] Please avoid having localhost in the servers list
 # This file is managed by MediaTeX software.
 localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
@@ -54,16 +37,16 @@ host1.mediatex.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAM
 [err serv.c] cannot add user1Key_rsa.pub key to coll1 collection
 [notice serv.c] *** add a key: 
 [info serv.c] add user3Key_dsa.pub key to coll1 collection
-[info ssh.c] Serializing the authorized_keys file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/authorized_keys
 # This file is managed by MediaTeX software.
 ssh-dss AAAAB3NzaC1kc3MAAACBANTUb46yvsV3bL8AX7oSg48oyN2MPqVCLWL8GiGADVzX71dZmYiqFeTJ5v3vBgk/7rEiaUzfAIZ0ebXhKB1TSc17Vqbdx2DfHm3/IbgBgrBe47VAkbPX+iW2n1zC9fBY5bc/819V0Szf7qvUyzZUkJ/9Vsi79Ikbq7rWu8r3VBeVAAAAFQDTyYPXMe1NzSrUHagG4BLlEQEx7QAAAIEAmYWtuhy0uuoLsoZu96ECnD6Se+buik4WhEi6xuAMPe+/RR7z3IHTh7Xvg56PyfqlFNReFnlc1s23ZZMmWsSAtNYFWqGrir/rddfisDm9Esk5aqPuwi8ToEFikGpthbJZYHjz4PpB2jfWDyLax2HpzFx4vmd1LcrCCM5PtuJ1sEAAAACBALPb55K2CZT3etbLgJ0rfoYDMnutNl38kK5rxf5Ps7Qfq2Uayv1BSKh8arOoMi94qoGKmBDLmwy99raNL4UhVly6YcnOPZ1yhVMfSGy2B1bFHIxh4qhxulm6VsVcPxIQpfwjQCRPImo57jkIjVk49o+K6DY7pDuy60MOmkXPr/sC mdtx@host
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDlnF3vIn3ad3kMTMdqLa/Q7WK0F2Lm1LbUPTh58ZYcCevtB0Eh4nyEuglApyu0d44/PfcUBAUEBVn3TOwPH6PIU0s7UmiiZpNHSO1cRWuULts8ebE2ePPbKiNj8rcqmTTuoxXB3nnbWtbqJAu4ld6s1P5Rtm84B53dltlkZijCbtBa3FFPpShiRJQ8mIdQBKn5GXg5FDZ6xj9DUVcWAYxmkZXH3Wa2Uy1fSGMhhvSkvzDWJI/m3bBcQQZVJzrrr3Z+KG4MxO2qe1IhOa5Vjlf20PdRy0oB25NU09OfeV+LhfEdDadWvf2lRvcR60RhAf9C4GJOtRSjpO2xo8FNBnjB
 ssh-dss AAAAB3NzaC1kc3MAAACBALSNj2g79yICAQHQBrEWzwYp/h7KGJl7KPOkRcgyr1vyBhBYfJJQpxhKZOBLkFs4RoyZmx+NX3tMUNH2FkYPbSWjms1czokhM9nq96ZUGCx/rWZ2oDB5KVNx+sp8rqveTDB45FTfJQ6+2PDoHfajc6kthxM/UUTBzTLaTD5V1ChjAAAAFQCfhKdnRBlZEnyp5U4w+xqJLg/yPwAAAIEAp6SRRiF6ucA+NZ+GxsBBgQMKT/uokI7rxWnljPeyVbAi3c07mdpEoLUDAUbAy4qfatWXEf9RDLGQuFwyMeBkMtRHENmuWyIlRT191xhQzKMAhbFukRNdmjm7lvB9gnlhPiESxmrZqBppeKh13CtntWQyEL8KYv5AVoEwfkwGyGMAAACAAW8BloIq4V7j4/qEJWjvlHUbVHlgeZU9gnOSL2BDaS1zqTYrUTuWo/HKRMWf6xWbh1Es7YpYtQ8EA8Z/fW4xGSH1J+nhCNxepezXNAzejPF/aHph9YcPp7n6qdW0dHoL6GfPJt47Rs+XyXalEiyNU1POm38qn3/BKuHisS49/0o=
-[info ssh.c] Serializing the ssh's config file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/config
 # This file is managed by MediaTeX software.
 
 # Do not ask for password
 BatchMode yes
+Compression yes
+#LogLevel DEBUG3
 
 Host localhost
 	Port 22
@@ -71,15 +54,12 @@ Host localhost
 Host host1.mediatex.org
 	Port 22
 
-[info confTree.c] configuration already populated
-[info ssh.c] Serializing the known_host file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/known_hosts
 [warning ssh.c] Please avoid having localhost in the servers list
 # This file is managed by MediaTeX software.
 localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
 localhost ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze
 host1.mediatex.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
 [notice serv.c] *** save and disease test: 
-[info serverTree.c] Serializing the server tree file: stdout
 # This file is managed by MediaTeX software.
 # MediaTeX mdtx1-coll1@host1.mediatex.org:22 servers list:
 
@@ -139,7 +119,6 @@ end
 # mode: conf
 # mode: font-lock
 # End:
-[info confTree.c] free configuration
 [info serv.c] exit on success
 =================================
   Second run 
@@ -147,5 +126,4 @@ end
 [info serv.c] client ipc key: {LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf, 6562}
 [err serv.c] cannot take concurent access as it is already locked
 [err serv.c] fails to get writter lock
-[info confTree.c] free configuration
 [info serv.c] exit on error

@@ -63,7 +63,8 @@ Below entities are all dupplicated for each collection:
 
 @itemize @bullet
 @item States
-@table @state
+@c @table @state
+@table @code
 @item diseased
 data remains on disk file which is up to date
 @item loaded
@@ -73,7 +74,8 @@ the last change on data remains in memory
 @end table
 
 @item Events in
-@table @event
+@c @table @event
+@table @code
 @item load
 from @state{diseased} to @state{loaded}:@*
 a @process{Process} tells it need the file to be load
@@ -97,7 +99,8 @@ from @state{loaded} to @state{diseased}:@*
 @note{} The @state{loaded} and @state{modified} states are group
 into the @state{inUse} meta-state.
 @item States
-@table @state
+@c @table @state
+@table @code
 @item diseased
 data remains on disk file which is up to date
 @item loaded
@@ -109,7 +112,8 @@ the last change on data remains in memory
 @item Events in
 @note{} the number of threads using the data (n) is registered in 
 order to know if we may or not release memory.
-@table @event
+@c @table @event
+@table @code
 @item load (n+=1)
 a @process{Process} tells it need the file to be load@*
 from @state{diseased} to @state{loaded} if n==0 or@*

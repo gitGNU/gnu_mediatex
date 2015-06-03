@@ -1,7 +1,8 @@
 @cindex mail
 
 @process{Delivering} process call a script in order 
-to warm-up an @actorUser{} that an archive he ask for is now available.
+to warm-up an 
+@actorUser{} that an archive he ask for is now available.
 
 Process conceptual model:
 

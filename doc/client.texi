@@ -39,23 +39,28 @@ Flood diagram:
 @itemx @eventClientMiscPurge
 @itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-from @actorAdmin{} to @procClientMisc
+from 
+@actorAdmin{} to @procClientMisc
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdmin{} to @procClientConf
+from 
+@actorAdmin{} to @procClientConf
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
-from @actorPublisher{} to @procClientServ
+from 
+@actorPublisher{} to @procClientServ
 @item @eventClientConfList
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
-from @actorPublisher{} to @procClientConf
+from 
+@actorPublisher{} to @procClientConf
 @item @eventClientMiscSuppList
 @itemx @eventClientMiscSuppAdd
 @itemx @eventClientMiscSuppDel
 @itemx @eventClientMiscSuppNote
 @itemx @eventClientMiscSuppCheck
-from @actorPublisher{} to @procClientSupp
+from 
+@actorPublisher{} to @procClientSupp
 @item @eventClientExtract
 @itemx @eventClientNotify
 from @procScriptsCron{}
@@ -66,10 +71,12 @@ from @procScriptsCron{} to @procClientMotd
 @itemx @eventClientMiscClean
 @itemx @eventClientMiscUpload
 @itemx @eventClientServUpgrade
-from @actorPublisher{} to @procClientMisc
+from 
+@actorPublisher{} to @procClientMisc
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from @activityServer{} to @procClientMisc
+from 
+@activityServer{} to @procClientMisc
 @item @eventClientMiscGet
 from @procServerExtract{} to @procClientMisc
 @item @eventClientMiscSuppMount
@@ -127,19 +134,19 @@ only re-serialized and upgraded if the last @file{NN.txt} file was present when 
 
 Options:
 @table @option
-@itemx -n
+@item -n
 @itemx --dry-run
 do a dry run
-@itemx -m
-@itemx --nice-limit
+@item -m
+@itemx --memory-limit
 Amount of RAM in Mo the soft try to run bellow
-@itemx -M
-@itemx --soft-limit
-Amount of RAM in Mo the soft may reach
-@itemx -c
+@item -M
+@itemx --debug-alloc	
+Debug information from malloc/free
+@item -c
 @itemx --conf-label
 Allow to manage several configurations (default is mdtx)
-@itemx -w
+@item -w
 @itemx --no-www-cvs
 Do not synchronise meta-data with master server
 @end table

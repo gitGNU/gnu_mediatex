@@ -2,12 +2,14 @@
 
 @process{Cache} process manage the local server storage place. Files into cache's directories called @file{toKeep} will never be deleted. Symlink are not followed.
 
-@process{Cache} use 3 options define into the @dataConf{} file:
+@process{Cache} use 3 options define into the 
+@dataConf{} file:
 @table @code
 @item cacheSize
 the maximum size that limit growing operations into the cache
 @item cacheTTL
-the minimum time a file notifyed to @actorUser{} has to be keept into the cache
+the minimum time a file notifyed to 
+@actorUser{} has to be keept into the cache
 @item queryTTL
 the time to live of a @actorUserO{} query is keept into the
 @dataChecksum{} file
@@ -21,17 +23,21 @@ Process conceptual model:
 @item Events in
 @table @code
 @item @eventServerCacheUpload
-from @actorPublisher
+from 
+@actorPublisher
 @item @eventServerCacheAlloc 
 from @procServerExtract
 @end table
 
 @item Data
 @itemize @bullet
-@item in: @dataConf
-@item in: @dataChecksum
+@item in: 
+@dataConf
+@item in: 
+@dataChecksum
 @item in: @dataServers
-@item in: @dataExtract
+@item in: 
+@dataExtract
 @end itemize
 @end itemize
 

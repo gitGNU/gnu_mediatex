@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.2 2014/11/13 16:36:20 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.3 2015/06/03 14:03:30 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
  * shell reentrant scanner
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -37,7 +37,8 @@
 %option noposix-compat
 %option nostdinit
 %option noyywrap
-
+%option yylineno
+   
 /* Code-Level And API Options: */
 %option ansi-definitions
 %option ansi-prototypes
@@ -45,7 +46,7 @@
 %option bison-bridge
 %option noc++
 %option pointer
-%option prefix="shellQuery_"
+%option prefix="shell_"
 %option nomain
 %option unistd
 
@@ -63,6 +64,7 @@
 
 /* Miscellaneous Options: */
 %option nounput
+%option noinput
 
 %top {
 /*=======================================================================
@@ -73,7 +75,7 @@
  * shell reentrant scanner
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -92,42 +94,17 @@
 #include "../mediatex.h"
 #include "../misc/log.h"
 #include "../memory/strdsm.h"
-#include "../memory/confTree.h"
-#include "../memory/supportTree.h"
-
-#ifndef utMAIN 
-#include "shellQuery.tab.h"
-#endif
-
-   extern int shellQueryLocalCounter;
-   extern int shellQuery_input_file; /* to deal with files (not streams) */
-   int getCommandLine(int argc, char** argv, int optind);
-
-   // %union{} used by flex/bison to write/read values
-   typedef union BisonUnion {
-     int   number;
-     char string[MAX_SIZE_STRING+1];
-     Collection* coll;
-   } BisonUnion;
-
-#define YYSTYPE BisonUnion
-#define YY_NO_INPUT // no warning
+   
+int getCommandLine(int argc, char** argv, int optind);
 }
-
+   
 %{
-  int shellQueryLocalCounter = 1;
-  int shellQuery_input_file = 0;
-  int number = 0;
-
-  /* add to deal with buffer */
-#define YY_INPUT(buf,result,max_size)					\
-  {									\
-    if (env.commandLine[0] != (char)0){					\
-      strncpy(buf, env.commandLine, max_size);				\
-      result = strlen(buf);						\
-      env.commandLine[0] = (char)0;					\
-    } else result = YY_NULL;						\
-  }
+#ifdef utMAIN
+#define YYSTYPE void*
+#else
+#include "shellQuery.tab.h"
+#define YYSTYPE SHELL_STYPE
+#endif	/*	: utMAIN	*/
 %}
 
  /* scaner states */
@@ -154,7 +131,6 @@
 	}
 
 	(\n|\r\n) {
-	  ++shellQueryLocalCounter;
 #ifdef utMAIN
 	  logEmit(LOG_DEBUG, "%s", "EOL");
 #else	/*	: utMAIN	*/
@@ -502,7 +478,6 @@
 
   (\n|\r\n) {
     BEGIN(INITIAL);
-    ++shellQueryLocalCounter;
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "%s", "EOL");
 #else	/*	: utMAIN	*/
@@ -512,11 +487,10 @@
 
   [+-]?[[:digit:]]+ {
     BEGIN(INITIAL);
-    number = strtoul(yytext, (char**)0, 10);
 #ifdef utMAIN
-    logEmit(LOG_INFO, "NUMBER = %i", number);
+    logEmit(LOG_INFO, "NUMBER = %s", yytext);
 #else	/*	: utMAIN	*/
-    yylval->number = number;
+    yylval->number = strtoul(yytext, (char**)0, 10);
     return(shellNUMBER);
 #endif	/*	: utMAIN	*/
   }
@@ -537,7 +511,6 @@
 
   (\n|\r\n) {
     BEGIN(INITIAL);
-    ++shellQueryLocalCounter;
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "%s", "EOL");
 #else	/*	: utMAIN	*/
@@ -558,23 +531,24 @@
  }
 
 <COMMENT>{
-        [^\n\r]   /* : eat up any unmatched character */
-
-        \*\/ {
-	  BEGIN(INITIAL);
-	}
+  [^\n\r]   /* : eat up any unmatched character */
+    
+  \*\/ {
+    BEGIN(INITIAL);
+  }
 }
 
 <*>{
 
   [[:blank:]]+  /* : eat up any blank character */
 
-    . {  /* : eat up any unmatched character */ 
-
-    logEmit(LOG_ERR, "exit on scanner error: %s", yytext);
-    
-    /* generate a parsor error (unexpected $end) */
+  . {  /* : eat up any unmatched character and 
+	  let bison manage the errors */
+    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+	    yylineno, yytext);
+#ifdef utMAIN
     return -1;
+#endif /*	: utMAIN	*/
   }
 }
 
@@ -608,7 +582,7 @@ int getCommandLine(int argc, char** argv, int optind)
   }
   *(ptr) = (char)0;
   if (ptr == env.commandLine) goto error;
-  logEmit(LOG_INFO, "command line: %s", env.commandLine);
+  logEmit(LOG_DEBUG, "command line: %s", env.commandLine);
   *(--ptr) = '\n';
   rc = TRUE;
 
@@ -660,6 +634,7 @@ int
 main(int argc, char** argv)
 {
   yyscan_t scanner;
+  void* buffer = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -674,7 +649,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -689,18 +664,22 @@ main(int argc, char** argv)
   /************************************************************************/
   // !!! remind to protect \" in cmdline
   if (!getCommandLine(argc, argv, optind)) goto error;
-  
-  shellQuery_lex_init ( &scanner );
-  shellQuery_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "shellQuery_set_debug = %i", 
-	  shellQuery_get_debug(scanner));
+
+  shell_lex_init(&scanner);
+  buffer = shell__scan_string(env.commandLine, scanner);
+
+  shell_set_debug(env.debugLexer, scanner);
+  logEmit(LOG_DEBUG, "shell_set_debug = %i", shell_get_debug(scanner));
   
   // call scanner 
-  if (shellQuery_lex(NULL, scanner)) {
-    shellQuery_lex_destroy(scanner);
+  if (shell_lex(0, scanner)) {
+    shell__delete_buffer(buffer, scanner);
+    shell_lex_destroy(scanner);
     goto error;
   }
-  shellQuery_lex_destroy(scanner);
+
+  shell__delete_buffer(buffer, scanner);
+  shell_lex_destroy(scanner);
   /************************************************************************/
 
   rc = TRUE;

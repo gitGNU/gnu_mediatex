@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:08 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:21 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  inital configuration files (and testing/exemple purpose)
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ include $(top_srcdir)/Make-rules
 
 examplesdir = $(datarootdir)@mdtx_mediatexdir@/examples
 dist_examples_DATA = \
-	mediatex_cron mediatex.conf supports.txt \
-	catalog00.txt extract00.txt servers.txt \
+	mediatex_cron mediatex.conf \
+	supports.txt catalog00.txt extract00.txt servers.txt \
 	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
 	apache-mdtx.conf htgroup viewvc.conf header.ezt \
 	mediatex.css floppy-icon.png home.htaccess \

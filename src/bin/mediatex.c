@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.2 2014/11/13 16:36:16 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.3 2015/06/03 14:03:27 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
  * Client software's main function
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@
 #include "../memory/confTree.h"
 #include "../common/openClose.h"
 #include "../client/shellQuery.tab.h"
-#include "../client/shellQuery.h"
 
 #include <locale.h>
 
@@ -108,7 +107,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS "w";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"no-www-cvs", required_argument, NULL, 'w'},
+    {"no-www-cvs", required_argument, 0, 'w'},
     {0, 0, 0, 0}
   };
 
@@ -119,7 +118,7 @@ main(int argc, char** argv)
 
   // import mdtx environment
   /*
-  env.logFile = NULL;
+  env.logFile = 0;
   env.logFacility = "file";
   env.logSeverity = "info";
   env.confFile = CONF_ETCDIR "/mediatex.conf";
@@ -129,12 +128,12 @@ main(int argc, char** argv)
   env.noRegression = FALSE;
   */
   env.noCollCvs = FALSE; // enable cvs
-  env.allocLimit = 256;
+  env.allocLimit *= 2;
   env.allocDiseaseCallBack = clientDiseaseAll;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

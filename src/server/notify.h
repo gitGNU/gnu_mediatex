@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: notify.h,v 1.2 2014/11/13 16:37:09 nroche Exp $
+ * Version: $Id: notify.h,v 1.3 2015/06/03 14:03:56 nroche Exp $
  * Project: MediaTeX
  * Module : server/notify
  *
  * Manage notify for remote servers: send local md5sums list
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

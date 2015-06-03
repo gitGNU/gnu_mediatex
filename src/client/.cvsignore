@@ -15,3 +15,5 @@ ut.out
 ut.out2
 ut.txt
 user*.pub
+*.log
+*.trs

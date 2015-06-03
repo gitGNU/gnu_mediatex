@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.2 2014/11/13 16:36:17 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.3 2015/06/03 14:03:28 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
 * Server producer interface
 
 MediaTex is an Electronic Records Management System
-Copyright (C) 2014  Nicolas Roche
+Copyright (C) 2014 2015 Nicolas Roche
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -84,8 +84,8 @@ int getListUri(char* buf, int id)
 int htmlMakeDirs(char* path, int max)
 {
   int rc = FALSE;
-  char* string = NULL;
-  char* number = NULL;
+  char* string = 0;
+  char* number = 0;
   int i = 0, j = 0;
 
   i = strlen(path);
@@ -286,7 +286,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "[")) goto error;
   } else {
     if (!getListUri(ptr, 1)) goto error;
-    htmlLink(fd, NULL, url, "[");
+    htmlLink(fd, 0, url, "[");
   }
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
 
@@ -295,7 +295,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "-")) goto error;
   } else {
     if (!getListUri(ptr, n-1)) goto error;;
-    htmlLink(fd, NULL, url, "-");
+    htmlLink(fd, 0, url, "-");
   }
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
 
@@ -304,7 +304,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "|")) goto error;
   } else {
     if (!getListUri(ptr, (N+1)>>1)) goto error;
-    htmlLink(fd, NULL, url, "|");
+    htmlLink(fd, 0, url, "|");
   }
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
 
@@ -313,7 +313,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "+")) goto error;
   } else {
     if (!getListUri(ptr, n+1)) goto error;
-    htmlLink(fd, NULL, url, "+");
+    htmlLink(fd, 0, url, "+");
   }
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
 
@@ -322,7 +322,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "]")) goto error;
   } else {
     if (!getListUri(ptr, N)) goto error;;
-    htmlLink(fd, NULL, url, "]");
+    htmlLink(fd, 0, url, "]");
   }
 
   if (!fprintf(fd, "%s", 
@@ -350,7 +350,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (!fprintf(fd, "%s", "<")) goto error;
   } else {
     if (!getListUri(ptr, n - (1<<(d-2)))) goto error;
-    htmlLink(fd, NULL, url, "<");
+    htmlLink(fd, 0, url, "<");
   }
 
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
@@ -366,7 +366,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     if (c > N) c = n - (1<<(d-1));
 
     if (!getListUri(ptr, c)) goto error;
-    htmlLink(fd, NULL, url, "!");
+    htmlLink(fd, 0, url, "!");
   }
 
   if (!fprintf(fd, "%s", "<TD ALIGN='CENTER'>\n")) goto error;
@@ -378,7 +378,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
     // divide normal step by 2 until the node exist
     for (x=d; n + (1<<(x-2)) > N; --x);
     if (!getListUri(ptr, n + (1<<(x-2)))) goto error;
-    htmlLink(fd, NULL, url, ">");
+    htmlLink(fd, 0, url, ">");
   }
 
   if (!fprintf(fd, "%s",
@@ -407,7 +407,7 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
 {
   int rc = FALSE;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "htmlAssoCarac: %s=%s", 
 	  self->carac->label, self->value);
 
@@ -436,10 +436,10 @@ static int
 serializeHtmlCacheHeader(Collection* coll)
 { 
   int rc = TRUE;
-  ServerTree* self = NULL;
-  Server *server = NULL;
-  RGIT* curr = NULL;
-  char* path = NULL;
+  ServerTree* self = 0;
+  Server *server = 0;
+  RGIT* curr = 0;
+  char* path = 0;
   char url[512];
   FILE* fd = stdout; 
 
@@ -448,7 +448,7 @@ serializeHtmlCacheHeader(Collection* coll)
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cacheHeader.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -461,12 +461,12 @@ serializeHtmlCacheHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext_r(self->servers, &curr)) != NULL) {
+    while ((server = rgNext_r(self->servers, &curr)) != 0) {
       if (!sprintf(url, "https://%s/~%s/cache/", 
 		   server->host, server->user)) goto error;
 
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, server->host);
+      htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);      
     }
     htmlUlClose(fd);
@@ -505,11 +505,11 @@ static int
 serializeHtmlCgiHeader(Collection* coll)
 { 
   int rc = TRUE;
-  Configuration* conf = NULL;
-  ServerTree* self = NULL;
-  Server *server = NULL;
-  RGIT* curr = NULL;
-  char* path = NULL;
+  Configuration* conf = 0;
+  ServerTree* self = 0;
+  Server *server = 0;
+  RGIT* curr = 0;
+  char* path = 0;
   char url1[512];
   char url2[512];
   FILE* fd = stdout; 
@@ -520,7 +520,7 @@ serializeHtmlCgiHeader(Collection* coll)
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cgiHeader.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -536,12 +536,12 @@ serializeHtmlCgiHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext_r(self->servers, &curr)) != NULL) {
+    while ((server = rgNext_r(self->servers, &curr)) != 0) {
       if (!sprintf(url2, "https://%s/~%s/cache/", 
 		   server->host, server->user)) goto error;
 
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url2, server->host);
+      htmlLink(fd, 0, url2, server->host);
       htmlLiClose(fd);      
     }
     htmlUlClose(fd);
@@ -579,7 +579,7 @@ static int
 serializeHtmlFooter(Collection* coll)
 { 
   int rc = TRUE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout;
   time_t now = 0;
   struct tm date;
@@ -589,7 +589,7 @@ serializeHtmlFooter(Collection* coll)
   if (!(path = catString(path, "/footer.html"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
 
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -685,7 +685,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -700,7 +700,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

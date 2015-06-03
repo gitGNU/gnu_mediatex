@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cypher.c,v 1.2 2014/11/13 16:36:38 nroche Exp $
+ * Version: $Id: cypher.c,v 1.3 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * md5sum computation
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -44,9 +44,9 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
 {
   int rc = FALSE;
 
-  if (key == NULL || key[MAX_SIZE_AES] != (char)0) goto error;
+  if (key == 0 || key[MAX_SIZE_AES] != (char)0) goto error;
   logEmit(LOG_DEBUG, "loadAesKey: '%s'", key);
-  if (data == NULL) {
+  if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
   }
@@ -117,7 +117,7 @@ doCypher(AESData* data) {
   logEmit(LOG_DEBUG, "%s", "doCypher");
 #endif
 
-  if (data == NULL) {
+  if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
   }
@@ -265,7 +265,7 @@ aesFlush(AESData* data)
   logEmit(LOG_DEBUG, "%s", "aesFlush"); 
 #endif
 
-  if (data == NULL) {
+  if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
   }
@@ -328,7 +328,7 @@ aesPrint(AESData* data, const char* format, ...)
   logEmit(LOG_DEBUG, "%s", "aesPrint"); 
 #endif
 
-  if (data == NULL) {
+  if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
   }
@@ -405,7 +405,7 @@ aesInput(AESData* data, char* buf, int *result, int maxsize)
   logEmit(LOG_DEBUG, "%s", "aesInput"); 
 #endif
 
-  if (data == NULL) {
+  if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
   }
@@ -511,7 +511,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       GET_MISC_OPTIONS; // generic options

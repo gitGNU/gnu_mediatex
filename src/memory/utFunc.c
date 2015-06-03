@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.2 2014/11/13 16:36:34 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.3 2015/06/03 14:03:42 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
  * Functions building memory modules's configuration used by unit tests
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,8 +47,8 @@ static char supportNames[3][3][64] = {
 int
 createExempleSupportTree()
 {
-  Configuration* conf = NULL;  
-  Support *supp = NULL;
+  Configuration* conf = 0;  
+  Support *supp = 0;
   int i=0, j=0, k=0;
 
   /*
@@ -143,8 +143,8 @@ createExempleSupportTree()
     "??"
   };
 
-  if ((conf = getConfiguration()) == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot load configuration");
+  if ((conf = getConfiguration()) == 0) {
+    logMemory(LOG_ERR, "%s", "cannot load configuration");
     goto error;
   }
 
@@ -181,61 +181,61 @@ int createExempleExtractTree(Collection* coll)
   Archive *iso1, *iso2, *catP1, *catP2, *tgz, *logo, *xpm, 
     *tbz, *afio, *zip, *rar1, *rar2,
     *tar, *cpio, *gzip, *bzip;
-  Container* container = NULL;
-  FromAsso* asso = NULL;
+  Container* container = 0;
+  FromAsso* asso = 0;
 
   // documentTree
-  if (coll->extractTree == NULL) goto error;
+  if (coll->extractTree == 0) goto error;
 
   // records
   if ((iso1 = 
        addArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168))
-      == NULL) goto error;
+      == 0) goto error;
   if ((iso2 = 
        addArchive(coll, "0a7ecd447ef2acb3b5c6e4c550e6636f", 374784))
-      == NULL) goto error;
+      == 0) goto error;
   if ((catP1 = 
        addArchive(coll, "1a167d608e76a6a4a8b16d168580873c", 20480))
-      == NULL) goto error;
+      == 0) goto error;
   if ((catP2 = 
        addArchive(coll, "c0c055a0829982bd646e2fafff01aaa6", 4066))
-      == NULL) goto error;
+      == 0) goto error;
   if ((tgz = 
        addArchive(coll, "0387eee9820fa224525ff8b2e0dfa9be", 24546))
-      == NULL) goto error;
+      == 0) goto error;
   if ((logo = 
        addArchive(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075))
-      == NULL) goto error;
+      == 0) goto error;
   if ((xpm = 
        addArchive(coll, "b281449c229bcc4a3556cdcc0d3ebcec", 815))
-      == NULL) goto error;
+      == 0) goto error;
   if ((tbz = 
        addArchive(coll, "b5810aba99ed0d15f1f0a073e646d5bd", 25045))
-      == NULL) goto error;
+      == 0) goto error;
   if ((afio = 
        addArchive(coll, "65f1464142f405dbbeeea4830c95ddd3", 25600))
-      == NULL) goto error;
+      == 0) goto error;
   if ((zip = 
        addArchive(coll, "d79581b67ec1932fd276dcf3b6d6db9a", 24733))
-      == NULL) goto error;
+      == 0) goto error;
   if ((rar1 = 
        addArchive(coll, "7808473c7db9a9e3493a6b61f44f8805", 20480))
-      == NULL) goto error;
+      == 0) goto error;
   if ((rar2 = 
        addArchive(coll, "db8b80896f7202b656913f99d438075c", 4090))
-      == NULL) goto error;
+      == 0) goto error;
   if ((tar = 
        addArchive(coll, "f54fba7d2e070d48051ac3f8f1c2eb98", 30720))
-      == NULL) goto error;
+      == 0) goto error;
   if ((cpio = 
        addArchive(coll, "b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5", 25088))
-      == NULL) goto error;
+      == 0) goto error;
   if ((gzip = 
        addArchive(coll, "3a04277dd1f43740a5fe17fd0ae9a5aa", 24457))
-      == NULL) goto error;
+      == 0) goto error;
   if ((bzip = 
        addArchive(coll, "fa2b0b536bf61f61617528c474e0bf61", 24973))
-      == NULL) goto error;
+      == 0) goto error;
 
   // ISO 1
   if (!(container = addContainer(coll, ISO, iso1))) goto error;
@@ -315,7 +315,7 @@ int createExempleExtractTree(Collection* coll)
 
   return TRUE;
  error:
-  logEmit(LOG_ERR, "%s", 
+  logMemory(LOG_ERR, "%s", 
 	  "sorry, cannot build the extract exemple... gdb is your friend");
   return FALSE;
 }
@@ -333,15 +333,15 @@ int
 createExempleCatalogTree(Collection* coll)
 {
   int rc = TRUE;
-  AssoCarac* assoCarac = NULL;
-  AssoRole* assoRole = NULL;
-  Carac* carac = NULL;
-  Role* role = NULL;
-  Category* category = NULL;
-  Category* father = NULL;
-  Human* human = NULL;
-  Document* document = NULL;
-  Archive* archive = NULL;
+  AssoCarac* assoCarac = 0;
+  AssoRole* assoRole = 0;
+  Carac* carac = 0;
+  Role* role = 0;
+  Category* category = 0;
+  Category* father = 0;
+  Human* human = 0;
+  Document* document = 0;
+  Archive* archive = 0;
 
   // catalogTree
   rc=rc&& (coll->catalogTree);
@@ -367,7 +367,7 @@ createExempleCatalogTree(Collection* coll)
   rc=rc&& (category = addCategory(coll, "animal", TRUE));
   
   // category 5
-  rc=rc&& (category = addCategory(coll, "hand", FALSE));
+  rc=rc&& (category = addCategory(coll, "\\\"hand\\\"", FALSE));
   rc=rc&& (father = addCategory(coll, "drawing", FALSE));
   rc=rc&& addCategoryLink(coll, father, category);
   rc=rc&& (father = addCategory(coll, "animal", FALSE));
@@ -425,7 +425,7 @@ createExempleCatalogTree(Collection* coll)
   rc=rc&& addDocumentToCategory(coll, document, category);
   
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "sorry, cannot build the catalog exemple");
+    logMemory(LOG_ERR, "%s", "sorry, cannot build the catalog exemple");
     coll->catalogTree = destroyCatalogTree(coll->catalogTree);
   }
   return rc;
@@ -446,15 +446,15 @@ int
 createExempleConfiguration()
 {
   int rc = FALSE;
-  Configuration* self = NULL;
-  Collection* coll = NULL;
-  Support* supp = NULL;
-  RGIT* curr = NULL;
-  char* string = NULL;
+  Configuration* self = 0;
+  Collection* coll = 0;
+  Support* supp = 0;
+  RGIT* curr = 0;
+  char* string = 0;
   char host[] = "hostX.mediatex.org";
   int i = 0, j = 0;
 
-  logEmit(LOG_DEBUG, "%s", "build the configuration exemple.");
+  logMemory(LOG_DEBUG, "%s", "build the configuration exemple.");
 
   if (!(self = getConfiguration())) goto error;
   host[4] = env.confLabel[4]; // same host numder as conf label number
@@ -467,7 +467,7 @@ createExempleConfiguration()
   if (!(coll = addCollection("coll1"))) goto error;
   if (!(coll->masterLabel = createString("mdtx1"))) goto error;
   strncpy(coll->masterHost, "host1.mediatex.org", MAX_SIZE_HOST);
-  coll = NULL;
+  coll = 0;
 
   /* test2 collection */
   if (!(coll = addCollection("coll2"))) goto error;
@@ -476,7 +476,7 @@ createExempleConfiguration()
   coll->cacheSize = 200*MEGA;
   coll->cacheTTL = 1*MONTH;
   coll->queryTTL = 15*DAY;
-  coll = NULL;
+  coll = 0;
   
   /* test3 collection */
   if (!(coll = addCollection("coll3"))) goto error;
@@ -506,14 +506,14 @@ createExempleConfiguration()
   if (!populateConfiguration()) goto error;
 
   // get the localhost fingerprints for the collections
-  while((coll = rgNext_r(self->collections, &curr)) != NULL) {
+  while((coll = rgNext_r(self->collections, &curr)) != 0) {
     if (!populateCollection(coll)) goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "sorry, cannot build the configuration exemple.");  
     freeConfiguration();
   }
@@ -532,10 +532,10 @@ createExempleConfiguration()
 int 
 createExempleServerTree(Collection* coll)
 {
-  Server *server = NULL;
-  Image* image = NULL;
-  Archive* archive = NULL;
-  char* string = NULL;
+  Server *server = 0;
+  Image* image = 0;
+  Archive* archive = 0;
+  char* string = 0;
   int i=0, j=0;
 
   char* labels[] = {
@@ -648,7 +648,7 @@ createExempleServerTree(Collection* coll)
 
   return TRUE;
  error:
-  logEmit(LOG_ERR, "%s", "sorry, cannot build the configuration exemple.");
+  logMemory(LOG_ERR, "%s", "sorry, cannot build the configuration exemple.");
   coll->serverTree = destroyServerTree(coll->serverTree);
   return FALSE;
 }
@@ -665,10 +665,10 @@ createExempleServerTree(Collection* coll)
 int 
 createExempleRecordTree(Collection* coll)
 {
-  Record *record = NULL;
-  Archive* archive = NULL;
-  Server* server = NULL;
-  char* extra = NULL;
+  Record *record = 0;
+  Archive* archive = 0;
+  Server* server = 0;
+  char* extra = 0;
 
   int i=0;
   

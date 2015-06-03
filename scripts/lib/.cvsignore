@@ -7,3 +7,5 @@ Makefile
 include.sh
 # make check
 *.out
+*.log
+*.trs

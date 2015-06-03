@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.c,v 1.2 2014/11/13 16:36:43 nroche Exp $
+ * Version: $Id: progbar.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -12,7 +12,7 @@
  License.
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ e2fsck_simple_progress(struct ProgBar* progbar, const char *label,
    * the last 1/8th of a second, no point doing it
    * again.
    */
-  gettimeofday(&tv, NULL);
+  gettimeofday(&tv, 0);
   tick = (tv.tv_sec << 3) + (tv.tv_usec / (1000000 / 8));
   if ((tick == progbar->progress_last_time) &&
       (fixed_percent != 0) && (fixed_percent != 1000))

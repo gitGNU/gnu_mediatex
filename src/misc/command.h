@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.2 2014/11/13 16:36:38 nroche Exp $
+ * Version: $Id: command.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
  * system API
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,33 +28,34 @@
 #include "alloc.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hvf:s:l:nm:M"
+#define MISC_SHORT_OPTIONS "hvf:s:l:na:AS"
 #define MISC_LONG_OPTIONS				\
-  {"help", no_argument, NULL, 'h'},			\
-  {"version", no_argument, NULL, 'v'},			\
-  {"facility", required_argument, NULL, 'f'},		\
-  {"severity", required_argument, NULL, 's'},		\
-  {"log-file", required_argument, NULL, 'l'},		\
-  {"dry-run", no_argument, NULL, 'n'},			\
-  {"memory-limit", required_argument, NULL, 'm'},	\
-  {"debug-alloc", no_argument, NULL, 'M'}
+  {"help", no_argument, 0, 'h'},			\
+  {"version", no_argument, 0, 'v'},			\
+  {"facility", required_argument, 0, 'f'},		\
+  {"severity", required_argument, 0, 's'},		\
+  {"log-file", required_argument, 0, 'l'},		\
+  {"dry-run", no_argument, 0, 'n'},			\
+  {"alloc-limit", required_argument, 0, 'a'},		\
+  {"debug-alloc", no_argument, 0, 'A'},			\
+  {"debug-script", required_argument, 0, 'S'}
 
-#define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
+#define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS "M"
 #define MEMORY_LONG_OPTIONS				\
-  MISC_LONG_OPTIONS					
+  MISC_LONG_OPTIONS,					\
+  {"debug-memory", no_argument, 0, 'M'}			
 
 #define PARSER_SHORT_OPTIONS MEMORY_SHORT_OPTIONS "LP"
-#define PARSER_LONG_OPTIONS			\
-  MEMORY_LONG_OPTIONS,				\
-  {"debug-lexer", no_argument, NULL, 'L'},	\
-  {"debug-parser", no_argument, NULL, 'P'}
+#define PARSER_LONG_OPTIONS			        \
+  MEMORY_LONG_OPTIONS,					\
+  {"debug-lexer", no_argument, 0, 'L'},			\
+  {"debug-parser", no_argument, 0, 'P'}
 
-
-#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "Xc:"
+#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:C"
 #define MDTX_LONG_OPTIONS				\
   PARSER_LONG_OPTIONS,					\
-  {"debug-script", required_argument, NULL, 'X'},	\
-  {"conf-label", required_argument, NULL, 'c'}
+  {"conf-label", required_argument, 0, 'c'},		\
+  {"debug-Common", no_argument, 0, 'C'}
 
 void version();
 
@@ -89,7 +90,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  =======================================================================*/
 #define GET_MISC_OPTIONS						\
   case 'h':								\
-    usage(programName);							\
+  usage(programName);							\
     rc = EXIT_SUCCESS;							\
     goto optError;							\
     break;								\
@@ -134,7 +135,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.dryRun = 1;							\
     break;								\
 									\
-   case 'm':								\
+   case 'a':								\
     if(optarg == (char*)0 || *optarg == (char)0) {			\
       fprintf(stderr,							\
 	      "%s: nil or empty argument for the nice limit\n",		\
@@ -145,14 +146,17 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.allocLimit = atoi(optarg);					\
     break;								\
 									\
-  case 'M':								\
+  case 'A':								\
     env.debugAlloc = 1;							\
+    break;								\
+									\
+  case 'S':								\
+    env.debugScript = 1;						\
     break;								\
 									\
   default:								\
     rc = EINVAL;							\
-    usage(programName);							\
-
+    usage(programName);
 
 /*=======================================================================
  * Macro      : GET_MEMORY_OPTIONS
@@ -162,8 +166,11 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Output     : N/A
  =======================================================================*/
 #define GET_MEMORY_OPTIONS 						\
-    GET_MISC_OPTIONS;							\
-
+  case 'M':								\
+    env.debugMemory = 1;						\
+    break;								\
+									\
+  GET_MISC_OPTIONS;
 
 /*=======================================================================
  * Macro      : GET_PARSER_OPTIONS
@@ -171,20 +178,19 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Synopsis   : GET_PARSER_OPTIONS
  * Input      : N/A
  * Output     : N/A
+ * Note       : you must build the scanner using %option debug 
+ *              to include debugging information in it.
  =======================================================================*/
 #define GET_PARSER_OPTIONS 						\
   case 'L':								\
-    /* Note that you must build the scanner using %option debug		\
-       to include debugging information in it. */			\
     env.debugLexer = 1;							\
     break;								\
+  									\
+ case 'P':								\
+   env.debugParser = 1;							\
+   break;								\
     									\
-  case 'P':								\
-    env.debugParser = 1;						\
-    break;								\
-    									\
-    GET_MEMORY_OPTIONS;							\
-    									
+ GET_MEMORY_OPTIONS;
 
 /*=======================================================================
  * Macro      : GET_MDTX_OPTIONS
@@ -194,10 +200,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Output     : N/A
  =======================================================================*/
 #define GET_MDTX_OPTIONS 						\
-  case 'X':								\
-    env.debugScript = 1;						\
-    break;								\
-    									\
   case 'c':								\
     if(optarg == (char*)0 || *optarg == (char)0) {			\
       fprintf(stderr,							\
@@ -208,9 +210,12 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     }									\
     env.confLabel = optarg;						\
     break;								\
-    									\
-    GET_PARSER_OPTIONS;							\
-    
+									\
+  case 'C':								\
+    env.debugCommon = 1;						\
+    break;								\
+   									\
+  GET_PARSER_OPTIONS;
 
 /*=======================================================================
  * Macro      : ENDINGS
@@ -221,6 +226,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  =======================================================================*/
 #define ENDINGS							\
   logEmit(LOG_INFO, "exit on %s", rc?"success":"error");	\
+  if (env.debugAlloc) memoryStatus(LOG_NOTICE);			\
   exitMalloc();							\
   DefaultLog = logClose(DefaultLog)
 

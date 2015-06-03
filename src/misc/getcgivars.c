@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: getcgivars.c,v 1.2 2014/11/13 16:36:39 nroche Exp $
+ * Version: $Id: getcgivars.c,v 1.3 2015/06/03 14:03:45 nroche Exp $
  * Project: CGIVARS
  * Module : mediatex
  *
@@ -62,7 +62,7 @@ unescape_url(char *url) {
 }
 
 /** Read the CGI input and place all name/val pairs into list.        **/
-/** Returns list containing name1, value1, name2, value2, ... , NULL  **/
+/** Returns list containing name1, value1, name2, value2, ... , 0  **/
 char
 **getcgivars() {
   register int i ;
@@ -78,12 +78,12 @@ char
   /** Depending on the request method, read all CGI input into cgiinput. **/
   request_method= getenv("REQUEST_METHOD") ;
 
-  if (request_method == NULL)
+  if (request_method == 0)
     return (char**)0;
 
   if (!strcmp(request_method, "GET") || !strcmp(request_method, "HEAD") ) {
     /* Some servers apparently don't provide QUERY_STRING if it's empty, */
-    /*   so avoid strdup()'ing a NULL pointer here.                      */
+    /*   so avoid strdup()'ing a 0 pointer here.                      */
     char *qs ;
     qs= getenv("QUERY_STRING") ;
     cgiinput= strdup(qs  ? qs  : "") ;
@@ -135,9 +135,9 @@ char
     if (!(paircount%256))
       pairlist= (char **) realloc(pairlist,
 				  (paircount+256)*sizeof(char **)) ;
-    nvpair= strtok(NULL, "&;") ;
+    nvpair= strtok(0, "&;") ;
   }
-  pairlist[paircount]= 0 ;    /* terminate the list with NULL */
+  pairlist[paircount]= 0 ;    /* terminate the list with 0 */
 
   /** Then, from the list of pairs, extract the names and values. **/
   cgivars= (char **) malloc((paircount*2+1)*sizeof(char **)) ;
@@ -150,7 +150,7 @@ char
     }
     unescape_url(cgivars[i*2]= strdup(pairlist[i])) ;
   }
-  cgivars[paircount*2]= 0 ;   /* terminate the list with NULL */
+  cgivars[paircount*2]= 0 ;   /* terminate the list with 0 */
     
   /** Free anything that needs to be freed. **/
   free(cgiinput) ;
@@ -199,7 +199,7 @@ main() {
     }
     
   /** Print the CGI variables sent by the user.  Note the list of **/
-  /**   variables alternates names and values, and ends in NULL.  **/
+  /**   variables alternates names and values, and ends in 0.  **/
   for (i=0; cgivars[i]; i+= 2)
     printf("<li>[%s] = [%s]\n", cgivars[i], cgivars[i+1]) ;
         

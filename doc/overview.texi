@@ -88,7 +88,8 @@ A server may participates to several collections.
 A server manages a local set of private supports including copies.
 @item 
 Each @mediatexO{} system instance is located on a given host. 
-On a so call server, the @actorPublisher{} decides which support 
+On a so call server, the 
+@actorPublisher{} decides which support 
 are shared by which collection. 
 This association remains private and not accessible remotely.
 @end itemize
@@ -134,10 +135,13 @@ but versions are managed by a uniq @acronym{CVS} ``master'' server.
 @item
 Archive's data files are stored in a cache for each collection by each server.
 @item
-A @actorUser{} query is distributed to all servers. 
+A 
+@actorUser{} query is distributed to all servers. 
 If none of them can serve the query, the server which receive 
-the initial query ask for the @actor{User}'s mail. 
-The @actor{User} mail address is never sent to the other servers.
+the initial query ask for the 
+@actor{User}'s mail. 
+The 
+@actor{User} mail address is never sent to the other servers.
 
 @image{mediatex-figures/where2,,,,}
 
@@ -150,20 +154,24 @@ The @actor{User} mail address is never sent to the other servers.
 
 @itemize @bullet
 @item
-When @actorPublisher{} modifies the meta-data on a given server,
+When 
+@actorPublisher{} modifies the meta-data on a given server,
 the other servers update there own copies later using the centralised 
 @acronym{CVS} server.
 @item 
-When @actorUser{} queries for a file that no server have in cache, 
+When 
+@actorUser{} queries for a file that no server have in cache, 
 the first requested server provides an @acronym{HTML} form 
-in order to recall the @actor{User} latter, when the file becomes available.
+in order to recall the 
+@actor{User} latter, when the file becomes available.
 
 @image{mediatex-figures/when,,,,}
 
 @item
 @actorDate{} is implement by the @procToolsCron{} daemon.
 @item 
-By reading the ``message of the day'', the @actorPublisherO{} 
+By reading the ``message of the day'', the 
+@actorPublisherO{} 
 is asked to provide supports needed for extraction
 or needed to perform a periodic checkup.
 @end itemize
@@ -178,14 +186,16 @@ or needed to perform a periodic checkup.
 @cindex sendmail
 @cindex motd
 
-@mediatexO{} system is build around other @acronym{GNU} @activityTools{}:
+@mediatexO{} system is build around other @acronym{GNU} 
+@activityTools{}:
 @itemize @bullet
 @item 
 Trace-ability is done by @sc{Syslog} for binaries messages 
 and by @sc{Cvs} for changes in the meta-data.
 @item 
 Access is granted by @sc{Apache} but when archives need to retrieved, 
-the @actorUser{} will be recall later using @sc{Sendmail}.
+the 
+@actorUser{} will be recall later using @sc{Sendmail}.
 @item 
 Catalogue index and extraction rules have to be edited by hand by the 
 @actorPublisher{} using a text editor like @sc{emacs} or

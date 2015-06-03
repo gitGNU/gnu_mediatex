@@ -94,9 +94,11 @@ this @acronym{url}: @*
 # mediatex adm init
 @end example
 
-Add a new @actorPublisher{} user using an already existing user login.
+Add a new 
+@actorPublisher{} user using an already existing user login.
 Then, reload the Xsession or use @command{su} to re-login in order 
-the @actor{Publisher} belongs effectively to his new @code{mdtx} group.
+the 
+@actor{Publisher} belongs effectively to his new @code{mdtx} group.
 @example
 # mediatex adm add user @var{username1}
 # su @var{username1}
@@ -142,7 +144,8 @@ Add the new ``hello'' collection.
 You will be asked for the ``mdtx'' password that will gives you 
 full access next, on the @acronym{Html} catalogue.
 Once again you will need to re-login so as 
-the @actorPublisher{} belongs to the new @code{mdtx-hello} group.
+the 
+@actorPublisher{} belongs to the new @code{mdtx-hello} group.
 @example
 # mediatex adm add coll hello@@localhost
 # su @var{username1}
@@ -164,7 +167,8 @@ Build the ``hello'' @acronym{Html} catalogue.
 $ mediatex make coll hello
 @end example
 
-Add a new @actorUser{} to the collection's @sc{apache} users.
+Add a new 
+@actorUser{} to the collection's @sc{apache} users.
 @example
 $ htdigest /etc/mediatex/mdtx-hello/apache2/htpasswd \
            mdtx-hello @var{username2}
@@ -237,7 +241,8 @@ EOF
 $ chmod g+w /etc/mediatex/mdtx-hello/*NN.txt
 @end example
 
-Then, the @actor{publisher} have to provide the 
+Then, the 
+@actor{publisher} have to provide the 
 new support to the collection
 @example
 $ mediatex add supp ex-new-doc on yourFile.dat
@@ -251,7 +256,7 @@ so many files to burn them on a new support).
 This will automatically add the extraction rule, but you still 
 have to edit the catalogue file by hand.
 @example
-$ mdtx upload yourFile.dat to coll hello
+$ mediatex upload yourFile.dat to coll hello
 
 $ cat > /etc/mediatex/mdtx-hello/catalogNN.txt <<EOF
 Document "your file"
@@ -294,7 +299,8 @@ should match with the one given in @var{hostname1} configuration file.
 @end example
 
 This has created your local collection key.
-Send it to a @actorPublisher{} already managing this collection.
+Send it to a 
+@actorPublisher{} already managing this collection.
 @example
  @var{hostname2}# cat ~mdtx-hello/.ssh/id_dsa.pub
 @end example

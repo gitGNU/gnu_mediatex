@@ -15,3 +15,5 @@ key
 key.pub
 ut.html
 ut.css
+*.log
+*.trs

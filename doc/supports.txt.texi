@@ -16,7 +16,8 @@ Relational schema:
 
 @item Linked entities
 @itemize @bullet
-@item The @sc{Collection} entity, from @dataConf{}, lists all the collections the server share.
+@item The @sc{Collection} entity, from 
+@dataConf{}, lists all the collections the server share.
 @end itemize
 
 @item Relations

@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.2 2014/11/13 16:36:27 nroche Exp $
+ * Version: $Id: archive.h,v 1.3 2015/06/03 14:03:37 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
  * Archive producer interface
 
  MediaTex is an Electronic Archives Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ struct Archive
   // not easy to parse into uchar[16]
   char  hash[MAX_SIZE_HASH+1]; 
   int   id;  // id used to serialize html pages
+  int   tag; // dedicated for external use
 
   // off_t must be 64bit to manage CDRom size
   // (_FILE_OFFSET_BITS set to 64 by mediatex.h)

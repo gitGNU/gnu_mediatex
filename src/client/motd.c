@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.2 2014/11/13 16:36:19 nroche Exp $
+ * Version: $Id: motd.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/motd
  *
  * Manage message of the day
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,9 +49,9 @@ int motdArchive(MotdData* data, Archive* archive);
 RG* 
 updateMotdFromSupportDB()
 {
-  RG* rc = NULL;
-  Configuration* conf = NULL;
-  Support *support = NULL;
+  RG* rc = 0;
+  Configuration* conf = 0;
+  Support *support = 0;
 
   logEmit(LOG_DEBUG, "%s", "update motd from supports");
 
@@ -59,7 +59,7 @@ updateMotdFromSupportDB()
   if (!(rc = createRing())) goto error;
 
   rgRewind(conf->supports);
-  while((support = rgNext(conf->supports)) != NULL) {
+  while((support = rgNext(conf->supports)) != 0) {
     if (!scoreSupport(support, &conf->scoreParam)) goto error;
     if (support->score <= conf->scoreParam.badScore) {
       if (!rgInsert(rc, support)) goto error;
@@ -85,8 +85,8 @@ updateMotdFromSupportDB()
 int motdContainer(MotdData* data, Container* container)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "motd a container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
@@ -124,8 +124,8 @@ int motdContainer(MotdData* data, Container* container)
 int motdArchive(MotdData* data, Archive* archive)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  RGIT* curr = NULL;
+  FromAsso* asso = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "motd an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -170,10 +170,10 @@ int motdArchive(MotdData* data, Archive* archive)
 RG* 
 updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
 {
-  RG* rc = NULL;
-  Archive* archive = NULL;
-  Support* support = NULL;
-  RGIT* curr = NULL;
+  RG* rc = 0;
+  Archive* archive = 0;
+  Support* support = 0;
+  RGIT* curr = 0;
   MotdData data;
 
   logEmit(LOG_DEBUG, "update motd from server for %s collection",
@@ -186,7 +186,7 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
 
   // for each cache entry
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= NULL) {
+	!= 0) {
 
     // scan wanted archives
     if (archive->state != WANTED) continue;
@@ -195,16 +195,16 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
 
   // for each record (that all are images), match supports
   rgRewind(data.outArchives);
-  while ((archive = rgNext(data.outArchives)) != NULL) {
+  while ((archive = rgNext(data.outArchives)) != 0) {
 
     // match support shared with that collection
     rgRewind(coll->supports);
-    while((support = rgNext(coll->supports)) != NULL) {
+    while((support = rgNext(coll->supports)) != 0) {
       if (!strncmp(support->fullHash, archive->hash, MAX_SIZE_HASH) &&
 	  support->size == archive->size) {
 	
 	// add support
-	if (support != NULL) {
+	if (support != 0) {
 	  if (!rgInsert(ring, support)) goto error2;
 	}
       }
@@ -213,7 +213,7 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
   }   
   rc = ring; 
  error2:
-  if (!releaseCollection(coll, SERV|EXTR|CACH)) rc = NULL;
+  if (!releaseCollection(coll, SERV|EXTR|CACH)) rc = 0;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "fails to update motd from server for %s collection",
@@ -234,10 +234,10 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
 RG* 
 updateMotdFromAllMd5sumsDB()
 {
-  RG* rc = NULL;
-  RG* ring = NULL;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
+  RG* rc = 0;
+  RG* ring = 0;
+  Configuration* conf = 0;
+  Collection* coll = 0;
 
   logEmit(LOG_DEBUG, "%s", "update motd from server");
   if (!(conf = getConfiguration())) goto error;
@@ -250,9 +250,9 @@ updateMotdFromAllMd5sumsDB()
   }
 #endif
 
-  if (conf->collections == NULL) goto error;
+  if (conf->collections == 0) goto error;
   rgRewind(conf->collections);
-  while((coll = rgNext(conf->collections)) != NULL) {
+  while((coll = rgNext(conf->collections)) != 0) {
 
     // assert we have the localhost server object
     if (!getLocalHost(coll)) goto error;
@@ -283,13 +283,13 @@ int
 updateMotd()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  RG* tree1 = NULL;
-  RG* tree2 = NULL;
-  Support *support = NULL;
-  Support *prev = NULL;
-  Collection* coll = NULL;
-  char* text = NULL;
+  Configuration* conf = 0;
+  RG* tree1 = 0;
+  RG* tree2 = 0;
+  Support *support = 0;
+  Support *prev = 0;
+  Collection* coll = 0;
+  char* text = 0;
   off_t badSize = 0;
 
   if (!allowedUser(env.confLabel)) goto error;
@@ -314,7 +314,7 @@ updateMotd()
   if (tree1) {
     if (!rgSort(tree1, cmpSupport)) goto error2;
     printf("Need to check your local supports:\n");
-    while((support = rgNext(tree1)) != NULL) {
+    while((support = rgNext(tree1)) != 0) {
       printf("- %s\n", support->name);
     }
   }
@@ -322,7 +322,7 @@ updateMotd()
   if (tree2) {   
     if (!rgSort(tree2, cmpSupport)) goto error2;  
     printf("Looking for content from your shared supports:\n"); 
-    while((support = rgNext(tree2)) != NULL) {
+    while((support = rgNext(tree2)) != 0) {
       // do not display support twice
       if (!prev || cmpSupport(&support, &prev)) 
 	printf("- %s\n", support->name);
@@ -332,11 +332,11 @@ updateMotd()
 
   // display collections global status 
   printf("Looking for content to burn:\n"); 
-  if (conf->collections == NULL) goto error2;
+  if (conf->collections == 0) goto error2;
   rgRewind(conf->collections);
-  while((coll = rgNext(conf->collections)) != NULL) {
+  while((coll = rgNext(conf->collections)) != 0) {
     if (!computeExtractScore(coll)) goto error2;
-    if (!(text = getExtractStatus(coll, &badSize, NULL))) 
+    if (!(text = getExtractStatus(coll, &badSize, 0))) 
       goto error2;
 
     if (badSize == 0) goto next;
@@ -424,7 +424,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

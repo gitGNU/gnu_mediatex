@@ -141,7 +141,9 @@ CVS/Root  <-------+-----------> CVS/Root
 @end example
 
 @item On stage D2 (Serialise meta-data files), 
-the default behaviour is to not serialise @dataCatalog{} and @dataExtract{} unless they provide a new @file{NN.txt} post-fixed file.
+the default behaviour is to not serialise 
+@dataCatalog{} and 
+@dataExtract{} unless they provide a new @file{NN.txt} post-fixed file.
 This intents to speed-up some queries ending (as @code{make}).
 In order to force serialising theses files you have to use the @code{upgrade} query.
 @end itemize

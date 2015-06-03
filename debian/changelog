@@ -1,3 +1,9 @@
+mediatex (0.3-1) jessie; urgency=low
+
+  * Upgrade to jessie
+
+ -- nroche <nroche@fred.narval.tk>  Wed, 27 May 2015 13:06:01 +0200
+
 mediatex (0.2) wheezy; urgency=low
 
   * Registering to savannah

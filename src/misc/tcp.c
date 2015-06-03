@@ -1,12 +1,12 @@
 /* ======================================================================= 
- * Version: $Id: tcp.c,v 1.2 2014/11/13 16:36:48 nroche Exp $
+ * Version: $Id: tcp.c,v 1.3 2015/06/03 14:03:48 nroche Exp $
  * Project: 
  * Module : tcp socket
 
  * deal with tcp sockets
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -250,7 +250,7 @@ tcpServerExemple(int sock, struct sockaddr_in* address_accepted)
   int rc = TRUE;
   char buffer[100];
   int i,n = 0;  
-  char* addr = NULL;
+  char* addr = 0;
 
   // rq: getpeername can retrieve struct sockaddr* from sock
   addr = getHostNameByAddr(&address_accepted->sin_addr);
@@ -372,7 +372,7 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"c";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"client", required_argument, NULL, 'c'},
+    {"client", required_argument, 0, 'c'},
     {0, 0, 0, 0}
   };
 
@@ -380,7 +380,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

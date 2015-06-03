@@ -1,6 +1,7 @@
 @cindex cgi
 
-@process{cgiClient} is a frontend that dispatch the @actorUser{} queries 
+@process{cgiClient} is a frontend that dispatch the 
+@actorUser{} queries 
 around all the remote collection's @activityServer{}.
 
 Process conceptual model:

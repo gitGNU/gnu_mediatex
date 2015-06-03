@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: remove.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
+# * Version: $Id: remove.sh,v 1.3 2015/06/03 14:03:25 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -10,7 +10,7 @@ set -e
 # * ... to be call by debian/prerm
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,10 @@ Debug "remove"
 [ ! -z "$MDTX_MDTXUSER" ] || 
 Error "expect MDTX_MDTXUSER variable to be set by the environment"
 
-invoke-rc.d ${MEDIATEX#/}d stop $MDTX
+# only the init script for mdtx server is manage here
+if [ $MDTX = mdtx ]; then
+    invoke-rc.d ${MEDIATEX#/}d stop $MDTX
+fi
 
 JAIL_unbind
 SSH_chroot_login no

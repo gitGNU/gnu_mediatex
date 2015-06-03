@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.2 2014/11/13 16:36:57 nroche Exp $
+ * Version: $Id: confFile.l,v 1.3 2015/06/03 14:03:51 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
  * configuration scanner
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@
 %option noposix-compat
 %option nostdinit
 %option noyywrap
+%option yylineno
 
 /* Code-Level And API Options: */
 %option ansi-definitions
@@ -63,6 +64,7 @@
 
 /* Miscellaneous Options: */
 %option nounput
+%option noinput
 
 %top{
 /*=======================================================================
@@ -73,7 +75,7 @@
  * configuration scanner
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -92,32 +94,15 @@
 #include "../mediatex.h"
 #include "../misc/log.h"
 #include "../memory/strdsm.h"
-
-#ifndef utMAIN
-#include "confFile.tab.h"
-#endif	/*	: utMAIN	*/
-
-typedef struct ConfExtra {
-  int            lineNo;
-  // nothing more needed into the scanner
-} ConfExtra;
-
-// %union{} used by flex/bison to write/read values
-// (only available when linked with bison)
-typedef union ConfBisonUnion {
-  unsigned int  number;
-  float         score;
-  off_t         size;
-  time_t        time;
-  char*         string;
-} ConfBisonUnion;
-
-#define YYSTYPE ConfBisonUnion
-#define YY_NO_INPUT // no warning
 }
 
 %{
-  /* no local variables: reentrant */
+#ifdef utMAIN
+#define YYSTYPE void*
+#else
+#include "confFile.tab.h"
+#define YYSTYPE CONF_STYPE
+#endif	/*	: utMAIN	*/
 %}
 
  /* scaner states */
@@ -139,7 +124,7 @@ typedef union ConfBisonUnion {
   host {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: HOST", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: HOST", yylineno);
 #else	/*	: utMAIN	*/
     return(confHOST);
 #endif	/*	: utMAIN	*/
@@ -148,7 +133,7 @@ typedef union ConfBisonUnion {
  networks {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: NETWORKS", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: NETWORKS", yylineno);
 #else	/*	: utMAIN	*/
     return(confNETWORKS);
 #endif	/*	: utMAIN	*/
@@ -157,7 +142,7 @@ typedef union ConfBisonUnion {
  gateways {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: GATEWAYS", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: GATEWAYS", yylineno);
 #else	/*	: utMAIN	*/
     return(confGATEWAYS);
 #endif	/*	: utMAIN	*/
@@ -166,7 +151,7 @@ typedef union ConfBisonUnion {
   mdtxport {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MDTXPORT", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MDTXPORT", yylineno);
 #else	/*	: utMAIN	*/
     return(confMDTXPORT);
 #endif	/*	: utMAIN	*/
@@ -175,7 +160,7 @@ typedef union ConfBisonUnion {
   sshport {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: SSHPORT", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: SSHPORT", yylineno);
 #else	/*	: utMAIN	*/
     return(confSSHPORT);
 #endif	/*	: utMAIN	*/
@@ -184,7 +169,7 @@ typedef union ConfBisonUnion {
   cachesize {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: CACHE_SIZE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: CACHE_SIZE", yylineno);
 #else	/*	: utMAIN	*/
     return(confCACHESIZE);
 #endif	/*	: utMAIN	*/
@@ -193,7 +178,7 @@ typedef union ConfBisonUnion {
   cachettl {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: CACHE_TTL", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: CACHE_TTL", yylineno);
 #else	/*	: utMAIN	*/
     return(confCACHETTL);
 #endif	/*	: utMAIN	*/
@@ -202,7 +187,7 @@ typedef union ConfBisonUnion {
   queryttl {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: QUERY_TTL", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: QUERY_TTL", yylineno);
 #else	/*	: utMAIN	*/
     return(confQUERYTTL);
 #endif	/*	: utMAIN	*/
@@ -211,7 +196,7 @@ typedef union ConfBisonUnion {
   checkttl {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: CHECK_TTL", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: CHECK_TTL", yylineno);
 #else	/*	: utMAIN	*/
     return(confCHECKTTL);
 #endif	/*	: utMAIN	*/
@@ -220,7 +205,7 @@ typedef union ConfBisonUnion {
   suppttl {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: SUPP_TTL", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: SUPP_TTL", yylineno);
 #else	/*	: utMAIN	*/
     return(confSUPPTTL);
 #endif	/*	: utMAIN	*/
@@ -229,7 +214,7 @@ typedef union ConfBisonUnion {
   maxscore {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MAXSCORE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MAXSCORE", yylineno);
 #else	/*	: utMAIN	*/
     return(confMAXSCORE);
 #endif	/*	: utMAIN	*/
@@ -238,7 +223,7 @@ typedef union ConfBisonUnion {
   badscore {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: BADSCORE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: BADSCORE", yylineno);
 #else	/*	: utMAIN	*/
     return(confBADSCORE);
 #endif	/*	: utMAIN	*/
@@ -247,7 +232,7 @@ typedef union ConfBisonUnion {
   powsupp {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: POWSUPP", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: POWSUPP", yylineno);
 #else	/*	: utMAIN	*/
     return(confPOWSUPP);
 #endif	/*	: utMAIN	*/
@@ -256,7 +241,7 @@ typedef union ConfBisonUnion {
   factsupp {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: FACTSUPP", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: FACTSUPP", yylineno);
 #else	/*	: utMAIN	*/
     return(confFACTSUPP);
 #endif	/*	: utMAIN	*/
@@ -265,7 +250,7 @@ typedef union ConfBisonUnion {
   comment {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: COMMENT", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: COMMENT", yylineno);
 #else	/*	: utMAIN	*/
     return(confCOMMENT);
 #endif	/*	: utMAIN	*/
@@ -275,7 +260,7 @@ typedef union ConfBisonUnion {
   coll(ection)? {
     BEGIN(COLLECTION);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: COLL", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: COLL", yylineno);
 #else	/*	: utMAIN	*/
     return(confCOLL);
 #endif	/*	: utMAIN	*/
@@ -285,7 +270,7 @@ typedef union ConfBisonUnion {
     BEGIN(USERVALUE);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: LOCALHOST", 
-	    ((ConfExtra*)yyextra)->lineNo);
+	    yylineno);
 #else	/*	: utMAIN	*/
     return(confLOCALHOST);
 #endif	/*	: utMAIN	*/
@@ -294,7 +279,7 @@ typedef union ConfBisonUnion {
   share {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: SHARE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: SHARE", yylineno);
 #else	/*	: utMAIN	*/
     return(confSHARE);
 #endif	/*	: utMAIN	*/
@@ -303,7 +288,7 @@ typedef union ConfBisonUnion {
   , {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: COMMA", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: COMMA", yylineno);
 #else	/*	: utMAIN	*/
     return(confCOMMA);
 #endif	/*	: utMAIN	*/
@@ -312,7 +297,7 @@ typedef union ConfBisonUnion {
   - { 
     BEGIN(COLLECTION);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MINUS", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MINUS", yylineno);
 #else	/*	: utMAIN	*/
     return(confMINUS);
 #endif	/*	: utMAIN	*/
@@ -321,7 +306,7 @@ typedef union ConfBisonUnion {
   @ { 
     BEGIN(COLLECTION);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: AROBASE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: AROBASE", yylineno);
 #else	/*	: utMAIN	*/
     return(confAROBASE);
 #endif	/*	: utMAIN	*/
@@ -330,7 +315,7 @@ typedef union ConfBisonUnion {
   : {
     BEGIN(USERVALUE);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: COLON", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: COLON", yylineno);
 #else	/*	: utMAIN	*/
     return(confCOLON);
 #endif	/*	: utMAIN	*/
@@ -338,7 +323,7 @@ typedef union ConfBisonUnion {
 
   end(block)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: ENDBLOCK", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: ENDBLOCK", yylineno);
 #else	/*	: utMAIN	*/
     return(confENDBLOCK);
 #endif	/*	: utMAIN	*/
@@ -346,7 +331,7 @@ typedef union ConfBisonUnion {
 
   g(o)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: GIGA", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: GIGA", yylineno);
 #else	/*	: utMAIN	*/
     yylval->size = GIGA;
     return(confSIZE);
@@ -355,7 +340,7 @@ typedef union ConfBisonUnion {
 
   m(o)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MEGA", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MEGA", yylineno);
 #else	/*	: utMAIN	*/
      yylval->size = MEGA;
      return(confSIZE);
@@ -364,7 +349,7 @@ typedef union ConfBisonUnion {
 
   k(o)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: KILO", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: KILO", yylineno);
 #else	/*	: utMAIN	*/
     yylval->size = KILO;
     return(confSIZE);
@@ -373,7 +358,7 @@ typedef union ConfBisonUnion {
 
   o {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: OCTET", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: OCTET", yylineno);
 #else	/*	: utMAIN	*/
     yylval->size = 1;
     return(confSIZE);
@@ -382,7 +367,7 @@ typedef union ConfBisonUnion {
 
   y(ear)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: YEAR", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: YEAR", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = YEAR;
     return(confTIME);
@@ -391,7 +376,7 @@ typedef union ConfBisonUnion {
 
   mon(th)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MONTH", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MONTH", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = MONTH;
     return(confTIME);
@@ -400,7 +385,7 @@ typedef union ConfBisonUnion {
 
   w(eek)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: WEEK", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: WEEK", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = WEEK;
     return(confTIME);
@@ -409,7 +394,7 @@ typedef union ConfBisonUnion {
 
   d(ay)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: DAY", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: DAY", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = DAY;
     return(confTIME);
@@ -418,7 +403,7 @@ typedef union ConfBisonUnion {
 
   h(our)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: HOUR", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: HOUR", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = HOUR;
     return(confTIME);
@@ -427,7 +412,7 @@ typedef union ConfBisonUnion {
 
   min|(nute) {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: MINUTE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: MINUTE", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = MINUTE;
     return(confTIME);
@@ -436,7 +421,7 @@ typedef union ConfBisonUnion {
 
   s(econde)? {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: SECONDE", ((ConfExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: SECONDE", yylineno);
 #else	/*	: utMAIN	*/
     yylval->time = 1;
     return(confTIME);
@@ -444,7 +429,7 @@ typedef union ConfBisonUnion {
   }
  }
 
- /* Allow to use a value wich begin by a token name */
+ /* Allow to use a value which begin by a token name */
 <USERVALUE>{
 
   [+-]?[[:digit:]^]+\.[+-]?[[:digit:]^]+ {
@@ -453,7 +438,7 @@ typedef union ConfBisonUnion {
     sscanf(yytext, "%f", &score);
 #ifdef utMAIN
     logEmit(LOG_INFO, "line %i: SCORE=  %.2f", 
-	    ((ConfExtra*)yyextra)->lineNo, score);
+	    yylineno, score);
 #else	/*	: utMAIN	*/
     yylval->score = score;
     return(confSCORE);
@@ -466,7 +451,7 @@ typedef union ConfBisonUnion {
     number = strtoul(yytext, (char**)0, 10);
 #ifdef utMAIN
     logEmit(LOG_INFO, "line %i: NUMBER=  %i", 
-	    ((ConfExtra*)yyextra)->lineNo, number);
+	    yylineno, number);
 #else	/*	: utMAIN	*/
     yylval->number = number;
     return(confNUMBER);
@@ -477,9 +462,10 @@ typedef union ConfBisonUnion {
     BEGIN(INITIAL);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: ID=     '%s'", 
-	    ((ConfExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
-    yylval->string = createSizedString(yyleng-2, yytext+1);
+    strncpy(yylval->string, yytext+1, yyleng-2);
+    yylval->string[yyleng-2] = (char)0;
     return(confSTRING);
 #endif	/*	: utMAIN	*/
   }
@@ -488,9 +474,10 @@ typedef union ConfBisonUnion {
     BEGIN(INITIAL);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: ID=     '%s'", 
-	    ((ConfExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
-    yylval->string = createSizedString(yyleng, yytext);
+    strncpy(yylval->string, yytext, yyleng);
+    yylval->string[yyleng] = (char)0;
     return(confSTRING);
 #endif	/*	: utMAIN	*/
   }
@@ -503,7 +490,8 @@ typedef union ConfBisonUnion {
 #ifdef utMAIN
     logEmit(LOG_INFO, "STRING = \"%s\"", yytext);
 #else	/*	: utMAIN	*/
-    yylval->string = createSizedString(yyleng, yytext);
+    strncpy(yylval->string, yytext, yyleng);
+    yylval->string[yyleng] = (char)0;
     return(confSTRING);
 #endif	/*	: utMAIN	*/
   }
@@ -513,25 +501,15 @@ typedef union ConfBisonUnion {
 
   [[:blank:]]+   /* : eat up any blank character */
    #[^\r\n]*     /* : eat up comments */
+  (\n|\r\n)      /* : eat up carriage returns */
 
-  (\n|\r\n) {
-    ++((ConfExtra*)yyextra)->lineNo;
- /* #ifdef utMAIN */
- /*     ++env.progBar.cur; */
- /* #endif */
-  }
-
-  . { /* : eat up any unmatched character */
-    logEmit(LOG_ERR, "line %i: exit on scanner error: '%s'", 
-	    ((ConfExtra*)yyextra)->lineNo, yytext);
-
-    /* generate a parsor error (unexpected $end) */
+  . { /* : eat up any unmatched character and 
+	 let bison manage the errors */
+    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+	    yylineno, yytext);
 #ifdef utMAIN
     return -1;
-#else
-    //yylval->string = createSizedString(yyleng, yytext); // (not used)
-    return confERROR;
-#endif
+#endif	/*	: utMAIN	*/
   }
  }
 
@@ -576,9 +554,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
+  char* inputPath = 0;
   FILE* inputStream = stdin;
-  ConfExtra extra;
   yyscan_t scanner;
   // ---
   int rc = 0;
@@ -586,7 +563,7 @@ main(int argc, char** argv)
   char* programName = *argv;
   char* options = PARSER_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
-     {"input", required_argument, NULL, 'i'},
+     {"input", required_argument, 0, 'i'},
     PARSER_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
@@ -595,7 +572,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -608,7 +585,7 @@ main(int argc, char** argv)
       }
       else {
 	if ((inputPath = (char*)malloc(sizeof(char) * strlen(optarg) + 1))
-	    == NULL) {
+	    == 0) {
 	  fprintf(stderr, 
 		  "%s: cannot allocate memory for the input stream name\n", 
 		  programName);
@@ -638,18 +615,16 @@ main(int argc, char** argv)
   logEmit(LOG_DEBUG, "conf_set_debug = %i", conf_get_debug(scanner));
   
   // scan input file if defined
-  if (inputPath != NULL) {
-    if ((inputStream = fopen(inputPath, "r")) == NULL) {
+  if (inputPath != 0) {
+    if ((inputStream = fopen(inputPath, "r")) == 0) {
       logEmit(LOG_ERR, "cannot open input stream: %s", inputPath); 
       goto error;
     }
   }
   
   // call scanner 
-  extra.lineNo = 1;
-  conf_set_extra (&extra, scanner);
   conf_set_in(inputStream, scanner);
-  if (conf_lex(NULL, scanner)) goto error;
+  if (conf_lex(0, scanner)) goto error;
   conf_lex_destroy(scanner);
   fclose(inputStream);
   /************************************************************************/

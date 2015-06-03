@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.2 2014/11/13 16:36:30 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -10,7 +10,7 @@
  * - server->recordTree for remote records
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -97,7 +97,7 @@ cmpRecord(const void *p1, const void *p2)
   if (!rc) rc = a1->type - a2->type; 
 
   if (!rc) {
-    // extra should not but may be NULL
+    // extra should not but may be 0
     if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
       rc = strcmp(a1->extra, a2->extra);
     if (isEmptyString(a1->extra) && !isEmptyString(a2->extra))
@@ -136,7 +136,7 @@ cmpRecordSize(const void *p1, const void *p2)
   if (!rc) rc = (a1->type & 0x3) - (a2->type & 0x3); 
 
   if (!rc) {
-    // extra should not but may be NULL
+    // extra should not but may be 0
     if ((a1->type & 0x3) == DEMAND) {
       if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
 	rc = strcmp(a1->extra, a2->extra);
@@ -161,15 +161,15 @@ cmpRecordSize(const void *p1, const void *p2)
 Record* 
 createRecord(void)
 {
-  Record* rc = NULL;
+  Record* rc = 0;
 
-  if ((rc = (Record*)malloc(sizeof(Record))) == NULL)
+  if ((rc = (Record*)malloc(sizeof(Record))) == 0)
     goto error;
    
   memset(rc, 0, sizeof(Record));
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Record");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Record");
   return rc;
 }
 
@@ -184,13 +184,13 @@ createRecord(void)
 Record* 
 destroyRecord(Record* self)
 {
-  Record* rc = NULL;
+  Record* rc = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
     
 #if 1 // developpement mode
-  self->archive = NULL;
-  self->server = NULL;
+  self->archive = 0;
+  self->server = 0;
   self->date = 0;
   self->type = UNDEF_;
 #endif 
@@ -215,14 +215,14 @@ destroyRecord(Record* self)
 /* { */
 /*   destination = destroyRecord(destination); */
 
-/*   if (source == NULL) */
+/*   if (source == 0) */
 /*     goto error; */
 
-/*   if ((destination = createRecord()) == NULL) */
+/*   if ((destination = createRecord()) == 0) */
 /*     goto error; */
 
 /*   if (!isEmptyString(source->extra) && */
-/*       (destination->extra = createString(source->extra)) == NULL) */
+/*       (destination->extra = createString(source->extra)) == 0) */
 /*     goto error; */
 
 /*   destination->archive = source->archive; */
@@ -232,7 +232,7 @@ destroyRecord(Record* self)
 
 /*   return destination; */
 /*  error: */
-/*   logEmit(LOG_ERR, "%s", "malloc: cannot copy Record"); */
+/*   logMemory(LOG_ERR, "%s", "malloc: cannot copy Record"); */
 /*   return destroyRecord(destination); */
 /* } */
 
@@ -254,7 +254,7 @@ serializeRecord(RecordTree* tree, Record* self)
 
   // not esay to read when serializing to stdout because of aesPrint
   if (!env.noRegression) {
-    logEmit(LOG_DEBUG, "serialize Record: %s, %s %s:%lli",
+    logMemory(LOG_DEBUG, "serialize Record: %s, %s %s:%lli",
     strRecordType(self), self->server->fingerPrint, 
     self->archive->hash, (long long int)self->archive->size);
   }
@@ -262,14 +262,14 @@ serializeRecord(RecordTree* tree, Record* self)
   if (self->type & REMOVE) goto end;
 
   if (getRecordType(self) == MALLOC_SUPPLY) {
-     logEmit(LOG_WARNING, "%s", "get a malloc record ?!");
+     logMemory(LOG_WARNING, "%s", "get a malloc record ?!");
   }
   if (getRecordType(self) == UNDEF_RECORD) {
-     logEmit(LOG_WARNING, "%s", "get an undef record ?!");
+     logMemory(LOG_WARNING, "%s", "get an undef record ?!");
   }
 
   if (localtime_r(&self->date, &date) == (struct tm*)0) {
-    logEmit(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
     goto error;
   }
 
@@ -297,7 +297,7 @@ serializeRecord(RecordTree* tree, Record* self)
  end:
   return TRUE;
  error:
-  logEmit(LOG_ERR, "%s", "fails to serialize a record");
+  logMemory(LOG_ERR, "%s", "fails to serialize a record");
   return FALSE;
 }
 
@@ -314,7 +314,7 @@ getRecordType(Record* self)
   RecordType rc = UNDEF_RECORD;
 
   if (self->server->isLocalhost && isEmptyString(self->extra)) {
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "extra string is needed to get the local record type");
     goto error;
   }
@@ -354,7 +354,7 @@ getRecordType(Record* self)
 
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getRecordType fails");
+    logMemory(LOG_ERR, "%s", "getRecordType fails");
   }
   return rc;
 }
@@ -415,11 +415,11 @@ strRecordType(Record* self)
 RecordTree* 
 createRecordTree(void)
 {
-  RecordTree* rc = NULL;
+  RecordTree* rc = 0;
 
   if ((rc = (RecordTree*) malloc (sizeof (RecordTree))) 
-     == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create RecordTree");
+     == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create RecordTree");
     goto error;
   }
 
@@ -430,12 +430,12 @@ createRecordTree(void)
   rc->aes.way = ENCRYPT;
   rc->doCypher = FALSE;
 
-  if ((rc->records = createRing()) == NULL)
+  if ((rc->records = createRing()) == 0)
     goto error;
   
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "fails to create RecordTree");
+  logMemory(LOG_ERR, "%s", "fails to create RecordTree");
   return destroyRecordTree(rc);
 }
 
@@ -450,9 +450,9 @@ createRecordTree(void)
 RecordTree* 
 destroyRecordTree(RecordTree* self)
 {
-  RecordTree* rc = NULL;
+  RecordTree* rc = 0;
 
-  if(self != NULL)
+  if(self != 0)
     {
       self->records 
 	= destroyRing(self->records,
@@ -477,16 +477,16 @@ destroyRecordTree(RecordTree* self)
 /* RecordTree*  */
 /* copyRecordTree(RecordTree* destination, RecordTree* source) */
 /* { */
-/*   RecordTree* rc = NULL; */
+/*   RecordTree* rc = 0; */
 
 /*   destination = destroyRecordTree(destination); */
 
-/*   if(source != NULL) */
+/*   if(source != 0) */
 /*     { */
 /*       destination = createRecordTree(); */
 /*     } */
 
-/*   if (destination != NULL) */
+/*   if (destination != 0) */
 /*     { */
 /*       //strncpy(destination->collectionLabel, source->collectionLabel, */
 /*       //      MAX_SIZE_COLL); */
@@ -496,14 +496,14 @@ destroyRecordTree(RecordTree* self)
 /* 		      source->records,  */
 /* 		      (void*(*)(void*)) destroyRecord, */
 /* 		      (void*(*)(void*, const void*)) copyRecord))  */
-/* 	  == NULL) goto error; */
+/* 	  == 0) goto error; */
 
 /*       rc = destination; */
 /*     } */
   
 /*   return(rc); */
 /*  error: */
-/*   logEmit(LOG_ERR, "%s", "malloc: cannot copy RecordTree !"); */
+/*   logMemory(LOG_ERR, "%s", "malloc: cannot copy RecordTree !"); */
 /*   return destroyRecordTree(destination); */
 /* } */
 
@@ -549,31 +549,31 @@ int
 serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 { 
   int rc = FALSE;
-  Record *record = NULL;
-  RGIT* curr = NULL;
-  AESData* aes = NULL;
+  Record *record = 0;
+  RGIT* curr = 0;
+  AESData* aes = 0;
 
   checkRecordTree(self);
-  logEmit(LOG_INFO, "Serializing %s record tree in file: %s", 
+  logMemory(LOG_INFO, "Serializing %s record tree in file: %s", 
 	  strMessageType(self->messageType), path?path:"stdout");
 
   aes = &(self->aes);
 
   // output file to use (may already be set into aes->fd)
   if (!env.dryRun && !isEmptyString(path)) {
-    if ((aes->fd = creat(path, S_IRWXU)) == -1) {
-      logEmit(LOG_ERR, "Cannot write into the records tree file: %s", 
+    if ((aes->fd = creat(path, S_IRWXU|S_IRGRP)) == -1) {
+      logMemory(LOG_ERR, "Cannot write into the records tree file: %s", 
 	      strerror(errno));
       goto error;
     }
   }
 
   // print local server fingerPrint if not overrided
-  if (fingerPrint == NULL) {
+  if (fingerPrint == 0) {
     fingerPrint = self->collection->userFingerPrint;
   }
 
-  if(self != NULL && self->records != NULL) {
+  if(self != 0 && self->records != 0) {
     rgSort(self->records, cmpRecord);
   }
 
@@ -602,9 +602,9 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 	   "extra");
   rc = TRUE;
 
-  if(self != NULL) {
-    if (self->records != NULL) {
-      while((record = rgNext_r(self->records, &curr)) != NULL)
+  if(self != 0) {
+    if (self->records != 0) {
+      while((record = rgNext_r(self->records, &curr)) != 0)
 	if (!serializeRecord(self, record)) rc=FALSE;
     }
   }
@@ -632,39 +632,39 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
  *              Archive* archive: id2
  *              Type  type: SUPPLY or DEMAND
  *              char* extra: file's path or custumer's mail
- * Output     : pointer on the new Record or NULL on error
+ * Output     : pointer on the new Record or 0 on error
  =======================================================================*/
 Record* 
 newRecord(Server* server, Archive* archive, Type type, char* extra)
 {
-  Record* rc = NULL;
-  Record* record = NULL;
+  Record* rc = 0;
+  Record* record = 0;
 
   checkServer(server);
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "newRecord: (%i), %s, %s:%lli",
+  logMemory(LOG_DEBUG, "newRecord: (%i), %s, %s:%lli",
 	  type, server->fingerPrint, 
 	  archive->hash, (long long int)archive->size);
 
   if ((type&0x3) != SUPPLY && (type&0x3) != DEMAND) {
-    logEmit(LOG_ERR, "%s", "please choose a type (supply or demand) "
+    logMemory(LOG_ERR, "%s", "please choose a type (supply or demand) "
 	    "for the new Record");
     goto error;
   }
 
-  if ((record = createRecord()) == NULL) goto error;
+  if ((record = createRecord()) == 0) goto error;
   if ((record->date = currentTime()) == -1) goto error;
   record->server = server;
   record->archive = archive;
   record->type = type;
   record->extra = extra;
-  extra = NULL; // consume string
+  extra = 0; // consume string
   if (getRecordType(record) == UNDEF_RECORD) goto error;
   
   rc = record;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "newRecord fails");
+    logMemory(LOG_ERR, "%s", "newRecord fails");
     record = destroyRecord(record);
   }
   destroyString(extra);
@@ -683,20 +683,20 @@ newRecord(Server* server, Archive* archive, Type type, char* extra)
  *              Archive* archive: id2
  *              Type  type: SUPPLY or DEMAND
  *              char* extra: file's path or custumer's mail
- * Output     : pointer on the new Record or NULL on error
+ * Output     : pointer on the new Record or 0 on error
  * Note       : severals record may have the same ids
  *              IS THIS A GOOD THINK ?   
  =======================================================================*/
 Record* addRecord(Collection* coll, Server* server, Archive* archive,
 		  Type type, char* extra)
 {
-  Record* rc = NULL;
-  Record* record = NULL;
+  Record* rc = 0;
+  Record* record = 0;
 
   checkCollection(coll);
   checkServer(server);
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "addRecord: (%i), %s, %s:%lli",
+  logMemory(LOG_DEBUG, "addRecord: (%i), %s, %s:%lli",
 	  type, server->fingerPrint,
 	  archive->hash, (long long int)archive->size);
 
@@ -711,7 +711,7 @@ Record* addRecord(Collection* coll, Server* server, Archive* archive,
   rc = record;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "newRecord fails");
+    logMemory(LOG_ERR, "%s", "newRecord fails");
     if (record) delRecord(coll, record); 
   }
   return rc;
@@ -729,11 +729,11 @@ Record* addRecord(Collection* coll, Server* server, Archive* archive,
 int delRecord(Collection* coll, Record* self)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkRecord(self);
-  logEmit(LOG_DEBUG, "delRecord: (%i), %s, %s:%lli",
+  logMemory(LOG_DEBUG, "delRecord: (%i), %s, %s:%lli",
 	  self->type, self->server->fingerPrint,
 	  self->archive->hash, (long long int)self->archive->size);
 
@@ -757,7 +757,7 @@ int delRecord(Collection* coll, Record* self)
   rc = TRUE;
  error:
  if (!rc) {
-    logEmit(LOG_ERR, "%s", "delRecord fails");
+    logMemory(LOG_ERR, "%s", "delRecord fails");
  }
   return rc;
 }
@@ -773,20 +773,20 @@ int
 diseaseRecordTree(RecordTree* self)
 { 
   int rc = FALSE;
-  Record *record = NULL;
+  Record *record = 0;
   
   checkRecordTree(self);
   checkCollection(self->collection);
-  logEmit(LOG_DEBUG, "Disease %s related record tree", 
+  logMemory(LOG_DEBUG, "Disease %s related record tree", 
 	  self->collection->label);
   
-  while((record = rgHead(self->records)) != NULL)
+  while((record = rgHead(self->records)) != 0)
     if (!delRecord(self->collection, record)) goto error;
   
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "%s", "diseaseRecordTree fails");
+    logMemory(LOG_INFO, "%s", "diseaseRecordTree fails");
   }
   return(rc);
 }
@@ -828,9 +828,9 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   char key[MAX_SIZE_AES+1] = "1000000000000000";
-  AESData* aes = NULL;
+  AESData* aes = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -843,10 +843,11 @@ main(int argc, char** argv)
        
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -871,13 +872,13 @@ main(int argc, char** argv)
 
   // serialize uncrypted file
   if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB,
-			   NULL)) goto error;
+			   0)) goto error;
 
   // serialize crypted file
   strncpy(coll->md5sumsDB + strlen(coll->md5sumsDB) -3, "aes", 3);
   coll->cacheTree->recordTree->doCypher = TRUE;
   if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB, 
-			   NULL)) goto error;
+			   0)) goto error;
 
   // disease
   aes->doCypher = FALSE;

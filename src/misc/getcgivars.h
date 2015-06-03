@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: getcgivars.h,v 1.2 2014/11/13 16:36:39 nroche Exp $
+ * Version: $Id: getcgivars.h,v 1.3 2015/06/03 14:03:45 nroche Exp $
  * Project: CGIVARS
  * Module : mediatex
  *

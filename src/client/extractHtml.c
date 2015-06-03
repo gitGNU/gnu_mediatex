@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.2 2014/11/13 16:36:18 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree latex serializer
  *
  * Extraction tree latex serializer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -90,15 +90,15 @@ static int
 htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
 {
   int rc = FALSE;
-  Container* container = NULL;
-  Archive* archive = NULL;
+  Container* container = 0;
+  Archive* archive = 0;
   int many = FALSE;
   char url[64];
   char label[16];
   char score[8];
   int i = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "%s", "htmlFromAsso");
 
   container = self->container;
@@ -112,7 +112,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   // do not sort !
   if (many) htmlUlOpen(fd);
   
-  while((archive = rgNext(container->parents)) != NULL) {
+  while((archive = rgNext(container->parents)) != 0) {
     if (isHeader) {
       getArchiveUri(url, "../../../..", archive);
     } else {
@@ -127,7 +127,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
     }
 
     if (!sprintf(score, " (%5.2f)", archive->extractScore)) goto error;    
-    htmlLink(fd, NULL, url, score);    
+    htmlLink(fd, 0, url, score);    
     if (many) htmlLiClose(fd);
   }
 
@@ -156,13 +156,13 @@ int
 htmlContainer(Container* self, FILE* fd)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  AVLNode *node = NULL;
+  FromAsso* asso = 0;
+  AVLNode *node = 0;
   int many = FALSE;
   char url [128];
   char score[8];
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "%s", "htmlContainer");
 
   //many = (self->childs->nbItems > 1);
@@ -181,7 +181,7 @@ htmlContainer(Container* self, FILE* fd)
     getArchiveUri(url, "../..", asso->archive);
     if (many) htmlLiOpen(fd);
     if (!sprintf(score, "(%5.2f)", asso->archive->extractScore)) goto error;
-    htmlLink(fd, NULL, url, score);
+    htmlLink(fd, 0, url, score);
     if (!fprintf(fd, "%s", " ")) goto error;
     htmlItalic(fd, asso->path);
     if (many) htmlLiClose(fd);
@@ -214,10 +214,10 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
 			 int archId, int i, int n)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  Archive* archive = NULL;
+  FromAsso* asso = 0;
+  Archive* archive = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   char score[8];
@@ -228,7 +228,7 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }
@@ -250,7 +250,7 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, NULL, url, score);
+    htmlLink(fd, 0, url, score);
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -290,14 +290,14 @@ static int
 serializeHtmlScoreArchive(Collection* coll, Archive* self)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  AssoCarac *assoCarac = NULL;
-  Document* document = NULL;
-  FromAsso* asso = NULL;
-  Image* image = NULL;
-  AVLNode *node = NULL;
+  Configuration* conf = 0;
+  AssoCarac *assoCarac = 0;
+  Document* document = 0;
+  FromAsso* asso = 0;
+  Image* image = 0;
+  AVLNode *node = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[512];
   char text[128];
   int isHeader = FALSE;
@@ -346,7 +346,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }
@@ -377,7 +377,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
     rgRewind(self->assoCaracs);
     htmlUlOpen(fd);
 
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
 
@@ -393,12 +393,12 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->documents)) {
     if (!rgSort(self->documents, cmpDocument)) goto error;
-    while((document = rgNext(self->documents)) != NULL) {
+    while((document = rgNext(self->documents)) != 0) {
       if (!sprintf(text, "%s/../index", home)) goto error;
       getDocumentUri(url, text, document->id);
 
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, document->label);
+      htmlLink(fd, 0, url, document->label);
       htmlLiClose(fd);
     }
   }
@@ -416,12 +416,12 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->images)) {
     if (!rgSort(self->images, cmpImage)) goto error;
-    while((image = rgNext(self->images)) != NULL) {
+    while((image = rgNext(self->images)) != 0) {
       if (!sprintf(text, "%s/servers/srv_%s.shtml", home,
   		   image->server->fingerPrint)) goto error;
 
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, text, image->server->host);
+      htmlLink(fd, 0, text, image->server->host);
       if (!fprintf(fd, " (%.2f)", image->score)) goto error;
       htmlLiClose(fd);
     }
@@ -441,7 +441,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   if (!isEmptyRing(self->fromContainers)) {
     // already sorted
     rgRewind(self->fromContainers);
-    while((asso = rgNext(self->fromContainers)) != NULL) {
+    while((asso = rgNext(self->fromContainers)) != 0) {
       htmlFromAsso(asso, fd, isHeader);
     }
   }
@@ -522,10 +522,10 @@ serializeHtmlServer(Collection* coll, Server* server)
 { 
   int rc = FALSE;
   FILE* fd = stdout;
-  char* path = NULL;
-  char* string = NULL;
-  Image* image = NULL;
-  RGIT* curr = NULL;
+  char* path = 0;
+  char* string = 0;
+  Image* image = 0;
+  RGIT* curr = 0;
   char url[128];
   char text[128];
   char score[8];
@@ -536,7 +536,7 @@ serializeHtmlServer(Collection* coll, Server* server)
   if (!(path = catString(path, server->fingerPrint))) goto error;
   if (!(path = catString(path, ".shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -584,7 +584,7 @@ serializeHtmlServer(Collection* coll, Server* server)
     if (!fprintf(fd, _("On networks:\n"))) goto error;
     htmlUlOpen(fd);
 				    
-    curr = NULL;
+    curr = 0;
     while((string = rgNext_r(server->networks, &curr))) {    
       htmlLiOpen(fd);
       if (!fprintf(fd, "%s\n", string)) goto error;
@@ -601,7 +601,7 @@ serializeHtmlServer(Collection* coll, Server* server)
     if (!fprintf(fd, _("Gateway for:\n"))) goto error;
     htmlUlOpen(fd);
 				    
-    curr = NULL;
+    curr = 0;
     while((string = rgNext_r(server->gateways, &curr))) {    
       htmlLiOpen(fd);
       if (!fprintf(fd, "%s\n", string)) goto error;
@@ -619,7 +619,7 @@ serializeHtmlServer(Collection* coll, Server* server)
       goto error;
     htmlUlOpen(fd);
 				    
-    curr = NULL;
+    curr = 0;
     while((image = rgNext_r(server->images, &curr))) {    
       getArchiveUri(url, "..", image->archive);
       if (!sprintf(text, "%s:%lli ", image->archive->hash, 
@@ -628,7 +628,7 @@ serializeHtmlServer(Collection* coll, Server* server)
 
       htmlLiOpen(fd);
       htmlVerb(fd, text);
-      htmlLink(fd, NULL, url, score);
+      htmlLink(fd, 0, url, score);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -666,9 +666,9 @@ static int
 serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
+  Archive* archive = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   char score[8];
@@ -678,7 +678,7 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -700,7 +700,7 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, NULL, url, score);
+    htmlLink(fd, 0, url, score);
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -739,11 +739,11 @@ static int
 serializeHtmlArchiveLists(Collection* coll)
 { 
   int rc = FALSE;
-  AVLNode *node = NULL;
+  AVLNode *node = 0;
   FILE* fd = stdout;
   char tmp[128];
-  char* path = NULL;
-  char* path2 = NULL;
+  char* path = 0;
+  char* path2 = 0;
   int nb = 0;
   int i = 0;
   int n = 0;
@@ -765,8 +765,8 @@ serializeHtmlArchiveLists(Collection* coll)
   // serialize header file for the document list
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2); 
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }  
@@ -786,7 +786,7 @@ serializeHtmlArchiveLists(Collection* coll)
 
   // get the total number of lists of archives
   n = (nb - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_INFO, "have %i archive, so %i lists", nb, n);
+  logEmit(LOG_DEBUG, "have %i archive, so %i lists", nb, n);
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
   if (!htmlMakeDirs(path, n)) goto error;
@@ -800,7 +800,7 @@ serializeHtmlArchiveLists(Collection* coll)
   // empty list if needed
   if (n == 0) {
     if (!htmlMakeDirs(path, 1)) goto error;
-    if (!serializeHtmlArchiveList(coll, NULL, 1, 0)) goto error;
+    if (!serializeHtmlArchiveList(coll, 0, 1, 0)) goto error;
   }
 
   rc = TRUE;
@@ -827,9 +827,9 @@ static int
 serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
+  Archive* archive = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   char score[8];
@@ -842,7 +842,7 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -864,7 +864,7 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, NULL, url, score);
+    htmlLink(fd, 0, url, score);
     htmlLiClose(fd);
 
     archive = rgNext(ring);
@@ -903,12 +903,12 @@ static int
 serializeHtmlBadLists(Collection* coll)
 { 
   int rc = FALSE;
-  RG* badArchives = NULL;
+  RG* badArchives = 0;
   FILE* fd = stdout;
   char tmp[128];
-  char* text = NULL;
-  char* path = NULL;
-  char* path2 = NULL;
+  char* text = 0;
+  char* path = 0;
+  char* path2 = 0;
   off_t badSize = 0;
   int nb = 0;
   int i = 0;
@@ -935,8 +935,8 @@ serializeHtmlBadLists(Collection* coll)
   // serialize header file for the document list
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2); 
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }
@@ -980,7 +980,7 @@ serializeHtmlBadLists(Collection* coll)
 
   // get the total number of lists of documents
   n = (nb - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_INFO, "have %i bad archives, so %i lists", nb, n);
+  logEmit(LOG_DEBUG, "have %i bad archives, so %i lists", nb, n);
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
   if (!htmlMakeDirs(path, n)) goto error;
@@ -994,7 +994,7 @@ serializeHtmlBadLists(Collection* coll)
   // empty list if needed
   if (n == 0) {
     if (!htmlMakeDirs(path, 1)) goto error;
-    if (!serializeHtmlBadList(coll, NULL, 1, 0)) goto error;
+    if (!serializeHtmlBadList(coll, 0, 1, 0)) goto error;
   }
 
   rc = TRUE;
@@ -1022,9 +1022,9 @@ serializeHtmsScoreIndex(Collection* coll)
 { 
   int rc = FALSE;
   FILE* fd = stdout;
-  char* path = NULL;
-  ServerTree* serverTree = NULL;
-  Archive* archive = NULL;
+  char* path = 0;
+  ServerTree* serverTree = 0;
+  Archive* archive = 0;
   char url[128];
   char text[128];
   char score[8];
@@ -1034,7 +1034,7 @@ serializeHtmsScoreIndex(Collection* coll)
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, "/index.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -1073,7 +1073,7 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlUlOpen(fd);
   if (!isEmptyRing(serverTree->archives)) {
     if (!rgSort(serverTree->archives, cmpArchive)) goto error;
-    while((archive = rgNext(serverTree->archives)) != NULL) {
+    while((archive = rgNext(serverTree->archives)) != 0) {
       getArchiveUri(url, "", archive);
       if (!sprintf(text, "%s:%lli ", archive->hash, 
 		   (long long int)archive->size)) goto error;
@@ -1081,7 +1081,7 @@ serializeHtmsScoreIndex(Collection* coll)
 
       htmlLiOpen(fd);
       htmlVerb(fd, text);
-      htmlLink(fd, NULL, url, score);
+      htmlLink(fd, 0, url, score);
 
       htmlLiClose(fd);
     }
@@ -1122,10 +1122,10 @@ static int
 serializeHtmlScoreHeader(Collection* coll)
 { 
   int rc = FALSE;
-  ServerTree* self = NULL;
-  Server* server = NULL;
+  ServerTree* self = 0;
+  Server* server = 0;
   FILE* fd = stdout;
-  char* path = NULL;
+  char* path = 0;
   char url[512];
 
   if (!(coll->extractTree)) goto error;
@@ -1134,7 +1134,7 @@ serializeHtmlScoreHeader(Collection* coll)
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/scoreHeader.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -1148,12 +1148,12 @@ serializeHtmlScoreHeader(Collection* coll)
 
   // archive lists
   getArchiveListUri(url, "<!--#echo var='HOME' -->/score", 1);
-  htmlLink(fd, NULL, url, _("All archives"));
+  htmlLink(fd, 0, url, _("All archives"));
   htmlBr(fd);
 
   // archive with bad score lists
   getBadListUri(url, "<!--#echo var='HOME' -->/score", 1);
-  htmlLink(fd, NULL, url, _("Bad archives"));
+  htmlLink(fd, 0, url, _("Bad archives"));
   htmlBr(fd);
 
   // each server
@@ -1162,13 +1162,13 @@ serializeHtmlScoreHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext(self->servers)) != NULL) {
+    while ((server = rgNext(self->servers)) != 0) {
       if (!sprintf(url, 
 		   "<!--#echo var='HOME' -->/score/servers/srv_%s.shtml", 
 		   server->fingerPrint)) goto error;
     
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, server->host);
+      htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -1207,13 +1207,13 @@ int
 serializeHtmlScore(Collection* coll)
 { 
   int rc = FALSE;
-  ServerTree* self = NULL;
-  Server* server = NULL;
-  Archive *archive = NULL;
-  AVLNode *node = NULL;
+  ServerTree* self = 0;
+  Server* server = 0;
+  Archive *archive = 0;
+  AVLNode *node = 0;
   char tmp[128];
-  char *path1 = NULL;
-  char *path2 = NULL;
+  char *path1 = 0;
+  char *path2 = 0;
   int nb = 0;
 
   checkCollection(coll);
@@ -1233,7 +1233,7 @@ serializeHtmlScore(Collection* coll)
   // servers
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext(self->servers)) != NULL) {
+    while((server = rgNext(self->servers)) != 0) {
       if (!serializeHtmlServer(coll, server)) goto error;
     }
   }
@@ -1251,7 +1251,7 @@ serializeHtmlScore(Collection* coll)
   }
 
   if ((nb = avl_count(coll->archives))) {
-    logEmit(LOG_INFO, "have %i archives", nb);
+    logEmit(LOG_DEBUG, "have %i archives", nb);
     if (!htmlMakeDirs(path1, nb)) goto error;
   }
 
@@ -1319,7 +1319,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -1334,7 +1334,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.3 2015/02/25 17:37:54 nroche Exp $
+ * Version: $Id: address.c,v 1.4 2015/06/03 14:03:43 nroche Exp $
  * Project: 
  * Module : socket address
 
@@ -9,7 +9,7 @@
  * Applications should use getaddrinfo(3) and getnameinfo(3) instead.
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@
 char*
 getHostNameByAddr(struct in_addr* inAddr)
 {
-  char* rc = NULL;
+  char* rc = 0;
   struct hostent  *sHost;
 
   sHost = gethostbyaddr(inAddr, sizeof(struct in_addr), AF_INET);
@@ -67,7 +67,7 @@ getHostNameByAddr(struct in_addr* inAddr)
       logEmit(LOG_INFO, "gethostbyaddr: %s", "HOST_NOT_FOUND");
       
       // do not found an hostname: use IP instead
-      if ((rc = (char*)malloc(16)) == NULL) {
+      if ((rc = (char*)malloc(16)) == 0) {
 	logEmit(LOG_ERR, "%s", "malloc cannot allocate string for IP");
 	goto error;
       }
@@ -88,7 +88,7 @@ getHostNameByAddr(struct in_addr* inAddr)
   }
 
   // normal case (found a hostname)
-  if ((rc = (char*)malloc(strlen(sHost->h_name)+1)) == NULL) {
+  if ((rc = (char*)malloc(strlen(sHost->h_name)+1)) == 0) {
     logEmit(LOG_ERR, "malloc cannot allocate string of len %i+1",
 	    strlen(sHost->h_name));
     goto error;
@@ -213,7 +213,7 @@ buildSocketAddress(struct sockaddr_in* address,
   
   // Convert service parameter. (we need to build socket address)
   // It should be a number or a string.
-  if (service == NULL || *service == (char)0) {
+  if (service == 0 || *service == (char)0) {
     logEmit(LOG_WARNING, "no port defined for %s address", host);
     port = htons(CONF_PORT);
   }
@@ -231,7 +231,7 @@ buildSocketAddress(struct sockaddr_in* address,
   }
 
   // Convert host parameter
-  if (host == NULL || *host == (char)0) {
+  if (host == 0 || *host == (char)0) {
     ipv4.s_addr = htonl(INADDR_ANY); // this is ok for a server address
   }
   else {
@@ -287,7 +287,7 @@ main(int argc, char** argv)
 {
   struct sockaddr_in address;
   struct in_addr ipv4;
-  char* text = NULL;
+  char* text = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -295,7 +295,7 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    //{"input-file", required_argument, NULL, 'i'},
+    //{"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
 
@@ -303,7 +303,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -324,7 +324,7 @@ main(int argc, char** argv)
     goto error;
   } 
  
-  if ((text = getHostNameByAddr(&address.sin_addr)) == NULL)
+  if ((text = getHostNameByAddr(&address.sin_addr)) == 0)
     goto error;
 
   printf("host name of 0x7f000001 is: %s\n", text);

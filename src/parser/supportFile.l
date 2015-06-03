@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.2 2014/11/13 16:37:01 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.3 2015/06/03 14:03:52 nroche Exp $
  * Project: Mediatex
  * Module : supportFile scanner
 
  * support scanner
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@
 %option noposix-compat
 %option nostdinit
 %option noyywrap
+%option yylineno
 
 /* Code-Level And API Options: */
 %option ansi-definitions
@@ -63,6 +64,7 @@
 
 /* Miscellaneous Options: */
 %option nounput
+%option noinput
 
 %top{
 /*=======================================================================
@@ -74,7 +76,7 @@
  * Note : the numerical constants need to be changed manually
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -93,32 +95,15 @@
 #include "../mediatex.h"
 #include "../misc/log.h"
 #include "../memory/strdsm.h"
-
-#ifndef utMAIN
-#include "supportFile.tab.h"
-#endif	/*	: utMAIN	*/
-
-typedef struct SuppExtra {
-  int            lineNo;
-  // nothing more needed into the scanner
-} SuppExtra;
-
-// %union{} used by flex/bison to write/read values
-// (only available when linked with bison)
-typedef union SuppBisonUnion {
-  off_t  size;
-  time_t time;
-  char   hash[MAX_SIZE_HASH+1];
-  char   status[MAX_SIZE_STAT+1];
-  char   name[MAX_SIZE_NAME+1];
-} SuppBisonUnion;
-
-#define YYSTYPE SuppBisonUnion
-#define YY_NO_INPUT // no warning
 }
 
 %{
-  /* no local variables: reentrant */
+#ifdef utMAIN
+#define YYSTYPE void*
+#else
+#include "supportFile.tab.h"
+#define YYSTYPE SUPP_STYPE
+#endif
 %}
 
  /* scaner states */
@@ -153,8 +138,8 @@ NAME    [^[:blank:]\r\n]+
 
   {DATE} {
 #ifdef utMAIN
-    logEmit(LOG_INFO, "line %i: DATE = %s", 
-	    ((SuppExtra*)yyextra)->lineNo, yytext);
+    logEmit(LOG_INFO, "line %i: DATE = %s",
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     // date conversion into time_t
     struct tm date;
@@ -170,7 +155,7 @@ NAME    [^[:blank:]\r\n]+
     date.tm_mon -= 1;     // month are managed from 0 to 11 
     date.tm_isdst = -1;   // no informatio available about spring horodation
     if ((yylval->time = mktime(&date)) == -1) {
-      logEmit(LOG_ERR, "%s", "mktime: error parsing date");
+      logEmit(LOG_ERR, "%s", "mktime: error while parsing date");
       return(suppERROR);
     }
     return(suppDATE);
@@ -178,14 +163,10 @@ NAME    [^[:blank:]\r\n]+
   }
   
   {HASH} {
-    // force to take 32 char
-    // else the ending digit are taken by the=
-    //if (yyleng != MAX_SIZE_HASH) yyless(MAX_SIZE_HASH);
 #ifdef utMAIN
     logEmit(LOG_INFO, "line %i: HASH = %s", 
-	    ((SuppExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
-    // Maybe need to do a tric with sscanf here -> uchar[12]
     strncpy(yylval->hash, yytext, MAX_SIZE_HASH);
     yylval->hash[MAX_SIZE_HASH] = (char)0;
     return(suppHASH);
@@ -197,8 +178,8 @@ NAME    [^[:blank:]\r\n]+
     BEGIN(STATE2);
     sscanf(yytext, "%llu", (unsigned long long int*)&size);
 #ifdef utMAIN
-    logEmit(LOG_INFO, "line %i: SIZE = %lli", 
-	    ((SuppExtra*)yyextra)->lineNo, size);
+    logEmit(LOG_INFO, "line %i: SIZE = %lli",
+	    yylineno, size);
 #else	/*	: utMAIN	*/
     yylval->size = size;
     return(suppSIZE);
@@ -211,8 +192,8 @@ NAME    [^[:blank:]\r\n]+
     BEGIN(STATE3);
     if (yyleng > MAX_SIZE_STAT) yyless(MAX_SIZE_STAT);
 #ifdef utMAIN
-    logEmit(LOG_INFO, "line %i: STATUS = \%s", 
-	    ((SuppExtra*)yyextra)->lineNo, yytext);
+    logEmit(LOG_INFO, "line %i: STATUS = \%s",
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     strncpy(yylval->status, yytext, yyleng);
     yylval->status[yyleng] = (char)0;
@@ -226,8 +207,8 @@ NAME    [^[:blank:]\r\n]+
     BEGIN(INITIAL);
     if (yyleng > MAX_SIZE_NAME) yyless(MAX_SIZE_NAME);
 #ifdef utMAIN
-    logEmit(LOG_INFO, "line %i: NAME = \%s", 
-	    ((SuppExtra*)yyextra)->lineNo, yytext);
+    logEmit(LOG_INFO, "line %i: NAME = \%s",
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     strncpy(yylval->name, yytext, yyleng);
     yylval->name[yyleng] = (char)0;
@@ -241,23 +222,18 @@ NAME    [^[:blank:]\r\n]+
     ^#.*$         /* : eat up comments */
     \/\/.*$       /* : eat up comments */
     
-  (\n|\r\n) {
+  (\n|\r\n) {    /* : eat up carriage returns */
     BEGIN(INITIAL);
-    ++((SuppExtra*)yyextra)->lineNo;
   }
  }
 
 <*>{
-  . { /* : eat up any unmatched character */
-    
-    logEmit(LOG_ERR, "line %i: exit on scanner error: %s", 
-	    ((SuppExtra*)yyextra)->lineNo, yytext);
-    
+  . { /* : eat up any unmatched character and 
+	 let bison manage the errors */
+    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+	    yylineno, yytext);
 #ifdef utMAIN
-    logEmit(LOG_ERR, "%s", "ERROR");
     return -1;
-#else	/*	: utMAIN	*/
-    return(suppERROR);
 #endif	/*	: utMAIN	*/
   }
  }
@@ -303,9 +279,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
+  char* inputPath = 0;
   FILE* inputStream = stdin;
-  SuppExtra extra;
   yyscan_t scanner;
   // ---
   int rc = 0;
@@ -313,7 +288,7 @@ main(int argc, char** argv)
   char* programName = *argv;
   char* options = PARSER_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
-     {"input", required_argument, NULL, 'i'},
+     {"input", required_argument, 0, 'i'},
     PARSER_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
@@ -322,7 +297,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -335,7 +310,7 @@ main(int argc, char** argv)
       }
       else {
 	if ((inputPath = (char*)malloc(sizeof(char) * strlen(optarg) + 1))
-	    == NULL) {
+	    == 0) {
 	  fprintf(stderr, 
 		  "%s: cannot allocate memory for the input stream name\n", 
 		  programName);
@@ -366,18 +341,16 @@ main(int argc, char** argv)
  
   
   // scan input file if defined
-  if (inputPath != NULL) {
-    if ((inputStream = fopen(inputPath, "r")) == NULL) {
+  if (inputPath != 0) {
+    if ((inputStream = fopen(inputPath, "r")) == 0) {
       logEmit(LOG_ERR, "cannot open input stream: %s", inputPath); 
       goto error;
     }
   }
 
   // call scanner 
-  extra.lineNo = 1;
-  supp_set_extra (&extra, scanner);
   supp_set_in(inputStream, scanner);
-  if (supp_lex(NULL, scanner)) goto error;
+  if (supp_lex(0, scanner)) goto error; // never fails
   supp_lex_destroy(scanner);
   fclose(inputStream);
   /************************************************************************/

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.c,v 1.2 2014/11/13 16:36:27 nroche Exp $
+ * Version: $Id: ardsm.c,v 1.3 2015/06/03 14:03:37 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -41,10 +41,10 @@
 RGIT* 
 rgCreate(void)
 {
-  RGIT *item = NULL;
+  RGIT *item = 0;
   
-  if((item = (RGIT*)malloc(sizeof(RGIT))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot allocate a ring item");
+  if((item = (RGIT*)malloc(sizeof(RGIT))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot allocate a ring item");
     goto error;
   }
 
@@ -65,9 +65,9 @@ rgCreate(void)
 void 
 rgDestroy(RGIT* item)
 {
-  if(item != NULL) {
+  if(item != 0) {
     free(item);
-    item = NULL;
+    item = 0;
   }
   
   return;
@@ -87,7 +87,7 @@ void
 rgInit(RG* ring)
 {
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -141,14 +141,14 @@ int
 rgInsert(RG* ring, void* it)
 {
   int rc = FALSE;
-  RGIT *item = NULL;
+  RGIT *item = 0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
-  if ((item = rgCreate()) == NULL) 
+  if ((item = rgCreate()) == 0) 
     goto error;
 
   item->it = it;	/*	:	content	*/
@@ -182,7 +182,7 @@ rgInsert_r(RG* ring, void* it, RGIT** curr)
 {
   int rc = FALSE;
 
-  *curr = NULL;
+  *curr = 0;
   rc = rgInsert(ring, it);
   if (rc) *curr = ring->tail;
   return(rc);
@@ -200,14 +200,14 @@ int
 rgHeadInsert(RG* ring, void* it)
 {
   int rc = FALSE;
-  RGIT *item = NULL;
+  RGIT *item = 0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
-  if ((item = rgCreate()) == NULL) 
+  if ((item = rgCreate()) == 0) 
     goto error;
 
   item->it = it;	/*	:	content	*/
@@ -241,7 +241,7 @@ rgRemove(RG* ring)
   RGIT *temp = (RGIT *)0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -299,7 +299,7 @@ void rgRemove_r(RG* ring, RGIT** curr)
   RGIT *temp = (RGIT *)0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -359,7 +359,7 @@ rgCurrent(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -385,7 +385,7 @@ rgPrevious(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -422,7 +422,7 @@ rgNext(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -459,7 +459,7 @@ rgNext(RG* ring)
 /*   void *rc = (void *)0; */
   
 /*   if(ring == (RG *)0) { */
-/*     logEmit(LOG_ERR, "%s", "please do not provide an empty ring"); */
+/*     logMemory(LOG_ERR, "%s", "please do not provide an empty ring"); */
 /*     goto error; */
 /*   } */
 
@@ -484,9 +484,9 @@ rgNext(RG* ring)
 
 /* void* rgNext_r(RG* ring, RGIT** curr) */
 /* { */
-/*   if(!ring->head) return NULL; */
+/*   if(!ring->head) return 0; */
 /*   *curr = (*curr)? (*curr)->next : ring->head; */
-/*   return (void*)((*curr)? (*curr)->it : NULL); */
+/*   return (void*)((*curr)? (*curr)->it : 0); */
 /* } */
 
 /*=======================================================================
@@ -502,7 +502,7 @@ rgHead(RG* ring)
   void *rc = (void *)0;
   
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -527,7 +527,7 @@ void
 rgRewind(RG* ring)
 {
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
@@ -553,32 +553,32 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
   int nbItem = 0;	
   void** pItemArray;
   void*  pItem;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   if(ring == (RG *)0) {	
-    logEmit(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
     goto error;
   }
 
   if(ring->nbItems > 1) {
     if ((pItemArray = (void**)malloc(ring->nbItems * sizeof(void*))) 
 	== (void**)0) {
-      logEmit(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, "%s", 
 	      "malloc: cannot allocate an array to sort the ring");
       goto error;
     }
 
     nbItem = 0;
-    curr = NULL;
-    while((pItem = (void*)rgNext_r(ring, &curr)) != NULL) {	
+    curr = 0;
+    while((pItem = (void*)rgNext_r(ring, &curr)) != 0) {	
       pItemArray[nbItem++] = pItem;
     }
 	  
     qsort(pItemArray, nbItem, sizeof(void*), compar);
 	  
     nbItem = 0;
-    curr = NULL;
-    while((pItem = (void*)rgNext_r(ring, &curr)) != NULL) {	
+    curr = 0;
+    while((pItem = (void*)rgNext_r(ring, &curr)) != 0) {	
       curr->it = pItemArray[nbItem++];
     }
 	    
@@ -589,7 +589,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "rgSort fails");
+    logMemory(LOG_ERR, "%s", "rgSort fails");
   }
   return rc;
 }
@@ -603,16 +603,16 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
  *              void* pItem = item to look for
  *              int(*compar)(const void *, const void *) comparaison
  *              function betwen two items
- * Output     : a pointer on RGIT or NULL if not found
+ * Output     : a pointer on RGIT or 0 if not found
  =======================================================================*/
 RGIT*
 rgMatchItem(RG* ring, void* pItem, 
 	    int(*compar)(const void *, const void *))
 {
-  void* pIt = NULL;
-  RGIT* rc = NULL;
+  void* pIt = 0;
+  RGIT* rc = 0;
 
-  while((pIt = rgNext_r(ring, &rc)) != NULL) {
+  while((pIt = rgNext_r(ring, &rc)) != 0) {
     if (!compar(&pIt, &pItem)) break;
   }
 
@@ -625,15 +625,15 @@ rgMatchItem(RG* ring, void* pItem,
  * Synopsis   : int rgHaveItem(RG* ring, void* pItem)
  * Input      : RG* ring = ring to look into
  *              void* pItem = item to look for
- * Output     : a pointer on RGIT or NULL if not found
+ * Output     : a pointer on RGIT or 0 if not found
  =======================================================================*/
 RGIT*
 rgHaveItem(RG* ring, void* pItem)
 {
-  RGIT* rc = NULL;
-  void* pIt = NULL;
+  RGIT* rc = 0;
+  void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &rc)) != NULL) {
+  while((pIt = rgNext_r(ring, &rc)) != 0) {
     if (pIt == pItem) break;
   }
 
@@ -652,14 +652,14 @@ int
 rgDelItem(RG* ring, void* pItem)
 {
   int rc = 0;
-  RGIT* curr = NULL;
-  void* pIt = NULL;
+  RGIT* curr = 0;
+  void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &curr)) != NULL) {
+  while((pIt = rgNext_r(ring, &curr)) != 0) {
     if (pIt == pItem) break;
   }
 
-  if (pIt != NULL) {
+  if (pIt != 0) {
     rgRemove_r(ring, &curr);
     rc = 1;
   }
@@ -679,18 +679,18 @@ int
 rgShareItems(RG* ring1, RG* ring2)
 {
   int rc = FALSE;
-  RGIT* curr1 = NULL;
-  RGIT* curr2 = NULL;
-  void* pIt1 = NULL;
-  void* pIt2 = NULL;
+  RGIT* curr1 = 0;
+  RGIT* curr2 = 0;
+  void* pIt1 = 0;
+  void* pIt2 = 0;
 
   if (isEmptyRing(ring1)) goto end;
   if (isEmptyRing(ring2)) goto end;
   
   // O(n2) but rings should usaly only have 1 or 2 items
-  while((pIt1 = rgNext_r(ring1, &curr1)) != NULL) {
-    pIt2 = NULL;
-    while((pIt2 = rgNext_r(ring2, &curr2)) != NULL) {
+  while((pIt1 = rgNext_r(ring1, &curr1)) != 0) {
+    pIt2 = 0;
+    while((pIt2 = rgNext_r(ring2, &curr2)) != 0) {
       if (pIt1 == pIt2) {
 	rc = TRUE;
 	goto end;
@@ -723,17 +723,17 @@ cmpPtr(const void *p1, const void *p2)
  * Synopsis   : RG* rgInter(RG* ring1, RG* ring2)
  * Input      : RG* ring1
  *              RG* ring2
- * Output     : NULL on error
+ * Output     : 0 on error
  * Note       : the items on the resulting link are not dupplicated
  =======================================================================*/
 RG*
 rgInter(RG* ring1, RG* ring2)
 {
-  RG* rc = NULL;
-  RGIT* curr1 = NULL;
-  RGIT* curr2 = NULL;
-  void* pIt1 = NULL;
-  void* pIt2 = NULL;
+  RG* rc = 0;
+  RGIT* curr1 = 0;
+  RGIT* curr2 = 0;
+  void* pIt1 = 0;
+  void* pIt2 = 0;
 
   if (!rgSort(ring1, cmpPtr)) goto error;
   if (!rgSort(ring2, cmpPtr)) goto error;
@@ -769,17 +769,17 @@ rgInter(RG* ring1, RG* ring2)
  * Synopsis   : RG* rgUnion(RG* ring1, RG* ring2)
  * Input      : RG* ring1
  *              RG* ring2
- * Output     : NULL on error
+ * Output     : 0 on error
  * Note       : the items on the resulting link are not dupplicated
  =======================================================================*/
 RG*
 rgUnion(RG* ring1, RG* ring2)
 {
-  RG* rc = NULL;
-  RGIT* curr1 = NULL;
-  RGIT* curr2 = NULL;
-  void* pIt1 = NULL;
-  void* pIt2 = NULL;
+  RG* rc = 0;
+  RGIT* curr1 = 0;
+  RGIT* curr2 = 0;
+  void* pIt1 = 0;
+  void* pIt2 = 0;
 
   if (!rgSort(ring1, cmpPtr)) goto error;
   if (!rgSort(ring2, cmpPtr)) goto error;
@@ -826,17 +826,17 @@ rgUnion(RG* ring1, RG* ring2)
  * Synopsis   : RG* rgMinus(RG* ring1, RG* ring2)
  * Input      : RG* ring1
  *              RG* ring2
- * Output     : NULL on error
+ * Output     : 0 on error
  * Note       : the items on the resulting link are not dupplicated
  =======================================================================*/
 RG*
 rgMinus(RG* ring1, RG* ring2)
 {
-  RG* rc = NULL;
-  RGIT* curr1 = NULL;
-  RGIT* curr2 = NULL;
-  void* pIt1 = NULL;
-  void* pIt2 = NULL;
+  RG* rc = 0;
+  RGIT* curr1 = 0;
+  RGIT* curr2 = 0;
+  void* pIt1 = 0;
+  void* pIt2 = 0;
 
   if (!rgSort(ring1, cmpPtr)) goto error;
   if (!rgSort(ring2, cmpPtr)) goto error;
@@ -881,10 +881,10 @@ rgMinus(RG* ring1, RG* ring2)
 RG* 
 createRing()
 {
-  RG* rc = NULL;
+  RG* rc = 0;
 
-  if ((rc = (RG*)malloc(sizeof(RG))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot allocate a ring");
+  if ((rc = (RG*)malloc(sizeof(RG))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot allocate a ring");
     goto error;
   }
 							  
@@ -904,7 +904,7 @@ createRing()
 RG* 
 destroyOnlyRing(RG* self)
 {
-  if (self != NULL) {
+  if (self != 0) {
     rgDelete(self);
     free(self);
   } 
@@ -923,13 +923,13 @@ destroyOnlyRing(RG* self)
 RG* 
 destroyRing(RG* self, void* (*destroyItem)(void *))
 {
-  void* item = NULL;
-  RGIT* curr = NULL;
+  void* item = 0;
+  RGIT* curr = 0;
 	
-  if(self != NULL) {
+  if(self != 0) {
     //rgRewind(self);
-    while((item = (RG*)rgNext_r(self, &curr)) != NULL) {
-      if (destroyItem != NULL) {
+    while((item = (RG*)rgNext_r(self, &curr)) != 0) {
+      if (destroyItem != 0) {
 	item = destroyItem(item);
       }
     }
@@ -958,24 +958,24 @@ copyRing(RG* destination, RG* source,
 	 void* (*destroyItem)(void *),
 	 void* (*copyItem)(void *, const void *))
 {
-  void* sourceItem = NULL;
-  void* destinationItem = NULL;
-  RGIT* curr = NULL;
+  void* sourceItem = 0;
+  void* destinationItem = 0;
+  RGIT* curr = 0;
 
-  if(source == NULL) {
-    logEmit(LOG_ERR, "%s", "please do not provide an empty source ring");
+  if(source == 0) {
+    logMemory(LOG_ERR, "%s", "please do not provide an empty source ring");
     goto error;
   }
 
   destination = destroyRing(destination, destroyItem);
-  if ((destination = createRing()) == NULL) {
+  if ((destination = createRing()) == 0) {
     goto error;
   }
   
-  if(source != NULL) {
+  if(source != 0) {
     //rgRewind(source);
-    while((sourceItem = (void*)rgNext_r(source, &curr)) != NULL) {
-      if ((destinationItem = copyItem(destinationItem, sourceItem)) == NULL) {
+    while((sourceItem = (void*)rgNext_r(source, &curr)) != 0) {
+      if ((destinationItem = copyItem(destinationItem, sourceItem)) == 0) {
 	goto error;
       }
       
@@ -984,7 +984,7 @@ copyRing(RG* destination, RG* source,
 	goto error;
       }
       
-      destinationItem = NULL;
+      destinationItem = 0;
     }
     
     destination->nbItems = source->nbItems;
@@ -992,7 +992,7 @@ copyRing(RG* destination, RG* source,
   
   return destination;
  error:
-  logEmit(LOG_ERR, "%s", "fails to copy a ring");
+  logMemory(LOG_ERR, "%s", "fails to copy a ring");
   destination = destroyRing(destination, destroyItem);
   return destination;
 }
@@ -1008,7 +1008,7 @@ copyRing(RG* destination, RG* source,
  =======================================================================*/
 inline int isEmptyRing(RG* self)
 {
-  return (self == NULL || self->head == NULL)?TRUE:FALSE;
+  return (self == 0 || self->head == 0)?TRUE:FALSE;
 }
 
 /************************************************************************/
@@ -1057,9 +1057,9 @@ main(int argc, char** argv)
   char* E2[] = {       &E[1], &E[2], &E[3]};
   int i = 0;
   char *it = (char *)0;
-  RG* cont = NULL;
-  RG* ring = NULL;
-  RG* ring2 = NULL;
+  RG* cont = 0;
+  RG* ring = 0;
+  RG* ring2 = 0;
   FILE* hin = (FILE*)stdin;
   FILE* hout = (FILE*)stdout;
   char buffer[BUFSIZ];
@@ -1070,16 +1070,17 @@ main(int argc, char** argv)
   char* options = MEMORY_SHORT_OPTIONS"i:o:";
   struct option longOptions[] = {
     MEMORY_LONG_OPTIONS,
-    {"input", required_argument, NULL, 'i'},
-    {"output", required_argument, NULL, 'o'},
+    {"input", required_argument, 0, 'i'},
+    {"output", required_argument, 0, 'o'},
     {0, 0, 0, 0}
   };
 
   // import mdtx environment
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -1091,7 +1092,7 @@ main(int argc, char** argv)
 	rc = 2;
       }
       else {
-	if ((hin = fopen(optarg, "r")) == NULL) {
+	if ((hin = fopen(optarg, "r")) == 0) {
 	  fprintf(stderr, 
 		  "cannot open '%s' for input, "
 		  "will try to revert to the standard input\n", optarg);
@@ -1108,7 +1109,7 @@ main(int argc, char** argv)
 	rc = 2;
       }
       else {
-	if ((hin = fopen(optarg, "r")) == NULL) {
+	if ((hin = fopen(optarg, "r")) == 0) {
 	  fprintf(stderr, 
 		  "cannot open '%s' for input, "
 		  "will try to revert to the standard output\n", optarg);
@@ -1163,13 +1164,13 @@ main(int argc, char** argv)
   ring = destroyOnlyRing(ring);
   ring2 = destroyOnlyRing(ring2);
   /*------------------------------------------------------------------*/
-  if ((cont = createRing()) == NULL) goto error;
-  if ((ring2 = createRing()) == NULL) goto error;
+  if ((cont = createRing()) == 0) goto error;
+  if ((ring2 = createRing()) == 0) goto error;
   rgInit(cont);	/*	: ring initialisation (not needed) */
   fprintf(hout, 
 	  "Enter items, one per line.\nEnd the list by EOF (ctl-d)\n");
 		
-  while(fgets(buffer, BUFSIZ, hin) != NULL) {
+  while(fgets(buffer, BUFSIZ, hin) != 0) {
     if (!strcmp(buffer, "quit\n")) break;
 
     /*	content acquisition :	*/
@@ -1183,7 +1184,7 @@ main(int argc, char** argv)
   if ((ring = copyRing(ring, cont,
 		       (void*(*)(void*)) destroyString, 
 		       (void*(*)(void*, const void*)) copyString))
-      == NULL) goto error;
+      == 0) goto error;
 
   while((it = (char *)rgNext(ring)) != (char *)0) {
     /*	forward :	*/

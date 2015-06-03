@@ -1,7 +1,7 @@
 @cindex deliver
 
-This script finalize the delivering process, 
-by sending a mail to the @actorUser{}.
+This script finalize the delivering process, by sending a mail to the 
+@actorUser{}.
 
 Process conceptual model:
 @itemize @bullet

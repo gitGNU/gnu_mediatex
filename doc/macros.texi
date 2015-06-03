@@ -122,7 +122,8 @@
 @cindex mediatex
 @end macro
 @macro mediatex
-@mediatexO{} (@pxref{Conceptual model})
+@mediatexO{} 
+(@pxref{Conceptual model})
 @end macro
 
 @macro activityToolsO
@@ -130,7 +131,8 @@
 @cindex tools
 @end macro
 @macro activityTools
-@activityToolsO{} (@pxref{Tools})
+@activityToolsO{} 
+(@pxref{Tools})
 @end macro
 
 @macro activityScriptsO
@@ -138,7 +140,8 @@
 @cindex scripts
 @end macro
 @macro activityScripts
-@activityScriptsO{} (@pxref{Scripts})
+@activityScriptsO{} 
+(@pxref{Scripts})
 @end macro
 
 @macro activityServerO
@@ -146,14 +149,16 @@
 @cindex server
 @end macro
 @macro activityServer
-@activityServerO{} (@pxref{Server})
+@activityServerO{} 
+(@pxref{Server})
 @end macro
 
 @macro activityClientO
 @activity{Client}
 @end macro
 @macro activityClient
-@activityClientO{} (@pxref{Client})
+@activityClientO{} 
+(@pxref{Client})
 @end macro
 
 @c Processings

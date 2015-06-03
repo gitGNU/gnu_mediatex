@@ -2,14 +2,14 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: init.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
+# * Version: $Id: init.sh,v 1.3 2015/06/03 14:03:24 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
 # * This script setup the MediaTex software
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,12 +48,20 @@ JAIL_build $MDTX
 HTDOCS_configure_mdtx_viewvc
 HTDOCS_configure_mdtx_apache2
 
-/usr/sbin/a2ensite default-ssl
-/usr/sbin/a2enmod auth_digest autoindex env include rewrite userdir ssl
-/usr/sbin/invoke-rc.d apache2 restart
-/usr/sbin/invoke-rc.d rsyslog restart
-/sbin/ldconfig
+# only needed once
+if [ $MDTX = mdtx ]; then
+    /usr/sbin/a2enmod auth_digest autoindex env include rewrite userdir ssl
+    /usr/sbin/a2ensite default-ssl
+    /usr/sbin/invoke-rc.d rsyslog restart
+    /sbin/ldconfig
+fi
 
-/usr/sbin/update-rc.d ${MEDIATEX#/}d defaults
-/usr/sbin/invoke-rc.d ${MEDIATEX#/}d start $MDTX
+/usr/sbin/a2enconf mediatex ${MEDIATEX#/}-$MDTX.conf
+/usr/sbin/invoke-rc.d apache2 restart
+
+# script is not automatically installed for other instances than mdtx
+if [ $MDTX = mdtx ]; then
+    /usr/sbin/update-rc.d ${MEDIATEX#/}d defaults
+    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d start $MDTX
+fi
 Info "done"

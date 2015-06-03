@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.2 2014/11/13 16:37:12 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.3 2015/06/03 14:03:57 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
  * Function use by unit tests
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -42,10 +42,10 @@ utCleanCaches(void)
   int rc = FALSE;
  
   logEmit(LOG_NOTICE, "%s", "clean the cache");
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
-  char* argv[] = {"/bin/bash", "-c", NULL, NULL};
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+  char* argv[] = {"/bin/bash", "-c", 0, 0};
   char* cmd = "rm -fr ";
 
   logEmit(LOG_NOTICE, "%s", "clean cache for all collections");
@@ -59,7 +59,7 @@ utCleanCaches(void)
     if (!(argv[2] = createString(cmd))) goto error;
     if (!(argv[2] = catString(argv[2], coll->cacheDir))) goto error;
     if (!(argv[2] = catString(argv[2], "/*"))) goto error;
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
     argv[2] = destroyString(argv[2]);
   }
 
@@ -87,7 +87,7 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
 {
   int rc = FALSE;
 
-  char* argv[] = {"/bin/cp", "-f", NULL, NULL, NULL};
+  char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
 
   logEmit(LOG_NOTICE, "copy %s to the %s cache", srcfile, coll->label);
 
@@ -96,7 +96,7 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
   if (!(argv[2] = catString(argv[2], srcfile))) goto error;
 
   argv[3] = coll->cacheDir;
-  if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argv, 0, 0, FALSE)) goto error;
 
   rc = TRUE;
  error:
@@ -121,9 +121,9 @@ Record*
 utNewRecord(Collection* coll, char* hash, off_t size, 
 	    Type type, char* extra)
 {
-  Record* rc = NULL;
-  Archive* archive = NULL;
-  Record *record = NULL;
+  Record* rc = 0;
+  Archive* archive = 0;
+  Record *record = 0;
  
   logEmit(LOG_NOTICE, "add a generic demand for", hash);
   checkCollection(coll);
@@ -156,8 +156,8 @@ int
 utDemand(Collection* coll, char* hash, off_t size, char* mail)
 {
   int rc = FALSE;
-  Record *record = NULL;
-  char* extra = NULL;
+  Record *record = 0;
+  char* extra = 0;
  
   logEmit(LOG_NOTICE, "ask for %s file", hash);
   checkCollection(coll);
@@ -183,14 +183,14 @@ utDemand(Collection* coll, char* hash, off_t size, char* mail)
  =======================================================================*/
 RecordTree* ask4logo(Collection* coll, char* mail)
 {
-  RecordTree *rc = NULL;
-  Record *record = NULL;
-  RecordTree *tree = NULL;
-  char* extra = NULL;
+  RecordTree *rc = 0;
+  Record *record = 0;
+  RecordTree *tree = 0;
+  char* extra = 0;
 
   logEmit(LOG_NOTICE, "%s", "ask for logo.png");
 
-  if (mail != NULL) {
+  if (mail != 0) {
     if (!(extra = createString(mail))) goto error;
   }
   else {
@@ -202,16 +202,16 @@ RecordTree* ask4logo(Collection* coll, char* mail)
 		   DEMAND, extra)))
     goto error;
 
-  if ((tree = createRecordTree()) == NULL) goto error;
+  if ((tree = createRecordTree()) == 0) goto error;
   tree->collection = coll;
   tree->messageType = CGI;
   strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
 
   if (!rgInsert(tree->records, record)) goto error;
-  record = NULL;
+  record = 0;
 
   rc = tree;
-  tree = NULL;
+  tree = 0;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "fails to ask for logo.png");
@@ -230,10 +230,10 @@ RecordTree* ask4logo(Collection* coll, char* mail)
  =======================================================================*/
 RecordTree* providePart1(Collection* coll, char* path)
 {
-  RecordTree *rc = NULL;
-  Record *record = NULL;
-  RecordTree *tree = NULL;
-  char* extra = NULL;
+  RecordTree *rc = 0;
+  Record *record = 0;
+  RecordTree *tree = 0;
+  char* extra = 0;
 
   logEmit(LOG_NOTICE, "%s", "provide logoP1.cat");
 
@@ -242,17 +242,17 @@ RecordTree* providePart1(Collection* coll, char* path)
 	utNewRecord(coll, "1a167d608e76a6a4a8b16d168580873c", 20480, 
 		   SUPPLY, extra))) goto error;
 
-  if ((tree = createRecordTree()) == NULL) goto error;
+  if ((tree = createRecordTree()) == 0) goto error;
   tree->collection = coll;
   tree->messageType = HAVE;
   strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
 
   if (!rgInsert(tree->records, record)) goto error;
-  record = NULL;
+  record = 0;
 
 
   rc = tree;
-  tree = NULL;
+  tree = 0;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "fails to provide logoP1.cat");
@@ -271,10 +271,10 @@ RecordTree* providePart1(Collection* coll, char* path)
  =======================================================================*/
 RecordTree* providePart2(Collection* coll, char* path)
 {
-  RecordTree *rc = NULL;
-  Record *record = NULL;
-  RecordTree *tree = NULL;
-  char* extra = NULL;
+  RecordTree *rc = 0;
+  Record *record = 0;
+  RecordTree *tree = 0;
+  char* extra = 0;
   
   logEmit(LOG_NOTICE, "%s", "provide logoP2.cat");
 
@@ -284,16 +284,16 @@ RecordTree* providePart2(Collection* coll, char* path)
 		   SUPPLY, extra)))
     goto error;
 
-  if ((tree = createRecordTree()) == NULL) goto error;
+  if ((tree = createRecordTree()) == 0) goto error;
   tree->collection = coll;
   tree->messageType = HAVE;
   strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
 
   if (!rgInsert(tree->records, record)) goto error;
-  record = NULL;
+  record = 0;
 
   rc = tree;
-  tree = NULL;
+  tree = 0;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "fails to provide logoP2.cat");
@@ -316,7 +316,7 @@ RecordTree* providePart2(Collection* coll, char* path)
 void 
 utLog(char* format, void* topo, Collection* coll)
 { 
-  if (coll == NULL) {
+  if (coll == 0) {
     logEmit(LOG_NOTICE, "%s", 
 	    "----------------------------------------------------------");
     logEmit(LOG_NOTICE, format, topo);
@@ -329,7 +329,7 @@ utLog(char* format, void* topo, Collection* coll)
     logEmit(LOG_NOTICE, format, topo);
     logEmit(LOG_NOTICE, "%s", 
 	    "..........................................................");
-    serializeRecordTree(coll->cacheTree->recordTree, NULL, NULL);
+    serializeRecordTree(coll->cacheTree->recordTree, 0, 0);
     logEmit(LOG_NOTICE, "%s", 
 	    "----------------------------------------------------------");
   }

@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utExtractScore.sh,v 1.2 2014/11/13 16:36:25 nroche Exp $
+# * Version: $Id: utExtractScore.sh,v 1.3 2015/06/03 14:03:36 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *
 # * Unit test script for extractscore.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ set -e
 . ${srcdir}/../utMediatex.sh
 
 # run the unit test
-./utextractScore >ut.out 2>&1
+./utextractScore -sdebug >ut.out 2>&1
 
 # compare with the expected output
 mrProperOutputs

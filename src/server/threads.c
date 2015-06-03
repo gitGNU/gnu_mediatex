@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.2 2014/11/13 16:37:10 nroche Exp $
+ * Version: $Id: threads.c,v 1.3 2015/06/03 14:03:56 nroche Exp $
  * Project: MediaTeX
  * Module : server/threads
 
  * Handle sockets and signals
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -108,7 +108,7 @@ initThreadParamaters(pthread_attr_t *attr)
  * Description: Signal handler calling the callback function
  * Synopsis   : void* sigManager(void* arg)
  * Input      : void* arg
- * Output     : alway NULL
+ * Output     : alway 0
  * Note       : Concurency with serverManager (not with ourself)
                 May force exit (if it fails softly)
  =======================================================================*/
@@ -128,7 +128,7 @@ sigManager(void* arg)
 
   while (env.running) {
     sigNumber = -1;
-    if ((sigNumber = sigwaitinfo(&signalsToManage, NULL)) == -1) {
+    if ((sigNumber = sigwaitinfo(&signalsToManage, 0)) == -1) {
       if (errno == EINTR) continue; // so as to manage debugging with gdb
       logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
       goto error;
@@ -228,7 +228,7 @@ sigManager(void* arg)
 
     // create dedicated thread for signal query
     while ((rc = pthread_create(&signalTaskThread, &taskAttr,
-  				signalJob, NULL))) {
+  				signalJob, 0))) {
       logEmit(LOG_ERR, "pthread_create fails: %s", strerror(rc));
       if (rc == EAGAIN && try--) {
   	usleep(100000);
@@ -240,7 +240,7 @@ sigManager(void* arg)
   }
 
  error:
-  return (void*)NULL;
+  return (void*)0;
 }
 
 /*=======================================================================
@@ -277,7 +277,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
   int rc = FALSE;
   pthread_t socketTaskThread;
   int try = 5;
-  Connexion* connexion = NULL;
+  Connexion* connexion = 0;
   int port = -1;
 
   // connexion informations 
@@ -332,7 +332,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
   }
 
   // thread consume the connexion variables
-  connexion = NULL;
+  connexion = 0;
   sock = 0;
  end:
   rc = TRUE;
@@ -392,7 +392,7 @@ mainLoop()
   }
   
   // build the listenning socket for both remote and local connection
-  if (!buildSocketAddress(&address, NULL, "tcp", service)) {
+  if (!buildSocketAddress(&address, 0, "tcp", service)) {
     logEmit(LOG_ERR, "%s", "error while building socket address");
     goto error;
   }
@@ -409,7 +409,7 @@ mainLoop()
     rc = FALSE;
   }
   if (!mdtxShmFree()) rc = FALSE;
-  if (thread && (err = pthread_join(thread, NULL))) {
+  if (thread && (err = pthread_join(thread, 0))) {
     logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
@@ -462,7 +462,7 @@ hupManager()
 void* 
 signalJob(void* arg)
 {
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   int me = 0;
   long int rc = FALSE;
   ShmParam param;
@@ -507,7 +507,7 @@ void* socketJob(void* arg)
 {
   int me = 0;
   long int rc = FALSE;
-  Connexion* connexion = NULL;
+  Connexion* connexion = 0;
 
   me = taskSocketNumber;
   connexion = (Connexion*)arg;
@@ -572,7 +572,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

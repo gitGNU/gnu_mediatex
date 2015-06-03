@@ -2,7 +2,8 @@
 
 The @activity{Server} manage local cache integrity and 
 exchange files with other @sc{Mediatex}'s @activity{Server}s.
-@activityClient{} may ask it to updates the @dataChecksum{} file
+@activityClient{} may ask it to updates the 
+@dataChecksum{} file
 that gives the local cache's status.
 
 The @activity{server} activity is diveded into 6 process:
@@ -26,7 +27,7 @@ Flood diagram:
 @itemx @eventServerStop
 @item @eventServerReload
 from @procScriptsInitd
-@itemx @eventServerSaveReg
+@item @eventServerSaveReg
 from @procClientMisc
 @item @eventServerExtractReg
 @itemx @eventServerNotifyReg 
@@ -56,28 +57,30 @@ from @procServerDeliver{} to @procScriptsDeliver
 
 @item Data in
 @table @code
-@item @dataConf
+@c @item @dataConf
+@item @dataConfO (@pxref{mdtx.conf})
 @item @dataServers
 @end table
 
 @item Data in/out
 @table @code
-@item @dataChecksum
+@c @item @dataChecksum
+@item @dataChecksumO (@pxref{mdtxCOLL.md5})
 @end table
 @end itemize
 
 Options:
 @table @option
-@itemx -n
+@item -n
 @itemx --dry-run
 do a dry run
-@itemx -m
-@itemx --nice-limit
+@item -m
+@itemx --memory-limit
 Amount of RAM in Mo the soft try to run bellow
-@itemx -M
-@itemx --soft-limit
-Amount of RAM in Mo the soft may reach
-@itemx -c
+@item -M
+@itemx --debug-alloc	
+Debug information from malloc/free
+@item -c
 @itemx --conf-label
 Allow to manage several configurations (default is mdtx)
 @end table

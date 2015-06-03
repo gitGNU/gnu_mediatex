@@ -2,9 +2,6 @@
 Options +ExecCGI +FollowSymLinks
 AddHandler cgi-script .cgi
 
-# should not be needed
-DefaultType text/html
-
 <Files get.cgi>
        # set log severity
        SetEnv MDTX_LOG_FACILITY local2

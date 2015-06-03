@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: strdsm.c,v 1.2 2014/11/13 16:36:31 nroche Exp $
+ * Version: $Id: strdsm.c,v 1.3 2015/06/03 14:03:40 nroche Exp $
  * Project: MediaTeX
  * Module : strdsm
  *
@@ -40,14 +40,14 @@
 char* 
 createString(const char* content)
 {
-  char* rc = NULL;
+  char* rc = 0;
 
-  if (content == NULL) {
-    logEmit(LOG_WARNING, "%s", "create null String");
+  if (content == 0) {
+    logMemory(LOG_WARNING, "%s", "create null String");
   }
 
-  if ((rc = copyString(rc, content)) == NULL) {
-    logEmit(LOG_ERR, "malloc: cannot create String: \"%s\"", content);
+  if ((rc = copyString(rc, content)) == 0) {
+    logMemory(LOG_ERR, "malloc: cannot create String: \"%s\"", content);
   }
 
   return(rc);
@@ -67,14 +67,14 @@ createString(const char* content)
 char* 
 createSizedString(size_t size, const char* content)
 {
-  char* rc = NULL;
+  char* rc = 0;
 
-  if (content == NULL) {
-    logEmit(LOG_WARNING, "create null sized String: length=%i", size);
+  if (content == 0) {
+    logMemory(LOG_WARNING, "create null sized String: length=%i", size);
   }
 
-  if ((rc = copySizedString(size, rc, content)) == NULL) {
-    logEmit(LOG_ERR, "malloc: cannot create sized String: \"%s\" length=%i",
+  if ((rc = copySizedString(size, rc, content)) == 0) {
+    logMemory(LOG_ERR, "malloc: cannot create sized String: \"%s\" length=%i",
 	    content, size);
   }
 	
@@ -91,9 +91,9 @@ createSizedString(size_t size, const char* content)
 char* 
 destroyString(char* self)
 {
-  char* rc = NULL;
+  char* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     free(self);
   }
 	
@@ -114,21 +114,21 @@ destroyString(char* self)
 char* 
 copyString(char* destination, const char* source)
 {
-  char* rc = NULL;
+  char* rc = 0;
 
-  if(destination != NULL) {
+  if(destination != 0) {
     free(destination);
-    destination = NULL;
+    destination = 0;
   }
 
-  if(source != NULL) {
+  if(source != 0) {
     if ((destination 
 	 = (char*)malloc(sizeof(char) * (strlen(source) + 1)))
-	== NULL) {
-      logEmit(LOG_ERR, "%s", "malloc: cannot allocate String");
+	== 0) {
+      logMemory(LOG_ERR, "%s", "malloc: cannot allocate String");
     }
     
-    if(destination != NULL) {
+    if(destination != 0) {
       strcpy(destination, source);
     }
   }
@@ -154,21 +154,21 @@ copyString(char* destination, const char* source)
 char* 
 copySizedString(size_t size, char* destination, const char* source)
 {
-  char* rc = NULL;
+  char* rc = 0;
 
-  if(destination != NULL) {
+  if(destination != 0) {
     free(destination);
-    destination = NULL;
+    destination = 0;
   }
 
-  if(source != NULL) {
+  if(source != 0) {
     if ((destination 
 	 = (char*)malloc(sizeof(char) * (size + 1))) 
-	== NULL) {
-      logEmit(LOG_ERR, "%", "malloc: cannot allocate String");
+	== 0) {
+      logMemory(LOG_ERR, "%", "malloc: cannot allocate String");
     }
     
-    if(destination != NULL) {
+    if(destination != 0) {
       size_t eos = strlen(source);
       
       eos = ((eos <= size) ? eos : size);
@@ -195,25 +195,25 @@ catString(char* prefix, const char* suffix)
 {
   char* rc = prefix;
 
-  if(suffix != NULL) {
+  if(suffix != 0) {
     int size = strlen(suffix);
     
-    if(prefix != NULL) {
+    if(prefix != 0) {
       size += strlen(prefix);
     }
     
     if ((rc 
 	 = (char*)malloc(sizeof(char) * (size + 1))) 
-	== NULL) {
-      logEmit(LOG_ERR, "%s", "malloc: cannot allocate String");
+	== 0) {
+      logMemory(LOG_ERR, "%s", "malloc: cannot allocate String");
     }
     
-    if(rc != NULL) {
+    if(rc != 0) {
       /* on Solaris 10 u2 sparc, malloc doesn't sets memory to
 	 nil */
       memset(rc, 0, (size + 1));
       
-      if(prefix != NULL) {
+      if(prefix != 0) {
 	strcat(rc, prefix);
 	prefix = destroyString(prefix);
       }
@@ -236,7 +236,7 @@ catString(char* prefix, const char* suffix)
  =======================================================================*/
 inline int isEmptyString(const char* content)
 {
-  return (content == NULL || *content == (char)0)?TRUE:FALSE;
+  return (content == 0 || *content == (char)0)?TRUE:FALSE;
 }
 
 /*=======================================================================
@@ -307,16 +307,17 @@ main(int argc, char** argv)
   char* options = MEMORY_SHORT_OPTIONS"i:o:";
   struct option longOptions[] = {
     MEMORY_LONG_OPTIONS,
-    {"input", required_argument, NULL, 'i'},
-    {"output", required_argument, NULL, 'o'},
+    {"input", required_argument, 0, 'i'},
+    {"output", required_argument, 0, 'o'},
     {0, 0, 0, 0}
   };
 
   // import mdtx environment
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -328,7 +329,7 @@ main(int argc, char** argv)
 	rc = EINVAL;
       }
       else {
-	if ((hin = fopen(optarg, "r")) == NULL) {
+	if ((hin = fopen(optarg, "r")) == 0) {
 	  fprintf(stderr, 
 		  "cannot open '%s' for input, "
 		  "will try to revert to the standard input\n", optarg);
@@ -345,7 +346,7 @@ main(int argc, char** argv)
 	rc = EINVAL;
       }
       else {
-	if ((hin = fopen(optarg, "r")) == NULL) {
+	if ((hin = fopen(optarg, "r")) == 0) {
 	  fprintf(stderr, 
 		  "cannot open '%s' for input, "
 		  "will try to revert to the standard output\n", optarg);
@@ -364,8 +365,8 @@ main(int argc, char** argv)
   
   /************************************************************************/
   char buffer[BUFSIZ];
-  char* string = NULL;
-  char* copy = NULL;
+  char* string = 0;
+  char* copy = 0;
   
   char* prefix = createString("prefix");
   char* suffix = createString("/suffix");
@@ -385,17 +386,17 @@ main(int argc, char** argv)
   fprintf(hout, 
 	  "Enter items, one per line.\nEnd the list by EOF (ctl-d)\n");
 		
-  while(fgets(buffer, BUFSIZ, hin) != NULL) {	
+  while(fgets(buffer, BUFSIZ, hin) != 0) {	
     if (!strcmp(buffer, "quit\n")) break;
     
     fprintf(hout, "content = %s", buffer);
 
     fprintf(hout, "created = ");
-    if ((string = createString(buffer)) == NULL) goto error;
+    if ((string = createString(buffer)) == 0) goto error;
     fprintf(hout, "%s", string);
     
     fprintf(hout, "copied  = ");
-    if ((copy = copyString(copy, string)) == NULL) goto error;
+    if ((copy = copyString(copy, string)) == 0) goto error;
     fprintf(hout, "%s", copy);
     
     string = destroyString(string);
@@ -408,16 +409,16 @@ main(int argc, char** argv)
 	  "Only the first 4 characters are used for the creation\n"
 	  "Only the first 2 characters are copied\n");
 		
-  while(fgets(buffer, BUFSIZ, hin) != NULL)	{
+  while(fgets(buffer, BUFSIZ, hin) != 0)	{
 
     fprintf(hout, "content = %s", buffer);
     
     fprintf(hout, "created = ");
-    if ((string = createSizedString(4, buffer)) == NULL) goto error;
+    if ((string = createSizedString(4, buffer)) == 0) goto error;
     fprintf(hout, "%s\n", string);
 
     fprintf(hout, "copied  = ");
-    if ((copy = copySizedString(2, copy, string)) == NULL) goto error;
+    if ((copy = copySizedString(2, copy, string)) == 0) goto error;
     fprintf(hout, "%s\n", copy);
     
     string = destroyString(string);

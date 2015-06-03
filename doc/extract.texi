@@ -51,7 +51,7 @@ from @procServerCgiSrv{} or @procServerHave
 to @procServerCache
 @item @eventServerDeliver
 to @procServerDeliver
-@itemx @eventClientMiscGet
+@item @eventClientMiscGet
 to @procClientMisc
 @item @eventClientMiscSuppMount
 @itemx @eventClientMiscSuppUMount

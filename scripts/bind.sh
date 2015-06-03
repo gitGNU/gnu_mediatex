@@ -2,14 +2,14 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: bind.sh,v 1.2 2014/11/13 16:36:10 nroche Exp $
+# * Version: $Id: bind.sh,v 1.3 2015/06/03 14:03:23 nroche Exp $
 # * Project: MediaTex
 # * Module : bind script
 # *
 # * This script bind MediaTex directories into the chroot jail
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

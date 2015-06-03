@@ -1,11 +1,11 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.2 2014/11/13 16:37:07 nroche Exp $
+ * Version: $Id: deliver.c,v 1.3 2015/06/03 14:03:55 nroche Exp $
  * Project: MediaTeX
  *
  * Manage delivering mail
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ int
 callMail(Collection* coll, Record* record, char* address)
 {
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0, 0, 0, 0, 0};
   char available[16];
   char url[256];
   
@@ -76,7 +76,7 @@ callMail(Collection* coll, Record* record, char* address)
   argv[5] = url;
   
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -103,11 +103,11 @@ int
 deliverMail(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Record* record = NULL;
-  Record* record2 = NULL;
-  Record* next = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Record* record = 0;
+  Record* record2 = 0;
+  Record* next = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkArchive(archive);
@@ -155,12 +155,12 @@ int
 deliverMails(Collection* coll)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  char* path = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  Configuration* conf = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  char* path = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   int deliver = FALSE;
 
   logEmit(LOG_DEBUG, "delivering %s collection files to users",
@@ -172,10 +172,10 @@ deliverMails(Collection* coll)
 
   // for each cache entry
   while((archive = rgNext_r(coll->cacheTree->archives, &curr))
-	!= NULL) {
+	!= 0) {
 
     // look if archive is supplyed
-    if (archive->localSupply == NULL) continue;
+    if (archive->localSupply == 0) continue;
 
     // test if the file is really there
     path = destroyString(path);
@@ -192,7 +192,7 @@ deliverMails(Collection* coll)
 
     // look if we have final demands on it
     deliver = FALSE;
-    curr2 = NULL;
+    curr2 = 0;
     while((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) == FINALE_DEMAND) {
 	deliver = TRUE;
@@ -253,7 +253,7 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -261,7 +261,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -269,12 +269,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -295,17 +295,17 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
 
-  utLog("%s", "add a demand for logo.png:", NULL);
+  utLog("%s", "add a demand for logo.png:", 0);
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"nroche@narval.tk")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "deliver the mail:", NULL);
+  utLog("%s", "deliver the mail:", 0);
   if (!deliverMails(coll)) goto error;
   utLog("%s", "Finaly we have :", coll);
 

@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.2 2014/11/13 16:36:25 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.3 2015/06/03 14:03:35 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/upgrade
  *
  * Manage servers.txt upgrade from mediatex.conf and supports.txt
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -52,13 +52,13 @@
 int 
 scoreSupport(Support* supp, ScoreParam *p)
 {
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   time_t now = 0;
   time_t laps = 0;
   int rc = FALSE;
 
   checkSupport(supp);
-  logEmit(LOG_INFO, "compute support score for %s:%lli (%s)", 
+  logCommon(LOG_INFO, "compute support score for %s:%lli (%s)", 
 	  supp->fullHash, supp->size, supp->name);
 
   if (!(conf = getConfiguration())) goto error;
@@ -69,17 +69,17 @@ scoreSupport(Support* supp, ScoreParam *p)
 
   // check data consistancy
   if (supp->firstSeen > now) {
-    logEmit(LOG_ERR, "%s", "support firstSeen date is in the futur");
+    logCommon(LOG_ERR, "%s", "support firstSeen date is in the futur");
     goto error;
   }
 
   if (supp->firstSeen > supp->lastCheck) {
-    logEmit(LOG_ERR, "%s", "support lastCheck > firstSeen");
+    logCommon(LOG_ERR, "%s", "support lastCheck > firstSeen");
     goto error;
   }
 
   if (supp->lastCheck > supp->lastSeen) {
-    logEmit(LOG_ERR, "%s", "support lastCheck > lastSeen");
+    logCommon(LOG_ERR, "%s", "support lastCheck > lastSeen");
     goto error;
   }
 
@@ -88,7 +88,7 @@ scoreSupport(Support* supp, ScoreParam *p)
   if (conf->checkTTL < 0 ||
       (conf->checkTTL >= 0 &&
        laps > conf->checkTTL)) {
-    logEmit(LOG_WARNING, "\"%s\" support have expired since %d days",
+    logCommon(LOG_WARNING, "\"%s\" support have expired since %d days",
     	    supp->name, laps/(60*60*24));
     // score = 0: unchecked support for too many time (may be broken)
     goto end;
@@ -102,7 +102,7 @@ scoreSupport(Support* supp, ScoreParam *p)
     supp->score = 
       powf ( ((p->suppTTL - (float)laps) / p->suppTTL), 1 / p->powSupp ) 
       * (p->maxScore - p->badScore) + p->badScore;
-    logEmit(LOG_INFO, 
+    logCommon(LOG_INFO, 
 	    "laps < suppTTL: pow ( %.6f, 1/%.2f ) * %.2f + %.2f = %.2f", 
 	    ((p->suppTTL - (float)laps) / p->suppTTL),
 	    p->powSupp,
@@ -115,7 +115,7 @@ scoreSupport(Support* supp, ScoreParam *p)
     supp->score = 
       (1 / (1 + p->factSupp * (((float)laps - p->suppTTL) / p->suppTTL)) )
       * p->badScore; 
-    logEmit(LOG_INFO, 
+    logCommon(LOG_INFO, 
 	    "laps > suppTTL: (1 / (1 + %.2f * (%.2f)) ) * %.2f = %.2f",
 	    p->factSupp, ((float)laps - p->suppTTL) / p->suppTTL, 
 	    p->badScore, supp->score);
@@ -125,7 +125,7 @@ scoreSupport(Support* supp, ScoreParam *p)
   rc = TRUE;
  error:
   if (!rc && supp) {
-    logEmit(LOG_ERR, "%s", "scoreSupport fails");
+    logCommon(LOG_ERR, "%s", "scoreSupport fails");
   }
   return rc;
 }
@@ -143,29 +143,29 @@ int
 scoreLocalImages(Collection* coll)
 {
   int rc = FALSE;
-  ServerTree* serverTree = NULL;
-  Support* supp = NULL;
-  Archive* archive = NULL;
-  RG* images = NULL; // temporary objects
-  Image* image1 = NULL;
-  Image* image2 = NULL;
-  Image* image3 = NULL;
-  //char* label = NULL;
+  ServerTree* serverTree = 0;
+  Support* supp = 0;
+  Archive* archive = 0;
+  RG* images = 0; // temporary objects
+  Image* image1 = 0;
+  Image* image2 = 0;
+  Image* image3 = 0;
+  //char* label = 0;
   int nbSupp = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "scores for %s collection", coll->label);
+  logCommon(LOG_DEBUG, "scores for %s collection", coll->label);
 
 #ifndef utMAIN
   if (!loadConfiguration(SUPP)) goto error;
 #endif
 
-  if ((images = createRing()) == NULL)  goto error;
+  if ((images = createRing()) == 0)  goto error;
   serverTree = coll->serverTree;
 
   // for each support names:
   rgRewind(coll->supports);
-  while((supp = rgNext(coll->supports)) != NULL) {
+  while((supp = rgNext(coll->supports)) != 0) {
  
     // compute score on support (using collection's parameters)
     if (!scoreSupport(supp, &serverTree->scoreParam)) goto error;
@@ -173,7 +173,7 @@ scoreLocalImages(Collection* coll)
     // add supports to temporary ring
     if (!(archive = addArchive(coll, supp->fullHash, supp->size)))
       goto error;
-    if ((image1 = createImage()) == NULL) goto error;
+    if ((image1 = createImage()) == 0) goto error;
     image1->archive = archive;
     image1->score = supp->score;
     if (!rgInsert(images, image1)) goto error;
@@ -185,18 +185,18 @@ scoreLocalImages(Collection* coll)
    // for each group of support names:
   rgRewind(images);
   image1 = image2 = rgNext(images);
-  while (image1 != NULL) {
-    logEmit(LOG_INFO, "compute image score for %s:%lli", 
+  while (image1 != 0) {
+    logCommon(LOG_INFO, "compute image score for %s:%lli", 
 	    image1->archive->hash, image1->archive->size);
     nbSupp = 0;
 
     // while supports match the same image
-    while (image2 != NULL && 
+    while (image2 != 0 && 
 	   image1->archive == image2->archive) {
       
       // if not the first image, incremment the final score
       if (++nbSupp > 1) image1->score += image2->score;
-      logEmit(LOG_INFO, "%c %5.2f", 
+      logCommon(LOG_INFO, "%c %5.2f", 
 	      (nbSupp > 1)?'+':' ', image2->score);
 
       image2 = rgNext(images);
@@ -205,11 +205,11 @@ scoreLocalImages(Collection* coll)
     // truncate it if more than maxScore
     if (image1->score > serverTree->scoreParam.maxScore) {
       image1->score = serverTree->scoreParam.maxScore;
-      logEmit(LOG_INFO, "> %5.2f", coll->serverTree->scoreParam.maxScore);
+      logCommon(LOG_INFO, "> %5.2f", coll->serverTree->scoreParam.maxScore);
     }
 
-    logEmit(LOG_INFO, "-------", archive->imageScore);
-    logEmit(LOG_INFO, "= %5.2f", image1->score);
+    logCommon(LOG_INFO, "-------", archive->imageScore);
+    logCommon(LOG_INFO, "= %5.2f", image1->score);
 
     // finaly, add image1 to local server's images ring
     if (!(image3 = addImage(coll, coll->localhost, image1->archive))) 
@@ -224,7 +224,7 @@ scoreLocalImages(Collection* coll)
  error:
   images = destroyRing(images, (void*(*)(void*)) destroyImage);
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "scoreLocalImages fails");
+    logCommon(LOG_ERR, "%s", "scoreLocalImages fails");
   }
   return rc;
 }
@@ -242,15 +242,15 @@ static int
 serializeCvsRootClientFile(Collection* coll, char* dirpath)
 { 
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout; 
-  ServerTree* self = NULL;
+  ServerTree* self = 0;
   mode_t mask;
 
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
   checkServer(self->master);
-  logEmit(LOG_DEBUG, "%s", "serialize CVS/Root files");
+  logCommon(LOG_DEBUG, "%s", "serialize CVS/Root files");
 
   if (!(path = createString(dirpath)) ||
       !(path = catString(path, "/")) ||
@@ -259,8 +259,8 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
   // output file
   mask = umask(0117);
   if (!env.dryRun) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    if ((fd = fopen(path, "w")) == 0) {
+      logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
       goto error;
     }
   }
@@ -273,11 +273,11 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
   rc = TRUE;  
  error:  
   if (fd != stdout && fclose(fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
     rc = FALSE;
   }
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeCvsRootClientFile fails");
+    logCommon(LOG_ERR, "%s", "serializeCvsRootClientFile fails");
   }
   umask(mask);
   path = destroyString(path);
@@ -298,21 +298,21 @@ int
 scanCvsClientDirectory(Collection* coll, char* path) 
 {
   int rc = FALSE;
-  ServerTree* self = NULL;
+  ServerTree* self = 0;
   struct dirent** entries;
   struct dirent* entry;
   int nbEntries = 0;
   int n = 0;
-  char* subdir = NULL;
+  char* subdir = 0;
 
   if (!(self = coll->serverTree)) goto error;
   checkServer(self->master);
-  logEmit(LOG_DEBUG, "scaning CVS directory: %s", path);
+  logCommon(LOG_DEBUG, "scaning CVS directory: %s", path);
 
   entries = 0;
   if ((nbEntries 
-       = scandir(path, &entries, NULL, alphasort)) == -1) {
-    logEmit(LOG_ERR, "scandir fails on %s: %s", path, strerror(errno));
+       = scandir(path, &entries, 0, alphasort)) == -1) {
+    logCommon(LOG_ERR, "scandir fails on %s: %s", path, strerror(errno));
     goto error;
   }
 
@@ -345,7 +345,7 @@ scanCvsClientDirectory(Collection* coll, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "scanCvsClientDirectory fails");
+    logCommon(LOG_ERR, "%s", "scanCvsClientDirectory fails");
   }
   if (entries != 0) {
     for (n=0; n<nbEntries; ++n) {
@@ -379,16 +379,16 @@ int
 upgradeCollection(Collection* coll)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Server* localhost = NULL;
-  Server* master = NULL;
-  char* string = NULL;
-  RG* ring = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Server* localhost = 0;
+  Server* master = 0;
+  char* string = 0;
+  RG* ring = 0;
+  RGIT* curr = 0;
   int isMaster = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "upgradeCollection %s", coll->label);
+  logCommon(LOG_DEBUG, "upgradeCollection %s", coll->label);
   if (!(conf = getConfiguration())) goto error;
   if (!populateConfiguration()) goto error;
 
@@ -418,19 +418,19 @@ upgradeCollection(Collection* coll)
   // get networks and gateway from configuration
   ring = coll->networks;
   if (isEmptyRing(ring)) ring = conf->networks;
-  curr = NULL;
+  curr = 0;
   while ((string = rgNext_r(ring, &curr))) {
     if (!rgInsert(localhost->networks, string)) goto error;
   }
   ring = coll->gateways;
   if (isEmptyRing(ring)) ring = conf->gateways;
-  curr = NULL;
+  curr = 0;
   while ((string = rgNext_r(ring, &curr))) {
     if (!rgInsert(localhost->gateways, string)) goto error;
   }
 
   coll->localhost = localhost;
-  localhost = NULL;
+  localhost = 0;
 
   // add local images to serverTree
   if (!scoreLocalImages(coll)) goto error;
@@ -449,7 +449,7 @@ upgradeCollection(Collection* coll)
 
   // else we trust the servers.txt file
   if (!(master = coll->serverTree->master)) {
-    logEmit(LOG_ERR, "loose master server for %s collection", 
+    logCommon(LOG_ERR, "loose master server for %s collection", 
 	    coll->label);
     goto error;
   }
@@ -487,7 +487,7 @@ upgradeCollection(Collection* coll)
   rc = TRUE;
 error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "upgradeCollection fails");
+    logCommon(LOG_ERR, "%s", "upgradeCollection fails");
     // note: not a good idea to destroy localhost server on error,
     // as it may be used later
   }
@@ -530,8 +530,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -543,10 +543,11 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -568,7 +569,7 @@ main(int argc, char** argv)
   if (!expandCollection(coll)) goto error;
   if (!parseServerFile(coll, coll->serversDB)) goto error;
 
-  logEmit(LOG_DEBUG, "%s", "*** upgrade: ");
+  logCommon(LOG_DEBUG, "%s", "*** upgrade: ");
   if (!(populateConfiguration())) goto error;
   if (!upgradeCollection(coll)) goto error;
   if (!serializeServer(coll->localhost, stdout)) goto error;

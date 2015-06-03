@@ -1,3 +1,4 @@
+[notice confFile.y] parse configuration
 [notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] Clean the cache and add part1:
 [notice utFunc.c] ..........................................................
@@ -15,7 +16,6 @@
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
-[info openClose.c] records file is: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice utFunc.c] ----------------------------------------------------------
@@ -23,11 +23,9 @@
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] ask for 022a34b2f9b893fba5774237e1aa80ea file
 [notice utFunc.c] add a generic demand for
-[info cacheTree.c] state: UNUSED -> WANTED
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -44,7 +42,6 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] provide logoP1.cat
 [notice utFunc.c] add a generic demand for
-[info cacheTree.c] state: UNUSED -> USED
 [notice have.c] have an archive to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
@@ -57,7 +54,6 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] free   =    104857600
 [info cache.c] frozen =            0
 [info cache.c] avail  =    104857600
-[info cacheTree.c] state: USED -> ALLOCATED
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: /tmp/logoP1.cat
@@ -66,11 +62,9 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logoP1.cat to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
-[info cacheTree.c] state: ALLOCATED -> TOKEEP
 [notice extract.c] extract 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
-[info cacheTree.c] state: TOKEEP -> AVAILABLE
 [info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
@@ -91,11 +85,9 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cacheTree.c] state: AVAILABLE -> AVAILABLE
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -113,9 +105,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] provide logoP2.cat
 [notice utFunc.c] add a generic demand for
-[info cacheTree.c] state: UNUSED -> USED
 [notice have.c] have an archive to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cacheTree.c] state: AVAILABLE -> TOKEEP
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
@@ -125,7 +115,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] free   =    104837120
 [info cache.c] frozen =        20480
 [info cache.c] avail  =    104837120
-[info cacheTree.c] state: UNUSED -> ALLOCATED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat /tmp/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
@@ -133,10 +122,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
-[info cacheTree.c] state: ALLOCATED -> TOKEEP
 [notice extract.c] extract 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
-[info cacheTree.c] state: TOKEEP -> AVAILABLE
 [info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cache.c] need   =        24075
@@ -145,7 +132,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] free   =    104812574
 [info cache.c] frozen =        24546
 [info cache.c] avail  =    104833054
-[info cacheTree.c] state: WANTED -> ALLOCATED
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -156,20 +142,13 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cacheTree.c] state: ALLOCATED -> TOKEEP
 [notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
 [info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
-[info cacheTree.c] state: TOKEEP -> AVAILABLE
 [info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[info cacheTree.c] state: TOKEEP -> TOKEEP
-[info cacheTree.c] state: USED -> UNUSED
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -196,12 +175,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
-[info cacheTree.c] state: TOKEEP -> UNUSED
-[info cacheTree.c] state: AVAILABLE -> UNUSED
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
-[info confTree.c] free configuration
 [info have.c] exit on success

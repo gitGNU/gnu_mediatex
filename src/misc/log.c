@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.2 2014/11/13 16:36:41 nroche Exp $
+ * Version: $Id: log.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -66,7 +66,7 @@
 
 #include "log.h"
 
-LogHandler* DefaultLog = NULL;
+LogHandler* DefaultLog = 0;
 
 /*=======================================================================
  * Function   : logDefault (log) [MediaTeX]
@@ -79,9 +79,9 @@ LogHandler* DefaultLog = NULL;
 LogHandler* 
 logDefault(LogHandler* logHandler)
 {
-  LogHandler* rc = NULL;
+  LogHandler* rc = 0;
 
-  if(logHandler != NULL) {
+  if(logHandler != 0) {
     DefaultLog = logHandler;
   }
 
@@ -109,7 +109,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
   static const char* NilName = "unknown:nil";
   static const char* EmptyName = "unknown:empty";
 	
-  LogHandler* rc = NULL;
+  LogHandler* rc = 0;
   int fopenError = FALSE;
 	
   rc = (LogHandler*)malloc(sizeof(LogHandler));
@@ -117,8 +117,8 @@ logOpen(char* name, int facility, int severity, char* logFile)
   // rc->hlog is sometine already defined when re-opening the log
   memset(rc, 0, sizeof(LogHandler)); 
 				
-  if(rc != NULL) {
-    if(name == NULL) {
+  if(rc != 0) {
+    if(name == 0) {
       name = (char*)NilName;
     }
     else {
@@ -128,20 +128,20 @@ logOpen(char* name, int facility, int severity, char* logFile)
     }
 
     char* baseName = strrchr(name, '/');
-    name = (baseName == NULL) ? name : (baseName + 1);
+    name = (baseName == 0) ? name : (baseName + 1);
     
     rc->name = (char*)malloc(sizeof(char) * (strlen(name) + 1));
-    if(rc->name != NULL) {
+    if(rc->name != 0) {
       strcpy(rc->name, name);
       
       rc->facility = getLogFacilityByCode(facility);
-      if(rc->facility == NULL) {
+      if(rc->facility == 0) {
 	rc->facility = getLogFacilityByCode(MISC_LOG_FILE);
-	logFile = NULL;
+	logFile = 0;
       }
       
       rc->severity = getLogSeverityByCode(severity);
-      if(rc->severity == NULL) {
+      if(rc->severity == 0) {
 	rc->severity = getLogSeverityByCode(LOG_INFO);
       }
       
@@ -151,9 +151,9 @@ logOpen(char* name, int facility, int severity, char* logFile)
 		rc->facility->code);
       }
       else {
-	if(logFile != NULL && *logFile != (char)0) {
+	if(logFile != 0 && *logFile != (char)0) {
 	  rc->hlog = fopen(logFile, "a");
-	  if(rc->hlog == NULL) {
+	  if(rc->hlog == 0) {
 	    fopenError = TRUE;
 	  }
 	}
@@ -163,8 +163,8 @@ logOpen(char* name, int facility, int severity, char* logFile)
       //uname(&(rc->uname));
       //rc->pid = getpid();			
 
-      if(rc->facility->code == MISC_LOG_FILE && rc->hlog == NULL) {
-	if(rc->hlog == NULL) {
+      if(rc->facility->code == MISC_LOG_FILE && rc->hlog == 0) {
+	if(rc->hlog == 0) {
 	  rc->hlog = (FILE*)stderr;
 	  if(fopenError) {
 	    logEmit(LOG_WARNING, 
@@ -180,7 +180,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
     }
     else {
       free(rc);
-      rc = NULL;
+      rc = 0;
     }
   }
 	
@@ -208,20 +208,20 @@ logOpen(char* name, int facility, int severity, char* logFile)
 void 
 logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
 {
-  LogSeverity* severity = NULL;
+  LogSeverity* severity = 0;
   va_list args;
 
-  if(logHandler != NULL) {
-    if(format != NULL) {
+  if(logHandler != 0) {
+    if(format != 0) {
       //severity = getLogSeverityByCode(priority); // speed-up
       severity = LogSeverities + priority;
-      if(severity == NULL) {
+      if(severity == 0) {
 	severity = getLogSeverityByCode(LOG_INFO);
       }
 
       if(severity->code <= logHandler->severity->code) {
 	va_start(args, format);
-	if(logHandler->hlog == NULL) {
+	if(logHandler->hlog == 0) {
 	  vsyslog(priority, format, args);
 	}
 	else {
@@ -300,20 +300,20 @@ logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
 LogHandler* 
 logClose(LogHandler* logHandler)
 {
-  if(logHandler != NULL) {
+  if(logHandler != 0) {
       //logEmit(LOG_INFO, "stopped");
 		
-      if(logHandler->hlog == NULL) {
+      if(logHandler->hlog == 0) {
 	closelog();
       }
       else {
 	if(logHandler->hlog != (FILE*)stderr) {
 	  fclose(logHandler->hlog);
 	}
-	logHandler->hlog = NULL;
+	logHandler->hlog = 0;
       }
 
-      if(logHandler->name != NULL) {
+      if(logHandler->name != 0) {
 	free(logHandler->name);
       }
       
@@ -366,10 +366,10 @@ getLogFacility(char* name)
 {
   int rc = (int)-1;
 
-  if(name != NULL) {
+  if(name != 0) {
     LogFacility* facility = LogFacilities;
     
-    for(; facility->name != NULL; facility++) {
+    for(; facility->name != 0; facility++) {
       if(strcmp(facility->name, name) == 0) {
 	rc = facility->code;
       }
@@ -390,12 +390,12 @@ getLogFacility(char* name)
 LogFacility* 
 getLogFacilityByName(char* name)
 {
-  LogFacility* rc = NULL;
+  LogFacility* rc = 0;
 
-  if(name != NULL) {
+  if(name != 0) {
     LogFacility* facility = LogFacilities;
     
-    for(; facility->name != NULL; facility++) {
+    for(; facility->name != 0; facility++) {
       if(strcmp(facility->name, name) == 0) {
 	rc = facility;
       }
@@ -416,11 +416,11 @@ getLogFacilityByName(char* name)
 LogFacility* 
 getLogFacilityByCode(int code)
 {
-  LogFacility* rc = NULL;
+  LogFacility* rc = 0;
 
   LogFacility* facility = LogFacilities;
 
-  for(; facility->name != NULL; facility++) {
+  for(; facility->name != 0; facility++) {
     if(code == facility->code) {
       rc = facility;
     }
@@ -454,10 +454,10 @@ getLogSeverity(char* name)
 {
   int rc = (int)-1;
 
-  if(name != NULL) {
+  if(name != 0) {
     LogSeverity* severity = LogSeverities;
     
-    for(; severity->name != NULL; severity++) {
+    for(; severity->name != 0; severity++) {
       if(strcmp(severity->name, name) == 0) {
 	rc = severity->code;
       }
@@ -478,12 +478,12 @@ getLogSeverity(char* name)
 LogSeverity* 
 getLogSeverityByName(char* name)
 {
-  LogSeverity* rc = NULL;
+  LogSeverity* rc = 0;
 
-  if(name != NULL) {
+  if(name != 0) {
     LogSeverity* severity = LogSeverities;
     
-    for(; severity->name != NULL; severity++) {
+    for(; severity->name != 0; severity++) {
 	if(strcmp(severity->name, name) == 0) {
 	  rc = severity;
 	}
@@ -504,11 +504,11 @@ getLogSeverityByName(char* name)
 LogSeverity* 
 getLogSeverityByCode(int code)
 {
-  LogSeverity* rc = NULL;
+  LogSeverity* rc = 0;
 
   LogSeverity* severity = LogSeverities;
 
-  for(; severity->name != NULL; severity++) {
+  for(; severity->name != 0; severity++) {
     if(code == severity->code) {
       rc = severity;
     }
@@ -567,12 +567,12 @@ main(int argc, char** argv)
   int cOption = EOF;
 
   char* programName = *argv;
-  char* logFile = NULL;
+  char* logFile = 0;
 	
   int logFacility = -1;
   int logSeverity = -1;
 	
-  LogHandler* logHandler = NULL;
+  LogHandler* logHandler = 0;
 	
   while(TRUE) {
     cOption = getopt(argc, argv, ":f:s:l:h");
@@ -584,7 +584,7 @@ main(int argc, char** argv)
     switch(cOption) {
 
     case 'f':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the facility name\n", 
 		programName);
 	rc = 2;
@@ -607,7 +607,7 @@ main(int argc, char** argv)
       break;
       
     case 's':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the severity name\n", 
 		programName);
 	rc = 2;
@@ -630,7 +630,7 @@ main(int argc, char** argv)
       break;
 	
     case 'l':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the log stream\n", 
 		programName);
 	rc = 2;
@@ -643,7 +643,7 @@ main(int argc, char** argv)
 	}
 	else {
 	  logFile = (char*)malloc(sizeof(char) * strlen(optarg) + 1);
-	  if(logFile != NULL) {
+	  if(logFile != 0) {
 	    strcpy(logFile, optarg);
 	  }
 	  else {
@@ -685,7 +685,7 @@ main(int argc, char** argv)
   if(!rc)
     {
       logHandler = logOpen(programName, logFacility, logSeverity, logFile);
-      if(logHandler != NULL) {
+      if(logHandler != 0) {
 
 	  logDefault(logHandler);
 	  logEmit(LOG_EMERG, "%s", 
@@ -777,7 +777,7 @@ main(int argc, char** argv)
       logClose(logHandler);
     }
 
-  if(logFile != NULL) {
+  if(logFile != 0) {
     free(logFile);
   }
 	

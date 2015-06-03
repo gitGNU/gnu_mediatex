@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.2 2014/11/13 16:37:09 nroche Exp $
+ * Version: $Id: have.c,v 1.3 2015/06/03 14:03:56 nroche Exp $
  * Project: MediaTeX
  * Module : server/have
  *
  * Manage extraction from removable device
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,8 +47,8 @@ int haveArchive(ExtractData* data, Archive* archive);
 int haveContainer(ExtractData* data, Container* container)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  AVLNode *node = NULL;
+  FromAsso* asso = 0;
+  AVLNode *node = 0;
   int found = FALSE;
 
   checkCollection(data->coll);
@@ -85,8 +85,8 @@ int haveContainer(ExtractData* data, Container* container)
 int haveArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Record* record = 0;
+  RGIT* curr = 0;
   int deliver = FALSE;
 
   logEmit(LOG_DEBUG, "have an archive: %s:%lli", 
@@ -112,7 +112,7 @@ int haveArchive(ExtractData* data, Archive* archive)
 
     // (same code as extractArchives)
     data->context = X_STEP;
-    curr = NULL;
+    curr = 0;
     while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) == FINALE_DEMAND) {
 	data->context = X_MAIN;
@@ -131,8 +131,8 @@ int haveArchive(ExtractData* data, Archive* archive)
     // (same code as extractArchives)
     if (data->found) {
       // adjuste to-keep date
-      curr = NULL;
-      while((record = rgNext_r(archive->demands, &curr)) != NULL) {
+      curr = 0;
+      while((record = rgNext_r(archive->demands, &curr)) != 0) {
 	if (!keepArchive(data->coll, archive, getRecordType(record)))
 	  goto error;
 	if (getRecordType(record) == FINALE_DEMAND &&
@@ -164,8 +164,8 @@ static int
 addFinalSupplies(RecordTree* tree, Record** iso)
 {
   int rc = FALSE;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Record* record = 0;
+  RGIT* curr = 0;
   off_t maxSize = 0;
 
   while((record = rgNext_r(tree->records, &curr))) {
@@ -197,14 +197,14 @@ addFinalSupplies(RecordTree* tree, Record** iso)
 static int delFinalSupplies(RecordTree* tree)
 {
   int rc = FALSE;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Record* record = 0;
+  RGIT* curr = 0;
 
   while((record = rgNext_r(tree->records, &curr))) {
     if (!delCacheEntry(tree->collection, record)) goto error;
 
     // consume records from the tree
-    curr->it = NULL;
+    curr->it = 0;
   }
   rc = TRUE;
  error:
@@ -222,7 +222,7 @@ int
 extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
 {
   int rc = FALSE;
-  Record* iso = NULL;
+  Record* iso = 0;
   ExtractData data;
   (void) connexion;
 
@@ -230,7 +230,7 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
   if (!(data.toKeeps = createRing())) goto error;
 
   // get the archiveTree's collection
-  if ((data.coll = recordTree->collection) == NULL) {
+  if ((data.coll = recordTree->collection) == 0) {
     logEmit(LOG_ERR, "%s", "unknown collection for archiveTree");
     goto error;
   }
@@ -317,9 +317,8 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  char* inputRep2 = "/tmp"; // slash needed
-  Collection* coll = NULL;
-  RecordTree* tree = NULL;
+  Collection* coll = 0;
+  RecordTree* tree = 0;
   char path[1024];
   // ---
   int rc = 0;
@@ -328,7 +327,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -337,12 +336,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -363,30 +362,30 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
 
-  utLog("%s", "Clean the cache and add part1:", NULL);
+  utLog("%s", "Clean the cache and add part1:", 0);
   if (!utCleanCaches()) goto error;
 
   if (!quickScan(coll)) goto error;
-  utLog("%s", "add a demand for logo.png", NULL);
+  utLog("%s", "add a demand for logo.png", 0);
   if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 		"test@test.com")) goto error;
   utLog("%s", "Now we have :", coll);
 
-  utLog("%s", "provide part 1", NULL);
-  sprintf(path, "%s/logoP1.cat", inputRep2);
+  utLog("%s", "provide part 1", 0);
+  sprintf(path, "/tmp/logoP1.cat");
   if (!(tree = providePart1(coll, path))) goto error;
-  if (!extractFinaleArchives(tree, NULL)) goto error;
+  if (!extractFinaleArchives(tree, 0)) goto error;
   utLog("%s", "Now we have :", coll);
   tree = destroyRecordTree(tree);
 
-  utLog("%s", "provide part2", NULL);
-  sprintf(path, "%s/logoP2.cat", inputRep2);
+  utLog("%s", "provide part2", 0);
+  sprintf(path, "/tmp/logoP2.cat");
   if (!(tree = providePart2(coll, path))) goto error;
-  if (!extractFinaleArchives(tree, NULL)) goto error;
+  if (!extractFinaleArchives(tree, 0)) goto error;
   utLog("%s", "Now we have :", coll);
   tree = destroyRecordTree(tree);
  
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   /************************************************************************/
 

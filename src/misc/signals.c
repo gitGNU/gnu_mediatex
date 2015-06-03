@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: signals.c,v 1.2 2014/11/13 16:36:45 nroche Exp $
+ * Version: $Id: signals.c,v 1.3 2015/06/03 14:03:48 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
  * Signal manager
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ reEnableALL()
 {
   int rc = TRUE;
 
-  rc=rc&& (sigprocmask(SIG_SETMASK, &backupALL, NULL) == 0);
+  rc=rc&& (sigprocmask(SIG_SETMASK, &backupALL, 0) == 0);
   return rc;
 }
 
@@ -103,7 +103,7 @@ enableAlarm()
   rc=rc&& (sigdelset(&mask, SIGALRM) == 0);
   if (!rc) goto error;
 
-  if ((err = pthread_sigmask(SIG_SETMASK, &mask, NULL))) {
+  if ((err = pthread_sigmask(SIG_SETMASK, &mask, 0))) {
     logEmit(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
     rc = FALSE;
   }
@@ -128,7 +128,7 @@ disableAlarm()
   int rc = FALSE;
   int err = 0;
 
-  if ((err = pthread_sigmask(SIG_SETMASK, &signalsToManage, NULL))) {
+  if ((err = pthread_sigmask(SIG_SETMASK, &signalsToManage, 0))) {
     logEmit(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
     goto error;
   }
@@ -162,7 +162,7 @@ manageSignals(void* manager(void*), pthread_t* thread)
   rc=rc&& (sigdelset(&signalsToManage, SIGALRM) == 0);
   if (!rc) goto error;
 
-  rc = pthread_create(thread, NULL, manager, (void *)NULL);
+  rc = pthread_create(thread, 0, manager, (void *)0);
   if (rc != 0) {
     logEmit(LOG_ERR, "pthread_create fails: %s", strerror(rc));
     goto error;
@@ -197,7 +197,7 @@ empty(void* arg)
  * Description: Exemple for a signal manager
  * Synopsis   : void* sigManager(void* arg)
  * Input      : void* arg
- * Output     : NULL
+ * Output     : 0
  * Note       : Not interrupted by signals as sigwaitinfo wait for them
  *              and wake-up when a new signal is available
  =======================================================================*/
@@ -213,7 +213,7 @@ sigManager(void* arg)
   logEmit(LOG_DEBUG, "- kill -SIGTERM %i", getpid());
 
   while (running) {
-    if ((sigNumber = sigwaitinfo(&signalsToManage, NULL)) == -1) {
+    if ((sigNumber = sigwaitinfo(&signalsToManage, 0)) == -1) {
       logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
       goto error;
     }
@@ -297,7 +297,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {      
       GET_MISC_OPTIONS;
@@ -305,12 +305,12 @@ main(int argc, char** argv)
     if (rc) goto optError;
   }
 
-  if ((err = pthread_create(&thread, NULL, empty, (void *)NULL))) {
+  if ((err = pthread_create(&thread, 0, empty, (void *)0))) {
     logEmit(LOG_ERR, "pthread_create fails: %s", strerror(err));
     goto error;
   }
 
-  if ((err = pthread_join(thread, NULL))) {
+  if ((err = pthread_join(thread, 0))) {
     logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
@@ -324,7 +324,7 @@ main(int argc, char** argv)
     usleep(200000);
   }
 
-  if ((err = pthread_join(thread, NULL))) {
+  if ((err = pthread_join(thread, 0))) {
     logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }

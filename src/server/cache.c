@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.2 2014/11/13 16:37:05 nroche Exp $
+ * Version: $Id: cache.c,v 1.3 2015/06/03 14:03:55 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
  * Manage local cache directory and DB
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -43,12 +43,12 @@
  * Synopsis   : char* absCachePath(Collection* coll, char* path) 
  * Input      : Collection* coll = the related collection
  *              char* path = the relative path
- * Output     : absolute path, NULL on failure
+ * Output     : absolute path, 0 on failure
  =======================================================================*/
 char*
 getAbsCachePath(Collection* coll, char* path) 
 {
-  char* rc = NULL;
+  char* rc = 0;
 
   checkCollection(coll);
   checkLabel(path);
@@ -71,12 +71,12 @@ getAbsCachePath(Collection* coll, char* path)
  * Synopsis   : char* absoluteRecordPath(Collection* coll, Record* record) 
  * Input      : Collection* coll = the related collection
  *              Record* record = the related record
- * Output     : path where to find the record file, NULL on failure
+ * Output     : path where to find the record file, 0 on failure
  =======================================================================*/
 char*
 getAbsRecordPath(Collection* coll, Record* record) 
 {
-  char* rc = NULL;
+  char* rc = 0;
 
   checkCollection(coll);
   checkRecord(record);
@@ -117,11 +117,11 @@ int
 scanFile(Collection* coll, char* path, char* relativePath, int toKeep) 
 {
   int rc = FALSE;
-  RG* archives = NULL;
-  Archive* archive = NULL;
-  Record *record = NULL;
-  char* extra = NULL;
-  RGIT* curr = NULL;
+  RG* archives = 0;
+  Archive* archive = 0;
+  Record *record = 0;
+  char* extra = 0;
+  RGIT* curr = 0;
   struct stat statBuffer;
   Md5Data md5; 
 
@@ -142,10 +142,10 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
 
   // first try to look for file in cache
   archives = coll->cacheTree->archives;
-  while((archive = rgNext_r(archives, &curr)) != NULL) {
+  while((archive = rgNext_r(archives, &curr)) != 0) {
     
     if (archive->size != statBuffer.st_size) continue;
-    if ((record = archive->localSupply) == NULL) continue;
+    if ((record = archive->localSupply) == 0) continue;
     if (strcmp(record->extra, relativePath)) continue;
 
     // if already there do not compute the md5sums
@@ -212,26 +212,26 @@ scanRepository(Collection* coll, const char* path, int toKeep)
   struct dirent* entry;
   int nbEntries = 0;
   int n = 0;
-  char* absolutePath = NULL;
-  char* relativePath = NULL;
-  char* absolutePath2= NULL;
+  char* absolutePath = 0;
+  char* relativePath = 0;
+  char* absolutePath2= 0;
 
-  if (path == NULL) {
+  if (path == 0) {
     logEmit(LOG_ERR, "%s", 
 	    "please provide at least an empty string for path");
     goto error;
   }
 
-  if ((absolutePath = createString(coll->cacheDir)) == NULL ||
-      (absolutePath = catString(absolutePath, "/")) == NULL ||
-      (absolutePath = catString(absolutePath, path)) == NULL)
+  if ((absolutePath = createString(coll->cacheDir)) == 0 ||
+      (absolutePath = catString(absolutePath, "/")) == 0 ||
+      (absolutePath = catString(absolutePath, path)) == 0)
     goto error;
 
   logEmit(LOG_INFO, "scaning directory: %s", absolutePath);
 
   entries = 0;
   if ((nbEntries 
-       = scandir(absolutePath, &entries, NULL, alphasort)) == -1) {
+       = scandir(absolutePath, &entries, 0, alphasort)) == -1) {
     logEmit(LOG_ERR, "scandir fails on %s: %s", 
 	    absolutePath, strerror(errno));
     goto error;
@@ -243,8 +243,8 @@ scanRepository(Collection* coll, const char* path, int toKeep)
     if (!strcmp(entry->d_name, "..")) continue;
     if (!strcmp(entry->d_name, "toKeep")) toKeep = TRUE;
 
-    if ((relativePath = createString(path)) == NULL ||
-	(relativePath = catString(relativePath, entry->d_name)) == NULL)
+    if ((relativePath = createString(path)) == 0 ||
+	(relativePath = catString(relativePath, entry->d_name)) == 0)
       goto error;
     
     //logEmit(LOG_INFO, "scaning '%s'", relativePath);
@@ -252,14 +252,14 @@ scanRepository(Collection* coll, const char* path, int toKeep)
       switch (entry->d_type) {
 
       case DT_DIR: 
-	if ((relativePath = catString(relativePath, "/")) == NULL ||
+	if ((relativePath = catString(relativePath, "/")) == 0 ||
 	    !scanRepository(coll, relativePath, toKeep)) goto error;
 	break;
 	
       case DT_REG: 
-	if ((absolutePath2 = createString(absolutePath)) == NULL ||
+	if ((absolutePath2 = createString(absolutePath)) == 0 ||
 	    (absolutePath2 = catString(absolutePath2, entry->d_name)) 
-	    == NULL) goto error;
+	    == 0) goto error;
 	if (!scanFile(coll, absolutePath2, relativePath, toKeep)) goto error;
 	break;
 	
@@ -306,11 +306,11 @@ int
 quickScan(Collection* coll)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  Archive* next = NULL;
-  char* path = NULL;
-  RGIT* curr = NULL;
-  Record* supply = NULL;
+  Archive* archive = 0;
+  Archive* next = 0;
+  char* path = 0;
+  RGIT* curr = 0;
+  Record* supply = 0;
 
   logEmit(LOG_DEBUG, "updating cache for %s collection", coll->label);
   checkCollection(coll);
@@ -325,7 +325,7 @@ quickScan(Collection* coll)
   if (!(archive = rgNext_r(coll->cacheTree->archives, &curr))) goto end;
   do {
     next = rgNext_r(coll->cacheTree->archives, &curr);
-    if ((supply = archive->localSupply) == NULL) continue;
+    if ((supply = archive->localSupply) == 0) continue;
 
     // test if the file is really there 
     path = destroyString(path);
@@ -364,17 +364,17 @@ int
 quickScanAll(void)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "%s", "updating cache for all collections");
 
   // for all collection
   conf = getConfiguration();
-  if (conf->collections != NULL) {
+  if (conf->collections != 0) {
     if (!expandConfiguration()) goto error;
-    while((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
       if (!quickScan(coll)) goto error;
       if (!cleanCacheTree(coll)) goto error;
     }
@@ -402,17 +402,17 @@ static int
 freeCache(Collection* coll, off_t need, int* success)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  CacheTree* self = NULL;
-  Archive* archive = NULL;
-  //Archive* next = NULL;
-  Record* record = NULL;
-  RG* archives = NULL;
+  Configuration* conf = 0;
+  CacheTree* self = 0;
+  Archive* archive = 0;
+  //Archive* next = 0;
+  Record* record = 0;
+  RG* archives = 0;
   off_t free = 0;
   off_t available = 0;
   time_t date = 0;
-  char* path = NULL;
-  RGIT* curr = NULL;
+  char* path = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "free the %s cache", coll->label);
   *success = FALSE; 
@@ -519,16 +519,16 @@ int
 cacheAlloc(Record** record, Collection* coll, Archive* archive)
 {
   int rc = FALSE;
-  CacheTree* cache = NULL;
+  CacheTree* cache = 0;
   int success = FALSE;
-  char* extra = NULL;
+  char* extra = 0;
   int err = 0;
 
   checkCollection(coll);
   checkArchive(archive);
   cache = coll->cacheTree;
   logEmit(LOG_DEBUG, "allocate new record into %s cache", coll->label);
-  *record = NULL; // default output (allocation fails)
+  *record = 0; // default output (allocation fails)
 
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_ALLOC]))) {
     logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
@@ -552,7 +552,7 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
     if (!(extra = createString("!malloc"))) goto error2;
     if (!(*record = addRecord(coll, coll->localhost, archive, 
 			      SUPPLY, extra))) goto error2;
-    extra = NULL;
+    extra = 0;
 
     // add the record into the cache
     if (!addCacheEntry(coll, *record)) goto error2;
@@ -722,7 +722,7 @@ int
 extractCp(char* source, char* target)
 {
   int rc = FALSE;
-  char* argv[] = {"/bin/cp", "-f", NULL, NULL, NULL};
+  char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
 
   checkLabel(source);
   checkLabel(target);
@@ -731,7 +731,7 @@ extractCp(char* source, char* target)
   argv[2] = source;
   argv[3] = target;
 
-  if (!env.dryRun && !execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
 
   rc = TRUE;
  error:
@@ -753,12 +753,12 @@ int
 cacheUpload(Collection* coll, Record* record)
 {
   int rc = FALSE;
-  char* basename = NULL;
+  char* basename = 0;
   char targetRelDirname[24];
-  char* targetRelPath = NULL;
-  char* targetAbsDirname = NULL;
-  char* targetAbsPath = NULL;
-  Record* record2 = NULL;
+  char* targetRelPath = 0;
+  char* targetAbsDirname = 0;
+  char* targetAbsPath = 0;
+  Record* record2 = 0;
   struct stat statBuffer;
   struct tm date;
 
@@ -776,7 +776,7 @@ cacheUpload(Collection* coll, Record* record)
     goto error;
   }
   basename = strrchr(record->extra, '/');
-  basename = (basename == NULL) ? record->extra : (basename + 1);
+  basename = (basename == 0) ? record->extra : (basename + 1);
   sprintf(targetRelDirname, "/incoming/%04i-%02i/",
 	  date.tm_year + 1900, date.tm_mon+1);
   if (!(targetRelPath = createString(targetRelDirname + 1)) ||
@@ -790,13 +790,13 @@ cacheUpload(Collection* coll, Record* record)
   // assert target path is not already used
   if (stat(targetAbsPath, &statBuffer) == 0) {
     logEmit(LOG_WARNING, "target path already exists: %s", targetAbsPath);
-    goto error;
+    goto end;
   }
 
   // assert archive is new
-  if ((record->archive->localSupply) != NULL) {
+  if ((record->archive->localSupply) != 0) {
     logEmit(LOG_WARNING, "%s", "archive already exists");
-    goto error;
+    goto end;
   }
 
   // ask for place in cache and build record
@@ -809,8 +809,9 @@ cacheUpload(Collection* coll, Record* record)
   // toggle !malloc record to local-supply...
   record2->extra = destroyString(record2->extra);
   record2->extra = targetRelPath;
-  targetRelPath = NULL;
+  targetRelPath = 0;
 
+ end:
   rc = TRUE;
  error:
   if (!rc) {
@@ -835,15 +836,15 @@ int
 uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Record* record = NULL;
-  Archive* archive = NULL;
+  Collection* coll = 0;
+  Record* record = 0;
+  Archive* archive = 0;
   (void) connexion;
 
   logEmit(LOG_DEBUG, "%s", "work on upload message");
 
   // get the archiveTree's collection
-  if ((coll = recordTree->collection) == NULL) {
+  if ((coll = recordTree->collection) == 0) {
     logEmit(LOG_ERR, "%s", "unknown collection for archiveTree");
     goto error;
   }
@@ -918,11 +919,11 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  Collection* coll = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  Record* record = 0;
   off_t size = 0;
-  char* extra = NULL;
+  char* extra = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -930,7 +931,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -939,12 +940,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -965,10 +966,10 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;  
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
 
-  utLog("%s", "Scan the cache directory :", NULL);
+  utLog("%s", "Scan the cache directory :", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
@@ -978,7 +979,7 @@ main(int argc, char** argv)
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan gives :", coll);
 
-  utLog("%s", "Keep logoP1.iso and logoP2.iso:", NULL);
+  utLog("%s", "Keep logoP1.iso and logoP2.iso:", 0);
   if (!(archive =
   	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
     goto error;
@@ -990,40 +991,40 @@ main(int argc, char** argv)
   utLog("%s", "Now we have :", coll);
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for too much place :", NULL);
+  utLog("%s", "Ask for too much place :", 0);
   size = coll->cacheTree->totalSize - 2*KILO;
   if (!(archive = addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   			     size))) goto error;
   if (cacheAlloc(&record, coll, archive)) goto error;
-  utLog("reply : %i", (void*)(record!=NULL), coll); // 0: too much
+  utLog("reply : %i", (void*)(record!=0), coll); // 0: too much
   
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for little place so do not suppress anything :", NULL);
+  utLog("%s", "Ask for little place so do not suppress anything :", 0);
   size = coll->cacheTree->totalSize;
   size -= coll->cacheTree->useSize; // free size
   size -= 2*KILO;
   archive->size = size;
-  record = NULL;
+  record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
   record->extra[0]='*';
-  utLog("reply : %i", (void*)(record!=NULL), coll); // 1: already avail
+  utLog("reply : %i", (void*)(record!=0), coll); // 1: already avail
   if (!delCacheEntry(coll, record)) goto error;
   if (!delRecord(coll, record)) goto error;
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for place so as we need to suppress files :", NULL);
+  utLog("%s", "Ask for place so as we need to suppress files :", 0);
   size = coll->cacheTree->totalSize;
   size -= coll->cacheTree->frozenSize; // available size
   size -= 2*KILO;
   if (!(archive = addArchive(coll, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   			    size))) goto error;
-  record = NULL;
+  record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
   record->extra[0]='*';
-  utLog("reply : %i", (void*)(record!=NULL), coll); // 1: del some entries
+  utLog("reply : %i", (void*)(record!=0), coll); // 1: del some entries
 
   /*--------------------------------------------------------*/
-  utLog("%s", "API to upload files :", NULL);
+  utLog("%s", "API to upload files :", 0);
   if (!(extra = createString(inputRep))) goto error;
   if (!(extra = catString(extra, "/../../examples/"))) goto error;
   if (!(extra = catString(extra, "README"))) goto error;
@@ -1031,12 +1032,12 @@ main(int argc, char** argv)
   			    1937))) goto error;
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
-  extra = NULL;
+  extra = 0;
   if (!cacheUpload(coll, record)) goto error;
   utLog("reply : %s", "upload ok", coll);
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   /************************************************************************/
 

@@ -35,7 +35,7 @@ mediatex_TEXINFOS = \
 	serv.texi conf.texi supp.texi misc.texi motd.texi \
 	data.texi mdtx.conf.texi supports.txt.texi mdtx-COLL.md5.texi \
 	catalog.txt.texi extract.txt.texi servers.txt.texi \
-	useCase.texi consistency.texi fdl.texi
+	useCase.texi consistency.texi bugs.texi fdl.texi
 
 # to force install-html ?
 # install-data-local: install-html

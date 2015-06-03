@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utHave.sh,v 1.2 2014/11/13 16:37:12 nroche Exp $
+# * Version: $Id: utHave.sh,v 1.3 2015/06/03 14:03:58 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
 # * Unit test script for have.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@ set -e
 cp ${srcdir}/../../examples/logoP1.cat /tmp
 cp ${srcdir}/../../examples/logoP2.cat /tmp
 ./uthave -d ${srcdir} >ut.out 2>&1
+rm -f /tmp/logoP1.cat
+rm -f /tmp/logoP2.cat
 
 # compare with the expected output
 mrProperOutputs

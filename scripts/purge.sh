@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: purge.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
+# * Version: $Id: purge.sh,v 1.3 2015/06/03 14:03:24 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -10,7 +10,7 @@ set -e
 # * ... to be copy past into debian/postrm for purge
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,14 +32,18 @@ set -e
 [ ! -z $MDTX_SH_USERS ]   || source $libdir/users.sh
 [ ! -z $MDTX_SH_SSH ]     || source $libdir/ssh.sh
 [ ! -z $MDTX_SH_JAIL ]    || source $libdir/jail.sh
+[ ! -z $MDTX_SH_HTDOCS ]  || source $libdir/htdocs.sh
 
 Debug "purge"
 [ $(id -u) -eq 0 ] || Error "need to be root"
 [ ! -z "$MDTX_MDTXUSER" ] || 
 Error "expect MDTX_MDTXUSER variable to be set by the environment"
 
-invoke-rc.d ${MEDIATEX#/}d stop $MDTX
-update-rc.d -f ${MEDIATEX#/}d remove
+# only the init script for mdtx server is manage here
+if [ $MDTX = mdtx ]; then
+    invoke-rc.d ${MEDIATEX#/}d stop $MDTX
+    update-rc.d -f ${MEDIATEX#/}d remove
+fi
 
 JAIL_unbind
 SSH_chroot_login no
@@ -52,6 +56,11 @@ done
 USERS_mdtx_remove_user
 USERS_root_disease
 
+/usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
+HTDOCS_unconfigure_mdtx_apache2
+
 Info "Please check if these apache modules we were using are still needed:"
 Info "* auth_digest autoindex env include rewrite userdir ssl"
 Info "done"
+
+/usr/sbin/invoke-rc.d apache2 restart

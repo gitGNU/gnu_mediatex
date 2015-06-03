@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.2 2014/11/13 16:36:39 nroche Exp $
+ * Version: $Id: device.c,v 1.3 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * Device informations
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
  * Description: return the absolute path (and resolv symlinks into dirname)
  * Synopsis   : char* absolutePath(char* path)
  * Input      : char* path: potential relative path
- * Output     : char*: absolute path (NULL on error)
+ * Output     : char*: absolute path (0 on error)
 
  * should work for all possible input paths:
  *   file
@@ -44,15 +44,15 @@
 char* 
 absolutePath(char* path)
 {
-  char* rc = NULL;
-  char* pwd1 = NULL;
-  char *pwd2 = NULL;
-  char *base = NULL;
+  char* rc = 0;
+  char* pwd1 = 0;
+  char *pwd2 = 0;
+  char *base = 0;
   int len2 = 0, i=0;
   char car = (char)0;
 
   // remind the current directory for cd back into
-  if ((pwd1 = getcwd(NULL, 0)) == NULL) {
+  if ((pwd1 = getcwd(0, 0)) == 0) {
     logEmit(LOG_ERR, "getcwd: %s", strerror(errno));
     goto error;
   }
@@ -66,7 +66,7 @@ absolutePath(char* path)
   for (i=strlen(path); i>0 && path[i] != '/'; --i);
   if (i == 0) { // here, no directory
     pwd2 = pwd1;
-    pwd1 = NULL;
+    pwd1 = 0;
     base = path; // basename if relative path
   }
   else {
@@ -80,7 +80,7 @@ absolutePath(char* path)
     }
 
     // get the absolute dirname
-    if ((pwd2 = getcwd(NULL, 0)) == NULL) {
+    if ((pwd2 = getcwd(0, 0)) == 0) {
       logEmit(LOG_ERR, "getcwd: %s", strerror(errno));
       goto error;
     }
@@ -95,12 +95,12 @@ absolutePath(char* path)
     path[i+1] = car; // path rewind as it was provided
     base = path+i+1; // the basename 
     free(pwd1);
-    pwd1 = NULL;
+    pwd1 = 0;
   }
 
   // concatenate absolute dirname and the basename
   len2 = strlen(pwd2);
-  if ((rc = malloc(len2 + 1 + strlen(base) + 1)) == NULL) {
+  if ((rc = malloc(len2 + 1 + strlen(base) + 1)) == 0) {
     logEmit(LOG_ERR, "cannot malloc absolute path: %s", strerror(errno));
     goto error;
   }
@@ -129,13 +129,13 @@ absolutePath(char* path)
  * Synopsis   : symlinkTarget(char* path)
  * Input      : char* path: path to test
  * Output     : char*: path to target file
- *                     NULL if not a symlink
+ *                     0 if not a symlink
  =======================================================================*/
 char* symlinkTarget(char* path) {
-  char* rc = NULL;
+  char* rc = 0;
   struct stat statBuffer;
 
-  if (path == NULL || *path == (char)0) {
+  if (path == 0 || *path == (char)0) {
     logEmit(LOG_ERR, "%s", "please provide a path for the path");
     goto error;
   }
@@ -155,7 +155,7 @@ char* symlinkTarget(char* path) {
 
   /* The size of a symbolic  link  is the length of the pathname 
      it contains, without a terminating null byte. */
-  if ((rc = malloc(statBuffer.st_size+1)) == NULL) {
+  if ((rc = malloc(statBuffer.st_size+1)) == 0) {
     logEmit(LOG_ERR, "cannot malloc symlink path: %s", strerror(errno));
     goto error;
   }
@@ -185,14 +185,14 @@ char* symlinkTarget(char* path) {
  =======================================================================*/
 char* mount2device(char* absPath)
 {
-  char* rc = NULL;
-  FILE* mtab = NULL;
+  char* rc = 0;
+  FILE* mtab = 0;
   struct mntent mntEntry;
   const int buflen = 255;
   char buf[buflen];
 
   // loop on mtab
-  if ((mtab = setmntent(MISC_CHECKSUMS_MTAB, "r")) == NULL) {
+  if ((mtab = setmntent(MISC_CHECKSUMS_MTAB, "r")) == 0) {
     logEmit(LOG_ERR, "setmntent error on %s: %s", 
 	    MISC_CHECKSUMS_MTAB, strerror(errno));
     goto error;
@@ -200,7 +200,7 @@ char* mount2device(char* absPath)
   
   errno = 0;
   while(1) {
-    if (getmntent_r(mtab, &mntEntry, buf, buflen) == NULL)  {
+    if (getmntent_r(mtab, &mntEntry, buf, buflen) == 0)  {
       if (errno == 0) break;
       logEmit(LOG_ERR, "getmntent_r error: %s", strerror(errno));
       goto error;
@@ -208,7 +208,7 @@ char* mount2device(char* absPath)
 
     // looking for matchin dirname
     if (!strncmp(mntEntry.mnt_dir, absPath, strlen(absPath))) {
-      if ((rc = malloc(strlen(mntEntry.mnt_fsname)+1)) == NULL) {
+      if ((rc = malloc(strlen(mntEntry.mnt_fsname)+1)) == 0) {
 	logEmit(LOG_ERR, "cannot malloc device path: %s", strerror(errno));
 	goto error;
       }
@@ -244,14 +244,14 @@ char* mount2device(char* absPath)
 int normalizePath(char* inPath, char** outPath)
 {
   int rc = FALSE;
-  char* path = NULL;
-  char* absPath = NULL;
-  char* basename = NULL;
+  char* path = 0;
+  char* absPath = 0;
+  char* basename = 0;
   int i = 0;
   int nbLink = 0;
 
   path = inPath;
-  if (path == NULL || *path == (char)0) {
+  if (path == 0 || *path == (char)0) {
     logEmit(LOG_ERR, "%s", "please provide a path for the device");
     goto error;
   }
@@ -262,7 +262,7 @@ int normalizePath(char* inPath, char** outPath)
     if (basename) free(basename);
     
     // get absolute path
-    if ((absPath = absolutePath(path)) == NULL) {
+    if ((absPath = absolutePath(path)) == 0) {
       goto error;
     }
     if (path && path != inPath) free(path);
@@ -271,7 +271,7 @@ int normalizePath(char* inPath, char** outPath)
     for (i=strlen(absPath); i>0 && absPath[i] != '/'; --i);
 
     // look for symlink
-    if ((basename = symlinkTarget(absPath)) != NULL) {
+    if ((basename = symlinkTarget(absPath)) != 0) {
       ++nbLink;
 
       // if an absolute symlink delete the previous path
@@ -281,7 +281,7 @@ int normalizePath(char* inPath, char** outPath)
       absPath[i+1] = (char)0; // now absPath is the dirname
       
       if ((path = malloc(strlen(absPath) + strlen(basename) + 1))
-  	  == NULL) {
+  	  == 0) {
   	logEmit(LOG_ERR, "cannot malloc path: %s", strerror(errno));
   	goto error;
       }
@@ -295,10 +295,10 @@ int normalizePath(char* inPath, char** outPath)
     }
     else {
       path = absPath;
-      absPath = NULL;
+      absPath = 0;
     }
 
-  } while (nbLink < MISC_CHECKSUMS_MAX_NBLINK && basename != NULL);
+  } while (nbLink < MISC_CHECKSUMS_MAX_NBLINK && basename != 0);
   if (nbLink >= MISC_CHECKSUMS_MAX_NBLINK) {
     logEmit(LOG_ERR, "reach %i symlinks (is there a loop ?)",
   	    MISC_CHECKSUMS_MAX_NBLINK);
@@ -306,7 +306,7 @@ int normalizePath(char* inPath, char** outPath)
   }
   
   *outPath = path;
-  path = NULL;
+  path = 0;
   rc = TRUE;
  error:
   if (!rc) {
@@ -329,8 +329,8 @@ int normalizePath(char* inPath, char** outPath)
 int getDevice(char* inPath, char** outPath)
 {
   int rc = FALSE;
-  char *oldPath = NULL;
-  char *newPath = NULL;
+  char *oldPath = 0;
+  char *newPath = 0;
 
   logEmit(LOG_DEBUG, "%s", "getDevice");
   
@@ -339,7 +339,7 @@ int getDevice(char* inPath, char** outPath)
   /*
   // find if one device matchs in mtab
   oldPath = newPath;
-  if ((newPath = mount2device(oldPath)) != NULL) {
+  if ((newPath = mount2device(oldPath)) != 0) {
     oldPath = newPath;
     if (!normalizePath(oldPath, &newPath)) goto error;
   } else {
@@ -370,7 +370,7 @@ int isBlockDevice(char* path, int* isB) {
   logEmit(LOG_DEBUG, "%s", "isBlockDevice");
   *isB = FALSE;
 
-  if (path == NULL || *path == (char)0) {
+  if (path == 0 || *path == (char)0) {
     logEmit(LOG_ERR, "%s", "please provide a path for the device");
     goto error;
   }
@@ -528,8 +528,8 @@ static void usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
-  char* devicePath = NULL;
+  char* inputPath = 0;
+  char* devicePath = 0;
   int isBlockDev = FALSE;
   int fd = 0;
   off_t size = 0;
@@ -542,7 +542,7 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"input-file", required_argument, NULL, 'i'},
+    {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
   
@@ -550,18 +550,18 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'i':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the input device\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the input device path: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -580,7 +580,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (inputPath == NULL) {
+  if (inputPath == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide an input device path");
     goto error;

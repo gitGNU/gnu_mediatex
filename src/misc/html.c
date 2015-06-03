@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: html.c,v 1.2 2014/11/13 16:36:40 nroche Exp $
+ * Version: $Id: html.c,v 1.3 2015/06/03 14:03:45 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
  * HTML generator
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,10 +38,10 @@ int
 htmlCaps(FILE* fd, char* text)
 {
   int rc = FALSE;
-  char* string = NULL;
+  char* string = 0;
   int l = 0;
 
-  if (text == NULL) goto error;
+  if (text == 0) goto error;
   logEmit(LOG_DEBUG, "%s", "htmlCaps");
 
   l = strlen(text);
@@ -480,7 +480,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

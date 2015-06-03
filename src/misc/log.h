@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.h,v 1.2 2014/11/13 16:36:42 nroche Exp $
+ * Version: $Id: log.h,v 1.3 2015/06/03 14:03:46 nroche Exp $
  * Project: MediaTex
  * Module : log
  *
@@ -112,20 +112,68 @@ extern LogHandler* logClose(LogHandler* logHandler);
   } while (0)
 
 /*=======================================================================
+ * Macro      : logAlloc
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the memory allocations
+ * Synopsis   : void logAlloc(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logAlloc(priority, format, ...) {				\
+    if (priority < LOG_INFO || env.debugMemory == TRUE) {		\
+      logEmit(priority, format, __VA_ARGS__);				\
+    }									\
+  }									\
+
+/*=======================================================================
+ * Macro      : logMemory
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the memory objects
+ * Synopsis   : void logMemory(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logMemory(priority, format, ...) {				\
+    if (priority < LOG_INFO || env.debugMemory == TRUE) {		\
+      logEmit(priority, format, __VA_ARGS__);				\
+    }									\
+  }									\
+    
+/*=======================================================================
  * Macro      : logParser
  * Author(s)  : Nicolas Roche
  * Date begin : 2012/05/01
  *     change : 2012/05/01
- * Description: Special log function for the parsers (so as to debug)
+ * Description: Special log function for the parsers
  * Synopsis   : void logParser(level, format, ...)
- * Input      : wrapper for logEmit maccro (see it)
+ * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logParser(priority, format, ...) {	\
-    if (env.debugParser == TRUE) {		\
-      logEmit(priority, format, __VA_ARGS__);	\
-    }						\
-  }						\
+#define logParser(priority, format, ...) {				\
+    if (priority < LOG_INFO || env.debugParser == TRUE) {		\
+      logEmit(priority, format, __VA_ARGS__);				\
+    }									\
+  }									\
+
+/*=======================================================================
+ * Macro      : logCommon
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the common code
+ * Synopsis   : void logCommon(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logCommon(priority, format, ...) {				\
+    if (priority < LOG_INFO || env.debugCommon == TRUE) {		\
+      logEmit(priority, format, __VA_ARGS__);				\
+    }									\
+  }									\
 
 #endif /* MISC_LOG_H */
 

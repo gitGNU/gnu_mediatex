@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: strdsm.h,v 1.2 2014/11/13 16:36:31 nroche Exp $
+ * Version: $Id: strdsm.h,v 1.3 2015/06/03 14:03:40 nroche Exp $
  * Project: MediaTeX
  * Module : strdsm
  *

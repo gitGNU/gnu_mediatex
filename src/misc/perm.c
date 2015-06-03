@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.2 2014/11/13 16:36:42 nroche Exp $
+ * Version: $Id: perm.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * md5sum computation
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -45,19 +45,19 @@
 /* buildDirectory(char* path, mode_t mode) */
 /* { */
 /*   int rc = FALSE; */
-/*   DIR* dir  = NULL; */
+/*   DIR* dir  = 0; */
 /*   size_t i=1; // shift the leading slash */
-/*   char* copy = NULL; */
+/*   char* copy = 0; */
 
 /*   logEmit(LOG_DEBUG, "buildDirectory %s", path); */
   
-/*   if (path == NULL || *path == (char)0) { */
+/*   if (path == 0 || *path == (char)0) { */
 /*     logEmit(LOG_ERR, "%s", "cannot check empty directory path"); */
 /*     goto error; */
 /*   } */
 
 /*   // needed if we have path in static memory */
-/*   if ((copy = malloc(strlen(path))) == NULL) { */
+/*   if ((copy = malloc(strlen(path))) == 0) { */
 /*     logEmit(LOG_ERR, "malloc: %s", strerror(errno)); */
 /*     goto error; */
 /*   } */
@@ -75,7 +75,7 @@
 /*     printf("copy2 = %s\n", copy); */
 
 /*     // try to open dir */
-/*     while ((dir = opendir(copy)) == NULL) { */
+/*     while ((dir = opendir(copy)) == 0) { */
 /*       // try to create it */
 /*       logEmit(LOG_NOTICE, "create new directory: %s", copy);  */
 /*       if (mkdir(copy, mode) != 0) { */
@@ -85,7 +85,7 @@
 /* 	goto error; */
 /*       } */
 /*     } */
-/*     if (dir != NULL && closedir(dir) != 0) { */
+/*     if (dir != 0 && closedir(dir) != 0) { */
 /*       logEmit(LOG_ERR, "cannot close directory: %s", strerror(errno));  */
 /*       goto error; */
 /*     } */
@@ -124,10 +124,10 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   struct stat sb;
   struct passwd pw;
   struct group gr;
-  char *buf = NULL;
+  char *buf = 0;
   mode_t mask = 07777;
 
-  if (path == NULL || *path == (char)0) {
+  if (path == 0 || *path == (char)0) {
     logEmit(LOG_ERR, "%s", "cannot check empty directory path");
     goto error;
   }
@@ -156,7 +156,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   }
 
   // check user
-  if (!getPasswdLine (NULL, sb.st_uid, &pw, &buf)) goto error;
+  if (!getPasswdLine (0, sb.st_uid, &pw, &buf)) goto error;
   if (strcmp(user, pw.pw_name) != 0) {
     logEmit(LOG_ERR, "%s should be owne by %s user, not %s",
 	    path, user, pw.pw_name);
@@ -165,7 +165,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   
   // check group  
   if (buf) free (buf);
-  if (!getGroupLine (NULL, sb.st_gid, &gr, &buf)) goto error;
+  if (!getGroupLine (0, sb.st_gid, &gr, &buf)) goto error;
   if (strcmp(group, gr.gr_name) != 0) {
     logEmit(LOG_ERR, "%s should be owne by %s group, not %s",
 	    path, group, gr.gr_name);
@@ -253,9 +253,9 @@ void usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
-  char* user = NULL;
-  char* group = NULL;
+  char* inputPath = 0;
+  char* user = 0;
+  char* group = 0;
   mode_t mode = 0111;
   // ---
   int rc = 0;
@@ -264,10 +264,10 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"d:u:g:p:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"dir", required_argument, NULL, 'd'},
-    {"user", required_argument, NULL, 'u'},
-    {"group", required_argument, NULL, 'g'},
-    {"perm", required_argument, NULL, 'p'},
+    {"dir", required_argument, 0, 'd'},
+    {"user", required_argument, 0, 'u'},
+    {"group", required_argument, 0, 'g'},
+    {"perm", required_argument, 0, 'p'},
     {0, 0, 0, 0}
   };
 
@@ -275,18 +275,18 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for directory\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the directory path: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -296,13 +296,13 @@ main(int argc, char** argv)
       break;
       
     case 'u':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for user\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((user = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((user = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the user name: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -312,13 +312,13 @@ main(int argc, char** argv)
       break;
 
     case 'g':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for group\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((group = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((group = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the group name: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -328,7 +328,7 @@ main(int argc, char** argv)
       break;
 
     case 'p':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the permission\n",
 		programName);
 	rc = EINVAL;
@@ -352,19 +352,19 @@ main(int argc, char** argv)
   /************************************************************************/
   logEmit(LOG_NOTICE, "unit test's current date : %d", currentTime());
 
-  if (inputPath == NULL) {
+  if (inputPath == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide a directory to check");
     goto error;
   }
 
-  if (user == NULL) {
+  if (user == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide a user");
     goto error;
   }
 
-  if (group == NULL) {
+  if (group == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide a group");
     goto error;

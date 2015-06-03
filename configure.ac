@@ -1,11 +1,11 @@
-dnl  * Version: $Id: configure.ac,v 1.2 2014/11/13 16:36:06 nroche Exp $
+dnl  * Version: $Id: configure.ac,v 1.3 2015/06/03 14:03:14 nroche Exp $
 dnl  * Project: MediaTex
 dnl  * Module:  root
 dnl  *
 dnl  * Process this file with autoconf to produce a configure script.
 dnl 
 dnl  MediaTex is an Electronic Records Management System
-dnl  Copyright (C) 2014  Nicolas Roche
+dnl  Copyright (C) 2014 2015 Nicolas Roche
 dnl 
 dnl  This program is free software: you can redistribute it and/or modify
 dnl  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@ dnl  You should have received a copy of the GNU General Public License
 dnl  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ([2.60])
-AC_INIT([MediaTex], [0.2], [nroche@narval.tk])
-AM_INIT_AUTOMAKE
-LT_INIT
+AC_INIT([MediaTex], [0.3], [nroche@narval.tk])
+# AM_INIT_AUTOMAKE([subdir-objects -Wall])
+AM_INIT_AUTOMAKE([-Wall])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/mediatex.h])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([mediatex-config.h])
 
 # i18n support from GNU gettext.
-AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT_VERSION([0.19])
 AM_GNU_GETTEXT([external])
 
 # Checks for programs.
@@ -42,7 +42,9 @@ AC_PROG_YACC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET 
 AC_PROG_LN_S
+AM_PROG_AR
 # AC_PROG_RANLIB
+LT_INIT
 
 # GNU help2man creates man pages from --help output; in many cases, this
 # is sufficient, and obviates the need to maintain man pages separately.

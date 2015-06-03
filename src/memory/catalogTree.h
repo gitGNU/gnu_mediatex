@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: catalogTree.h,v 1.2 2014/11/13 16:36:28 nroche Exp $
+ * Version: $Id: catalogTree.h,v 1.3 2015/06/03 14:03:38 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
  * Catalog producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@ struct AssoCarac
 struct Role
 {
   int       id;    // role_ID.html pages
+  int       tag;   // dedicated for external use
   char*     label;
   RG*       assos; // AssoRole* ; no gain with AVL here 
 
@@ -60,7 +61,8 @@ struct AssoRole
 
 struct Category
 {
-  int    id;
+  int    id;         // ID fo html pages
+  int    tag;        // dedicated for external use
   char*  label;
   int    show;       // if we display it in the html index or not
 
@@ -73,7 +75,8 @@ struct Category
 
 struct Human
 {
-  int    id;
+  int    id;         // ID fo html pages
+  int    tag;        // dedicated for external use
   char*  firstName;
   char*  secondName;
 
@@ -84,7 +87,8 @@ struct Human
 
 struct Document
 {
-  int    id;
+  int    id;         // ID fo html pages
+  int    tag;        // dedicated for external use
   char*  label;
 
   RG*    categories; // Category*

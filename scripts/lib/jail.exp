@@ -57,7 +57,6 @@ cvs update: Updating .
 [info cvs.sh] su ut4-mdtx -c 'cvs update -d'
 cvs update: Updating .
 [debug jail.sh] SSH_chroot_login: yes
-Reloading OpenBSD Secure Shell server's configuration: sshd.
 [debug jail.sh] JAIL_build:
 [debug jail.sh] JAIL_add_binary: /bin/ls
 [debug jail.sh] JAIL_add_binary: /bin/bash
@@ -111,11 +110,10 @@ N ut4-mdtx-hello/servers.txt
 [debug jail.sh] SSH_bootstrapKeys ut4-mdtx-hello 
 known_hosts updated.
 Original contents retained as known_hosts.old
-WARNING: known_hosts.old contains unhashed entries
-Delete this file to ensure privacy of hostnames
 [debug jail.sh] SSH_configure_client ut4-mdtx-hello localhost 22
 [debug jail.sh] JAIL_add_user: ut4-mdtx-hello
 [info jail.sh] su LABEL -c "ssh -o PasswordAuthentication=no ut4-mdtx-hello@localhost ls"
+Could not chdir to home directory /var/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello: No such file or directory
 bin
 dev
 etc
@@ -125,8 +123,10 @@ usr
 var
 [debug jail.sh] JAIL_bind
 [info jail.sh] su USER -c "scp ut4-mdtx-hello@localhost:/var/cache/ut4-mdtx-hello/hello.txt /var/cache/mediatex/ut4-mdtx/tmp/ut4-mdtx-hello"
+Could not chdir to home directory /var/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello: No such file or directory
 [debug jail.sh] CVS_coll_checkout: ut4-mdtx-hello ut4-mdtx-hello@localhost
 [info cvs.sh] su USER -c "cvs -d :ext:ut4-mdtx-hello@localhost:/var/lib/cvsroot co ut4-mdtx-hello"
+Could not chdir to home directory /var/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello: No such file or directory
 cvs checkout: Updating ut4-mdtx-hello
 U ut4-mdtx-hello/.cvsignore
 U ut4-mdtx-hello/catalog00.txt
@@ -146,7 +146,6 @@ U ut4-mdtx-hello/icons/floppy-icon.png
 [debug jail.sh] JAIL_unbind
 [debug jail.sh] JAIL_del_user: ut4-mdtx-hello
 [debug jail.sh] SSH_chroot_login: no
-Reloading OpenBSD Secure Shell server's configuration: sshd.
 [debug jail.sh] USERS_coll_disease: ut4-mdtx-hello
 [debug jail.sh] USERS_coll_remove_user: ut4-mdtx-hello
 [debug users.sh] USERS_del_from_group: ut4-mdtx-hello

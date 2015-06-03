@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.2 2014/11/13 16:37:06 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.3 2015/06/03 14:03:55 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
  * Manage cgi queries
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ int
 extractCgiArchive(Collection* coll, Archive* archive, int* found)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   ExtractData data;
 
   logEmit(LOG_DEBUG, "%s", "local extraction");
@@ -100,23 +100,23 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
 int cgiServer(RecordTree* recordTree, Connexion* connexion)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Record* record = NULL;
-  Record* record2 = NULL;
-  Archive* archive = NULL;
+  Collection* coll = 0;
+  Record* record = 0;
+  Record* record2 = 0;
+  Archive* archive = 0;
   int found = FALSE;
   char buffer[256];
-  char* extra = NULL;
+  char* extra = 0;
   int cgiErrno = 0;
 
   logEmit(LOG_DEBUG, "%s", "cgiServer: serving cgi query");
   /* #ifdef utMAIN */
   /*   logEmit(LOG_INFO, "%s", "input archive tree:"); */
-  /* serializeRecordTree(recordTree, NULL); */
+  /* serializeRecordTree(recordTree, 0); */
   /* #endif */
 
   // get the archiveTree's collection
-  if ((coll = recordTree->collection) == NULL) {
+  if ((coll = recordTree->collection) == 0) {
     logEmit(LOG_ERR, "%s", "unknown collection for archiveTree");
     cgiErrno = 5;
     goto error;
@@ -226,9 +226,9 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  Collection* coll = NULL;
+  Collection* coll = 0;
   Connexion connexion;
-  RecordTree* tree = NULL;
+  RecordTree* tree = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -236,7 +236,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -245,12 +245,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -271,42 +271,42 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
   connexion.sock = STDOUT_FILENO;
-  if (!(tree = ask4logo(coll, NULL))) goto error;
+  if (!(tree = ask4logo(coll, 0))) goto error;
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   
-  utLog("%s", "1) try to extract the demand", NULL);
+  utLog("%s", "1) try to extract the demand", 0);
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "2) retry with it on cache", NULL);
+  utLog("%s", "2) retry with it on cache", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!quickScan(coll)) goto error;
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "3) retry with tgz on cache", NULL);
+  utLog("%s", "3) retry with tgz on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
   if (!quickScan(coll)) goto error;
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "4) try with only part1 on cache", NULL);
+  utLog("%s", "4) try with only part1 on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!quickScan(coll)) goto error;
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "5) try with part2 added on cache too", NULL);
+  utLog("%s", "5) try with part2 added on cache too", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
   if (!quickScan(coll)) goto error;
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "6) register a mail", NULL);
+  utLog("%s", "6) register a mail", 0);
   if (!utCleanCaches()) goto error;
   if (!quickScan(coll)) goto error;
   tree = destroyRecordTree(tree);
@@ -314,7 +314,7 @@ main(int argc, char** argv)
   if (!cgiServer(tree, &connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   tree = destroyRecordTree(tree);
   /************************************************************************/

@@ -11,3 +11,5 @@ libmemory.la
 ut[a-z]*
 ut.out
 ut.txt
+*.log
+*.trs

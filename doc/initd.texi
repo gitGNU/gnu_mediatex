@@ -13,7 +13,8 @@ Process conceptual model:
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload
-from @actorAdmin
+from 
+@actorAdmin
 @end table
 
 @item Events out

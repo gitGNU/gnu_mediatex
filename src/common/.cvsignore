@@ -13,3 +13,5 @@ ut[a-z]*
 ut*.out
 ut*.txt
 ut*.sort
+*.log
+*.trs

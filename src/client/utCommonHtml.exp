@@ -1,3 +1,4 @@
+[notice confFile.y] parse configuration
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.1//EN'>
 
 <!--Inspired from LaTeX2HTML 2008 (1.71)
@@ -119,5 +120,4 @@ HREF='https://host1.mediatex.org/~mdtx1-coll1/cgi/viewvc.cgi'>Version</A></TD>
 </BODY>
 </HTML>
 
-[info confTree.c] free configuration
 [info commonHtml.c] exit on success

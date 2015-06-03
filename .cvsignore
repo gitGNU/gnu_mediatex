@@ -7,7 +7,7 @@ Makefile.in
 aclocal.m4
 autom4te.cache
 compile
-config.h.in
+mediatex-config.h.in
 configure
 depcomp
 install-sh
@@ -20,9 +20,10 @@ config.rpath
 config.sub
 m4
 ltmain.sh
+ar-lib
 # ./configure
 Makefile
-config.h
+mediatex-config.h
 config.log
 config.status
 stamp-h1
@@ -34,7 +35,7 @@ mediatex-*.tar.gz
 # make check
 ut.out
 # make distcheck
-mediatex-0.1
+mediatex-0.3
 # dpkg-buildpackage
 mediatex_0.1.debian.tar.gz
 mediatex_0.1.dsc
@@ -42,3 +43,4 @@ mediatex_0.1.orig.tar.gz
 mediatex_0.1_i386.changes
 mediatex_0.1_i386.deb
 # others
+test-driver

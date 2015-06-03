@@ -23,7 +23,8 @@ to @activityClient
 @item @eventClientMotd
 to @procClientMotd
 @item @eventActorPublisherMotd
-to @actorPublisher
+to 
+@actorPublisher
 @end table
 
 @item Data out

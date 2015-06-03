@@ -4,9 +4,9 @@
 [notice tcp.c] Listenning on 0.0.0.0:6560
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
 [notice threads.c] doing job 1 for localhost
-[notice threads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
 [info threads.c] in  shm: (1000)
+[notice threads.c] finish job 1 for localhost
 [notice threads.c] doing job 1 for signal
 [notice threads.c] finish job 1 for signal
 [info threads.c] out shm: (0000)
@@ -49,5 +49,4 @@
 [info address.c] build socket address 127.0.0.1:6560
 [info tcp.c] connecting to 127.0.0.1:6560
 [notice threads.c] accepting signal USR1
-[info confTree.c] free configuration
 [info threads.c] exit on success

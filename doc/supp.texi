@@ -12,15 +12,15 @@ where: (default value)
 @table @math
 @item T 
 is the support time to live (10 years)
-@itemx t
+@item t
 is the current support age
-@itemx a 
+@item a 
 power that reduce score from age of supports (2)
-@itemx M 
+@item M 
 the maximum score (10)
-@itemx b
+@item b
 maximum score for outdated supports (1)
-@itemx c
+@item c
 factor that reduce score of out-dated supports (2)
 @end table
 
@@ -40,7 +40,8 @@ Process conceptual model:
 @itemx @eventClientMiscSuppDel
 @itemx @eventClientMiscSuppNote
 @itemx @eventClientMiscSuppCheck
-from @actorPublisher
+from 
+@actorPublisher
 @end table
 
 @item Events out

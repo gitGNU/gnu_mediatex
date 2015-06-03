@@ -61,7 +61,8 @@ Process conceptual model:
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
-from @actorPublisher
+from 
+@actorPublisher
 @item @eventClientServUpgradeCall
 from @procClientConf
 @end table

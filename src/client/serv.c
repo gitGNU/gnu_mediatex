@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.2 2014/11/13 16:36:19 nroche Exp $
+ * Version: $Id: serv.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/serv
  *
  * Manage servers.txt modifications
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ typedef union semun {
  =======================================================================*/
 static int setConcurentAccessLock()
 {
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   int rc = FALSE;
   key_t key;
   semun_t u_semun;
@@ -118,7 +118,7 @@ static int setConcurentAccessLock()
 int clientWriteLock()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   struct sembuf sembuf;
   int uid = getuid();
 
@@ -173,7 +173,7 @@ int clientWriteLock()
 int clientWriteUnlock()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   union semun arg;
   int uid = getuid();
 
@@ -224,7 +224,7 @@ int
 mdtxUpdate(char* label)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
+  Collection* coll = 0;
 
   checkLabel(label);
   logEmit(LOG_DEBUG, "%s", "update collection");
@@ -254,8 +254,8 @@ int
 mdtxCommit(char* label)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
 
   checkLabel(label);
   logEmit(LOG_DEBUG, "%s", "commit collection");
@@ -292,8 +292,8 @@ int
 mdtxUpgrade(char* label)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
 
   checkLabel(label);
   logEmit(LOG_DEBUG, "plan to upgrade %s collection", label);
@@ -330,14 +330,14 @@ int
 addKey(char* label, char* path)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  char* key = NULL;
+  Collection* coll = 0;
+  char* key = 0;
   char hash[MAX_SIZE_HASH+1];
-  ServerTree* servers = NULL;
-  Server* server = NULL;
+  ServerTree* servers = 0;
+  Server* server = 0;
 
-  if (label == NULL) goto error;
-  if (path == NULL) goto error;
+  if (label == 0) goto error;
+  if (path == 0) goto error;
   logEmit(LOG_INFO, "add %s key to %s collection", path, label);
 
   // parse server DB for merge
@@ -356,11 +356,11 @@ addKey(char* label, char* path)
   // look if key is already shared by the collection
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
-  while ((server = rgNext(servers->servers)) != NULL) {
+  while ((server = rgNext(servers->servers)) != 0) {
     if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
   }
 
-  if (server != NULL) {
+  if (server != 0) {
     logEmit(LOG_WARNING, "key \"%s\" is already added to %s collection", 
 	    hash, coll->label);
     goto error2;
@@ -369,7 +369,7 @@ addKey(char* label, char* path)
   // add a new server entry
   if (!(server = addServer(coll, hash))) goto error2;
   server->userKey = key;
-  key = NULL;
+  key = 0;
 
   // needed a second time
   if (!upgradeSshConfiguration(coll)) goto error2;
@@ -402,13 +402,13 @@ int
 delKey(char* label, char* key)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
+  Collection* coll = 0;
   char hash[MAX_SIZE_HASH+1];
-  ServerTree* servers = NULL;
-  Server* server = NULL;
+  ServerTree* servers = 0;
+  Server* server = 0;
 
-  if (label == NULL) goto error;
-  if (key == NULL) goto error;
+  if (label == 0) goto error;
+  if (key == 0) goto error;
   logEmit(LOG_INFO, "del %s key from %s collection", key, label);
 
   // we are expecting a fingerprint
@@ -428,11 +428,11 @@ delKey(char* label, char* key)
   // look if key is shared by the collection
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
-  while ((server = rgNext(servers->servers)) != NULL) {
+  while ((server = rgNext(servers->servers)) != 0) {
     if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
   }
 
-  if (server == NULL) {
+  if (server == 0) {
     logEmit(LOG_WARNING, 
 	    "key \"%s\" not share with %s collection", 
 	    hash, coll->label);
@@ -477,7 +477,7 @@ sigManager(void* arg)
   logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
   logEmit(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
 
-  if ((sigNumber = sigwaitinfo(&signalsToManage, NULL)) == -1) {
+  if ((sigNumber = sigwaitinfo(&signalsToManage, 0)) == -1) {
     logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
     goto error;
   }
@@ -519,7 +519,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   pthread_t thread;
   int doLock = FALSE;
   int err = 0;
@@ -529,7 +529,7 @@ main(int argc, char** argv)
   char* programName = *argv;
   char* options = MDTX_SHORT_OPTIONS"k";
   struct option longOptions[] = {
-    {"lock", no_argument, NULL, 'k'},
+    {"lock", no_argument, 0, 'k'},
     MDTX_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
@@ -538,7 +538,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -564,7 +564,7 @@ main(int argc, char** argv)
     while (running) usleep(200000);
     
     if (!clientWriteUnlock()) goto error;
-    if ((err = pthread_join(thread, NULL))) {
+    if ((err = pthread_join(thread, 0))) {
       logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
       goto error;
     }

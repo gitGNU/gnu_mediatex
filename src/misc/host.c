@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     }
     /* else */
     he = gethostbyaddr(&addr, 4, AF_INET);
-    if (he == NULL)
+    if (he == 0)
     {
         perror("gethostbyaddr");
         switch (h_errno)

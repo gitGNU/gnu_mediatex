@@ -24,10 +24,12 @@ Process conceptual model:
 @table @code
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdmin
+from 
+@actorAdmin
 @item @eventClientConfList
 @itemx @eventClientConfWithdrawSupp
-from @actorPublisher
+from 
+@actorPublisher
 @eventClientConfWithdrawSuppCall
 from @procClientSupp
 @end table

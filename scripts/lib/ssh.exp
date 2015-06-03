@@ -54,8 +54,6 @@ Fait.
 [debug ssh.sh] SSH_bootstrapKeys ut3-mdtx-hello 
 known_hosts updated.
 Original contents retained as known_hosts.old
-WARNING: known_hosts.old contains unhashed entries
-Delete this file to ensure privacy of hostnames
 [debug ssh.sh] SSH_configure_client ut3-mdtx-hello localhost 22
 [info ssh.sh] su USER -c "ssh -o PasswordAuthentication=no ut3-mdtx-hello@localhost ls"
 cache

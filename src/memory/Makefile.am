@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:26 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:37 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  memory tree modules
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ utconfTree_CFLAGS = -DutMAIN
 utconfTree_LDADD = extractTree.o catalogTree.o serverTree.o \
  recordTree.o supportTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utconfTree_LDFLAGS = -pthread -lavl
+utconfTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utsupportTree_SOURCES = supportTree.c supportTree.h \
 	strdsm.h ardsm.h
@@ -100,7 +100,7 @@ utsupportTree_CFLAGS = -DutMAIN
 utsupportTree_LDADD = extractTree.o catalogTree.o serverTree.o \
  recordTree.o confTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utsupportTree_LDFLAGS = -pthread -lavl
+utsupportTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utarchive_SOURCES = archive.c archive.h confTree.h \
 	strdsm.h ardsm.h
@@ -108,7 +108,7 @@ utarchive_CFLAGS = -DutMAIN
 utarchive_LDADD = extractTree.o catalogTree.o serverTree.o \
  recordTree.o supportTree.o confTree.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utarchive_LDFLAGS = -pthread -lavl
+utarchive_LDFLAGS = -pthread -lavl -lcrypto
 
 utcatalogTree_SOURCES = catalogTree.c catalogTree.h \
 	strdsm.h ardsm.h
@@ -116,7 +116,7 @@ utcatalogTree_CFLAGS = -DutMAIN
 utcatalogTree_LDADD = extractTree.o serverTree.o recordTree.o \
  supportTree.o confTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects) 
-utcatalogTree_LDFLAGS = -pthread -lavl
+utcatalogTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utserverTree_SOURCES = serverTree.c serverTree.h \
 	strdsm.h ardsm.h
@@ -124,7 +124,7 @@ utserverTree_CFLAGS = -DutMAIN
 utserverTree_LDADD = extractTree.o catalogTree.o recordTree.o \
  supportTree.o confTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utserverTree_LDFLAGS = -pthread -lavl
+utserverTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utextractTree_SOURCES = extractTree.c extractTree.h \
 	strdsm.h ardsm.h
@@ -132,7 +132,7 @@ utextractTree_CFLAGS = -DutMAIN
 utextractTree_LDADD = catalogTree.o serverTree.o recordTree.o \
  supportTree.o confTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utextractTree_LDFLAGS = -pthread -lavl
+utextractTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utrecordTree_SOURCES = recordTree.c recordTree.h archive.h \
 	strdsm.h ardsm.h
@@ -140,7 +140,7 @@ utrecordTree_CFLAGS = -DutMAIN
 utrecordTree_LDADD = extractTree.o catalogTree.o serverTree.o \
  supportTree.o confTree.o archive.o cacheTree.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utrecordTree_LDFLAGS = -pthread -lavl
+utrecordTree_LDFLAGS = -pthread -lavl -lcrypto
 
 utcacheTree_SOURCES = cacheTree.c cacheTree.h \
 	strdsm.h ardsm.h
@@ -148,7 +148,7 @@ utcacheTree_CFLAGS = -DutMAIN
 utcacheTree_LDADD = extractTree.o catalogTree.o serverTree.o \
  recordTree.o supportTree.o confTree.o archive.o \
  cvsPrint.o strdsm.o ardsm.o $(objects)
-utcacheTree_LDFLAGS = -pthread -lavl
+utcacheTree_LDFLAGS = -pthread -lavl -lcrypto
 
 clean-local:
 	-rm -f ut.out ut.txt

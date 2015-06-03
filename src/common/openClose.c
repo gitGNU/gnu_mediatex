@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
+ * Version: $Id: openClose.c,v 1.3 2015/06/03 14:03:34 nroche Exp $
  * Project: MediaTeX
  * Module : bus/openClose
  
  * Manage data files
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -56,11 +56,11 @@ int
 callUpdate(char* user)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  char *argv[] = {NULL, NULL, NULL};
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0};
 
   checkLabel(user);
-  logEmit(LOG_DEBUG, "callUpdate %s", user);
+  logCommon(LOG_INFO, "callUpdate %s", user);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
@@ -68,13 +68,13 @@ callUpdate(char* user)
   argv[1] = user;
 
   if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
-    if (!execScript(argv, user, NULL, FALSE)) goto error;
+    if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_WARNING, "%s", "callUpdate fails");
+    logCommon(LOG_WARNING, "%s", "callUpdate fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -93,11 +93,11 @@ int
 callCommit(char* user, char* signature1, char* signature2)
 { 
   int rc = FALSE;  
-  Configuration* conf = NULL;
-  char *argv[] = {NULL, NULL, NULL, NULL, NULL, NULL};
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0, 0, 0, 0};
 
   checkLabel(user);
-  logEmit(LOG_DEBUG, "callCommit %s: %s", user, env.commandLine);
+  logCommon(LOG_INFO, "callCommit %s: %s", user, env.commandLine);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
@@ -108,13 +108,13 @@ callCommit(char* user, char* signature1, char* signature2)
   argv[4] = signature2;
   
   if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
-    if (!execScript(argv, user, NULL, FALSE)) goto error;
+    if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_WARNING, "%s", "callCommit fails");
+    logCommon(LOG_WARNING, "%s", "callCommit fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -130,11 +130,11 @@ callCommit(char* user, char* signature1, char* signature2)
 int loadConfiguration(int confFiles)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
 
-  logEmit(LOG_DEBUG, "%s", "load configuration");
+  logCommon(LOG_DEBUG, "%s", "load configuration");
   if (!confFiles) {
-    logEmit(LOG_ERR, "%s", "please provide files to load");
+    logCommon(LOG_ERR, "%s", "please provide files to load");
     goto error;
   }
   if (!(conf = getConfiguration())) goto error;
@@ -152,7 +152,7 @@ int loadConfiguration(int confFiles)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to load configuration");   
+    logCommon(LOG_ERR, "%s", "fails to load configuration");   
   }
   return rc;
 }
@@ -169,35 +169,35 @@ int loadRecords(Collection* coll)
 {
   int rc = FALSE;
   int fd = -1;
-  RecordTree* tree = NULL;
-  RGIT* curr = NULL;
-  Record* record = NULL;
+  RecordTree* tree = 0;
+  RGIT* curr = 0;
+  Record* record = 0;
   
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "load %s records", coll->label);
-  logEmit(LOG_INFO, "records file is: %s", coll->md5sumsDB);
+  logCommon(LOG_INFO, "load %s records", coll->label);
+  logCommon(LOG_DEBUG, "records file is: %s", coll->md5sumsDB);
 
   if (access(coll->md5sumsDB, R_OK) == -1) {
-    logEmit(LOG_NOTICE, "no md5sums file: %s", coll->md5sumsDB);
+    logCommon(LOG_NOTICE, "no md5sums file: %s", coll->md5sumsDB);
     rc = TRUE;
     goto error;
   }
 
   // open md5sumsDB file
   if ((fd = open(coll->md5sumsDB, O_RDONLY)) == -1) {
-    logEmit(LOG_ERR, "open: %s", strerror(errno));
-    logEmit(LOG_ERR, "cannot open records file: %s", coll->md5sumsDB);
+    logCommon(LOG_ERR, "open: %s", strerror(errno));
+    logCommon(LOG_ERR, "cannot open records file: %s", coll->md5sumsDB);
     goto error;
   }
   if (!lock(fd, F_RDLCK)) goto error;
 
   // parse md5sumsDB file into the main recordTree
-  if ((tree = parseRecordList(fd)) == NULL) goto error;
+  if ((tree = parseRecordList(fd)) == 0) goto error;
 
   if (!unLock(fd)) goto error;
   if (close(fd) == -1) {
-    logEmit(LOG_ERR, "close: %s", strerror(errno));
-    logEmit(LOG_ERR, "cannot close records file: %s", coll->md5sumsDB);
+    logCommon(LOG_ERR, "close: %s", strerror(errno));
+    logCommon(LOG_ERR, "cannot close records file: %s", coll->md5sumsDB);
     goto error;
   }
 
@@ -206,17 +206,17 @@ int loadRecords(Collection* coll)
   destroyRecordTree(coll->cacheTree->recordTree);
   coll->cacheTree->recordTree = tree;
   coll->cacheTree->recordTree->messageType = DISK;
-  curr = NULL;
+  curr = 0;
 
   while((record = rgNext_r(coll->cacheTree->recordTree->records, &curr)) 
-	!= NULL) {
+	!= 0) {
     if (!addCacheEntry(coll, record)) goto error;
   }
    
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to load records");   
+    logCommon(LOG_ERR, "%s", "fails to load records");   
   }
   return rc;
 }
@@ -250,7 +250,7 @@ collectionLoop(Collection* coll, int collFiles,
   int i = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "file loop on %s collection (%s)", 
+  logCommon(LOG_DEBUG, "file loop on %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
   for (i=iCTLG; i<=iCACH; ++i) {
@@ -262,7 +262,7 @@ collectionLoop(Collection* coll, int collFiles,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "file loop fails");   
+    logCommon(LOG_ERR, "%s", "file loop fails");   
   }
   return rc;
 }
@@ -280,11 +280,11 @@ loadCvsFiles(Collection* coll, int fileIdx)
 {
   int rc = FALSE;
   int (*parser)(Collection*, const char* path);
-  char* path = NULL;
+  char* path = 0;
   int l = 0;
   int i = 0;
 
-  logEmit(LOG_DEBUG, "load %s files", strCF(1<<fileIdx));
+  logCommon(LOG_DEBUG, "load %s files", strCF(1<<fileIdx));
 
   switch (fileIdx) {
   case iCTLG:
@@ -296,7 +296,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
     parser = parseExtractFile;
     break;
   default:
-    logEmit(LOG_ERR, "%s", "metadata file not handle"); 
+    logCommon(LOG_ERR, "%s", "metadata file not handle"); 
     goto error;
   }
 
@@ -328,7 +328,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
   rc = i>0;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "loadCvFiles fails");   
+    logCommon(LOG_ERR, "%s", "loadCvsFiles fails");
   }
   path = destroyString(path);
   return rc;
@@ -350,11 +350,11 @@ loadColl(Collection* coll, int fileIdx)
 
   checkCollection(coll);
   if (fileIdx < iCTLG || fileIdx > iCACH) goto error;
-  logEmit(LOG_DEBUG, "do load %s collection (%s)", 
+  logCommon(LOG_DEBUG, "do load %s collection (%s)", 
 	  coll->label, strCF(1<<fileIdx));
 
   if ((err = pthread_mutex_lock(&coll->mutex[fileIdx])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   
@@ -393,12 +393,12 @@ loadColl(Collection* coll, int fileIdx)
   rc = TRUE;
  error2:
   if ((err = pthread_mutex_unlock(&coll->mutex[fileIdx])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "loadColl fails");   
+    logCommon(LOG_ERR, "%s", "loadColl fails");   
   }
   return rc;
 }
@@ -415,12 +415,12 @@ static int
 loadCollectionNbSteps(Collection* coll, int collFiles)
 {
   int rc = FALSE;
-  char* path = NULL;
-  FILE* fd = NULL;
+  char* path = 0;
+  FILE* fd = 0;
   int fileIdx = 0, i = 0, l = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "loadCollectionNbSteps");
+  logCommon(LOG_DEBUG, "%s", "loadCollectionNbSteps");
 
   env.progBar.cur = env.progBar.max = 0;
   for (fileIdx=iCTLG; fileIdx<=iCACH; ++fileIdx) {
@@ -466,11 +466,13 @@ loadCollectionNbSteps(Collection* coll, int collFiles)
     }    
   }
 
-  logEmit(LOG_INFO, "estimate %i steps for load", env.progBar.max);
+  if (env.progBar.max > 0) {
+    logCommon(LOG_INFO, "estimate %i steps for load", env.progBar.max);
+  }
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "loadCollectionNbSteps fails");   
+    logCommon(LOG_ERR, "%s", "loadCollectionNbSteps fails");   
   }
   path = destroyString(path);
   return rc;
@@ -488,10 +490,9 @@ int
 loadCollection(Collection* coll, int collFiles)
 {
   int rc = FALSE;
-  int doProgBar = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "load %s collection (%s)", 
+  logCommon(LOG_DEBUG, "load %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
   if (!expandCollection(coll)) goto error;
@@ -502,22 +503,22 @@ loadCollection(Collection* coll, int collFiles)
     }
   }
 
-  // only progbar for client (check logs facility)
-  doProgBar = (!env.noRegression && !strncmp(env.logFacility, "file", 4));
-
-  if (doProgBar) {
-    if (!loadCollectionNbSteps(coll, collFiles)) goto error;
-    startProgBar("load");
+  if (!loadCollectionNbSteps(coll, collFiles)) goto error;
+  if (env.progBar.max > 0) { // else nothing to do
+    logCommon(LOG_INFO, "parse %s collection (%s)", 
+	      coll->label, strCF(collFiles));
   }
 
+  startProgBar("load");
   if (!collectionLoop(coll, collFiles, loadColl)) goto error;
-
-  if (doProgBar) stopProgBar();
+  stopProgBar();
+  logCommon(LOG_INFO, "steps: %lli / %lli", 
+	    env.progBar.cur, env.progBar.max);
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to load collection");   
+    logCommon(LOG_ERR, "%s", "fails to load collection");   
   }
   return rc;
 }
@@ -536,25 +537,25 @@ wasModifiedColl(Collection* coll, int i)
   int err = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "do set %s collection as modified (%s)", 
+  logCommon(LOG_DEBUG, "do set %s collection as modified (%s)", 
 	  coll->label, strCF(1<<i));
 
   if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   
   coll->fileState[i] = MODIFIED;
   
   if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to set collection as modified");
+    logCommon(LOG_ERR, "%s", "fails to set collection as modified");
   }
   return rc;
 }
@@ -572,7 +573,7 @@ wasModifiedCollection(Collection* coll, int collFiles)
   int rc = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "set %s collection as modified (%s)", 
+  logCommon(LOG_DEBUG, "set %s collection as modified (%s)", 
 	  coll->label, strCF(collFiles));
 
   if (!loadCollection(coll, collFiles)) goto error;
@@ -583,7 +584,7 @@ wasModifiedCollection(Collection* coll, int collFiles)
   releaseCollection(coll, collFiles);
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to set collection as modified");
+    logCommon(LOG_ERR, "%s", "fails to set collection as modified");
   }
   return rc;
 }
@@ -602,11 +603,11 @@ releaseColl(Collection* coll, int i)
   int err = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "do release %s collection (%s)", 
+  logCommon(LOG_DEBUG, "do release %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
   if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   
@@ -615,19 +616,19 @@ releaseColl(Collection* coll, int i)
 
   // assert cpt >= 0
   if (coll->cptInUse[i] < 0) {
-    logEmit(LOG_WARNING, "cptInUse for %s = %i !", 
+    logCommon(LOG_WARNING, "cptInUse for %s = %i !", 
 	    strCF(1<<i), coll->cptInUse[i]);
   }
 
   if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do release collection");
+    logCommon(LOG_ERR, "%s", "fails to do release collection");
   }
   return rc;
 }
@@ -645,7 +646,7 @@ releaseCollection(Collection* coll, int collFiles)
   int rc = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "release %s collection (%s)", 
+  logCommon(LOG_DEBUG, "release %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
  if (!collectionLoop(coll, collFiles, releaseColl)) goto error;
@@ -653,7 +654,7 @@ releaseCollection(Collection* coll, int collFiles)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to release collection");
+    logCommon(LOG_ERR, "%s", "fails to release collection");
   }
   return rc;
 }
@@ -669,10 +670,10 @@ int
 saveConfiguration()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   int change = FALSE;
 
-  logEmit(LOG_DEBUG, "%s", "save configuration");
+  logCommon(LOG_DEBUG, "%s", "save configuration");
   if (!(conf = getConfiguration())) goto error;
 
   if (conf->fileState[iCONF] == MODIFIED) {
@@ -698,7 +699,7 @@ saveConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to save configuration");   
+    logCommon(LOG_ERR, "%s", "fails to save configuration");   
   }
   return rc;
 }
@@ -717,11 +718,11 @@ saveColl(Collection* coll, int i)
   int err = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "do save %s collection (%s)", 
+  logCommon(LOG_DEBUG, "do save %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
   if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
@@ -746,7 +747,7 @@ saveColl(Collection* coll, int i)
       coll->cacheTree->recordTree->collection = coll;
       coll->cacheTree->recordTree->messageType = DISK;
       if (!serializeRecordTree(coll->cacheTree->recordTree,
-			       coll->md5sumsDB, NULL)) goto error2;
+			       coll->md5sumsDB, 0)) goto error2;
       if (!unLockCache(coll)) goto error2;
       break;
     default:
@@ -755,12 +756,12 @@ saveColl(Collection* coll, int i)
     coll->fileState[i] = LOADED;
   }
   else {
-    logEmit(LOG_INFO, "%s", "do not save collection as...");
+    logCommon(LOG_DEBUG, "%s", "do not save collection as...");
     if (coll->fileState[i] != MODIFIED) {
-      logEmit(LOG_INFO, "%s", "... not modified");
+      logCommon(LOG_DEBUG, "%s", "... not modified");
     }
     if (coll->cptInUse[i]) {
-      logEmit(LOG_INFO, "... still used by %i functions", 
+      logCommon(LOG_DEBUG, "... still used by %i functions", 
 	      coll->cptInUse[i]);
     }
   }
@@ -768,12 +769,12 @@ saveColl(Collection* coll, int i)
   rc = TRUE;
  error2:
   if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to save collection");
+    logCommon(LOG_ERR, "%s", "fails to save collection");
   }
   return rc;
 }
@@ -793,7 +794,7 @@ saveCollectionNbSteps(Collection* coll, int collFiles)
   int fileIdx = 0, i = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "saveCollectionNbSteps");
+  logCommon(LOG_DEBUG, "%s", "saveCollectionNbSteps");
 
   env.progBar.cur = env.progBar.max = 0;
   for (fileIdx=iCTLG; fileIdx<=iCACH; ++fileIdx) {
@@ -812,11 +813,13 @@ saveCollectionNbSteps(Collection* coll, int collFiles)
     }
   }
 
-  logEmit(LOG_INFO, "estimate %i steps for save", env.progBar.max);
+  if (env.progBar.max > 0) { // else nothing to do
+    logCommon(LOG_INFO, "estimate %i steps for save", env.progBar.max);
+  }
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "saveCollectionNbSteps fails");   
+    logCommon(LOG_ERR, "%s", "saveCollectionNbSteps fails");   
   }
   return rc;
 }
@@ -833,26 +836,24 @@ int
 saveCollection(Collection* coll, int collFiles)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  int doProgBar = FALSE;
+  Configuration* conf = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "save %s collection (%s)", 
+  logCommon(LOG_DEBUG, "save %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
   if (!(conf = getConfiguration())) goto error;
-
-  // only progbar for client (check logs facility)
-  doProgBar = (!env.noRegression && !strncmp(env.logFacility, "file", 4));
-
-  if (doProgBar) {
-    if (!saveCollectionNbSteps(coll, collFiles)) goto error;
-    startProgBar("save");
+  if (!saveCollectionNbSteps(coll, collFiles)) goto error;
+  if (env.progBar.max > 0) { // else nothing to do
+    logCommon(LOG_DEBUG, "serialize  %s collection (%s)", 
+	      coll->label, strCF(collFiles));
   }
 
+  startProgBar("save");
   if (!collectionLoop(coll, collFiles, saveColl)) goto error;
-
-  if (doProgBar) stopProgBar();
+  stopProgBar();
+  logCommon(LOG_INFO, "steps: %lli / %lli", 
+	    env.progBar.cur, env.progBar.max);
 
   // commit changes
   if (coll->toCommit && !env.noCollCvs) {
@@ -866,7 +867,7 @@ saveCollection(Collection* coll, int collFiles)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to save collection");
+    logCommon(LOG_ERR, "%s", "fails to save collection");
   }
   return rc;
 }
@@ -883,14 +884,14 @@ int
 clientSaveAll()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
   
-  logEmit(LOG_DEBUG, "%s", "clientSaveAll");
+  logCommon(LOG_DEBUG, "%s", "clientSaveAll");
   if (!(conf = env.confTree)) goto end; // nothing was loaded
 
-  while ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  while ((coll = rgNext_r(conf->collections, &curr)) != 0) {
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
   }
 
@@ -906,7 +907,7 @@ clientSaveAll()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "clientSaveAll fails");
+    logCommon(LOG_ERR, "%s", "clientSaveAll fails");
   }
   return rc;
 }
@@ -921,14 +922,14 @@ clientSaveAll()
 int serverSaveAll()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
   
-  logEmit(LOG_DEBUG, "%s", "server save all");
+  logCommon(LOG_DEBUG, "%s", "server save all");
   if (!(conf = env.confTree)) goto end; // nothing was loaded
 
-  while ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  while ((coll = rgNext_r(conf->collections, &curr)) != 0) {
     if (!saveCollection(coll, CACH)) goto error;
   }
 
@@ -936,7 +937,7 @@ int serverSaveAll()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "server fails to save all");
+    logCommon(LOG_ERR, "%s", "server fails to save all");
   }
   return rc;
 }
@@ -955,11 +956,11 @@ diseaseColl(Collection* coll, int i)
   int err = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "disease %s collection (%s)", 
+  logCommon(LOG_DEBUG, "disease %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
   if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   } 
   
@@ -987,12 +988,12 @@ diseaseColl(Collection* coll, int i)
   rc = TRUE; 
  error2:
   if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to disease collection");
+    logCommon(LOG_ERR, "%s", "fails to disease collection");
   }
   return rc;
 }
@@ -1010,7 +1011,7 @@ diseaseCollection(Collection* coll, int collFiles)
   int rc = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "disease %s collection (%s)", 
+  logCommon(LOG_DEBUG, "disease %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
   if (!env.noRegression) memoryStatus(LOG_NOTICE);
@@ -1020,7 +1021,7 @@ diseaseCollection(Collection* coll, int collFiles)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to disease collection");
+    logCommon(LOG_ERR, "%s", "fails to disease collection");
   }
   return rc;
 }
@@ -1037,14 +1038,14 @@ int
 clientDiseaseAll()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
   
-  logEmit(LOG_DEBUG, "%s", "clientDiseaseAll");
+  logCommon(LOG_DEBUG, "%s", "clientDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  if ((coll = rgNext_r(conf->collections, &curr)) != 0) {
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }
@@ -1052,7 +1053,7 @@ clientDiseaseAll()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "clientDiseaseAll fails");
+    logCommon(LOG_ERR, "%s", "clientDiseaseAll fails");
   }
   return rc;
 }
@@ -1067,14 +1068,14 @@ clientDiseaseAll()
 int serverDiseaseAll()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
   
-  logEmit(LOG_DEBUG, "%s", "serverDiseaseAll");
+  logCommon(LOG_DEBUG, "%s", "serverDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  if ((coll = rgNext_r(conf->collections, &curr)) != 0) {
     if (!saveCollection(coll, CACH)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }
@@ -1082,7 +1083,7 @@ int serverDiseaseAll()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serverDiseaseAll fails");
+    logCommon(LOG_ERR, "%s", "serverDiseaseAll fails");
   }
   return rc;
 }
@@ -1092,15 +1093,15 @@ int serverDiseaseAll()
  * Description: Call serializer on all modified files
  * Synopsis   : Collection* mdtxGetCollection(char* label)
  * Input      : char* label: collection label to search for
- * Output     : Collection*: the matching collection ; NULL if not found
+ * Output     : Collection*: the matching collection ; 0 if not found
  =======================================================================*/
 Collection* mdtxGetCollection(char* label)
 {
-  Collection* rc = NULL;
-  Collection* coll = NULL;
+  Collection* rc = 0;
+  Collection* coll = 0;
 
   checkLabel(label);  
-  logEmit(LOG_DEBUG, "get %s collection", label);
+  logCommon(LOG_DEBUG, "get %s collection", label);
 
   if (!loadConfiguration(CONF)) goto error;
   if (!(coll = getCollection(label))) goto error;
@@ -1109,7 +1110,7 @@ Collection* mdtxGetCollection(char* label)
   rc = coll;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to get collection");
+    logCommon(LOG_ERR, "%s", "fails to get collection");
   }
   return rc;
 }
@@ -1119,15 +1120,15 @@ Collection* mdtxGetCollection(char* label)
  * Description: Call serializer on all modified files
  * Synopsis   : Support* mdtxGetSupport(char* label)
  * Input      : char* label: support label to search for
- * Output     : Support*: the matching support ; NULL if not found
+ * Output     : Support*: the matching support ; 0 if not found
  =======================================================================*/
 Support* mdtxGetSupport(char* label)
 {
-  Support* rc = NULL;
-  Support* supp = NULL;
+  Support* rc = 0;
+  Support* supp = 0;
 
   checkLabel(label);  
-  logEmit(LOG_DEBUG, "get %s support", label);
+  logCommon(LOG_DEBUG, "get %s support", label);
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!loadConfiguration(SUPP)) goto error;
@@ -1136,7 +1137,7 @@ Support* mdtxGetSupport(char* label)
   rc = supp;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to get support");
+    logCommon(LOG_ERR, "%s", "fails to get support");
   }
   return rc;
 }
@@ -1152,19 +1153,19 @@ int
 clientLoop(int (*callback)(char*))
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "%s", "loop on all collections");
+  logCommon(LOG_DEBUG, "%s", "loop on all collections");
 
   if (!allowedUser(env.confLabel)) goto error;
 
   // for all collection
   if (!loadConfiguration(CONF)) goto error;
   conf = getConfiguration();
-  if (conf->collections != NULL) {
-    while((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  if (conf->collections != 0) {
+    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
       if (!callback(coll->label)) goto error;
       
       // free memory as soon as possible
@@ -1176,7 +1177,7 @@ clientLoop(int (*callback)(char*))
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "%s", "clientLoop fails");
+    logCommon(LOG_ERR, "%s", "clientLoop fails");
   } 
   return rc;
 }
@@ -1192,19 +1193,19 @@ int
 serverLoop(int (*callback)(Collection*))
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "%s", "loop on all collections (2)");
+  logCommon(LOG_DEBUG, "%s", "loop on all collections (2)");
 
   if (!allowedUser(env.confLabel)) goto error;
 
   // for all collection
   if (!loadConfiguration(CONF)) goto error;
   conf = getConfiguration();
-  if (conf->collections != NULL) {
-    while((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  if (conf->collections != 0) {
+    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
       if (!callback(coll)) goto error;
     }
   }
@@ -1212,7 +1213,7 @@ serverLoop(int (*callback)(Collection*))
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "%s", "serverLoop fails");
+    logCommon(LOG_ERR, "%s", "serverLoop fails");
   } 
   return rc;
 }
@@ -1254,7 +1255,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -1266,10 +1267,11 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

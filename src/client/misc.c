@@ -1,12 +1,12 @@
  /*=======================================================================
- * Version: $Id: misc.c,v 1.2 2014/11/13 16:36:18 nroche Exp $
+ * Version: $Id: misc.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/make
  *
  * Front-end for the html sub modules
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,16 +49,16 @@
 int mdtxMake(char* label)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
+  Collection* coll = 0;
   int uid = getuid();
   int n = 0;
 
   checkLabel(label);
-  logEmit(LOG_DEBUG, "mdtxMake %s", label);
-
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV|CTLG|EXTR)) goto error;
   if (!computeExtractScore(coll)) goto error2;
+
+  logEmit(LOG_INFO, "Make HTML for %s", label);
 
   // roughtly estimate the number of steps
   env.progBar.cur = 0;
@@ -72,7 +72,7 @@ int mdtxMake(char* label)
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
   logEmit(LOG_INFO, "estimate %i steps for all", env.progBar.max);
 
-  logEmit(LOG_NOTICE, "%s", "html");
+  logEmit(LOG_INFO, "%s", "html");
   if (!becomeUser(env.confLabel, TRUE)) goto error2;
   startProgBar("make");
   if (!serializeHtmlCache(coll)) goto error3;
@@ -80,7 +80,7 @@ int mdtxMake(char* label)
   if (!serializeHtmlScore(coll)) goto error3;
   stopProgBar();
   logEmit(LOG_INFO, "steps: %lli / %lli", env.progBar.cur, env.progBar.max);
-  logEmit(LOG_NOTICE, "%s", "ending");
+  logEmit(LOG_INFO, "%s", "ending");
 
   rc = TRUE;
  error3:
@@ -106,9 +106,9 @@ int
 mdtxClean(char* label)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  //Collection* coll = NULL;
-  char* argv[3] = {NULL, NULL, NULL};
+  Configuration* conf = 0;
+  //Collection* coll = 0;
+  char* argv[3] = {0, 0, 0};
 
   logEmit(LOG_DEBUG, "%s", "del a collection");
 
@@ -119,7 +119,7 @@ mdtxClean(char* label)
   argv[0] = catString(argv[0], "/clean.sh");
   argv[1] = label;
 #ifndef utMAIN
-  if (!execScript(argv, "root", NULL, FALSE)) goto error;
+  if (!execScript(argv, "root", 0, FALSE)) goto error;
 #endif
 
   rc = TRUE;
@@ -143,7 +143,7 @@ int
 mdtxInit()
 { 
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0};
 
   logEmit(LOG_DEBUG, "%s", "initializing mdtx software");
 
@@ -152,7 +152,7 @@ mdtxInit()
 
   if (!env.noRegression && !env.dryRun) {
     if (!(argv[0] = catString(argv[0], "/init.sh"))) goto error;
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -176,7 +176,7 @@ int
 mdtxRemove()
 { 
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0};
 
   logEmit(LOG_DEBUG, "%s", "removing mdtx software");
 
@@ -185,7 +185,7 @@ mdtxRemove()
 
   if (!env.noRegression && !env.dryRun) {
     if (!(argv[0] = catString(argv[0], "/remove.sh"))) goto error;
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -209,7 +209,7 @@ int
 mdtxPurge()
 { 
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0};
 
   logEmit(LOG_DEBUG, "%s", "purging mdtx software");
 
@@ -218,7 +218,7 @@ mdtxPurge()
 
   if (!env.noRegression && !env.dryRun) {
     if (!(argv[0] = catString(argv[0], "/purge.sh"))) goto error;
-    if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -241,8 +241,8 @@ int
 mdtxAddUser(char* user)
 { 
   int rc = FALSE;  
-  Configuration* conf = NULL;
-  char *argv[] = {NULL, NULL, NULL};
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0};
 
   checkLabel(user);
   logEmit(LOG_DEBUG, "mdtxAddUser %s:", user);
@@ -253,7 +253,7 @@ mdtxAddUser(char* user)
   argv[1] = user;
   
 #ifndef utMAIN
-  if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argv, 0, 0, FALSE)) goto error;
 #endif
 
   rc = TRUE;
@@ -276,8 +276,8 @@ int
 mdtxDelUser(char* user)
 { 
   int rc = FALSE;  
-  Configuration* conf = NULL;
-  char *argv[] = {NULL, NULL, NULL};
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0};
 
   checkLabel(user);
   logEmit(LOG_DEBUG, "mdtxDelUser %s:", user);
@@ -288,7 +288,7 @@ mdtxDelUser(char* user)
   argv[1] = user;
   
 #ifndef utMAIN
-  if (!execScript(argv, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argv, 0, 0, FALSE)) goto error;
 #endif
 
   rc = TRUE;
@@ -312,7 +312,7 @@ int
 mdtxBind()
 { 
   int rc = FALSE;
-  char *argv[] = {NULL, NULL};
+  char *argv[] = {0, 0};
 
   logEmit(LOG_DEBUG, "%s", "bind mdtx directories");
 
@@ -321,7 +321,7 @@ mdtxBind()
     goto error;
 
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, "root", NULL, FALSE)) goto error;
+    if (!execScript(argv, "root", 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -345,7 +345,7 @@ int
 mdtxUnbind()
 { 
   int rc = FALSE;
-  char *argv[] = {NULL, NULL};
+  char *argv[] = {0, 0};
 
   logEmit(LOG_DEBUG, "%s", "unbind mdtx directories");
 
@@ -354,7 +354,7 @@ mdtxUnbind()
     goto error;
 
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, "root", NULL, FALSE)) goto error;
+    if (!execScript(argv, "root", 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -371,23 +371,23 @@ mdtxUnbind()
  * Description: call bin/bash
  * Synopsis   : int mdtxSu(char* label)
  * Input      : char* label: the collection user to become
- *                                or mdtx user if NULL
+ *                                or mdtx user if 0
  * Output     : TRUE on success
  =======================================================================*/
 int 
 mdtxSu(char* label)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  char* argv[] = {"/bin/bash", NULL, NULL};
-  char* home = NULL;
-  char* user = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  char* argv[] = {"/bin/bash", 0, 0};
+  char* home = 0;
+  char* user = 0;
 
   logEmit(LOG_DEBUG, "mdtxSu %s", label?label:"");
 
   // set the HOME directory environment variable
-  if (label == NULL) {
+  if (label == 0) {
     if (!(conf = getConfiguration())) goto error;
     home = conf->homeDir;
   }
@@ -397,7 +397,7 @@ mdtxSu(char* label)
   }
   
   // get the username
-  if (coll == NULL) {
+  if (coll == 0) {
     user = env.confLabel;
   }
   else {
@@ -411,7 +411,7 @@ mdtxSu(char* label)
     // do not close stdout !
     env.debugScript = TRUE;
     
-    if (!execScript(argv, user, NULL, FALSE)) goto error;
+    if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -434,9 +434,9 @@ int
 mdtxScp(char* label, char* fingerPrint, char* target)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Server* server = NULL;
-  char* argv[] = {"/usr/bin/scp", NULL, NULL, NULL};
+  Collection* coll = 0;
+  Server* server = 0;
+  char* argv[] = {"/usr/bin/scp", 0, 0, 0};
 
   checkLabel(label);
   checkLabel(fingerPrint);
@@ -461,7 +461,7 @@ mdtxScp(char* label, char* fingerPrint, char* target)
       || !(argv[2] = catString(argv[2], target)))
     goto error2;
 
-  if (!env.dryRun && !execScript(argv, coll->user, NULL, FALSE)) 
+  if (!env.dryRun && !execScript(argv, coll->user, 0, FALSE)) 
     goto error2;
   rc = TRUE;
  error2:
@@ -477,32 +477,32 @@ mdtxScp(char* label, char* fingerPrint, char* target)
 
 /*=======================================================================
  * Function   : mdtxUploadFile 
- * Description: check an already registered support
+ * Description: upload a file and add its extraction metadata
  * Synopsis   : int mdtxUploadFile(char* label, char* path)
- * Input      : char* label = support provided
- *            : char* path = path to the device that host the support
+ * Input      : char* label = related collection
+ *            : char* path = path to the file to upload
  * Output     : TRUE on success
  =======================================================================*/
-int 
+int
 mdtxUploadFile(char* label, char* path)
 {
   int rc = FALSE;
   int socket = -1;
-  Collection* coll = NULL;
-  Container* container = NULL;
-  RecordTree* tree = NULL;
-  Record* record = NULL;
-  Archive* archive = NULL;
+  Collection* coll = 0;
+  Container* container = 0;
+  Archive* archive = 0;
+  RecordTree* tree = 0;
+  Record* record = 0;
   struct stat statBuffer;
   Md5Data md5; 
-  char* extra = NULL;
+  char* extra = 0;
 #ifndef utMAIN
-  char* message = NULL;
+  char* message = 0;
   char reply[256];
   int status = 0;
   int n = 0;
 #endif
- 
+
   if (isEmptyString(path)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, EXTR)) goto error;
@@ -534,21 +534,23 @@ mdtxUploadFile(char* label, char* path)
   md5.opp = MD5_CACHE_ID;
   if (!doMd5sum(&md5)) goto error2;
 
-  /* // add the file to the UPLOAD message */
+  // archive to upload
   if (!(archive = addArchive(coll, md5.fullMd5sum, statBuffer.st_size)))
     goto error2;
+
+  /* // add the file to the UPLOAD message */
   if (!(extra = absolutePath(path))) goto error2;
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error2;
-  extra = NULL;
+  extra = 0;
   if (!rgInsert(tree->records, record)) goto error2;
-  record = NULL;
+  record = 0;
   
 #ifdef utMAIN
   logEmit(LOG_INFO, "upload file to %s collection", label);
 #else
   if ((socket = connectServer(coll->localhost)) == -1) goto error2;
-  if (!upgradeServer(socket, tree, NULL)) goto error2;
+  if (!upgradeServer(socket, tree, 0)) goto error2;
 
   // read reply
   n = tcpRead(socket, reply, 255);
@@ -625,8 +627,8 @@ int
 main(int argc, char** argv)
 {
   char inputRep[255] = ".";
-  char* path = NULL;
-  Collection* coll = NULL;
+  char* path = 0;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -634,7 +636,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -643,12 +645,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);

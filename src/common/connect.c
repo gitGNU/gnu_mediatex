@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.2 2014/11/13 16:36:23 nroche Exp $
+ * Version: $Id: connect.c,v 1.3 2015/06/03 14:03:33 nroche Exp $
  * Project: MediaTeX
  * Module : server/connect
  *
  * Manage socket connexion to the server and sending recordTree
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -47,14 +47,14 @@ buildServerAddress(Server* server)
   char service[10];
 
   checkServer(server);
-  logEmit(LOG_DEBUG, "%s", "buildServerAddress");
+  logCommon(LOG_DEBUG, "%s", "buildServerAddress");
 
   // already done
   if (server->address.sin_family) goto end;
 
   // convert port into char
   if (sprintf(service, "%i", server->mdtxPort) < 0) {
-    logEmit(LOG_ERR, "%s", "sprintf connot convert port into service");
+    logCommon(LOG_ERR, "%s", "sprintf cannot convert port into service");
     goto error;
   }
     
@@ -68,7 +68,7 @@ buildServerAddress(Server* server)
   rc = TRUE;
  error:
   if (!rc) {
-       logEmit(LOG_ERR, "%s", "buildServerAddress fails");
+       logCommon(LOG_ERR, "%s", "buildServerAddress fails");
   }
   return rc;
 }
@@ -86,7 +86,7 @@ sigalarmManager(int unused)
 {
   (void) unused;
   // nothing to do
-   logEmit(LOG_NOTICE, "sigalarmManager get %i", unused);
+   logCommon(LOG_NOTICE, "sigalarmManager get %i", unused);
    return;
 }
 
@@ -110,7 +110,7 @@ connectServer(Server* server)
   int err = 0;
 
   checkServer(server);
-  logEmit(LOG_DEBUG, "connectServer %s", server->fingerPrint);
+  logCommon(LOG_DEBUG, "connectServer %s", server->fingerPrint);
 
   // build server address if not already done
   if (server->address.sin_family == 0 && !buildServerAddress(server))
@@ -120,8 +120,8 @@ connectServer(Server* server)
   sigemptyset(&action.sa_mask);
   action.sa_flags = 0;
   action.sa_handler = sigalarmManager;
-  if (sigaction(SIGALRM, &action, NULL) != 0) {
-    logEmit(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
+  if (sigaction(SIGALRM, &action, 0) != 0) {
+    logCommon(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
     goto error;
   }
 
@@ -134,15 +134,15 @@ connectServer(Server* server)
   if (!disableAlarm()) goto error;
 
   if (socket == -1) { 
-    //logEmit(LOG_DEBUG, "errno=%i: %s", err, strerror(err));
+    //logCommon(LOG_DEBUG, "errno=%i: %s", err, strerror(err));
     switch (err) {
     case EINTR:   // interupted by alarm
     case SIGALRM:
-      logEmit(LOG_WARNING, "too much time to reach %s:%i", 
+      logCommon(LOG_WARNING, "too much time to reach %s:%i", 
 	      server->host, server->mdtxPort);
       break;
     default:
-      logEmit(LOG_INFO, "cannot reach %s:%i",
+      logCommon(LOG_INFO, "cannot reach %s:%i",
 	      server->host, server->mdtxPort);
       break;
     }
@@ -150,11 +150,11 @@ connectServer(Server* server)
   }
 
   rc = socket;
-  logEmit(LOG_INFO, "connected to %s (%s)", 
+  logCommon(LOG_INFO, "connected to %s (%s)", 
 	  server->host, server->fingerPrint);
  error:
   if (rc == -1) {
-    logEmit(LOG_ERR, "%s", "connectServer fails");
+    logCommon(LOG_ERR, "%s", "connectServer fails");
   }
  end:
 
@@ -179,17 +179,17 @@ int
 upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
 {
   int rc = FALSE;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Record* record = 0;
+  RGIT* curr = 0;
   struct tm date;
 #ifndef utMAIN
-  char* key = NULL;
+  char* key = 0;
 #endif
 
   checkRecordTree(tree);
   checkCollection(tree->collection);
   
-  logEmit(LOG_DEBUG, "upgradeServer %s %s",
+  logCommon(LOG_DEBUG, "upgradeServer %s %s",
 	  tree->collection->label, strMessageType(tree->messageType));
   
 #ifndef utMAIN
@@ -201,18 +201,18 @@ upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
 
   // send content
   tree->aes.fd = socket;
-  if (!serializeRecordTree(tree, NULL, fingerPrint)) goto error;
+  if (!serializeRecordTree(tree, 0, fingerPrint)) goto error;
 
   if (shutdown(socket, SHUT_WR) == -1) {
-    logEmit(LOG_ERR, "shutdown fails: %s", strerror(errno));
+    logCommon(LOG_ERR, "shutdown fails: %s", strerror(errno));
     goto error;
   }
   
   // add some trace for debugging
-  if(tree != NULL && tree->records != NULL) {
-    while((record = rgNext_r(tree->records, &curr)) != NULL) {
+  if(tree != 0 && tree->records != 0) {
+    while((record = rgNext_r(tree->records, &curr)) != 0) {
       localtime_r(&record->date, &date);
-      logEmit(LOG_INFO, "%c "
+      logCommon(LOG_INFO, "%c "
 	      "%04i-%02i-%02i,%02i:%02i:%02i "
 	      "%*s %*s %*llu %s",
 	      (record->type & 0x3) == DEMAND?'D':
@@ -229,7 +229,7 @@ upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "upgradeServer fails");
+    logCommon(LOG_ERR, "%s", "upgradeServer fails");
   }
   return rc;
 }
@@ -272,13 +272,13 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  Archive* archive = NULL;
-  Server* server = NULL;
-  Record* record = NULL;
-  RecordTree* tree = NULL;
-  char* extra = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  Server* server = 0;
+  Record* record = 0;
+  RecordTree* tree = 0;
+  char* extra = 0;
   int socket = -1;
   // ---
   int rc = 0;
@@ -291,10 +291,11 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -313,7 +314,7 @@ main(int argc, char** argv)
   if (!expandCollection(coll)) goto error;
 
   // new record tree
-  if ((tree = createRecordTree())== NULL) goto error;
+  if ((tree = createRecordTree())== 0) goto error;
   tree->collection = coll;
   strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
 
@@ -343,7 +344,7 @@ main(int argc, char** argv)
   }
 
   // if there is a server listenning, send the record tree
-  if (!upgradeServer(socket, tree, NULL)) goto error;
+  if (!upgradeServer(socket, tree, 0)) goto error;
   /************************************************************************/
 
  end:

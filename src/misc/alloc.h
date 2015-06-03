@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: alloc.h,v 1.2 2014/11/13 16:36:37 nroche Exp $
+ * Version: $Id: alloc.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * modified malloc
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
 #define MISC_ALLOC_H 1
 
 #include "log.h"
+#include <malloc.h>
 
 #define malloc(s) mdtxMalloc(s, __FILE__, __LINE__)
 #define free(p) mdtxFree(p, __FILE__, __LINE__)

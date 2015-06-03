@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shm.c,v 1.2 2014/11/13 16:36:44 nroche Exp $
+ * Version: $Id: shm.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
  * Project: MediaTeX
  * Module : shm
  *
@@ -10,7 +10,7 @@
  if not, error ENOSYS is raised
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -63,11 +63,11 @@ shmWrite(char* pathFile, int shmSize,
   struct sembuf sembuf;
   semun_t u_semun;
   unsigned short table[1];
-  void* buffer = NULL;
+  void* buffer = 0;
 
   logEmit(LOG_DEBUG, "%s", "shmWrite");
 
-  if (pathFile == NULL || *pathFile == (char)0) {
+  if (pathFile == 0 || *pathFile == (char)0) {
     logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
@@ -89,7 +89,7 @@ shmWrite(char* pathFile, int shmSize,
   }
 
   // Attach the share memory segment to the space memory of the processus
-  if ((buffer = shmat(shm, NULL, 0)) == NULL) {
+  if ((buffer = shmat(shm, 0, 0)) == 0) {
     logEmit(LOG_ERR, "shmat fails to attach share memory: %s", 
 	    strerror(errno)); 
     goto error;
@@ -174,11 +174,11 @@ shmRead(char* pathFile, int shmSize,
   int sem;
   int shm;
   struct sembuf sembuf;
-  void* buffer = NULL;
+  void* buffer = 0;
 
   logEmit(LOG_DEBUG, "%s", "shmRead");
 
-  if (pathFile == NULL || *pathFile == (char)0) {
+  if (pathFile == 0 || *pathFile == (char)0) {
     logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
@@ -208,7 +208,7 @@ shmRead(char* pathFile, int shmSize,
   }
   
   // Attach the share memory segment to the space memory of the processus
-  if ((buffer = shmat(shm, NULL, SHM_RDONLY)) == NULL) {
+  if ((buffer = shmat(shm, 0, SHM_RDONLY)) == 0) {
     logEmit(LOG_ERR, "shmat fails to attach share memory: %s", 
 	    strerror(errno)); 
     goto error;
@@ -269,7 +269,7 @@ shmFree(char* pathFile, int shmSize)
 
   logEmit(LOG_DEBUG, "%s", "shmFree");
 
-  if (pathFile == NULL || *pathFile == (char)0) {
+  if (pathFile == 0 || *pathFile == (char)0) {
     logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
@@ -295,7 +295,7 @@ shmFree(char* pathFile, int shmSize)
   }
 
   // Free share memory IPC ressource
-  if (shmctl(shm, IPC_RMID, NULL) == -1) {
+  if (shmctl(shm, IPC_RMID, 0) == -1) {
     logEmit(LOG_ERR, "shmctl fails: %s", strerror(errno)); 
     goto error;
   }
@@ -395,9 +395,9 @@ int main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"rwc";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"read", no_argument, NULL, 'r'},
-    {"write", no_argument, NULL, 'w'},
-    {"clean", no_argument, NULL, 'c'},
+    {"read", no_argument, 0, 'r'},
+    {"write", no_argument, 0, 'w'},
+    {"clean", no_argument, 0, 'c'},
     {0, 0, 0, 0}
   };
 
@@ -405,7 +405,7 @@ int main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -444,10 +444,10 @@ int main(int argc, char** argv)
   /************************************************************************/
   switch (role) {
   case WRITER:
-    rc = shmWrite(argv[0], MDTX_SHM_BUFF_SIZE, exempleForWrite, NULL);
+    rc = shmWrite(argv[0], MDTX_SHM_BUFF_SIZE, exempleForWrite, 0);
     break;
   case READER:
-    rc = shmRead(argv[0], MDTX_SHM_BUFF_SIZE, exempleForRead, NULL);
+    rc = shmRead(argv[0], MDTX_SHM_BUFF_SIZE, exempleForRead, 0);
     break;
   case CLEANER:
     rc = shmFree(argv[0], MDTX_SHM_BUFF_SIZE);

@@ -124,8 +124,6 @@ N ut2-mdtx-hello/servers.txt
 [debug cvs.sh] SSH_bootstrapKeys ut2-mdtx-hello 
 known_hosts updated.
 Original contents retained as known_hosts.old
-WARNING: known_hosts.old contains unhashed entries
-Delete this file to ensure privacy of hostnames
 [debug cvs.sh] SSH_configure_client ut2-mdtx-hello localhost 22
 [info cvs.sh] su USER -c "ssh -o PasswordAuthentication=no ut2-mdtx-hello@localhost ls"
 cache

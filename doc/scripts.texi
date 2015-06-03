@@ -25,7 +25,8 @@ Flood diagram:
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload
-from @actorAdmin{} to @procScriptsInitd
+from 
+@actorAdmin{} to @procScriptsInitd
 @item @eventScriptsCgiGetQuery
 @itemx @eventScriptsCgiPostQuery 
 from @procToolsApache{} to @procScriptsCgi
@@ -84,7 +85,8 @@ from @procScriptsDeliver{} to @procToolsExim
 @itemx @eventClientMotd
 from @procScriptsCron{} respectively to @procClientMotd{}: generate the message of the day.
 @item @eventActorPublisherMotd
-from @procScriptsCron{} to @actorPublisher{}: update the (above generated) message of the day.
+from @procScriptsCron{} to 
+@actorPublisher{}: update the (above generated) message of the day.
 @end table
 @end itemize
 

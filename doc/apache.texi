@@ -34,12 +34,15 @@ Process conceptual model:
 @itemx @eventToolsApacheRestart
 from @procScriptsInitRemovePurge
 @item @eventToolsApacheHttpGet 
-from @actorUser{}: resulting from a click on an archive's @acronym{URL}.
+from 
+@actorUser{}: resulting from a click on an archive's @acronym{URL}.
 @item @eventToolsApacheHttpPost 
-from @actorUser{}: submiting the requested form to provide @acronym{eMAIL} 
+from 
+@actorUser{}: submiting the requested form to provide @acronym{eMAIL} 
 address, in order to be call back when archive will become available.
 @item @eventToolsApacheStartDownload
-from @actorUser{}: final request for a file availble into the cache.
+from 
+@actorUser{}: final request for a file availble into the cache.
 @end table
 
 @item Events out
@@ -49,9 +52,10 @@ from @actorUser{}: final request for a file availble into the cache.
 to @procScriptsCgi{}: forward queries to the @acronym{CGI} script.
 @item @eventActorUserHtmlForm 
 (if archive is not available) ...
-@itemx @eventActorUserHtmlRedirect 
+@item @eventActorUserHtmlRedirect 
 (if archive is available) @*
-to @actorUser{}: send back either a form asking form an @acronym{eMAIL} address, or a redirection link to the archive into one server's cache.
+to 
+@actorUser{}: send back either a form asking form an @acronym{eMAIL} address, or a redirection link to the archive into one server's cache.
 @end table
 
 @item Data in

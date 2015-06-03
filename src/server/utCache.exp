@@ -1,3 +1,4 @@
+[notice confFile.y] parse configuration
 [notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] Clean the cache:
 [notice utFunc.c] ..........................................................
@@ -54,31 +55,23 @@
 [info command.c]  arg2: ./../../examples/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
-[info openClose.c] records file is: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [info md5sum.c] de5008799752552b7963a2670dc5eb18 quick md5sum computed on 391168 bytes
 [info md5sum.c] de5008799752552b7963a2670dc5eb18  full md5sum computed on 391168 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6 quick md5sum computed on 4066 bytes
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6  full md5sum computed on 4066 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f quick md5sum computed on 374784 bytes
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f  full md5sum computed on 374784 bytes
-[info cacheTree.c] state: UNUSED -> AVAILABLE
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Scan gives :
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -98,12 +91,9 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] Keep logoP1.iso and logoP2.iso:
 [notice utFunc.c] ..........................................................
-[info cacheTree.c] state: AVAILABLE -> TOKEEP
-[info cacheTree.c] state: AVAILABLE -> TOKEEP
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] Now we have :
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -134,7 +124,6 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] reply : 0
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -160,11 +149,9 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [info cache.c] free   =    104018481
 [info cache.c] frozen =       765952
 [info cache.c] avail  =    104091648
-[info cacheTree.c] state: UNUSED -> ALLOCATED
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] reply : 1
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -182,7 +169,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
     
 [notice utFunc.c] ----------------------------------------------------------
-[info cacheTree.c] state: ALLOCATED -> UNUSED
 [notice utFunc.c] ----------------------------------------------------------
 [notice utFunc.c] Ask for place so as we need to suppress files :
 [notice utFunc.c] ..........................................................
@@ -192,93 +178,13 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [info cache.c] free   =    104018481
 [info cache.c] frozen =       765952
 [info cache.c] avail  =    104091648
-[info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
-[info extractScore.c]    7.50
-[info extractScore.c]   14.00
-[info extractScore.c] = 21.50
-[info extractScore.c] / 2
-[info extractScore.c] > 10.00
-[info extractScore.c] -------
-[info extractScore.c] = 10.00
-[info extractScore.c] local image score for de5008799752552b7963a2670dc5eb18:391168
-[info extractScore.c]   10.00
-[info extractScore.c]    2.00
-[info extractScore.c] + 12.00
-[info extractScore.c] = 24.00
-[info extractScore.c] / 2
-[info extractScore.c] > 10.00
-[info extractScore.c] -------
-[info extractScore.c] = 10.00
-[info extractScore.c] local image score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]   17.50
-[info extractScore.c] = 17.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  8.75
-[info extractScore.c]         archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]        container ISO/de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]       archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c]         archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 8.75
-[info extractScore.c]        container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 8.75
-[info extractScore.c]       archive c0c055a0829982bd646e2fafff01aaa6:4066 = 8.75
-[info extractScore.c]      container CAT/1a167d608e76a6a4a8b16d168580873c:20480 = 8.75
-[info extractScore.c]     archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 8.75
-[info extractScore.c]    container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 8.75
-[info extractScore.c]     archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]    container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]     archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]    container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]     archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]    container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]       archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]      container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]       archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]      container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]     archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]    container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]     archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]    container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]     archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]     archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]    container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   archive 022a34b2f9b893fba5774237e1aa80ea:24075 = 10.00
-[info extractScore.c]   archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 8.75
-[info extractScore.c]   archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 8.75
-[info extractScore.c]   archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c]   archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]   archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   archive aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104016433 = 0.00
-[info extractScore.c]    container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 8.75
-[info extractScore.c]    container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]    container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]    container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]    container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]    container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]    container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   archive b281449c229bcc4a3556cdcc0d3ebcec:815 = 8.75
-[info extractScore.c]   archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   archive bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:104089600 = 0.00
-[info extractScore.c]   archive c0c055a0829982bd646e2fafff01aaa6:4066 = 8.75
-[info extractScore.c]   archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]   archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]   archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.png
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
-[info cacheTree.c] state: AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat
-[info cacheTree.c] state: UNUSED -> ALLOCATED
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] reply : 1
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -301,7 +207,6 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [info cache.c] free   =         2048
 [info cache.c] frozen =       765952
 [info cache.c] avail  =    104091648
-[info cacheTree.c] state: UNUSED -> ALLOCATED
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../../examples/README
@@ -310,7 +215,6 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utFunc.c] ..........................................................
 [notice utFunc.c] reply : upload ok
 [notice utFunc.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -338,13 +242,8 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
-[info cacheTree.c] state: TOKEEP -> UNUSED
-[info cacheTree.c] state: ALLOCATED -> UNUSED
-[info cacheTree.c] state: ALLOCATED -> UNUSED
-[info cacheTree.c] state: TOKEEP -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
-[info confTree.c] free configuration
 [info cache.c] exit on success

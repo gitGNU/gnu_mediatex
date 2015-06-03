@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.2 2014/11/13 16:36:17 nroche Exp $
+ * Version: $Id: catalogHtml.c,v 1.3 2015/06/03 14:03:28 nroche Exp $
  * Project: MediaTeX
  * Module : Archive catalog's latex serializer
  *
  * Archive catalog's latex serializer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -149,11 +149,11 @@ static int
 htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
 {
   int rc = FALSE;
-  AssoCarac *assoCarac = NULL;
+  AssoCarac *assoCarac = 0;
   char url[512];
   char score[8];
   char* path = "floppy-icon.png";
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkArchive(self);
   logEmit(LOG_DEBUG, "htmlIndexArchive: %s:%lli", 
@@ -177,14 +177,14 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
   htmlImage(fd, "../../../icons", path, url);
 
   getArchiveUri(url, "../../../score", self);
-  htmlLink(fd, NULL, url, score);
+  htmlLink(fd, 0, url, score);
 
   /* latexalize caracs */
   if (!isEmptyRing(self->assoCaracs)) {
     rgRewind(self->assoCaracs);
     htmlUlOpen(fd);
 
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!strcmp(assoCarac->carac->label, "icon")) continue;
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
@@ -215,9 +215,9 @@ static int
 serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
 {
   int rc = FALSE;
-  AssoRole* asso = NULL;
+  AssoRole* asso = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   int j = 0;
@@ -235,7 +235,7 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -252,10 +252,10 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
     if (!sprintf(text, "%s %s", asso->human->firstName,
 		 asso->human->secondName)) goto error;
     htmlLiOpen(fd);
-    htmlLink(fd, NULL, url, text);
+    htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
-    while ((asso = rgNext(assoRoles)) != NULL && humId == asso->human->id);
+    while ((asso = rgNext(assoRoles)) != 0 && humId == asso->human->id);
     if (asso) humId = asso->human->id;
   }
   htmlUlClose(fd);
@@ -292,16 +292,16 @@ static int
 serializeHtmlRole(Collection* coll, Role* self)
 {
   int rc = FALSE;
-  AssoRole* assoRole = NULL;
+  AssoRole* assoRole = 0;
   FILE* fd = stdout;
-  char* path = NULL;
-  char* path2 = NULL;
+  char* path = 0;
+  char* path2 = 0;
   char tmp[128];
   int humId = -1;
   int nbHum = 0;
   int i = 0, n = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "serializeHtmlRole %i: %s", self->id, self->label);
 
   // serialize the role header (included by each list)
@@ -322,7 +322,7 @@ serializeHtmlRole(Collection* coll, Role* self)
     if (!rgSort(self->assos, cmpAssoRole)) goto error; 
 
     rgRewind(self->assos);
-    while ((assoRole = rgNext(self->assos)) != NULL) {
+    while ((assoRole = rgNext(self->assos)) != 0) {
       if (humId == assoRole->human->id) continue;
       humId = assoRole->human->id;
       ++nbHum;
@@ -332,8 +332,8 @@ serializeHtmlRole(Collection* coll, Role* self)
   // serialize header file for this role
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2); 
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }  
@@ -356,7 +356,7 @@ serializeHtmlRole(Collection* coll, Role* self)
  
     // build lists sub-directories (group by MAX_FILES_PER_DIR)
     n = (nbHum - 1) / MAX_INDEX_PER_PAGE +1;
-    logEmit(LOG_INFO, "have %i human, so %i lists for role %s", 
+    logEmit(LOG_DEBUG, "have %i human, so %i lists for role %s", 
 	    nbHum, n, self->label);
     if (!htmlMakeDirs(path, n)) goto error;
       
@@ -390,17 +390,17 @@ static int
 serializeHtmlHuman(Collection* coll, Human* self)
 {
   int rc = FALSE;
-  Category* category = NULL;
-  AssoCarac *assoCarac = NULL;
-  AssoRole* assoRole = NULL;
-  Role*     role = NULL;
+  Category* category = 0;
+  AssoCarac *assoCarac = 0;
+  AssoRole* assoRole = 0;
+  Role*     role = 0;
   FILE* fd = stdout;
-  char* path = NULL;
+  char* path = 0;
   char url[128];
   char text[128];
   int nbCategory = -1;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "serializeHtmlHuman %i: %s %s", 
 	  self->id, self->firstName, self->secondName);
 
@@ -408,8 +408,8 @@ serializeHtmlHuman(Collection* coll, Human* self)
   if (!(path = createString(coll->htmlIndexDir))) goto error;
   if (!(path = catString(path, url))) goto error;
 
-  logEmit(LOG_INFO, "serialize: %s", path); 
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "serialize: %s", path); 
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }  
@@ -430,10 +430,10 @@ serializeHtmlHuman(Collection* coll, Human* self)
     htmlPOpen(fd);
     if (!fprintf(fd, "%s", "(")) goto error;
     rgRewind(self->categories);
-    while ((category = rgNext(self->categories)) != NULL) {
+    while ((category = rgNext(self->categories)) != 0) {
       getCateListUri(url, "../..", category->id, 1);
       fprintf(fd, "%s", (++nbCategory)?", ":""); // may return 0
-      htmlLink(fd, NULL, url, category->label);
+      htmlLink(fd, 0, url, category->label);
     }
     if (!fprintf(fd, "%s", ")")) goto error;
     htmlPClose(fd);
@@ -447,7 +447,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -461,21 +461,21 @@ serializeHtmlHuman(Collection* coll, Human* self)
     htmlUlOpen(fd);
     rgRewind(self->assoRoles);
     if (!rgSort(self->assoRoles, cmpAssoRole)) goto error;
-    while ((assoRole = rgNext(self->assoRoles)) != NULL) {
+    while ((assoRole = rgNext(self->assoRoles)) != 0) {
 
       if (!role || assoRole->role != role) {
 	if (role) htmlUlClose(fd);
 	role = assoRole->role;
 	htmlLiOpen(fd);
 	getRoleListUri(url, "../..", assoRole->role->id, 1);
-	htmlLink(fd, NULL, url, assoRole->role->label);
+	htmlLink(fd, 0, url, assoRole->role->label);
 	htmlUlOpen(fd);
       }
 
       htmlLiOpen(fd);
       getDocumentUri(url, "../..", assoRole->document->id);
       if (!fprintf(fd, "%s", _("for "))) goto error;
-      htmlLink(fd, NULL, url, assoRole->document->label);
+      htmlLink(fd, 0, url, assoRole->document->label);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -513,17 +513,17 @@ static int
 serializeHtmlDocument(Collection* coll, Document* self)
 {
   int rc = FALSE;
-  Category* category = NULL;
-  AssoCarac  *assoCarac  = NULL;
-  AssoRole* assoRole = NULL;
-  Archive *archive = NULL;
+  Category* category = 0;
+  AssoCarac  *assoCarac  = 0;
+  AssoRole* assoRole = 0;
+  Archive *archive = 0;
   FILE* fd = stdout;
-  char* path = NULL;
+  char* path = 0;
   char url[128];
   char text[128];
   int nbCategory = -1;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "serializeHtmlDocument %i: %s", self->id, self->label);
 
   getDocumentUri(url, "/", self->id);
@@ -531,7 +531,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize: %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }  
@@ -549,10 +549,10 @@ serializeHtmlDocument(Collection* coll, Document* self)
     htmlPOpen(fd);
     if (!fprintf(fd, "%s", "(")) goto error;
     rgRewind(self->categories);
-    while ((category = rgNext(self->categories)) != NULL) {
+    while ((category = rgNext(self->categories)) != 0) {
       getCateListUri(url, "../..", category->id, 1);
       fprintf(fd, "%s", (++nbCategory)?", ":""); // may return 0
-      htmlLink(fd, NULL, url, category->label);
+      htmlLink(fd, 0, url, category->label);
     }
     if (!fprintf(fd, "%s", ")")) goto error;
     htmlPClose(fd);
@@ -566,7 +566,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -579,18 +579,18 @@ serializeHtmlDocument(Collection* coll, Document* self)
     if (!fprintf(fd, "%s", _("\nParteners:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoRoles);
-    while ((assoRole = rgNext(self->assoRoles)) != NULL) {
+    while ((assoRole = rgNext(self->assoRoles)) != 0) {
       htmlLiOpen(fd);
 
       getRoleListUri(url, "../..", assoRole->role->id, 1);
-      htmlLink(fd, NULL, url, assoRole->role->label);
+      htmlLink(fd, 0, url, assoRole->role->label);
       if (!fprintf(fd, "%s", " : ")) goto error;
 
       getHumanUri(url, "../..", assoRole->human->id);
       if (!sprintf(text, "%s %s", assoRole->human->firstName,
 		   assoRole->human->secondName)) goto error;
 
-      htmlLink(fd, NULL, url, text);
+      htmlLink(fd, 0, url, text);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -603,7 +603,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->archives)) {
     rgRewind(self->archives); 
-    while ((archive = rgNext(self->archives)) != NULL) {
+    while ((archive = rgNext(self->archives)) != 0) {
       htmlIndexArchive(fd, coll, archive);
     }
   }
@@ -646,10 +646,10 @@ static int
 serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
 {
   int rc = FALSE;
-  RG* documents = NULL;
-  Document* document = NULL;
+  RG* documents = 0;
+  Document* document = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   int j = 0;
@@ -664,7 +664,7 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -682,7 +682,7 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
     getDocumentUri(url, "../../..", document->id);
     if (!sprintf(text, "%s", document->label)) goto error;
     htmlLiOpen(fd);
-    htmlLink(fd, NULL, url, text);
+    htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
     document = rgNext(documents);
@@ -723,17 +723,17 @@ static int
 serializeHtmlCategory(Collection* coll, Category* self)
 {
   int rc = FALSE;
-  AssoCarac  *assoCarac = NULL;
-  Human *human = NULL;
-  Category* cat = NULL;
+  AssoCarac  *assoCarac = 0;
+  Human *human = 0;
+  Category* cat = 0;
   FILE* fd = stdout;
-  char* path = NULL;
-  char* path2 = NULL;
+  char* path = 0;
+  char* path2 = 0;
   char tmp[128];
   char url[128];
   int nbDoc = 0, i = 0, n = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "serializeHtmlCategory %i: %s",
   	  self->id, self->label);
 
@@ -753,8 +753,8 @@ serializeHtmlCategory(Collection* coll, Category* self)
   // serialize header file for this role
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2);
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2);
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno));
     goto error;
   }
@@ -773,10 +773,10 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nParent classes: "))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->fathers);
-    while ((cat = rgNext(self->fathers)) != NULL) {
+    while ((cat = rgNext(self->fathers)) != 0) {
       getCateListUri(url, "../../..", cat->id, 1);
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, cat->label);
+      htmlLink(fd, 0, url, cat->label);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -789,10 +789,10 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nSub-classes:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->childs);
-    while ((cat = rgNext(self->childs)) != NULL) {
+    while ((cat = rgNext(self->childs)) != 0) {
         getCateListUri(url, "../../..", cat->id, 1);
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, cat->label);
+      htmlLink(fd, 0, url, cat->label);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -805,7 +805,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nCharacteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -818,13 +818,13 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, _("\nParteners:\n"))) goto error;
     htmlUlOpen(fd);
     if (!rgSort(self->humans, cmpHuman)) goto error;
-    while ((human = rgNext(self->humans)) != NULL) {
+    while ((human = rgNext(self->humans)) != 0) {
       getHumanUri(url, "../../..", human->id);
       if (!sprintf(tmp, "%s %s", human->firstName, human->secondName))
   	goto error;
 
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, tmp);
+      htmlLink(fd, 0, url, tmp);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -848,7 +848,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
 
     // compute the number of document into this category
     n = (nbDoc - 1) / MAX_INDEX_PER_PAGE +1;
-    logEmit(LOG_INFO, "have %i doc, so %i lists for category %s",
+    logEmit(LOG_DEBUG, "have %i doc, so %i lists for category %s",
   	    nbDoc, n, self->label);
 
     // build lists sub-directories (group by MAX_FILES_PER_DIR)
@@ -891,9 +891,9 @@ static int
 serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
 {
   int rc = FALSE;
-  Document* document = NULL;
+  Document* document = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   int j = 0;
 
@@ -904,7 +904,7 @@ serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -921,7 +921,7 @@ serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
 
     getDocumentUri(url, "../..", document->id);
     htmlLiOpen(fd);
-    htmlLink(fd, NULL, url, document->label);
+    htmlLink(fd, 0, url, document->label);
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -960,16 +960,16 @@ static int
 serializeHtmlDocLists(Collection* coll, CatalogTree* self)
 {
   int rc = FALSE;
-  AVLNode *node = NULL;
+  AVLNode *node = 0;
   FILE* fd = stdout;
   char tmp[128];
-  char* path = NULL;
-  char* path2 = NULL;
+  char* path = 0;
+  char* path2 = 0;
   int nbDoc = 0;
   int i = 0;
   int n = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "%s", "serializeHtmlDocLists");
 
   nbDoc = avl_count(self->documents);
@@ -987,8 +987,8 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
   // serialize header file for the document list
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2); 
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }  
@@ -1007,7 +1007,7 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
 
   // get the total number of lists of documents
   n = (nbDoc - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_INFO, "have %i document lists", n);
+  logEmit(LOG_DEBUG, "have %i document lists", n);
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
   if (!htmlMakeDirs(path, n)) goto error;
@@ -1021,7 +1021,7 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
   // empty list if needed
   if (n == 0) {
     if (!htmlMakeDirs(path, 1)) goto error;
-    if (!serializeHtmlDocList(coll, NULL, 1, 0)) goto error;
+    if (!serializeHtmlDocList(coll, 0, 1, 0)) goto error;
   }
 
   rc = TRUE;
@@ -1048,10 +1048,10 @@ static int
 serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
 {
   int rc = FALSE;
-  CatalogTree* self = NULL;
-  Human* human = NULL;
+  CatalogTree* self = 0;
+  Human* human = 0;
   FILE *fd = stdout;
-  char *path = NULL;
+  char *path = 0;
   char url[128];
   char text[128];
   int j = 0;
@@ -1064,7 +1064,7 @@ serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
   if (!(path = catString(path, url))) goto error;
 
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -1082,7 +1082,7 @@ serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
     if (!sprintf(text, "%s %s", human->firstName,
 		 human->secondName)) goto error;
     htmlLiOpen(fd);
-    htmlLink(fd, NULL, url, text);
+    htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -1122,16 +1122,16 @@ static int
 serializeHtmlHumLists(Collection* coll, CatalogTree* self)
 {
   int rc = FALSE;
-  AVLNode *node = NULL;
+  AVLNode *node = 0;
   FILE* fd = stdout;
   char tmp[128];
-  char* path = NULL;
-  char* path2 = NULL;
+  char* path = 0;
+  char* path2 = 0;
   int nbHum = 0;
   int i = 0;
   int n = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   logEmit(LOG_DEBUG, "%s", "serializeHtmlDocLists");
 
   nbHum = avl_count(self->humans);
@@ -1149,8 +1149,8 @@ serializeHtmlHumLists(Collection* coll, CatalogTree* self)
   // serialize header file for this role
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_INFO, "Serialize %s", path2); 
-  if (!env.dryRun && (fd = fopen(path2, "w")) == NULL) {
+  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }  
@@ -1169,7 +1169,7 @@ serializeHtmlHumLists(Collection* coll, CatalogTree* self)
 
   // get the total number of lists of documents
   n = (nbHum - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_INFO, "have %i human lists", n);
+  logEmit(LOG_DEBUG, "have %i human lists", n);
   if (nbHum <= 0) goto end;
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
@@ -1205,16 +1205,16 @@ static int
 serializeHtmlMainIndex(Collection* coll)
 { 
   int rc = FALSE;
-  CatalogTree* self = NULL;
+  CatalogTree* self = 0;
   FILE* fd = stdout;
-  char* path = NULL;
+  char* path = 0;
 
   if (!(self = coll->catalogTree)) goto error;
 
   if (!(path = createString(coll->htmlIndexDir))) goto error;
   if (!(path = catString(path, "/index.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize: %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }  
@@ -1265,21 +1265,21 @@ static int
 htmlCategoryMenu(FILE* fd, Category* self, int depth)
 {
   int rc = FALSE;
-  Category* category = NULL;
+  Category* category = 0;
   char url[128];
 
-  if (self == NULL) goto error;
+  if (self == 0) goto error;
   logEmit(LOG_DEBUG, "htmlCategoryMenu %i", depth);
 
   getCateListUri(url, "<!--#echo var='HOME' -->/index", self->id, 1);
   if (depth>0) htmlLiOpen(fd);
-  htmlLink(fd, NULL, url, self->label);
+  htmlLink(fd, 0, url, self->label);
 
   /* childs */
   rgRewind(self->childs);
   if (!isEmptyRing(self->childs)) {
     htmlUlOpen(fd);
-    while((category = rgNext(self->childs)) != NULL) {
+    while((category = rgNext(self->childs)) != 0) {
       if (category->show && !htmlCategoryMenu(fd, category, depth+1)) 
 	goto error;
     }
@@ -1305,11 +1305,11 @@ static int
 serializeHtmlIndexHeader(Collection* coll)
 { 
   int rc = FALSE;
-  CatalogTree* self = NULL;
-  Category* category = NULL;
-  Role* role = NULL;
+  CatalogTree* self = 0;
+  Category* category = 0;
+  Role* role = 0;
   FILE* fd = stdout;
-  char* path = NULL;
+  char* path = 0;
   char url[512];
 
   if (!(self = coll->catalogTree)) goto error;
@@ -1317,7 +1317,7 @@ serializeHtmlIndexHeader(Collection* coll)
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/indexHeader.shtml"))) goto error;
   logEmit(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == NULL) {
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
@@ -1327,7 +1327,7 @@ serializeHtmlIndexHeader(Collection* coll)
 
   htmlPOpen(fd);
   getDocListUri(url, "<!--#echo var='HOME' -->/index", 1);
-  htmlLink(fd, NULL, url, _("All documents"));
+  htmlLink(fd, 0, url, _("All documents"));
   htmlPClose(fd);
 
   // categories
@@ -1336,7 +1336,7 @@ serializeHtmlIndexHeader(Collection* coll)
     if (!fprintf(fd, _("\nClasses:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories)) != NULL) {
+    while((category = rgNext(self->categories)) != 0) {
       if (category->show && isEmptyRing(category->fathers)) {
 	htmlLiOpen(fd);
 	if (!htmlCategoryMenu(fd, category, 0)) goto error;
@@ -1352,14 +1352,14 @@ serializeHtmlIndexHeader(Collection* coll)
     htmlPOpen(fd);
 
     getHumListUri(url, "<!--#echo var='HOME' -->/index", 1);
-    htmlLink(fd, NULL, url, _("Parteners:"));
+    htmlLink(fd, 0, url, _("Parteners:"));
 
     htmlUlOpen(fd);
     rgRewind(self->roles);
-    while ((role = rgNext(self->roles)) != NULL) {
+    while ((role = rgNext(self->roles)) != 0) {
       getRoleListUri(url, "<!--#echo var='HOME' -->/index", role->id, 1);
       htmlLiOpen(fd);
-      htmlLink(fd, NULL, url, role->label);
+      htmlLink(fd, 0, url, role->label);
       htmlLiClose(fd);
     }
     htmlUlClose(fd);
@@ -1398,15 +1398,15 @@ int
 serializeHtmlIndex(Collection* coll)
 { 
   int rc = FALSE;
-  CatalogTree* self = NULL;
-  Category *category = NULL;
-  Document *document = NULL;
-  Human *human = NULL;
-  Role *role = NULL;
-  AVLNode *node = NULL;
+  CatalogTree* self = 0;
+  Category *category = 0;
+  Document *document = 0;
+  Human *human = 0;
+  Role *role = 0;
+  AVLNode *node = 0;
   char tmp[128];
-  char *path1 = NULL;
-  char *path2 = NULL;
+  char *path1 = 0;
+  char *path2 = 0;
   int nbDoc = 0;
   int nbHum = 0;
 
@@ -1449,7 +1449,7 @@ serializeHtmlIndex(Collection* coll)
   }
 
   if (nbDoc > 0) {
-    logEmit(LOG_INFO, "have %i documents", nbDoc);
+    logEmit(LOG_DEBUG, "have %i documents", nbDoc);
     if (!htmlMakeDirs(path1, nbDoc)) goto error;
   }
 
@@ -1466,7 +1466,7 @@ serializeHtmlIndex(Collection* coll)
   }
   
   if (nbHum > 0) {
-    logEmit(LOG_INFO, "have %i humans", nbHum);
+    logEmit(LOG_DEBUG, "have %i humans", nbHum);
     if (!htmlMakeDirs(path1, nbHum)) goto error;
   }
 
@@ -1489,7 +1489,7 @@ serializeHtmlIndex(Collection* coll)
   // roles
   if (!isEmptyRing(self->roles)) {
     if (!rgSort(self->roles, cmpRole)) goto error;
-    while((role = rgNext(self->roles)) != NULL) {
+    while((role = rgNext(self->roles)) != 0) {
       if (!serializeHtmlRole(coll, role)) goto error;
     }
   }
@@ -1497,7 +1497,7 @@ serializeHtmlIndex(Collection* coll)
   // categories
   if (!isEmptyRing(self->categories)) {
     if (!rgSort(self->categories, cmpCategory)) goto error;
-    while((category = rgNext(self->categories)) != NULL) {
+    while((category = rgNext(self->categories)) != 0) {
       if (!serializeHtmlCategory(coll, category)) goto error;
     }
   }
@@ -1555,7 +1555,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -1570,7 +1570,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

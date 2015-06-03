@@ -7,7 +7,8 @@ Top Category "media"
 Top Category "image": "media"
 Top Category "drawing": "image"
 Top Category "animal"
-Category "hand": "drawing", "animal"
+Category "\"hand\"": "drawing", "animal"
+Category "hand"
 
 # Humans:
 

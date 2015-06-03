@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utMediatex.sh,v 1.2 2014/11/13 16:36:15 nroche Exp $
+# * Version: $Id: utMediatex.sh,v 1.3 2015/06/03 14:03:27 nroche Exp $
 # * Project: MediaTex
 # * Module : C codes
 # *
 # * This script is include by all C unit tests
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,8 @@
 #set -x
 
 [ -z $srcdir ] && srcdir=.
-CONFIG=../../config.h # do not prefix by ${srcdir} (important for distcheck)
+# do not prefix by ${srcdir} (important for distcheck)
+CONFIG=../../mediatex-config.h 
 HEADER=${srcdir}/../mediatex.h
 
 # this script should alway be called from one directory deeper

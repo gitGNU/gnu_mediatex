@@ -18,15 +18,18 @@ Process conceptual model:
 @item @eventClientMiscInit
 @itemx @eventClientMiscRemove
 @itemx @eventClientMiscPurge
-from @actorAdmin
+from 
+@actorAdmin
 @item @eventClientMiscSu
 @itemx @eventClientMiscMake
 @itemx @eventClientMiscUpload
-from @actorPublisher
+from 
+@actorPublisher
 @item @eventClientMiscClean
 @item @eventClientMiscAddUser
 @item @eventClientMiscDelUser
-from @actorPublisher
+from 
+@actorPublisher
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
 from @activityServer

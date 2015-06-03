@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: unitTest.sh,v 1.2 2014/11/13 16:36:13 nroche Exp $
+# * Version: $Id: unitTest.sh,v 1.3 2015/06/03 14:03:26 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -10,7 +10,7 @@ set -e
 #   "module.out" output is match against "module.exp" expected output
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ function UNIT_TEST_populate_datadir()
     done
 
     mkdir -p $ETCDIR # TO MOVE !!
-    mkdir -p $SYSCONFDIR/apache2/conf.d
+    mkdir -p $SYSCONFDIR/apache2/conf-available
 }
 # this function set the directory to use for unit tests
 # $1: root directory to add before /

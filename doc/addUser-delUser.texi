@@ -1,7 +1,8 @@
 @cindex group
 @cindex publisher user
 
-Theses 2 scripts manage @actorPublisher{} users by adding/removing
+Theses 2 scripts manage 
+@actorPublisher{} users by adding/removing
 them from the @code{mdtx} system group and collection's groups too.
 
 Process conceptual model:

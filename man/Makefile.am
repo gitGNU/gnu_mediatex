@@ -44,3 +44,6 @@ mediatexd.1: $(top_srcdir)/src/bin/mediatexd $(common_mandeps)
 
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+
+clean-local:
+	rm -f *.1

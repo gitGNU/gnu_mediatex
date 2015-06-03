@@ -37,7 +37,6 @@ Fait.
 [debug users.sh] USERS_mdtx_populate
 [debug users.sh] USERS_mdtx_create_user: 
 [debug users.sh] USERS_create_user: ut1-mdtx /var/cache/mediatex/ut1-mdtx
-[warn users.sh] reuse the existing ut1-mdtx's home
 [info users.sh] ut1-mdtx user already exists
 [debug users.sh] USERS_add_to_group: ut1-mdtx cdrom
 [info users.sh] ut1-mdtx user already beyong to cdrom group
@@ -67,7 +66,6 @@ Fait.
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
 [debug users.sh] USERS_coll_create_user: ut1-mdtx-hello
 [debug users.sh] USERS_create_user: ut1-mdtx-hello /var/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
-[warn users.sh] reuse the existing ut1-mdtx-hello's home
 [info users.sh] ut1-mdtx-hello user already exists
 [debug users.sh] USERS_add_to_group: ut1-mdtx-hello ut1-mdtx_md
 [info users.sh] ut1-mdtx-hello user already beyong to ut1-mdtx_md group
@@ -80,7 +78,7 @@ home :
           root           root drwxr-xr-x .
           root           root drwxr-xr-x ./etc
           root           root drwxr-xr-x ./etc/apache2
-          root           root drwxr-xr-x ./etc/apache2/conf.d
+          root           root drwxr-xr-x ./etc/apache2/conf-available
           root           root drwxr-xr-x ./etc/cron.d
           root           root -rw-r----- ./etc/cron.d/mediatex_cron
           root           root drwxr-xr-x ./etc/mediatex
@@ -185,7 +183,7 @@ cleanup :
 drwxr-xr-x .
 drwxr-xr-x ./etc
 drwxr-xr-x ./etc/apache2
-drwxr-xr-x ./etc/apache2/conf.d
+drwxr-xr-x ./etc/apache2/conf-available
 drwxr-xr-x ./etc/cron.d
 drwxr-xr-x ./etc/mediatex
 drwxr-xr-x ./usr

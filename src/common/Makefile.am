@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:22 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:33 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  common modules (both used by clients and server)
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -65,38 +65,38 @@ objects = \
 utregister_SOURCES = register.c register.h
 utregister_CFLAGS = -DutMAIN
 utregister_LDADD = $(objects)
-utregister_LDFLAGS = -pthread -lavl
+utregister_LDFLAGS = -pthread -lavl -lcrypto
 
 utconnect_SOURCES = connect.c connect.h
 utconnect_CFLAGS = -DutMAIN
 utconnect_LDADD = $(objects)
-utconnect_LDFLAGS = -pthread -lavl
+utconnect_LDFLAGS = -pthread -lavl -lcrypto
 
 utssh_SOURCES = ssh.c ssh.h
 utssh_CFLAGS = -DutMAIN
 utssh_LDADD = $(objects)
-utssh_LDFLAGS = -pthread -lavl
+utssh_LDFLAGS = -pthread -lavl -lcrypto
 
 utupgrade_SOURCES = upgrade.c upgrade.h ssh.h
 utupgrade_CFLAGS = -DutMAIN
 utupgrade_LDADD = ssh.o $(objects)
-utupgrade_LDFLAGS = -pthread -lm -lavl
+utupgrade_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utopenClose_SOURCES = openClose.c openClose.h register.h upgrade.h ssh.h
 utopenClose_CFLAGS = -DutMAIN
 utopenClose_LDADD = register.o upgrade.o ssh.o $(objects)
-utopenClose_LDFLAGS = -pthread -lm -lavl
+utopenClose_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utextractScore_SOURCES = extractScore.c extractScore.h \
 	openClose.h upgrade.h ssh.h
 utextractScore_CFLAGS = -DutMAIN
 utextractScore_LDADD = openClose.o register.o upgrade.o ssh.o $(objects)
-utextractScore_LDFLAGS = -pthread -lm -lavl
+utextractScore_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utcgi_SOURCES = cgi.c
 utcgi_CFLAGS = -DutMAIN
 utcgi_LDADD = libcommon.a $(objects)
-utcgi_LDFLAGS = -pthread -lm -lavl
+utcgi_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 clean-local:
 	-rm -f ut.out ut*.sort

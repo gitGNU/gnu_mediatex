@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.2 2014/11/13 16:36:23 nroche Exp $
+ * Version: $Id: cgi.c,v 1.3 2015/06/03 14:03:33 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
  * Cgi script software's main function
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ MdtxEnv env = GLOBAL_MDTX_STRUCT_UT;
 MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN;
 #endif
 
-static char* confLabel = NULL;
+static char* confLabel = 0;
 
 
 /*=======================================================================
@@ -62,26 +62,26 @@ static char* confLabel = NULL;
 int sendTemplate(Collection* coll, char* filename)
 {
   int rc = FALSE;
-  char* path  = NULL;
-  FILE* fd = NULL;
+  char* path  = 0;
+  FILE* fd = 0;
   char buffer[256];
   int len = 0;
   
   logEmit(LOG_DEBUG, "sendTemplate %s", filename);
 
-  if (coll->htmlCgiDir == NULL) {
+  if (coll->htmlCgiDir == 0) {
     logEmit(LOG_ERR, "%s", "cannot match cgi to collection");
     goto error;
   }
 
-  if ((path = createString(coll->htmlCgiDir)) == NULL ||
-      (path = catString(path, "/../")) == NULL ||
-      (path = catString(path, filename)) == NULL) {
+  if ((path = createString(coll->htmlCgiDir)) == 0 ||
+      (path = catString(path, "/../")) == 0 ||
+      (path = catString(path, filename)) == 0) {
     logEmit(LOG_ERR, "mdtx-cgi cannot malloc path for %s", filename);
     goto error;
   }
   
-  if ((fd = fopen(path, "r")) == NULL) {
+  if ((fd = fopen(path, "r")) == 0) {
     logEmit(LOG_ERR, "mdtx-cgi cannot open template %s", path);
     goto error;
   }
@@ -126,7 +126,7 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   if ((socket = connectServer(server)) == -1) goto end;
 
   // write query
-  if (!upgradeServer(socket, tree, NULL)) goto error;
+  if (!upgradeServer(socket, tree, 0)) goto error;
     
   // read reply
   logEmit(LOG_INFO, "%s", "read");
@@ -164,20 +164,20 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   int rc = FALSE;
   int status = 0;
   static char url[256];
-  Collection* coll = NULL;
-  ServerTree *sTree = NULL;
-  Server *server = NULL;
+  Collection* coll = 0;
+  ServerTree *sTree = 0;
+  Server *server = 0;
 
   logEmit(LOG_DEBUG, "%s", "mdtxSearch");
 
   if (!(coll = rTree->collection)) goto error;
   if (!getLocalHost(coll)) goto error;
-  if ((sTree = coll->serverTree) == NULL) goto error;
+  if ((sTree = coll->serverTree) == 0) goto error;
   if (isEmptyRing(sTree->servers)) goto error;
 
   /* loop on every server */
   rgRewind(sTree->servers);
-  while((server = rgNext(sTree->servers)) != NULL) {
+  while((server = rgNext(sTree->servers)) != 0) {
     /* querying the server */
     if (server != coll->localhost && 
 	!isReachable(coll, coll->localhost, server)) {
@@ -223,11 +223,11 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 int mdtxFind(RecordTree *tree)
 {
   int rc = FALSE;
-  char *reply = NULL;
+  char *reply = 0;
   char *url;
   int status = 0;
-  Collection* coll = NULL;
-  Record* record = NULL;
+  Collection* coll = 0;
+  Record* record = 0;
   
   logEmit(LOG_DEBUG, "%s", "mdtxFind");
 
@@ -311,11 +311,11 @@ int mdtxFind(RecordTree *tree)
 int mdtxRegister(RecordTree *tree)
 {
   int rc = FALSE;
-  char *reply = NULL;
+  char *reply = 0;
   int status = 0;
-  Server* server = NULL;
-  Collection* coll = NULL;
-  Record* record = NULL;
+  Server* server = 0;
+  Collection* coll = 0;
+  Record* record = 0;
   
   logEmit(LOG_DEBUG, "%s", "mdtxRegister");
 
@@ -388,13 +388,13 @@ int mdtxRegister(RecordTree *tree)
  =======================================================================*/
 RecordTree* scanCgiQuery(Collection* coll)
 {
-  Configuration* conf = NULL;
-  RecordTree* rc = NULL;
-  RecordTree* tree = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
+  Configuration* conf = 0;
+  RecordTree* rc = 0;
+  RecordTree* tree = 0;
+  Archive* archive = 0;
+  Record* record = 0;
   off_t size = 0;
-  char* extra = NULL;
+  char* extra = 0;
   char **cgivars = (char**)0;
 
   logEmit(LOG_DEBUG, "%s", "scanCgiQuery");
@@ -410,24 +410,24 @@ RecordTree* scanCgiQuery(Collection* coll)
   }
  
   /** scan the CGI variables sent by the user.  Note the list of **/
-  /** variables alternates names and values, and ends in NULL.  **/
-  if (cgivars[0] == NULL     ||
+  /** variables alternates names and values, and ends in 0.  **/
+  if (cgivars[0] == 0     ||
       strcmp(cgivars[0], "hash") ||
-      cgivars[1] == NULL     ||
+      cgivars[1] == 0     ||
       cgivars[1][0] == (char)0   ||
       
-      cgivars[2] == NULL     ||
+      cgivars[2] == 0     ||
       strcmp(cgivars[2], "size") ||
-      cgivars[3] == NULL     ||
+      cgivars[3] == 0     ||
       cgivars[3][0] == (char)0) {
     logEmit(LOG_ERR, "%s", 
 	    "bad usage: please use ?hash=<val>&size=<val> syntax\n");
     goto error;
   }
 
-  if (cgivars[3] != NULL     &&
+  if (cgivars[3] != 0     &&
       strcmp(cgivars[3], "mail") &&
-      cgivars[4] != NULL     &&
+      cgivars[4] != 0     &&
       cgivars[4][0] != (char)0) {  
     extra = createString(cgivars[5]);
   }
@@ -437,7 +437,7 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (sscanf(cgivars[3], "%llu", (unsigned long long int*)&size) != 1)
     goto error;
   if (!(archive = addArchive(coll, cgivars[1], size))) goto error;
-  if ((tree = createRecordTree()) == NULL) goto error;
+  if ((tree = createRecordTree()) == 0) goto error;
 
   tree->collection = coll;
   tree->messageType = CGI;
@@ -452,10 +452,10 @@ RecordTree* scanCgiQuery(Collection* coll)
 	  record->archive->hash, record->archive->size);
 
 #ifdef utMAIN  
-  serializeRecordTree(tree, NULL, NULL);
+  serializeRecordTree(tree, 0, 0);
 #endif
   rc = tree;
-  tree = NULL;
+  tree = 0;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "scanCgiQuery fails");
@@ -475,8 +475,8 @@ RecordTree* scanCgiQuery(Collection* coll)
  =======================================================================*/
 char* getIndexLabel()
 {
-  char* rc = NULL;
-  char* path = NULL;
+  char* rc = 0;
+  char* path = 0;
   regex_t motif_compile;
   int err = 0;
   size_t size;
@@ -488,20 +488,20 @@ char* getIndexLabel()
   if ((err = regcomp(&motif_compile, 
 		     "^.*/\\(.*\\)-\\(.*\\)/public_html/cgi/get.cgi$", 
 		     0))) {
-    size = regerror(err, &motif_compile, NULL, 0);
-    if ((rc = (char*)malloc(size)) == NULL) {
+    size = regerror(err, &motif_compile, 0, 0);
+    if ((rc = (char*)malloc(size)) == 0) {
       logEmit(LOG_ERR, "%s", 
 	      "regcomp error (malloc failed for regerror meessage");
       goto error;
     }
     regerror(err, &motif_compile, rc, 20);
     logEmit(LOG_ERR, "regcomp error: %s", rc);
-    free(rc); rc = NULL;
+    free(rc); rc = 0;
     goto error;
   }
 
   // cgi script own url
-  if ((path = getenv("SCRIPT_FILENAME")) == NULL) {
+  if ((path = getenv("SCRIPT_FILENAME")) == 0) {
     logEmit(LOG_ERR, "%s", "cannot retrieve SCRIPT_FILENAME in env");
     logEmit(LOG_ERR, "%s", 
 	    "cgi script is not compatible with your browser");
@@ -521,7 +521,7 @@ char* getIndexLabel()
   }
 
   size = matchingPart[1].rm_eo - matchingPart[1].rm_so;
-  if ((confLabel = (char*)malloc(size+1)) == NULL) {
+  if ((confLabel = (char*)malloc(size+1)) == 0) {
     logEmit(LOG_ERR, "%s", "malloc failed to allocate confLabel string");
     goto error;
   }
@@ -531,7 +531,7 @@ char* getIndexLabel()
   env.confLabel = confLabel;
 
   size = matchingPart[2].rm_eo - matchingPart[2].rm_so;
-  if ((rc = (char*)malloc(size+1)) == NULL) {
+  if ((rc = (char*)malloc(size+1)) == 0) {
     logEmit(LOG_ERR, "%s", "malloc failed to allocate collection string");
     goto error;
   }
@@ -539,7 +539,7 @@ char* getIndexLabel()
   rc[size] = '\0';
 
  error:
-  if (rc == NULL) {
+  if (rc == 0) {
     logEmit(LOG_ERR, "regex fails to retrieve collection from url: %s", 
 	    path);
   }
@@ -632,11 +632,11 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  //Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RecordTree* tree = NULL;
-  Record* record = NULL;
-  char* label = NULL;
+  //Configuration* conf = 0;
+  Collection* coll = 0;
+  RecordTree* tree = 0;
+  Record* record = 0;
+  char* label = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -652,7 +652,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -667,7 +667,7 @@ main(int argc, char** argv)
   /************************************************************************/
   // match collection
   logEmit(LOG_INFO, "%s", "debug message from cgi script are enabled");
-  if ((label = getIndexLabel()) == NULL) {
+  if ((label = getIndexLabel()) == 0) {
     usage(programName);
     goto error;
   }
@@ -678,7 +678,7 @@ main(int argc, char** argv)
   if (!(coll = mdtxGetCollection(label))) goto error;
   
   // build record query from query parameters
-  if ((tree = scanCgiQuery(coll)) == NULL) goto htmlError;
+  if ((tree = scanCgiQuery(coll)) == 0) goto htmlError;
   if (!(record = (Record*)tree->records->head->it)) goto htmlError;
   
   // relay query to daemon(s)

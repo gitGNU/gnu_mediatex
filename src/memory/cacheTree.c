@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.2 2014/11/13 16:36:27 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.3 2015/06/03 14:03:38 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
  * Manage local cache directory and DB
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -41,18 +41,18 @@ int lockCacheRead(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "lock cache for read");
+  logMemory(LOG_DEBUG, "%s", "lock cache for read");
  
   // lock R
   if ((err = pthread_rwlock_rdlock(coll->cacheTree->rwlock))) {
-    logEmit(LOG_ERR, "pthread_rdlock_rdlock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_rdlock_rdlock fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "lockCacheRead fails");
+    logMemory(LOG_ERR, "%s", "lockCacheRead fails");
   }
   return rc;
 }
@@ -70,18 +70,18 @@ int lockCacheWrite(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "lock cache for write");
+  logMemory(LOG_DEBUG, "%s", "lock cache for write");
  
   // lock W
   if ((err = pthread_rwlock_wrlock(coll->cacheTree->rwlock))) {
-    logEmit(LOG_ERR, "pthread_rwlock_wrlock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_rwlock_wrlock fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "lockCacheWrite fails");
+    logMemory(LOG_ERR, "%s", "lockCacheWrite fails");
   }
   return rc;
 }
@@ -100,18 +100,18 @@ int unLockCache(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "unlock Cache");
+  logMemory(LOG_DEBUG, "%s", "unlock Cache");
  
   // lock W
   if ((err = pthread_rwlock_unlock(coll->cacheTree->rwlock))) {
-    logEmit(LOG_ERR, "pthread_rwlock_unlock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_rwlock_unlock fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "unLockCache fails");
+    logMemory(LOG_ERR, "%s", "unLockCache fails");
   }
   return rc;
 }
@@ -127,7 +127,7 @@ int unLockCache(Collection* coll)
 CacheTree*
 createCacheTree(void)
 {
-  CacheTree* rc = NULL;
+  CacheTree* rc = 0;
   int i = 0;
   int err = 0;
 
@@ -136,44 +136,44 @@ createCacheTree(void)
    
   memset(rc, 0, sizeof(CacheTree));
   
-  if ((rc->archives = createRing()) == NULL) goto error;
-  if ((rc->recordTree = createRecordTree()) == NULL)
+  if ((rc->archives = createRing()) == 0) goto error;
+  if ((rc->recordTree = createRecordTree()) == 0)
     goto error;
 
   // init the locks
 
-  if ((rc->attr = malloc(sizeof(pthread_rwlockattr_t))) == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot allocate pthread_rwlockattr_t");
+  if ((rc->attr = malloc(sizeof(pthread_rwlockattr_t))) == 0) {
+    logMemory(LOG_ERR, "%s", "cannot allocate pthread_rwlockattr_t");
     goto error;
   }
 
-  if ((rc->rwlock = malloc(sizeof(pthread_rwlock_t))) == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot allocate pthread_rwlock_t");
+  if ((rc->rwlock = malloc(sizeof(pthread_rwlock_t))) == 0) {
+    logMemory(LOG_ERR, "%s", "cannot allocate pthread_rwlock_t");
     goto error;
   }
   
   if (pthread_rwlockattr_setpshared(rc->attr, PTHREAD_PROCESS_SHARED)) {
-    logEmit(LOG_ERR, "pthread_rwlockattr_setpshared fails: %s", 
+    logMemory(LOG_ERR, "pthread_rwlockattr_setpshared fails: %s", 
 	    strerror(errno));
     goto error;
   }
   
   if (pthread_rwlock_init(rc->rwlock, rc->attr)) {
-    logEmit(LOG_ERR, "pthread_rwlock_init fails: %s", strerror(errno));
+    logMemory(LOG_ERR, "pthread_rwlock_init fails: %s", strerror(errno));
     goto error;
   }
 
   for (i=0; i<MUTEX_MAX; ++i) {
     if ((err = pthread_mutex_init(&rc->mutex[i], (pthread_mutexattr_t*)0))
 	!= 0) {
-      logEmit(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
+      logMemory(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
       goto error;
     }
   }
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Record");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Record");
   rc = destroyCacheTree(rc);
   return rc;
 }
@@ -191,7 +191,7 @@ destroyCacheTree(CacheTree* self)
   int i = 0;
   int err = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
 
   // do not free archives
   self->archives = destroyOnlyRing(self->archives); 
@@ -205,7 +205,7 @@ destroyCacheTree(CacheTree* self)
   
   for (i=0; i<MUTEX_MAX; ++i) {
     if ((err = pthread_mutex_destroy(&self->mutex[i]) != 0)) {
-      logEmit(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
+      logMemory(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
       goto error;
     }
   }
@@ -226,8 +226,8 @@ int
 haveRecords(RG* ring) 
 {
   int rc = FALSE;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Record* record = 0;
+  RGIT* curr = 0;
 
   while ((record = rgNext_r(ring, &curr))) {
     if (!(record->type & REMOVE)) {
@@ -250,7 +250,7 @@ static int
 computeArchiveStatus(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
-  CacheTree* cache = NULL;
+  CacheTree* cache = 0;
   AState previousState = UNUSED;
   time_t date = -1;
   int err = 0;
@@ -259,13 +259,13 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   checkArchive(archive);
   cache = coll->cacheTree;
   previousState = archive->state;
-  logEmit(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
+  logMemory(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
 	  archive->hash, archive->size);
 
   if ((date = currentTime()) == -1) goto error; 
 
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_COMPUTE]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
@@ -279,10 +279,10 @@ computeArchiveStatus(Collection* coll, Archive* archive)
 
   // state 2: wanted
   if (haveRecords(archive->demands)) archive->state = WANTED;
-  if (archive->localSupply == NULL ||
+  if (archive->localSupply == 0 ||
       (archive->localSupply->type & REMOVE)) goto end;
 
-  // state 3: allocated (archive->localSupply != NULL)
+  // state 3: allocated (archive->localSupply != 0)
   switch (getRecordType(archive->localSupply)) {
   case MALLOC_SUPPLY:
     archive->state = ALLOCATED;
@@ -295,7 +295,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
     break;
 
   default:
-    logEmit(LOG_ERR, "bad state for local supply: %s", 
+    logMemory(LOG_ERR, "bad state for local supply: %s", 
 	    strRecordType(archive->localSupply));
     goto error2;
   }
@@ -306,7 +306,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   }
     
  end:
-  logEmit(LOG_INFO, "state: %s -> %s", 
+  logMemory(LOG_INFO, "state: %s -> %s", 
 	  strAState(previousState), strAState(archive->state));
 
   // become allocated
@@ -328,12 +328,12 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   rc = TRUE;
  error2:
   if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_COMPUTE]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
  error:
   if (!rc) {
-     logEmit(LOG_ERR, "%s", "computeArchiveStatus fails");
+     logMemory(LOG_ERR, "%s", "computeArchiveStatus fails");
   }
   return rc;
 }
@@ -352,15 +352,15 @@ computeArchiveStatus(Collection* coll, Archive* archive)
 int addCacheEntry(Collection* coll, Record* record) 
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  RG* ring = NULL;
+  Archive* archive = 0;
+  RG* ring = 0;
   //int err = 0;
 
   checkCollection(coll);
   checkRecord(record);
   archive = record->archive;
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "addCacheEntry %s, %s %s:%lli",
+  logMemory(LOG_DEBUG, "addCacheEntry %s, %s %s:%lli",
 	  strRecordType(record), record->server->fingerPrint, 
 	  record->archive->hash, (long long int)record->archive->size);
 
@@ -378,7 +378,7 @@ int addCacheEntry(Collection* coll, Record* record)
   }
 
   if (record->type & REMOVE) {
-    logEmit(LOG_ERR, "%s", "cannot add a record marked as removed");
+    logMemory(LOG_ERR, "%s", "cannot add a record marked as removed");
     goto error;
   }
 
@@ -387,12 +387,12 @@ int addCacheEntry(Collection* coll, Record* record)
 
   case MALLOC_SUPPLY:
   case LOCALE_SUPPLY:
-    if (archive->localSupply == NULL ||
+    if (archive->localSupply == 0 ||
 	(archive->localSupply->type & REMOVE)) {
       archive->localSupply = record;
     }
     else {
-      logEmit(LOG_NOTICE, "%s", 
+      logMemory(LOG_NOTICE, "%s", 
 	      "we only record one local supply by archive");
     }
     break;
@@ -412,7 +412,7 @@ int addCacheEntry(Collection* coll, Record* record)
      break;
 
   default:
-    logEmit(LOG_ERR, "cannot index %s record", strRecordType(record));
+    logMemory(LOG_ERR, "cannot index %s record", strRecordType(record));
     goto error;
   }
 
@@ -422,7 +422,7 @@ int addCacheEntry(Collection* coll, Record* record)
   /*
   // openClose mutex
   if ((err = pthread_mutex_lock(&coll->mutex[iCACH])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   */
@@ -431,7 +431,7 @@ int addCacheEntry(Collection* coll, Record* record)
 
   /*
   if ((err = pthread_mutex_unlock(&coll->mutex[iCACH])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
   */
@@ -439,7 +439,7 @@ int addCacheEntry(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-     logEmit(LOG_DEBUG, "%s", "fails to add a cache entry");
+     logMemory(LOG_DEBUG, "%s", "fails to add a cache entry");
      delCacheEntry(coll, record);
   }
   return rc;
@@ -457,14 +457,14 @@ int addCacheEntry(Collection* coll, Record* record)
 int delCacheEntry(Collection* coll, Record* record)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
+  Archive* archive = 0;
   //int err = 0;
 
   checkCollection(coll);
   checkRecord(record);
   archive = record->archive;
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "delCacheEntry %s, %s %s:%lli",
+  logMemory(LOG_DEBUG, "delCacheEntry %s, %s %s:%lli",
 	  strRecordType(record), record->server->fingerPrint, 
 	  record->archive->hash, (long long int)record->archive->size);
 
@@ -475,7 +475,7 @@ int delCacheEntry(Collection* coll, Record* record)
 
   /*
   if ((err = pthread_mutex_lock(&coll->mutex[iCACH])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   */
@@ -484,7 +484,7 @@ int delCacheEntry(Collection* coll, Record* record)
 
   /*
   if ((err = pthread_mutex_unlock(&coll->mutex[iCACH])) != 0) {
-    logEmit(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
   */
@@ -492,7 +492,7 @@ int delCacheEntry(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-     logEmit(LOG_ERR, "%s", "fails to del a cache entry");
+     logMemory(LOG_ERR, "%s", "fails to del a cache entry");
   }
   return rc;
 }
@@ -511,9 +511,9 @@ int
 keepArchive(Collection* coll, Archive* archive, RecordType type)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  CacheTree* cache = NULL;
-  Record* record = NULL;
+  Configuration* conf = 0;
+  CacheTree* cache = 0;
+  Record* record = 0;
   time_t date = -1;
   int err = 0;
 
@@ -522,17 +522,17 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
   record = archive->localSupply;
   checkRecord(record);
   cache = coll->cacheTree;
-  logEmit(LOG_DEBUG, "keep %s %s:%lli",
+  logMemory(LOG_DEBUG, "keep %s %s:%lli",
 	  type?strRecordType2(type):"TMP", archive->hash, archive->size); 
 
   if (record->type & REMOVE) {
-      logEmit(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, "%s", 
 	      "cannot keep as local supply is already removedkeep");
       goto error;
   }
   
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_ALLOC]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
@@ -556,7 +556,7 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
     break;
   default:
     if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_KEEP]))) {
-      logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+      logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
       goto error2;
     }
 
@@ -564,7 +564,7 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
     ++archive->nbKeep;
 
     if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_KEEP]))) {
-      logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+      logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
       goto error2;
     }
 
@@ -578,12 +578,12 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
   rc = TRUE;
  error2:
   if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_ALLOC]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
  error:
     if (!rc) {
-    logEmit(LOG_ERR, "%s", "keepArchive fails");
+    logMemory(LOG_ERR, "%s", "keepArchive fails");
   }
   return rc;
 }
@@ -604,8 +604,8 @@ int
 unKeepArchive(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
-  CacheTree* cache = NULL;
-  Record* record = NULL;
+  CacheTree* cache = 0;
+  Record* record = 0;
   int err = 0;
 
   checkCollection(coll);
@@ -613,17 +613,17 @@ unKeepArchive(Collection* coll, Archive* archive)
   record = archive->localSupply;
   checkRecord(record);
   cache = coll->cacheTree;
-  logEmit(LOG_DEBUG, "un keep %s:%lli",   
+  logMemory(LOG_DEBUG, "un keep %s:%lli",   
 	  archive->hash, archive->size); 
   
   if (record->type & REMOVE) {
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "cannot unkeep as local supply is already removedkeep");
     goto error;
   }
  
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_KEEP]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
@@ -632,7 +632,7 @@ unKeepArchive(Collection* coll, Archive* archive)
   archive->backupDate = 0;
 
   if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_KEEP]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
@@ -641,7 +641,7 @@ unKeepArchive(Collection* coll, Archive* archive)
   rc = TRUE;
  error:
     if (!rc) {
-    logEmit(LOG_ERR, "%s", "unKeepArchive fails");
+    logMemory(LOG_ERR, "%s", "unKeepArchive fails");
   }
   return rc;
 }
@@ -656,15 +656,15 @@ unKeepArchive(Collection* coll, Archive* archive)
 int cleanCacheTree(Collection* coll)
 {
   int rc = FALSE;
-  RG* records = NULL;
-  RG* archives = NULL;
-  Record* record = NULL;
-  Record* next = NULL;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  RG* records = 0;
+  RG* archives = 0;
+  Record* record = 0;
+  Record* next = 0;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "cleanCacheTree %s", coll->label);
+  logMemory(LOG_DEBUG, "cleanCacheTree %s", coll->label);
   if (!lockCacheWrite(coll)) goto error;
 
   // for all records marked as "removed"
@@ -681,7 +681,7 @@ int cleanCacheTree(Collection* coll)
     case MALLOC_SUPPLY:
     case LOCALE_SUPPLY:
       if (archive->localSupply == record) {
-	archive->localSupply = NULL; 
+	archive->localSupply = 0; 
       }
       break;
       
@@ -700,13 +700,13 @@ int cleanCacheTree(Collection* coll)
       break;
       
     default:
-      logEmit(LOG_ERR, "cannot unindex %s record", strRecordType(record));
+      logMemory(LOG_ERR, "cannot unindex %s record", strRecordType(record));
       goto error2;
     }
 
     // del record if there
     if (!rgDelItem(records, record)) {
-      logEmit(LOG_WARNING, "%s", "record not found into cache");
+      logMemory(LOG_WARNING, "%s", "record not found into cache");
       goto error2;
     }
 
@@ -728,7 +728,7 @@ int cleanCacheTree(Collection* coll)
   if (!unLockCache(coll)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cleanCacheTree fails");
+    logMemory(LOG_ERR, "%s", "cleanCacheTree fails");
   }
   return rc;
 }
@@ -744,12 +744,12 @@ int cleanCacheTree(Collection* coll)
 int diseaseCacheTree(Collection* coll)
 {
   int rc = FALSE;
-  RG* ring = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  RG* ring = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "disease %s cache tree", coll->label);
+  logMemory(LOG_DEBUG, "disease %s cache tree", coll->label);
 
   // for all records
   if (!expandCollection(coll)) goto error;
@@ -763,7 +763,7 @@ int diseaseCacheTree(Collection* coll)
 
   rc = TRUE;
  error:
-  if (!rc) logEmit(LOG_ERR, "%s", "diseaseCacheTree fails");
+  if (!rc) logMemory(LOG_ERR, "%s", "diseaseCacheTree fails");
   return rc;
 }
 
@@ -786,7 +786,7 @@ void*
 testThread(void* arg)
 {
   //env.recordTree = copyCurrentRecordTree(mergeMd5);
-  return NULL;
+  return 0;
 }
 
 /*=======================================================================
@@ -820,8 +820,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
-  Record* record = NULL;
+  Collection* coll = 0;
+  Record* record = 0;
   //pthread_t thread;
   // ---
   int rc = 0;
@@ -835,10 +835,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
  
@@ -866,7 +867,7 @@ main(int argc, char** argv)
   if (!createExempleRecordTree(coll)) goto error;
 
   // index the record tree
-  logEmit(LOG_DEBUG, "%s", "___ test indexation ___");
+  logMemory(LOG_DEBUG, "%s", "___ test indexation ___");
   coll->cacheTree->recordTree->aes.fd = STDERR_FILENO;
 
   while ((record = rgHead(coll->cacheTree->recordTree->records))) {

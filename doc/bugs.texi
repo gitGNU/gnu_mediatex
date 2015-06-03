@@ -1,0 +1,109 @@
+@cindex bug reporting
+@cindex problems
+@cindex reporting bugs
+
+To report bugs or suggest enhancements for Mediatex, please
+send electronic mail to @email{nroche@@narval.tk}.
+
+For bug reports, please include enough information for the maintainers
+to reproduce the problem.  Generally speaking, that means:
+
+@itemize @bullet
+@item The version numbers of Mediatex (which you can find by running
+      @w{@samp{mediatex --version}}) and any other program(s) or
+      manual(s) involved.
+@item Hardware and operating system names and versions.
+@item The contents of any input files necessary to reproduce the bug.
+@item The expected behaviour and/or output.
+@item A description of the problem and samples of any erroneous output.
+@item Options you gave to @command{configure} other than specifying
+      installation directories.
+@item Anything else that you think would be helpful.
+@end itemize
+
+When in doubt whether something is needed or not, include it.  It's
+better to include too much than to leave out something important.
+
+@cindex patches
+@cindex contributing
+Patches are welcome; if possible, please make them with @samp{@w{diff
+-c}}.  Please follow the existing coding style.
+
+@unnumberedsec Tips to debug
+@itemize @bullet
+@item configure @code{rsyslog} so as not to drop messages
+@example
+$ cat /etc/rsyslog.conf
+$ModLoad imuxsock 
+$SystemLogRateLimitInterval 0
+$SystemLogRateLimitBurst 0
+@end example
+@item working on source tree
+@example
+# apt-get install libtool-bin
+$ libtool --mode=execute valgrind ./@var{BINARY} @var{ARGS}
+$ libtool --mode=execute gdb @var{BINARY}
+@end example
+@item @code{gdb}
+@example
+// Attach daemon:
+$ gdb
+> attach @var{PID}
+
+// Get a core dump:
+# echo 1 > /proc/sys/fs/suid_dumpable
+# echo '/var/tmp/core.%p' > /proc/sys/kernel/core_pattern
+# ulimit -c unlimited               // (into /etc/init.d/mediatexd)
+
+# /etc/init.d/mediatexd start
+# kill -SIGABRT @var{PID}           // (to simulate coredump)
+# su mdtx
+$ gdb mediatexd
+> core-file /var/tmp/core
+> bt
+> frame @var{#Number}
+> set args ...
+@end example
+@item @code{valgrind} to detect memory leaks
+@example
+# su mdtx
+$ valgrind \
+       --leak-check=full --show-reachable=yes --track-origins=yes 
+       mediatexd
+[notice threads.c:390] Daemon (@var{PID}) started
+@dots{}
+# echo @var{PID} > /var/run/mediatex/mdtxd.pid
+# mediatex srv notify 
+# kill -SIGTERM @var{PID}
+@end example
+@item @code{massif} to detect memory hogs
+@example
+$ pmap @var{PID}
+
+# su mdtx
+$ cd /tmp
+$ valgrind --tool=massif mediatexd mediatexd -sdebug
+[notice threads.c:390] Daemon (@var{PID}) started
+@dots{}
+# echo @var{PID} > /var/run/mediatex/mdtxd.pid
+# mediatex srv notify 
+# kill -SIGTERM @var{PID}
+$ ms_print massif.out.@var{PID} | less
+@end example
+
+@item @code{gprof}
+@example
+$ make CFLAGS="-p"
+$ mediatex make
+$ ls gmon.out
+$ gprof /usr/bin/mediatex > gprof.txt
+@end example
+@item 
+reload the info page into emacs
+@example
+in a new buffer use the M-x org-mode :
+info:/home/user/cvs/mediatex/doc/mediatex.info
+info:/usr/share/info/mediatex.info
+place cursor on a line and type C-c C-o
+@end example
+@end itemize

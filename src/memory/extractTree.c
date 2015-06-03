@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.2 2014/11/13 16:36:29 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
  * Extraction producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ strEType(EType self)
      "ZIP", "RAR"};
 
   if (self < 0 || self >= ETYPE_MAX) {
-    logEmit(LOG_WARNING, "unknown extract type %i", self);
+    logMemory(LOG_WARNING, "unknown extract type %i", self);
     return "???";
   }
 
@@ -94,16 +94,16 @@ getEType(char* label)
 FromAsso* 
 createFromAsso(void)
 {
-  FromAsso* rc = NULL;
+  FromAsso* rc = 0;
 
-  if ((rc = (FromAsso*)malloc(sizeof(FromAsso))) == NULL)
+  if ((rc = (FromAsso*)malloc(sizeof(FromAsso))) == 0)
     goto error;
 
   memset(rc, 0, sizeof(FromAsso));
  
   return rc;  
  error:  
-  logEmit(LOG_ERR, "%s", "malloc: cannot create FromAsso");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create FromAsso");
   return destroyFromAsso(rc);
 }
 
@@ -118,7 +118,7 @@ createFromAsso(void)
 FromAsso* 
 destroyFromAsso(FromAsso* self)
 {
-  if (self == NULL) goto error;
+  if (self == 0) goto error;
   self->path = destroyString(self->path);
   free(self);
  error:
@@ -157,13 +157,13 @@ cmpFromAssoAvl(const void *p1, const void *p2)
 Container* 
 createContainer(void)
 {
-  Container* rc = NULL;
+  Container* rc = 0;
 
-  if ((rc = (Container*)malloc(sizeof(Container))) == NULL)
+  if ((rc = (Container*)malloc(sizeof(Container))) == 0)
     goto error;
 
   memset(rc, 0, sizeof(Container));
-  if ((rc->parents = createRing()) == NULL) goto error;
+  if ((rc->parents = createRing()) == 0) goto error;
   if (!(rc->childs = 
 	avl_alloc_tree(cmpFromAssoAvl, 
 		       (avl_freeitem_t)destroyFromAsso)))
@@ -172,7 +172,7 @@ createContainer(void)
 
   return rc;  
  error:  
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Container");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Container");
   return destroyContainer(rc);
 }
 
@@ -187,7 +187,7 @@ createContainer(void)
 Container* 
 destroyContainer(Container* self)
 {
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
  
   // do not free the Archive provided by collection
   self->parents = destroyOnlyRing(self->parents); 
@@ -213,12 +213,12 @@ int
 serializeContainer(Container* self, CvsFile* fd)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  Archive* archive = NULL;
-  AVLNode *node = NULL;
+  FromAsso* asso = 0;
+  Archive* archive = 0;
+  AVLNode *node = 0;
 
-  if(self == NULL) {
-    logEmit(LOG_INFO, "%s", "cannot serialize empty Container");
+  if(self == 0) {
+    logMemory(LOG_INFO, "%s", "cannot serialize empty Container");
     goto error;
   }
 
@@ -226,11 +226,11 @@ serializeContainer(Container* self, CvsFile* fd)
   fd->doCut = FALSE;
  
   rgRewind(self->parents);
-  if ((archive = rgNext(self->parents)) == NULL) goto error;
+  if ((archive = rgNext(self->parents)) == 0) goto error;
   do {
     if (!serializeExtractRecord(archive, fd)) goto error;
     cvsPrint(fd, "\n");
-  }  while ((archive = rgNext(self->parents)) != NULL);
+  }  while ((archive = rgNext(self->parents)) != 0);
 
   if (avl_count(self->childs) > 0) {
     cvsPrint(fd, "=>\n");
@@ -287,8 +287,8 @@ serializeExtractRecord(Archive* self, CvsFile* fd)
 {
   int rc = FALSE;
 
-  if (self == NULL) {
-    logEmit(LOG_WARNING, "%s", "do not serialize empty record"); 
+  if (self == 0) {
+    logMemory(LOG_WARNING, "%s", "do not serialize empty record"); 
     goto error;
   }
 
@@ -309,7 +309,7 @@ serializeExtractRecord(Archive* self, CvsFile* fd)
 ExtractTree* 
 createExtractTree(void)
 {
-  ExtractTree* rc = NULL;
+  ExtractTree* rc = 0;
 
   if(!(rc = (ExtractTree*)malloc(sizeof(ExtractTree)))) goto error;    
   memset(rc, 0, sizeof(ExtractTree));
@@ -322,7 +322,7 @@ createExtractTree(void)
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create ExtractTree");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create ExtractTree");
   return destroyExtractTree(rc);
 }
 
@@ -349,7 +349,7 @@ destroyExtractTree(ExtractTree* self)
 
 /*=======================================================================
  * Function   : serializeExtractTree 
- * Description: Serialize a catalog to latex working place
+ * Description: Serialize the extraction metadata
  * Synopsis   : int serializeExtractTree(Collection* coll)
  * Input      : Collection* coll = what to serialize
  * Output     : TRUE on success
@@ -358,19 +358,19 @@ int
 serializeExtractTree(Collection* coll)
 { 
   int rc = FALSE;
-  CvsFile fd = {NULL, 0, NULL, FALSE, 0};
-  ExtractTree* self = NULL;
-  Container* container = NULL;
-  AVLNode *node = NULL;
+  CvsFile fd = {0, 0, 0, FALSE, 0};
+  ExtractTree* self = 0;
+  Container* container = 0;
+  AVLNode *node = 0;
   int uid = getuid();
 
   checkCollection(coll);
   if (!(self = coll->extractTree)) goto error;
-  logEmit(LOG_DEBUG, "serialize %s extract tree", coll->label);
+  logMemory(LOG_DEBUG, "serialize %s extract tree", coll->label);
 
   // we neeed to use the cvs collection directory
   if ((!coll->memoryState & EXPANDED)) {
-    logEmit(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "%s", "collection must be expanded first");
     goto error;
   }
 
@@ -396,7 +396,7 @@ serializeExtractTree(Collection* coll)
   if (!cvsCloseFile(&fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeExtractTree fails");
+    logMemory(LOG_ERR, "%s", "serializeExtractTree fails");
   }
   return rc;
 }
@@ -419,7 +419,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
 
   checkCollection(coll);
   if (!container || !archive) goto error;
-  logEmit(LOG_DEBUG, "addFromArchive %s/%s:%lli -> %s:%lli",
+  logMemory(LOG_DEBUG, "addFromArchive %s/%s:%lli -> %s:%lli",
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size,
 	  archive->hash, (long long int)archive->size);
@@ -428,7 +428,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   switch (container->type) {
   case REC:
   case ISO:
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "REC and ISO containers must only comes from one archive");
     goto error;
   case TGZ:
@@ -437,12 +437,12 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   case TAR:
   case CPIO:
   case ZIP:
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "multi-volume archive is only implemented for RAR container");
     goto error;
   case GZIP:
   case BZIP:
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "compression only container must only comes from one archive");
     goto error;
   default:
@@ -450,16 +450,16 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   }
  next:
 
-// add archive to container's parents ring
+  // add archive to container's parents ring
   if (rgHaveItem(container->parents, archive)) {
-    logEmit(LOG_ERR, "%s", "parent already added to the container");
+    logMemory(LOG_ERR, "%s", "parent already added to the container");
     goto error;
   }
   if (!rgInsert(container->parents, archive)) goto error;
 
   // link container to archive
   if (archive->toContainer) {
-    logEmit(LOG_ERR, "%s", "archive already comes from another container");
+    logMemory(LOG_ERR, "%s", "archive already comes from another container");
     goto error;
   }
   archive->toContainer = container;
@@ -467,7 +467,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addFromArchive fails");
+    logMemory(LOG_ERR, "%s", "addFromArchive fails");
     if (container && archive) delFromArchive(coll, container, archive);
   }
   return rc;
@@ -488,11 +488,11 @@ int
 delFromArchive(Collection* coll, Container* container, Archive* archive)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!container || !archive) goto error;
-  logEmit(LOG_DEBUG, "delFromArchive %s/%s:%lli -> %s:%lli",
+  logMemory(LOG_DEBUG, "delFromArchive %s/%s:%lli -> %s:%lli",
 	  strEType(container->type), container->parent->hash, 
 	  (long long int)container->parent->size,
 	  archive->hash, (long long int)archive->size);
@@ -503,7 +503,7 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
   }
 
   // unlink container from archive
-  archive->toContainer = NULL;
+  archive->toContainer = 0;
   
   // del container if archive was the first parent (its primary key)
   if (archive == container->parent) {
@@ -513,15 +513,15 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delFromArchive fails");
+    logMemory(LOG_ERR, "%s", "delFromArchive fails");
   }
   return rc;
 }
 
 /*=======================================================================
  * Function   : addFromAsso
- * Description: Add an fromAsso if not already there
- * Synopsis   : FromAsso* getFromAsso(Collection* coll, Archive* archive
+ * Description: Add a fromAsso if not already there
+ * Synopsis   : FromAsso* addFromAsso(Collection* coll, Archive* archive
  *                                    Container* container)
  * Input      : Collection* coll : where to add
  *              Archive* archive : id
@@ -535,26 +535,26 @@ FromAsso*
 addFromAsso(Collection* coll, Archive* archive, Container* container,
 	    char* path)
 {
-  FromAsso* rc = NULL;
-  FromAsso* asso = NULL;
-  char* string = NULL;
+  FromAsso* rc = 0;
+  FromAsso* asso = 0;
+  char* string = 0;
   
   checkCollection(coll);
   if (!container || !archive) goto error;
-  logEmit(LOG_DEBUG, "addFromAsso %s:%lli -> %s/%s:%lli",
+  logMemory(LOG_DEBUG, "addFromAsso %s:%lli -> %s/%s:%lli",
 	  archive->hash, (long long int)archive->size,
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
   switch (container->type) {
   case REC:
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "REC containers must not contains archive");
     goto error;
   case GZIP:
   case BZIP:
     if (avl_count(container->childs) > 0) {
-      logEmit(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, "%s", 
 	      "compression only container must only provides one archive");
       goto error;
     }
@@ -575,7 +575,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   rc = asso;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addFromAsso fails");
+    logMemory(LOG_ERR, "%s", "addFromAsso fails");
     if (asso) delFromAsso(coll, asso, TRUE);
   }
   return rc;
@@ -594,11 +594,11 @@ int
 delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
  
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delFromAsso %s:%lli -> %s/%s:%lli",
+  logMemory(LOG_DEBUG, "delFromAsso %s:%lli -> %s/%s:%lli",
 	  self->archive->hash, (long long int)self->archive->size,
 	  strEType(self->container->type), self->container->parent->hash,
 	  (long long int)self->container->parent->size);
@@ -616,7 +616,7 @@ delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delFromAsso fails");
+    logMemory(LOG_ERR, "%s", "delFromAsso fails");
   }
   return rc;
 }
@@ -634,13 +634,13 @@ delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
 Container* 
 getContainer(Collection* coll, EType type, Archive* parent)
 {
-  Container* rc = NULL;
+  Container* rc = 0;
   Container container;
-  AVLNode* node = NULL;
+  AVLNode* node = 0;
 
   checkCollection(coll);
   checkArchive(parent);
-  logEmit(LOG_DEBUG, "getContainer %s", strEType(type));
+  logMemory(LOG_DEBUG, "getContainer %s", strEType(type));
 
   // look for container
   container.type = type;
@@ -664,21 +664,21 @@ getContainer(Collection* coll, EType type, Archive* parent)
 Container*
 addContainer(Collection* coll, EType type, Archive* parent)
 {
-  Container* rc = NULL;
-  Container* container = NULL;
+  Container* rc = 0;
+  Container* container = 0;
 
   checkCollection(coll);
   checkArchive(parent);
-  logEmit(LOG_DEBUG, "addContainer %s", strEType(type));
+  logMemory(LOG_DEBUG, "addContainer %s", strEType(type));
 
   // already there
   if ((container = getContainer(coll, type, parent))) {
-    logEmit(LOG_ERR, "%s", "container already there");
+    logMemory(LOG_ERR, "%s", "container already there");
     goto error;
   }
 
   // add new one
-  if ((container = createContainer()) == NULL) goto error;
+  if ((container = createContainer()) == 0) goto error;
   container->type = type;
   container->parent = parent;
   if (!addFromArchive(coll, container, parent)) goto error;
@@ -687,7 +687,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
   rc = container;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addContainer fails");
+    logMemory(LOG_ERR, "%s", "addContainer fails");
     container = destroyContainer(container);
   }
   return rc;
@@ -706,12 +706,12 @@ int
 delContainer(Collection* coll, Container* self)
 {
   int rc = FALSE;
-  Archive* arch = NULL;
-  AVLNode *node = NULL;
+  Archive* arch = 0;
+  AVLNode *node = 0;
 
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delContainer %s/%s:%lli", 
+  logMemory(LOG_DEBUG, "delContainer %s/%s:%lli", 
 	  strEType(self->type), self->parent->hash,
 	  (long long int)self->parent->size);
 
@@ -722,7 +722,7 @@ delContainer(Collection* coll, Container* self)
 
   // delete container link with archives
   while((arch = rgHead(self->parents))) {
-    arch->toContainer = NULL;
+    arch->toContainer = 0;
     rgDelete(self->parents);
   }
 
@@ -746,10 +746,10 @@ int
 diseaseExtractTree(Collection* coll)
 {
   int rc = FALSE;
-  AVLNode *node = NULL;
+  AVLNode *node = 0;
 
-  if(coll == NULL) goto error;
-  logEmit(LOG_DEBUG, "diseaseExtractTree %s", coll);
+  if(coll == 0) goto error;
+  logMemory(LOG_DEBUG, "diseaseExtractTree %s", coll);
 
   // diseases containers
   while ((node = coll->extractTree->containers->head))
@@ -761,7 +761,7 @@ diseaseExtractTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "diseaseExtractTree fails");
+    logMemory(LOG_ERR, "%s", "diseaseExtractTree fails");
   }
   return rc;
 }
@@ -804,7 +804,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -817,10 +817,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -839,7 +840,7 @@ main(int argc, char** argv)
   
   // test serializing
   if (!serializeExtractTree(coll)) {
-    logEmit(LOG_ERR, "%s", "Error while serializing the extract exemple");
+    logMemory(LOG_ERR, "%s", "Error while serializing the extract exemple");
     goto error;
   }
   

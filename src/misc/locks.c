@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: locks.c,v 1.2 2014/11/13 16:36:41 nroche Exp $
+ * Version: $Id: locks.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * locks on files
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ sigManager(void* arg)
   logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
   logEmit(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
 
-  if ((sigNumber = sigwaitinfo(&signalsToManage, NULL)) == -1) {
+  if ((sigNumber = sigwaitinfo(&signalsToManage, 0)) == -1) {
     logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
     goto error;
   }
@@ -174,7 +174,7 @@ void usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
+  char* inputPath = 0;
   int mode = F_UNLCK;
   int fd = -1;
   pthread_t thread;
@@ -186,8 +186,8 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"i:p:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"input-file", required_argument, NULL, 'i'},
-    {"perm", required_argument, NULL, 'p'},
+    {"input-file", required_argument, 0, 'i'},
+    {"perm", required_argument, 0, 'p'},
     {0, 0, 0, 0}
   };
 
@@ -195,18 +195,18 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'i':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the input device\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the input device path: %s\n", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -216,7 +216,7 @@ main(int argc, char** argv)
       break;
 
     case 'p':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the permission\n",
 		programName);
 	rc = EINVAL;
@@ -253,7 +253,7 @@ main(int argc, char** argv)
   logEmit(LOG_DEBUG, "F_WRLCK = %i", F_WRLCK);
   */
 
-  if (inputPath == NULL) {
+  if (inputPath == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide a file to lock");
     goto error;
@@ -282,7 +282,7 @@ main(int argc, char** argv)
   // unlock
   if (!unLock(fd)) goto error;
 
-  if ((err = pthread_join(thread, NULL))) {
+  if ((err = pthread_join(thread, 0))) {
     logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }

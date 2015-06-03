@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: register.c,v 1.2 2014/11/13 16:36:24 nroche Exp $
+ * Version: $Id: register.c,v 1.3 2015/06/03 14:03:34 nroche Exp $
  * Project: MediaTeX
  * Module : bus/register
  
  * Manage simple interaction between wrapper and server
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ mdtxShmInitialize()
   ShmParam param;
 
   strncpy(param.buf, buffer, MDTX_SHM_BUFF_SIZE);
-  logEmit(LOG_NOTICE, "Initialise SHM using %s conf file", env.confLabel);
+  logCommon(LOG_NOTICE, "Initialise SHM using %s conf file", env.confLabel);
   return shmWrite(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE, 
 		  mdtxShmCopy, (void*)&param);
 }
@@ -167,44 +167,44 @@ int
 mdtxAsyncSignal(int signal)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  FILE* fd = NULL;
+  Configuration* conf = 0;
+  FILE* fd = 0;
   int pid;
 
   // send HUP signal by default
   if (signal == 0) signal = SIGHUP;
-  logEmit(LOG_DEBUG, "mdtxAsyncSignal %i", signal);
+  logCommon(LOG_DEBUG, "mdtxAsyncSignal %i", signal);
 
   // retrieve daemon's pid
   if (!(conf = getConfiguration())) goto error;
-  if ((fd = fopen(conf->pidFile, "r")) == NULL) {
-    logEmit(LOG_INFO, "open %s failed: %s", 
+  if ((fd = fopen(conf->pidFile, "r")) == 0) {
+    logCommon(LOG_INFO, "open %s failed: %s", 
 	    conf->pidFile, strerror(errno));
     goto error;
   }
 
   if (fscanf(fd, "%i", &pid) != 1) {
-    logEmit(LOG_INFO, "cannot retrieve pid from %s", conf->pidFile);
+    logCommon(LOG_INFO, "cannot retrieve pid from %s", conf->pidFile);
     goto error;
   }
   if (fclose(fd) != 0) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
   // send SIGUSR1 to daemon
-  logEmit(LOG_INFO, "sending signal %i to %i", signal, pid);
+  logCommon(LOG_INFO, "sending signal %i to %i", signal, pid);
 
   if (kill(pid, signal) == -1) {
-    logEmit(LOG_ERR, "kill signal to daemon fails: %s", strerror(errno));
-    //logEmit(LOG_DEBUG, "%s", "(you need to be logged as mdtx user)");
+    logCommon(LOG_ERR, "kill signal to daemon fails: %s", strerror(errno));
+    //logCommon(LOG_DEBUG, "%s", "(you need to be logged as mdtx user)");
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_WARNING, "%s", "mdtxAsyncSignal fails");
+    logCommon(LOG_WARNING, "%s", "mdtxAsyncSignal fails");
   }
 return rc;
 }
@@ -221,17 +221,17 @@ return rc;
 int mdtxSyncSignal(int flag)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   ShmParam param;
 
   // test if there is or not a pid file
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "mdtxSyncSignal %i", flag);
+  logCommon(LOG_DEBUG, "mdtxSyncSignal %i", flag);
 
   if (access(conf->pidFile, R_OK) == -1) {
-    logEmit(LOG_WARNING, "access %s failed: %s", 
+    logCommon(LOG_WARNING, "access %s failed: %s", 
 	    conf->pidFile, strerror(errno));
-    logEmit(LOG_WARNING, "daemon looks stopped", flag);
+    logCommon(LOG_WARNING, "daemon looks stopped", flag);
     rc = TRUE;
     goto error;
   }
@@ -245,7 +245,7 @@ int mdtxSyncSignal(int flag)
   if (param.buf[flag] == MDTX_QUERY) goto quit;
 
   // Set register
-  logEmit(LOG_INFO, "setting %i register", flag);
+  logCommon(LOG_INFO, "setting %i register", flag);
   param.flag = flag;
   if (!shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE, 
 		mdtxShmEnable, (void*)&param))
@@ -256,7 +256,7 @@ int mdtxSyncSignal(int flag)
   if (!mdtxAsyncSignal(SIGUSR1)) goto error;
 
   // Wait until this register is unset by the daemon
-  logEmit(LOG_INFO, "waiting for %i register unset", flag);
+  logCommon(LOG_INFO, "waiting for %i register unset", flag);
   do {
     usleep(200000);
     rc = shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE, 
@@ -266,11 +266,11 @@ int mdtxSyncSignal(int flag)
 
   rc = TRUE;
   if (param.buf[flag] != MDTX_DONE) {
-    logEmit(LOG_WARNING, "%s", "server fails to perform your query");
+    logCommon(LOG_WARNING, "%s", "server fails to perform your query");
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxSyncSignal fails");
+    logCommon(LOG_ERR, "%s", "mdtxSyncSignal fails");
   }
   return rc;
 }
@@ -305,7 +305,7 @@ usage(char* programName)
 	  "  -I, --initialize\tinitialize share memory\n"
 	  "  -G, --read-shm\tread share memory\n"
 	  "  -F, --free-shm\tfree share memory\n"
-	  "  -S, --do-save\t\tsave md5sums.txt file\n"
+	  "  -W, --do-save\t\tsave md5sums.txt file\n"
 	  "  -E, --do-extract\tperform extracton\n"
 	  "  -N, --do-notify\tperform notification\n"
 	  "  -D, --do-deliver\tperform deliver\n"
@@ -333,25 +333,26 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"IGFSENDe";
+  char* options = MDTX_SHORT_OPTIONS"IGFWENDe";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"initialize", required_argument, NULL, 'I'},
-    {"read-shm", required_argument, NULL, 'G'},
-    {"free-shm", required_argument, NULL, 'F'},
-    {"do-save", required_argument, NULL, 'S'},
-    {"do-extract", required_argument, NULL, 'E'},
-    {"do-notify", required_argument, NULL, 'N'},
-    {"do-deliver", required_argument, NULL, 'D'},
-    {"do-error", required_argument, NULL, 'e'},
+    {"initialize", required_argument, 0, 'I'},
+    {"read-shm", required_argument, 0, 'G'},
+    {"free-shm", required_argument, 0, 'F'},
+    {"do-save", required_argument, 0, 'W'},
+    {"do-extract", required_argument, 0, 'E'},
+    {"do-notify", required_argument, 0, 'N'},
+    {"do-deliver", required_argument, 0, 'D'},
+    {"do-error", required_argument, 0, 'e'},
     {0, 0, 0, 0}
   };
 
   // import mdtx environment
+  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -370,7 +371,7 @@ main(int argc, char** argv)
       signal = FREE;
       break;
 
-    case 'S':
+    case 'W':
       if (signal != UNDEF) rc=4;
       signal = MDTX_SAVEMD5;
       break;

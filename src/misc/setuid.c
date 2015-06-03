@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.2 2014/11/13 16:36:44 nroche Exp $
+ * Version: $Id: setuid.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -8,7 +8,7 @@
  * Note: setuid do not works with threads.
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
  * Synopsis   : int getPasswdLine (char* label, uid_t uid,
  *                                 struct passwd* pw, char** buffer)
  * Input      : char *label: the username to match
- *              uid_t uid: the uid to match, if username is NULL
+ *              uid_t uid: the uid to match, if username is 0
  * Output     : struct passwd** pw: the password structure that match 
  *              char** buffer: the buffer used by pointers in pw
  *              FALSE on error or if not found
@@ -51,17 +51,17 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
 #endif
 
   // allocate buffer
-  *buffer = NULL;
+  *buffer = 0;
   if ((bufsize = sysconf(_SC_GETPW_R_SIZE_MAX)) == -1) {
     bufsize = 16384;        // Should be more than enough
   }
-  if ((*buffer = malloc(bufsize)) == NULL) {
+  if ((*buffer = malloc(bufsize)) == 0) {
     logEmit (LOG_ERR, "cannot malloc: %s", strerror (errno));
     goto error;
   }
 
   // use the uid if no label is provided
-  if (label == NULL || *label == (char)0) {
+  if (label == 0 || *label == (char)0) {
     if ((err = getpwuid_r(uid, pw, *buffer, bufsize, &result))) {
 	logEmit (LOG_ERR, "getpwuid_r fails: %s", strerror (err));
 	goto error;
@@ -74,7 +74,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
     }
   }
 
-  if (result == NULL) {
+  if (result == 0) {
     logEmit (LOG_WARNING, "%s/%i user not found", label, uid);
     goto error;
   }
@@ -82,7 +82,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
   return TRUE;
  error:
   if (*buffer) free (*buffer);
-  *buffer = NULL;
+  *buffer = 0;
   return FALSE;
 }
   
@@ -92,7 +92,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
  * Synopsis   : int getGroupLine (char* label, git_t gid,
  *                                struct groupe* gr, char** buffer)
  * Input      : char *label: the group name to match
- *              gid_t gid: the gid to match, if group is NULL
+ *              gid_t gid: the gid to match, if group is 0
  * Output     : struct groupe* gr: the groupe structure that match 
  *              char* buffer: the buffer used by pointers in gr
  *            : 0 on error or if not found
@@ -109,23 +109,23 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
 #endif
 
   // allocate buffer
-  *buffer = NULL;
+  *buffer = 0;
   if ((bufsize = sysconf(_SC_GETGR_R_SIZE_MAX)) == -1) {
     bufsize = 16384;        /* I do not know what to put here ? */
   }
-  if ((*buffer = malloc(bufsize)) == NULL) {
+  if ((*buffer = malloc(bufsize)) == 0) {
     logEmit (LOG_ERR, "cannot malloc: %s", strerror (errno));
     goto error;
   }
 
   // use the uid if no label is provided
-  if (label == NULL || *label == (char)0) {
+  if (label == 0 || *label == (char)0) {
     s = getgrgid_r(gid, gr, *buffer, bufsize, &result);    
   }
   else {
     s = getgrnam_r(label, gr, *buffer, bufsize, &result);
   }
-  if (result == NULL) {
+  if (result == 0) {
     if (s == 0) {
       logEmit (LOG_WARNING, "group not found: %s", label);
     }
@@ -138,7 +138,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   return TRUE;
  error:
   free (*buffer);
-  *buffer = NULL;
+  *buffer = 0;
   return FALSE;
 }
 
@@ -201,8 +201,8 @@ allowedUser (char* label)
   int rc = FALSE;
   struct passwd pw;
   struct group gr;
-  char *buf1 = NULL;
-  char *buf2 = NULL;
+  char *buf1 = 0;
+  char *buf2 = 0;
   int belongs = 0;
 
   if (!label) goto error;
@@ -226,7 +226,7 @@ allowedUser (char* label)
   }
 
   // get current user name
-  if (!getPasswdLine (NULL, getuid(), &pw, &buf1)) goto error;
+  if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
   logEmit (LOG_INFO, "you are %s", pw.pw_name);
 
   // if current user is already label
@@ -242,7 +242,7 @@ allowedUser (char* label)
 
   // check if current user belongs to the mdtx group
   if (!getGroupLine (env.confLabel, -1, &gr, &buf2)) goto error;
-  while (*(gr.gr_mem) != NULL) {
+  while (*(gr.gr_mem) != 0) {
     if (!strcmp(*(gr.gr_mem), pw.pw_name)) {
       belongs=1;
       break;
@@ -281,8 +281,8 @@ becomeUser (char* label, int doCheck)
   int rc = FALSE;
   struct passwd pw;
   struct group gr;
-  char *buf1 = NULL;
-  char *buf2 = NULL;
+  char *buf1 = 0;
+  char *buf2 = 0;
 
   if (!label) goto error;
   logEmit (LOG_DEBUG, "becomeUser %s", label);
@@ -292,10 +292,10 @@ becomeUser (char* label, int doCheck)
   if (doCheck && !allowedUser (label)) goto error;
 
   // get current user name
-  if (!getPasswdLine (NULL, getuid(), &pw, &buf1)) goto error;
+  if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
   if (!strcmp(label, pw.pw_name)) goto nothingToDo;
   free (buf1);
-  buf1 = NULL;
+  buf1 = 0;
 
   // get new user name and group labels
   if (!getGroupLine (label, -1, &gr, &buf2)) goto error;
@@ -360,7 +360,7 @@ logoutUser (int uid)
 {
   int rc = FALSE;
   struct passwd pw;
-  char* buf = NULL;
+  char* buf = 0;
 
   //if (uid == 0) goto error; // needed by setConcurentAccessLock
   logEmit (LOG_DEBUG, "logoutUser %i", uid);
@@ -371,7 +371,7 @@ logoutUser (int uid)
   if (uid == getuid()) goto nothingToDo;
 
   // get current user name
-  if (!getPasswdLine (NULL, uid, &pw, &buf)) goto error;
+  if (!getPasswdLine (0, uid, &pw, &buf)) goto error;
   if (!becomeUser (pw.pw_name, FALSE)) goto error;
 
  nothingToDo:
@@ -430,9 +430,9 @@ usage (char* programName)
 int 
 main (int argc, char** argv)
 {
-  char* inputFile = NULL;
+  char* inputFile = 0;
   int i;
-  char *argvExec[] = { NULL, "parameter1", NULL};
+  char *argvExec[] = { 0, "parameter1", 0};
   int uid = getuid();
   // ---
   int rc = 0;
@@ -441,8 +441,8 @@ main (int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"i:u:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"sudo-user", required_argument, NULL, 'u'},
-    {"input-file", required_argument, NULL, 'i'},
+    {"sudo-user", required_argument, 0, 'u'},
+    {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
 
@@ -450,12 +450,12 @@ main (int argc, char** argv)
   getEnv (&env);
 
   // parse the command line
-  while ((cOption = getopt_long (argc, argv, options, longOptions, NULL)) 
+  while ((cOption = getopt_long (argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch (cOption) {
       
     case 'i':
-      if (optarg == NULL || *optarg == (char)0) {
+      if (optarg == 0 || *optarg == (char)0) {
 	fprintf (stderr, 
 		 "%s: nil or empty argument for the input stream\n", 
 		 programName);
@@ -465,7 +465,7 @@ main (int argc, char** argv)
       break;
 
     case 'u':
-      if (optarg == NULL || *optarg == (char)0) {
+      if (optarg == 0 || *optarg == (char)0) {
 	fprintf (stderr, "%s: nil or empty argument for the user name\n", 
 		programName);
 	rc = EINVAL;
@@ -482,12 +482,12 @@ main (int argc, char** argv)
   if (!setEnv (programName, &env)) goto optError;
 
   /************************************************************************/
-  if (env.confLabel == NULL) {
+  if (env.confLabel == 0) {
     usage (programName);
     logEmit (LOG_ERR, "%s", "Please provide a user to become");
     goto error;
   }
-  if (inputFile == NULL) {
+  if (inputFile == 0) {
     usage (programName);
     logEmit (LOG_ERR, "%s", "Please provide an input file");
     goto error;
@@ -522,17 +522,17 @@ main (int argc, char** argv)
   logEmit (LOG_NOTICE, "%s", "** API for wrapper");
   uid = getuid();
   for (i=0; i<2; ++i) {
-    if (!(rc = execScript (argvExec, NULL, NULL, FALSE))) goto error;
+    if (!(rc = execScript (argvExec, 0, 0, FALSE))) goto error;
     if (!becomeUser(env.confLabel, TRUE)) goto error;
-    if (!(execScript (argvExec, NULL, NULL, FALSE))) goto error;
+    if (!(execScript (argvExec, 0, 0, FALSE))) goto error;
     if (!logoutUser(uid)) goto error;
   }
 
   // API for thread
   logEmit (LOG_NOTICE, "%s", "** API for thread");
   for (i=0; i<2; ++i) {
-    if (!execScript(argvExec, env.confLabel, NULL, FALSE)) goto error;
-    if (!execScript(argvExec, NULL, NULL, FALSE)) goto error;
+    if (!execScript(argvExec, env.confLabel, 0, FALSE)) goto error;
+    if (!execScript(argvExec, 0, 0, FALSE)) goto error;
   }
   /************************************************************************/
 

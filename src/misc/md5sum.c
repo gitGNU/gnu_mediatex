@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.2 2014/11/13 16:36:42 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
  * md5sum computation
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ manageSIGALRM(void (*manager)(int))
   action.sa_handler = manager;
   sigemptyset(&(action.sa_mask));
   action.sa_flags = SA_RESTART;
-  if (sigaction(SIGALRM, &action, NULL) != 0) {
+  if (sigaction(SIGALRM, &action, 0) != 0) {
     logEmit(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
     goto error;
   }
@@ -98,7 +98,10 @@ gestionnaireSIGALRM(int i)
  =======================================================================*/
 int startProgBar(char* label)
 {
-  if (env.noRegression) return TRUE; // progbar disturbs ut outpout
+  // only run progbar for client (but not for cgi or server)
+  if (env.noRegression || strncmp(env.logFacility, "file", 4)) 
+    return TRUE; 
+
   env.progBar.label = label;
   return manageSIGALRM(gestionnaireSIGALRM);
 }
@@ -112,9 +115,11 @@ int startProgBar(char* label)
  =======================================================================*/
 void stopProgBar()
 {
-  if (env.noRegression) return; // progbar disturbs ut outpout
+  // only run progbar for client (but not for cgi or server)
+  if (env.noRegression || strncmp(env.logFacility, "file", 4)) return; 
+
   e2fsck_clear_progbar(&env.progBar.bar);
-  env.progBar.label = NULL;
+  env.progBar.label = 0;
 }
 
 /*=======================================================================
@@ -172,12 +177,12 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
     goto error;
   }
 
-  if (sum == NULL) {
+  if (sum == 0) {
   logEmit(LOG_ERR, "%s", "quickMd5: allocate provide a ssize_t argument");
     goto error;
   }
 
-  if (quickMd5sum == NULL) {
+  if (quickMd5sum == 0) {
     logEmit(LOG_ERR, "%s", "quickMd5 please allocate quickMd5sum argument");
     goto error;
   } 
@@ -254,7 +259,7 @@ computeFullMd5(int fd, ssize_t *sum, MD5_CTX *c,
     goto error;
   } 
 
-  if (fullMd5sum == NULL) {
+  if (fullMd5sum == 0) {
     logEmit(LOG_ERR, "%s", "fullMd5 please allocate fullMd5sum argument");
     goto error;
   } 
@@ -299,7 +304,7 @@ doMd5sum(Md5Data* data)
   off_t size;
   char quickMd5sum[MAX_SIZE_HASH+1];
   char fullMd5sum[MAX_SIZE_HASH+1];
-  char* backupPath = NULL;
+  char* backupPath = 0;
   int isBlockDev = FALSE;
   unsigned short int bs = 0;
   unsigned long int count = 0;
@@ -312,7 +317,7 @@ doMd5sum(Md5Data* data)
   strncpy(quickMd5sum, data->quickMd5sum, MAX_SIZE_HASH+1); 
   strncpy(fullMd5sum, data->fullMd5sum, MAX_SIZE_HASH+1); 
 
-  if (data->path == NULL || *(data->path) == (char)0) {
+  if (data->path == 0 || *(data->path) == (char)0) {
     logEmit(LOG_ERR, "%s", "Please provide a path for md5sum computing");
     goto error;
   }
@@ -445,7 +450,7 @@ void usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
+  char* inputPath = 0;
   Md5Data data;
   // ---
   int rc = 0;
@@ -454,8 +459,8 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"i:p";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"input-file", required_argument, NULL, 'i'},
-    {"no-progbar", no_argument, NULL, 'p'},
+    {"input-file", required_argument, 0, 'i'},
+    {"no-progbar", no_argument, 0, 'p'},
     {0, 0, 0, 0}
   };
 
@@ -464,18 +469,18 @@ main(int argc, char** argv)
   env.noRegression = FALSE; // show the progbar 
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'i':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the input device\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the input device path: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -497,7 +502,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (inputPath == NULL) {
+  if (inputPath == 0) {
     usage(programName);
     logEmit(LOG_ERR, "%s", "Please provide a file to compute checksums");
     goto error;

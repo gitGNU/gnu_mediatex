@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.2 2014/11/13 16:36:37 nroche Exp $
+ * Version: $Id: alloc.c,v 1.3 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
  * modified malloc
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@
 
 #include "alloc.h"
 
-#include <malloc.h>
 #include <pthread.h>
 
 // unregister macros defined in alloc.h so as to use true ones here
@@ -53,7 +52,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
 
   if (!isMutexInitialized) {
     if ((err = pthread_mutex_init(&mallocMutex, (pthread_mutexattr_t*)0))) {
-      logEmit(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
+      logAlloc(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
       goto error;
     }
     isMutexInitialized = TRUE;
@@ -75,7 +74,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
  =======================================================================*/
 void* mdtxMalloc(size_t size, char* file, int line)
 {
-  void* rc = NULL;
+  void* rc = 0;
   size_t need = 0;
   size_t prev = 0;
   
@@ -92,7 +91,7 @@ void* mdtxMalloc(size_t size, char* file, int line)
   need = 0;
   do { 
     if ((rc = malloc(size))) break;
-    logEmit(LOG_WARNING, "malloc fails: %s", strerror(errno));
+    logAlloc(LOG_WARNING, "malloc fails: %s", strerror(errno));
     need = (need==0)?1:(need<<1);
     prev = sumAllocated;
   } while (diseaseCallBack(need) && prev != sumAllocated);
@@ -106,7 +105,7 @@ void* mdtxMalloc(size_t size, char* file, int line)
 
     if (env.debugAlloc) {
       if (DefaultLog) {
-	logEmitFunc(DefaultLog, LOG_NOTICE,
+	logEmitFunc(DefaultLog, LOG_DEBUG,
 		    "[alloc %s:%i] malloc n%i: %i (sum= %i / lim= %i)",
 		    file, line, nbAlloc, malloc_usable_size (rc), 
 		    sumAllocated, limAllocated);
@@ -121,7 +120,7 @@ void* mdtxMalloc(size_t size, char* file, int line)
 
   } 
   else {
-    logEmit(LOG_ERR, "mdtxMalloc fails (sum= %i / lim= %i)",
+    logAlloc(LOG_ERR, "mdtxMalloc fails (sum= %i / lim= %i)",
 	    sumAllocated, limAllocated);
   }
   
@@ -135,6 +134,8 @@ void* mdtxMalloc(size_t size, char* file, int line)
  * Synopsis   : void* mdtxFakeMalloc(size_t size)
  * Input      : void* ptr: memory allocated
  * Output     : TRUE on success
+ * Note       : Needed to take accounting of when we free variable
+ *              allocated for us by external library (getcwd and scandir)
  =======================================================================*/
 void mdtxFakeMalloc(void* ptr, char* file, int line)
 {
@@ -147,7 +148,7 @@ void mdtxFakeMalloc(void* ptr, char* file, int line)
 
   if (env.debugAlloc) {
     if (DefaultLog) {
-      logEmitFunc(DefaultLog, LOG_NOTICE,
+      logEmitFunc(DefaultLog, LOG_DEBUG,
 		  "[alloc %s:%i] malloc n%i: %i (sum= %i / lim= %i)",
 		  file, line, nbAlloc+1, malloc_usable_size (ptr), 
 		  sumAllocated, limAllocated);
@@ -176,7 +177,7 @@ void mdtxFree(void* ptr, char* file, int line)
     size_t size = 0;
     size = malloc_usable_size (ptr);
     if (DefaultLog) {
-      logEmitFunc(DefaultLog, LOG_NOTICE, 
+      logEmitFunc(DefaultLog, LOG_DEBUG, 
 		  "[alloc %s:%i] free n%i: %i (sum= %i / lim= %i)",
 		  file, line, nbAlloc, size, 
 		  sumAllocated - size, limAllocated);
@@ -211,7 +212,7 @@ exitMalloc()
   if (nbAlloc == 0 && sumAllocated == 0) goto end;
 
   if (DefaultLog) {
-  logEmit(LOG_WARNING, "Memory leaks: n%i, sum= %i", 
+  logAlloc(LOG_WARNING, "Memory leaks: n%i, sum= %i", 
 	  nbAlloc, sumAllocated);
   }
   else {
@@ -245,29 +246,29 @@ exitMalloc()
 size_t getVmSize() 
 {
   size_t rc  = -1;
-  FILE* file = NULL;
+  FILE* file = 0;
   long vm = 0;
 
-  if ((file = fopen("/proc/self/statm", "r")) == NULL) {
-    logEmit(LOG_ERR, "fopen fails: %s", strerror(errno));
+  if ((file = fopen("/proc/self/statm", "r")) == 0) {
+    logAlloc(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
 
   // Just need the first num: vm size
   if (fscanf (file, "%li", &vm) < 1) {
-    logEmit(LOG_ERR, "fscanf fails: %s", strerror(errno));
+    logAlloc(LOG_ERR, "fscanf fails: %s", strerror(errno));
     goto error;
   }
 
   if (fclose(file) != 0) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logAlloc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
   // this value match cat /proc/$$/status | grep VmSize
   rc = vm * getpagesize();
  error:
-  if (rc == -1) logEmit(LOG_ERR, "%s", "getVmSize fails");
+  if (rc == -1) logAlloc(LOG_ERR, "%s", "getVmSize fails");
   return rc;
 }
 
@@ -291,11 +292,12 @@ memoryStatus(int priority)
   sprintSize(max, (long long unsigned int)maxAllocated);
   sprintSize(lim, (long long unsigned int)limAllocated);
 
-  logEmit(priority, "%s",
-	  "Memory: VSZ ; SELF: actual, max reach, nice limit");
-  logEmit(priority, "%11s%15s%11s%12s", vsz, use, max, lim);
+  if (env.debugAlloc) {
+    logAlloc(priority, "%s",
+	    "Memory: VSZ ; SELF: actual, max reach, nice limit");
+    logAlloc(priority, "%11s%15s%11s%12s", vsz, use, max, lim);
+  }
 }
-
 
 /************************************************************************/
 
@@ -326,7 +328,7 @@ int disease(long size)
   long goal = 0;
   int i=0;
 
-  logEmit(LOG_INFO, "disease callback: %i", size);
+  logAlloc(LOG_INFO, "disease callback: %i", size);
 
   goal = maxAllocated - size;
   if (goal < 0) goal = 0;
@@ -334,9 +336,9 @@ int disease(long size)
   while (i<BLOCK_MAX && sumAllocated > goal) {
     while (i<BLOCK_MAX && !ptr[i]) ++i;
     if (i<BLOCK_MAX) {
-      logEmit(LOG_INFO, "free slot %i", i);
+      logAlloc(LOG_INFO, "free slot %i", i);
       free(ptr[i]);
-      ptr[i] = NULL;
+      ptr[i] = 0;
       rc = TRUE;
     }
     ++i;
@@ -344,7 +346,7 @@ int disease(long size)
 
   // check if something was free
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to disease memory");
+    logAlloc(LOG_ERR, "%s", "fail to disease memory");
   }
   return rc;
 }
@@ -397,12 +399,12 @@ main(int argc, char** argv)
   int cOption = EOF;
 
   char* programName = *argv;
-  char* logFile = NULL;
+  char* logFile = 0;
 	
   int logFacility = -1;
   int logSeverity = -1;
 	
-  LogHandler* logHandler = NULL;
+  LogHandler* logHandler = 0;
 	
   // set the log handler default values
   if ((logFacility = getLogFacility("file")) == -1) {
@@ -424,7 +426,7 @@ main(int argc, char** argv)
     switch(cOption) {
 
     case 'f':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the facility name\n", 
 		programName);
 	rc = 2;
@@ -447,7 +449,7 @@ main(int argc, char** argv)
       break;
       
     case 's':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the severity name\n", 
 		programName);
 	rc = 2;
@@ -470,7 +472,7 @@ main(int argc, char** argv)
       break;
 	
     case 'l':
-      if(optarg == NULL) {
+      if(optarg == 0) {
 	fprintf(stderr, "%s: nil argument for the log stream\n", 
 		programName);
 	rc = 2;
@@ -483,7 +485,7 @@ main(int argc, char** argv)
 	}
 	else {
 	  logFile = (char*)malloc(sizeof(char) * strlen(optarg) + 1);
-	  if(logFile != NULL) {
+	  if(logFile != 0) {
 	    strcpy(logFile, optarg);
 	  }
 	  else {
@@ -527,7 +529,7 @@ main(int argc, char** argv)
   // set the log handler
   if((logHandler = 
       logOpen(programName, logFacility, logSeverity, logFile)) 
-     == NULL) {
+     == 0) {
     fprintf(stderr, "%s: cannot allocate the logHandler\n", programName);
     goto optError;
   }
@@ -542,24 +544,24 @@ main(int argc, char** argv)
   initMalloc(2000, disease);
 
   for (i=1; i<BLOCK_MAX; ++i) {
-    logEmit(LOG_NOTICE, "allocating slot %i...", i);
+    logAlloc(LOG_NOTICE, "allocating slot %i...", i);
     if (!(ptr[i] = malloc(BLOCK_SIZE*i))) goto error;
     memset(ptr[i], 42, BLOCK_SIZE*i);
-    logEmit(LOG_NOTICE, "...slot %i allocated", i);
+    logAlloc(LOG_NOTICE, "...slot %i allocated", i);
     memoryStatus(LOG_DEBUG);
   }
 
   // Finished
   for (i=1; i<BLOCK_MAX; ++i) {
     if (ptr[i]) {
-      logEmit(LOG_NOTICE, "freeing slot %i...", i);
+      logAlloc(LOG_NOTICE, "freeing slot %i...", i);
       free(ptr[i]);
-      logEmit(LOG_NOTICE, "...slot %i is free", i);
+      logAlloc(LOG_NOTICE, "...slot %i is free", i);
     }
   }
 
   memoryStatus(LOG_DEBUG);
-  logEmit(LOG_NOTICE, "sumAllocated = %i", sumAllocated);
+  logAlloc(LOG_NOTICE, "sumAllocated = %i", sumAllocated);
 
   /************************************************************************/
 

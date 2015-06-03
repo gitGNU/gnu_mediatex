@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:09 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:22 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts files (called by C code)
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -46,15 +46,15 @@ do_subst = sed \
  -e "s!CONF_MEDIATEX!$(mdtx_mediatexdir)!" \
  -e "s!CONF_BINDIR!$(bindir)!" \
  -e "s!CONF_LOCALSTATEDIR!$(localstatedir)!" \
- -e "s!CONF_SYSCONFDIR!$(sysconfdir)!"
+ -e "s!CONF_SYSCONFDIR!$(sysconfdir)!g"
 
-mediatexd: mediatexd.src $(top_srcdir)/config.h
+mediatexd: mediatexd.src $(top_srcdir)/mediatex-config.h
 	$(do_subst) < $< > $@
 
-cron_hourly.sh: cron_hourly.src $(top_srcdir)/config.h
+cron_hourly.sh: cron_hourly.src $(top_srcdir)/mediatex-config.h
 	$(do_subst) < $< > $@
 
-cron_daily.sh: cron_daily.src $(top_srcdir)/config.h
+cron_daily.sh: cron_daily.src $(top_srcdir)/mediatex-config.h
 	$(do_subst) < $< > $@
 
 localedir = $(datadir)/locale

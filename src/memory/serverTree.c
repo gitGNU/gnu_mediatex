@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.2 2014/11/13 16:36:30 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
 * Server producer interface
 
 MediaTex is an Electronic Records Management System
-Copyright (C) 2014  Nicolas Roche
+Copyright (C) 2014 2015 Nicolas Roche
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,17 +37,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Image* 
 createImage(void)
 {
-  Image* rc = NULL;
+  Image* rc = 0;
 
   rc = (Image*)malloc(sizeof(Image));
-  if(rc == NULL)
+  if(rc == 0)
     goto error;
    
   memset(rc, 0, sizeof(Image));
 
   return(rc);
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create an Image");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create an Image");
   return(rc);
 }
 
@@ -62,7 +62,7 @@ createImage(void)
 Image* 
 destroyImage(Image* self)
 {
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   free(self);
  error:
   return (Image*)0;
@@ -86,8 +86,8 @@ serializeImage(Image* self, FILE* fd)
 {
   int rc = FALSE;
 
-  if(self == NULL) {
-    logEmit(LOG_ERR, "%s", "empty image");
+  if(self == 0) {
+    logMemory(LOG_ERR, "%s", "empty image");
     goto error;
   }
 
@@ -99,7 +99,7 @@ serializeImage(Image* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeImage fails");
+    logMemory(LOG_ERR, "%s", "serializeImage fails");
   }
   return rc;
 }
@@ -167,10 +167,10 @@ cmpImageScore(const void *p1, const void *p2)
 Server* 
 createServer(void)
 {
-  Server* rc = NULL;
+  Server* rc = 0;
 
   rc = (Server*)malloc(sizeof(Server));
-  if(rc == NULL) goto error;
+  if(rc == 0) goto error;
    
   memset(rc, 0, sizeof(Server));
 
@@ -180,14 +180,14 @@ createServer(void)
   rc->scoreParam = (ScoreParam)DEFAULT_SCORE_PARAM;
   rc->minGeoDup = DEFAULT_MIN_GEO;
 
-  if ((rc->networks = createRing()) == NULL) goto error;
-  if ((rc->gateways = createRing()) == NULL) goto error;
-  if ((rc->images = createRing()) == NULL) goto error;
-  if ((rc->records = createRing()) == NULL) goto error;
+  if ((rc->networks = createRing()) == 0) goto error;
+  if ((rc->gateways = createRing()) == 0) goto error;
+  if ((rc->images = createRing()) == 0) goto error;
+  if ((rc->records = createRing()) == 0) goto error;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Server");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Server");
   return destroyServer(rc);
 }
 
@@ -202,7 +202,7 @@ createServer(void)
 Server* 
 destroyServer(Server* self)
 {
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   self->label = destroyString(self->label);
   self->user = destroyString(self->user);
   self->comment = destroyString(self->comment);
@@ -237,12 +237,12 @@ int
 serializeServer(Server* self, FILE* fd)
 {
   int rc = FALSE;
-  Image* image = NULL;
-  char* string = NULL;
-  RGIT* curr = NULL;
+  Image* image = 0;
+  char* string = 0;
+  RGIT* curr = 0;
 
-  if(self == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty Server");
+  if(self == 0) {
+    logMemory(LOG_ERR, "%s", "cannot serialize empty Server");
     goto error;
   }
   
@@ -266,7 +266,7 @@ serializeServer(Server* self, FILE* fd)
   if (!isEmptyRing(self->networks)) {
     fprintf(fd, "\t%-9s ", "networks");
     if (!rgSort(self->networks, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->networks, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->networks, &curr))) {
@@ -278,7 +278,7 @@ serializeServer(Server* self, FILE* fd)
   if (!isEmptyRing(self->gateways)) {
     fprintf(fd, "\t%-9s ", "gateways");
     if (!rgSort(self->gateways, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->gateways, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->gateways, &curr))) {
@@ -301,15 +301,15 @@ serializeServer(Server* self, FILE* fd)
   // list of images
   if (!isEmptyRing(self->images)) {
     if (!rgSort(self->images, cmpImage)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(image = rgNext_r(self->images, &curr))) goto error;
     fprintf(fd, "%s", "\tprovide\t  ");
     do {
       if (!serializeImage(image, fd)) goto error;
       image = rgNext_r(self->images, &curr);
-      if (image != NULL) fprintf(fd, ",\n\t\t  ");
+      if (image != 0) fprintf(fd, ",\n\t\t  ");
     }
-    while(image != NULL);
+    while(image != 0);
     fprintf(fd, "\n");
   } 
 
@@ -359,11 +359,11 @@ cmpServer(const void *p1, const void *p2)
 ServerTree* 
 createServerTree(void)
 {
-  ServerTree* rc = NULL;
+  ServerTree* rc = 0;
   ScoreParam defaultScoreParam = DEFAULT_SCORE_PARAM;
 
   rc = (ServerTree*)malloc(sizeof(ServerTree));
-  if(rc == NULL)
+  if(rc == 0)
     goto error;
     
   memset(rc, 0, sizeof(ServerTree));
@@ -372,12 +372,12 @@ createServerTree(void)
   rc->scoreParam = defaultScoreParam;
   rc->minGeoDup = DEFAULT_MIN_GEO;
 
-  if ((rc->servers = createRing()) == NULL) goto error;
-  if ((rc->archives = createRing()) == NULL) goto error;
+  if ((rc->servers = createRing()) == 0) goto error;
+  if ((rc->archives = createRing()) == 0) goto error;
   
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create a serverTree");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create a serverTree");
   return destroyServerTree(rc);
 }
 
@@ -392,7 +392,7 @@ createServerTree(void)
 ServerTree* 
 destroyServerTree(ServerTree* self)
 {
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
   // do not delete archives objets 
   self->archives = destroyOnlyRing(self->archives);
   self->servers = destroyRing(self->servers, 
@@ -413,20 +413,20 @@ int
 serializeServerTree(Collection* coll)
 { 
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout; 
-  ServerTree *self = NULL;
-  Server *server = NULL;
-  RGIT* curr = NULL;
+  ServerTree *self = 0;
+  Server *server = 0;
+  RGIT* curr = 0;
   int uid = getuid();
 
   checkCollection(coll);
   if(!(self = coll->serverTree)) goto error;
-  logEmit(LOG_DEBUG, "serialize %s server tree", coll->label);
+  logMemory(LOG_DEBUG, "serialize %s server tree", coll->label);
 
   // we neeed to use the home cvs collection directory
   if (!(coll->memoryState & EXPANDED)) {
-    logEmit(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "%s", "collection must be expanded first");
     goto error;
   }
 
@@ -434,11 +434,11 @@ serializeServerTree(Collection* coll)
 
   // output file
   if (env.dryRun == FALSE) path = coll->serversDB;
-  logEmit(LOG_INFO, "Serializing the server tree file: %s", 
+  logMemory(LOG_INFO, "Serializing the server tree file: %s", 
 	  path?path:"stdout");
-  if (path != NULL && *path != (char)0) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+  if (path != 0 && *path != (char)0) {
+    if ((fd = fopen(path, "w")) == 0) {
+      logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
       goto error;
     }
@@ -452,7 +452,7 @@ serializeServerTree(Collection* coll)
   //fprintf(fd, "# Version: $" "Id" "$\n");
   
   if (!self->master) {
-    logEmit(LOG_ERR, "loose master server for %s collection", 
+    logMemory(LOG_ERR, "loose master server for %s collection", 
 	    coll->label);
     goto error;
   }
@@ -476,7 +476,7 @@ serializeServerTree(Collection* coll)
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext_r(self->servers, &curr)) != NULL) {
+    while((server = rgNext_r(self->servers, &curr)) != 0) {
       if (!serializeServer(server, fd)) goto error;
     }
   }
@@ -493,7 +493,7 @@ serializeServerTree(Collection* coll)
   if (fd != stdout) {
     if (!unLock(fileno(fd))) rc = FALSE;
     if (fclose(fd)) {
-      logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+      logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
       rc = FALSE;
     }
   }
@@ -515,17 +515,17 @@ serializeServerTree(Collection* coll)
 Image* 
 getImage(Collection* coll, Server* server, Archive* archive)
 {
-  Image* rc = NULL;
-  RGIT* curr = NULL;
+  Image* rc = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkServer(server);
-  logEmit(LOG_DEBUG, "getImage %s, %s:%i, %s:%lli",
+  logMemory(LOG_DEBUG, "getImage %s, %s:%i, %s:%lli",
 	  coll, server->host, server->mdtxPort, archive->hash,
 	  (long long int)archive->size);
   
   // look for image
-  while((rc = rgNext_r(server->images, &curr)) != NULL)
+  while((rc = rgNext_r(server->images, &curr)) != 0)
     if (!cmpArchive(&rc->archive, &archive)) break;
 
  error:
@@ -545,12 +545,12 @@ getImage(Collection* coll, Server* server, Archive* archive)
 Image* 
 addImage(Collection* coll, Server* server, Archive* archive)
 {
-  Image* rc = NULL;
-  Image* image = NULL;
+  Image* rc = 0;
+  Image* image = 0;
 
   checkCollection(coll);
   checkServer(server);
-  logEmit(LOG_DEBUG, "addImage %s, %s:%i, %s:%lli",
+  logMemory(LOG_DEBUG, "addImage %s, %s:%i, %s:%lli",
 	  coll, server->host, server->mdtxPort, archive->hash,
 	  (long long int)archive->size);
 
@@ -558,7 +558,7 @@ addImage(Collection* coll, Server* server, Archive* archive)
   if ((image = getImage(coll, server, archive))) goto end;
 
   // add new one if not already there
-  if ((image = createImage()) == NULL) goto error;
+  if ((image = createImage()) == 0) goto error;
   image->archive = archive;
   image->server = server;
 
@@ -577,7 +577,7 @@ addImage(Collection* coll, Server* server, Archive* archive)
   rc = image;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to add an image");
+    logMemory(LOG_ERR, "%s", "fails to add an image");
     if (image) delImage(coll, image);
   }
   return rc;
@@ -598,14 +598,14 @@ int
 delImage(Collection* coll, Image* image)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
  
   checkCollection(coll);
   checkImage(image);
-  logEmit(LOG_DEBUG, "delImage %s, %s:%i, %s:%lli",
+  logMemory(LOG_DEBUG, "delImage %s, %s:%i, %s:%lli",
 	  coll, image->server->host, image->server->mdtxPort, 
 	  image->archive->hash, (long long int)image->archive->size);
-  logEmit(LOG_DEBUG, "%s", "delImage");
+  logMemory(LOG_DEBUG, "%s", "delImage");
 
   // delete image from server
   if ((curr = rgHaveItem(image->server->images, image))) {
@@ -629,7 +629,7 @@ delImage(Collection* coll, Image* image)
   rc = TRUE;
  error:
  if (!rc) {
-    logEmit(LOG_ERR, "%s", "delImage fails");
+    logMemory(LOG_ERR, "%s", "delImage fails");
   }
   return rc;
 }
@@ -651,15 +651,15 @@ isReachable(Collection* coll, Server* from, Server* to)
 {
   int rc = FALSE;
   int loop = TRUE;
-  RG* reach = NULL;
-  void* it = NULL;
-  RG* tmp = NULL;
-  //RG* tmp2 = NULL;
-  RGIT* curr = NULL;
-  Server* server = NULL;
+  RG* reach = 0;
+  void* it = 0;
+  RG* tmp = 0;
+  //RG* tmp2 = 0;
+  RGIT* curr = 0;
+  Server* server = 0;
   int nbReachable = 0;
 
-  logEmit(LOG_DEBUG, "isReachable from %s to %s",
+  logMemory(LOG_DEBUG, "isReachable from %s to %s",
 	  from->fingerPrint, to->fingerPrint);
 
   // networks we can reach
@@ -694,7 +694,7 @@ isReachable(Collection* coll, Server* from, Server* to)
 
     // look for a new gateway (juste one)
     loop = FALSE;
-    curr = NULL; 
+    curr = 0; 
     while(!loop && (server = rgNext_r(coll->serverTree->servers, &curr))) {
       if (!(tmp = rgInter(reach, server->gateways))) goto error;
       if (!isEmptyRing(tmp)) {
@@ -708,7 +708,7 @@ isReachable(Collection* coll, Server* from, Server* to)
 	if (!(tmp = rgUnion(reach, server->networks))) goto error;
 	reach = destroyOnlyRing(reach);
 	reach = tmp;
-	tmp = NULL;
+	tmp = 0;
 
 	// but is there new networks ?
 	loop = (reach->nbItems > nbReachable);
@@ -719,12 +719,12 @@ isReachable(Collection* coll, Server* from, Server* to)
 
   /* printf("... not reachable\n"); */
  end:
-  logEmit(LOG_INFO, "%s may %sreach %s",
+  logMemory(LOG_INFO, "%s may %sreach %s",
 	  from->fingerPrint, rc?"":"not ", to->fingerPrint);
   reach = destroyOnlyRing(reach);
   return rc;
  error:
-  logEmit(LOG_DEBUG, "%s", "isReachable fails");
+  logMemory(LOG_DEBUG, "%s", "isReachable fails");
   reach = destroyOnlyRing(reach);
   return FALSE;
 }
@@ -742,15 +742,15 @@ isReachable(Collection* coll, Server* from, Server* to)
 Server* 
 getServer(Collection* coll, char* fingerPrint)
 {
-  Server* rc = NULL;
-  RGIT* curr = NULL;
+  Server* rc = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkLabel(fingerPrint);
-  logEmit(LOG_DEBUG, "getServer %s", fingerPrint);
+  logMemory(LOG_DEBUG, "getServer %s", fingerPrint);
   
   // look for server
-  while((rc = rgNext_r(coll->serverTree->servers, &curr)) != NULL)
+  while((rc = rgNext_r(coll->serverTree->servers, &curr)) != 0)
     if (!strncmp(rc->fingerPrint, fingerPrint, MAX_SIZE_HASH)) break;
 
  error:
@@ -769,12 +769,12 @@ getServer(Collection* coll, char* fingerPrint)
 Server* 
 addServer(Collection* coll, char* fingerPrint)
 {
-  Server* rc = NULL;
-  Server* server = NULL;
+  Server* rc = 0;
+  Server* server = 0;
 
   checkCollection(coll);
   checkLabel(fingerPrint);
-  logEmit(LOG_DEBUG, "addServer %s", fingerPrint);
+  logMemory(LOG_DEBUG, "addServer %s", fingerPrint);
   
   // already there
   if ((server = getServer(coll, fingerPrint))) goto end;
@@ -793,7 +793,7 @@ addServer(Collection* coll, char* fingerPrint)
   rc = server;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addServer fails");
+    logMemory(LOG_ERR, "%s", "addServer fails");
     server = destroyServer(server);
   }
   return rc;
@@ -811,23 +811,23 @@ int
 delServer(Collection* coll, Server* server)
 {
   int rc = FALSE;
-  Image* img = NULL;
-  Record* rec = NULL;
-  RGIT* curr = NULL;
+  Image* img = 0;
+  Record* rec = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkServer(server);
-  logEmit(LOG_DEBUG, "delServer %s", server->fingerPrint);
+  logMemory(LOG_DEBUG, "delServer %s", server->fingerPrint);
 
   // delete from coll if localhost 
-  if (coll->localhost == server) coll->localhost = NULL;
+  if (coll->localhost == server) coll->localhost = 0;
 
   // delete images own by the this server
-  while ((img = rgHead(server->images)) != NULL)
+  while ((img = rgHead(server->images)) != 0)
     if (!delImage(coll, img)) goto error;
 
   // delete records
-  while((rec = rgHead(server->records)) != NULL)
+  while((rec = rgHead(server->records)) != 0)
     if (!delRecord(coll, rec)) goto error;
 
   // delete server from collection ring
@@ -854,15 +854,15 @@ int
 diseaseServer(Collection* coll, Server* server)
 {
   int rc = FALSE;
-  Image* image = NULL;
-  RGIT* curr = NULL;
+  Image* image = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkServer(server);
-  logEmit(LOG_DEBUG, "disease %s server", server->fingerPrint);
+  logMemory(LOG_DEBUG, "disease %s server", server->fingerPrint);
 
   // delete images own by the this server
-  while ((image = rgHead(server->images)) != NULL) {
+  while ((image = rgHead(server->images)) != 0) {
 
     // delete archive from serverTree
     if ((curr = rgHaveItem(coll->serverTree->archives, image->archive))) {
@@ -904,7 +904,7 @@ diseaseServer(Collection* coll, Server* server)
   
   rc = TRUE;
  error:
-  if (!rc) logEmit(LOG_ERR, "%s", "diseaseServer fails");
+  if (!rc) logMemory(LOG_ERR, "%s", "diseaseServer fails");
   return rc;
 }
 
@@ -919,23 +919,23 @@ int
 diseaseServerTree(Collection* coll)
 {
   int rc = FALSE;
-  ServerTree *self = NULL;
-  Server *server = NULL;
-  RGIT* curr = NULL;
+  ServerTree *self = 0;
+  Server *server = 0;
+  RGIT* curr = 0;
  
   checkCollection(coll);
-  if((self = coll->serverTree) == NULL) goto error;
-  logEmit(LOG_DEBUG, "disease %s servers", coll->label);
+  if((self = coll->serverTree) == 0) goto error;
+  logMemory(LOG_DEBUG, "disease %s servers", coll->label);
 
   // disease servers
-  curr = NULL;
-  while((server = rgNext_r(self->servers, &curr)) != NULL) {
+  curr = 0;
+  while((server = rgNext_r(self->servers, &curr)) != 0) {
     if (!diseaseServer(coll, server)) goto error;
   }
 
   rc = TRUE;
  error:
-  if (!rc) logEmit(LOG_ERR, "%s", "diseaseServerTree fails");
+  if (!rc) logMemory(LOG_ERR, "%s", "diseaseServerTree fails");
   return rc;
 }
 
@@ -975,10 +975,10 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
-  Server* server1 = NULL;
-  Server* server2 = NULL;
-  Server* server3 = NULL;
+  Collection* coll = 0;
+  Server* server1 = 0;
+  Server* server2 = 0;
+  Server* server3 = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -991,10 +991,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -1013,7 +1014,7 @@ main(int argc, char** argv)
   
   // test serializing
   if (!serializeServerTree(coll)) {
-    logEmit(LOG_ERR, "%s", "sorry, cannot serialize the exemple");
+    logMemory(LOG_ERR, "%s", "sorry, cannot serialize the exemple");
     goto error;
   }
 

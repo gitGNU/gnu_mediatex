@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.2 2014/11/13 16:36:20 nroche Exp $
+ * Version: $Id: supp.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/supp
  *
  * Manage local supports data-base
 
   MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ int
 mdtxMount(char* iso, char* target)
 {
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0, 0, 0};
   int isBlockDev = FALSE;
 
   checkLabel(iso);
@@ -80,7 +80,7 @@ mdtxMount(char* iso, char* target)
   if (!isBlockDev) argv[3] = ",loop";
 
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, "root", NULL, FALSE)) goto error;
+    if (!execScript(argv, "root", 0, FALSE)) goto error;
   }
   
   rc = TRUE;
@@ -105,7 +105,7 @@ int
 mdtxUmount(char* target)
 {
   int rc = FALSE;
-  char *argv[] = {NULL, NULL, NULL};
+  char *argv[] = {0, 0, 0};
 
   checkLabel(target);
   logEmit(LOG_DEBUG, "mdtx umount %s", target);
@@ -117,7 +117,7 @@ mdtxUmount(char* target)
   argv[1] = target;
 
   if (!env.noRegression && !env.dryRun) {
-    if (!execScript(argv, "root", NULL, FALSE)) goto error;
+    if (!execScript(argv, "root", 0, FALSE)) goto error;
   }
 
   rc = TRUE;
@@ -141,8 +141,8 @@ int
 mdtxUpdateSupport(char* label, char* status)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support *supp = NULL;
+  Configuration* conf = 0;
+  Support *supp = 0;
 
   logEmit(LOG_DEBUG, "%s", "mdtxUpdateSupport");
 
@@ -183,7 +183,7 @@ doCheckSupport(Support *supp, char* path)
   logEmit(LOG_DEBUG, "%s", "doCheckSupport");
   memset(&data, 0, sizeof(Md5Data));
   
-  if ((data.path = createString(path)) == NULL) {
+  if ((data.path = createString(path)) == 0) {
     logEmit(LOG_ERR, "%s", "cannot dupplicate path string");
     goto error;
   }
@@ -288,9 +288,9 @@ int
 mdtxLsSupport()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  RG* supports = NULL;
-  Support *supp = NULL;
+  Configuration* conf = 0;
+  RG* supports = 0;
+  Support *supp = 0;
 
   logEmit(LOG_DEBUG, "%s", "mdtxLsSupport");
   if (!(conf = getConfiguration())) goto error;
@@ -298,13 +298,13 @@ mdtxLsSupport()
   supports = conf->supports;
 
   rgRewind(supports);
-  while((supp = rgNext(supports)) != NULL) {
+  while((supp = rgNext(supports)) != 0) {
     if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
   
   printf("%5s %*s %s\n", 
 	 "score", MAX_SIZE_STAT, "state", "label");
-  while((supp = rgNext(supports)) != NULL) {
+  while((supp = rgNext(supports)) != 0) {
     printf("%5.2f %*s %s\n", 
 	   supp->score, MAX_SIZE_STAT, supp->status, supp->name);
   }
@@ -330,8 +330,8 @@ int
 mdtxAddSupport(char* label, char* path)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support *supp = NULL;
+  Configuration* conf = 0;
+  Support *supp = 0;
   time_t now = 0;
 
   logEmit(LOG_DEBUG, "%s", "mdtxAddSupport");
@@ -347,7 +347,7 @@ mdtxAddSupport(char* label, char* path)
   }
 
   // create and complete support object
-  if ((supp = addSupport(label)) == NULL) goto error;
+  if ((supp = addSupport(label)) == 0) goto error;
   supp->firstSeen = now;
   if (!doCheckSupport(supp, path)) goto error;
 
@@ -377,11 +377,11 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
 		 RecordTree* tree) 
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  FromAsso* asso = NULL;
-  AVLNode *node = NULL;
-  char* extra = NULL;
+  Archive* archive = 0;
+  Record* record = 0;
+  FromAsso* asso = 0;
+  AVLNode *node = 0;
+  char* extra = 0;
 
   logEmit(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
@@ -401,6 +401,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
 
   // add available content once the iso is mounted
   // (server do not mount it so do not use the extraction rules)
+  if (!mnt) goto end;
   for(node = archive->toContainer->childs->head; 
       node; node = node->next) {
     asso = node->item;
@@ -415,6 +416,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
     if (!rgInsert(tree->records, record)) goto error2;
   }
 
+ end:
   rc = TRUE;
  error2:
   if (!releaseCollection(coll, EXTR)) rc = FALSE;
@@ -438,20 +440,20 @@ notifyHave(Support* supp, char* path, char* mnt)
 {
   int rc = FALSE;
   int socket = 0;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RecordTree* tree = NULL;
-  Record* record = NULL;
-  RGIT* curr1 = NULL;
-  RGIT* curr2 = NULL;
-  char* name = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RecordTree* tree = 0;
+  Record* record = 0;
+  RGIT* curr1 = 0;
+  RGIT* curr2 = 0;
+  char* name = 0;
   int isShared = FALSE;
 #ifndef utMAIN
   char reply[1];
 #endif
 
   logEmit(LOG_DEBUG, "%s", "notifyHave");
-  if (supp == NULL) goto error;
+  if (supp == 0) goto error;
   if (isEmptyString(path) || *path != '/') {
     logEmit(LOG_ERR, "%s", 
 	    "daemon need an absolute path for support extraction");
@@ -465,22 +467,28 @@ notifyHave(Support* supp, char* path, char* mnt)
   tree->messageType = HAVE;
 
   // for each collections
-  while((coll = rgNext_r(conf->collections, &curr1)) != NULL) {
+  while((coll = rgNext_r(conf->collections, &curr1)) != 0) {
     tree->collection = coll;
 
     // find the support if used by this collection
-    while((name = rgNext_r(coll->supports, &curr2)) != NULL) {
+    while((name = rgNext_r(coll->supports, &curr2)) != 0) {
       if (!strncmp(name, supp->name, MAX_SIZE_NAME)) break;
     }
-    if (name == NULL) continue;
+    if (name == 0) continue;
     isShared = TRUE;
 
     // add final supplies    
     if (!addFinalSupplies(coll, supp, path, mnt, tree)) goto error;
 
 #ifndef utMAIN
+    // trick to use 127.0.0.1 instead of www IP address
+    buildSocketAddressEasy(&coll->localhost->address, 
+			   0x7f000001, coll->localhost->mdtxPort);
+
     if ((socket = connectServer(coll->localhost)) == -1) goto error;
-    if (!upgradeServer(socket, tree, NULL)) goto error;
+    if (!upgradeServer(socket, tree, 0)) goto error;
+    coll->localhost->address.sin_family = 0; // do not use 127.0.0.1 anymore
+
     // wait until server shut down the sockect
     tcpRead(socket, reply, 1);
 #else
@@ -490,7 +498,7 @@ notifyHave(Support* supp, char* path, char* mnt)
 #endif
     
     // del final supplies
-    while((record = rgHead(tree->records)) != NULL) {
+    while((record = rgHead(tree->records)) != 0) {
       if (!delRecord(coll, record)) goto error;
       rgRemove(tree->records);
     }
@@ -514,8 +522,8 @@ notifyHave(Support* supp, char* path, char* mnt)
 /*=======================================================================
  * Function   : isIso 
  * Description: check if a file is an iso
- * Synopsis   : 
- * Input      : 
+ * Synopsis   : int isIsoFile(char* path)
+ * Input      : char* path
  * Output     : TRUE on success
  =======================================================================*/
 int isIsoFile(char* path)
@@ -541,7 +549,7 @@ int isIsoFile(char* path)
     rc = FALSE;
   }
  if (!rc) {
-    logEmit(LOG_ERR, "%s", "isIsoFile fails");
+    logEmit(LOG_INFO, "%s", "not an iso");
   }
   return rc;
 }
@@ -559,16 +567,16 @@ int
 mdtxHaveSupport(char* label, char* path)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support *supp = NULL;
-  char* absPath = NULL;
-  char* mnt = NULL;
+  Configuration* conf = 0;
+  Support *supp = 0;
+  char* absPath = 0;
+  char* mnt = 0;
   char pid[12];
 
   logEmit(LOG_DEBUG, "%s", "mdtxHaveSupport");
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(label))) goto error;
-  if (supp == NULL) goto error;
+  if (supp == 0) goto error;
   if (isEmptyString(path)) goto error;
   if (!doCheckSupport(supp, path)) goto error;
   
@@ -630,13 +638,13 @@ int
 mdtxDelSupport(char* label)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support *supp = NULL;
+  Configuration* conf = 0;
+  Support *supp = 0;
 
   logEmit(LOG_DEBUG, "%s", "mdtxDelSupport");
 
   // withdraw support
-  if (!mdtxWithdrawSupport(label, NULL)) goto error;
+  if (!mdtxWithdrawSupport(label, 0)) goto error;
 
   // remove support
   if (!(conf = getConfiguration())) goto error;
@@ -692,7 +700,7 @@ main(int argc, char** argv)
   char inputRep[255] = "../../examples";
   char* supp = "SUPP21_logo.part1";
   char path[1024];
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -700,7 +708,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -708,12 +716,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);

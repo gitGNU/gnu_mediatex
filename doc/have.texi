@@ -1,6 +1,7 @@
 @cindex supports
 
-@process{Have} process is call when @actorPublisher provide a support. 
+@process{Have} process is call when 
+@actorPublisher provide a support. 
 
 Process conceptual model:
 

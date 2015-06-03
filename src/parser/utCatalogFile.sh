@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utCatalogFile.sh,v 1.2 2014/11/13 16:37:02 nroche Exp $
+# * Version: $Id: utCatalogFile.sh,v 1.3 2015/06/03 14:03:54 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
 # * Unit test script for catalogfile.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-#set -x
+set -x
 set -e
 
 [ -z $srcdir ] && srcdir=.

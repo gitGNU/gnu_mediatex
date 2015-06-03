@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.3 2014/11/13 16:36:38 nroche Exp $
+ * Version: $Id: command.c,v 1.4 2015/06/03 14:03:44 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
  * system API
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "config.h"
+#include "mediatex-config.h"
 #include "command.h"
 #include "setuid.h"
 
@@ -73,7 +73,7 @@ miscUsage(char* programName)
   fprintf(stderr, "The usage for %s is:\n", basename(programName));
   fprintf(stderr, "%s\t{ -h | -v |\n", basename(programName));
   fprintf(stderr, "\t\t[ -f facility ] [ -s severity ] [ -l logFile ]");
-  fprintf(stderr, "\n\t\t[ -n ] [ -M ] [-m memoryLimit ]");
+  fprintf(stderr, "\n\t\t[-a memoryLimit ] [ -n ] [ -A ] [ -S ]");
 }
 
 /*=======================================================================
@@ -86,6 +86,7 @@ miscUsage(char* programName)
 void 
 memoryUsage(char* programName)
 {
+  fprintf(stderr, "\n\t\t[ -M ]");
   miscUsage(programName);
 }
 
@@ -114,7 +115,7 @@ void
 mdtxUsage(char* programName)
 {
   parserUsage(programName);
-  fprintf(stderr, "\n\t\t[ -X ] [ -c confFile ]");
+  fprintf(stderr, "\n\t\t[ -O ] [ -c confFile ]");
 }
 
 /*=======================================================================
@@ -138,9 +139,10 @@ miscOptions()
 	  "\t\t\tamongs 'err' 'warning' 'notice' 'info' 'debug'\n"
 	  "  -l, --log-file\tlog to logFile\n"
 	  "\t\t\tneed to be coupled with the 'file' facility\n"
+	  "  -a, --memory-limit\tlimit for malloc in Mo\n"
 	  "  -n, --dry-run\t\tdo a dry run\n"
-	  "  -m, --memory-limit\tlimit for malloc in Mo\n"
-	  "  -M, --debug-alloc\tdebug information from malloc/free\n");
+	  "  -A, --debug-alloc\tenable logs from malloc/free\n"
+	  "  -S, --debug-script\tdo not hide outpouts from scripts\n");
 }
 
 /*=======================================================================
@@ -154,7 +156,8 @@ void
 memoryOptions()
 {
   miscOptions();
-
+  fprintf(stderr,
+	  "  -M, --debug-memory\tenable logs from the memory objects\n");
 }
 
 /*=======================================================================
@@ -184,9 +187,10 @@ void
 mdtxOptions()
 {
   parserOptions();
-  fprintf(stderr, "  -X, --debug-script\tshow the script commands\n");
-  fprintf(stderr, "  -c, --conf-label\tto overhide default configuration"
-	  CONF_ETCDIR CONF_MEDIATEXDIR ".conf\n");
+  fprintf(stderr, 
+	  "  -C, --debug-common\tenable logs from the common code\n"
+	  "  -c, --conf-label\tto overhide default configuration file"
+	  " mdtx.conf\n");
 }
 
 /*=======================================================================
@@ -199,20 +203,20 @@ mdtxOptions()
 void 
 getEnv(MdtxEnv* self)
 {
-  char* tmpValue = NULL;
+  char* tmpValue = 0;
 
   // no logging available here
  
   // check the environment variables
-  if ((tmpValue = getenv("MDTX_LOG_FILE")) != NULL)
+  if ((tmpValue = getenv("MDTX_LOG_FILE")) != 0)
     self->logFile = tmpValue;
-  if ((tmpValue = getenv("MDTX_LOG_FACILITY")) != NULL)
+  if ((tmpValue = getenv("MDTX_LOG_FACILITY")) != 0)
     self->logFacility = tmpValue;
-  if ((tmpValue = getenv("MDTX_LOG_SEVERITY")) != NULL)
+  if ((tmpValue = getenv("MDTX_LOG_SEVERITY")) != 0)
     self->logSeverity = tmpValue;
-  if ((tmpValue = getenv("MDTX_MDTXUSER")) != NULL)
+  if ((tmpValue = getenv("MDTX_MDTXUSER")) != 0)
     self->confLabel = tmpValue;
-  if ((tmpValue = getenv("MDTX_DRY_RUN")) != NULL)
+  if ((tmpValue = getenv("MDTX_DRY_RUN")) != 0)
     self->dryRun = !strncmp(tmpValue, "1", 2);
 }
 
@@ -231,7 +235,7 @@ setEnv(char* programName, MdtxEnv *self)
   int rc = FALSE;
   int logFacility = -1;
   int logSeverity = -1;
-  LogHandler* logHandler = NULL;
+  LogHandler* logHandler = 0;
 
   // no logging available here
 
@@ -246,7 +250,7 @@ setEnv(char* programName, MdtxEnv *self)
   }
   if((logHandler = 
       logOpen(programName, logFacility, logSeverity, self->logFile)) 
-     == NULL) {
+     == 0) {
     fprintf(stderr, "%s: cannot allocate the logHandler\n", programName);
     goto error;
   }
@@ -346,7 +350,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   int status = 0;
   int i = 0;
   
-  if (argv[0] == NULL || *argv[0] == (char)0) {
+  if (argv[0] == 0 || *argv[0] == (char)0) {
     logEmit(LOG_ERR, "%s", "please provide a script to exec");
     goto error;
   }
@@ -356,7 +360,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
 	  pwd?" PWD=":"", pwd?pwd:"",
 	  argv[0]);
 
-  while (argv[++i] != NULL && *argv[i] != (char)0) {
+  while (argv[++i] != 0 && *argv[i] != (char)0) {
     logEmit(LOG_INFO, " arg%i: %s", i, argv[i]);
   }
 
@@ -453,8 +457,8 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputFile = NULL;
-  char *argvExec[] = { NULL, "parameter1", NULL};
+  char* inputFile = 0;
+  char *argvExec[] = { 0, "parameter1", 0};
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -462,7 +466,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-file", required_argument, NULL, 'i'},
+    {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
 
@@ -470,12 +474,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'i':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the input stream\n", 
 		programName);
 	rc = EINVAL;
@@ -492,14 +496,14 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (inputFile == NULL) {
+  if (inputFile == 0) {
     usage(programName);
     //logEmit(LOG_ERR, "%s", "Please provide an input file");
     goto error;
   }
 
   argvExec[0] = inputFile;
-  if (!execScript(argvExec, NULL, NULL, FALSE)) goto error;
+  if (!execScript(argvExec, 0, 0, FALSE)) goto error;
   /************************************************************************/
 
   rc = TRUE;

@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utUdp.sh,v 1.2 2014/11/13 16:36:56 nroche Exp $
+# * Version: $Id: utUdp.sh,v 1.3 2015/06/03 14:03:51 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
 # * Unit test script for udp.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

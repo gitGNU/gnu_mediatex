@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordList.l,v 1.2 2014/11/13 16:36:59 nroche Exp $
+ * Version: $Id: recordList.l,v 1.3 2015/06/03 14:03:52 nroche Exp $
  * Project: Mediatex
  * Module : recordList reentrant scanner
 
@@ -7,7 +7,7 @@
  * Note: Please provide an archive by line from input file
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@
 %option noposix-compat
 %option nostdinit
 %option noyywrap
+%option yylineno
 
 /* Code-Level And API Options: */
 %option ansi-definitions
@@ -61,10 +62,10 @@
 %option debug
 %option noperf-report
 %option warn
-%option nounput
 
 /* Miscellaneous Options: */
 %option nounput
+%option noinput
 
 %top{
 /*=======================================================================
@@ -76,7 +77,7 @@
  * Note: Please provide an archive by line from input file
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -90,51 +91,31 @@
  
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 =======================================================================*/
 
 #include "../mediatex.h"
 #include "../misc/log.h"
 #include "../memory/strdsm.h"
-#include "../memory/recordTree.h"
-
-#ifndef utMAIN
 #include "../misc/cypher.h"
-#include "recordList.tab.h"
-#include <sys/socket.h> //
-#include <netinet/in.h> // inet_aton
-#include <arpa/inet.h>  //
-#endif	/*	: utMAIN	*/
 
 typedef struct RecordExtra {
-  int            lineNo;
   AESData*       aesData;
 } RecordExtra;
-
-// %union{} used by flex/bison to write/read values
-typedef union BisonUnion {
-  // lex token types
-  Type   type;
-  time_t time;
-  off_t  size;
-  char*  string;
-  int    msgval;
-  char   hash[MAX_SIZE_HASH+1];
-
-  // bison token types
-  Record*          record;
-} BisonUnion;
-
-#define YYSTYPE BisonUnion
-#define YY_NO_INPUT // no warning
 }
 
 %{
-  /* local variables: */
-#ifndef utMAIN
-#define YY_INPUT(buf, result, max_size) \
-  aesInput(((RecordExtra*)yyextra)->aesData, buf, &result, max_size)
-#endif 
+#ifdef utMAIN
+#define YYSTYPE void*
+
+#else  	/*	: utMAIN	*/
+#include "../memory/recordTree.h"
+#include "recordList.tab.h"
+#define YYSTYPE RECORD_STYPE
+
+#define YY_INPUT(buf, result, max_size)					\
+  aesInput(((RecordExtra*)yyextra)->aesData, buf, (int*)&result, max_size)
+  
+#endif	/*	: utMAIN	*/
 %}
 
  /* scaner states */
@@ -173,13 +154,11 @@ HASH    [[:xdigit:]]{32}
     BEGIN(COMMENT);
   }
 
-  (\n|\r\n) {
-    ++((RecordExtra*)yyextra)->lineNo;
-  }
+  (\n|\r\n) 
 
   headers {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: HEADER", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: HEADER", yylineno);
 #else	/*	: utMAIN	*/
     return(recordHEADER);
 #endif	/*	: utMAIN	*/
@@ -188,7 +167,7 @@ HASH    [[:xdigit:]]{32}
   collection {
     BEGIN(STRING);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: COLL", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: COLL", yylineno);
 #else	/*	: utMAIN	*/
     return(recordCOLL);
 #endif	/*	: utMAIN	*/
@@ -198,7 +177,7 @@ HASH    [[:xdigit:]]{32}
     BEGIN(STRING);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: DOCYPHER", 
-	    ((RecordExtra*)yyextra)->lineNo);
+	    yylineno);
 #else	/*	: utMAIN	*/
     return(recordDOCYPHER);
 #endif	/*	: utMAIN	*/
@@ -207,7 +186,7 @@ HASH    [[:xdigit:]]{32}
   server {
     BEGIN(STRING);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: TYPE", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: TYPE", yylineno);
 #else	/*	: utMAIN	*/
     return(recordSERVER);
 #endif	/*	: utMAIN	*/
@@ -215,7 +194,7 @@ HASH    [[:xdigit:]]{32}
 
   type {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: TYPE", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: TYPE", yylineno);
 #else	/*	: utMAIN	*/
     return(recordMSGTYPE);
 #endif	/*	: utMAIN	*/
@@ -223,7 +202,7 @@ HASH    [[:xdigit:]]{32}
 
   disk {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: DISK", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: DISK", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = DISK;
     return(recordMSGVAL);
@@ -232,7 +211,7 @@ HASH    [[:xdigit:]]{32}
 
   cgi {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: CGI", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: CGI", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = CGI;
     return(recordMSGVAL);
@@ -241,7 +220,7 @@ HASH    [[:xdigit:]]{32}
 
   have {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: HAVE", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: HAVE", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = HAVE;
     return(recordMSGVAL);
@@ -250,7 +229,7 @@ HASH    [[:xdigit:]]{32}
 
   notify {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: NOTIFY", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: NOTIFY", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = NOTIFY;
     return(recordMSGVAL);
@@ -259,7 +238,7 @@ HASH    [[:xdigit:]]{32}
 
   upload {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: UPLOAD", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: UPLOAD", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = UPLOAD;
     return(recordMSGVAL);
@@ -268,7 +247,7 @@ HASH    [[:xdigit:]]{32}
 
   unknown {
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: UNKNOWN", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: UNKNOWN", yylineno);
 #else	/*	: utMAIN	*/
     yylval->msgval = UNKNOWN;
     return(recordMSGVAL);
@@ -278,7 +257,7 @@ HASH    [[:xdigit:]]{32}
   body {
     BEGIN(STATE1);
 #ifdef utMAIN
-    logEmit(LOG_DEBUG, "line %i: BODY", ((RecordExtra*)yyextra)->lineNo);
+    logEmit(LOG_DEBUG, "line %i: BODY", yylineno);
 #else	/*	: utMAIN	*/
     return(recordBODY);
 #endif	/*	: utMAIN	*/
@@ -291,9 +270,10 @@ HASH    [[:xdigit:]]{32}
     BEGIN(INITIAL);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: STRING ='%s'", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
-    yylval->string = createSizedString(yyleng, yytext);
+    strncpy(yylval->string, yytext, yyleng);
+    yylval->string[yyleng] = (char)0;
     return(recordSTRING);
 #endif	/*	: utMAIN	*/
   }
@@ -302,13 +282,13 @@ HASH    [[:xdigit:]]{32}
 <STATE1>{
 
   (\n|\r\n) {
-    ++((RecordExtra*)yyextra)->lineNo;
+    ++yylineno;
   }
 
   -?[Ss] {
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: TYPE = %ssupply", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext[0]=='-'?"- ":"");
+	    yylineno, yytext[0]=='-'?"- ":"");
 #else	/*	: utMAIN	*/
     yylval->type = SUPPLY;
     //if (yytext[0] == '-') yylval->type |= REMOVE; // (no more used)
@@ -319,7 +299,7 @@ HASH    [[:xdigit:]]{32}
   -?[Dd] {
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: TYPE = %sdemand", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext[0]=='-'?"- ":"");
+	    yylineno, yytext[0]=='-'?"- ":"");
 #else	/*	: utMAIN	*/
     yylval->type = DEMAND;
     //if (yytext[0] == '-') yylval->type |= REMOVE;
@@ -330,7 +310,7 @@ HASH    [[:xdigit:]]{32}
   {DATE} {
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: DATE = %s", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     // date conversion into time_t
     struct tm date;
@@ -360,7 +340,7 @@ HASH    [[:xdigit:]]{32}
     //if (yyleng != MAX_SIZE_HASH) yyless(MAX_SIZE_HASH);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: HASH(1) =%s", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     strncpy(yylval->hash, yytext, MAX_SIZE_HASH);
     yylval->hash[MAX_SIZE_HASH] = (char)0;
@@ -378,7 +358,7 @@ HASH    [[:xdigit:]]{32}
     if (yyleng != MAX_SIZE_HASH) yyless(MAX_SIZE_HASH);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: HASH(2) =%s", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
     strncpy(yylval->hash, yytext, MAX_SIZE_HASH);
     yylval->hash[MAX_SIZE_HASH] = (char)0;
@@ -395,7 +375,7 @@ HASH    [[:xdigit:]]{32}
     sscanf(yytext, "%llu", (unsigned long long int*)&size);
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: SIZE =%lli", 
-	    ((RecordExtra*)yyextra)->lineNo, size);
+	    yylineno, size);
 #else	/*	: utMAIN	*/
     yylval->size = size;
     return(recordSIZE);
@@ -408,16 +388,17 @@ HASH    [[:xdigit:]]{32}
   [^[:blank:]\r\n]+ { 
 #ifdef utMAIN
     logEmit(LOG_DEBUG, "line %i: PATH ='%s'", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
+	    yylineno, yytext);
 #else	/*	: utMAIN	*/
-    yylval->string = createSizedString(yyleng, yytext);
+    strncpy(yylval->string, yytext, yyleng);
+    yylval->string[yyleng] = (char)0;
     return(recordPATH);
 #endif	/*	: utMAIN	*/
   }
 
   (\n|\r\n) {
     BEGIN(STATE1);
-    ++((RecordExtra*)yyextra)->lineNo;
+    ++yylineno;
   }
  }
    
@@ -437,16 +418,12 @@ HASH    [[:xdigit:]]{32}
  }
    
 <*>{
-  . { /* : eat up any unmatched character */
-    
-    logEmit(LOG_ERR, "line %i: exit on scanner error: %s", 
-	    ((RecordExtra*)yyextra)->lineNo, yytext);
-    
-    // generate a parsor error (unexpected $end)
+  . { /* : eat up any unmatched character and 
+	 let bison manage the errors */
+    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+	    yylineno, yytext);
 #ifdef utMAIN
     return -1;
-#else	/*	: utMAIN	*/
-    return recordERROR;
 #endif	/*	: utMAIN	*/
   }
  }
@@ -492,11 +469,13 @@ usage(char* programName)
  * Synopsis   : ./utrecordList
  * Input      : stdin
  * Output     : stdout
+
+ * Note       : cannot scan cryted input as key is loaded by parser
  =======================================================================*/
 int 
 main(int argc, char** argv)
 {
-  char* inputPath = NULL;
+  char* inputPath = 0;
   int inputFd = -1;
   FILE* inputStream = stdin;
   RecordExtra extra;
@@ -507,7 +486,7 @@ main(int argc, char** argv)
   char* programName = *argv;
   char* options = PARSER_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
-    {"input", required_argument, NULL, 'i'},
+    {"input", required_argument, 0, 'i'},
     PARSER_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
@@ -516,7 +495,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -529,7 +508,7 @@ main(int argc, char** argv)
       }
       else {
 	if ((inputPath = (char*)malloc(sizeof(char) * strlen(optarg) + 1))
-	    == NULL) {
+	    == 0) {
 	  fprintf(stderr, 
 		  "%s: cannot allocate memory for the input stream name\n", 
 		  programName);
@@ -566,7 +545,7 @@ main(int argc, char** argv)
       goto error;
     }
     
-    if ((inputStream = fdopen(inputFd, "r")) == NULL) {
+    if ((inputStream = fdopen(inputFd, "r")) == 0) {
       logEmit(LOG_ERR, "%s", "fdopen failed");
       goto error;
     }
@@ -574,12 +553,9 @@ main(int argc, char** argv)
   }
   
   // call scanner 
-  extra.lineNo = 1;
-  extra.aesData = NULL;
-  record_set_extra (&extra, scanner);
-  //data = record_get_extra (scanner);
-  //in GDB: print *(RecordExtra*)yyg->yyextra_r
-  if (record_lex(NULL, scanner)) goto error;
+  extra.aesData = 0;
+  record_set_extra (&extra, scanner);  //in GDB: print *(RecordExtra*)yyg->yyextra_r
+  if (record_lex(0, scanner)) goto error;
   record_lex_destroy(scanner);
   fclose(inputStream);
   /************************************************************************/

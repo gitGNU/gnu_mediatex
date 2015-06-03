@@ -1,6 +1,5 @@
 * Initialize shm
 [notice register.c] Initialise SHM using mdtx1 conf file
-[info confTree.c] free configuration
 [info register.c] exit on success
 => 0000
 * Send save message
@@ -10,7 +9,6 @@
 => 1000
 => 0000
 * Send extract message
-[info confTree.c] free configuration
 [info register.c] exit on success
 [info register.c] setting 1 register
 [info register.c] sending signal 10 to XXXX
@@ -18,7 +16,6 @@
 => 0100
 => 0000
 * Send notify message
-[info confTree.c] free configuration
 [info register.c] exit on success
 [info register.c] setting 2 register
 [info register.c] sending signal 10 to XXXX
@@ -26,7 +23,6 @@
 => 0010
 => 0000
 * Send deliver message
-[info confTree.c] free configuration
 [info register.c] exit on success
 [info register.c] setting 3 register
 [info register.c] sending signal 10 to XXXX
@@ -34,7 +30,5 @@
 => 0001
 => 0000
 * Free shm
-[info confTree.c] free configuration
 [info register.c] exit on success
-[info confTree.c] free configuration
 [info register.c] exit on success

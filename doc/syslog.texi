@@ -72,7 +72,7 @@ LOG_SEVERITY=$@{MDTX_LOG_SEVERITY-info@}
 However, this will be overwritten and the verbosity may be moreover 
 increased on @activity{client} and @activity{server} using the options.
 @table @option
-@itemx -f
+@item -f
 @itemx --facility
 There are 2 main facilities or target for the log:
 @table @code
@@ -81,10 +81,10 @@ log to file (to @code{stdout}, the standard output by default)
 @item local2
 log to syslog (@code{man 3 syslog}) 
 @end table
-@itemx -l
+@item -l
 @itemx --log-file
 In the case the @code{file} facility is used, specify which file to log into
-@itemx -s
+@item -s
 @itemx --severity
 There are 5 levels of verbosity:
 @table @code

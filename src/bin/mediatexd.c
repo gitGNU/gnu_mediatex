@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.2 2014/11/13 16:36:16 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.3 2015/06/03 14:03:28 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
  * Server software's main function
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ void*
 signalJob(void* arg)
 {
   int me = taskSignalNumber;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   long int rc = FALSE;
   int loop = FALSE;
   ShmParam param;
@@ -217,15 +217,15 @@ termManager()
 int matchServer(RecordTree* tree, Connexion* connexion)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Server* server = NULL;
-  //Server* relayed = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Collection* coll = 0;
+  Server* server = 0;
+  //Server* relayed = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
   struct tm date;
 
   coll = tree->collection;
-  connexion->server = NULL;
+  connexion->server = 0;
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "matchServer");
 
@@ -240,7 +240,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
     if (!(strncmp(tree->fingerPrint, server->fingerPrint, MAX_SIZE_HASH)))
       break;
   }
-  if (server == NULL) {
+  if (server == 0) {
     logEmit(LOG_WARNING, 
 	    "server %s is not register into collection %s",
 	    connexion->host, coll->label);
@@ -255,7 +255,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
     logEmit(LOG_INFO, "%s", "receive empty content");
   }
   else {
-    curr = NULL;
+    curr = 0;
     while((record = rgNext_r(tree->records, &curr))) {
       localtime_r(&record->date, &date);
       logEmit(LOG_INFO, "%c "
@@ -278,7 +278,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
 
   /*   // note: get a private incoming IP so we cannot match it. */
   /*   // just check all records have the same server's fingerprint */
-  /*   curr = NULL; */
+  /*   curr = 0; */
   /*   relayed = rgNext_r(tree->records, &curr); */
   /*   logEmit(LOG_NOTICE, "%s", "original message from %s (%s)", */
   /* 	    relayed->host, relayed->fingerPrint); */
@@ -306,7 +306,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   /* } */
   
   // check all records are related to the calling server 
-  curr = NULL;
+  curr = 0;
   if (isEmptyRing(tree->records)) {
     while((record = rgNext_r(tree->records, &curr))) {
       if (server != record->server) {
@@ -341,15 +341,15 @@ socketJob(void* arg)
 {
   int me = taskSocketNumber;
   long int rc = FALSE;
-  Connexion* connexion = NULL;
-  RecordTree* tree = NULL;
+  Connexion* connexion = 0;
+  RecordTree* tree = 0;
 
   connexion = (Connexion*)arg; // to be free as we own it as a thread
   logEmit(LOG_DEBUG, "socketJob %i", me);
   
   // read the socket
   if ((tree = parseRecordList(connexion->sock))
-      == NULL) {
+      == 0) {
     logEmit(LOG_ERR, "%s", "fail to parse RecordTree");
     goto error;
   }
@@ -461,7 +461,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

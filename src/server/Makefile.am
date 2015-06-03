@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:37:04 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:55 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  server modules
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -65,37 +65,37 @@ objects = \
 utcache_SOURCES = cache.c cache.h 
 utcache_CFLAGS = -DutMAIN
 utcache_LDADD = $(objects)
-utcache_LDFLAGS = -pthread -lm -lavl
+utcache_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utdeliver_SOURCES = deliver.c deliver.h
 utdeliver_CFLAGS = -DutMAIN
 utdeliver_LDADD = cache.o $(objects)
-utdeliver_LDFLAGS = -pthread -lm -lavl
+utdeliver_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utextract_SOURCES = extract.c extract.h deliver.h cache.h
 utextract_CFLAGS = -DutMAIN
 utextract_LDADD = deliver.o cache.o $(objects)
-utextract_LDFLAGS = -pthread -lm -lavl
+utextract_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utcgiSrv_SOURCES = cgiSrv.c cgiSrv.h extract.h deliver.h cache.h
 utcgiSrv_CFLAGS = -DutMAIN
 utcgiSrv_LDADD = extract.o deliver.o  cache.o $(objects)
-utcgiSrv_LDFLAGS = -pthread -lm -lavl
+utcgiSrv_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 uthave_SOURCES = have.c have.h extract.h deliver.h cache.h
 uthave_CFLAGS = -DutMAIN
 uthave_LDADD = extract.o deliver.o cache.o $(objects)
-uthave_LDFLAGS = -pthread -lm -lavl
+uthave_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utnotify_SOURCES = notify.c notify.h extract.h deliver.h cache.h
 utnotify_CFLAGS = -DutMAIN
 utnotify_LDADD = extract.o deliver.o cache.o $(objects)
-utnotify_LDFLAGS = -pthread -lm -lavl
+utnotify_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 utthreads_SOURCES = threads.c threads.h
 utthreads_CFLAGS = -DutMAIN
 utthreads_LDADD = $(objects)
-utthreads_LDFLAGS = -pthread -lm -lavl
+utthreads_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 clean-local:
 	-rm -f ut.out ut*.sort mediatexd

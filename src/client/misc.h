@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: misc.h,v 1.2 2014/11/13 16:36:19 nroche Exp $
+ * Version: $Id: misc.h,v 1.3 2015/06/03 14:03:29 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/make
  *
  * Front-end for the html sub modules
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@
 
 #ifndef MDTX_WRAPPER_MAKE_H
 #define MDTX_WRAPPER_MAKE_H 1
+
+#include "../memory/archive.h"
 
 /* API */
 

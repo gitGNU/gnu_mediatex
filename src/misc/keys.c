@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.2 2014/11/13 16:36:40 nroche Exp $
+ * Version: $Id: keys.c,v 1.3 2015/06/03 14:03:45 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
  * uuid and keys retrievals
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -34,18 +34,18 @@
  * Description: open an public key file on read it
  * Synopsis   : char* readPublicKey(char* path) 
  * Input      : char* path: the public key file
- * Output     : the allocated key string or NULL on failure
+ * Output     : the allocated key string or 0 on failure
  =======================================================================*/
 char* 
 readPublicKey(char* path) 
 {
-  char* rc = NULL;
-  FILE* fd = NULL;
+  char* rc = 0;
+  FILE* fd = 0;
   char buf[1024];
   char* ptr = buf;
   int n = 0;
 
-  if (path == NULL || *path == (char)0) {
+  if (path == 0 || *path == (char)0) {
     logEmit(LOG_ERR, "%s", 
 	    "please provide a path for the public key to read");
     goto error;
@@ -53,7 +53,7 @@ readPublicKey(char* path)
 
   logEmit(LOG_DEBUG, "readPublicKey: %s", path);
 
-  if ((fd = fopen(path, "r")) == NULL) {
+  if ((fd = fopen(path, "r")) == 0) {
     logEmit(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
@@ -79,14 +79,14 @@ readPublicKey(char* path)
     *(ptr-1) = (char)0;
   }
 
-  if ((rc = malloc (strlen(buf)+1)) == NULL) {
+  if ((rc = malloc (strlen(buf)+1)) == 0) {
     logEmit(LOG_ERR, "malloc fails: %s", strerror(errno));
     goto error;
   }
 
   strcpy(rc, buf);
  error:
-  if (rc == NULL) {
+  if (rc == 0) {
     logEmit(LOG_ERR, "%s", "readPublicKey fails");
   }
   return rc;
@@ -140,7 +140,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   // unbase64 the public key
 
   // we just use the size of the public key for now
-  if ((key_unbase64 = malloc(strlen(key))) == NULL) {
+  if ((key_unbase64 = malloc(strlen(key))) == 0) {
     logEmit(LOG_ERR, "malloc fails: %s", strerror(errno));
     goto error;
   }
@@ -163,7 +163,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   EVP_MD_CTX_init(&mdctx);
 
   // initialize our context to use MD5 as the hashing algorithm
-  if (EVP_DigestInit_ex(&mdctx, EVP_md5(), NULL) != 1) {
+  if (EVP_DigestInit_ex(&mdctx, EVP_md5(), 0) != 1) {
     logEmit(LOG_ERR, "%s", "EVP_DigestInit_ex fails");
     goto error;
   }
@@ -234,8 +234,8 @@ void usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char* inputFile = NULL;
-  char* key = NULL;
+  char* inputFile = 0;
+  char* key = 0;
   char fingerprint[MAX_SIZE_HASH+1];
   int i;
   // ---
@@ -245,7 +245,7 @@ main(int argc, char** argv)
   char* options = MISC_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    {"input-key", required_argument, NULL, 'i'},
+    {"input-key", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
 
@@ -253,18 +253,18 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {					
 					
     case 'i':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the input device\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if ((inputFile = malloc(strlen(optarg) + 1)) == NULL) {
+      if ((inputFile = malloc(strlen(optarg) + 1)) == 0) {
 	fprintf(stderr, "cannot malloc the input device path: %s", 
 		strerror(errno));
 	rc = ENOMEM;
@@ -282,13 +282,13 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (inputFile == NULL) {
+  if (inputFile == 0) {
     usage(programName);
     goto error;	
   }
   
   // load the dsa public key
-  if ((key = readPublicKey(inputFile)) == NULL) goto error;
+  if ((key = readPublicKey(inputFile)) == 0) goto error;
   if (!getFingerPrint(key, fingerprint)) goto error;
 
   // print the fingerprint

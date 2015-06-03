@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.2 2014/11/13 16:36:29 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
  * cvs files producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -28,11 +28,6 @@
 #include "strdsm.h"
 #include "cvsPrint.h"
 
-#ifdef utMAIN
-#undef MEMORY_CVSPRINT_MAX
-#define MEMORY_CVSPRINT_MAX 10
-#endif
-
 /*=======================================================================
  * Function   : cvsCloseFile
  * Description: 
@@ -45,7 +40,7 @@ int cvsCloseFile(CvsFile* fd)
   int rc = FALSE;
 
   if (!fd) goto error;
-  logEmit(LOG_DEBUG, "cvsCloseFile %s", fd->path);
+  logMemory(LOG_DEBUG, "cvsCloseFile %s", fd->path);
   if (!(fd->fd)) goto end;
 
   fprintf(fd->fd, "\n# Local Variables:\n"
@@ -60,16 +55,16 @@ int cvsCloseFile(CvsFile* fd)
 
   if (!unLock(fileno(fd->fd))) rc = FALSE;
   if (fclose(fd->fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
-  fd->fd = NULL;
+  fd->fd = 0;
  end:
   rc = TRUE;
 error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cvsCloseFile fails");
+    logMemory(LOG_ERR, "%s", "cvsCloseFile fails");
   }
   return rc;
 }
@@ -84,35 +79,35 @@ error:
 int cvsOpenFile(CvsFile* fd)
 {
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   int l = 0;
   int i = 0;
 
   if (!fd) goto error;
   if (isEmptyString(fd->path)) goto error; 
-  logEmit(LOG_DEBUG, "cvsOpenFile %s %i", fd->path, fd->nb);
+  logMemory(LOG_DEBUG, "cvsOpenFile %s %i", fd->path, fd->nb);
 
   l = strlen(fd->path);
   if (!(path = createString(fd->path))
       || !(path = catString(path, "00.txt"))) goto error;
 
-  // first call:  unlink existing files
+  // first call: unlink existing files
   if (fd->nb == 0 && fd->fd != stdout) {
     // empty part files
     do {
       if (!sprintf(path+l, "%02i.txt", i)) goto error;
       if (access(path, R_OK) != 0) break;
       if (!env.dryRun) {
-	logEmit(LOG_INFO, "empty %s", path);
-	if ((fd->fd = fopen(path, "w")) == NULL) {
-	  logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+	logMemory(LOG_INFO, "empty %s", path);
+	if ((fd->fd = fopen(path, "w")) == 0) {
+	  logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
 	  goto error;
 	}
 	if (fclose(fd->fd)) {
-	  logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+	  logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
 	  goto error;
 	}
-	fd->fd = NULL;
+	fd->fd = 0;
       }
     }
     while (++i < 100);
@@ -120,9 +115,9 @@ int cvsOpenFile(CvsFile* fd)
     // unlink last addon
     if (!sprintf(path+l, "%s", "NN.txt")) goto error;
     if (access(path, R_OK) == 0) {
-      logEmit(LOG_INFO, "unlink %s", path);
+      logMemory(LOG_INFO, "unlink %s", path);
       if (unlink(path) == -1) {
-	logEmit(LOG_ERR, "unlink fails %s:", strerror(errno));
+	logMemory(LOG_ERR, "unlink fails %s:", strerror(errno));
 	goto error;
       }
     }
@@ -135,10 +130,10 @@ int cvsOpenFile(CvsFile* fd)
 
   // open file
   if (!sprintf(path+l, "%02i.txt", fd->nb)) goto error;
-  logEmit(LOG_INFO, "serialize into %s", path);
+  logMemory(LOG_INFO, "serialize into %s", path);
   if (fd->fd == stdout) goto end;
-  if ((fd->fd = fopen(path, "w")) == NULL) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+  if ((fd->fd = fopen(path, "w")) == 0) {
+    logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
     goto error;
   }
 
@@ -149,7 +144,7 @@ int cvsOpenFile(CvsFile* fd)
   rc = TRUE;
 error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cvsOpenFile fails");
+    logMemory(LOG_ERR, "%s", "cvsOpenFile fails");
   }
   path = destroyString(path);
   return rc;
@@ -169,7 +164,7 @@ int cvsPrint(CvsFile* fd, const char* format, ...)
 
   if (!fd) goto error;
 
-  if (fd->doCut && fd->offset > MEMORY_CVSPRINT_MAX) {
+  if (fd->doCut && fd->offset > env.cvsprintMax) {
     if (!cvsOpenFile(fd)) goto error;
   }
 
@@ -179,7 +174,7 @@ int cvsPrint(CvsFile* fd, const char* format, ...)
   rc = TRUE;
 error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cvsPrint fails");
+    logMemory(LOG_ERR, "%s", "cvsPrint fails");
   }
   return rc;
 }
@@ -232,10 +227,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -248,6 +244,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
+  env.cvsprintMax = 10;
   if (!cvsOpenFile(&fd)) goto error;
   fd.doCut = FALSE;
   if (!cvsPrint(&fd, "%s", "the lines should not be cut\n")) goto error;

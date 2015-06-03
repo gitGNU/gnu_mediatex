@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utRegister.sh,v 1.2 2014/11/13 16:36:26 nroche Exp $
+# * Version: $Id: utRegister.sh,v 1.3 2015/06/03 14:03:36 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *
 # * Unit test script for register.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ echo "* Initialize shm" >ut.out
 
 # we send the signal, wait it is received and finaly display the shm
 echo "* Send save message" >>ut.out
-./utregister -S >>ut.out 2>&1 &
+./utregister -W >>ut.out 2>&1 &
 wait || ./utregister -G >>ut.out 2>/dev/null
 
 echo "* Send extract message" >>ut.out
@@ -58,7 +58,7 @@ echo "* Send deliver message" >>ut.out
 wait || ./utregister -G >>ut.out 2>/dev/null
 
 echo "* Free shm" >>ut.out
-sleep 1
+#sleep 1
 ./utregister -F >>ut.out 2>&1
 
 # compare with the expected output

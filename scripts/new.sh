@@ -2,14 +2,14 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: new.sh,v 1.2 2014/11/13 16:36:11 nroche Exp $
+# * Version: $Id: new.sh,v 1.3 2015/06/03 14:03:24 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
 # * This script setup a new MediaTex collection
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ JAIL_bind
 
 # test the connection
 set +e
-su $USER <<EOF 
+su $USER 2>/dev/null <<EOF 
 ssh -o PasswordAuthentication=no $MUSER@$HOST ls >/dev/null
 EOF
 RC=$?
@@ -93,6 +93,11 @@ CVS_coll_checkout $USER $SERV $COLL $HOST
 
 # reload daemons as there configuration have changed
 /usr/sbin/invoke-rc.d apache2 reload
-/usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
+
+# only the init script for mdtx server is manage here
+# (because they are different using wheezy or jessie)
+if [ $MDTX = mdtx ]; then
+    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
+fi
 
 Info "done"

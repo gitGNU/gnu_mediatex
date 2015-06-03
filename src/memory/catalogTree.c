@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.2 2014/11/13 16:36:28 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.3 2015/06/03 14:03:38 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
  * Catalog producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ strCType(CType self)
     {"CATE", "DOC", "HUM", "ARCH", "ROLE"};
 
   if (self < 0 || self >= CTYPE_MAX) {
-    logEmit(LOG_WARNING, "unknown catalog type %i", self);
+    logMemory(LOG_WARNING, "unknown catalog type %i", self);
     return "???";
   }
 
@@ -61,10 +61,10 @@ strCType(CType self)
 Carac* 
 createCarac()
 {
-  Carac* rc = NULL;
+  Carac* rc = 0;
 
-  if ((rc = (Carac*)malloc(sizeof(Carac))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create a Carac");
+  if ((rc = (Carac*)malloc(sizeof(Carac))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create a Carac");
     goto error;
   }
 
@@ -86,9 +86,9 @@ createCarac()
 Carac* 
 destroyCarac(Carac* self)
 {
-  Carac* rc = NULL;
+  Carac* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->label = destroyString(self->label);
     free(self);
   }
@@ -124,10 +124,10 @@ cmpCarac(const void *p1, const void *p2)
 AssoCarac* 
 createAssoCarac()
 {
-  AssoCarac* rc = NULL;
+  AssoCarac* rc = 0;
 
-  if ((rc = (AssoCarac*)malloc(sizeof(AssoCarac))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create AssoCarac");
+  if ((rc = (AssoCarac*)malloc(sizeof(AssoCarac))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create AssoCarac");
     goto error;
   }
 
@@ -149,9 +149,9 @@ createAssoCarac()
 AssoCarac* 
 destroyAssoCarac(AssoCarac* self)
 {
-  AssoCarac* rc = NULL;
+  AssoCarac* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->value = destroyString(self->value);
     free(self);
   }
@@ -193,8 +193,8 @@ serializeAssoCarac(AssoCarac* self, CvsFile* fd)
 {
   int rc = FALSE;
 
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "serialize AssoCarac: %s/%s", 
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "serialize AssoCarac: %s/%s", 
 	  self->carac->label, self->value);
 
   cvsPrint(fd, "  \"%s\" = \"%s\"\n", self->carac->label, self->value);
@@ -202,7 +202,7 @@ serializeAssoCarac(AssoCarac* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty AssoCarac");
+    logMemory(LOG_ERR, "%s", "cannot serialize empty AssoCarac");
   }
   return(rc);
 }
@@ -240,15 +240,15 @@ cmpAssoRole(const void *p1, const void *p2)
 Role* 
 createRole(void)
 {
-  Role* rc = NULL;
+  Role* rc = 0;
 
-  if ((rc = (Role*)malloc(sizeof(Role))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create a Role");
+  if ((rc = (Role*)malloc(sizeof(Role))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create a Role");
     goto error;
   }
 
   memset(rc, 0, sizeof(Role));
-  if ((rc->assos = createRing()) == NULL) goto error;
+  if ((rc->assos = createRing()) == 0) goto error;
   
   return rc;  
  error:  
@@ -266,9 +266,9 @@ createRole(void)
 Role* 
 destroyRole(Role* self)
 {
-  Role* rc = NULL;
+  Role* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->label = destroyString(self->label);
     
     // we destroy the assoRole too
@@ -309,10 +309,10 @@ cmpRole(const void *p1, const void *p2)
 AssoRole* 
 createAssoRole()
 {
-  AssoRole* rc = NULL;
+  AssoRole* rc = 0;
 
-  if ((rc = (AssoRole*)malloc(sizeof(AssoRole))) == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create AssoRole");
+  if ((rc = (AssoRole*)malloc(sizeof(AssoRole))) == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create AssoRole");
     goto error;
   }
 
@@ -334,9 +334,9 @@ createAssoRole()
 AssoRole* 
 destroyAssoRole(AssoRole* self)
 {
-  AssoRole* rc = NULL;
+  AssoRole* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     free(self);
   }
 
@@ -356,8 +356,8 @@ serializeAssoRole(AssoRole* self, CvsFile* fd)
 {
   int rc = FALSE;
 
-  logEmit(LOG_DEBUG, "serialize AssoRole: %s", self->role->label);
-  if(self == NULL) goto error;
+  logMemory(LOG_DEBUG, "serialize AssoRole: %s", self->role->label);
+  if(self == 0) goto error;
 
   cvsPrint(fd, "  With \"%s\" = \"%s\" \"%s\"\n", 
 	  self->role->label, 
@@ -366,7 +366,7 @@ serializeAssoRole(AssoRole* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty AssoRole");
+    logMemory(LOG_ERR, "%s", "cannot serialize empty AssoRole");
   }
   return(rc);
 }
@@ -383,10 +383,10 @@ int
 serializeCatalogArchive(Archive* self, CvsFile* fd)
 {
   int rc = FALSE;
-  AssoCarac *assoCarac = NULL;
+  AssoCarac *assoCarac = 0;
 
   checkArchive(self);
-  logEmit(LOG_DEBUG, "serialize archive: %s:%lli", self->hash, self->size);
+  logMemory(LOG_DEBUG, "serialize archive: %s:%lli", self->hash, self->size);
 
   cvsPrint(fd, "Archive\t %s:%lli\n", self->hash, self->size);
   fd->doCut = FALSE;
@@ -395,7 +395,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -404,7 +404,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty CRecord");
+    logMemory(LOG_ERR, "%s", "cannot serialize empty CRecord");
   }
   return(rc);
 }
@@ -420,19 +420,19 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
 Human*
 createHuman(void)
 {
-  Human* rc = NULL;
+  Human* rc = 0;
 
-  if ((rc = (Human*)malloc(sizeof(Human))) == NULL) goto error;
+  if ((rc = (Human*)malloc(sizeof(Human))) == 0) goto error;
   memset(rc, 0, sizeof(Human));
 
-  if ((rc->categories = createRing()) == NULL ||
-      (rc->assoCaracs = createRing()) == NULL ||
-      (rc->assoRoles = createRing()) == NULL)
+  if ((rc->categories = createRing()) == 0 ||
+      (rc->assoCaracs = createRing()) == 0 ||
+      (rc->assoRoles = createRing()) == 0)
     goto error;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Human");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Human");
   return destroyHuman(rc);
 }
 
@@ -447,9 +447,9 @@ createHuman(void)
 Human*
 destroyHuman(Human* self)
 {
-  Human* rc = NULL;
+  Human* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->firstName  = destroyString(self->firstName);
     self->secondName = destroyString(self->secondName);
 
@@ -514,12 +514,12 @@ int
 serializeHuman(Human* self, CvsFile* fd)
 {
   int rc = FALSE;
-  AssoCarac *assoCarac = NULL;
-  Category *cathegory = NULL;
+  AssoCarac *assoCarac = 0;
+  Category *cathegory = 0;
   int i = -1;
 
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "serialize Human %i: %s %s",
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "serialize Human %i: %s %s",
 	  self->id, self->firstName, self->secondName);
 
   cvsPrint(fd, "Human\t \"%s\" \"%s\"", self->firstName, self->secondName);
@@ -529,7 +529,7 @@ serializeHuman(Human* self, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while ((cathegory = rgNext(self->categories)) != NULL) {
+    while ((cathegory = rgNext(self->categories)) != 0) {
       cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
@@ -539,7 +539,7 @@ serializeHuman(Human* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       serializeAssoCarac(assoCarac, fd);
     }
   }
@@ -549,7 +549,7 @@ serializeHuman(Human* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty Human");
+    logMemory(LOG_ERR, "%s", "cannot serialize empty Human");
   }
   return(rc);
 }
@@ -565,20 +565,20 @@ serializeHuman(Human* self, CvsFile* fd)
 Document*
 createDocument(void)
 {
-  Document* rc = NULL;
+  Document* rc = 0;
 
-  if ((rc = (Document*)malloc(sizeof(Document))) == NULL) goto error;
+  if ((rc = (Document*)malloc(sizeof(Document))) == 0) goto error;
   memset(rc, 0, sizeof(Document));
 
-  if ((rc->categories = createRing()) == NULL ||
-      (rc->assoCaracs = createRing()) == NULL ||
-      (rc->assoRoles = createRing()) == NULL ||
-      (rc->archives = createRing()) == NULL)
+  if ((rc->categories = createRing()) == 0 ||
+      (rc->assoCaracs = createRing()) == 0 ||
+      (rc->assoRoles = createRing()) == 0 ||
+      (rc->archives = createRing()) == 0)
     goto error;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Document");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Document");
   return destroyDocument(rc);
 }
 
@@ -593,9 +593,9 @@ createDocument(void)
 Document*
 destroyDocument(Document* self)
 {
-  Document* rc = NULL;
+  Document* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->label = destroyString(self->label);
  
     // delete assoCarac associations
@@ -658,14 +658,14 @@ int
 serializeDocument(Document* self, CvsFile* fd)
 {
   int rc = FALSE;
-  AssoCarac *assoCarac = NULL;
-  Archive *archive = NULL;
-  AssoRole *assoRole = NULL;
-  Category *cathegory = NULL;
+  AssoCarac *assoCarac = 0;
+  Archive *archive = 0;
+  AssoRole *assoRole = 0;
+  Category *cathegory = 0;
   int i=-1;
  
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "serialize Document %s", self->label);
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "serialize Document %s", self->label);
 
   cvsPrint(fd, "Document \"%s\"", self->label);
   fd->doCut = FALSE;
@@ -674,7 +674,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while ((cathegory = rgNext(self->categories)) != NULL) {
+    while ((cathegory = rgNext(self->categories)) != 0) {
       cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
@@ -684,7 +684,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->assoRoles)) {
     rgSort(self->assoRoles, cmpAssoRole);
     rgRewind(self->assoRoles);
-    while ((assoRole = rgNext(self->assoRoles)) != NULL) {
+    while ((assoRole = rgNext(self->assoRoles)) != 0) {
       if (!serializeAssoRole(assoRole, fd)) goto error;
     }
   }
@@ -693,7 +693,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -702,7 +702,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->archives)) {
     rgSort(self->archives, cmpArchive);
     rgRewind(self->archives);
-    while ((archive = rgNext(self->archives)) != NULL) {
+    while ((archive = rgNext(self->archives)) != 0) {
       cvsPrint(fd, "  %s:%lli\n", archive->hash, archive->size);
     }
   }
@@ -712,7 +712,7 @@ serializeDocument(Document* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeDocument fails");
+    logMemory(LOG_ERR, "%s", "serializeDocument fails");
   }
   return(rc);
 }
@@ -728,21 +728,21 @@ serializeDocument(Document* self, CvsFile* fd)
 Category*
 createCategory(void)
 {
-  Category* rc = NULL;
+  Category* rc = 0;
 
-  if ((rc = (Category*)malloc(sizeof(Category))) == NULL) goto error;
+  if ((rc = (Category*)malloc(sizeof(Category))) == 0) goto error;
   memset(rc, 0, sizeof(Category));
 
-  if ((rc->fathers = createRing()) == NULL ||
-      (rc->childs = createRing()) == NULL ||
-      (rc->assoCaracs = createRing()) == NULL ||
-      (rc->humans = createRing()) == NULL ||
-      (rc->documents = createRing()) == NULL)
+  if ((rc->fathers = createRing()) == 0 ||
+      (rc->childs = createRing()) == 0 ||
+      (rc->assoCaracs = createRing()) == 0 ||
+      (rc->humans = createRing()) == 0 ||
+      (rc->documents = createRing()) == 0)
     goto error;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Category");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Category");
   return destroyCategory(rc);
 }
 
@@ -757,9 +757,9 @@ createCategory(void)
 Category*
 destroyCategory(Category* self)
 {
-  Category* rc = NULL;
+  Category* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     self->label = destroyString(self->label);
     
     // delete assoCarac associations
@@ -810,12 +810,12 @@ int
 serializeCategory(Category* self, CvsFile* fd)
 {
   int rc = FALSE;
-  Category *cathegory = NULL;
-  AssoCarac  *assoCarac  = NULL;
+  Category *category = 0;
+  AssoCarac  *assoCarac  = 0;
   int i=-1;
 
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "serialize Category %s", self->label);
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "serialize Category %s", self->label);
 
   cvsPrint(fd, "%sCategory \"%s\"", self->show?"Top ":"", self->label);
   fd->doCut = FALSE;
@@ -824,8 +824,8 @@ serializeCategory(Category* self, CvsFile* fd)
   if (!isEmptyRing(self->fathers)) {
     //rgSort(self->fathers, cmpCategory);
     rgRewind(self->fathers);
-    while ((cathegory = rgNext(self->fathers)) != NULL) {
-      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+    while ((category = rgNext(self->fathers)) != 0) {
+      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", category->label);
     }
   }
   cvsPrint(fd, "\n");
@@ -834,7 +834,7 @@ serializeCategory(Category* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != NULL) {
+    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -843,7 +843,7 @@ serializeCategory(Category* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeCategory fails");
+    logMemory(LOG_ERR, "%s", "serializeCategory fails");
   }
   return(rc);
 }
@@ -858,17 +858,17 @@ serializeCategory(Category* self, CvsFile* fd)
 CatalogTree*
 createCatalogTree(void)
 {
-  CatalogTree* rc = NULL;
+  CatalogTree* rc = 0;
   //int i = 0;
 
-  if((rc = (CatalogTree*)malloc(sizeof(CatalogTree))) == NULL)
+  if((rc = (CatalogTree*)malloc(sizeof(CatalogTree))) == 0)
     goto error;
     
   memset(rc, 0, sizeof(CatalogTree));
 
   /* entities */
-  if ((rc->roles = createRing()) == NULL
-      || (rc->categories = createRing()) == NULL)
+  if ((rc->roles = createRing()) == 0
+      || (rc->categories = createRing()) == 0)
     goto error;
 
   if (!(rc->documents = 
@@ -877,11 +877,11 @@ createCatalogTree(void)
 	   avl_alloc_tree(cmpHuman2, (avl_freeitem_t)destroyHuman)))
       goto error;
 
-  if ((rc->caracs = createRing()) == NULL) goto error;
+  if ((rc->caracs = createRing()) == 0) goto error;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create CatalogTree");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create CatalogTree");
   return destroyCatalogTree(rc);
 }
 
@@ -897,10 +897,10 @@ createCatalogTree(void)
 CatalogTree*
 destroyCatalogTree(CatalogTree* self)
 {
-  CatalogTree* rc = NULL;
+  CatalogTree* rc = 0;
   //int i = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
 
     /* entities */
     /* do not destroy archives (owned by the collection) */
@@ -928,7 +928,7 @@ destroyCatalogTree(CatalogTree* self)
 
 /*=======================================================================
  * Function   : serializeCatalogTree
- * Description: Serialize a catalog to latex working place
+ * Description: Serialize the catalog metadata
  * Synopsis   : int serializeCatalogTree(Collection* coll)
  * Input      : Collection* coll = what to serialize
  * Output     : TRUE on success
@@ -937,22 +937,22 @@ int
 serializeCatalogTree(Collection* coll)
 {
   int rc = FALSE;
-  CvsFile fd = {NULL, 0, NULL, FALSE, 0};
-  Human* human = NULL;
-  Archive* archive = NULL;
-  Document* document = NULL;
-  Category* category = NULL;
-  CatalogTree* self = NULL;
-  AVLNode *node = NULL;
+  CvsFile fd = {0, 0, 0, FALSE, 0};
+  Human* human = 0;
+  Archive* archive = 0;
+  Document* document = 0;
+  Category* category = 0;
+  CatalogTree* self = 0;
+  AVLNode *node = 0;
   int uid = getuid();
 
   checkCollection(coll);
   if (!(self = coll->catalogTree)) goto error;
-  logEmit(LOG_DEBUG, "serialize %s document tree", coll->label);
+  logMemory(LOG_DEBUG, "serialize %s document tree", coll->label);
 
   // we neeed to use the cvs collection directory
   if (!coll->memoryState & EXPANDED) {
-    logEmit(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "%s", "collection must be expanded first");
     goto error;
   }
   
@@ -970,7 +970,7 @@ serializeCatalogTree(Collection* coll)
   if (!isEmptyRing(self->categories)) {
     //rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories)) != NULL) {
+    while((category = rgNext(self->categories)) != 0) {
       if (!serializeCategory(category, &fd)) goto error;
     }
     cvsPrint(&fd, "\n");
@@ -1010,7 +1010,7 @@ serializeCatalogTree(Collection* coll)
   if (!cvsCloseFile(&fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeCatalogTree fails");
+    logMemory(LOG_ERR, "%s", "serializeCatalogTree fails");
   }
   return rc;
 }
@@ -1028,8 +1028,8 @@ serializeCatalogTree(Collection* coll)
 Carac* 
 getCarac(Collection* coll, char* label)
 {
-  Carac* rc = NULL;
-  RGIT* curr = NULL;
+  Carac* rc = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
  
@@ -1054,11 +1054,11 @@ getCarac(Collection* coll, char* label)
 Carac* 
 addCarac(Collection* coll, char* label)
 {
-  Carac* rc = NULL;
-  Carac* carac = NULL;
+  Carac* rc = 0;
+  Carac* carac = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "create the %s carac", label);
+  logMemory(LOG_DEBUG, "create the %s carac", label);
 
   // already there
   if ((carac = getCarac(coll, label))) goto end;
@@ -1072,7 +1072,7 @@ addCarac(Collection* coll, char* label)
   rc = carac;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addCarac fails");
+    logMemory(LOG_ERR, "%s", "addCarac fails");
     carac = destroyCarac(carac);
   }
   return rc;
@@ -1090,10 +1090,10 @@ int
 delCarac(Collection* coll, Carac* self)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
   
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "delCarac %s", self->label);
+  logMemory(LOG_DEBUG, "delCarac %s", self->label);
 
   // delete carac from catalogTree rings
   if ((curr = rgHaveItem(coll->catalogTree->caracs, self))) {
@@ -1106,7 +1106,7 @@ delCarac(Collection* coll, Carac* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delCarac fails");
+    logMemory(LOG_ERR, "%s", "delCarac fails");
   }
   return rc;
 }
@@ -1126,13 +1126,13 @@ AssoCarac*
 getAssoCarac(Collection* coll, Carac* carac, CType type, 
 	     void* entity, char* value)
 {
-  AssoCarac* rc = NULL;
-  RG* ring = NULL;
-  RGIT* curr = NULL;
+  AssoCarac* rc = 0;
+  RG* ring = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!carac || !entity || !value) goto error;
-  logEmit(LOG_DEBUG, "getAssoCarac %s %s=%s", 
+  logMemory(LOG_DEBUG, "getAssoCarac %s %s=%s", 
 	  strCType(type), carac->label, value);
 
   switch (type) {
@@ -1149,12 +1149,12 @@ getAssoCarac(Collection* coll, Carac* carac, CType type,
     ring = ((Archive*)entity)->assoCaracs;
     break;
   default:
-    logEmit(LOG_ERR, "unknown type %i", type);
+    logMemory(LOG_ERR, "unknown type %i", type);
     goto error;
   }
 
   // look for assoCarac
-  while((rc = rgNext_r(ring, &curr)) != NULL) {
+  while((rc = rgNext_r(ring, &curr)) != 0) {
     if (carac == rc->carac && !strcmp(rc->value, value)) break;
   }
   
@@ -1177,20 +1177,20 @@ AssoCarac*
 addAssoCarac(Collection* coll, Carac* carac, CType type, 
 	     void* entity, char* value)
 {
-  AssoCarac* rc = NULL;
-  AssoCarac* asso = NULL;
-  RG* ring = NULL;
+  AssoCarac* rc = 0;
+  AssoCarac* asso = 0;
+  RG* ring = 0;
 
   checkCollection(coll);
   if (!carac || !entity || !value) goto error;
-  logEmit(LOG_DEBUG, "addAssoCarac %s %s=%s", 
+  logMemory(LOG_DEBUG, "addAssoCarac %s %s=%s", 
 	  strCType(type), carac->label, value);
 
   // already there
   if ((asso = getAssoCarac(coll, carac, type, entity, value))) goto end;
 
   // add new one if not already there
-  if ((asso = createAssoCarac()) == NULL) goto error;
+  if ((asso = createAssoCarac()) == 0) goto error;
   if (!(asso->value = createString(value))) goto error; 
   asso->carac = carac;
 
@@ -1209,7 +1209,7 @@ addAssoCarac(Collection* coll, Carac* carac, CType type,
     ring = ((Archive*)entity)->assoCaracs;
     break;
   default:
-    logEmit(LOG_INFO, "unknown carac type %i", type);
+    logMemory(LOG_INFO, "unknown carac type %i", type);
     goto error;
   }
   if (!rgInsert(ring, asso)) goto error;
@@ -1218,7 +1218,7 @@ addAssoCarac(Collection* coll, Carac* carac, CType type,
   rc = asso;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addAssoCarac fails");
+    logMemory(LOG_ERR, "%s", "addAssoCarac fails");
     asso = destroyAssoCarac(asso);
   }
   return rc;
@@ -1237,11 +1237,11 @@ addAssoCarac(Collection* coll, Carac* carac, CType type,
 Role* 
 getRole(Collection* coll, char* label)
 {
-  Role* rc = NULL;
-  RGIT* curr = NULL;
+  Role* rc = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "getRole %s", label);
+  logMemory(LOG_DEBUG, "getRole %s", label);
 
   // look for role
   while ((rc = rgNext_r(coll->catalogTree->roles, &curr)))
@@ -1264,11 +1264,11 @@ getRole(Collection* coll, char* label)
 Role* 
 addRole(Collection* coll, char* label)
 {
-  Role* rc = NULL;
-  Role* role = NULL;
+  Role* rc = 0;
+  Role* role = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "create the %s role", label);
+  logMemory(LOG_DEBUG, "create the %s role", label);
 
   // already there
   if ((role = getRole(coll, label))) goto end;
@@ -1283,7 +1283,7 @@ addRole(Collection* coll, char* label)
   rc = role;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addRole fails");
+    logMemory(LOG_ERR, "%s", "addRole fails");
     role = destroyRole(role);
   }
   return rc;
@@ -1301,14 +1301,14 @@ int
 delRole(Collection* coll, Role* self)
 {
   int rc = FALSE;
-  AssoRole* aR = NULL;
-  RGIT* curr = NULL;
+  AssoRole* aR = 0;
+  RGIT* curr = 0;
   
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "delRole %s", self->label);
+  logMemory(LOG_DEBUG, "delRole %s", self->label);
 
   // delete related assossiations
-  while((aR = rgHead(self->assos)) != NULL) {
+  while((aR = rgHead(self->assos)) != 0) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
@@ -1323,7 +1323,7 @@ delRole(Collection* coll, Role* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delRole fails");
+    logMemory(LOG_ERR, "%s", "delRole fails");
   }
   return rc;
 }
@@ -1343,16 +1343,16 @@ AssoRole*
 getAssoRole(Collection* coll, 
 	    Role* role, Human* human, Document* document)
 {
-  AssoRole* rc = NULL;
-  RGIT* curr = NULL;
+  AssoRole* rc = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!role || !human || !document) goto error;
-  logEmit(LOG_DEBUG, "getAssoRole %s, %s-%s, %s", role->label, 
+  logMemory(LOG_DEBUG, "getAssoRole %s, %s-%s, %s", role->label, 
 	  human->firstName, human->secondName, document->label);
 
   // look for assoRole
-  while((rc = rgNext_r(document->assoRoles, &curr)) != NULL) {
+  while((rc = rgNext_r(document->assoRoles, &curr)) != 0) {
     if (rc->human == human && rc->role == role) break;
   }
   
@@ -1375,19 +1375,19 @@ AssoRole*
 addAssoRole(Collection* coll, 
 	    Role* role, Human* human, Document* document)
 {
-  AssoRole* rc = NULL;
-  AssoRole* asso = NULL;
+  AssoRole* rc = 0;
+  AssoRole* asso = 0;
  
   checkCollection(coll);
   if (!role || !human || !document) goto error;
-  logEmit(LOG_DEBUG, "addAssoRole %s, %s-%s, %s", role->label, 
+  logMemory(LOG_DEBUG, "addAssoRole %s, %s-%s, %s", role->label, 
 	  human->firstName, human->secondName, document->label);
 
   // already there
   if ((asso = getAssoRole(coll, role, human, document))) goto end;
 
   // add new one if not already there
-  if ((asso = createAssoRole()) == NULL) goto error;
+  if ((asso = createAssoRole()) == 0) goto error;
   asso->role = role;
   asso->human = human;
   asso->document = document;
@@ -1405,7 +1405,7 @@ addAssoRole(Collection* coll,
   rc = asso;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cannot add an assoRole");
+    logMemory(LOG_ERR, "%s", "cannot add an assoRole");
     if (asso) delAssoRole(coll, asso);
   }
   return rc;
@@ -1423,11 +1423,11 @@ int
 delAssoRole(Collection* coll, AssoRole* self)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
   
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delAssoRole %s, %s-%s, %s", self->role->label, 
+  logMemory(LOG_DEBUG, "delAssoRole %s, %s-%s, %s", self->role->label, 
 	  self->human->firstName, self->human->secondName, 
 	  self->document->label);
 
@@ -1451,7 +1451,7 @@ delAssoRole(Collection* coll, AssoRole* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delAssoRole fails");
+    logMemory(LOG_ERR, "%s", "delAssoRole fails");
   }
   return rc;
 }
@@ -1472,7 +1472,7 @@ int addHumanToCategory(Collection* coll, Human* human, Category* category)
 
   checkCollection(coll);
   if (!human || !category) goto error;
-  logEmit(LOG_DEBUG, "addHumanToCategory %s-%s, %s",
+  logMemory(LOG_DEBUG, "addHumanToCategory %s-%s, %s",
 	  human->firstName, human->secondName, category->label);
 
   // add human to category ring
@@ -1486,7 +1486,7 @@ int addHumanToCategory(Collection* coll, Human* human, Category* category)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addHumanToCategory fails");
+    logMemory(LOG_ERR, "%s", "addHumanToCategory fails");
   }
   return rc;
 }
@@ -1504,11 +1504,11 @@ int addHumanToCategory(Collection* coll, Human* human, Category* category)
 int delHumanToCategory(Collection* coll, Human* human, Category* category)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!human || !category) goto error;
-  logEmit(LOG_DEBUG, "delHumanToCategory %s-%s, %s",
+  logMemory(LOG_DEBUG, "delHumanToCategory %s-%s, %s",
 	  human->firstName, human->secondName, category->label);
 
   // del human to category ring
@@ -1524,7 +1524,7 @@ int delHumanToCategory(Collection* coll, Human* human, Category* category)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delHumanToCategory fails");
+    logMemory(LOG_ERR, "%s", "delHumanToCategory fails");
   }
   return rc;
 }
@@ -1542,14 +1542,14 @@ int delHumanToCategory(Collection* coll, Human* human, Category* category)
 Human* 
 getHuman(Collection* coll, char* firstName, char* secondName)
 {
-  Human* rc = NULL;
+  Human* rc = 0;
   Human human;
-  AVLNode* node = NULL;
+  AVLNode* node = 0;
 
   checkCollection(coll);
   checkLabel(firstName);
   //checkLabel(secondName); may be null
-  logEmit(LOG_DEBUG, "getHuman %s-%s", firstName, secondName);
+  logMemory(LOG_DEBUG, "getHuman %s-%s", firstName, secondName);
 
   // look for human
   human.firstName = firstName;
@@ -1574,19 +1574,19 @@ getHuman(Collection* coll, char* firstName, char* secondName)
 Human* 
 addHuman(Collection* coll, char* firstName, char* secondName)
 {
-  Human* rc = NULL;
-  Human* human = NULL;
+  Human* rc = 0;
+  Human* human = 0;
 
   checkCollection(coll);
   checkLabel(firstName);
   //checkLabel(secondName); may be null
-  logEmit(LOG_DEBUG, "addHuman %s-%s", firstName, secondName);
+  logMemory(LOG_DEBUG, "addHuman %s-%s", firstName, secondName);
 
   // already there
   if ((human = getHuman(coll, firstName, secondName))) goto end;
 
   // add new one if not already there
-  if ((human = createHuman()) == NULL) goto error;
+  if ((human = createHuman()) == 0) goto error;
   if (!(human->firstName = createString(firstName))) goto error;
   if (!(human->secondName = createString(secondName))) goto error;
   human->id = coll->catalogTree->maxId[HUM]++;
@@ -1596,7 +1596,7 @@ addHuman(Collection* coll, char* firstName, char* secondName)
   rc = human;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addHuman fails");
+    logMemory(LOG_ERR, "%s", "addHuman fails");
     human = destroyHuman(human);
   }	    
   return rc;
@@ -1614,22 +1614,22 @@ int
 delHuman(Collection* coll, Human* self)
 {
   int rc = FALSE;
-  Category* cat = NULL;
-  AssoRole* aR = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  Category* cat = 0;
+  AssoRole* aR = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
+  logMemory(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
 
   // delete assoRole associations
-  while((aR = rgHead(self->assoRoles)) != NULL)
+  while((aR = rgHead(self->assoRoles)) != 0)
     if (!delAssoRole(coll, aR)) goto error;
 
   // delete human from categories rings
-  curr = NULL;
-  while((cat = rgNext_r(self->categories, &curr)) != NULL) {
+  curr = 0;
+  while((cat = rgNext_r(self->categories, &curr)) != 0) {
     if ((curr2 = rgHaveItem(cat->humans, self))) {
       rgRemove_r(cat->humans, &curr2);
     }
@@ -1641,7 +1641,7 @@ delHuman(Collection* coll, Human* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delHuman fails");
+    logMemory(LOG_ERR, "%s", "delHuman fails");
   }
   return rc;
 }
@@ -1664,7 +1664,7 @@ int addArchiveToDocument(Collection* coll,
   checkCollection(coll);
   checkArchive(archive);
   if (!archive) goto error;
-  logEmit(LOG_DEBUG, "addArchiveToDocument %s:%lli, %s",
+  logMemory(LOG_DEBUG, "addArchiveToDocument %s:%lli, %s",
 	  archive->hash, (long long int)archive->size, document->label);
 
   // add archive to document ring
@@ -1678,7 +1678,7 @@ int addArchiveToDocument(Collection* coll,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addArchiveToDocument fails");
+    logMemory(LOG_ERR, "%s", "addArchiveToDocument fails");
   }
   return rc;
 }
@@ -1697,12 +1697,12 @@ int delArchiveFromDocument(Collection* coll,
 			   Archive* archive, Document* document)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkArchive(archive);
   if (!archive) goto error;
-  logEmit(LOG_DEBUG, "delArchiveFromDocument %s:%lli, %s",
+  logMemory(LOG_DEBUG, "delArchiveFromDocument %s:%lli, %s",
 	  archive->hash, (long long int)archive->size, document->label);
 
   // del archive to document ring
@@ -1718,7 +1718,7 @@ int delArchiveFromDocument(Collection* coll,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delArchiveFromDocument fails");
+    logMemory(LOG_ERR, "%s", "delArchiveFromDocument fails");
   }
   return rc;
 }
@@ -1740,7 +1740,7 @@ int addDocumentToCategory(Collection* coll, Document* document,
 
   checkCollection(coll);
   if (!document || !category) goto error;
-  logEmit(LOG_DEBUG, "addDocumentToCategory %s, %s",
+  logMemory(LOG_DEBUG, "addDocumentToCategory %s, %s",
 	  document->label, category->label);
 
   // add document to category ring
@@ -1754,7 +1754,7 @@ int addDocumentToCategory(Collection* coll, Document* document,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addDocumentToCategory fails");
+    logMemory(LOG_ERR, "%s", "addDocumentToCategory fails");
   }
   return rc;
 }
@@ -1773,11 +1773,11 @@ int delDocumentToCategory(Collection* coll, Document* document,
 			  Category* category)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!document || !category) goto error;
-  logEmit(LOG_DEBUG, "delDocumentToCategory %s, %s",
+  logMemory(LOG_DEBUG, "delDocumentToCategory %s, %s",
 	  document->label, category->label);
 
   // del document to category ring
@@ -1793,7 +1793,7 @@ int delDocumentToCategory(Collection* coll, Document* document,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delDocumentToCategory fails");
+    logMemory(LOG_ERR, "%s", "delDocumentToCategory fails");
   }
   return rc;
 }
@@ -1810,12 +1810,12 @@ int delDocumentToCategory(Collection* coll, Document* document,
 Document* 
 getDocument(Collection* coll, char* label)
 {
-  Document* rc = NULL;
+  Document* rc = 0;
   Document document;
-  AVLNode* node = NULL;
+  AVLNode* node = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "getDocument %s", label);
+  logMemory(LOG_DEBUG, "getDocument %s", label);
 
   // look for document
   document.label = label;
@@ -1839,18 +1839,18 @@ getDocument(Collection* coll, char* label)
 Document* 
 addDocument(Collection* coll, char* label)
 {
-  Document* rc = NULL;
-  Document* document = NULL;
+  Document* rc = 0;
+  Document* document = 0;
 
   checkCollection(coll);
   checkLabel(label);
-  logEmit(LOG_DEBUG, "addDocument %s", label);
+  logMemory(LOG_DEBUG, "addDocument %s", label);
 
   // already there
   if ((document = getDocument(coll, label))) goto end;
 
   // add new one if not already there
-  if ((document = createDocument()) == NULL) goto error;
+  if ((document = createDocument()) == 0) goto error;
   if (!(document->label = createString(label))) goto error; 
   document->id = coll->catalogTree->maxId[DOC]++;
   if (!avl_insert(coll->catalogTree->documents, document)) goto error;
@@ -1859,7 +1859,7 @@ addDocument(Collection* coll, char* label)
   rc = document;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addDocument fails");
+    logMemory(LOG_ERR, "%s", "addDocument fails");
     document = destroyDocument(document);
   }
   return rc;
@@ -1877,33 +1877,33 @@ int
 delDocument(Collection* coll, Document* self)
 {
   int rc = FALSE;
-  AssoRole* aR = NULL;
-  Category* cat = NULL;
-  Archive* arch = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  AssoRole* aR = 0;
+  Category* cat = 0;
+  Archive* arch = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delDocument %i (%s)", self->id, self->label);
+  logMemory(LOG_DEBUG, "delDocument %i (%s)", self->id, self->label);
 
   // delete assoRole associations
-  curr = NULL;
-  while((aR = rgNext_r(self->assoRoles, &curr)) != NULL) {
+  curr = 0;
+  while((aR = rgNext_r(self->assoRoles, &curr)) != 0) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
   // delete document from categories rings
-  curr = curr2 = NULL;
-  while((cat = rgNext_r(self->categories, &curr)) != NULL) {
+  curr = curr2 = 0;
+  while((cat = rgNext_r(self->categories, &curr)) != 0) {
     if ((curr2 = rgHaveItem(cat->documents, self))) {
       rgRemove_r(cat->documents, &curr2);
     }
   }
 
   // delete document from archive rings
-  curr = curr2 = NULL;
-  while((arch = rgNext_r(self->archives, &curr)) != NULL) {
+  curr = curr2 = 0;
+  while((arch = rgNext_r(self->archives, &curr)) != 0) {
     if ((curr2 = rgHaveItem(arch->documents, self))) {
       rgRemove_r(arch->documents, &curr2);
     }
@@ -1915,7 +1915,7 @@ delDocument(Collection* coll, Document* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delDocument fails");
+    logMemory(LOG_ERR, "%s", "delDocument fails");
   }
   return rc;
 }
@@ -1932,30 +1932,30 @@ int
 delArchiveCatalog(Collection* coll, Archive* self)
 {
   int rc = FALSE;
-  AssoCarac* aC = NULL;
-  Document* doc = NULL;
-  //RGIT* curr = NULL;
+  AssoCarac* aC = 0;
+  Document* doc = 0;
+  //RGIT* curr = 0;
   
   checkCollection(coll);
   checkArchive(self);
-  logEmit(LOG_DEBUG, "delArchiveCatalog %s:%lli",
+  logMemory(LOG_DEBUG, "delArchiveCatalog %s:%lli",
 	  self->hash, (long long int)self->size);
 
   // delete assoCarac associations
-  while((aC = rgHead(self->assoCaracs)) != NULL) {
+  while((aC = rgHead(self->assoCaracs)) != 0) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(aC);
   }
 
   // delete from document rings
-  while((doc = rgHead(self->documents)) != NULL) {
+  while((doc = rgHead(self->documents)) != 0) {
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delArchiveCatalog fails");
+    logMemory(LOG_ERR, "%s", "delArchiveCatalog fails");
   }
   return rc;
 }
@@ -1977,7 +1977,7 @@ addCategoryLink(Collection* coll, Category* father, Category* child)
 
   checkCollection(coll);
   if (!father || !child) goto error;
-  logEmit(LOG_DEBUG, "addCategoryLink %s -> %s", 
+  logMemory(LOG_DEBUG, "addCategoryLink %s -> %s", 
 	  child->label, father->label);
 
   // add link to father
@@ -1991,7 +1991,7 @@ addCategoryLink(Collection* coll, Category* father, Category* child)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addCategoryLink fails");
+    logMemory(LOG_ERR, "%s", "addCategoryLink fails");
   }
   return rc;
 }
@@ -2010,11 +2010,11 @@ int
 delCategoryLink(Collection* coll, Category* father, Category* child)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   if (!father || !child) goto error;
-  logEmit(LOG_DEBUG, "delCategoryLink %s -> %s", 
+  logMemory(LOG_DEBUG, "delCategoryLink %s -> %s", 
 	  child->label, father->label);
   
   // delete father link
@@ -2030,7 +2030,7 @@ delCategoryLink(Collection* coll, Category* father, Category* child)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delCategoryLink fails");
+    logMemory(LOG_ERR, "%s", "delCategoryLink fails");
   }
   return rc;
 }
@@ -2046,16 +2046,16 @@ delCategoryLink(Collection* coll, Category* father, Category* child)
 Category* 
 getCategory(Collection* coll, char* label)
 {
-  Category* rc = NULL;
-  RGIT* curr = NULL;
+  Category* rc = 0;
+  RGIT* curr = 0;
   
   checkCollection(coll);
   checkLabel(label);
-  logEmit(LOG_DEBUG, "getCategory %s", label);
+  logMemory(LOG_DEBUG, "getCategory %s", label);
   
   // look for category
   while((rc = rgNext_r(coll->catalogTree->categories, &curr)) 
-	!= NULL)
+	!= 0)
     if (!strcmp(rc->label, label)) break;
   
  error:
@@ -2073,12 +2073,12 @@ getCategory(Collection* coll, char* label)
 Category* 
 addCategory(Collection* coll, char* label, int show)
 {
-  Category* rc = NULL;
-  Category* cat = NULL;
+  Category* rc = 0;
+  Category* cat = 0;
 
   checkCollection(coll);
   checkLabel(label);
-  logEmit(LOG_DEBUG, "addCategory %s", label);
+  logMemory(LOG_DEBUG, "addCategory %s", label);
 
   // already there
   if ((cat = getCategory(coll, label))) goto end;
@@ -2094,7 +2094,7 @@ addCategory(Collection* coll, char* label, int show)
   rc = cat;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "cannot add %s category", label);
+    logMemory(LOG_ERR, "cannot add %s category", label);
     cat = destroyCategory(cat);
   }
   return rc;
@@ -2112,37 +2112,37 @@ int
 delCategory(Collection* coll, Category* self)
 {
   int rc = FALSE;
-  Category* cat = NULL;
-  Human* hum = NULL;
-  Document* doc = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  Category* cat = 0;
+  Human* hum = 0;
+  Document* doc = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
   
   checkCollection(coll);
   if (!self) goto error;
-  logEmit(LOG_DEBUG, "delCategory %s", self->label);
+  logMemory(LOG_DEBUG, "delCategory %s", self->label);
 
   // delete category from fathers ring
-  while((cat = rgHead(self->fathers)) != NULL)
+  while((cat = rgHead(self->fathers)) != 0)
     if (!delCategoryLink(coll, cat, self)) goto error;
 
-  // delete category from childs ring  curr = NULL;
-  while((cat = rgHead(self->childs)) != NULL)
+  // delete category from childs ring  curr = 0;
+  while((cat = rgHead(self->childs)) != 0)
     if (!delCategoryLink(coll, self, cat)) goto error;
 
   // delete category from humans rings
-  curr = NULL;
-  curr2 = NULL;
-  while((hum = rgNext_r(self->humans, &curr)) != NULL) {
+  curr = 0;
+  curr2 = 0;
+  while((hum = rgNext_r(self->humans, &curr)) != 0) {
     if ((curr2 = rgHaveItem(hum->categories, self))) {
       rgRemove_r(hum->categories, &curr2);
     }
   }
 
   // delete category from documents rings
-  curr = NULL;
-  curr2 = NULL;
-  while((doc = rgNext_r(self->documents, &curr)) != NULL) {
+  curr = 0;
+  curr2 = 0;
+  while((doc = rgNext_r(self->documents, &curr)) != 0) {
     if ((curr2 = rgHaveItem(doc->categories, self))) {
       rgRemove_r(doc->categories, &curr2);
     }
@@ -2159,7 +2159,7 @@ delCategory(Collection* coll, Category* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delCategory fails");
+    logMemory(LOG_ERR, "%s", "delCategory fails");
   }
   return rc;
 }
@@ -2176,16 +2176,16 @@ int
 diseaseCatalogTree(Collection* coll)
 {
   int rc = FALSE;
-  CatalogTree* self = NULL;
-  Category* category = NULL;
-  Carac* carac = NULL;
-  Role* role = NULL;
-  AVLNode *node = NULL;
+  CatalogTree* self = 0;
+  Category* category = 0;
+  Carac* carac = 0;
+  Role* role = 0;
+  AVLNode *node = 0;
   //int i = 0;
 
-  if(coll == NULL) goto error;
-  if((self = coll->catalogTree) == NULL) goto error;
-  logEmit(LOG_DEBUG, "diseaseCatalogTree %s", coll);
+  if(coll == 0) goto error;
+  if((self = coll->catalogTree) == 0) goto error;
+  logMemory(LOG_DEBUG, "diseaseCatalogTree %s", coll);
  
   // disease roles
   while((role = rgHead(self->roles))) 
@@ -2220,7 +2220,7 @@ diseaseCatalogTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "diseaseCatalogTree fails");
+    logMemory(LOG_ERR, "%s", "diseaseCatalogTree fails");
   }
   return rc;
 }
@@ -2261,7 +2261,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
+  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -2274,10 +2274,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -2296,7 +2297,7 @@ main(int argc, char** argv)
   
   // test serializing
   if (!serializeCatalogTree(coll)) {
-    logEmit(LOG_ERR, "%s", "Error while serializing the catalog exemple");
+    logMemory(LOG_ERR, "%s", "Error while serializing the catalog exemple");
     goto error;
   }
 

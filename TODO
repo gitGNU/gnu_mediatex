@@ -60,6 +60,8 @@ $ ./configure \
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
 
+$ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
+
 ** Diff between 2 arbos
 
 $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah/mediatex/{} \; \)
@@ -70,12 +72,12 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 
 *** TO CORRECT
 
-- md5sums/coll.md5 should be 640 (instead of 600)
-
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- do not allocate string within conf, record and server lexers
+- add AUTOMAKE subdir-objects option (no recursive Makefile.am in src)
+  (https://autotools.io/index.html)
+- move dirname into extract rule header to reduce extract.txt file size
 - manage ECDSA key too
 - add supp: wait CD doors is locked (cf v3)
 - i10n for french
@@ -84,8 +86,8 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- manage cgi header within port-forwarding
 - plugin system (sql,xml) and hooks (mail) with defaults overidable
-- replace openssl by libgcrypt (md5sum and cypher socket)
 - replaced Peter's code by mqueue
 - add thread ID to the log
 - shouldn't we use absolute link for cgi? (catalog copy)
@@ -98,4 +100,30 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 
 - ease SSH/CVS configuration
 - compatible with DNS round robin
+- cvsroot migration from one host to other (cf useCases/test.sh#16)
+- Port forwarding is not compatible with gateway hosted collections
 
+It means if your localhost is using the gateway address into mdtx.conf,
+thanks to port forwarding on the gateway.
+
+mdtx.conf:
+host     GATEWAY
+mdtxPort 6562
+sshPort  222
+
+GATEWAY:
+iptables -t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to $HOST:22
+iptables -t nat -A PREROUTING -p tcp --dport 6562 -j DNAT --to $HOST:6562
+iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 6562 -j ACCEPT
+
+Localy if your server own collections, you will have to skip the gateway.
+
+(GATEWAY is the IP on the WWW_NET interface)
+HOST:
+iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 2222 -j DNAT --to $HOST:22
+iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 6561 -j DNAT --to $HOST:6561
+
+Unfortunaly, the cgi script will not works on your local instance as it search for url (port 80) on the gateway too.
+
+More over, you cannot have both collecion hosted on your localhost and the gateway as your .ssh/config provide 2 different ports for the gateway. 

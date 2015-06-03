@@ -2,6 +2,8 @@
 
 # Do not ask for password
 BatchMode yes
+Compression yes
+#LogLevel DEBUG3
 
 Host localhost
 	Port 22

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.h,v 1.2 2014/11/13 16:36:27 nroche Exp $
+ * Version: $Id: ardsm.h,v 1.3 2015/06/03 14:03:38 nroche Exp $
  * Project: SCOREDIT
  * Module : ardsm
  *
@@ -46,7 +46,7 @@ typedef struct RG
 #define rgNext_r(ring, curr)				\
 (ring->head?						\
  ((*curr = (*curr) ? (*curr)->next : ring->head)?	\
-  (*curr)->it : NULL) : NULL)
+  (*curr)->it : 0) : 0)
 
 RGIT* rgCreate(void);
 void rgDestroy(RGIT* item);

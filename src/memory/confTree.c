@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.2 2014/11/13 16:36:28 nroche Exp $
+ * Version: $Id: confTree.c,v 1.3 2015/06/03 14:03:38 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
  * /etc configuration producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -66,11 +66,11 @@ int cmpCollection(const void *p1, const void *p2)
 Collection* 
 createCollection(void)
 {
-  Collection* rc = NULL;
+  Collection* rc = 0;
   int i = 0;
   int err = 0;
 
-  if((rc = (Collection*)malloc(sizeof(Collection))) == NULL) {
+  if((rc = (Collection*)malloc(sizeof(Collection))) == 0) {
     goto error;
   }
     
@@ -85,22 +85,22 @@ createCollection(void)
 	avl_alloc_tree(cmpArchive2, (avl_freeitem_t)destroyArchive)))
     goto error;
 
-  if ((rc->networks = createRing()) == NULL) goto error;
-  if ((rc->gateways = createRing()) == NULL) goto error;
-  if ((rc->supports = createRing()) == NULL) goto error;
+  if ((rc->networks = createRing()) == 0) goto error;
+  if ((rc->gateways = createRing()) == 0) goto error;
+  if ((rc->supports = createRing()) == 0) goto error;
 
   // init the locks
   for (i=iCTLG; i<iCACH; ++i) {
     if ((err = pthread_mutex_init(&rc->mutex[i], (pthread_mutexattr_t*)0))
 	!= 0) {
-      logEmit(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
+      logMemory(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
       goto error;
     }
   }
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Collection");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Collection");
   return destroyCollection(rc);
 }
 
@@ -115,11 +115,11 @@ createCollection(void)
 Collection* 
 destroyCollection(Collection* self)
 {
-  Collection* rc = NULL;
+  Collection* rc = 0;
   int i = 0;
   int err = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
 
   self->masterLabel = destroyString(self->masterLabel);
   self->masterUser = destroyString(self->masterUser);
@@ -168,7 +168,7 @@ destroyCollection(Collection* self)
   // free the locks
   for (i=iCTLG; i<iCACH; ++i) {
     if ((err = pthread_mutex_destroy(&self->mutex[i]) != 0)) {
-      logEmit(LOG_INFO, "pthread_mutex_destroy[%i]: %s", i, strerror(err));
+      logMemory(LOG_INFO, "pthread_mutex_destroy[%i]: %s", i, strerror(err));
       goto error;
     }
   }
@@ -190,8 +190,8 @@ int
 expandCollection(Collection* self)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  char* urlPart = NULL;
+  Configuration* conf = 0;
+  char* urlPart = 0;
   int i,j;
   char* dataV[] = {CONF_CATHFILE, CONF_SERVFILE, CONF_EXTRFILE, "/cgi"};
   char** dataP[] = {
@@ -200,26 +200,26 @@ expandCollection(Collection* self)
   char** htmlP[] = {
     &self->htmlIndexDir, &self->htmlCacheDir, 
     &self->htmlScoreDir, &self->htmlCgiDir};
-  char* label = NULL;
-  char* mdtx = NULL;
-  char* user = NULL;
+  char* label = 0;
+  char* mdtx = 0;
+  char* user = 0;
 
   // defensive code
   checkCollection(self);
   if (isEmptyString(self->masterLabel) ||
       isEmptyString(self->label) ||
       isEmptyString(self->masterHost)) {
-    logEmit(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, "%s", 
 	    "masterLabel, label and masterHost must be initialized");
     goto error;
   }
 
   if (self->memoryState & EXPANDED) {
-    logEmit(LOG_DEBUG, "%s collection already expanded", self->label);
+    logMemory(LOG_DEBUG, "%s collection already expanded", self->label);
     goto end;
   }
 
-  logEmit(LOG_DEBUG, "expand the %s collection", self->label);
+  logMemory(LOG_DEBUG, "expand the %s collection", self->label);
   if (!(conf = getConfiguration())) goto error;
 
   // replace localhost with hostname on master server
@@ -362,7 +362,7 @@ expandCollection(Collection* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to expand collection");
+    logMemory(LOG_ERR, "%s", "fails to expand collection");
   }
   urlPart = destroyString(urlPart);
   label = destroyString(label);
@@ -380,21 +380,21 @@ int
 populateCollection(Collection* self)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
   int uid = getuid();
 
   // defensive code
-  if (self == NULL) goto error;
+  if (self == 0) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(self->memoryState & EXPANDED)) {
-    logEmit(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "%s", "collection must be expanded first");
     goto error;
   }
   if (self->memoryState & POPULATED) {
-    logEmit(LOG_INFO, "%s collection already populated", self->label);
+    logMemory(LOG_INFO, "%s collection already populated", self->label);
     goto end;
   }
-  logEmit(LOG_DEBUG, "populate the %s collection", self->label);
+  logMemory(LOG_DEBUG, "populate the %s collection", self->label);
 
   if (!becomeUser(self->user, FALSE)) goto error;
 
@@ -408,7 +408,7 @@ populateCollection(Collection* self)
       (self->userKey = readPublicKey(self->sshRsaPublicKey))) goto next;
   if (!access(self->sshDsaPublicKey, F_OK) &&
       (self->userKey = readPublicKey(self->sshDsaPublicKey))) goto next;
-  logEmit(LOG_ERR, "%s", "fails to load the user public key");
+  logMemory(LOG_ERR, "%s", "fails to load the user public key");
   goto error;
 
  next:
@@ -419,7 +419,7 @@ populateCollection(Collection* self)
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "fails to populate %s collection", self->label);
+    logMemory(LOG_ERR, "fails to populate %s collection", self->label);
   }
   return rc;
 }
@@ -436,13 +436,13 @@ int
 serializeCollection(Collection* self, FILE* fd)
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support* supp = NULL;
-  char* string = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Support* supp = 0;
+  char* string = 0;
+  RGIT* curr = 0;
 
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "serialize the %s collection", self->label);
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "serialize the %s collection", self->label);
   if (!(conf = getConfiguration())) goto error;
 
   fprintf(fd, "\nCollection %s-%s@%s:%i\n", 
@@ -453,7 +453,7 @@ serializeCollection(Collection* self, FILE* fd)
   if (!isEmptyRing(self->networks)) {
     fprintf(fd, "\t%s  ", "networks");
     if (!rgSort(self->networks, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->networks, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->networks, &curr))) {
@@ -465,7 +465,7 @@ serializeCollection(Collection* self, FILE* fd)
   if (!isEmptyRing(self->gateways)) {
     fprintf(fd, "\t%s  ", "gateways");
     if (!rgSort(self->gateways, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->gateways, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->gateways, &curr))) {
@@ -492,7 +492,7 @@ serializeCollection(Collection* self, FILE* fd)
   // list of supports
   if (!isEmptyRing(self->supports)) {
     if (!rgSort(self->supports, cmpSupport)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(supp = rgNext_r(self->supports, &curr))) goto error;
     fprintf(fd, "\tshare\t  %s", supp->name);
     while ((supp = rgNext_r(self->supports, &curr))) {
@@ -505,7 +505,7 @@ serializeCollection(Collection* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "error while serializing Collection");
+    logMemory(LOG_ERR, "%s", "error while serializing Collection");
   }
   return rc;
 }
@@ -521,25 +521,25 @@ serializeCollection(Collection* self, FILE* fd)
 Configuration* 
 createConfiguration(void)
 {
-  Configuration* rc = NULL;
-  Configuration* conf = NULL;
+  Configuration* rc = 0;
+  Configuration* conf = 0;
   ScoreParam defaultScoreParam = DEFAULT_SCORE_PARAM;
-  char* tmpDir = NULL;
-  char* pidDir = NULL;
-  char* label = NULL;
+  char* tmpDir = 0;
+  char* pidDir = 0;
+  char* label = 0;
 
   if((conf = (Configuration*)malloc(sizeof(Configuration))) 
-     == NULL) {
-    logEmit(LOG_ERR, "%s", "malloc: cannot create Configuration");
+     == 0) {
+    logMemory(LOG_ERR, "%s", "malloc: cannot create Configuration");
     goto error;
   }
     
   memset(conf, 0, sizeof(Configuration));
-  if ((conf->allNetworks = createRing()) == NULL) goto error;
-  if ((conf->networks = createRing()) == NULL) goto error;
-  if ((conf->gateways = createRing()) == NULL) goto error;
-  if ((conf->collections = createRing()) == NULL) goto error;
-  if ((conf->supports = createRing()) == NULL) goto error;
+  if ((conf->allNetworks = createRing()) == 0) goto error;
+  if ((conf->networks = createRing()) == 0) goto error;
+  if ((conf->gateways = createRing()) == 0) goto error;
+  if ((conf->collections = createRing()) == 0) goto error;
+  if ((conf->supports = createRing()) == 0) goto error;
   
   if (!(tmpDir = createString(CONF_TMPDIR))
       || !(tmpDir = catString(tmpDir, DEFAULT_MDTXUSER)))
@@ -611,7 +611,7 @@ createConfiguration(void)
   rc = conf;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "createConfiguration fails");
+    logMemory(LOG_ERR, "%s", "createConfiguration fails");
     conf = destroyConfiguration(conf);
   }
   tmpDir = destroyString(tmpDir);
@@ -632,9 +632,9 @@ createConfiguration(void)
 Configuration* 
 destroyConfiguration(Configuration* self)
 {
-  Configuration* rc = NULL;
+  Configuration* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
 
     // directories
     self->cvsRootDir = destroyString(self->cvsRootDir);
@@ -690,18 +690,18 @@ int
 expandConfiguration()
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
-  char* jail = NULL;
-  char* meta = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+  char* jail = 0;
+  char* meta = 0;
   char* mdtx = env.confLabel;
 
   // defensive code
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "%s", "expand configuration");
+  logMemory(LOG_DEBUG, "%s", "expand configuration");
   if (conf->memoryState & EXPANDED) {
-    logEmit(LOG_INFO, "%s", "configuration already expanded");
+    logMemory(LOG_INFO, "%s", "configuration already expanded");
     goto end;
   }
 
@@ -725,8 +725,8 @@ expandConfiguration()
     goto error;
 
   // expand collections
-  if (conf->collections != NULL) {
-    while((coll = rgNext_r(conf->collections, &curr)) != NULL) {
+  if (conf->collections != 0) {
+    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
       if (!expandCollection(coll)) goto error;
     }
   }
@@ -736,7 +736,7 @@ expandConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to expand configuration");
+    logMemory(LOG_ERR, "%s", "fails to expand configuration");
   }
   jail = destroyString(jail);
   meta = destroyString(meta);
@@ -754,26 +754,26 @@ int
 populateConfiguration()
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
+  Configuration* conf = 0;
 
   // defensive code
   if (!(conf = getConfiguration())) goto error;
   /* if (!(conf->memoryState & EXPANDED)) { */
-  /*   logEmit(LOG_ERR, "%s", "configuration must be expanded first"); */
+  /*   logMemory(LOG_ERR, "%s", "configuration must be expanded first"); */
   /*   goto error; */
   /* } */
   if (conf->memoryState & POPULATED) {
-    logEmit(LOG_INFO, "%s", "configuration already populated");
+    logMemory(LOG_INFO, "%s", "configuration already populated");
     goto end;
   }
-  logEmit(LOG_DEBUG, "%s", "populate configuration");
+  logMemory(LOG_DEBUG, "%s", "populate configuration");
 
   // load the host public key
   if (!access(conf->sshRsaPublicKey, F_OK) && 
       (conf->hostKey = readPublicKey(conf->sshRsaPublicKey))) goto next;
   if (!access(conf->sshDsaPublicKey, F_OK) &&
       (conf->hostKey = readPublicKey(conf->sshDsaPublicKey))) goto next;
-  logEmit(LOG_ERR, "%s", "fails to load the host public key");
+  logMemory(LOG_ERR, "%s", "fails to load the host public key");
   goto error;
 
  next:
@@ -783,7 +783,7 @@ populateConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to populate Configuration");
+    logMemory(LOG_ERR, "%s", "fails to populate Configuration");
   }
   return(rc);
 }
@@ -802,20 +802,20 @@ int
 serializeConfiguration(Configuration* self)
 { 
   int rc = FALSE;
-  char* path = NULL;
+  char* path = 0;
   FILE* fd = stdout; 
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
-  char* string = NULL;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+  char* string = 0;
   int uid = getuid();
 
-  if(self == NULL) goto error;
-  logEmit(LOG_DEBUG, "%s", "serialize the configuration");
+  if(self == 0) goto error;
+  logMemory(LOG_DEBUG, "%s", "serialize the configuration");
 
   // we need the host key to be loaded so as to be able
   // to print the host fingerprint !
   if (!(self->memoryState & POPULATED)) {
-    logEmit(LOG_ERR, "%s", "configuration must be populated first");
+    logMemory(LOG_ERR, "%s", "configuration must be populated first");
     goto error;
   }
 
@@ -823,11 +823,11 @@ serializeConfiguration(Configuration* self)
 
   // output file
   if (env.dryRun == FALSE) path = self->confFile;
-  logEmit(LOG_INFO, "Serializing configuration into: %s", 
+  logMemory(LOG_INFO, "Serializing configuration into: %s", 
 	  path?path:"stdout");
-  if (path != NULL && *path != (char)0) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+  if (path != 0 && *path != (char)0) {
+    if ((fd = fopen(path, "w")) == 0) {
+      logMemory(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
       fd = stdout;
       goto error;
     }
@@ -859,7 +859,7 @@ serializeConfiguration(Configuration* self)
   }
   else {
     if (!rgSort(self->networks, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->networks, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->networks, &curr))) {
@@ -872,7 +872,7 @@ serializeConfiguration(Configuration* self)
   if (!isEmptyRing(self->gateways)) {
     fprintf(fd, "%-10s ", "gateways");
     if (!rgSort(self->gateways, cmpString)) goto error;
-    curr = NULL;
+    curr = 0;
     if (!(string = rgNext_r(self->gateways, &curr))) goto error;
     fprintf(fd, "%s", string);
     while ((string = rgNext_r(self->gateways, &curr))) {
@@ -913,7 +913,7 @@ serializeConfiguration(Configuration* self)
   if (fd != stdout) {
     if (!unLock(fileno(fd))) rc = FALSE;
     if (fclose(fd)) {
-      logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+      logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
       rc = FALSE;
     }
   }
@@ -931,11 +931,11 @@ serializeConfiguration(Configuration* self)
 Configuration*
 getConfiguration(void)
 {
-  Configuration* rc = NULL;
+  Configuration* rc = 0;
 
-  if(env.confTree == NULL) {
-    if ((env.confTree = createConfiguration()) == NULL) {
-      logEmit(LOG_ERR, "%s", "cannot malloc default collection");
+  if(env.confTree == 0) {
+    if ((env.confTree = createConfiguration()) == 0) {
+      logMemory(LOG_ERR, "%s", "cannot malloc default collection");
       goto error;
     }
   }
@@ -943,7 +943,7 @@ getConfiguration(void)
   rc = env.confTree;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to get configuration");
+    logMemory(LOG_ERR, "%s", "fails to get configuration");
   }
   return rc;
 }
@@ -958,7 +958,7 @@ getConfiguration(void)
 void
 freeConfiguration(void)
 {
-  logEmit(LOG_INFO, "%s", "free configuration");
+  logMemory(LOG_INFO, "%s", "free configuration");
   env.confTree = destroyConfiguration(env.confTree);
 }
 
@@ -973,15 +973,15 @@ freeConfiguration(void)
 Collection* 
 getCollection(char *label)
 {
-  Configuration* conf = NULL;
-  Collection *rc = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection *rc = 0;
+  RGIT* curr = 0;
 
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "getCollection %s", label);
+  logMemory(LOG_DEBUG, "getCollection %s", label);
 
   // look for collection
-  while((rc = rgNext_r(conf->collections, &curr)) != NULL)
+  while((rc = rgNext_r(conf->collections, &curr)) != 0)
     if (!strncmp(rc->label, label, MAX_SIZE_COLL)) break;
 
  error:
@@ -998,13 +998,13 @@ getCollection(char *label)
 Collection* 
 addCollection(char *label)
 {
-  Configuration* conf = NULL;
-  Collection *rc = NULL;
-  Collection *coll = NULL;
+  Configuration* conf = 0;
+  Collection *rc = 0;
+  Collection *coll = 0;
 
   checkLabel(label);
   if (!(conf = getConfiguration())) goto end;
-  logEmit(LOG_DEBUG, "addCollection %s", label);
+  logMemory(LOG_DEBUG, "addCollection %s", label);
 
   // already there
   if ((coll = getCollection(label))) goto end;
@@ -1019,7 +1019,7 @@ addCollection(char *label)
   rc = coll;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to add a collection");
+    logMemory(LOG_ERR, "%s", "fails to add a collection");
     if (coll) destroyCollection(coll);
   }
   return rc;
@@ -1036,16 +1036,16 @@ int
 delCollection(Collection* self)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Support* supp = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Support* supp = 0;
+  RGIT* curr = 0;
 
   checkCollection(self);
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "delCollection %s", self->label);
+  logMemory(LOG_DEBUG, "delCollection %s", self->label);
 
   // delete support associations
-  curr = NULL;
+  curr = 0;
   while((supp = rgHead(self->supports))) {
     if (!delSupportFromCollection(supp, self)) goto error;
   }
@@ -1060,7 +1060,7 @@ delCollection(Collection* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delCollection fails");
+    logMemory(LOG_ERR, "%s", "delCollection fails");
   }
   return rc;
 }
@@ -1076,15 +1076,15 @@ delCollection(Collection* self)
 char* 
 getNetwork(char *label)
 {
-  Configuration* conf = NULL;
-  char* rc = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  char* rc = 0;
+  RGIT* curr = 0;
 
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "getNetwork %s", label);
+  logMemory(LOG_DEBUG, "getNetwork %s", label);
 
   // look for network
-  while((rc = rgNext_r(conf->allNetworks, &curr)) != NULL)
+  while((rc = rgNext_r(conf->allNetworks, &curr)) != 0)
     if (!strcmp(rc, label)) break;
 
  error:
@@ -1101,13 +1101,13 @@ getNetwork(char *label)
 char* 
 addNetwork(char *label)
 {
-  Configuration* conf = NULL;
-  char* rc = NULL;
-  char *net = NULL;
+  Configuration* conf = 0;
+  char* rc = 0;
+  char *net = 0;
 
   checkLabel(label);
   if (!(conf = getConfiguration())) goto end;
-  logEmit(LOG_DEBUG, "addNetwork %s", label);
+  logMemory(LOG_DEBUG, "addNetwork %s", label);
 
   // already there
   if ((net = getNetwork(label))) goto end;
@@ -1120,7 +1120,7 @@ addNetwork(char *label)
   rc = net;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to add a network");
+    logMemory(LOG_ERR, "%s", "fails to add a network");
     if (net) destroyString(net);
   }
   return rc;
@@ -1138,9 +1138,9 @@ int
 addNetworkToRing(RG* ring, char *label)
 {
   int rc = FALSE;
-  char* string = NULL;
+  char* string = 0;
 
-  logEmit(LOG_DEBUG, "%s", "addNetworkToRing");
+  logMemory(LOG_DEBUG, "%s", "addNetworkToRing");
 
   if (!(string = addNetwork(label))) goto error;
   if (!rgHaveItem(ring, string)) {
@@ -1150,7 +1150,7 @@ addNetworkToRing(RG* ring, char *label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to add a network to a ring");
+    logMemory(LOG_ERR, "%s", "fails to add a network to a ring");
   }
   return rc;
 }
@@ -1170,7 +1170,7 @@ int addSupportToCollection(Support* support, Collection* coll)
 
   checkCollection(coll);
   checkSupport(support);
-  logEmit(LOG_DEBUG, "addSupportToCollection %s to %s", 
+  logMemory(LOG_DEBUG, "addSupportToCollection %s to %s", 
 	  support->name, coll->label);
 
   // add collection to the support ring
@@ -1184,7 +1184,7 @@ int addSupportToCollection(Support* support, Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addSupportToCollection fails");
+    logMemory(LOG_ERR, "%s", "addSupportToCollection fails");
   }
   return rc;
 }
@@ -1201,11 +1201,11 @@ int addSupportToCollection(Support* support, Collection* coll)
 int delSupportFromCollection(Support* support, Collection* coll)
 {
   int rc = FALSE;
-  RGIT* curr = NULL;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   checkSupport(support);
-  logEmit(LOG_DEBUG, "delSupportFromCollection %s from %s",
+  logMemory(LOG_DEBUG, "delSupportFromCollection %s from %s",
 	  support->name, coll->label);
 
   // del collection to the support ring
@@ -1221,7 +1221,7 @@ int delSupportFromCollection(Support* support, Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "delSupportFromCollection fails");
+    logMemory(LOG_ERR, "%s", "delSupportFromCollection fails");
   }
   return rc;
 }
@@ -1232,17 +1232,17 @@ int delSupportFromCollection(Support* support, Collection* coll)
  * Description: Get the localhost server
  * Synopsis   : Server* getLocalHost(Collection* coll)
  * Input      : Collection* coll: 
- * Output     : The localhost server, NULL on error
+ * Output     : The localhost server, 0 on error
  =======================================================================*/
 Server* 
 getLocalHost(Collection* coll)
 {
-  Configuration* conf = NULL;
-  Server* rc = NULL;
+  Configuration* conf = 0;
+  Server* rc = 0;
 
   checkCollection(coll);
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "%s", "getLocalHost");
+  logMemory(LOG_DEBUG, "%s", "getLocalHost");
 
   // assert we have the localhost server object
   if (!coll->localhost) {
@@ -1257,8 +1257,8 @@ getLocalHost(Collection* coll)
 
   rc = coll->localhost;
  error:
-  if (rc == NULL) {
-    logEmit(LOG_ERR, "%s", "fails to get localhost server object");
+  if (rc == 0) {
+    logMemory(LOG_ERR, "%s", "fails to get localhost server object");
   }
   return rc;
 }
@@ -1299,10 +1299,10 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  char* string = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  char* string = 0;
+  RGIT* curr = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -1315,10 +1315,11 @@ main(int argc, char** argv)
        
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

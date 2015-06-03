@@ -2,8 +2,8 @@
 @cindex remove
 @cindex purge
 
-These 3 scripts deal with installation and may only be call
-by @actorAdmin{} so as to install/upgrade/purge the @sc{Mediatex}
+These 3 scripts deal with installation and may only be call by 
+@actorAdmin{} so as to install/upgrade/purge the @sc{Mediatex}
 software. Indeed, @code{remove.sh} only uninstall the software but 
 do not touch to the collection's meta-data so as to ease an upgrade 
 by installing a new software version 

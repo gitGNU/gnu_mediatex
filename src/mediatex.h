@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.2 2014/11/13 16:36:13 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.3 2015/06/03 14:03:27 nroche Exp $
  * Project: MediaTex
  * Module : mediatex pre-configuration output file
  *
  * This file is included by all the C modules
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 
 #define _GNU_SOURCE // setresuid
 
-#include <config.h> // from ./configure
+#include "mediatex-config.h" // from ./configure
 
 #include <errno.h>  // errno
 #include <stdio.h>  // printf
@@ -76,6 +76,10 @@ typedef struct AssoRole AssoRole;
 
 typedef struct RecordTree RecordTree;
 typedef struct Record Record;
+
+// we should remove the below definition by providing a header file for parsers
+// (hiding the XX_parse functions)
+typedef void* yyscan_t;
 
 // Defined in config.h:
 // Installers are expected to override these default values when calling 
@@ -196,9 +200,6 @@ typedef struct Record Record;
 // note: we deals with mediatex memory so not same as VMS, RSS
 #define DEFAULT_MALLOC_LIMIT 32*MEGA
 
-// maximum size for files handle by CVS
-#define MEMORY_CVSPRINT_MAX 10*MEGA
-
 // default average upload rate in b.s-1 (still not used)
 #define CONF_UPLOAD_RATE 500*KILO
 
@@ -271,18 +272,21 @@ typedef struct MdtxEnv {
   // allocating
   long long int allocLimit;
   int (*allocDiseaseCallBack)(long);
-  int debugAlloc;
 
   // configuration
   char* confLabel;
   int dryRun;        // output to stdout (set by unit tests by default)
   int noRegression;  // fixed dates and no sig to server (unit tests only)
   int noCollCvs;     // do not call cvs loading/saving collections
+  int cvsprintMax;   // maximum size for files handle by CVS
 
   // debug options
+  int debugAlloc;
+  int debugScript;
+  int debugMemory;
   int debugLexer;
   int debugParser;
-  int debugScript;
+  int debugCommon;
 
   // global data structures:
   Configuration* confTree;
@@ -305,15 +309,15 @@ typedef struct MdtxEnv {
 #define GLOBAL_MDTX_STRUCT_UT						\
   {									\
     /* logging */							\
-    NULL, "file", "info",						\
+    0, "file", "info",							\
       /* allocating */							\
-      0, (int (*)(long))0, FALSE,					\
+      0, (int (*)(long))0,						\
       /* configuration */						\
-      DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE,				\
+      DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 10*MEGA,			\
       /* debug */							\
-      FALSE, FALSE, FALSE,						\
+      FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
       /* global data structure */					\
-      NULL, TRUE							\
+      0, TRUE								\
       }
 
 // Global variable definition having its default values for binaries
@@ -321,16 +325,16 @@ typedef struct MdtxEnv {
 #define GLOBAL_MDTX_STRUCT_BIN						\
   {									\
     /* logging */							\
-    NULL, "file", "notice",						\
+    0, "file", "notice",						\
       /* allocating */							\
-      32, (int (*)(long))0, FALSE,					\
+      128, (int (*)(long))0,						\
       /* configration */						\
-      DEFAULT_MDTXUSER, FALSE, FALSE, TRUE,				\
+      DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 10*MEGA,			\
       /* debug and tests */						\
-      FALSE, FALSE, FALSE,						\
+      FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
       /* global data structure */					\
-      NULL, TRUE							\
-  }
+      0, TRUE								\
+      }
 
 #define GLOBAL_STRUCT_DEF MdtxEnv env =	GLOBAL_MDTX_STRUCT_UT
 #define GLOBAL_STRUCT_DEF_BIN MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN

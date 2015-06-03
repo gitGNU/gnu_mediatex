@@ -1,3 +1,7 @@
+2015-05-27  Nicolas Roche  <nroche@narval.tk>
+
+	* Upgrade to Jessie and break Wheezy compatibility
+
 2012-09-01  Nicolas Roche  <nroche@narval.tk>
 
 	* First release

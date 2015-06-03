@@ -12,7 +12,8 @@ Process conceptual model:
 @item Events in
 @table @code
 @item @eventToolsCronDate
-from @actorDate
+from 
+@actorDate
 @end table
 
 @item Events out
@@ -21,7 +22,8 @@ from @actorDate
 @itemx @eventScriptsCronDaily
 to @procScriptsCron
 @item @eventActorAdminMail
-to @actorAdmin{} when the above scripts fails (or generate outputs)
+to 
+@actorAdmin{} when the above scripts fails (or generate outputs)
 @end table
 
 @item Data in

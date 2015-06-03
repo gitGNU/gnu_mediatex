@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.3 2015/02/25 17:37:54 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.4 2015/06/03 14:03:40 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
  * SupportTree producer interface
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -59,19 +59,19 @@ int cmpSupport(const void *p1, const void *p2)
 Support* 
 createSupport(void)
 {
-  Support* rc = NULL;
+  Support* rc = 0;
 
   rc = (Support*)malloc(sizeof(Support));
-  if(rc == NULL)
+  if(rc == 0)
     goto error;
    
   memset(rc, 0, sizeof(Support));
   strncpy(rc->status, "ok", MAX_SIZE_STAT);
-  if ((rc->collections = createRing()) == NULL) goto error;
+  if ((rc->collections = createRing()) == 0) goto error;
 
   return(rc);
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Support");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Support");
   return destroySupport(rc);
 }
 
@@ -86,9 +86,9 @@ createSupport(void)
 Support* 
 destroySupport(Support* self)
 {
-  Support* rc = NULL;
+  Support* rc = 0;
 
-  if(self != NULL) {
+  if(self != 0) {
     // we do not free the objects (owned by conf), just the rings
     self->collections = destroyOnlyRing(self->collections);
     free(self);
@@ -113,17 +113,17 @@ serializeSupport(Support* self, FILE *fd)
   struct tm lastCheck;
   struct tm lastSeen;
 
-  if (fd == NULL) fd = stdout;
+  if (fd == 0) fd = stdout;
 
-  if(self == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot serialize empty support");
+  if(self == 0) {
+    logMemory(LOG_ERR, "%s", "cannot serialize empty support");
     goto error;
   }
 
   if (localtime_r(&self->firstSeen, &firstSeen) == (struct tm*)0 ||
       localtime_r(&self->lastCheck, &lastCheck)  == (struct tm*)0 ||
       localtime_r(&self->lastSeen, &lastSeen) == (struct tm*)0 ) {
-    logEmit(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
     goto error;
   }
 
@@ -159,17 +159,17 @@ int
 serializeSupports()
 { 
   int rc = FALSE;
-  Configuration* conf = NULL;
-  char* path = NULL;
+  Configuration* conf = 0;
+  char* path = 0;
   FILE* fd = stdout; 
-  Support *supp = NULL;
-  RGIT* curr = NULL;
+  Support *supp = 0;
+  RGIT* curr = 0;
   int uid = getuid();
 
-  logEmit(LOG_DEBUG, "%s", "serialize supports");
+  logMemory(LOG_DEBUG, "%s", "serialize supports");
 
-  if ((conf = getConfiguration()) == NULL) {
-    logEmit(LOG_ERR, "%s", "cannot load configuration");
+  if ((conf = getConfiguration()) == 0) {
+    logMemory(LOG_ERR, "%s", "cannot load configuration");
     goto error;
   }
 
@@ -177,11 +177,11 @@ serializeSupports()
 
   // output file
   if (env.dryRun == FALSE) path = conf->supportDB;
-  logEmit(LOG_INFO, "Serializing the supports list file: %s", 
+  logMemory(LOG_INFO, "Serializing the supports list file: %s", 
 	  path?path:"stdout");
-  if (path != NULL && *path != (char)0) {
-    if ((fd = fopen(path, "w")) == NULL) {
-      logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+  if (path != 0 && *path != (char)0) {
+    if ((fd = fopen(path, "w")) == 0) {
+      logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
       goto error;
     }
@@ -210,7 +210,7 @@ serializeSupports()
   if (fd != stdout) {
     if (!unLock(fileno(fd))) rc = FALSE;
     if (fclose(fd)) {
-      logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+      logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
       rc = FALSE;
     }
   }
@@ -230,16 +230,16 @@ serializeSupports()
 Support* 
 getSupport(char* name)
 {
-  Configuration* conf = NULL;
-  Support* rc = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Support* rc = 0;
+  RGIT* curr = 0;
 
   checkLabel(name);
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "getSupport %s", name);
+  logMemory(LOG_DEBUG, "getSupport %s", name);
   
   // look for support
-  while((rc = rgNext_r(conf->supports, &curr)) != NULL)
+  while((rc = rgNext_r(conf->supports, &curr)) != 0)
     if (!strncmp(rc->name, name, MAX_SIZE_NAME)) break;
 
  error:
@@ -256,19 +256,19 @@ getSupport(char* name)
 Support* 
 addSupport(char* name)
 {
-  Support* rc = NULL;
-  Support* supp = NULL;
-  Configuration* conf = NULL;
+  Support* rc = 0;
+  Support* supp = 0;
+  Configuration* conf = 0;
 
   checkLabel(name);
-  logEmit(LOG_DEBUG, "addSupport %s", name);
+  logMemory(LOG_DEBUG, "addSupport %s", name);
 
   // already there
   if ((supp = getSupport(name))) goto end;
 
   // add new one if not already there
   if (!(conf = getConfiguration())) goto error;
-  if ((supp = createSupport()) == NULL) goto error;
+  if ((supp = createSupport()) == 0) goto error;
   strncpy(supp->name, name, MAX_SIZE_NAME);
   supp->name[MAX_SIZE_NAME] = (char)0; // developpement code
   if (!rgInsert(conf->supports, supp)) goto error;
@@ -276,8 +276,8 @@ addSupport(char* name)
  end:
   rc = supp;
  error:
-  if (rc == NULL) {
-    logEmit(LOG_ERR, "%s", "fails to add a support");
+  if (rc == 0) {
+    logMemory(LOG_ERR, "%s", "fails to add a support");
     supp = destroySupport(supp);
   }
   return rc;
@@ -294,17 +294,17 @@ int
 delSupport(Support* self)
 {
   int rc = FALSE;
-  Configuration* conf = NULL;
-  Collection* coll = NULL;
-  RGIT* curr = NULL;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
  
   checkSupport(self);
   if (!(conf = getConfiguration())) goto error;
-  logEmit(LOG_DEBUG, "delSupport %s", self->name);
+  logMemory(LOG_DEBUG, "delSupport %s", self->name);
 
   // delete support from collections rings
-  curr = NULL;
-  while((coll = rgNext_r(conf->collections, &curr)) != NULL)
+  curr = 0;
+  while((coll = rgNext_r(conf->collections, &curr)) != 0)
     if (!delSupportFromCollection(self, coll)) goto error;
   
   // delete support from configuration ring
@@ -317,7 +317,7 @@ delSupport(Support* self)
   rc = TRUE;
  error:
  if (!rc) {
-    logEmit(LOG_ERR, "%s", "delSupport fails");
+    logMemory(LOG_ERR, "%s", "delSupport fails");
   }
   return rc;
 }
@@ -358,7 +358,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Support* supp = NULL;
+  Support* supp = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -371,10 +371,11 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -390,13 +391,13 @@ main(int argc, char** argv)
   // test types on this architecture:
   off_t offset = 0xFFFFFFFFFFFFFFFFULL; // 2^64
   time_t timer = 0x7FFFFFFF; // 2^32
-  logEmit(LOG_DEBUG, "type off_t is store into %u bytes", 
+  logMemory(LOG_DEBUG, "type off_t is store into %u bytes", 
 	  (unsigned int)sizeof(off_t));
-  logEmit(LOG_DEBUG, "type time_t is store into %u bytes", 
+  logMemory(LOG_DEBUG, "type time_t is store into %u bytes", 
 	  (unsigned int) sizeof(time_t));
-  logEmit(LOG_NOTICE,  "off_t max value is: %llu", 
+  logMemory(LOG_NOTICE,  "off_t max value is: %llu", 
 	  (unsigned long long int)offset);
-  logEmit(LOG_NOTICE, "time_t max value is: %lu", 
+  logMemory(LOG_NOTICE, "time_t max value is: %lu", 
 	  (unsigned long int)timer);
 
   // test memory tree

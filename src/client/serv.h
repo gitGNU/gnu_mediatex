@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: serv.h,v 1.2 2014/11/13 16:36:19 nroche Exp $
+ * Version: $Id: serv.h,v 1.3 2015/06/03 14:03:30 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/serv
  *
  * Manage servers.txt modifications
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

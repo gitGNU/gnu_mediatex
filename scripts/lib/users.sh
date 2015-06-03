@@ -2,14 +2,14 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: users.sh,v 1.2 2014/11/13 16:36:13 nroche Exp $
+# * Version: $Id: users.sh,v 1.3 2015/06/03 14:03:27 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
 # * This module manage the mdtx users and related home directory
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ function USERS_root_random
     rand=$(printf "%02i\n" $rand)
 }
 
-# this function create the users directories
+# this function create the root directories
 function USERS_root_populate()
 {
     Debug "$FUNCNAME" 2
@@ -62,8 +62,8 @@ function USERS_root_populate()
     sed $SYSCONFDIR/cron.d/mediatex_cron -i -e "s!ZZ!$rand!"
 }
 
-# this function remove the users directories
-# we do not remove STATEDIR as it contains all the recovering data
+# this function remove the root directories
+# it removes STATEDIR wich contains all the recovering data
 function USERS_root_disease()
 {
     Debug "$FUNCNAME" 2
@@ -77,6 +77,7 @@ function USERS_root_disease()
     done
 }
 
+# this function create the server directories
 function USERS_mdtx_populate()
 {
     Debug "$FUNCNAME" 2
@@ -101,7 +102,7 @@ function USERS_mdtx_populate()
     install -o $MDTX -g $MDTX       -m 750  -d $HOME/public_html
 }
 
-# this function remove the users directories
+# this function remove the server directories
 # we do remove STATEDIR wich contains all the recovering data
 function USERS_mdtx_disease()
 {
@@ -145,7 +146,8 @@ function USERS_coll_populate()
     done
 }
 
-# this function unpopulate a collection
+# this function remove a collection
+# but the collection may be recover from cvsroot
 # $1: user
 function USERS_coll_disease()
 {
@@ -266,7 +268,7 @@ function USERS_create_user()
     Debug "$FUNCNAME: $1 $2" 2
     [ $(id -u) -eq 0 ] || Error $0 $LINENO "need to be root"
     [ $# -eq 2 ] || Error "expect 2 parameters"
-    [ ! -d $2 ] || Warning "reuse the existing $1's home"
+    [ ! -d $2/$1 ] || Warning "reuse the existing $1's home"
 
     # non-sens here to use a fake /etc dir
     if [ -z "$(grep "^$1:" /etc/passwd)" ]; then

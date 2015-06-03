@@ -1,13 +1,13 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utSetuid.sh,v 1.2 2014/11/13 16:36:54 nroche Exp $
+# * Version: $Id: utSetuid.sh,v 1.3 2015/06/03 14:03:50 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
 # * Unit test script for setuid.c
 #
 # MediaTex is an Electronic Records Management System
-# Copyright (C) 2014  Nicolas Roche
+# Copyright (C) 2014 2015 Nicolas Roche
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,12 +46,12 @@ adduser \
 
 addgroup ut-mdtx-user1 ut-mdtx-user2 >/dev/null
 
-#echo su ut-mdtx-user1 -c \"./utsetuid -X -u ut-mdtx-user2 -i $PWD/user.sh\"
-#su ut-mdtx-user1 -c "./utsetuid -X -u ut-mdtx-user2 -i $PWD/user.sh"
+#echo su ut-mdtx-user1 -c \"./utsetuid -S -u ut-mdtx-user2 -i $PWD/user.sh\"
+#su ut-mdtx-user1 -c "./utsetuid -S -u ut-mdtx-user2 -i $PWD/user.sh"
 #exit
 
 su ut-mdtx-user1 -c \
-    "./utsetuid -X -s notice -u ut-mdtx-user2 -i $PWD/user.sh" \
+    "./utsetuid -S -s notice -u ut-mdtx-user2 -i $PWD/user.sh" \
     >ut.out 2>&1
 
 deluser --quiet ut-mdtx-user2 2>/dev/null

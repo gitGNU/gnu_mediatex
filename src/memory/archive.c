@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.3 2015/02/25 17:37:53 nroche Exp $
+ * Version: $Id: archive.c,v 1.4 2015/06/03 14:03:37 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
  * archive producer interface
 
  MediaTex is an Electronic Archives Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,28 +40,27 @@
 Archive* 
 createArchive(void)
 {
-  Archive* rc = NULL;
-  static int id = 0;
+  Archive* rc = 0;
 
-  if ((rc = (Archive*)malloc(sizeof(Archive))) == NULL)
+  if ((rc = (Archive*)malloc(sizeof(Archive))) == 0)
     goto error;
    
   memset(rc, 0, sizeof(Archive));
-  if ((rc->images = createRing()) == NULL) goto error;
-  if ((rc->fromContainers = createRing()) == NULL) goto error;
-  if ((rc->documents = createRing()) == NULL) goto error;
-  if ((rc->assoCaracs = createRing()) == NULL) goto error;
-  if ((rc->records = createRing()) == NULL) goto error;
-  if ((rc->demands = createRing()) == NULL) goto error;
-  if ((rc->remoteSupplies = createRing()) == NULL) goto error;
-  if ((rc->finaleSupplies = createRing()) == NULL) goto error;
+  if ((rc->images = createRing()) == 0) goto error;
+  if ((rc->fromContainers = createRing()) == 0) goto error;
+  if ((rc->documents = createRing()) == 0) goto error;
+  if ((rc->assoCaracs = createRing()) == 0) goto error;
+  if ((rc->records = createRing()) == 0) goto error;
+  if ((rc->demands = createRing()) == 0) goto error;
+  if ((rc->remoteSupplies = createRing()) == 0) goto error;
+  if ((rc->finaleSupplies = createRing()) == 0) goto error;
   rc->extractScore = -1; // still not computed
   rc->imageScore = -1;   // still not computed
   rc->state = UNUSED;
 
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "malloc: cannot create Archive");
+  logMemory(LOG_ERR, "%s", "malloc: cannot create Archive");
   return destroyArchive(rc);
 }
 
@@ -76,9 +75,9 @@ createArchive(void)
 Archive* 
 destroyArchive(Archive* self)
 {
-  Archive* rc = NULL;
+  Archive* rc = 0;
 
-  if(self == NULL) goto error;
+  if(self == 0) goto error;
 
 #if 0 // developpement mode
   strncpy(self->hash, "................................", 
@@ -208,7 +207,7 @@ cmpArchiveScore(const void *p1, const void *p2)
  * Description: return a string for the archive state
  * Synopsis   : char* strArchiveState(ArchiveLocalState state)
  * Input      : ArchiveLocalState state
- * Output     : the state string or NULL on error
+ * Output     : the state string or 0 on error
  =======================================================================*/
 char* 
 strAState(AState self)
@@ -217,7 +216,7 @@ strAState(AState self)
     {"UNUSED", "USED", "WANTED", "ALLOCATED", "AVAILABLE",  "TOKEEP"};
 
   if (self < 0 || self >= ASTATE_MAX) {
-    logEmit(LOG_WARNING, "unknown archive type %i", self);
+    logMemory(LOG_WARNING, "unknown archive type %i", self);
     return "???";
   }
 
@@ -238,13 +237,13 @@ strAState(AState self)
 Archive* 
 getArchive(Collection* coll, char* hash, off_t size)
 {
-  Archive* rc = NULL;
+  Archive* rc = 0;
   Archive archive;
-  AVLNode* node = NULL;
+  AVLNode* node = 0;
 
   checkCollection(coll);
   checkLabel(hash);
-  logEmit(LOG_DEBUG, "getArchive %s:%lli", hash, (long long int) size);
+  logMemory(LOG_DEBUG, "getArchive %s:%lli", hash, (long long int) size);
 
   // look for archive
   strncpy(archive.hash, hash, MAX_SIZE_HASH);
@@ -270,12 +269,12 @@ getArchive(Collection* coll, char* hash, off_t size)
 Archive* 
 addArchive(Collection* coll, char* hash, off_t size)
 {
-  Archive* rc = NULL;
-  Archive* archive = NULL;
+  Archive* rc = 0;
+  Archive* archive = 0;
 
   checkCollection(coll);
   checkLabel(hash);
-  logEmit(LOG_DEBUG, "addArchive %s:%lli", hash, (long long int) size);
+  logMemory(LOG_DEBUG, "addArchive %s:%lli", hash, (long long int) size);
   
   // already there
   if ((archive = getArchive(coll, hash, size))) goto end;
@@ -295,7 +294,7 @@ addArchive(Collection* coll, char* hash, off_t size)
   rc = archive;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addArchive fails");
+    logMemory(LOG_ERR, "%s", "addArchive fails");
     archive = destroyArchive(archive);
   }
   return rc;
@@ -313,26 +312,26 @@ int
 delArchive(Collection* coll, Archive* self)
 {
   int rc = FALSE;
-  Record* rec = NULL;
-  Image* img = NULL;
-  FromAsso* af = NULL;
-  Document* doc = NULL;
-  AssoCarac* ac = NULL;
-  RGIT* curr = NULL;
+  Record* rec = 0;
+  Image* img = 0;
+  FromAsso* af = 0;
+  Document* doc = 0;
+  AssoCarac* ac = 0;
+  RGIT* curr = 0;
  
   checkCollection(coll);
   checkArchive(self);
-  logEmit(LOG_DEBUG, "delArchive %s:%lli", 
+  logMemory(LOG_DEBUG, "delArchive %s:%lli", 
 	  self->hash, (long long int) self->size);
 
   // delete archive from record ring
-  curr = NULL;
-  while((rec = rgNext_r(self->records, &curr)) != NULL)
+  curr = 0;
+  while((rec = rgNext_r(self->records, &curr)) != 0)
     if (!delRecord(coll, rec)) goto error;
 
   // delete archive from image ring
-  curr = NULL;
-  while((img = rgNext_r(self->images, &curr)) != NULL)
+  curr = 0;
+  while((img = rgNext_r(self->images, &curr)) != 0)
     if (!delImage(coll, img)) goto error;
 
   // delete archive from container ring
@@ -340,18 +339,18 @@ delArchive(Collection* coll, Archive* self)
 
   // delete archive from content association
   // (should be already done by above call)
-  curr = NULL;
-  while((af = rgNext_r(self->fromContainers, &curr)) != NULL)
+  curr = 0;
+  while((af = rgNext_r(self->fromContainers, &curr)) != 0)
     if (!delFromAsso(coll, af, TRUE)) goto error;
   
   // delete archive from document ring
-  curr = NULL;
-  while((doc = rgNext_r(self->documents, &curr)) != NULL)
+  curr = 0;
+  while((doc = rgNext_r(self->documents, &curr)) != 0)
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   
   // delete archive from assoCarac ring
-  curr = NULL;
-  while((ac = rgNext_r(self->assoCaracs, &curr)) != NULL) {
+  curr = 0;
+  while((ac = rgNext_r(self->assoCaracs, &curr)) != 0) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(ac);
   }
@@ -383,7 +382,7 @@ diseaseArchive(Collection* coll, Archive* self)
 
   checkCollection(coll);
   checkArchive(self);
-  logEmit(LOG_DEBUG, "diseaseArchive %s:%lli", 
+  logMemory(LOG_DEBUG, "diseaseArchive %s:%lli", 
 	  self->hash, (long long int) self->size);
 
   // check images ring
@@ -404,7 +403,7 @@ diseaseArchive(Collection* coll, Archive* self)
   if (self->demands->nbItems >0) goto next;
   if (self->remoteSupplies->nbItems >0) goto next;
   if (self->finaleSupplies->nbItems >0) goto next;
-  if (self->localSupply != NULL) goto next;
+  if (self->localSupply != 0) goto next;
   
   // delete archive from collection ring and free it
   avl_delete(coll->archives, self);
@@ -413,7 +412,7 @@ diseaseArchive(Collection* coll, Archive* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "diseaseArchive fails");
+    logMemory(LOG_ERR, "%s", "diseaseArchive fails");
   }
   return rc;
 }
@@ -428,12 +427,12 @@ int
 diseaseArchives(Collection* coll)
 {
   int rc = FALSE;
-  Archive* arch = NULL;
-  AVLNode *node = NULL;
-  AVLNode *next = NULL;
+  Archive* arch = 0;
+  AVLNode *node = 0;
+  AVLNode *next = 0;
  
-  if(coll == NULL) goto error;
-  logEmit(LOG_DEBUG, "diseaseArchives %s", coll);
+  if(coll == 0) goto error;
+  logMemory(LOG_DEBUG, "diseaseArchives %s", coll);
 
   // for each archive host by the collection,
   if ((node = coll->archives->head)) {
@@ -448,7 +447,7 @@ diseaseArchives(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "diseaseArchives fails");
+    logMemory(LOG_ERR, "%s", "diseaseArchives fails");
   }
   return rc;
 }
@@ -490,9 +489,9 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = NULL;
-  Archive* arch1 = NULL;
-  Archive* arch2 = NULL;
+  Collection* coll = 0;
+  Archive* arch1 = 0;
+  Archive* arch2 = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -505,10 +504,11 @@ main(int argc, char** argv)
        
   // import mdtx environment
   env.dryRun = FALSE;
+  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -524,13 +524,13 @@ main(int argc, char** argv)
   // test types on this architecture:
   off_t offset = 0xFFFFFFFFFFFFFFFFULL; // 2^64
   time_t timer = 0x7FFFFFFF; // 2^32
-  logEmit(LOG_DEBUG, "type off_t is store into %u bytes", 
+  logMemory(LOG_DEBUG, "type off_t is store into %u bytes", 
 	  (unsigned int)sizeof(off_t));
-  logEmit(LOG_DEBUG, "type time_t is store into %u bytes", 
+  logMemory(LOG_DEBUG, "type time_t is store into %u bytes", 
 	  (unsigned int) sizeof(time_t));
-  logEmit(LOG_DEBUG,  "off_t max value is: %llu", 
+  logMemory(LOG_DEBUG,  "off_t max value is: %llu", 
 	  (unsigned long long int)offset);
-  logEmit(LOG_DEBUG, "time_t max value is: %lu", 
+  logMemory(LOG_DEBUG, "time_t max value is: %lu", 
 	  (unsigned long int)timer);
 
   if (!createExempleConfiguration()) goto error;

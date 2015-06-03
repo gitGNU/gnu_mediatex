@@ -1,11 +1,11 @@
-#  * Version: $Id: Makefile.am,v 1.2 2014/11/13 16:36:16 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:27 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  binaries
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
 #  MediaTex is an Electronic Records Management System
-#  Copyright (C) 2014  Nicolas Roche
+#  Copyright (C) 2014 2015 Nicolas Roche
 # 
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -43,17 +43,17 @@ cgi_PROGRAMS = cgi
 
 mediatex_SOURCE = mediatex.c
 mediatex_LDADD = libmediatex.la 
-mediatex_LDFLAGS = @LIBINTL@ -pthread -lm -lavl
+mediatex_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
 
 mediatexd_SOURCE = mediatexd.c
 mediatexd_LDADD = \
 	libmediatex.la \
 	../server/libserver.a
-mediatexd_LDFLAGS = -pthread -lm -lavl
+mediatexd_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 cgi_SOURCE = cgi.c
 cgi_LDADD = libmediatex.la
-cgi_LDFLAGS = -pthread -lm -lavl
+cgi_LDFLAGS = -pthread -lm -lavl -lcrypto
 
 cgi.c: ../common/cgi.c
 	cp $< .

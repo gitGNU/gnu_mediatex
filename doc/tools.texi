@@ -22,7 +22,8 @@ from @activityClient{}, @activityServer{} and @activityScripts{} to @procToolsSy
 @item @eventToolsApacheHttpGet 
 @itemx @eventToolsApacheHttpPost 
 @itemx @eventToolsApacheStartDownload
-from @actorUser{} to @procToolsApache
+from 
+@actorUser{} to @procToolsApache
 @item @eventToolsApacheReload
 @itemx @eventToolsApacheRestart
 from @procScriptsInitRemovePurge{} to @procToolsApache
@@ -39,7 +40,8 @@ from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsCv
 @itemx @eventToolsCvsCommit 
 from @procScriptsUpdateCommit{} to @procToolsCvs{}: synchronize meta-data.
 @item @eventToolsCronDate
-from @actorDate{} to @procToolsCron
+from 
+@actorDate{} to @procToolsCron
 @end table
 
 @item Events out
@@ -49,13 +51,17 @@ from @actorDate{} to @procToolsCron
 from @procToolsApache{} to @procScriptsCgi
 @item @eventActorUserHtmlForm 
 (if archive is not available) ...
-@itemx @eventActorUserHtmlRedirect 
+@item @eventActorUserHtmlRedirect 
 (if archive is available) @*
-from @procToolsApache{} to @actorUser 
+from 
+@procToolsApache{} to 
+@actorUser 
 @item @eventActorUserMail 
 from @procToolsExim{} to @actorUserO
 @item @eventActorAdminMail
-from @procToolsCron{} to @actorAdmin
+from 
+@procToolsCron{} to 
+@actorAdmin
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
 from @procToolsCron{} to @procScriptsCron

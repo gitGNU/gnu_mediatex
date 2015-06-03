@@ -1,12 +1,12 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.2 2014/11/13 16:37:09 nroche Exp $
+ * Version: $Id: notify.c,v 1.3 2015/06/03 14:03:56 nroche Exp $
  * Project: MediaTeX
  * Module : server/notify
 
  * Send cache index to other servers 
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014  Nicolas Roche
+ Copyright (C) 2014 2015 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -55,8 +55,8 @@ int notifyArchive(NotifyData* data, Archive* archive);
 int notifyContainer(NotifyData* data, Container* container)
 {
   int rc = FALSE;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "notify a container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
@@ -94,8 +94,8 @@ int notifyContainer(NotifyData* data, Container* container)
 int notifyArchive(NotifyData* data, Archive* archive)
 {
   int rc = FALSE;
-  FromAsso* asso = NULL;
-  RGIT* curr = NULL;
+  FromAsso* asso = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "notify an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -137,17 +137,17 @@ int notifyArchive(NotifyData* data, Archive* archive)
  * Description: copy all wanted archives into a ring
  * Synopsis   : RG* getWantedArchives(Collection* coll)
  * Input      : Collection* coll
- * Output     : a ring of arhives, NULL o error
+ * Output     : a ring of arhives, 0 o error
  =======================================================================*/
 RG* 
 getWantedRemoteArchives(Collection* coll)
 {
-  RG* rc = NULL;
-  RG* ring = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  RG* rc = 0;
+  RG* ring = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
 
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "getWantedArchives");
@@ -184,22 +184,22 @@ getWantedRemoteArchives(Collection* coll)
 int addFinalDemands(NotifyData* data)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Archive* archive = NULL;
-  Record* record = NULL;
-  Record* demand = NULL;
-  char* extra = NULL;
-  RGIT* curr = NULL;
-  RGIT* curr2 = NULL;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  Record* demand = 0;
+  char* extra = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
 
   coll = data->coll;
   checkCollection(coll);
   logEmit(LOG_DEBUG, "%s", "addFinalDemands");
 
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= NULL) {
+	!= 0) {
     if (archive->state != WANTED) continue;
-    while((record = rgNext_r(archive->demands, &curr2)) != NULL) {
+    while((record = rgNext_r(archive->demands, &curr2)) != 0) {
       
       // final demand: add it
       if (getRecordType(record) == FINALE_DEMAND) {
@@ -207,9 +207,9 @@ int addFinalDemands(NotifyData* data)
 	if (!(extra = createString("!wanted"))) goto error;
 	if (!(demand = newRecord(coll->localhost, archive, 
 				 DEMAND, extra))) goto error;
-	extra = NULL;
+	extra = 0;
 	if (!rgInsert(data->toNotify, demand)) goto error;
-	demand = NULL;
+	demand = 0;
 	break;
       }
     }
@@ -235,9 +235,9 @@ int addFinalDemands(NotifyData* data)
 int addBadTopLocalSupplies(NotifyData* data)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  RGIT* curr = 0;
 
   coll = data->coll;
   checkCollection(coll);
@@ -245,7 +245,7 @@ int addBadTopLocalSupplies(NotifyData* data)
 
   // add local iso (or other top containers) if it own a bad score
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= NULL) {
+	!= 0) {
     if (archive->state < AVAILABLE) continue;
     if (archive->fromContainers->nbItems != 0) continue;
     if (archive->extractScore > 10) 
@@ -277,10 +277,10 @@ int addBadTopLocalSupplies(NotifyData* data)
  =======================================================================*/
 RG* buildNotifyRings(Collection* coll, RG* records)
 {
-  RG* rc = NULL;
-  RG* archives = NULL;
-  Archive* archive = NULL;
-  RGIT* curr = NULL;
+  RG* rc = 0;
+  RG* archives = 0;
+  Archive* archive = 0;
+  RGIT* curr = 0;
   NotifyData data;
 
   checkCollection(coll);
@@ -290,7 +290,7 @@ RG* buildNotifyRings(Collection* coll, RG* records)
   if (!(archives = getWantedRemoteArchives(coll))) goto error;
 
   // for each cache entry, add local-supplies
-  while((archive = rgNext_r(archives, &curr)) != NULL) {
+  while((archive = rgNext_r(archives, &curr)) != 0) {
     if (!notifyArchive(&data, archive)) goto error;
   }
 
@@ -326,12 +326,12 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
 			   Server* origin)
 {
   int rc = FALSE;
-  Collection* coll = NULL;
+  Collection* coll = 0;
   int socket = -1;
-  char* serverFP = NULL;
+  char* serverFP = 0;
 
   checkServer(server);
-  if (recordTree == NULL) goto error;
+  if (recordTree == 0) goto error;
   coll = recordTree->collection;
 
   logEmit(LOG_DEBUG, "sendRemoteNotifyServer for %s/%s:%i",
@@ -346,9 +346,9 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   }
     
   // send the archive tree
-  if (origin != NULL) serverFP = origin->fingerPrint; // masquerade
+  if (origin != 0) serverFP = origin->fingerPrint; // masquerade
   if (env.dryRun) {
-    serializeRecordTree(recordTree, NULL, serverFP);
+    serializeRecordTree(recordTree, 0, serverFP);
   }
   else {
     if (!upgradeServer(socket, recordTree, serverFP)) goto error;
@@ -375,11 +375,11 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
 int sendRemoteNotify(Collection* coll)
 {
   int rc = FALSE;
-  Server* localhost = NULL;
-  Server* target = NULL;
-  RecordTree* recordTree = NULL;
-  Record* record = NULL;
-  RGIT* curr = NULL;
+  Server* localhost = 0;
+  Server* target = 0;
+  RecordTree* recordTree = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
 
   logEmit(LOG_DEBUG, "sendRemoteNotify for %s collections", 
 	  coll->label);
@@ -406,7 +406,7 @@ int sendRemoteNotify(Collection* coll)
     // skip server not directly connected to us
     if (!rgShareItems(localhost->networks, target->networks)) continue;
 
-    if (!sendRemoteNotifyServer(target, recordTree, NULL)) goto error3;
+    if (!sendRemoteNotifyServer(target, recordTree, 0)) goto error3;
   }
 
   rc = TRUE;
@@ -414,11 +414,11 @@ int sendRemoteNotify(Collection* coll)
   if (!unLockCache(coll)) rc = FALSE;
 
   // free local demands
-  curr = NULL;
-  while((record = rgNext_r(recordTree->records, &curr)) != NULL) {
+  curr = 0;
+  while((record = rgNext_r(recordTree->records, &curr)) != 0) {
     if (getRecordType(record) == LOCALE_DEMAND) {
       destroyRecord(record);
-      curr->it = NULL;
+      curr->it = 0;
     }
   }
 
@@ -447,13 +447,13 @@ int sendRemoteNotify(Collection* coll)
 int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
 {
   int rc = FALSE;
-  RG* records = NULL;
-  Record* record = NULL;
-  Collection* coll = NULL;
-  Server* source = NULL;
-  Server* target = NULL;
-  Server* localhost = NULL;
-  RGIT* curr = NULL;
+  RG* records = 0;
+  Record* record = 0;
+  Collection* coll = 0;
+  Server* source = 0;
+  Server* target = 0;
+  Server* localhost = 0;
+  RGIT* curr = 0;
 
   coll = tree->collection;
   source = connexion->server;
@@ -467,7 +467,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   
   // first: if localhost is a gateway...
   if (!isEmptyRing(coll->localhost->gateways)) {
-    curr = NULL;
+    curr = 0;
 
     // ...forward "same" message to our Nat clients
     while((target=rgNext_r(coll->serverTree->servers, &curr))) {
@@ -488,18 +488,18 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   if (!lockCacheRead(coll)) goto error2;
 
   // del all records we have from the calling server
-  curr = NULL;
+  curr = 0;
   records = coll->cacheTree->recordTree->records;
-  while((record = rgNext_r(records, &curr)) != NULL) {  
+  while((record = rgNext_r(records, &curr)) != 0) {  
     if (record->server != source) continue;
     if (!delCacheEntry(coll, record)) goto error3;
   }
 		
   // add calling server's records
   rgRewind(tree->records);
-  while ((record = rgNext(tree->records)) != NULL) {
+  while ((record = rgNext(tree->records)) != 0) {
     if (!addCacheEntry(coll, record)) goto error3;
-    tree->records->curr->it = NULL; // consume the record from the tree
+    tree->records->curr->it = 0; // consume the record from the tree
   }
   
   rc = TRUE;
@@ -557,11 +557,11 @@ int
 main(int argc, char** argv)
 {
   char inputRep[256] = ".";
-  Collection* coll = NULL;
-  Archive* archive = NULL;
-  Server* server = NULL;
-  Record* record = NULL;
-  char* extra = NULL;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  Server* server = 0;
+  Record* record = 0;
+  char* extra = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -569,7 +569,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, NULL, 'd'},
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -577,12 +577,12 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, NULL)) 
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
     case 'd':
-      if(optarg == NULL || *optarg == (char)0) {
+      if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, 
 		"%s: nil or empty argument for the input repository\n",
 		programName);
@@ -603,10 +603,10 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
   if (!getLocalHost(coll)) goto error;
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
 
-  utLog("%s", "add a demands and local supplies:", NULL);
+  utLog("%s", "add a demands and local supplies:", 0);
   
   // remote demand
   if (!(archive = 
@@ -629,14 +629,14 @@ main(int argc, char** argv)
   if (!quickScan(coll)) goto error;
   utLog("%s", "we have :", coll);
   
-  utLog("%s", "here we send", NULL);
+  utLog("%s", "here we send", 0);
   if (!sendRemoteNotify(coll)) goto error;
   
-  //utLog("%s", "here we receive", NULL);
+  //utLog("%s", "here we receive", 0);
   // ... need to copy the ring and clean the cache
   //if (!acceptRemoteNotify(diff, LOCALHOST)) goto error;
 
-  utLog("%s", "Clean the cache:", NULL);
+  utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   /************************************************************************/
 
