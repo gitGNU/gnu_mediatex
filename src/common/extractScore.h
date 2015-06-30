@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: extractScore.h,v 1.3 2015/06/03 14:03:34 nroche Exp $
+ * Version: $Id: extractScore.h,v 1.4 2015/06/30 17:37:26 nroche Exp $
  * Project: MediaTeX
- * Module : common/extractScore
+ * Module : extractScore
  *
- * Manage extraction scores
+ * Compute scores based on extraction rules
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -25,7 +25,7 @@
 #ifndef MDTX_COMMON_EXTRACT_SCORE_H
 #define MDTX_COMMON_EXTRACT_SCORE_H 1
 
-#include "../memory/confTree.h"
+#include "mediatex-types.h"
 
 int computeExtractScore(Collection* coll);
 char* getExtractStatus(Collection* coll, off_t* badSize, 

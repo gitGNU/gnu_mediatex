@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.3 2015/06/03 14:03:38 nroche Exp $
+ * Version: $Id: confTree.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
- * /etc configuration producer interface
+ * configuration producer interface
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,16 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../misc/perm.h"
-#include "../misc/locks.h"
-#include "confTree.h"
-
-#include <dirent.h> // opendir
-#include <sys/types.h>
-#include <sys/stat.h>
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : cmpCollection
@@ -527,6 +518,7 @@ createConfiguration(void)
   char* tmpDir = 0;
   char* pidDir = 0;
   char* label = 0;
+  int i = 0;
 
   if((conf = (Configuration*)malloc(sizeof(Configuration))) 
      == 0) {
@@ -540,14 +532,28 @@ createConfiguration(void)
   if ((conf->gateways = createRing()) == 0) goto error;
   if ((conf->collections = createRing()) == 0) goto error;
   if ((conf->supports = createRing()) == 0) goto error;
-  
-  if (!(tmpDir = createString(CONF_TMPDIR))
-      || !(tmpDir = catString(tmpDir, DEFAULT_MDTXUSER)))
+
+  label = destroyString(label);
+  if (!(label = createString("/"))
+      || !(label = catString(label, env.confLabel)))
     goto error;
 
-  // push /tmp/ut-mdtx if needed
+  // prefix by "$PWD/tmp" on unit tests
   if (env.noRegression) {
-    if (!(pidDir = createString(tmpDir))
+    if (!(tmpDir = get_current_dir_name())) {
+      logMemory(LOG_ERR, "get_current_dir_name fails: %s", 
+		strerror(errno));
+      goto error;
+    }
+
+    remind(tmpDir);
+
+    // remove prefix up to "_build" on "make distcheck"
+    if (strstr(CONF_PREFIX, "_inst")) i = strlen(CONF_PREFIX);
+    //logMemory(LOG_NOTICE, "CONF_PREFIX=%s, i=%i", CONF_PREFIX, i);
+
+    if (!(tmpDir = catString(tmpDir, "/tmp"))
+	|| !(pidDir = createString(tmpDir))
 	|| !(conf->cvsRootDir = createString(tmpDir))
 	|| !(conf->homeDir = createString(tmpDir))
 	|| !(conf->scriptsDir = createString(tmpDir))
@@ -555,17 +561,12 @@ createConfiguration(void)
       goto error;
   }
 
-  label = destroyString(label);
-  if (!(label = createString("/"))
-      || !(label = catString(label, env.confLabel)))
-    goto error;
-
   // directories
-  if (!(pidDir = catString(pidDir, CONF_PIDDIR))
-      || !(conf->cvsRootDir = catString(conf->cvsRootDir, CONF_STATEDIR))
+  if (!(pidDir = catString(pidDir, CONF_PIDDIR+i))
+      || !(conf->cvsRootDir = catString(conf->cvsRootDir, CONF_STATEDIR+i))
       || !(conf->cvsRootDir = catString(conf->cvsRootDir, label))
-      || !(conf->scriptsDir = catString(conf->scriptsDir, CONF_SCRIPTS))
-      || !(conf->homeDir = catString(conf->homeDir, CONF_CACHEDIR))
+      || !(conf->scriptsDir = catString(conf->scriptsDir, CONF_SCRIPTS+i))
+      || !(conf->homeDir = catString(conf->homeDir, CONF_CACHEDIR+i))
       || !(conf->homeDir = catString(conf->homeDir, label))
       || !(conf->md5sumDir = createString(conf->homeDir))
       || !(conf->md5sumDir = catString(conf->md5sumDir, CONF_MD5SUMS))
@@ -577,8 +578,16 @@ createConfiguration(void)
       || !(conf->cvsDir = catString(conf->cvsDir, CONF_CVSCLT))
       || !(conf->mdtxCvsDir = createString(conf->cvsDir))
       || !(conf->mdtxCvsDir = catString(conf->mdtxCvsDir, label))
-      || !(conf->hostSshDir = catString(conf->hostSshDir, CONF_HOSTSSH)))
+      || !(conf->hostSshDir = catString(conf->hostSshDir, CONF_HOSTSSH+i)))
     goto error;
+
+  /* logMemory(LOG_NOTICE, "CONF_PIDDIR=%s", CONF_PIDDIR); */
+  /* logMemory(LOG_NOTICE, "CONF_PIDDIR+i=%s", CONF_PIDDIR+i); */
+  /* logMemory(LOG_NOTICE, "pidDir=%s", pidDir); */
+
+  /* logMemory(LOG_NOTICE, "CONF_CACHEDIR=%s", CONF_CACHEDIR); */
+  /* logMemory(LOG_NOTICE, "CONF_CACHEDIR+i=%s", CONF_CACHEDIR+i); */
+  /* logMemory(LOG_NOTICE, "homeDir=%s", conf->homeDir); */
 
   // files
   if (!(conf->supportDB = createString(conf->mdtxCvsDir))
@@ -1262,138 +1271,6 @@ getLocalHost(Collection* coll)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "utFunc.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  memoryUsage(programName);
-
-  memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for confTree module.
- * Synopsis   : ./utconfTree -i
- * Input      : N/A
- * Output     : create the mediatex.conf file
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Configuration* conf = 0;
-  Collection* coll = 0;
-  char* string = 0;
-  RGIT* curr = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MEMORY_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-       
-  // import mdtx environment
-  env.dryRun = FALSE;
-  env.debugMemory = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MEMORY_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  // test building and serializing
-  if (!createExempleConfiguration()) goto error;  
-  if (!serializeConfiguration(getConfiguration())) goto error;
-
-  // test accessing the tree
-  if (getCollection("coll0")) goto error;
-  if (!(coll = getCollection("coll1"))) goto error;
-  if (!(coll = getCollection("coll2"))) goto error;
-  if (!(coll = getCollection("coll3"))) goto error;
-  if (!addCollection("coll4")) goto error;
-  freeConfiguration();
-
-  // Create 2 other configurations for later unit-tests based on
-  // network topologie (utNotify: not used, utExtract: todo). 
-  // So we have:
-  // - mdtx1 on "www" network (default)
-  // - mdtx2 is the gateway for private1 network
-  // - mdtx3 on "private1" network
-
-  // Each server share together 3 collections.
-  // Here, the collection's server keys are the sames for each server
-  // on every collection. This should never append, but remains possible.
-
-  env.confLabel="mdtx2";
-  if (!createExempleConfiguration()) goto error;
-  if (!(conf = getConfiguration())) goto error;
-  if (!(string = addNetwork("www"))) goto error;
-  if (!rgInsert(conf->networks, string)) goto error;
-  if (!(string = addNetwork("private1"))) goto error;
-  if (!rgInsert(conf->networks, string)) goto error;
-  if (!rgInsert(conf->gateways, string)) goto error;
-
-  // overwrite gateway on collection settings
-  if (!(coll = getCollection("coll3"))) goto error;
-  if (!(string = addNetwork("private2"))) goto error;
-  if ((curr = rgHaveItem(coll->gateways, string))) {
-    rgRemove_r(coll->gateways, &curr);
-  }
-  if (!(string = addNetwork("none"))) goto error;
-  if (!rgInsert(coll->gateways, string)) goto error;
-
-  if (!serializeConfiguration(getConfiguration())) goto error;
-  freeConfiguration();
-
-  env.confLabel="mdtx3";
-  if (!createExempleConfiguration()) goto error;
-  if (!(conf = getConfiguration())) goto error;
-  if (!(string = addNetwork("private1"))) goto error;
-  if (!rgInsert(conf->networks, string)) goto error;
-  if (!serializeConfiguration(getConfiguration())) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

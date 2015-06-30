@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: html.h,v 1.3 2015/06/03 14:03:45 nroche Exp $
+ * Version: $Id: html.h,v 1.4 2015/06/30 17:37:32 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *

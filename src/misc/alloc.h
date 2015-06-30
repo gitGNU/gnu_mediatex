@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: alloc.h,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,25 +22,34 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_ALLOC_H
-#define MISC_ALLOC_H 1
+#ifndef MDTX_MISC_ALLOC_H
+#define MDTX_MISC_ALLOC_H 1
 
-#include "log.h"
 #include <malloc.h>
 
+// replace malloc functions by our ones
 #define malloc(s) mdtxMalloc(s, __FILE__, __LINE__)
 #define free(p) mdtxFree(p, __FILE__, __LINE__)
 #define remind(p) mdtxFakeMalloc(p, __FILE__, __LINE__)
 
+typedef struct Alloc {
+  int (*diseaseCallBack)(long); // = (int (*)(long))NULL
+  size_t sumAllocated;          // = 0
+  size_t maxAllocated;          // = 0
+  size_t limAllocated;          // = DEFAULT_MALLOC_LIMIT
+  size_t nbAlloc;               // = 0
+  pthread_mutex_t mallocMutex;
+} Alloc;
+
 int initMalloc(size_t max, int (*callBack)(long));
-void memoryStatus();
+void memoryStatus(int priority, char* file, int line);
 void exitMalloc();
 
 void* mdtxMalloc(size_t size, char* file, int line);
 void mdtxFakeMalloc(void* ptr, char* file, int line);
 void mdtxFree(void* ptr, char* file, int line);
 
-#endif /* MISC_ALLOC_H */
+#endif /* MDTX_MISC_ALLOC_H */
 
 /* Local Variables: */
 /* mode: c */

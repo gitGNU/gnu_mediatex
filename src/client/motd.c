@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
+ * Version: $Id: motd.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/motd
+ * Module : motd
  *
  * Manage message of the day
 
@@ -22,20 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../memory/confTree.h"
-#include "../common/register.h"
-#include "../common/openClose.h"
-#include "../common/upgrade.h"
-#include "../common/extractScore.h"
-#include "conf.h"
-#include "supp.h"
-#include "motd.h"
-
-#include <errno.h>
-#include <sys/stat.h> // open
-#include <fcntl.h>    //
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 
 int motdArchive(MotdData* data, Archive* archive);
 
@@ -243,12 +231,12 @@ updateMotdFromAllMd5sumsDB()
   if (!(conf = getConfiguration())) goto error;
   if (!(ring = createRing())) goto error;
 
-#ifndef utMAIN
-  // ask daemon to update md5sumsDB file
-  if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
-    logEmit(LOG_WARNING, "%s", "fail to update md5sumsDB file");
+  if (!env.noRegression) {
+    // ask daemon to update md5sumsDB file
+    if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
+      logEmit(LOG_WARNING, "%s", "fail to update md5sumsDB file");
+    }
   }
-#endif
 
   if (conf->collections == 0) goto error;
   rgRewind(conf->collections);
@@ -294,7 +282,7 @@ updateMotd()
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
-  if (!loadConfiguration(CONF|SUPP)) goto error;
+  if (!loadConfiguration(CFG|SUPP)) goto error;
   if (!expandConfiguration()) goto error2;
 
   if (!(tree1 = updateMotdFromSupportDB()))  {
@@ -363,7 +351,7 @@ updateMotd()
   printf("\n");
   rc = TRUE;
  error2:
-  if (!loadConfiguration(CONF|SUPP)) rc = FALSE;
+  if (!loadConfiguration(CFG|SUPP)) rc = FALSE;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "fails to update motd");
@@ -372,84 +360,6 @@ updateMotd()
   tree2 = destroyOnlyRing(tree2);
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "../parser/confFile.tab.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/11/05
- * Description: entry point for motd module
- * Synopsis   : ./utmotd
- * Input      : N/A
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!updateMotd()) goto error;
-  /************************************************************************/
-  
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

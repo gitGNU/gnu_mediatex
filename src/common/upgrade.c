@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.3 2015/06/03 14:03:35 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/upgrade
+ * Module : upgrade
  *
  * Manage servers.txt upgrade from mediatex.conf and supports.txt
 
@@ -22,24 +22,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/address.h"
-#include "../misc/setuid.h"
-#include "../misc/perm.h"
-#include "../memory/ardsm.h"
-#include "../memory/strdsm.h"
-#include "../parser/confFile.tab.h"
-#include "../parser/supportFile.tab.h"
-#include "../parser/serverFile.tab.h"
-#include "../common/openClose.h"
-#include "ssh.h"
-#include "upgrade.h"
-
-#include <math.h>
-#include <sys/types.h> // umask
-#include <sys/stat.h>
-#include <dirent.h>
+#include "mediatex-config.h"
+#include <math.h>      // pow
+#include <dirent.h>    // scandir
 
 /*=======================================================================
  * Function   : scoreSupport
@@ -460,21 +445,21 @@ upgradeCollection(Collection* coll)
   if (strncmp(coll->masterHost, master->host, MAX_SIZE_HOST)) {
     strncpy(coll->masterHost, master->host, MAX_SIZE_HOST);
     coll->masterHost[MAX_SIZE_HOST] = 0;
-    conf->fileState[iCONF] = MODIFIED;
+    conf->fileState[iCFG] = MODIFIED;
   }
   if (strcmp(coll->masterLabel, master->label)) {
     destroyString(coll->masterLabel);
     if (!(coll->masterLabel = createString(master->label))) goto error;
-    conf->fileState[iCONF] = MODIFIED;
+    conf->fileState[iCFG] = MODIFIED;
   }
   if (strcmp(coll->masterUser, master->user)) {
     destroyString(coll->masterUser);
     if (!(coll->masterUser = createString(master->user))) goto error;
-    conf->fileState[iCONF] = MODIFIED;
+    conf->fileState[iCFG] = MODIFIED;
   }
   if (coll->masterPort != master->sshPort) {
     coll->masterPort = master->sshPort;
-    conf->fileState[iCONF] = MODIFIED;
+    conf->fileState[iCFG] = MODIFIED;
   } 
 
   // upgrade SSH settings (using servers)
@@ -493,98 +478,6 @@ error:
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-  
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for cache module.
- * Synopsis   : ./utupgrade
- * Input      : -i mediatex.conf
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Configuration* conf = 0;
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  env.debugCommon = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-   env.dryRun = TRUE;
-
-  if (!(conf = getConfiguration())) goto error;
-  if (!parseConfiguration(conf->confFile)) goto error;
-  if (!parseSupports(conf->supportDB)) goto error;
-  if (!(coll = getCollection("coll1"))) goto error;
-  if (!expandCollection(coll)) goto error;
-  if (!parseServerFile(coll, coll->serversDB)) goto error;
-
-  logCommon(LOG_DEBUG, "%s", "*** upgrade: ");
-  if (!(populateConfiguration())) goto error;
-  if (!upgradeCollection(coll)) goto error;
-  if (!serializeServer(coll->localhost, stdout)) goto error;
-  /************************************************************************/
-  
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

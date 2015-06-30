@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:20 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:36:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  figures for the documentation
 #  *
@@ -56,6 +56,3 @@ uninstall-local:
 
 clean-local:
 	rm -f *.{png,eps}
-
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@

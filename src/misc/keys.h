@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.h,v 1.3 2015/06/03 14:03:45 nroche Exp $
+ * Version: $Id: keys.h,v 1.4 2015/06/30 17:37:32 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,18 +22,15 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_KEYS_H
-#define MISC_KEYS_H 1
+#ifndef MDTX_MISC_KEYS_H
+#define MDTX_MISC_KEYS_H 1
 
-#include "../mediatex.h"
-
-//#define MAX_SIZE_UUID 32
-//char* getUuid(char target[MAX_SIZE_UUID]);
+#include "mediatex-types.h"
 
 char* readPublicKey(char* path);
 int getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1]);
 
-#endif /* MISC_KEYS_H */
+#endif /* MDTX_MISC_KEYS_H */
 
 /* Local Variables: */
 /* mode: c */

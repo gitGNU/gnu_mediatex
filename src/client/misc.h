@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: misc.h,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: misc.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/make
+ * Module : misc
  *
- * Front-end for the html sub modules
+ * Miscelanous client queries
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,10 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_MAKE_H
-#define MDTX_WRAPPER_MAKE_H 1
-
-#include "../memory/archive.h"
+#ifndef MDTX_CLIENT_MISC_H
+#define MDTX_CLIENT_MISC_H 1
 
 /* API */
 
@@ -42,7 +40,7 @@ int mdtxSu(char* label);
 int mdtxScp(char* label, char* fingerPrint, char* target);
 int mdtxUploadFile(char* label, char* path);
 
-#endif /* MDTX_WRAPPER_MAKE_H */
+#endif /* MDTX_CLIENT_MISC_H */
 
 /* Local Variables: */
 /* mode: c */

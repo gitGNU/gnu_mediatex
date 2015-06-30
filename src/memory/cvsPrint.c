@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
- * Module : md5sumTree
+ * Module : cvs print
  *
  * cvs files producer interface
 
@@ -22,17 +22,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/locks.h"
-#include "strdsm.h"
-#include "cvsPrint.h"
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : cvsCloseFile
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Description: Cut a big file into several ones
+ * Synopsis   : int cvsCloseFile(CvsFile* fd)
+ * Input      : CvsFile* fd
  * Output     : TRUE on success
  =======================================================================*/
 int cvsCloseFile(CvsFile* fd)
@@ -71,9 +67,9 @@ error:
 
 /*=======================================================================
  * Function   : cvsOpenFile
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Description: Cut a big file into several ones
+ * Synopsis   : int cvsOpenFile(CvsFile* fd)
+ * Input      : CvsFile* fd
  * Output     : TRUE on success
  =======================================================================*/
 int cvsOpenFile(CvsFile* fd)
@@ -152,9 +148,11 @@ error:
 
 /*=======================================================================
  * Function   : cvsPrint
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Description: Cut a big file into several ones
+ * Synopsis   : int cvsPrint(CvsFile* fd, const char* format, ...)
+ * Input      : CvsFile* fd
+ *              const char* format : as printf
+ *              ... : as printf
  * Output     : TRUE on success
  =======================================================================*/
 int cvsPrint(CvsFile* fd, const char* format, ...)
@@ -178,92 +176,6 @@ error:
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  memoryUsage(programName);
-
-  memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for confTree module.
- * Synopsis   : utconfTree
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  CvsFile fd = {"filename", 0, stdout, FALSE, 0};
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MEMORY_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  env.dryRun = FALSE;
-  env.debugMemory = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MEMORY_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  env.cvsprintMax = 10;
-  if (!cvsOpenFile(&fd)) goto error;
-  fd.doCut = FALSE;
-  if (!cvsPrint(&fd, "%s", "the lines should not be cut\n")) goto error;
-  if (!cvsPrint(&fd, "%s", "put 2nd line in same file\n")) goto error;
-  fd.doCut = TRUE;
-  if (!cvsPrint(&fd, "%s", "3rd line ...\n")) goto error;
-  if (!cvsPrint(&fd, "%s", "4rth line ...\n")) goto error;
-  if (!cvsCloseFile(&fd)) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

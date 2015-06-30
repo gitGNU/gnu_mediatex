@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: device.h,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,12 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_CHECKSUMS_DEVICE_H
-#define MISC_CHECKSUMS_DEVICE_H 1
-
-#include <sys/types.h>   // open
-#include <sys/stat.h>    // open
-#include <fcntl.h>       // open
+#ifndef MDTX_MISC_DEVICE_H
+#define MDTX_MISC_DEVICE_H 1
 
 char* absolutePath(char* path);
 int getDevice(char* inPath, char** outPath);
@@ -35,7 +31,7 @@ int isBlockDevice(char* path, int* isB);
 int getIsoSize(int fd, off_t *size, 
 	       unsigned long int *count, unsigned short int *bs);
 
-#endif /* MISC_CHECKSUMS_DEVICE_H */
+#endif /* MDTX_MISC_DEVICE_H */
 
 /* Local Variables: */
 /* mode: c */

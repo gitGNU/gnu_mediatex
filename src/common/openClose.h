@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: openClose.h,v 1.3 2015/06/03 14:03:34 nroche Exp $
+ * Version: $Id: openClose.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
- * Module : bus/openClose
+ * Module : openClose
  
- * Manage data files
+ * Manage medta-data files
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,8 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_BUS_OPEN_CLOSE_H
-#define MDTX_BUS_OPEN_CLOSE_H 1
+#ifndef MDTX_COMMON_OPENCLOSE_H
+#define MDTX_COMMON_OPENCLOSE_H 1
+
+#include "mediatex-types.h"
 
 int callUpdate(char* user);
 int callCommit(char* user, char* signature1, char* signature2);
@@ -51,7 +53,7 @@ Support* mdtxGetSupport(char* label);
 int clientLoop(int (*callback)(char*));
 int serverLoop(int (*callback)(Collection*));
 
-#endif /* MDTX_BUS_OPEN_CLOSE_H */
+#endif /* MDTX_COMMON_OPENCLOSE_H */
 
 /* Local Variables: */
 /* mode: c */

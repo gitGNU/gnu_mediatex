@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shm.h,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: shm.h,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : shm
  *
@@ -22,8 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_SHM_H
-#define MISC_SHM_H 
+#ifndef MDTX_MISC_SHM_H
+#define MDTX_MISC_SHM_H 1
 
 int shmRead(char* pathFile, int shmSize, 
 	    void (*callback)(void*, int, void*), void* arg);
@@ -31,7 +31,7 @@ int shmWrite(char* pathFile, int shmSize,
 	     void (*callback)(void*, int, void*), void* arg);
 int shmFree(char* pathFile, int shmSize);
 
-#endif /* MISC_SHM_H */
+#endif /* MDTX_MISC_SHM_H */
 
 /* Local Variables: */
 /* mode: c */

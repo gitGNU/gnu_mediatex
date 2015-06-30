@@ -1,9 +1,9 @@
 =======================================================================
-* Version: $Id: README,v 1.3 2015/06/03 14:03:21 nroche Exp $
+* Version: $Id: README,v 1.4 2015/06/30 17:37:00 nroche Exp $
 * Project: MediaTex
-* Module : configuration files and data exemples
+* Module : use cases
 *
-* Theses file are used to set up new collections
+* These files provides exemple use cases 
 
 MediaTex is an Electronic Records Management System
 Copyright (C) 2014 2015 Nicolas Roche
@@ -22,152 +22,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================
 
-The files you find in this directory are used to build new collection.
-For instance on of them is the logo file: logo.xpm
+The binary files you find in this directory provided bellow provide 
+exemple on how to interact with the MediaTex software. 
+Please consider all of them under the GPLv3+ license.
 
-Binaries are used to provide archive files exemples that populate the
-new collection and also as to test the software.
-All of them finally contains the above logo file:
-
-logo.afio
-logo.cpio.bz2
-logoP1.cat
-logoP2.cat
-logo.part1.rar
-logo.png
-logo.tar.bz2
-logo.cpio
-logo.cpio.gz
-logoP1.iso
-logoP2.iso
-logo.part2.rar
-logo.tar
-logo.tgz
-logo.zip
-
-Please consider all of theses files under the GPLv3+ license.
-
-Archive extraction example files:
----------------------------------
-
-1) We use the logo file as an archive for the default exemple collection.
-
- logoP1.iso => logoP1.cat -\             /-> logo/logo.png
-                            => logo.tgz = 
- logoP2.iso => logoP2.cat -/             \-> logo/logo.xpm
-    
-2) Information on how we have made these files
-
-* logo.xpm: source of the logo.
-
-/* XPM */
-static char * blarg_xpm[] = {
-"30 21  3 1",
-"* g #000000",
-", g #aaaaaa",
-"  g #ffffff",
-"                              ",
-"                              ",
-"         ,***,    ,***,       ",
-"        ,*****,  ,*****,      ",
-"       ,******,  ,*****,      ",
-"       ******,   ,*****,      ",
-"  ,***, ,****,    ,**,, ,***, ",
-" ,*****,               ,*****,",
-" *******     ,,,,,     ,,****,",
-" ,*****,  ,,,,***,,,,    ,,**,",
-"  ,***,  ,,*********,,,   ,,, ",
-"        ,,****,,******,,,     ",
-"       ,*****,, ,,******,,    ",
-"      ,*******,,,,******,,    ",
-"      ,*****************,,    ",
-"      ,*****************,,    ",
-"       ,***************,,     ",
-"        ,,*****,,*****,,      ",
-"         ,,,**,, ,**,,,       ",
-"          ,,,,,  ,,,,         ",
-"                              "
-}
-
-* logo.png:
-$ convert -resize 200x200 logo.xpm logo.png
-
-* logo.tgz:
-$ mkdir logo
-$ cp logo.png logo.xpm logo
-$ tar -zcf logo.tgz logo
-$ tar -ztf logo.tgz
-logo/logo.xpm
-logo/logo.png
-
-* logoP1.cat, logoP2.cat: (should use split instead of dd)
-$ dd if=logo.tgz of=logoP1.cat bs=1K count=20
-$ dd if=logo.tgz of=logoP2.cat bs=1K skip=20
-(or $ split -b20k logo.tgz logo.tgz.)
-
-* logoP1.iso, logoP2.iso:
-$ genisoimage -R -r -J --hide-rr-moved -V "logo part1" \
-   -o logoP1.iso logoP1.cat
-$ genisoimage -R -r -J --hide-rr-moved -V "logo part2" \
-   -o logoP2.iso logoP2.cat
-
-
-3) Scenarios given in the documentation consists in extracting
-the logo from the 2 ISO files. 
-Example:
-
-$ mkdir -p tmp/mnt
-$ cd tmp
-# mount -o loop ../logoP1.iso mnt
-$ cp mnt/logoP1.cat .
-# umount mnt
-# mount -o loop ../logoP1.iso mnt
-$ cat logoP1.cat mnt/logoP2.cat > logo.tgz
-# umount mnt
-$ tar -zxf logo.tgz logo/logo.png
-$ xview logo/logo.png 
-
-4) Other archives formats we managed:
-- tar + bzip2
-- zip (windows tar like)
-- rar (multi-volume must be in the same directory)
-- afio
-
-$ tar -jcf logo.tar.bz2 logo
-$ mkdir dir
-$ tar -C dir -jxf logo.tar.bz2 logo/logo.png
-
-$ zip -r logo.zip logo
-$ unzip -d dir logo.zip logo/logo.png
-
-// here we deals with multi-volumes (not done before as not so standard)
-$ rar -v20k a logo logo/
-$ rar x logo.part1.rar logo/logo.png dir/
-
-// no way to specify the target directory
-$ find logo | afio -o -Z logo.afio
-$ afio -i -y logo/logo.png logo.afio
-
-5) Unitary tools (should not be used but who knows):
-- tar alone
-- cpio (note: look capable to extract afio archive, even compressed)
-- gzip
-- bzip2
-
-$ tar -cf logo.tar logo
-$ tar -C dir -xf logo.tar logo/logo.png
-
-// no way to specify the target directory
-$ find logo | cpio -o > logo.cpio
-$ mkdir dir
-$ (cd dir && cpio -i --file logo.cpio --make-directories logo/logo.png)
-
-// note: without using redirection, gzip remove the original file
-//       and cannot extract to another directory
-$ gzip logo.cpio
-$ zcat logo.cpio.gz > dir/logo.cpio
-
-// note: bunzip2 has --keep option but cannot extract to another directory
-$ bzip2 logo.cpio
-$ cd dir
-$ bzcat logo.cpio.bz2 > dir/logo.cpio

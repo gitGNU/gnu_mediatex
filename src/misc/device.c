@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: device.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,12 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "alloc.h"
-#include "device.h"
-
-#include <unistd.h>
-#include <mntent.h>
+#include "mediatex-config.h"
+#include <mntent.h> // setmntent
 
 /*=======================================================================
  * Function   : absolutePath
@@ -109,9 +105,7 @@ absolutePath(char* path)
   rc[len2] = '/';
   strncpy(rc + 1 + len2, base, strlen(base)+1);
 
-  if (!env.noRegression) {
-    logEmit(LOG_INFO, "absolute path is %s", rc);
-  }
+  logEmit(LOG_INFO, "absolute path is %s", rc);
   
  error:
   if (!rc) {
@@ -147,9 +141,7 @@ char* symlinkTarget(char* path) {
   }
   
   if (!S_ISLNK(statBuffer.st_mode)) {
-    if (!env.noRegression) {
       logEmit(LOG_INFO, "not a symlink: %s", path);
-    }
     goto end;
   }
 
@@ -166,9 +158,7 @@ char* symlinkTarget(char* path) {
   }
   
   rc[statBuffer.st_size] = (char)0;
-  if (!env.noRegression) {
-    logEmit(LOG_INFO, "find a symlink: %s -> %s", path, rc);
-  }
+  logEmit(LOG_INFO, "find a symlink: %s -> %s", path, rc);
  end:
  error:
   return rc;
@@ -226,9 +216,7 @@ char* mount2device(char* absPath)
 
   return rc;
  error:
-  if(!env.noRegression) {
-    logEmit(LOG_INFO, "cannot match a device path: %s", absPath);
-  }
+  logEmit(LOG_INFO, "cannot match a device path: %s", absPath);
   return rc;
 }
 
@@ -382,9 +370,6 @@ int isBlockDevice(char* path, int* isB) {
   }
 
   rc = TRUE;
-#ifndef utMAIN
-  if (env.noRegression) goto end;
-#endif
 
   if (S_ISCHR(statBuffer.st_mode)) {
     logEmit(LOG_INFO, "find character device: %s", path);
@@ -489,135 +474,6 @@ int getIsoSize(int fd, off_t *size,
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually
- *                                  argv[0].
- * Output     : N/A
- =======================================================================*/
-static void usage(char* programName)
-{
-  miscUsage(programName);
-  fprintf(stderr, "\n\t\t[ -i device ]");
-
-  miscOptions();
-  fprintf(stderr, "  ---\n" 
-	  "  -i, --input-file\tinput device file to test\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 
- * Description: Unit test for md5sum module
- * Synopsis   : ./utcommand -i scriptPath
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char* inputPath = 0;
-  char* devicePath = 0;
-  int isBlockDev = FALSE;
-  int fd = 0;
-  off_t size = 0;
-  unsigned short int bs = 0;
-  unsigned long int count = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"i:";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    {"input-file", required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
-  
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'i':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, "%s: nil or empty argument for the input device\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
-	fprintf(stderr, "cannot malloc the input device path: %s", 
-		strerror(errno));
-	rc = ENOMEM;
-	break;
-      }
-      
-      strncpy(inputPath, optarg, strlen(optarg)+1);
-      break;
-      
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (inputPath == 0) {
-    usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide an input device path");
-    goto error;
-  }
-
-  if (!getDevice(inputPath, &devicePath)) goto error;
-  if (!isBlockDevice(devicePath, &isBlockDev)) goto error;
-  logEmit(LOG_NOTICE, "%s -> %s (is %sa block device)",
-	  inputPath, devicePath, isBlockDev?"":"not ");
-
-  if ((fd = open(devicePath, O_RDONLY)) == -1) {
-    logEmit(LOG_ERR, "open: %s", strerror(errno));
-    goto error;
-  }
-  
-  // compute iso size if block device
-  if (!getIsoSize(fd, &size, &count, &bs)) goto error;
-  logEmit(LOG_NOTICE, "%s is %san iso",
-	  devicePath, (size > 0)?"":"not ");
-  if (size > 0) {
-    logEmit(LOG_NOTICE, "volume size = %lu", count);
-    logEmit(LOG_NOTICE, "block size = %hu", bs);
-    logEmit(LOG_NOTICE, "size = %lli", (long long int)size);
-  }
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  free(devicePath);
-  free(inputPath);
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

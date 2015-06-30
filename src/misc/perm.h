@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: perm.h,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: perm.h,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,17 +22,17 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_PERM_H
-#define MISC_PERM_H 1
+#ifndef MDTX_MISC_PERM_H
+#define MDTX_MISC_PERM_H 1
 
-#include "../mediatex.h"
-
+#include "mediatex.h"
 #include <time.h>
 
 time_t currentTime();
+
 int checkDirectory(char* path, char* user, char* group, mode_t mode);
 
-#endif /* MISC_PERM_H */
+#endif /* MDTX_MISC_PERM_H */
 
 /* Local Variables: */
 /* mode: c */

@@ -1,6 +1,7 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.3 2015/06/03 14:03:55 nroche Exp $
+ * Version: $Id: deliver.c,v 1.4 2015/06/30 17:37:37 nroche Exp $
  * Project: MediaTeX
+ * Module : deliver
  *
  * Manage delivering mail
 
@@ -21,24 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../memory/strdsm.h"
-#include "../parser/confFile.tab.h"
-#include "../parser/recordList.tab.h"
-#include "../common/register.h"
-#include "../common/connect.h"
-#include "../common/openClose.h"
-#include "cache.h"
-#include "deliver.h"
-
-#include <sys/stat.h> // open
-#include <fcntl.h>    //
-
-#ifdef utMAIN
-#include "utFunc.h"
-#endif
+#include "mediatex-config.h"
+#include "server/mediatex-server.h"
 
 /*=======================================================================
  * Function   : callMail
@@ -216,112 +201,6 @@ deliverMails(Collection* coll)
   path = destroyString(path);
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2010/12/10
- * Description: entry point for mdtx-env
- * Synopsis   : mdtx-env
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char inputRep[256] = ".";
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"d:";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, 0, 'd'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-
-    case 'd':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, 
-		"%s: nil or empty argument for the input repository\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      strncpy(inputRep, optarg, strlen(optarg)+1);
-      break; 
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!(coll = mdtxGetCollection("coll3"))) goto error;
-
-  utLog("%s", "Clean the cache:", 0);
-  if (!utCleanCaches()) goto error;
-
-  utLog("%s", "add a demand for logo.png:", 0);
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"nroche@narval.tk")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
-  if (!quickScan(coll)) goto error;
-  utLog("%s", "Now we have :", coll);
-
-  utLog("%s", "deliver the mail:", 0);
-  if (!deliverMails(coll)) goto error;
-  utLog("%s", "Finaly we have :", coll);
-
-  if (!utCleanCaches()) goto error;
-  /************************************************************************/
-  
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

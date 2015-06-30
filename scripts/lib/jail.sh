@@ -1,8 +1,6 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: jail.sh,v 1.3 2015/06/03 14:03:26 nroche Exp $
+# * Version: $Id: jail.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -24,6 +22,8 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 ### very helpfull !
 # tail /var/log/auth.log
@@ -32,7 +32,8 @@ set -e
 # includes
 MDTX_SH_JAIL=1
 [ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
+[ -z $libdir ] && libdir=$srcdir/scripts/lib
+[ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 #[ ! -e /usr/share/initramfs-tools/hook-functions ] || 
 #source /usr/share/initramfs-tools/hook-functions
@@ -74,7 +75,9 @@ function JAIL_build()
 {
     Debug "$FUNCNAME:" 2
     [ $(id -u) -eq 0 ] || Error $0 $LINENO "need to be root"
-    JAIL=$CACHEDIR/$MDTX/jail
+
+    # /var/cache/mediatex/mdtx/jail
+    JAIL=$MDTXHOME/jail
     DESTDIR=$JAIL # used by copy_exec
     BINARIES="/bin/ls /bin/bash /usr/bin/id /usr/bin/scp /usr/bin/cvs"
 
@@ -111,6 +114,11 @@ function JAIL_build()
     chmod 777 $JAIL/tmp
     chmod 777 $JAIL/var/tmp
 
+    # remove "Could not chdir to home directory" warning
+    mkdir -p $JAIL$HOMES
+    rm -f $JAIL$HOMES/$USER
+    ln -s /var/cache $JAIL$HOMES/$USER
+
     # still not needed
     #cp /etc/nsswitch.conf $JAIL/etc
     #cp /etc/hosts $JAIL/etc
@@ -126,7 +134,7 @@ function JAIL_del_user()
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    JAIL=$CACHEDIR/$MDTX/jail
+    JAIL=$MDTXHOME/jail
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
@@ -143,7 +151,7 @@ function JAIL_add_user()
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    JAIL=$CACHEDIR/$MDTX/jail
+    JAIL=$MDTXHOME/jail
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
@@ -158,15 +166,15 @@ function JAIL_bind()
 {
     Debug $FUNCNAME 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    JAIL=$CACHEDIR/$MDTX/jail
+    JAIL=$MDTXHOME/jail
 
     grep -q $JAIL/var/cache /etc/mtab || 
-    mount --bind $CACHEDIR/$MDTX/cache $JAIL/var/cache
+    mount --bind $MDTXHOME/cache $JAIL/var/cache
     grep -q $JAIL/var/cache /etc/mtab || 
     Error "Cannot bind $JAIL/var/cache"
 
     grep -q $JAIL/var/lib/cvsroot /etc/mtab || 
-    mount --bind $STATEDIR/$MDTX $JAIL/var/lib/cvsroot
+    mount --bind $CVSROOT $JAIL/var/lib/cvsroot
     grep -q $JAIL/var/lib/cvsroot /etc/mtab || 
     Error "Cannot bind $JAIL/var/lib/cvsroot"
 }
@@ -176,7 +184,7 @@ function JAIL_unbind()
 {
     Debug $FUNCNAME 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    JAIL=$CACHEDIR/$MDTX/jail
+    JAIL=$MDTXHOME/jail
 
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
     umount $JAIL/var/cache
@@ -188,78 +196,3 @@ function JAIL_unbind()
     [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] || 
     Error "Cannot unbind $JAIL/var/lib/cvsroot"
 }
-
-# unitary tests
-if UNIT_TEST_start "jail"; then
-    [ ! -z $MDTX_SH_USERS ] || source $libdir/users.sh
-    [ ! -z $MDTX_SH_SSH ]   || source $libdir/ssh.sh
-    [ ! -z $MDTX_SH_CVS ]   || source $libdir/cvs.sh
-
-    MDTX="ut4-mdtx"
-    COLL="hello"
-    USER="$MDTX-$COLL"
-
-    # cleanup if previous test has failed
-    JAIL_unbind
-    USERS_mdtx_remove_user
-    USERS_coll_remove_user $USER
-    USERS_mdtx_disease
-    
-    # cf init.sh
-    USERS_root_populate
-    USERS_mdtx_create_user
-    CVS_mdtx_setup
-    SSH_chroot_login yes
-    JAIL_build
-
-    ## local check
-    Info "chroot $JAIL ls"
-    chroot $JAIL ls
-
-    # cf new.sh
-    USERS_coll_create_user $USER
-    CVS_coll_import $USER
-    SSH_build_key $USER
-    SSH_bootstrapKeys $USER
-    SSH_configure_client $USER "localhost" "22"
-    JAIL_add_user $USER	
-
-    ## remote login checks
-    QUERY="ssh -o PasswordAuthentication=no ${USER}@localhost ls"
-    Info "su LABEL -c \"$QUERY\""
-    su $USER -c "$QUERY" || Error "Cannot connect via ssh"
-    
-    ## cf init.d 
-    JAIL_bind
-    
-    ## scp and cvs checks
-    touch $CACHEDIR/$MDTX/cache/$USER/hello.txt
-    chown $USER.$USER $CACHEDIR/$MDTX/cache/$USER/hello.txt
-
-    CACHE="$CACHEDIR/$MDTX/tmp/$USER"
-    QUERY="scp ${USER}@localhost:/var/cache/$USER/hello.txt $CACHE"
-
-    Info "su USER -c \"$QUERY\""
-    su $USER -c "$QUERY" || Error "Cannot copy via ssh"
-    CVS_coll_checkout $USER $MDTX $COLL "localhost"
-    
-    #echo "results :"
-    #cd $UNIT_TEST_ROOTDIR
-    #find . -ls |
-    #awk '{ printf("%14s %14s %s %s\n",$5,$6,$3,$11) }' |
-    #sort -k4
-    #cd - >/dev/null
-
-    # cf init.d
-    JAIL_unbind
-    JAIL_del_user $USER
-
-    # cf free.sh & remove.sh
-    SSH_chroot_login no
-    USERS_coll_disease $USER
-    USERS_coll_remove_user $USER
-    USERS_mdtx_remove_user
-
-    Info "success"
-    UNIT_TEST_stop "jail"
-fi

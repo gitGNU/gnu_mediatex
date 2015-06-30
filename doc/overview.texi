@@ -1,14 +1,17 @@
 @cindex overview
 
-The GNU @mediatexO{} project intends to make easier as possible 
+The GNU @mediatexO{} 
+project intends to make easier as possible 
 archives management by spreading and accessing @acronym{WORM} supports 
 (as compact disks) and dedicated metadata.
-It is named @mediatexO{} because it aims to provide perennial
+It is named @mediatexO{} 
+because it aims to provide perennial
 @acronym{URL} on electronic documents.
 
 @cindex oais
 @cindex nf-z42013
-@mediatexO{} is inspired by @acronym{OAIS} archive system description
+@mediatexO{} 
+is inspired by @acronym{OAIS} archive system description
 (@url{http://public.ccsds.org/@/publications/@/archive/@/650x0m2.pdf})
 and aims to provide the @acronym{OAIS}'s archival storage entity. 
 However, it focus on already burned support ingestion 
@@ -34,7 +37,8 @@ that help to manage a @acronym{NF Z 42-013} compliant supports collection.
 @cindex web user
 @cindex date
 
-The @mediatexO{} system interacts with 3 kind of users:
+The @mediatexO{} 
+system interacts with 3 kind of users:
 @itemize @bullet
 @item 
 @actorAdminO{} or @verb{!root!} system user configures and start services 
@@ -55,7 +59,8 @@ browse and download archives. (@procToolsApache{})
 @cindex server
 @cindex collection
 
-The @mediatexO{} system allow several Server to share data and meta-data
+The @mediatexO{} 
+system allow several Server to share data and meta-data
 related to a collection of archives.
 
 @image{mediatex-figures/what,,,,}
@@ -87,7 +92,8 @@ A server may participates to several collections.
 @item
 A server manages a local set of private supports including copies.
 @item 
-Each @mediatexO{} system instance is located on a given host. 
+Each @mediatexO{} 
+system instance is located on a given host. 
 On a so call server, the 
 @actorPublisher{} decides which support 
 are shared by which collection. 
@@ -106,7 +112,8 @@ to a collection.
 A collection share support's content using there @acronym{ISO} image, 
 the extraction metadata and the content's description as a catalogue index.
 @item
-The @mediatexO{} system uses the collection concept to allow several 
+The @mediatexO{} 
+system uses the collection concept to allow several 
 hosts to manage together their local supports in order to manage them 
 as -so called- perennial archives.
 @end itemize
@@ -186,7 +193,8 @@ or needed to perform a periodic checkup.
 @cindex sendmail
 @cindex motd
 
-@mediatexO{} system is build around other @acronym{GNU} 
+@mediatexO{} 
+system is build around other @acronym{GNU} 
 @activityTools{}:
 @itemize @bullet
 @item 
@@ -226,7 +234,8 @@ The generated @acronym{HTML} catalogue also requires much more place than
 a database do (moreover, limitation should comes from the number of 
 available inodes on the @acronym{HTML} catalogue partition).
 
-All in all, the @mediatexO{} system is designed to handle collections 
+All in all, the @mediatexO{} 
+system is designed to handle collections 
 having less than a million archives, but may handle (who knows) numbers 
 of such ``little'' collections.
 
@@ -265,7 +274,8 @@ of electronic archives.
 Conception was made in order to provides redundancy, trace-ability 
 and a shared @acronym{HTML} access.
 @item 
-@mediatexO{} make possible to rebuild the system mainly from its optical 
+@mediatexO{} 
+make possible to rebuild the system mainly from its optical 
 supports (@note{} according that catalogue and extraction meta-data are 
 available on supports too).
 @item 

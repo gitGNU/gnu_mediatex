@@ -39,6 +39,3 @@ mediatex_TEXINFOS = \
 
 # to force install-html ?
 # install-data-local: install-html
-
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@

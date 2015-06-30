@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.h,v 1.3 2015/06/03 14:03:28 nroche Exp $
+ * Version: $Id: catalogHtml.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
  * Project: MediaTeX
- * Module : archive catalog's latex serializer
+ * Module : catalogHtml
  *
- * Catalog latex serializer interface
+ * HTML catalog serializer
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef WRAPPER_ADMCATALOG_H
-#define WRAPPER_ADMCATALOG_H 1
+#ifndef MDTX_CLIENT_ADMCATALOG_H
+#define MDTX_CLIENT_ADMCATALOG_H 1
 
-#include  "../memory/catalogTree.h"
+#include  "mediatex-types.h"
 
 /* API */
 
@@ -34,7 +34,7 @@ int getRoleListUri(char* buf, char* path, int roleId, int listId);
 int getCateListUri(char* buf, char* path, int cateId, int listId);
 int serializeHtmlIndex(Collection* coll);
 
-#endif /* WRAPPER_ADMCATALOG_H */
+#endif /* MDTX_CLIENT_ADMCATALOG_H */
 
 /* Local Variables: */
 /* mode: c */

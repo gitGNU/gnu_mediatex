@@ -1,17 +1,7 @@
-# autoreconf -i
-Makefile.in
-# ./configure
+# configure
 .deps
-Makefile
+
 # make
+.dirstamp
 .libs
 *.lo
-libcommon.la
-cgi
-# make check
-ut[a-z]*
-ut*.out
-ut*.txt
-ut*.sort
-*.log
-*.trs

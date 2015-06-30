@@ -1,6 +1,4 @@
-# autoreconf -i
 Makefile.in
-# ./configure
 Makefile
-# make
-.deps
+cake
+txt2sql

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.h,v 1.3 2015/06/03 14:03:55 nroche Exp $
+ * Version: $Id: cgiSrv.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -25,8 +25,7 @@
 #ifndef MDTX_SERVER_CGI_H
 #define MDTX_SERVER_CGI_H 1
 
-#include "../memory/recordTree.h"
-#include "threads.h"
+#include "mediatex-types.h"
 
 /* API */
 

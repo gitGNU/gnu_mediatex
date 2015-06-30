@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.h,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: setuid.h,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : setuid
  *
@@ -25,12 +25,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_SETUID_H
-#define MISC_SETUID_H 
+#ifndef MDTX_MISC_SETUID_H
+#define MDTX_MISC_SETUID_H 
 
-#include "../mediatex.h"
-
-#include <sys/types.h>
+#include "mediatex-types.h"
 #include <pwd.h>
 #include <grp.h>
 
@@ -44,7 +42,7 @@ int allowedUser (char* label);
 int becomeUser (char* label, int doCheck);
 int logoutUser (int uid);
 
-#endif /* MISC_SETUID_H */
+#endif /* MDTX_MISC_SETUID_H */
 
 /* Local Variables: */
 /* mode: c */

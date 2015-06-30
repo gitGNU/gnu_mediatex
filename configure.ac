@@ -1,6 +1,6 @@
-dnl  * Version: $Id: configure.ac,v 1.3 2015/06/03 14:03:14 nroche Exp $
+dnl  * Version: $Id: configure.ac,v 1.4 2015/06/30 17:36:57 nroche Exp $
 dnl  * Project: MediaTex
-dnl  * Module:  root
+dnl  * Module:  autotools
 dnl  *
 dnl  * Process this file with autoconf to produce a configure script.
 dnl 
@@ -20,111 +20,40 @@ dnl
 dnl  You should have received a copy of the GNU General Public License
 dnl  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_PREREQ([2.60])
-AC_INIT([MediaTex], [0.3], [nroche@narval.tk])
-# AM_INIT_AUTOMAKE([subdir-objects -Wall])
-AM_INIT_AUTOMAKE([-Wall])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/mediatex.h])
-AC_CONFIG_HEADERS([mediatex-config.h])
+AC_INIT([mediatex], [0.4], [nroche@narval.tk])
+AM_INIT_AUTOMAKE([subdir-objects -Wall silent-rules])
 
 # i18n support from GNU gettext.
 AM_GNU_GETTEXT_VERSION([0.19])
 AM_GNU_GETTEXT([external])
 
 # Checks for programs.
-AC_PROG_AWK
 AC_PROG_CC
-AM_PROG_CC_C_O
-AC_PROG_CXX
-AM_PROG_LEX
-AC_PROG_YACC
-AC_PROG_INSTALL
-AC_PROG_MAKE_SET 
-AC_PROG_LN_S
 AM_PROG_AR
-# AC_PROG_RANLIB
 LT_INIT
+AC_PROG_AWK
+AC_PROG_LEX
+AC_PROG_YACC
+AC_PROG_LN_S
 
-# GNU help2man creates man pages from --help output; in many cases, this
-# is sufficient, and obviates the need to maintain man pages separately.
-# However, this means invoking executables, which we generally cannot do
-# when cross-compiling, so we test to avoid that (the variable
-# "cross_compiling" is set by AC_PROG_CC).
-if test $cross_compiling = no; then
-  AM_MISSING_PROG(HELP2MAN, help2man)
-else
-  HELP2MAN=:
-fi
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_SRCDIR([src/mediatex.h])
+AC_CONFIG_HEADERS([config.h])
 
-# Checks for libraries.
-AC_CHECK_LIB([ssl], [MD5_Init])
-
-# Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h locale.h \
-			      malloc.h mntent.h netdb.h \
-			      netinet/in.h pthread.h \
-			      signal.h stddef.h \
-			      sys/socket.h sys/time.h syslog.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-AC_C_INLINE
-AC_TYPE_MODE_T
-AC_TYPE_INT16_T
-AC_TYPE_INT32_T
-AC_TYPE_INT8_T
-AC_TYPE_OFF_T
-AC_TYPE_PID_T
-AC_TYPE_SIZE_T
-AC_TYPE_SSIZE_T
-AC_TYPE_UID_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-AC_TYPE_UINT8_T
-
-# Checks for library functions.
-AC_FUNC_ALLOCA
-AC_FUNC_ERROR_AT_LINE
-AC_FUNC_FORK
-AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
-AC_FUNC_MALLOC
-AC_FUNC_MKTIME
-AC_FUNC_REALLOC
-
-AC_CHECK_FUNCS([alarm \
-		dup2 \
-		endpwent \
-		getcwd gethostbyaddr gethostbyname getmntent_r \
-		getpagesize gettimeofday \
-		inet_ntoa \
-		localtime_r \
-		memset mkdir \
-		pow \
-		rmdir regcomp \
-		setenv socket setlocale \
-		strcasecmp strchr strdup strerror strrchr \
-		strtoul \
-		uname])
-
-AC_CONFIG_FILES([Makefile
-		po/Makefile.in
-		doc/mediatex-figures/Makefile
-		doc/Makefile
-		examples/Makefile
-		etc/Makefile
- 		scripts/Makefile
- 		scripts/lib/Makefile
-		src/Makefile
-		src/misc/Makefile
-		src/memory/Makefile
-		src/parser/Makefile
-		src/common/Makefile
-		src/client/Makefile
-		src/server/Makefile
-		src/bin/Makefile
-		man/Makefile
-		useCases/Makefile])
+AC_CONFIG_FILES([
+	Makefile
+	doc/mediatex-figures/Makefile
+	doc/Makefile
+	misc/Makefile
+	etc/Makefile
+	scripts/Makefile
+	po/Makefile.in
+	src/Makefile
+	check/Makefile
+	check_as_root/Makefile
+	man/Makefile
+	examples/Makefile
+	])
 
 # fully expand the pathnames before they go into the config.h file
 mdtx_save_prefix=$prefix
@@ -141,10 +70,6 @@ eval mdtx_bindir=`echo $bindir`
 AC_DEFINE_UNQUOTED(CONF_BINDIR, "$mdtx_bindir",
                    [directory for mdtx scripts (exec_prefix/bin)])
 
-# eval mdtx_libdir=`echo $libdir`
-# AC_DEFINE_UNQUOTED(CONF_LIBDIR, "$mdtx_libdir",
-#                    [directory for mdtx libs (exec_prefix/lib)])
-
 eval mdtx_sysconfdir=`echo $sysconfdir`
 AC_DEFINE_UNQUOTED(CONF_SYSCONFDIR, "$mdtx_sysconfdir",
                    [directory for mdtx configuration (prefix/etc)])
@@ -160,20 +85,19 @@ AC_DEFINE_UNQUOTED(CONF_DATAROOTDIR, "$mdtx_datarootdir",
 prefix=$mdtx_save_prefix
 exec_prefix=$mdtx_save_exec_prefix
 
+mdtx_mediatexdir="/mediatex"
+AC_SUBST(mdtx_mediatexdir)	       
+AC_DEFINE_UNQUOTED(CONF_MEDIATEXDIR, "$mdtx_mediatexdir", 
+		  [generic directory name to use])
+
 # Add option to disable setuid during install, use in distcheck
-#? AM_CONDITIONAL(UPDATE_CACHES, test x"$enable_caches" = "xyes")
 AC_ARG_ENABLE(setuid-install, 
  AS_HELP_STRING(
  [--disable-setuid-install       do not set setuid flags during install]), 
  [enable_setuid_install=$enableval], [enable_setuid_install="yes"])
 AM_CONDITIONAL(SETUID_INSTALL, test x"$enable_setuid_install" = "xyes")
 
-mdtx_mediatexdir="/mediatex"
-AC_SUBST(mdtx_mediatexdir)	       
-AC_DEFINE_UNQUOTED(CONF_MEDIATEXDIR, "$mdtx_mediatexdir", 
-		  [generic directory name to use])
-
-# this is for the documentation figures (doc/mediatex-figures/Makefile.am)
+# Documentation figures (doc/mediatex-figures/Makefile.am)
 EPS_FILES=$(for IMG in $(ls $srcdir/doc/mediatex-figures/*.fig); do \
 		IMG=${IMG#$srcdir/doc/mediatex-figures/}; \
 		echo -n "${IMG%.fig}.eps "; \
@@ -184,5 +108,16 @@ PNG_FILES=$(for IMG in $(ls $srcdir/doc/mediatex-figures/*.fig); do \
 		done)
 AC_SUBST([EPS_FILES]) 
 AC_SUBST([PNG_FILES]) 
+
+# GNU help2man creates man pages from --help output; in many cases, this
+# is sufficient, and obviates the need to maintain man pages separately.
+# However, this means invoking executables, which we generally cannot do
+# when cross-compiling, so we test to avoid that (the variable
+# "cross_compiling" is set by AC_PROG_CC).
+if test $cross_compiling = no; then
+  AM_MISSING_PROG(HELP2MAN, help2man)
+else
+  HELP2MAN=:
+fi
 
 AC_OUTPUT

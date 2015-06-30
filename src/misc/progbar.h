@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.h,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: progbar.h,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -28,23 +28,19 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MISC_CHECKSUMS_PROGBAR_H
-#define MISC_CHECKSUMS_PROGBAR_H 1
+#ifndef MDTX_MISC_PROGBAR_H
+#define MDTX_MISC_PROGBAR_H 1
 
-#ifndef MDTX_H
-#define _FILE_OFFSET_BITS 64
-#define MISC_CHECKSUMS_PROGBARSIZE 128
-#include <sys/types.h>
+#include "mediatex-types.h" // off_t
 
-struct ProgBar {
+typedef struct ProgBar {
   char bar[MISC_CHECKSUMS_PROGBARSIZE];
   char spaces[MISC_CHECKSUMS_PROGBARSIZE];
 
   unsigned int progress_last_percent;
   unsigned int progress_last_time;
   unsigned int progress_pos;
-};
-#endif
+} ProgBar;
   
 float calc_percent(off_t curr, off_t max);
 void initProgBar(struct ProgBar* progbar);
@@ -52,7 +48,7 @@ void e2fsck_clear_progbar(struct ProgBar* progbar);
 void e2fsck_simple_progress(struct ProgBar* progbar, const char *label, 
 			    float percent);
 
-#endif /* MISC_CHECKSUMS_PROGBAR_H */
+#endif /* MDTX_MISC_PROGBAR_H */
 
 /* Local Variables: */
 /* mode: c */

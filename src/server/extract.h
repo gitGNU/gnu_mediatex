@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: extract.h,v 1.3 2015/06/03 14:03:56 nroche Exp $
+ * Version: $Id: extract.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
  * Project: MediaTeX
- * Module : server/extract
+ * Module : extract
  *
  * Manage local cache extraction
 
@@ -25,8 +25,7 @@
 #ifndef MDTX_SERVER_EXTRACT_H
 #define MDTX_SERVER_EXTRACT_H 1
 
-#include "../memory/confTree.h"
-#include "../memory/recordTree.h"
+#include "mediatex-types.h"
 
 /* API */
 

@@ -1,115 +1,113 @@
 /*=======================================================================
- * Version: $Id: log.h,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: log.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTex
  * Module : log
  *
  * Logging module public interface.
  * This file was originally written by Peter Felecan under GNU GPL
 
-    MediaTex is an Electronic Records Management System
-    Copyright (C) 2012  Roche Nicolas
+ MediaTex is an Electronic Records Management System
+ Copyright (C) 2012  Roche Nicolas
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-=======================================================================*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ =======================================================================*/
 
-#ifndef MISC_LOG_H
-#define MISC_LOG_H 1
+#ifndef MDTX_MISC_LOG_H
+#define MDTX_MISC_LOG_H 1
 
-#include "../mediatex.h"
+#include "../mediatex-types.h"
 
 #include <syslog.h>
-#include <sys/utsname.h>
 #include <stdarg.h>
-#include <sys/types.h>
-#include <time.h>
-#include <string.h>
 
-// Manage log function for parser (very verbose when debuging other stuffs)
-extern int debugParser;
+typedef struct LogFacility {
+  int code;
+  char* name;
+} LogFacility;
 
-typedef struct LogFacility
-{
-	int code;
-	char* name;
-}
-	LogFacility;
+int getLogFacility(char* name);
+LogFacility* getLogFacilityByName(char* name);
+LogFacility* getLogFacilityByCode(int code);
 
-extern LogFacility LogFacilities[];
+typedef struct LogSeverity {
+  int code;
+  char* name;
+} LogSeverity;
 
-extern int getLogFacility(char* name);
-extern LogFacility* getLogFacilityByName(char* name);
-extern LogFacility* getLogFacilityByCode(int code);
+int getLogSeverity(char* name);
+LogSeverity* getLogSeverityByName(char* name);
+LogSeverity* getLogSeverityByCode(int code);
 
-typedef struct LogSeverity
-{
-	int code;
-	char* name;
-}
-	LogSeverity;
+typedef struct LogHandler {
+  char* name;
+  LogFacility* facility;
+  LogSeverity* severity;
+  FILE* hlog;
+} LogHandler;
+
+LogHandler* logOpen(char* name, int facility, int severity, 
+		    char* logFile);
+
+void logEmitFunc(LogHandler* logHandler, int priority,
+		 const char* format, ...);
+
+LogHandler* logClose(LogHandler* logHandler);
 
 extern LogSeverity LogSeverities[];
 
-extern int getLogSeverity(char* name);
-extern LogSeverity* getLogSeverityByName(char* name);
-extern LogSeverity* getLogSeverityByCode(int code);
-
-#define MISC_LOG_FILE 99
-
-typedef struct LogHandler
-{
-	char* name;
-	LogFacility* facility;
-	LogSeverity* severity;
-	FILE* hlog;
-  //struct utsname uname;
-  //pid_t pid;
-}
-	LogHandler;
-
-extern LogHandler* DefaultLog;
-
-extern LogHandler* logDefault(LogHandler* logHandler);
-extern LogHandler* logOpen(char* name, int facility, int severity, 
-			   char* logFile);
-extern void logEmitFunc(LogHandler* logHandler, int priority, 
-			const char* format, ...);
-extern LogHandler* logClose(LogHandler* logHandler);
+/*=======================================================================
+ * Macro      : logEmitMacro
+ * Description: Call logEmitFunc without troubles about MISC_LOG_LINES
+ * Synopsis   : void logParserMacro(level, format, ...)
+ * Input      : Wrapper for logEmitFunc function
+ * Output     : N/A
+ * Note       : path are troncated so as to make compatible "make check" 
+ *              and "make distcheck" output
+ *              (https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html)
+ =======================================================================*/
+#if MISC_LOG_LINES    
+#define logEmitMacro(log, priority, file, line, format, ...) {		\
+    if (priority <= log->severity->code) {				\
+      char* ptr = file + strlen(file);					\
+      while (ptr > file && *(ptr-1) != '/') --ptr;			\
+      logEmitFunc(log, priority, "[%s %s:%i] " format,			\
+		  LogSeverities[priority].name, ptr, line,		\
+		  ## __VA_ARGS__);					\
+    }									\
+  }
+#else
+#define logEmitMacro(log, priority, file, line, format, ...) {		\
+    if (priority <= log->severity->code) {				\
+      char* ptr = file + strlen(file);					\
+      while (ptr > file && *(ptr-1) != '/') --ptr;			\
+      logEmitFunc(log, priority, "[%s %s] " format,			\
+		  LogSeverities[priority].name, ptr,			\
+		  ## __VA_ARGS__);					\
+    }									\
+  }
+#endif
 
 /*=======================================================================
  * Macro      : logEmit
- * Author(s)  : Nicolas Roche
- * Date begin : 2012/05/01
- *     change : 2012/05/01
  * Description: Add file and line to the log (so as to debug more easily)
  * Synopsis   : void logParser(level, format, ...)
  * Input      : Wrapper for logEmitFunc function
  * Output     : N/A
- * Note       : path are troncated to basenames so as to make compatible
- *              "make check" and "make distcheck" output
  =======================================================================*/
-#define logEmit(priority, format, ...) do {				\
-    /* need local variables to manage concurent calls */		\
-    char *file;								\
-    char logBuffer[256] = LOG_TEMPLATE;					\
-    strncpy(logBuffer+MISC_LOG_OFFSET, format, 256-MISC_LOG_OFFSET);	\
-    for (file = __FILE__ + strlen(__FILE__);				\
-	 file > (char*)__FILE__ && *(file-1) != '/';			\
-	 --file);							\
-    logEmitFunc(DefaultLog, priority, logBuffer,			\
-		(LogSeverities + (priority))->name,			\
-		file, __LINE__, __VA_ARGS__);				\
-  } while (0)
+#define logEmit(priority, format, ...)					\
+  logEmitMacro(env.logHandler, priority, __FILE__, __LINE__,		\
+	       format, ## __VA_ARGS__);
 
 /*=======================================================================
  * Macro      : logAlloc
@@ -121,11 +119,12 @@ extern LogHandler* logClose(LogHandler* logHandler);
  * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logAlloc(priority, format, ...) {				\
-    if (priority < LOG_INFO || env.debugMemory == TRUE) {		\
-      logEmit(priority, format, __VA_ARGS__);				\
-    }									\
-  }									\
+#define logAlloc(priority, file, line, format, ...) {		\
+    if (priority < LOG_NOTICE || env.debugAlloc) {		\
+      logEmitMacro(env.logHandler, priority, file, line,	\
+		   format, ## __VA_ARGS__);			\
+    }								\
+  }
 
 /*=======================================================================
  * Macro      : logMemory
@@ -137,11 +136,11 @@ extern LogHandler* logClose(LogHandler* logHandler);
  * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logMemory(priority, format, ...) {				\
-    if (priority < LOG_INFO || env.debugMemory == TRUE) {		\
-      logEmit(priority, format, __VA_ARGS__);				\
-    }									\
-  }									\
+#define logMemory(priority, format, ...) {			\
+    if (priority < LOG_NOTICE || env.debugMemory) {		\
+      logEmit(priority, format, ## __VA_ARGS__);		\
+    }								\
+  }
     
 /*=======================================================================
  * Macro      : logParser
@@ -153,11 +152,11 @@ extern LogHandler* logClose(LogHandler* logHandler);
  * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logParser(priority, format, ...) {				\
-    if (priority < LOG_INFO || env.debugParser == TRUE) {		\
-      logEmit(priority, format, __VA_ARGS__);				\
-    }									\
-  }									\
+#define logParser(priority, format, ...) {			\
+    if (priority < LOG_NOTICE || env.debugParser) {		\
+      logEmit(priority, format, ## __VA_ARGS__);		\
+    }								\
+  }
 
 /*=======================================================================
  * Macro      : logCommon
@@ -169,13 +168,13 @@ extern LogHandler* logClose(LogHandler* logHandler);
  * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logCommon(priority, format, ...) {				\
-    if (priority < LOG_INFO || env.debugCommon == TRUE) {		\
-      logEmit(priority, format, __VA_ARGS__);				\
-    }									\
-  }									\
+#define logCommon(priority, format, ...) {			\
+    if (priority < LOG_NOTICE || env.debugCommon) {		\
+      logEmit(priority, format, ## __VA_ARGS__);		\
+    }								\
+  }
 
-#endif /* MISC_LOG_H */
+#endif /* MDTX_MISC_LOG_H */
 
 /* Local Variables: */
 /* mode: c */

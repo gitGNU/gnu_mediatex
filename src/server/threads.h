@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: threads.h,v 1.3 2015/06/03 14:03:56 nroche Exp $
+ * Version: $Id: threads.h,v 1.4 2015/06/30 17:37:38 nroche Exp $
  * Project: MediaTeX
- * Module : server/threads
+ * Module : threads
  *
  * Handle sockets and signals
 
@@ -42,7 +42,7 @@ extern void* socketJob(void* arg);
 
 // to be called by Job callbacks when finishing
 void signalJobEnds();
-void socketJobEnds();
+void socketJobEnds(Connexion* connexion);
 
 // main thread
 int mainLoop();

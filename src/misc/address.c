@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.4 2015/06/03 14:03:43 nroche Exp $
+ * Version: $Id: address.c,v 1.5 2015/06/30 17:37:30 nroche Exp $
  * Project: 
  * Module : socket address
 
@@ -25,44 +25,42 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ======================================================================= */
 
-#include "../mediatex.h"
-#include "alloc.h"
-#include "log.h"
-#include "address.h"
+#include "mediatex-config.h"
 
-#include <string.h>  /* for memset */
-#include <netdb.h>
+#include <netdb.h> // gethostbyaddr
 
-#include <netinet/tcp.h> /* for TCP_NODELAY */
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#include <sys/socket.h>  //
+#include <netinet/tcp.h> // inet_ntoa
+#include <arpa/inet.h>   //
 
 
 /*=======================================================================
  * Function   : getHostNameByAddr
- * Author     : Nicolas ROCHE
  * Description: Retrieve the host name from the IP address
  * Synopsis   : getHostNameByAddr(struct in_addr* inAddr)
  * Input      : struct in_addr* inAddr
- * Output     : the host name
+ * Output     : an allocated string for the host name
  * Note       : Need an entry in /etc/hosts for local machine.
  *              Maybe need /etc/host.conf: order hosts,bind
  *              We should prefer to retrieve IP from hostname if possible
- * TODO       : use gethostbyaddr_r instead
  =======================================================================*/
 char*
 getHostNameByAddr(struct in_addr* inAddr)
 {
   char* rc = 0;
-  struct hostent  *sHost;
+  struct hostent sHost;
+  struct hostent *result = 0;
+  char buf[256];
+  int h_errnop = 0;
 
-  sHost = gethostbyaddr(inAddr, sizeof(struct in_addr), AF_INET);
-
-  if (sHost == (struct hostent*)0) {
+  if ((gethostbyaddr_r(inAddr, sizeof(struct in_addr), AF_INET,
+		       &sHost, buf, 256, &result, &h_errnop)) 
+      || !result) {
     logEmit(LOG_NOTICE, 
-	    "gethostbyaddr: cannot retrieve host name for %s: %s",
-	    inet_ntoa(*inAddr), strerror(errno));
-    switch (h_errno) {
+	    "gethostbyaddr_r: cannot retrieve host name for %s: %s",
+	    inet_ntoa(*inAddr), hstrerror(h_errnop));
+
+    switch (h_errnop) {
     case HOST_NOT_FOUND:
       logEmit(LOG_INFO, "gethostbyaddr: %s", "HOST_NOT_FOUND");
       
@@ -75,25 +73,28 @@ getHostNameByAddr(struct in_addr* inAddr)
       strcpy(rc, inet_ntoa(*inAddr));
       goto end;
     case NO_ADDRESS:
-      /* case NO_DATA: // same case value as NO_ADDRESS */
       logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_ADDRESS");
-      break;
+      goto error;
     case NO_RECOVERY:
       logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_RECOVERY");
       goto error;
     case TRY_AGAIN:
       logEmit(LOG_ERR, "gethostbyaddr: %s", "TRY_AGAIN");
       goto error;
+    case ERANGE:
+      logEmit(LOG_ERR, "gethostbyaddr: %s", "ERANGE");
+      goto error;
     }
+    goto error;
   }
 
   // normal case (found a hostname)
-  if ((rc = (char*)malloc(strlen(sHost->h_name)+1)) == 0) {
+  if ((rc = (char*)malloc(strlen(sHost.h_name)+1)) == 0) {
     logEmit(LOG_ERR, "malloc cannot allocate string of len %i+1",
-	    strlen(sHost->h_name));
+	    strlen(sHost.h_name));
     goto error;
   }
-  strcpy(rc, sHost->h_name);
+  strcpy(rc, sHost.h_name);
  end:
  error:
   return rc;
@@ -108,15 +109,15 @@ getHostNameByAddr(struct in_addr* inAddr)
  * Input      : char* hostname = the hostname
  *              struct in_addr *ipv4 = structure to fill
  * Output     : TRUE on success
- * TODO       : The  gethostbyname*() and gethostbyaddr*() functions are
- *              obsolete. Applications should use getaddrinfo(3) and 
- *              getnameinfo(3) instead.
  =======================================================================*/
 int
 getIpFromHostname(struct in_addr *ipv4, const char* hostname)
 {
-  struct hostent  *sHost = (struct hostent*)0;
   int a,b,c,d;
+  struct hostent sHost;
+  struct hostent *result = 0;
+  char buf[256];
+  int h_errnop = 0;
 
   memset(ipv4, 0, sizeof(struct in_addr));
 
@@ -128,11 +129,13 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
     }
   }
   else {
-    if ((sHost = gethostbyname(hostname)) == (struct hostent *)0) {
-      logEmit(LOG_ERR, "gethostbyname %s: %s", hostname, strerror(errno));
+    if ((gethostbyname_r(hostname, &sHost, buf, 256, &result, &h_errnop)) 
+	|| !result) {
+      logEmit(LOG_ERR, "gethostbyname_r %s: %s", 
+	      hostname, hstrerror(h_errnop));
       goto error;
     }
-    *ipv4 = *((struct in_addr *) sHost->h_addr);
+    *ipv4 = *((struct in_addr *) sHost.h_addr);
   }
 
   return TRUE;
@@ -248,103 +251,6 @@ buildSocketAddress(struct sockaddr_in* address,
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  miscUsage(programName);
-
-  miscOptions();
-  //fprintf(stderr, "\t\t---\n");
-
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * Description: Unit test for udp module
- * Synopsis   : utudp
- * Input      : -c option for client (else act as a server)
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  struct sockaddr_in address;
-  struct in_addr ipv4;
-  char* text = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    //{"input-file", required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!getIpFromHostname(&ipv4, "localhost")) goto error;;
-  printf("IP of localhost is: %s\n", inet_ntoa(ipv4)); 
-  
-  if (!buildSocketAddressEasy(&address, 0x7f000001, 7)) {
-    logEmit(LOG_ERR, "%s", "error while building socket address (1)");
-    goto error;
-  } 
- 
-  if ((text = getHostNameByAddr(&address.sin_addr)) == 0)
-    goto error;
-
-  printf("host name of 0x7f000001 is: %s\n", text);
-  free(text);
-
-  if (!buildSocketAddress(&address, "localhost", "udp", "echo")) {
-    logEmit(LOG_ERR, "%s", "error while building socket address (2)");
-    goto error;
-  }
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

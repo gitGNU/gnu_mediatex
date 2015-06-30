@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: command.h,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_COMMAND_H
-#define MISC_COMMAND_H 1
+#ifndef MDTX_MISC_COMMAND_H
+#define MDTX_MISC_COMMAND_H 1
 
-#include "alloc.h"
+#include "mediatex-types.h"
 #include <getopt.h>
 
 #define MISC_SHORT_OPTIONS "hvf:s:l:na:AS"
@@ -224,13 +224,13 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Input      : N/A
  * Output     : N/A
  =======================================================================*/
-#define ENDINGS							\
-  logEmit(LOG_INFO, "exit on %s", rc?"success":"error");	\
-  if (env.debugAlloc) memoryStatus(LOG_NOTICE);			\
-  exitMalloc();							\
-  DefaultLog = logClose(DefaultLog)
+#define ENDINGS								\
+  logEmit(LOG_INFO, "exit on %s", rc?"success":"error");		\
+  if (env.debugAlloc) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);	\
+  exitMalloc();								\
+  env.logHandler = logClose(env.logHandler)
 
-#endif /* MISC_COMMAND_H */
+#endif /* MDTX_MISC_COMMAND_H */
 
 /* Local Variables: */
 /* mode: c */

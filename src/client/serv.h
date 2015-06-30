@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: serv.h,v 1.3 2015/06/03 14:03:30 nroche Exp $
+ * Version: $Id: serv.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/serv
+ * Module : serv
  *
  * Manage servers.txt modifications
 
@@ -22,8 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_UPGRADE_H
-#define MDTX_WRAPPER_UPGRADE_H 1
+#ifndef MDTX_CLIENT_SERV_H
+#define MDTX_CLIENT_SERV_H 1
 
 // to use to ptrevent concurrent wrappers running together
 int clientWriteLock(); 
@@ -37,7 +37,7 @@ int mdtxUpgrade(char* label);
 int addKey(char* label, char* path);
 int delKey(char* label, char* path);
 
-#endif /* MDTX_WRAPPER_UPGRADE_H */
+#endif /* MDTX_CLIENT_SERV_H */
 
 /* Local Variables: */
 /* mode: c */

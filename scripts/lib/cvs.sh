@@ -1,8 +1,6 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.4 2015/06/03 14:03:25 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.5 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -25,18 +23,21 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 # includes
 MDTX_SH_CVS=1
 [ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
+[ -z $libdir ] && libdir=$srcdir/scripts/lib
+[ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 
 # this function initialise a CVS repository
 function CVS_init_cvsroot()
 {
     Debug $FUNCNAME 2
-    CVSROOT=$STATEDIR/$MDTX
+    # /var/lib/mediatex/mdtx/
 
     if [ -d $CVSROOT/CVSROOT/history ]; then
 	Warning "re-use already existing mdtx's cvsroot"
@@ -53,18 +54,20 @@ function CVS_init_cvsroot()
 function CVS_mdtx_import()
 {
     Debug "$FUNCNAME $1" 2
-    CVSROOT=$STATEDIR/$MDTX
-    EXAMPLE=$DATADIR/examples
-    CVS=$CACHEDIR/$MDTX/cvs/$MDTX
 
-    if [ -f $CVSROOT/$MDTX/$MDTX.conf,v ]; then
+    # /var/cache/mediatex/mdtx/cvs/mdtx
+    CVS=$CVSCLT/$MDTX
+
+    # /var/lib/mediatex/mdtx/mdtx/mdtx.conf,v
+    if [ -f $CVSROOT/$MDTX/$MDTX$CONF_CONFFILE,v ]; then
 	Warning "re-use already imported mdtx module"
     else 
 	cd $CVS
 
-	# add files
-	install -o $MDTX -g $MDTX -m 660 $EXAMPLE$MEDIATEX.conf $MDTX.conf
-	install -o $MDTX -g $MDTX -m 660 $EXAMPLE/supports.txt .
+	# add files from /usr/share/mediatex/misc/
+	install -o $MDTX -g $MDTX -m 660 $MISC$MEDIATEX$CONF_CONFFILE \
+	    $MDTX$CONF_CONFFILE
+	install -o $MDTX -g $MDTX -m 660 $MISC$CONF_SUPPFILE .
 
 	# import them
 	QUERY="CVSUMASK=027"
@@ -79,14 +82,14 @@ function CVS_mdtx_import()
 }
 
 # this function import a collection module
-# $1: user (MDTX-COLL)
+# $1: collection user (MDTX-COLL)
 function CVS_coll_import()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    CVSROOT=$STATEDIR/$MDTX
-    EXAMPLE=$DATADIR/examples
-    CVS=$CACHEDIR/$MDTX/cvs/$1
+
+    # /var/cache/mediatex/mdtx/cvs/mdtx-coll
+    CVS=$CVSCLT/$1
 
     # create CVSROOT dir (or re-use it)
     install -o $1 -g $1 -m 2750 -d $CVSROOT/$1
@@ -100,25 +103,28 @@ function CVS_coll_import()
 	# add files
 	install -o $USER -g $USER -m 770 -d apache2
 	install -o $USER -g $USER -m 770 -d icons
-	install -o $USER -g $USER -m 660 $EXAMPLE/floppy-icon.png icons
-	install -o $USER -g $USER -m 660 $EXAMPLE/home.htaccess apache2
-	install -o $USER -g $USER -m 660 $EXAMPLE/htgroup apache2
+	install -o $USER -g $USER -m 660 $MISC/floppy-icon.png icons
+	install -o $USER -g $USER -m 660 $MISC/home.htaccess apache2
+	install -o $USER -g $USER -m 660 $MISC/htgroup apache2
+
 	sed apache2/htgroup -i -e "s!MDTX!$MDTX!"
-	for f in logo.png mediatex.css \
-	    catalog00.txt extract00.txt servers.txt 
+
+	for f in logo.png mediatex.css ${CONF_CATHFILE}00.txt \
+	    ${CONF_EXTRFILE}00.txt ${CONF_SERVFILE}.txt 
 	do
-	    install -o $USER -g $USER -m 660 $EXAMPLE/$f .
+	    install -o $USER -g $USER -m 660 $MISC/$f .
 	done
 
 	for t in home index cache score cgi; do
-	    install -o $USER -g $USER -m 660 $EXAMPLE/$t.htaccess apache2
+	    install -o $USER -g $USER -m 660 $MISC/$t.htaccess apache2
 
 	    # adapt them
 	    if [ $t == cgi ]; then continue; fi
-	    sed apache2/$t.htaccess -i -e "s!MEDIATEX!$MEDIATEX!"
-	    sed apache2/$t.htaccess -i -e "s!MDTX-COLL!$1!"
-	    sed apache2/$t.htaccess -i -e "s!MDTX!$MDTX!"
-	    sed apache2/$t.htaccess -i -e "s!ETCDIR!$ETCDIR!"
+	    sed apache2/$t.htaccess -i \
+		-e "s!MEDIATEX!$MEDIATEX!" \
+		-e "s!MDTX-COLL!$1!" \
+		-e "s!MDTX!$MDTX!" \
+		-e "s!ETCDIR!$ETCDIR!"
 	done
 
 	cat > .cvsignore <<EOF
@@ -136,7 +142,7 @@ EOF
 	QUERY="$QUERY $USER $USER v1"
 	Info "$QUERY"
 	su $USER -c "cd $CVS && $QUERY" 2>&1 | 
-	sort || Error "error importing $1's cvs project (never raised)"
+	sort || Error "error importing $1's cvs project"
 	cd - >/dev/null
 	rm -fr $CVS/*
  	rm -f $CVS/.cvsignore
@@ -149,20 +155,18 @@ EOF
 function CVS_mdtx_checkout()
 {
     Debug "$FUNCNAME:" 2
-    CVSROOT=$STATEDIR/$MDTX
-    CVS=$CACHEDIR/$MDTX/cvs
 
-    if [ -d $CVS/$MDTX/CVS ]; then
+    if [ -d $CVSCLT/$MDTX/CVS ]; then
 	Warning "re-use already checkout cvs module: $MDTX"
     else
-	cd $CVS
+	cd $CVSCLT
 	UMASK=$(umask -p)
 	umask 0007
 
 	QUERY="cvs -d $CVSROOT co $MDTX" 
 	Info "su MDTX -c \"$QUERY\""
 	su $MDTX -c "$QUERY" | sort ||
-	Error "cannot checkout module: $MDTX (never raised)"
+	Error "cannot checkout module: $MDTX"
 
 	eval $UMASK
 	cd - > /dev/null
@@ -178,30 +182,30 @@ function CVS_coll_checkout()
 {
     Debug "$FUNCNAME: $1 $2-$3@$4" 2
     [ $# -eq 4 ] || Error "expect 4 parameter"
-    CVS=$CACHEDIR/$MDTX/cvs
-    MODULE="$2-$3"
-    CVSROOT=":ext:${2}-${3}@${4}:/var/lib/cvsroot"
 
-#    if [ -d $CVS/$1/CVS ]; then
+    EXT_MODULE="$2-$3"
+    EXT_CVSROOT=":ext:${2}-${3}@${4}:/var/lib/cvsroot"
+
+#    if [ -d $CVSCLT/$1/CVS ]; then
 #	Warning "re-use already checkout cvs module: $1"
 #    else
-	cd $CVS || Error "cannot cd to cvs working directory: $CVS"
-	[ "$MODULE" = "$1" ] ||  mv $1 $MODULE
+	cd $CVSCLT || Error "cannot cd to cvs working directory: $CVSCLT"
+	[ "$EXT_MODULE" = "$1" ] || mv $1 $EXT_MODULE
 
 	# force checkout
-	rm -fr $CVS/$MODULE/*
-	rm -f $CVS/$MODULE/.cvsignore
+	rm -fr $CVSCLT/$EXT_MODULE/*
+	rm -f $CVSCLT/$EXT_MODULE/.cvsignore
 
 	UMASK=$(umask -p)
 	umask 0007
 
-	QUERY="cvs -d $CVSROOT co $MODULE" 
+	QUERY="cvs -d $EXT_CVSROOT co $EXT_MODULE" 
 	Info "su USER -c \"$QUERY\""
 	su $USER -c "$QUERY" 2>&1 ||
-	Error "cannot checkout module: $MODULE (never raised)"
+	Error "cannot checkout module: $EXT_MODULE (never raised)"
 
 	eval $UMASK
-	[ "$MODULE" = "$1" ] || mv $MODULE $1
+	[ "$EXT_MODULE" = "$1" ] || mv $EXT_MODULE $1
 	cd - > /dev/null || true
 #    fi
 }
@@ -212,9 +216,9 @@ function CVS_update()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    CVS=$CACHEDIR/$MDTX/cvs/$1
 
-    cd $CVS ||
+    # /var/cache/mediatex/mdtx/cvs/mdtx-coll
+    cd $CVSCLT/$1 ||
     Error "cannot cd to cvs working directory: $CVS"
     UMASK=$(umask -p)
     umask 0007
@@ -238,11 +242,12 @@ function CVS_commit()
 {
     Debug "$FUNCNAME: $1 $2" 2
     [ $# -eq 2 ] || Error "expect 2 parameters"
-    CVS=$CACHEDIR/$MDTX/cvs/$1
+
     QUERY2="cvs commit -m \"$2\""
 
-    cd $CVS ||
-    Error "cannot cd to cvs working directory: $CVS"
+    # /var/cache/mediatex/mdtx/cvs/mdtx-coll
+    cd $CVSCLT/$1 ||
+    Error "cannot cd to cvs working directory: $CVSCLT/$1"
     UMASK=$(umask -p)
     umask 0007
 
@@ -255,12 +260,13 @@ function CVS_commit()
 
     # su to mdtx user when call from init.sh
     if [ $(id -u) -eq 0 ]; then
-	QUERY2="su $MDTX -c '$QUERY'"
+	#QUERY2="su $MDTX -c '$QUERY'"
+	QUERY2="su $MDTX -c '$QUERY2'"
     fi
 
     Info "$QUERY2"
     eval $QUERY2 2>&1 ||
-    Error "cannot commit cvs working directory: $CVS"
+    Error "cannot commit cvs working directory: $CVSCLT/$1"
 
     eval $UMASK
     cd - > /dev/null 2>&1 || true
@@ -277,61 +283,3 @@ function CVS_mdtx_setup()
     CVS_update $MDTX
     CVS_commit $MDTX "$(basename $0)"
 }
-
-# unitary tests
-if UNIT_TEST_start "cvs"; then
-    [ ! -z $MDTX_SH_USERS ] || source $libdir/users.sh
-    [ ! -z $MDTX_SH_SSH ]   || source $libdir/ssh.sh
-
-    MDTX="ut2-mdtx"
-    COLL="hello"
-    USER="$MDTX-$COLL"
-
-    # cleanup if previous test has failed
-    USERS_coll_remove_user $USER
-    USERS_mdtx_remove_user
-
-    # cf init.sh
-    USERS_root_populate
-    USERS_mdtx_create_user
-    CVS_mdtx_setup
-    
-    # test mdtx module
-    cd $CACHEDIR/$MDTX/cvs/$MDTX
-    echo -e "\n# test\n" >> $MDTX.conf
-    su $MDTX -c "cvs commit -m \"unit-test\"" 2>&1 | sort
-    su $MDTX -c "cvs update -d" 2>&1 | sort
-    su $MDTX -c "cvs log $MDTX.conf"
-    cd - >/dev/null
-    
-    # cf new.sh
-    USERS_coll_create_user $USER
-    CVS_coll_import $USER
-    SSH_build_key $USER
-    SSH_bootstrapKeys $USER
-    SSH_configure_client $USER "localhost" 22
-
-    # test ssh
-    QUERY="ssh -o PasswordAuthentication=no ${USER}@localhost ls"
-    Info "su USER -c \"$QUERY\""
-    su $USER -c "$QUERY" || Error "Cannot connect via ssh"
-
-    # test collection module
-    cd $CACHEDIR/$MDTX/cvs
-    su $USER -c "cvs -d :ext:$USER@localhost:$STATEDIR/$MDTX co $USER" | 
-    sort
-    cd - >/dev/null
-    cd $CACHEDIR/$MDTX/cvs/$USER
-    echo -e "\n# test\n" >> $CACHEDIR/$MDTX/cvs/$USER/catalog00.txt
-    su $USER -c "cvs commit -m \"unit-test\"" 2>&1 | sort
-    su $USER -c "cvs update -d" 2>&1 | sort
-    su $USER -c "cvs log catalog00.txt"
-    cd - >/dev/null
-   
-    # cf free.sh & remove.sh
-    USERS_coll_remove_user $USER
-    USERS_mdtx_remove_user
-
-    Info "success" 
-    UNIT_TEST_stop "cvs"
-fi

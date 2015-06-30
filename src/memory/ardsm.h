@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.h,v 1.3 2015/06/03 14:03:38 nroche Exp $
+ * Version: $Id: ardsm.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: SCOREDIT
  * Module : ardsm
  *
@@ -23,8 +23,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ARDSM_H
-#define MEMORY_ARDSM_H 1
+#ifndef MDTX_MEMORY_ARDSM_H
+#define MDTX_MEMORY_ARDSM_H 1
 
 typedef struct RGIT
 {   /*  RinG ITem : */
@@ -71,6 +71,7 @@ int rgShareItems(RG* ring1, RG* ring2);
 RG* rgInter(RG* ring1, RG* ring2);
 RG* rgUnion(RG* ring1, RG* ring2);
 RG* rgMinus(RG* ring1, RG* ring2);
+int cmpPtr(const void *p1, const void *p2);
 
 RG* createRing(void);
 RG* destroyOnlyRing(RG* self);
@@ -80,7 +81,7 @@ RG* copyRing(RG* destination, RG* source,
 			 void* (*copyItem)(void*, const void*));
 inline int isEmptyRing(RG* self);
 
-#endif /* MEMORY_ARDSM_H */
+#endif /* MDTX_MEMORY_ARDSM_H */
 
 /* Local Variables: */
 /* mode: c */

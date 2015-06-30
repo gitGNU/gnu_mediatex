@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: delUser.sh,v 1.3 2015/06/03 14:03:23 nroche Exp $
+# * Version: $Id: delUser.sh,v 1.4 2015/06/30 17:37:20 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *

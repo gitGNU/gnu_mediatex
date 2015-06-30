@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,16 +22,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "alloc.h"
-#include "signals.h"
-#include "md5sum.h"
+#include "mediatex-config.h"
+#include <openssl/md5.h>
 
-#include "progbar.h"
-#include "device.h"
+#if MAX_SIZE_HASH != (MD5_DIGEST_LENGTH << 1)
+#error Bad size used to store md5sums !!
+#endif
 
-#include <sys/types.h>   // open
-#include <sys/stat.h>    // open
-#include <fcntl.h>       // open
 
 /*=======================================================================
  * Function   : manageSIGALRM
@@ -197,8 +194,8 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   bytes=read(fd, buf, 512);
 
   while((!size || *sum < size) &&
-	*sum < MEGABYTE && bytes > 0) {
-    if (*sum + bytes > MEGABYTE) bytes -= ((*sum + bytes) - MEGABYTE);
+	*sum < MEGA && bytes > 0) {
+    if (*sum + bytes > MEGA) bytes -= ((*sum + bytes) - MEGA);
     *sum += bytes;
     MD5_Update(c, buf, bytes);
     env.progBar.cur = *sum;
@@ -212,7 +209,7 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   logEmit(LOG_INFO, "%s quick md5sum computed on %llu bytes", 
 	  quickMd5sum, (long long unsigned int)*sum);
 
-  rc = (*sum > 0 && *sum <= MEGABYTE);
+  rc = (*sum > 0 && *sum <= MEGA);
  error:
   return(rc);
 }
@@ -408,140 +405,6 @@ doMd5sum(Md5Data* data)
   }
   return rc;
 }
-
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually
- *                                  argv[0].
- * Output     : N/A
- =======================================================================*/
-static 
-void usage(char* programName)
-{
-  miscUsage(programName);
-  fprintf(stderr, "\n\t\t[ -i device ] [ -p ]");
-
-  miscOptions();
-  fprintf(stderr, "  ---\n"
-	  "  -i, --input-file\tinput device to compute checksums on\n"
-	  "  -p, --no-progbar\tdo not show the progbar\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 
- * Description: Unit test for md5sum module
- * Synopsis   : ./utcommand -i scriptPath
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char* inputPath = 0;
-  Md5Data data;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"i:p";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    {"input-file", required_argument, 0, 'i'},
-    {"no-progbar", no_argument, 0, 'p'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-  env.noRegression = FALSE; // show the progbar 
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'i':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, "%s: nil or empty argument for the input device\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      if ((inputPath = malloc(strlen(optarg) + 1)) == 0) {
-	fprintf(stderr, "cannot malloc the input device path: %s", 
-		strerror(errno));
-	rc = ENOMEM;
-	break;
-      }
-      strncpy(inputPath, optarg, strlen(optarg)+1);
-      break;
-      
-    case 'p':
-      env.noRegression = TRUE; // hide the progbar
-      break;
-
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (inputPath == 0) {
-    usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a file to compute checksums");
-    goto error;
-  }
-
-  memset((void*)&data, 0, sizeof(data)); // valgrind complains
-  data.path = inputPath;
-  data.size = 0; // undef
-  
-  logEmit(LOG_DEBUG, "%s", 
-	  "Quick computation, no path resolution, no progbar");
-  data.opp = MD5_CACHE_ID;
-  if (!doMd5sum(&data)) goto error;
-  
-  logEmit(LOG_NOTICE, "%s", "Quick computation, path resolution, progbar");
-  data.opp = MD5_SUPP_ID;
-  if (!doMd5sum(&data)) goto error;
-      
-  logEmit(LOG_NOTICE, "%s", "Full computation, path resolution, progbar");
-  data.opp = MD5_SUPP_ADD;
-  if (!doMd5sum(&data)) goto error;
-  
-  logEmit(LOG_NOTICE, "%s", "Full check, path resolution, progbar");
-  data.opp = MD5_SUPP_CHECK;
-  if (!doMd5sum(&data)) goto error;
-  
-  if (data.rc != MD5_SUCCESS) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  if (inputPath) free(inputPath);
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

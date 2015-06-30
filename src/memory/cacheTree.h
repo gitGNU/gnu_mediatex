@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.3 2015/06/03 14:03:38 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: MediaTeX
- * Module : cache
+ * Module : cache memory
  *
- * Manage local cache directory and DB
+ * Manage local cache directory
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,12 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_MEMORY_CACHE_TREE_H
-#define MDTX_MEMORY_CACHE_TREE_H 1
+#ifndef MDTX_MEMORY_CACHE_H
+#define MDTX_MEMORY_CACHE_H 1
 
-#include "../mediatex.h"
-#include "confTree.h"
-#include <pthread.h>
+#include "mediatex-types.h"
 
 /* API */
 
@@ -37,6 +35,22 @@ typedef enum {
   MUTEX_COMPUTE=2,
   MUTEX_MAX=3
 } CacheMutex;
+
+// hight level type computed from type, host and path
+typedef enum {
+  UNDEF_RECORD = 0,
+  FINALE_SUPPLY = 1, 
+  LOCALE_SUPPLY = 2,
+  REMOTE_SUPPLY = 4,
+  MALLOC_SUPPLY = 8,   // use by merger to reserve space
+  FINALE_DEMAND = 16, 
+  LOCALE_DEMAND = 32,
+  REMOTE_DEMAND = 64,
+  TOKEEP_DEMAND = 128, // NO MORE USED !
+  ALL_SUPPLY    = 1|2|4,
+  ALL_DEMAND    = 16|32|64|128,
+  ALL_RECORD    = 1|2|4|16|32|64|128,
+} RecordType;
 
 // cache content
 struct CacheTree
@@ -83,7 +97,7 @@ int getCacheSizes(Collection* coll,
 
 int diseaseCacheTree(Collection* coll);
 
-#endif /* MDTX_MEMORY_CACHE_TREE_H */
+#endif /* MDTX_MEMORY_CACHE_H */
 
 /* Local Variables: */
 /* mode: c */

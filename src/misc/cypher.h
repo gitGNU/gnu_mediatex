@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: cypher.h,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: cypher.h,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
- * md5sum computation
+ * aes encryption
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_CYPHER_H
-#define MISC_CYPHER_H 1
+#ifndef MDTX_MISC_CYPHER_H
+#define MDTX_MISC_CYPHER_H 1
 
-#include "../mediatex.h"
+#include "mediatex.h"
 #include <openssl/aes.h>
 
 typedef enum {NONE, ENCRYPT, DECRYPT} MDTX_AES_WAY;
@@ -51,7 +51,7 @@ int aesPrint(AESData* data, const char* format, ...);
 int aesFlush(AESData* data);
 int aesInput(AESData* data, char* buf, int *result, int maxsize);
 
-#endif /* MISC_CYPHER_H */
+#endif /* MDTX_MISC_CYPHER_H */
 
 /* Local Variables: */
 /* mode: c */

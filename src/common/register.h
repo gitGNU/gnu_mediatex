@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: register.h,v 1.3 2015/06/03 14:03:34 nroche Exp $
+ * Version: $Id: register.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
- * Module : bus/register
+ * Module : register
  
- * Manage simple interaction between wrapper and server
+ * Manage signals from client to server using registers
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,8 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_BUS_REGISTER_H
-#define MDTX_BUS_REGISTER_H 1
+#ifndef MDTX_COMMON_REGISTER_H
+#define MDTX_COMMON_REGISTER_H 1
+
+#include "mediatex-types.h"
 
 #define MDTX_SAVEMD5 0 // force daemon to write md5sum.txt file
 #define MDTX_EXTRACT 1 // run extraction procedure
@@ -51,7 +53,7 @@ int mdtxShmFree();
 int mdtxAsyncSignal(int signal);
 int mdtxSyncSignal(int flag);
 
-#endif /* MDTX_BUS_REGISTER_H */
+#endif /* MDTX_COMMON_REGISTER_H */
 
 /* Local Variables: */
 /* mode: c */

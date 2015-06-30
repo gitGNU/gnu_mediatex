@@ -1,15 +1,7 @@
-# autoreconf -i
-Makefile.in
-# ./configure
+# configure
 .deps
-Makefile
+
 # make
+.dirstamp
 .libs
-mediatexd
-# make check
-ut[a-z]*
-ut*.out
-ut*.txt
-ut*.sort
-*.log
-*.trs
+*.lo

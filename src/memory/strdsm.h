@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: strdsm.h,v 1.3 2015/06/03 14:03:40 nroche Exp $
+ * Version: $Id: strdsm.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
  * Project: MediaTeX
  * Module : strdsm
  *
@@ -23,8 +23,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_STRDSM_H
-#define MEMORY_STRDSM_H 1
+#ifndef MDTX_MEMORY_STRDSM_H
+#define MDTX_MEMORY_STRDSM_H 1
 
 char* createString(const char* content);
 char* createSizedString(size_t size, const char* content);
@@ -36,7 +36,7 @@ char* destroyString(char* self);
 inline int isEmptyString(const char* content);
 int cmpString(const void *p1, const void *p2);
 
-#endif /* MEMORY_STRDSM_H */
+#endif /* MDTX_MEMORY_STRDSM_H */
 
 /* Local Variables: */
 /* mode: c */

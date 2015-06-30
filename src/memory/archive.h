@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.3 2015/06/03 14:03:37 nroche Exp $
+ * Version: $Id: archive.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -25,7 +25,7 @@
 #ifndef MDTX_MEMORY_ARCHIVE_H
 #define MDTX_MEMORY_ARCHIVE_H 1
 
-#include "confTree.h"
+#include "mediatex-types.h"
 
 // type write into Record struct
 typedef enum {UNUSED = 0, USED, WANTED, ALLOCATED, AVAILABLE, TOKEEP,

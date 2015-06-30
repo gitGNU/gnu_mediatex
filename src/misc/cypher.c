@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: cypher.c,v 1.3 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: cypher.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
- * Module : checksums
+ * Module : cypher
  *
- * md5sum computation
+ * aes encryption
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,11 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "log.h"
-#include "tcp.h"
-#include "cypher.h"
-
-//#include <stdarg.h>
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : aesInit
@@ -45,7 +41,8 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
   int rc = FALSE;
 
   if (key == 0 || key[MAX_SIZE_AES] != (char)0) goto error;
-  logEmit(LOG_DEBUG, "loadAesKey: '%s'", key);
+  logEmit(LOG_DEBUG, "loadAesKey: '%s' for %s", key,
+	  way==ENCRYPT?"writing":(way==DECRYPT?"reading":"??"));
   if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
     goto error;
@@ -113,9 +110,7 @@ doCypher(AESData* data) {
   int rc = FALSE;
   //int i;
 
-#ifdef utMAIN
   logEmit(LOG_DEBUG, "%s", "doCypher");
-#endif
 
   if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
@@ -198,9 +193,8 @@ fdWrite(int fd, void* buffer, size_t bufferSize)
     }
     remaining -= writen;
     next += writen;
-/* #ifdef utMAIN */
-/*     logEmit(LOG_INFO, "written %d ; remain %d", writen, remaining); */
-/* #endif */
+
+    //logEmit(LOG_INFO, "written %d ; remain %d", writen, remaining); */
   }
 
   rc = (remaining == 0);
@@ -238,9 +232,8 @@ fdRead(int fd, void* buffer, size_t bufferSize)
       rc += nread;
       next += nread;
       remaining -= nread;
-/* #ifdef utMAIN */
-/*       logEmit(LOG_INFO, "read %d ; remain %d", rc, remaining); */
-/* #endif */
+
+      //logEmit(LOG_INFO, "read %d ; remain %d", rc, remaining); */
     }
   }
 
@@ -261,9 +254,7 @@ aesFlush(AESData* data)
 {
   int rc = FALSE;
 
-#ifdef utMAIN
   logEmit(LOG_DEBUG, "%s", "aesFlush"); 
-#endif
 
   if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
@@ -324,9 +315,7 @@ aesPrint(AESData* data, const char* format, ...)
   int len = 0;
   int max = 0;
 
-#ifdef utMAIN
   logEmit(LOG_DEBUG, "%s", "aesPrint"); 
-#endif
 
   if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
@@ -401,9 +390,7 @@ aesInput(AESData* data, char* buf, int *result, int maxsize)
   (void) maxsize;
   *result = 0;
 
-#ifdef utMAIN
   logEmit(LOG_DEBUG, "%s", "aesInput"); 
-#endif
 
   if (data == 0) {
     logEmit(LOG_ERR, "%s", "please provide a AESData structure");
@@ -450,170 +437,6 @@ aesInput(AESData* data, char* buf, int *result, int maxsize)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-
-#include <sys/types.h> //open
-#include <sys/stat.h>
-#include <fcntl.h>
-
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually
- *                                  argv[0].
- * Output     : N/A
- =======================================================================*/
-static 
-void usage(char* programName)
-{
-  miscUsage(programName);
-  miscOptions();
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 
- * Description: Unit test for md5sum module
- * Synopsis   : ./utcommand -i scriptPath
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char key[MAX_SIZE_AES+1] = "1000000000000000";
-  AESData data;
-  int pipefd[2];
-  char buf[512];
-  int result = 0;
-  int i = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  
-  logEmit(LOG_NOTICE, "%s", "*** low level functions");
-
-  memcpy(data.mBlock, "top secret messg\0", 17);
-  logEmit(LOG_NOTICE, "message: %s", data.mBlock);
-
-  if (!aesInit(&data, key, ENCRYPT)) goto error;
-  if (!doCypher(&data)) goto error;
-  logEmit(LOG_NOTICE, "encrypt:  %s", data.cBlock);
-
-  if (!aesInit(&data, key, DECRYPT)) goto error;
-  if (!doCypher(&data)) goto error;
-  logEmit(LOG_NOTICE, "decrypt: %s", data.mBlock);
-
-  // =================
-
-  logEmit(LOG_NOTICE, "%s", "***  encrypt API");
-
-  if (!aesInit(&data, key, ENCRYPT)) goto error;
-  //data.fd = STDOUT_FILENO;
-  data.fd = open("/dev/null", O_WRONLY);
-
-  aesPrint(&data, "%s", "# Collection's archives:\n");
-  aesPrint(&data, "%s", "Headers\n"); 
-  aesPrint(&data, "\tCollection\t%-*s\n", MAX_SIZE_COLL, "unit-test");
-  aesPrint(&data, "\tDoCypher\t%s\n", "TRUE");
-  aesFlush(&data);
-  aesPrint(&data, "%s", "\nBody          \n");
-  data.doCypher = TRUE;
-  aesPrint(&data, "# %20s %15s %*s %*s %s\n",
-	   "date", "host", 
-	   MAX_SIZE_HASH, "hash", 
-	   MAX_SIZE_SIZE, "size", 
-	   "path");
-  aesFlush(&data);
-
-  // =====================
-
-  logEmit(LOG_NOTICE, "%s", "***  decrypt API");
-
-  if (pipe(pipefd) != 0) {
-    logEmit(LOG_NOTICE, "pipe fails: %s", strerror(errno));
-    goto error;
-  }
-
-  if (!aesInit(&data, key, ENCRYPT)) goto error;
-  data.fd = pipefd[1];
-
-  aesPrint(&data, "%s", "# Collection's archives:\n");
-  aesPrint(&data, "%s", "Headers\n"); 
-  aesPrint(&data, "\tCollection\t%-*s\n", MAX_SIZE_COLL, "unit-test");
-  aesPrint(&data, "\tDoCypher\t%s\n", "TRUE");
-  aesFlush(&data);
-  aesPrint(&data, "%s", "\nBody          \n");
-  data.doCypher = TRUE;
-  aesPrint(&data, "# %20s %15s %*s %*s %s\n",
-	   "date", "host", 
-	   MAX_SIZE_HASH, "hash", 
-	   MAX_SIZE_SIZE, "size", 
-	   "path");
-  aesFlush(&data);
-
-  close (pipefd[1]);
-  if (!aesInit(&data, key, DECRYPT)) goto error;
-  data.fd = pipefd[0];
- 
-  // because we know here we have 7*16 byte of header here
-  for (i=0; i<7; ++i) {
-    if (!aesInput(&data, buf, &result, 1024)) goto error;
-    buf[result] = (char)0;
-    printf("%s", buf);
-  };
-  data.doCypher = TRUE;
-  do {
-    if (!aesInput(&data, buf, &result, 1024)) goto error;
-    buf[result] = (char)0;
-    printf("%s", buf);
-  } while (result > 0);
-  
-  close (pipefd[0]);
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

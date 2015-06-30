@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.h,v 1.3 2015/06/03 14:03:38 nroche Exp $
+ * Version: $Id: catalogTree.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ADMCATALOG_H
-#define MEMORY_ADMCATALOG_H 1
+#ifndef MDTX_MEMORY_CATALOG_H
+#define MDTX_MEMORY_CATALOG_H 1
 
-#include "confTree.h"
+#include "mediatex-types.h"
 
 typedef enum {CATE=0, DOC, HUM, ARCH, ROLE, CTYPE_MAX} CType;
 
@@ -197,7 +197,7 @@ int delCategory(Collection* coll, Category* self);
 
 int diseaseCatalogTree(Collection* coll);
 
-#endif /* MEMORY_ADMCATALOG_H */
+#endif /* MDTX_MEMORY_CATALOG_H */
 
 /* Local Variables: */
 /* mode: c */

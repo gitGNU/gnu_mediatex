@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.4 2015/06/03 14:03:37 nroche Exp $
+ * Version: $Id: archive.c,v 1.5 2015/06/30 17:37:28 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -22,12 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "archive.h"
-
-#include <string.h> // memset
-#include <avl.h>
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : createArchive
@@ -451,124 +446,6 @@ diseaseArchives(Collection* coll)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "utFunc.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, " [ -d repository ]");
-
-  memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main
- * Author     : Nicolas Roche
- * modif      : 2012/02/11
- * Description: Unit test for md5sumTree module.
- * Synopsis   : utmd5sumTree
- * Input      : N/A
- * Output     : /tmp/mdtx/var/local/cache/mdtx/md5sums.txt
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  Archive* arch1 = 0;
-  Archive* arch2 = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MEMORY_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-       
-  // import mdtx environment
-  env.dryRun = FALSE;
-  env.debugMemory = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MEMORY_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  // test types on this architecture:
-  off_t offset = 0xFFFFFFFFFFFFFFFFULL; // 2^64
-  time_t timer = 0x7FFFFFFF; // 2^32
-  logMemory(LOG_DEBUG, "type off_t is store into %u bytes", 
-	  (unsigned int)sizeof(off_t));
-  logMemory(LOG_DEBUG, "type time_t is store into %u bytes", 
-	  (unsigned int) sizeof(time_t));
-  logMemory(LOG_DEBUG,  "off_t max value is: %llu", 
-	  (unsigned long long int)offset);
-  logMemory(LOG_DEBUG, "time_t max value is: %lu", 
-	  (unsigned long int)timer);
-
-  if (!createExempleConfiguration()) goto error;
-  if (!(coll = getCollection("coll1"))) goto error;
-
-  // creating an archive 2 times return the same object
-  if (!(arch1 =
-  	addArchive(coll, "780968014038afcbae5c6feca2e630de", 81)))
-    goto error;
-  if (!(arch2 =
-  	addArchive(coll, "780968014038afcbae5c6feca2e630de", 81)))
-    goto error;
-  if (arch1 != arch2) goto error;
-  
-  // search an archive
-  if (getArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222))
-    goto error;
-  if (!(arch1 =
-  	addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222)))
-    goto error;
-  if (getArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222) != arch1)
-    goto error;
-
-  if (avl_count(coll->archives) != 2) goto error;
-  if (!(diseaseArchives(coll))) goto error;
-  if (avl_count(coll->archives) != 0) goto error;
-  /************************************************************************/
-
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

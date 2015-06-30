@@ -1,8 +1,8 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: conf.c,v 1.4 2015/06/30 17:37:24 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/conf
+ * Module : conf
  *
  * Manage mediatex.conf configuration file
 
@@ -23,18 +23,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../memory/confTree.h"
-#include "../parser/confFile.tab.h"
-#include "../common/openClose.h"
-#include "supp.h"
-#include "serv.h"
-#include "conf.h"
-
-#include <sys/stat.h>
-#include <time.h>
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 
 
 /*=======================================================================
@@ -82,12 +72,11 @@ mdtxAddCollection(Collection* coll)
   argv[0] = catString(argv[0], "/new.sh");
   argv[1] = buf;
   
-#ifndef utMAIN
-  if (!execScript(argv, 0, 0, FALSE)) goto error;
-#endif
+  if (!env.noRegression) {
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  }
 
   // check if script realy success
-  if (!loadConfiguration(CONF)) goto error;
   if (!(cvsFile = createString(conf->cvsDir)) 
       || !(cvsFile =  catString(cvsFile, "/"))
       || !(cvsFile =  catString(cvsFile, env.confLabel))
@@ -105,14 +94,16 @@ mdtxAddCollection(Collection* coll)
   }
 
   // register collection into configuration file
+  if (!loadConfiguration(CFG)) goto error;
   if (!(self = addCollection(coll->label))) goto error;
+  destroyString(self->masterLabel);
   self->masterLabel = coll->masterLabel;
   coll->masterLabel = 0; // consume it
   strncpy(self->masterHost, coll->masterHost, MAX_SIZE_HOST);
   self->masterPort = coll->masterPort;
   if (!expandCollection(self)) goto error;
   if (!populateCollection(self)) goto error;
-  conf->fileState[iCONF] = MODIFIED; // upgrade conf
+  conf->fileState[iCFG] = MODIFIED; // upgrade conf
 
   // register collection into servers.txt file
   if (!(self->serverTree->master = getLocalHost(self))) goto error;
@@ -128,7 +119,7 @@ mdtxAddCollection(Collection* coll)
   }
   argv[0] = destroyString(argv[0]);
   cvsFile = destroyString(cvsFile);
-  // coll is freed by parser
+  // coll is free by parser
   return rc;
 }
 
@@ -160,19 +151,20 @@ mdtxDelCollection(char* label)
   argv[0] = createString(conf->scriptsDir);
   argv[0] = catString(argv[0], "/free.sh");
   argv[1] = label;
-#ifndef utMAIN
-  if (!execScript(argv, 0, 0, FALSE)) goto error;
-#endif
+
+  if (!env.noRegression) {
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  }
 
   // upgrade configuration file
   // note: do not expand collection
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!(coll = getCollection(label))) {
     logEmit(LOG_WARNING, "there was no collection named '%s'", label);
     goto end;
   }
   if (!delCollection(coll)) goto error;
-  conf->fileState[iCONF] = MODIFIED;
+  conf->fileState[iCFG] = MODIFIED;
   
  end:
   rc = TRUE;
@@ -201,7 +193,7 @@ mdtxListCollection()
   int nb = 0;
 
   // search into the configuration
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (conf->collections != 0) {
 
@@ -241,7 +233,7 @@ mdtxShareSupport(char* sLabel, char* cLabel)
   Collection* coll = 0;
 
   checkLabel(sLabel);
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(sLabel))) goto error;
 
@@ -263,7 +255,7 @@ mdtxShareSupport(char* sLabel, char* cLabel)
     if (!wasModifiedCollection(coll, SERV)) goto error;
   }
 
-  conf->fileState[iCONF] = MODIFIED;
+  conf->fileState[iCFG] = MODIFIED;
   rc = TRUE;
  error:
   if (!rc) {
@@ -290,7 +282,7 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
   Support* supp = 0;
   Collection* coll = 0;
 
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(sLabel))) goto error;
 
@@ -313,7 +305,7 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
     if (!wasModifiedCollection(coll, SERV)) goto error;
   }
 
-  conf->fileState[iCONF] = MODIFIED;
+  conf->fileState[iCFG] = MODIFIED;
   rc = TRUE;
  error:
   if (!rc) {
@@ -324,125 +316,6 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2010/12/10
- * Description: entry point for conf module
- * Synopsis   : ./utconf
- * Input      : N/A
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll3 = 0;
-  Collection* coll4 = 0;
-  char* supp = "SUPP21_logo.part1";
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!(coll3 = addCollection("coll3"))) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** List collections: ");
-  if (!mdtxListCollection()) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Add a collection:");
-  if (!(coll4 = createCollection())) goto error;
-  strncpy(coll4->label, "coll4", MAX_SIZE_COLL);
-  strncpy(coll4->masterHost, "localhost", MAX_SIZE_HOST);
-  if (!mdtxAddCollection(coll4)) goto error;
-  coll4 = destroyCollection(coll4);
-
-  logEmit(LOG_NOTICE, "%s", "*** List collections:");
-  if (!mdtxListCollection()) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Del collection coll 4:");
-  if (!mdtxDelCollection("coll4")) goto error;
-  if (!saveConfiguration("topo")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Share a support:");
-  if (!mdtxShareSupport(supp, "coll3")) goto error;
-  if (!saveConfiguration("topo")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Share a support second time:");
-  if (!mdtxShareSupport(supp, "coll3")) goto error;
-  
-  logEmit(LOG_NOTICE, "%s", "*** Share support with all collections:");
-  if (!mdtxShareSupport(supp, 0)) goto error;
-  if (!saveConfiguration("topo")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Withdraw a support:");
-  if (!mdtxWithdrawSupport(supp, "coll3")) goto error;
-  if (!saveConfiguration("topo")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Withdraw second time:");
-  if (!mdtxWithdrawSupport(supp, "coll3")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** Withdraw support from all collections:");
-  if (!mdtxWithdrawSupport(supp, 0)) goto error;
-  if (!saveConfiguration("topo")) goto error;
-  /************************************************************************/
-  
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

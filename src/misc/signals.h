@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: signals.h,v 1.3 2015/06/03 14:03:48 nroche Exp $
+ * Version: $Id: signals.h,v 1.4 2015/06/30 17:37:35 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -22,8 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_SIGNAL_H
-#define MISC_SIGNAL_H 1
+#ifndef MDTX_MISC_SIGNAL_H
+#define MDTX_MISC_SIGNAL_H 1
 
 #include <signal.h>
 
@@ -34,7 +34,7 @@ int enableAlarm();
 int disableAlarm();
 int manageSignals(void* manager(void*), pthread_t* thread);
 
-#endif /* MISC_SIGNAL_H */
+#endif /* MDTX_MISC_SIGNAL_H */
 
 /* Local Variables: */
 /* mode: c */

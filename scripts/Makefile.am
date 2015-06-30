@@ -1,6 +1,6 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:22 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:37:17 nroche Exp $
 #  * Project: MediaTex
-#  * Module:  scripts files (called by C code)
+#  * Module:  scripts files
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
@@ -22,13 +22,13 @@
 
 include $(top_srcdir)/Make-rules
 
-# Build recursively 
-SUBDIRS = . lib
-
 init_ddir = $(sysconfdir)/init.d
-dist_init_d_SCRIPTS = mediatexd
-
 scriptsdir = $(datarootdir)@mdtx_mediatexdir@/scripts
+scriptslibdir = $(scriptsdir)/lib
+
+dist_init_d_SCRIPTS = \
+	mediatexd
+
 dist_scripts_SCRIPTS = \
 	init.sh remove.sh purge.sh \
 	new.sh free.sh clean.sh \
@@ -39,23 +39,35 @@ dist_scripts_SCRIPTS = \
 	deliver.sh \
 	cron_hourly.sh cron_daily.sh
 
-EXTRA_DIST = mediatexd.src cron_hourly.src cron_daily.src
-CLEANFILES = mediatexd cron_hourly.sh cron_daily.sh
+dist_scriptslib_SCRIPTS = \
+	lib/log.sh \
+	lib/include.sh \
+	lib/users.sh \
+	lib/htdocs.sh \
+	lib/ssh.sh \
+	lib/cvs.sh \
+	lib/jail.sh
 
-do_subst = sed \
- -e "s!CONF_MEDIATEX!$(mdtx_mediatexdir)!" \
- -e "s!CONF_BINDIR!$(bindir)!" \
- -e "s!CONF_LOCALSTATEDIR!$(localstatedir)!" \
- -e "s!CONF_SYSCONFDIR!$(sysconfdir)!g"
+EXTRA_DIST = \
+	lib/include.src \
+	mediatexd.src \
+	cron_hourly.src \
+	cron_daily.src
+CLEANFILES = \
+	lib/include.sh \
+	mediatexd \
+	cron_hourly.sh \
+	cron_daily.sh
 
-mediatexd: mediatexd.src $(top_srcdir)/mediatex-config.h
+mediatexd: mediatexd.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-cron_hourly.sh: cron_hourly.src $(top_srcdir)/mediatex-config.h
+lib/include.sh: lib/include.src
+	$(do_subst) < $< > $@
+	chmod +x $@
+
+cron_hourly.sh: cron_hourly.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-cron_daily.sh: cron_daily.src $(top_srcdir)/mediatex-config.h
+cron_daily.sh: cron_daily.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
-
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@

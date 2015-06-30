@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:13 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:36:56 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  root
 #  *
@@ -21,10 +21,4 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Build recursively
-SUBDIRS = doc po examples etc scripts src man useCases
-
-DISTCHECK_CONFIGURE_FLAGS=--disable-setuid-install
-
-ACLOCAL_AMFLAGS = -I m4
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+SUBDIRS = doc misc etc scripts po src check check_as_root man examples

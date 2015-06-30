@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: extractHtml.h,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: extractHtml.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : extraction tree-s html serializer
+ * Module : extractHtml
  *
- * Extraction html serializer
+ * HTML extraction catalog serializer
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,14 +22,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef WRAPPER_ADMEXTRACT_H
-#define WRAPPER_ADMEXTRACT_H 1
+#ifndef MDTX_CLIENT_ADMEXTRACT_H
+#define MDTX_CLIENT_ADMEXTRACT_H 1
 
-#include "../memory/extractTree.h"
+#include "mediatex-types.h"
 
 int serializeHtmlScore(Collection* coll);
 
-#endif /* WRAPPER_ADMEXTRACT_H */
+#endif /* MDTX_CLIENT_ADMEXTRACT_H */
 
 /* Local Variables: */
 /* mode: c */

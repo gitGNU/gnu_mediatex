@@ -1,11 +1,2 @@
-# autoreconf -i
-Makefile.in
-# ./configure
-Makefile
 # make
-.deps
 include.sh
-# make check
-*.out
-*.log
-*.trs

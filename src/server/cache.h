@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.h,v 1.3 2015/06/03 14:03:55 nroche Exp $
+ * Version: $Id: cache.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -25,8 +25,8 @@
 #ifndef MDTX_SERVER_CACHE_H
 #define MDTX_SERVER_CACHE_H 1
 
-#include "../memory/confTree.h"
-#include "threads.h"
+#include "mediatex-types.h"
+#include "server/mediatex-server.h"
 
 /* API */
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -22,14 +22,11 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ADMSERVER_H
-#define MEMORY_ADMSERVER_H 1
+#ifndef MISC_MEMORY_SERVER_H
+#define MISC_MEMORY_SERVER_H 1
 
-#include "../mediatex.h"
-#include "../misc/keys.h"
-#include "confTree.h"
-
-#include <netinet/in.h>
+#include "mediatex-types.h"
+//#include <netinet/in.h>
 
 /* 
    There at more 1 ISO image by archive and server.
@@ -120,7 +117,7 @@ int diseaseServerTree(Collection* coll);
 // only used by cgi client
 int isReachable(Collection* coll, Server* from, Server* to);
 
-#endif /* MEMORY_ADMSERVER_H */
+#endif /* MISC_MEMORY_SERVER_H */
 
 /* Local Variables: */
 /* mode: c */

@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : extraction tree latex serializer
+ * Module : extractHtml
  *
- * Extraction tree latex serializer interface
+ * HTML extraction catalog serializer
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,20 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/html.h"
-#include "../memory/strdsm.h"
-#include "../memory/ardsm.h"
-#include "../memory/confTree.h"
-#include "../memory/serverTree.h"
-#include "../memory/catalogTree.h"
-#include "../memory/extractTree.h"
-#include "../common/openClose.h"
-#include "../common/extractScore.h"
-#include "commonHtml.h"
-#include "extractHtml.h"
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 
 /*=======================================================================
  * Function   : getArchiveListUri
@@ -1278,92 +1266,6 @@ serializeHtmlScore(Collection* coll)
   path2 = destroyString(path2);
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "../parser/confFile.tab.h"
-#include "../parser/serverFile.tab.h"
-#include "../parser/catalogFile.tab.h"
-#include "../parser/extractFile.tab.h"
-GLOBAL_STRUCT_DEF;
-
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for confTree module.
- * Synopsis   : utconfTree
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!(coll = mdtxGetCollection("coll1"))) goto error;
-  if (!computeExtractScore(coll)) goto error; 
-  if (!loadCollection(coll, CTLG|SERV|EXTR)) goto error;
-  if (!serializeHtmlScore(coll)) goto error;
-  if (!releaseCollection(coll, CTLG|SERV|EXTR)) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: ssh.h,v 1.3 2015/06/03 14:03:35 nroche Exp $
+ * Version: $Id: ssh.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/conf
+ * Module : ssh
  *
- * SSH producer interface
+ * update ssh user's configuration
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,18 +22,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_SSH_H
-#define MDTX_WRAPPER_SSH_H 1
+#ifndef MDTX_COMMON_SSH_H
+#define MDTX_COMMON_SSH_H 1
 
-/* API */
-/*
-int serializeAuthKeys(Collection* coll);
-int serializeSshConfig(Collection* coll);
-int serializeKnownHosts(Collection* coll);
-*/
+#include "mediatex-types.h"
+
 int upgradeSshConfiguration(Collection* coll);
 
-#endif /* MDTX_WRAPPER_SSH_H */
+#endif /* MDTX_COMMON_SSH_H */
 
 /* Local Variables: */
 /* mode: c */

@@ -1,8 +1,6 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: log.sh,v 1.3 2015/06/03 14:03:26 nroche Exp $
+# * Version: $Id: log.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -24,12 +22,11 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 # includes
 MDTX_SH_LOG=1
-[ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
-[ ! -z $MDTX_SH_UNIT ] || source $libdir/unitTest.sh
 
 # print a log message:
 # $1: severity 
@@ -122,43 +119,3 @@ Debug()
 LOG_FILE=${MDTX_LOG_FILE-""}
 LOG_FACILITY=${MDTX_LOG_FACILITY-file}
 LOG_SEVERITY=${MDTX_LOG_SEVERITY-info}
-
-# unitary tests
-if UNIT_TEST_start "log"; then
-
-    # $1: indirection level
-    function indirection1()
-    {
-	Log "info" "indirection level=$[$1+1]" $[$1+1]
-    }
-
-    # $1: indirection level
-    function indirection2()
-    {
-	indirection1 $[$1+1]
-    }
-
-    # $1: indirection level
-    function indirection3()
-    {
-	indirection2 $[$1+1]
-    }
-    
-    # log to stdout
-    Log "info" "indirection level=0" 0
-    indirection1 0
-    indirection2 0
-    indirection3 0
-    #only_root indirection3 0
-    Warning "warning message"
-    Info "info message"
-    Debug "debug message"
-
-    # log to syslog
-    LOG_FACILITY="local2"
-    Warning "warning message for syslog"
-    Info "info message for syslog"
-    Debug "debug message for syslog"
-
-    UNIT_TEST_stop "log"
-fi

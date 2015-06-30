@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: setuid.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -24,9 +24,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "log.h"
-#include "command.h"
-#include "setuid.h"
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : getPasswdLine
@@ -46,9 +44,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
   size_t bufsize = 0;
   int err = 0;
 
-#ifdef utMAIN  
   logEmit (LOG_DEBUG, "%s", "find an /etc/passwd line");
-#endif
 
   // allocate buffer
   *buffer = 0;
@@ -104,9 +100,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   size_t bufsize = 0;
   int s;
 
-#ifdef utMAIN
   logEmit (LOG_DEBUG, "%s", "find an /etc/group line");
-#endif
 
   // allocate buffer
   *buffer = 0;
@@ -167,9 +161,7 @@ undo_seteuid (void)
     goto error;
   } 
 
-#ifdef utMAIN
-  logEmit (LOG_DEBUG, "= ruid=%i euid=%i", getuid (), geteuid ());     
-#endif
+  //logEmit (LOG_DEBUG, "= ruid=%i euid=%i", getuid (), geteuid ());     
 
   if ((rc = setresuid (-1, uid, 0))) {
     logEmit (LOG_ERR, "setrsuid fails: %s", strerror (errno));
@@ -178,9 +170,7 @@ undo_seteuid (void)
   
   rc = TRUE;
  error:
-#ifdef utMAIN
-  logEmit (LOG_DEBUG, "> ruid=%i euid=%i", getuid (), geteuid ());
-#endif
+  //logEmit (LOG_DEBUG, "> ruid=%i euid=%i", getuid (), geteuid ());
   if (!rc) {
     logEmit (LOG_ERR, "%s", "fails to hide eid");
   }
@@ -208,18 +198,9 @@ allowedUser (char* label)
   if (!label) goto error;
   logEmit (LOG_DEBUG, "check permissions to become %s user", label);
 
-#ifndef utMAIN
   if (env.noRegression) return TRUE;
-#endif
 
-  if (
-#ifdef utMAIN
-      strncmp(label, "ut-", 3) &&
-      strncmp(label+3, env.confLabel, strlen(env.confLabel))
-#else 
-      strncmp(label, env.confLabel, strlen(env.confLabel))
-#endif
-      ) {
+  if (strncmp(label, env.confLabel, strlen(env.confLabel))) {
     logEmit (LOG_ERR, "the %s user account is not manage by mediatex", 
 	     label);
     goto error;
@@ -286,9 +267,8 @@ becomeUser (char* label, int doCheck)
 
   if (!label) goto error;
   logEmit (LOG_DEBUG, "becomeUser %s", label);
-#ifndef utMAIN
+
   if (env.noRegression) return TRUE;
-#endif
   if (doCheck && !allowedUser (label)) goto error;
 
   // get current user name
@@ -364,10 +344,8 @@ logoutUser (int uid)
 
   //if (uid == 0) goto error; // needed by setConcurentAccessLock
   logEmit (LOG_DEBUG, "logoutUser %i", uid);
-#ifndef utMAIN
-  if (env.noRegression) return TRUE;
-#endif
 
+  if (env.noRegression) return TRUE;
   if (uid == getuid()) goto nothingToDo;
 
   // get current user name
@@ -383,168 +361,6 @@ logoutUser (int uid)
   if (buf) free (buf);
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include <pthread.h>
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage (char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage (char* programName)
-{
-  mdtxUsage (programName);
-  fprintf (stderr, "\n\t\t -u user");
-  fprintf (stderr, "\n\t\t -i scriptPath");
-
-  mdtxOptions();
-  fprintf (stderr, "  ---\n");
-  fprintf (stderr, "  -u, --sudo-user\tuser to become\n");
-  fprintf (stderr, "  -i, --input-file\tinput script to exec\n");
-
-  fprintf (stderr, "\nNeed prior to do as root:\n" \
-	  "# chown root. utsetuid\n" \
-	  "# chmod u+s utsetuid\n");
-
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/11/11
- * Description: Unit test for md5sum module
- * Synopsis   : ./utcommand -i scriptPath
- * Input      : -i option for scriptPath to exec
- * Output     : N/A
- =======================================================================*/
-int 
-main (int argc, char** argv)
-{
-  char* inputFile = 0;
-  int i;
-  char *argvExec[] = { 0, "parameter1", 0};
-  int uid = getuid();
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"i:u:";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {"sudo-user", required_argument, 0, 'u'},
-    {"input-file", required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv (&env);
-
-  // parse the command line
-  while ((cOption = getopt_long (argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch (cOption) {
-      
-    case 'i':
-      if (optarg == 0 || *optarg == (char)0) {
-	fprintf (stderr, 
-		 "%s: nil or empty argument for the input stream\n", 
-		 programName);
-	rc = EINVAL;
-      }
-      inputFile = optarg;
-      break;
-
-    case 'u':
-      if (optarg == 0 || *optarg == (char)0) {
-	fprintf (stderr, "%s: nil or empty argument for the user name\n", 
-		programName);
-	rc = EINVAL;
-      }
-      env.confLabel = optarg;
-      break;
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv (programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (env.confLabel == 0) {
-    usage (programName);
-    logEmit (LOG_ERR, "%s", "Please provide a user to become");
-    goto error;
-  }
-  if (inputFile == 0) {
-    usage (programName);
-    logEmit (LOG_ERR, "%s", "Please provide an input file");
-    goto error;
-  }
-  argvExec[0] = inputFile;
-
-  // must be done first
-  if (!undo_seteuid ()) goto error;
-
-  // first layer
-  logEmit (LOG_NOTICE, "%s", "** first layer");
-  for (i=0; i<2; ++i) {
-
-    // get privileges
-    if ((rc = setresuid (0, 0, -1))) {
-      logEmit (LOG_ERR, "setresuid fails: %s", strerror (errno));
-      goto error;
-    }
-
-    logEmit (LOG_INFO, "> ruid=%i euid=%i", getuid (), geteuid ());
-
-    // change to label user
-    if ((rc = setresuid (uid, uid, 0))) {
-      logEmit (LOG_ERR, "setrsuid fails: %s", strerror (errno));
-      goto error;
-    }
-
-    logEmit (LOG_INFO, "< ruid=%i euid=%i", getuid (), geteuid ());
-  }
-
-  // API for wrapper
-  logEmit (LOG_NOTICE, "%s", "** API for wrapper");
-  uid = getuid();
-  for (i=0; i<2; ++i) {
-    if (!(rc = execScript (argvExec, 0, 0, FALSE))) goto error;
-    if (!becomeUser(env.confLabel, TRUE)) goto error;
-    if (!(execScript (argvExec, 0, 0, FALSE))) goto error;
-    if (!logoutUser(uid)) goto error;
-  }
-
-  // API for thread
-  logEmit (LOG_NOTICE, "%s", "** API for thread");
-  for (i=0; i<2; ++i) {
-    if (!execScript(argvExec, env.confLabel, 0, FALSE)) goto error;
-    if (!execScript(argvExec, 0, 0, FALSE)) goto error;
-  }
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

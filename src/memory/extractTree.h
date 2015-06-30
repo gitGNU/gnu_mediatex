@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ADMEXTRACT_H
-#define MEMORY_ADMEXTRACT_H 1
+#ifndef MDTX_MEMORY_EXTRACT_H
+#define MDTX_MEMORY_EXTRACT_H 1
 
-#include "confTree.h"
+#include "mediatex-types.h"
 
 typedef enum {UNDEF=0, REC, ISO, 
 	      CAT,                   // generic way to do multi-volume
@@ -98,7 +98,7 @@ int delContainer(Collection* coll, Container* self);
 
 int diseaseExtractTree(Collection* coll);
 
-#endif /* MEMORY_ADMEXTRACT_H */
+#endif /* MDTX_MEMORY_EXTRACT_H */
 
 /* Local Variables: */
 /* mode: c */

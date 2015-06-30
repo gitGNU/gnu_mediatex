@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.3 2015/06/03 14:03:34 nroche Exp $
+ * Version: $Id: openClose.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
  * Project: MediaTeX
- * Module : bus/openClose
+ * Module : openClose
  
- * Manage data files
+ * Manage meta-data files
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,23 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../misc/log.h"
-#include "../misc/setuid.h"
-#include "../misc/command.h"
-#include "../misc/md5sum.h"
-#include "../memory/confTree.h"
-#include "../parser/confFile.tab.h"
-#include "../parser/supportFile.tab.h"
-#include "../parser/catalogFile.tab.h"
-#include "../parser/extractFile.tab.h"
-#include "../parser/serverFile.tab.h"
-#include "../parser/recordList.tab.h"
-#include "register.h"
-#include "ssh.h"
-#include "upgrade.h"
-#include "openClose.h"
-
-#include <avl.h>
+#include "mediatex-config.h"
 
 static char* CollFiles[] = {
   "    ", "   C", "  X ", "  XC", " S  ", " S C", " SX ", " SXC",
@@ -124,7 +108,7 @@ callCommit(char* user, char* signature1, char* signature2)
  * Function   : loadConfiguration
  * Description: Call the parser on private files
  * Synopsis   : int loadConfiguration(int confFiles)
- * Input      : int confFiles: OR from ConfFile (CONF,SUPP)
+ * Input      : int confFiles: OR from ConfFile (CFG,SUPP)
  * Output     : TRUE on success
  =======================================================================*/
 int loadConfiguration(int confFiles)
@@ -139,9 +123,9 @@ int loadConfiguration(int confFiles)
   }
   if (!(conf = getConfiguration())) goto error;
 
-  if ((confFiles & CONF) && conf->fileState[iCONF] == DISEASED) {
+  if ((confFiles & CFG) && conf->fileState[iCFG] == DISEASED) {
     if (!parseConfiguration(conf->confFile)) goto error;
-    conf->fileState[iCONF] = LOADED;
+    conf->fileState[iCFG] = LOADED;
   }
 
   if ((confFiles & SUPP) && conf->fileState[iSUPP] == DISEASED) {
@@ -192,7 +176,7 @@ int loadRecords(Collection* coll)
   if (!lock(fd, F_RDLCK)) goto error;
 
   // parse md5sumsDB file into the main recordTree
-  if ((tree = parseRecordList(fd)) == 0) goto error;
+  if ((tree = parseRecords(fd)) == 0) goto error;
 
   if (!unLock(fd)) goto error;
   if (close(fd) == -1) {
@@ -512,8 +496,11 @@ loadCollection(Collection* coll, int collFiles)
   startProgBar("load");
   if (!collectionLoop(coll, collFiles, loadColl)) goto error;
   stopProgBar();
-  logCommon(LOG_INFO, "steps: %lli / %lli", 
-	    env.progBar.cur, env.progBar.max);
+
+  if (env.progBar.max) {
+    logCommon(LOG_INFO, "steps: %lli / %lli", 
+	      env.progBar.cur, env.progBar.max);
+  }
 
   rc = TRUE;
  error:
@@ -676,11 +663,11 @@ saveConfiguration()
   logCommon(LOG_DEBUG, "%s", "save configuration");
   if (!(conf = getConfiguration())) goto error;
 
-  if (conf->fileState[iCONF] == MODIFIED) {
+  if (conf->fileState[iCFG] == MODIFIED) {
     if (!expandConfiguration()) goto error;
     if (!populateConfiguration()) goto error;
     if (!serializeConfiguration(conf)) goto error;
-    conf->fileState[iCONF] = LOADED;
+    conf->fileState[iCFG] = LOADED;
     change = TRUE;
     conf->toHup = TRUE;
   }
@@ -1014,9 +1001,9 @@ diseaseCollection(Collection* coll, int collFiles)
   logCommon(LOG_DEBUG, "disease %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
-  if (!env.noRegression) memoryStatus(LOG_NOTICE);
+  if (!env.noRegression) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
   if (!collectionLoop(coll, collFiles, diseaseColl)) goto error;
-  if (!env.noRegression) memoryStatus(LOG_NOTICE);
+  if (!env.noRegression) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
 
   rc = TRUE;
  error:
@@ -1103,7 +1090,7 @@ Collection* mdtxGetCollection(char* label)
   checkLabel(label);  
   logCommon(LOG_DEBUG, "get %s collection", label);
 
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!(coll = getCollection(label))) goto error;
   if (!expandCollection(coll)) goto error;
 
@@ -1162,7 +1149,7 @@ clientLoop(int (*callback)(char*))
   if (!allowedUser(env.confLabel)) goto error;
 
   // for all collection
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
   if (conf->collections != 0) {
     while((coll = rgNext_r(conf->collections, &curr)) != 0) {
@@ -1202,7 +1189,7 @@ serverLoop(int (*callback)(Collection*))
   if (!allowedUser(env.confLabel)) goto error;
 
   // for all collection
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
   if (conf->collections != 0) {
     while((coll = rgNext_r(conf->collections, &curr)) != 0) {
@@ -1217,90 +1204,6 @@ serverLoop(int (*callback)(Collection*))
   } 
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  //fprintf(stderr, "\n\t\t");
-
-  mdtxOptions();
-  //fprintf(stderr, "  ---\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for open/close module.
- * Synopsis   : ./openClose
- * Input      : 
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  env.debugCommon = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!mdtxGetSupport("SUPP11_logo.png")) goto error;
-  if (!(coll = mdtxGetCollection("coll1"))) goto error;
-  if (!loadCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
-  if (!releaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
-  if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

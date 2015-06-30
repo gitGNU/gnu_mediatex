@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: have.h,v 1.3 2015/06/03 14:03:56 nroche Exp $
+ * Version: $Id: have.h,v 1.4 2015/06/30 17:37:38 nroche Exp $
  * Project: MediaTeX
- * Module : server/have
+ * Module : have
  *
  * Manage extraction from removable device
 
@@ -25,8 +25,7 @@
 #ifndef MDTX_SERVER_HAVE_H
 #define MDTX_SERVER_HAVE_H 1
 
-#include "../memory/recordTree.h"
-#include "threads.h"
+#include "mediatex-types.h"
 
 /* API */
 

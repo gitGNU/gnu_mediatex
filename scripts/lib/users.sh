@@ -1,8 +1,6 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: users.sh,v 1.3 2015/06/03 14:03:27 nroche Exp $
+# * Version: $Id: users.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -24,15 +22,19 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 # includes
 MDTX_SH_USERS=1
 [ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
+[ -z $libdir ] && libdir=$srcdir/scripts/lib
+[ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 
 # get a random number from 0 to $1 on 2 digits
 # $1: maximum
+# $rand (out): result
 function USERS_root_random
 {
     rand=$(echo "$RANDOM*($1+1)/32768" | bc)
@@ -44,6 +46,7 @@ function USERS_root_populate()
 {
     Debug "$FUNCNAME" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
+    CRON_FILE=$SYSCONFDIR/cron.d/mediatex_cron
 
     install -o root -g root -m 755 -d $STATEDIR
     install -o root -g root -m 755 -d $CACHEDIR
@@ -51,15 +54,14 @@ function USERS_root_populate()
     install -o root -g root -m 755 -d $PIDDIR
 
     # configure cron
-    install -o root -g root -m 640 $DATADIR/examples/mediatex_cron \
-	$SYSCONFDIR/cron.d
-    sed $SYSCONFDIR/cron.d/mediatex_cron -i -e "s!DATADIR!$DATADIR!"
+    install -o root -g root -m 640 $MISC/mediatex_cron $SYSCONFDIR/cron.d
+    sed $CRON_FILE -i -e "s!DATADIR!$DATADIR!"
     USERS_root_random 59
-    sed $SYSCONFDIR/cron.d/mediatex_cron -i -e "s!#XX!$rand!"
+    sed $CRON_FILE -i -e "s!#XX!$rand!"
     USERS_root_random 59
-    sed $SYSCONFDIR/cron.d/mediatex_cron -i -e "s!#YY!$rand!"
+    sed $CRON_FILE -i -e "s!#YY!$rand!"
     USERS_root_random 23
-    sed $SYSCONFDIR/cron.d/mediatex_cron -i -e "s!ZZ!$rand!"
+    sed $CRON_FILE -i -e "s!ZZ!$rand!"
 }
 
 # this function remove the root directories
@@ -82,24 +84,24 @@ function USERS_mdtx_populate()
 {
     Debug "$FUNCNAME" 2
 
-    HOME=$CACHEDIR/$MDTX
-    install -o root  -g root        -m 755  -d $HOME
-    install -o root  -g root        -m 755  -d $HOME/jail
-    install -o $MDTX -g $MDTX       -m 750  -d $HOME/md5sums
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $HOME/cache
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $HOME/tmp
-    
-    CVSROOT=$STATEDIR/$MDTX
+    # /var/lib/mediatex/mdtx
     install -o $MDTX -g ${MDTX}_md  -m 750  -d $CVSROOT
     install -o $MDTX -g ${MDTX}_md  -m 2770 -d $CVSROOT/CVSROOT
     install -o $MDTX -g $MDTX       -m 2750 -d $CVSROOT/$MDTX
 
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $HOME/cvs
-    install -o $MDTX -g $MDTX       -m 2770 -d $HOME/cvs/$MDTX
-    ln -sf  $HOME/cvs/$MDTX/$MDTX.conf $ETCDIR/$MDTX.conf
+    # /var/cache/mediatex/mdtx
+    install -o root  -g root        -m 755  -d $MDTXHOME
+    install -o root  -g root        -m 755  -d $MDTXHOME/jail
+    install -o $MDTX -g $MDTX       -m 700  -d $MDTXHOME$CONF_SSHDIR
+    install -o $MDTX -g $MDTX       -m 750  -d $MDTXHOME$CONF_HTMLDIR
+    install -o $MDTX -g $MDTX       -m 750  -d $MD5SUMS
+    install -o $MDTX -g ${MDTX}_md  -m 750  -d $CACHES
+    install -o $MDTX -g ${MDTX}_md  -m 750  -d $EXTRACT
+    install -o $MDTX -g ${MDTX}_md  -m 750  -d $CVSCLT
+    install -o $MDTX -g $MDTX       -m 2770 -d $MDTXCVS
 
-    install -o $MDTX -g $MDTX       -m 700  -d $HOME/.ssh
-    install -o $MDTX -g $MDTX       -m 750  -d $HOME/public_html
+    # /etc/mediatex/mdtx.conf
+    ln -sf $MDTXCVS/$MDTX$CONF_CONFFILE $ETCDIR/$MDTX$CONF_CONFFILE
 }
 
 # this function remove the server directories
@@ -107,68 +109,71 @@ function USERS_mdtx_populate()
 function USERS_mdtx_disease()
 {
     Debug "$FUNCNAME" 2
+
+    # /etc/mediatex/mdtx* (links)
     rm -fr $ETCDIR/${MDTX}*
-    rm -fr $CACHEDIR/$MDTX
+
+    # /etc/apache2/conf.d/mediatex/mediatex-mdtx.conf
     rm -f $SYSCONFDIR/apache2/conf.d$MEDIATEX-$MDTX.conf
 
+    # /var/cache/mediatex/mdtx
+    rm -fr $MDTXHOME
+
+    # /var/lib/mediatex/mdtx
     # purge was asked, so we destroy all data sources
-    rm -fr $STATEDIR/$MDTX
+    rm -fr $CVSROOT
 }
 
 # this function populate a collection
-# $1: user
+# $1: collection user
 function USERS_coll_populate()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
+  
+    # /var/cache/mediatex/mdtx/*/mdtx-coll
+    COLL_CACHE=$CACHES/$1
+    COLL_TOKEEP=$COLL_CACHE/toKeep
+    COLL_EXTRACT=$EXTRACT/$1
+    COLL_CVS=$CVSCLT/$1
+    COLL_HOME=$HOMES/$1
 
-    # new   
-    CACHE=$CACHEDIR/$MDTX/cache/$1
-    TOKEEP=$CACHE/toKeep
-    TMP=$CACHEDIR/$MDTX/tmp/$1
-    CVSROOT=$STATEDIR/$MDTX/$1
-    CVS=$CACHEDIR/$MDTX/cvs/$1
-    HOME=$CACHEDIR/$MDTX/home/$1
-
-    install -o $MDTX -g $1    -m 2750 -d $CACHE
-    install -o $MDTX -g $1    -m 2750 -d $TOKEEP
-    install -o $MDTX -g $1    -m 2770 -d $TMP
-    #install -o $1    -g $1    -m 2750 -d $CVSROOT (not on slave)
-    install -o $MDTX -g $1    -m 2770 -d $CVS
-    install -o $1    -g $MDTX -m 750  -d $HOME
-    install -o $1    -g $1    -m 700  -d $HOME/.ssh
-    install -o $MDTX -g $1    -m 2750 -d $HOME/public_html
+    install -o $MDTX -g $1    -m 2750 -d $COLL_CACHE
+    install -o $MDTX -g $1    -m 2750 -d $COLL_TOKEEP
+    install -o $MDTX -g $1    -m 2770 -d $COLL_EXTRACT
+    install -o $MDTX -g $1    -m 2770 -d $COLL_CVS
+    install -o $1    -g $MDTX -m 750  -d $COLL_HOME
+    install -o $1    -g $1    -m 700  -d $COLL_HOME/$CONF_SSHDIR
+    install -o $MDTX -g $1    -m 2750 -d $COLL_HOME/$CONF_HTMLDIR
 
     # link facilities
     for f in cvs cache; do
-	rm -f $HOME/$f
-	ln -sf ../../$f/$1 $HOME/$f 
+	rm -f $COLL_HOME/$f
+	ln -sf ../../$f/$1 $COLL_HOME/$f 
     done
 }
 
-# this function remove a collection
-# but the collection may be recover from cvsroot
-# $1: user
+# this function remove a collection,
+# but the collection may still recover from cvsroot
+# $1: collection user
 function USERS_coll_disease()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
 
-    # new   
-    CACHE=$CACHEDIR/$MDTX/cache/$1
-    TMP=$CACHEDIR/$MDTX/tmp/$1
-    CVSROOT=$STATEDIR/$MDTX/$1
-    CVS=$CACHEDIR/$MDTX/cvs/$1
-    HOME=$CACHEDIR/$MDTX/home/$1
+    # /var/cache/mediatex/mdtx/*/mdtx-coll
+    COLL_CACHE=$CACHES/$1
+    COLL_EXTRACT=$EXTRACT/$1
+    COLL_CVS=$CVSCLT/$1
+    COLL_HOME=$HOMES/$1
 
-    rm -fr $CACHE
-    rm -fr $TMP
-    rm -fr $CVS
-    rm -fr $HOME
+    rm -fr $COLL_CACHE
+    rm -fr $COLL_EXTRACT
+    rm -fr $COLL_CVS
+    rm -fr $COLL_HOME
+
+    # /etc/mediatex/mdtx-coll (link)
     rm -f $ETCDIR/$1
-
-    # do not remove data sources, but let the user do that
-    #rm -fr $CVSROOT
 }
 
 # Create a group 
@@ -312,9 +317,9 @@ function USERS_remove_user()
 function USERS_mdtx_create_user()
 {
     Debug "$FUNCNAME: $1" 2
-    HOME=$CACHEDIR/$MDTX
 
-    USERS_create_user $MDTX $HOME
+    # home directory is /var/cache/mediatex/mdtx
+    USERS_create_user $MDTX $MDTXHOME
     USERS_add_to_group $MDTX cdrom
     USERS_add_to_group "www-data" $MDTX
     USERS_create_group ${MDTX}_md
@@ -334,14 +339,16 @@ function USERS_mdtx_remove_user()
 }
 
 # this function create a coll user
-# $1: user
+# $1: collection user
 function USERS_coll_create_user()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    HOME=$CACHEDIR/$MDTX/home/$1
 
-    USERS_create_user $1 $HOME
+    # /var/cache/mediatex/mdtx/home/mdtx-coll
+    COLL_HOME=$HOMES/$1
+
+    USERS_create_user $1 $COLL_HOME
     USERS_add_to_group $1 ${MDTX}_md
     USERS_add_to_group "www-data" $1
     USERS_add_to_group $MDTX $1
@@ -356,7 +363,7 @@ function USERS_coll_create_user()
 }
 
 # this function remove a coll user
-# $1: user
+# $1: collection user
 function USERS_coll_remove_user()
 {
     Debug "$FUNCNAME: $1" 2
@@ -366,46 +373,3 @@ function USERS_coll_remove_user()
     USERS_remove_user $1
     USERS_coll_disease $1
 }
-
-# unitary tests
-if UNIT_TEST_start "users"; then
-
-    MDTX="ut1-mdtx"
-    COLL="hello"
-    USER="$MDTX-$COLL"
-
-    # cleanup if previous test has failed
-    USERS_mdtx_remove_user
-    USERS_coll_remove_user $USER
-
-    USERS_root_populate
-    USERS_root_populate
-    USERS_mdtx_create_user
-    USERS_mdtx_create_user
-    
-    USERS_coll_create_user $USER
-    USERS_coll_create_user $USER
-    
-    echo "home :"
-    cd $UNIT_TEST_ROOTDIR
-    find . -ls |
-    awk '{ printf("%14s %14s %s %s\n",$5,$6,$3,$11) }' |
-    sort -k4
-    cd - >/dev/null
-    
-    USERS_coll_disease $USER
-    USERS_coll_remove_user $USER
-    USERS_coll_remove_user $USER
-    USERS_mdtx_remove_user
-    USERS_mdtx_remove_user
-    
-    echo "cleanup :"
-    cd $UNIT_TEST_ROOTDIR
-    find . -ls |
-    awk '{ printf("%s %s\n",$3,$11) }' |
-    sort -k4
-    cd - >/dev/null
-
-    Info "success"
-    UNIT_TEST_stop "users"
-fi

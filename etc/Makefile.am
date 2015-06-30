@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:20 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:36:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -37,30 +37,25 @@ dist_ldsoconf_DATA = mediatex_ld.conf
 completiondir = $(sysconfdir)/bash_completion.d
 dist_completion_DATA = mediatex_comp
 
-EXTRA_DIST = apache.src rsyslog.src logrotate.src ld.src
-CLEANFILES = mediatex.conf mediatex_log.conf mediatex_ld.conf
+EXTRA_DIST = \
+	apache.src \
+	rsyslog.src \
+	logrotate.src \
+	ld.src
+CLEANFILES = \
+	mediatex.conf \
+	mediatex_log.conf \
+	mediatex_rotate.conf \
+	mediatex_ld.conf
 
-mediatex.conf: apache.src $(top_srcdir)/mediatex-config.h
-	sed $< \
-		-e "s!/MEDIATEX!$(mdtx_mediatexdir)!" \
-		-e "s!CACHEDIR!$(localstatedir)/cache$(mdtx_mediatexdir)!" \
-		> $@
+mediatex.conf: apache.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
 
-mediatex_log.conf: rsyslog.src $(top_srcdir)/mediatex-config.h
-	sed $< \
-		-e "s!/MEDIATEX!$(mdtx_mediatexdir)!" \
-		> $@
+mediatex_log.conf: rsyslog.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
 
-mediatex_rotate.conf: logrotate.src $(top_srcdir)/mediatex-config.h
-	sed $< \
-		-e "s!/MEDIATEX!$(mdtx_mediatexdir)!" \
-		> $@
+mediatex_rotate.conf: logrotate.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
 
-mediatex_ld.conf: ld.src $(top_srcdir)/mediatex-config.h
-	sed $< \
-		-e "s!LIBDIR!$(libdir)!" \
-		-e "s!/MEDIATEX!$(mdtx_mediatexdir)!" \
-		> $@
-
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+mediatex_ld.conf: ld.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@

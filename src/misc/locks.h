@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: locks.h,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: locks.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,19 +22,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_LOCKS_H
-#define MISC_LOCKS_H 1
-
-#include "../mediatex.h"
-
-#include <sys/types.h> // 
-#include <sys/stat.h>  // lock
-#include <fcntl.h>     //
+#ifndef MDTX_MISC_LOCKS_H
+#define MDTX_MISC_LOCKS_H 1
 
 int lock(int fd, int mode);
 int unLock(int fd);
 
-#endif /* MISC_LOCKS_H */
+#endif /* MDTX_MISC_LOCKS_H */
 
 /* Local Variables: */
 /* mode: c */

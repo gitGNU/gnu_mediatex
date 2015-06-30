@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: tcp.h,v 1.3 2015/06/03 14:03:48 nroche Exp $
+ * Version: $Id: tcp.h,v 1.4 2015/06/30 17:37:35 nroche Exp $
  * Project: mediatex
  * Module : tcp
  *
@@ -22,8 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_SOCKET_TCP_H
-#define MISC_SOCKET_TCP_H 1
+#ifndef MDTX_MISC_TCP_H
+#define MDTX_MISC_TCP_H 1
 
 #include "address.h"
 
@@ -33,7 +33,7 @@ int connectTcpSocket(const struct sockaddr_in* address_server);
 int tcpWrite(int sd, char* buffer, size_t bufferSize);
 size_t tcpRead(int sd, char* buffer, size_t bufferSize);
 
-#endif /* MISC_SOCKET_TCP_H */
+#endif /* MDTX_MISC_TCP_H */
 
 /* Local Variables: */
 /* mode: c */

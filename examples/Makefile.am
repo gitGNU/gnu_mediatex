@@ -1,6 +1,6 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:21 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:37:00 nroche Exp $
 #  * Project: MediaTex
-#  * Module:  inital configuration files (and testing/exemple purpose)
+#  * Module:  use case exemples
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 
@@ -20,21 +20,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include $(top_srcdir)/Make-rules
-
 examplesdir = $(datarootdir)@mdtx_mediatexdir@/examples
-dist_examples_DATA = \
-	mediatex_cron mediatex.conf \
-	supports.txt catalog00.txt extract00.txt servers.txt \
-	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
-	apache-mdtx.conf htgroup viewvc.conf header.ezt \
-	mediatex.css floppy-icon.png home.htaccess \
-	logo.png logoP1.iso logoP2.iso logoP1.cat logoP2.cat\
-	logo.tgz logo.tar.bz2 logo.afio \
-	logo.tar logo.cpio.gz logo.cpio logo.cpio.bz2 \
-	logo.zip logo.part1.rar logo.part2.rar
-
-# dist_check_DATA = // need to modify servers modules
-
-localedir = $(datadir)/locale
-DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+dist_examples_DATA = cake.tgz txt2sql.tgz
+dist_examples_SCRIPTS = tests.sh

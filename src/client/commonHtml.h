@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: commonHtml.h,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: commonHtml.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
  * Project: MediaTeX
- * Module : server to LaTex
+ * Module : commonHtml
  *
- * Server to LaTex serializer
+ * HTML serializer common fonctions
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,11 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef WRAPPER_ADMSERVER_H
-#define WRAPPER_ADMSERVER_H 1
+#ifndef MDTX_CLIENT_ADMSERVER_H
+#define MDTX_CLIENT_ADMSERVER_H 1
 
-#include "../memory/serverTree.h"
-#include <avl.h>
+#include "mediatex-types.h"
 
 int getItemUri(char* buf, int id, char* suffix);
 int getListUri(char* buf, int id);
@@ -42,7 +41,7 @@ int htmlAssoCarac(FILE* fd, AssoCarac* self);
 
 int serializeHtmlCache(Collection* coll);
 
-#endif /* WRAPPER_ADMSERVER_H */
+#endif /* MDTX_CLIENT_ADMSERVER_H */
 
 /* Local Variables: */
 /* mode: c */

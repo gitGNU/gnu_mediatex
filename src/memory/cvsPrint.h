@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.h,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: cvsPrint.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
- * Module : archive tree
+ * Module : cvs print
  *
  * cvs files producer interface
 
@@ -22,8 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ADMCVSPRINT_H
-#define MEMORY_ADMCVSPRINT_H 1
+#ifndef MISC_MEMORY_CVSPRINT_H
+#define MISC_MEMORY_CVSPRINT_H 1
 
 /* API */
 
@@ -40,7 +40,7 @@ int cvsOpenFile(CvsFile* fd);
 int cvsPrint(CvsFile* fd, const char* format, ...);
 int cvsCloseFile(CvsFile* fd);
 
-#endif /* MEMORY_CVSPRINT_H */
+#endif /* MISC_MEMORY_CVSPRINT_H */
 
 /* Local Variables: */
 /* mode: c */

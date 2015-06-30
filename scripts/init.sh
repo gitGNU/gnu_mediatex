@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: init.sh,v 1.3 2015/06/03 14:03:24 nroche Exp $
+# * Version: $Id: init.sh,v 1.4 2015/06/30 17:37:21 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -56,7 +56,7 @@ if [ $MDTX = mdtx ]; then
     /sbin/ldconfig
 fi
 
-/usr/sbin/a2enconf mediatex ${MEDIATEX#/}-$MDTX.conf
+/usr/sbin/a2enconf mediatex ${MEDIATEX#/}-$MDTX.conf >/dev/null
 /usr/sbin/invoke-rc.d apache2 restart
 
 # script is not automatically installed for other instances than mdtx

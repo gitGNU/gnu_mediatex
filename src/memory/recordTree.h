@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.h,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: recordTree.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
  * Module : record tree
  *
@@ -22,14 +22,11 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_MEMORY_RECORD_TREE_H
-#define MDTX_MEMORY_RECORD_TREE_H 1
+#ifndef MDTX_MEMORY_RECORD_H
+#define MDTX_MEMORY_RECORD_H 1
 
-#include "../mediatex.h"
-#include "../misc/cypher.h"
-#include "confTree.h"
-
-#include <netinet/in.h>
+#include "mediatex-types.h"
+//#include <netinet/in.h>
 
 // message type
 typedef enum {UNKNOWN, DISK, CGI, HAVE, NOTIFY, UPLOAD} MessageType;
@@ -75,7 +72,6 @@ int serializeRecordTree(RecordTree* self, char* path, char* fingerPrint);
 
 RecordTree* createRecordTree(void);
 RecordTree* destroyRecordTree(RecordTree* self);
-//RecordTree* copyRecordTree(RecordTree* destination, RecordTree* source);
 int serializeRecord(RecordTree* tree, Record* self);
 
 
@@ -92,7 +88,7 @@ int delRecord(Collection* coll, Record* self);
 
 int diseaseRecordTree(RecordTree* self);
 
-#endif /* MDTX_MEMORY_RECORD_TREE_H */
+#endif /* MDTX_MEMORY_RECORD_H */
 
 /* Local Variables: */
 /* mode: c */

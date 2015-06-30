@@ -60,7 +60,37 @@ $ ./configure \
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
 
+
 $ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
+
+archives       .CVS        RAM     HTML    HTML    time
+                          VmSize          inodes
+----------------------------------------------------------
+10k            4M         20M     135M    32k     10"
+27k            12M        40M     377M    90k     20"
+55k            21M        67M     638M    151k    32"
+82k            31M        94M     913M    212k    51"
+110k           40M        122M    1.2G    273k    1'3
+137k           50M        145M    1.4G    334k    1'20
+
+archives    CVS     VmSize   HTML   HTML    time*
+          cat+ext  clt/serv        inodes     make
+----------------------------------------------------------
+27550      28+3M     68/ M   367M   89809    2'  (853278/ 89645)
+54848      58+4M    123/ M   644M  153579    4'       (?/149928)
+82456      87+6M    180/ M   898M  214835    6' (2527416/211099)
+
+
+81359      85+7M    176/60M  876M  211412    6'43"
+109000    113+9M    232/     1.2G  275971    8'06"
+
+
+
+*: Time for cvs merge is removed (using -w) as it depends on you internet connection. For instance it seems as long as parsing time using 150kb (Adsl upload link) but spends only seconds on a local network.
+
+AMD Sempron(tm) Processor 3200+
+
+
 
 ** Diff between 2 arbos
 
@@ -75,8 +105,6 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- add AUTOMAKE subdir-objects option (no recursive Makefile.am in src)
-  (https://autotools.io/index.html)
 - move dirname into extract rule header to reduce extract.txt file size
 - manage ECDSA key too
 - add supp: wait CD doors is locked (cf v3)
@@ -100,7 +128,7 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 
 - ease SSH/CVS configuration
 - compatible with DNS round robin
-- cvsroot migration from one host to other (cf useCases/test.sh#16)
+- cvsroot migration from one host to other (cf example/test.sh#16)
 - Port forwarding is not compatible with gateway hosted collections
 
 It means if your localhost is using the gateway address into mdtx.conf,

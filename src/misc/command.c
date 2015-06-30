@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.4 2015/06/03 14:03:44 nroche Exp $
+ * Version: $Id: command.c,v 1.5 2015/06/30 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -23,19 +23,8 @@
  =======================================================================*/
 
 #include "mediatex-config.h"
-#include "command.h"
-#include "setuid.h"
-
-// for setEnv to call libraries befor setting memory
-#include <netdb.h> // gethostbyname, gethostbyaddr
-
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include <libgen.h>    // basename
-
-#include <sys/stat.h> // open
-#include <fcntl.h>
+#include <sys/wait.h>  // waitpid
 
 extern char **environ;
 
@@ -218,6 +207,8 @@ getEnv(MdtxEnv* self)
     self->confLabel = tmpValue;
   if ((tmpValue = getenv("MDTX_DRY_RUN")) != 0)
     self->dryRun = !strncmp(tmpValue, "1", 2);
+  if ((tmpValue = getenv("MDTX_NO_REGRESSION")) != 0)
+    self->noRegression = !strncmp(tmpValue, "1", 2);
 }
 
 /*=======================================================================
@@ -237,7 +228,10 @@ setEnv(char* programName, MdtxEnv *self)
   int logSeverity = -1;
   LogHandler* logHandler = 0;
 
-  // no logging available here
+  // no logging available yet here
+
+  // unset previous log handler if it exists (on bad malloc init)
+  self->logHandler = logClose(self->logHandler);
 
   // set the log handler
   if ((logFacility = getLogFacility(self->logFacility)) == -1) {
@@ -248,17 +242,13 @@ setEnv(char* programName, MdtxEnv *self)
     fprintf(stderr, "%s: incorrect severity name '%s'\n", 
 	    programName, optarg); goto error;
   }
-  if((logHandler = 
-      logOpen(programName, logFacility, logSeverity, self->logFile)) 
-     == 0) {
+  if(!(self->logHandler = 
+       logOpen(programName, logFacility, logSeverity, self->logFile))) {
     fprintf(stderr, "%s: cannot allocate the logHandler\n", programName);
     goto error;
   }
-  logDefault(logHandler);
 
-#ifdef utMAIN
   logEmit(LOG_DEBUG, "%s", "set the environment variables");
-#endif
 
   // export the environment
   if (setenv("MDTX_LOG_FILE", self->logFile, 1) == -1
@@ -270,22 +260,25 @@ setEnv(char* programName, MdtxEnv *self)
       || setenv("IFS", "", 1) == -1
       ) {
     logEmit(LOG_ERR, "setenv variables failed: ", strerror(errno));
-    goto error;
+    goto error2;
   }
 
-  // export srcdir (first used by "make check") to source scripts
-  // too after installation
+  // Because of "make distcheck", scripts use $srcdir to source each
+  // others. Here, we reuse this automake variable so as scripts will
+  // still be able to source each others after installation.
   if (setenv("srcdir", CONF_SCRIPTS , 1) == -1)
+    goto error2;
+
+  // custumize malloc, record a callback to free memory if malloc fails
+  if (!initMalloc(self->allocLimit*MEGA, self->allocDiseaseCallBack))
     goto error;
 
-  // - record a callback to free memory if malloc fails
-  initMalloc(env.allocLimit*MEGA, env.allocDiseaseCallBack);
-
   rc = TRUE;
- error:
+ error2:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "fails to set the environment variables");
   }
+ error:
   return rc;
 }
 
@@ -303,12 +296,10 @@ execChild(char** argv, int doHideStderr)
   int rc = 0;
   int fd;
 
-#ifndef utMAIN
   if (argv[0][0] != '/') {
     logEmit(LOG_ERR, "%s", "refuse to exec from a relative path");
     goto error;
   }
-#endif
 
   // be quiet: close stdout
   if (!env.debugScript) {
@@ -320,9 +311,7 @@ execChild(char** argv, int doHideStderr)
   }
 
   rc = execve(argv[0], argv, environ);
-#ifndef utMAIN
  error:
-#endif
   if (rc == -1) {
     logEmit(LOG_ERR, "execve failed: ", strerror(errno));
   } else {
@@ -374,12 +363,8 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   case 0:
     // child
 
-#ifndef utMAIN
     // change user
     if (user && !becomeUser(user, FALSE)) goto error;
-#else
-    (void) user;
-#endif
 
     // change working directory
     if (pwd && chdir(pwd)) {
@@ -418,103 +403,6 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, "\n\t\t[ -i scriptPath ]");
-
-  mdtxOptions();
-  fprintf(stderr, "  ---\n");
-  fprintf(stderr, "  -i, --input-file\tinput script to exec\n");
-
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/11/11
- * Description: Unit test for md5sum module
- * Synopsis   : ./utcommand -i scriptPath
- * Input      : -i option for scriptPath to exec
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char* inputFile = 0;
-  char *argvExec[] = { 0, "parameter1", 0};
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"i:";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {"input-file", required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'i':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, "%s: nil or empty argument for the input stream\n", 
-		programName);
-	rc = EINVAL;
-      }
-      inputFile = optarg;
-      break;
-      
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (inputFile == 0) {
-    usage(programName);
-    //logEmit(LOG_ERR, "%s", "Please provide an input file");
-    goto error;
-  }
-
-  argvExec[0] = inputFile;
-  if (!execScript(argvExec, 0, 0, FALSE)) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

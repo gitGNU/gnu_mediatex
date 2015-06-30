@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: motd.h,v 1.3 2015/06/03 14:03:30 nroche Exp $
+ * Version: $Id: motd.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/motd
+ * Module : motd
  *
  * Manage message of the day
 
@@ -22,8 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_MOTD_H
-#define MDTX_WRAPPER_MOTD_H 1
+#ifndef MDTX_CLIENT_MOTD_H
+#define MDTX_CLIENT_MOTD_H 1
+
+#include "mediatex-types.h"
 
 typedef struct MotdData {
 
@@ -36,7 +38,7 @@ typedef struct MotdData {
 /* API */
 int updateMotd();
 
-#endif /* MDTX_WRAPPER_MOTD_H */
+#endif /* MDTX_CLIENT_MOTD_H */
 
 /* Local Variables: */
 /* mode: c */

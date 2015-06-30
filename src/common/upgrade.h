@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: upgrade.h,v 1.3 2015/06/03 14:03:35 nroche Exp $
+ * Version: $Id: upgrade.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/upgrade
+ * Module : upgrade
  *
  * Manage servers.txt upgrade from mediatex.conf and supports.txt
 
@@ -24,6 +24,8 @@
 
 #ifndef MDTX_COMMON_UPGRADE_H
 #define MDTX_COMMON_UPGRADE_H 1
+
+#include "mediatex-types.h"
 
 int scoreSupport(Support* supp, ScoreParam *p);
 int scoreLocalImages(Collection* coll);

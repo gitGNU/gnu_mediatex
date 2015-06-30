@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: notify.h,v 1.3 2015/06/03 14:03:56 nroche Exp $
+ * Version: $Id: notify.h,v 1.4 2015/06/30 17:37:38 nroche Exp $
  * Project: MediaTeX
- * Module : server/notify
+ * Module : notify
  *
  * Manage notify for remote servers: send local md5sums list
 
@@ -25,8 +25,8 @@
 #ifndef MDTX_SERVER_NOTIFY_H
 #define MDTX_SERVER_NOTIFY_H 1
 
-#include "../memory/recordTree.h"
-#include "threads.h"
+#include "mediatex-types.h"
+#include "server/mediatex-server.h"
 
 extern int running; // from threads.c
 
@@ -39,9 +39,6 @@ typedef struct NotifyData {
 } NotifyData;
 
 int sendRemoteNotify(Collection* coll); 
-//int sendAllRemoteNotify(); 
-
-// TO TEST IN MAIN
 int acceptRemoteNotify(RecordTree* tree, Connexion* connexion);
 
 #endif /* MDTX_SERVER_NOTIFY_H */

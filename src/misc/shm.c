@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shm.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: shm.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : shm
  *
@@ -26,14 +26,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "log.h"
-#include "shm.h"
-
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/sem.h>
-#include <sys/shm.h>
+#include "mediatex-config.h"
+#include <sys/ipc.h> // ftok
+#include <sys/sem.h> // semop
+#include <sys/shm.h> // shmget
 
 typedef union semun {
   int val;
@@ -314,157 +310,6 @@ shmFree(char* pathFile, int shmSize)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-#define MDTX_SHM_BUFF_SIZE 4
-
-/*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
- * Output     : N/A
- =======================================================================*/
-void 
-exempleForRead(void *buffer, int shmSize, void* arg) {
-  (void) arg;
-  (void) shmSize;
-  fprintf(stdout, "-> %s\n", (char*)buffer);
-}
-
-/*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
- * Output     : N/A
- =======================================================================*/
-void 
-exempleForWrite(void *buffer, int shmSize, void *arg) {
-  (void) arg;
-  // show actual content
-  fprintf(stdout, "-> %s\n", (char*)buffer);
-  // Modify share memory content
-  fprintf(stdout, "<- ");
-  fgets((char*)buffer, shmSize+1, stdin);
-  fprintf(stdout, "%s\n", (char*)buffer);
-}
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  miscUsage(programName);
-  fprintf(stderr, "\n\t\t{ -R | -W | -C }");
-
-  miscOptions();
-  fprintf(stderr, "  ---\n"
-	  "  -r, --read\t\tread the share memory\n"
-	  "  -w, --write\t\twrite the share memory\n"
-	  "  -c, --clean\t\tclean the share memory\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * Description: Unit test for shm module.
- * Synopsis   : utshm
- * Input      : -R | -W | -C 
- * Output     : N/A
- =======================================================================*/
-int main(int argc, char** argv)
-{
-  typedef enum {UNDEF, READER, WRITER, CLEANER} Role;
-  Role role = UNDEF;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"rwc";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    {"read", no_argument, 0, 'r'},
-    {"write", no_argument, 0, 'w'},
-    {"clean", no_argument, 0, 'c'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-
-    case 'r':
-      if (role != UNDEF) {
-	usage(programName);
-	goto error;
-      }
-      role = READER;
-      break;
-
-    case 'w':
-      if (role != UNDEF) {
-	usage(programName);
-	goto error;
-      }
-      role = WRITER;
-      break;
-
-    case 'c':
-      if (role != UNDEF) {
-	usage(programName);
-	goto error;
-      }
-      role = CLEANER;
-      break;
-
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-  
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-  
-  /************************************************************************/
-  switch (role) {
-  case WRITER:
-    rc = shmWrite(argv[0], MDTX_SHM_BUFF_SIZE, exempleForWrite, 0);
-    break;
-  case READER:
-    rc = shmRead(argv[0], MDTX_SHM_BUFF_SIZE, exempleForRead, 0);
-    break;
-  case CLEANER:
-    rc = shmFree(argv[0], MDTX_SHM_BUFF_SIZE);
-    break;
-  default:
-    usage(programName);
-  }
-  /************************************************************************/
-
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
- 
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

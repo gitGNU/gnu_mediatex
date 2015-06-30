@@ -1,18 +1,10 @@
-# autoreconf -i
-Makefile.in
-# ./configure
+# configure
 .deps
-Makefile
+
 # make
-utShellQuery.tmp
-*.[hc]
-*.output
+.dirstamp
 .libs
+*.h
+*.c
+*.output
 *.lo
-libparser.la
-# make check
-ut[a-z]*
-ut*.out
-ut*.txt
-*.log
-*.trs

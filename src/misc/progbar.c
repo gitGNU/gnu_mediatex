@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.c,v 1.3 2015/06/03 14:03:47 nroche Exp $
+ * Version: $Id: progbar.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -153,75 +153,3 @@ e2fsck_simple_progress(struct ProgBar* progbar, const char *label,
   
   return;
 }
-
-
-/*************************************************************************/
-#ifdef utMAIN
-
-void 
-e2fsck_progress(struct ProgBar* progbar, const char *label, 
-		     unsigned long max)
-{
-  unsigned long cur = 0;
-  float percent = 0;
-
-  progbar->progress_last_percent = -1;
-  progbar->progress_last_time = 0;
-  progbar->progress_pos = 0;
-
-  for (cur=0; cur<max; ++cur) {
-    percent = calc_percent(cur, max);
-    e2fsck_simple_progress(progbar, label, percent);
-    usleep(1000);
-  }
-  e2fsck_clear_progbar(progbar);
-}
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 
- * Description: Unit test for md5sum module
- * Synopsis   : ./utmd5sum -i file
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main() 
-{
-  struct ProgBar progbar;
-  char test[] = "sapin_de_noel";
-  char buff[20];
-  unsigned int i;
-  int p;
-
-  // algo init
-  initProgBar(&progbar);
-
-  // test 1
-  memset(buff, 0, sizeof(buff));
-
-  for (i=0; i<sizeof(test)-1; ++i) {
-    usleep(200000);
-    buff[i] = test[i];
-    p = i*100/(sizeof(test)-2);
-    //printf("%s %i\n", buff, p);
-    e2fsck_simple_progress(&progbar, buff, p);
-  }
-
-  // test 2
-  e2fsck_progress(&progbar, ":)", 1234);
-  e2fsck_progress(&progbar, "coucou", 3234);
-  e2fsck_progress(&progbar, "thank you very much Theodore Ts'o", 2345);
-  e2fsck_progress(&progbar, ":)", 1234);
-
-  return 0;
-}
-
-#endif	/*	: utMAIN	*/
-
-/* Local Variables: */
-/* mode: c */
-/* mode: font-lock */
-/* mode: auto-fill */
-/* End: */

@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: conf.h,v 1.3 2015/06/03 14:03:29 nroche Exp $
+ * Version: $Id: conf.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/conf
+ * Module : conf
  *
- * Manage configuration data-base
+ * Manage mediatex.conf configuration file
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,11 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_CONF_H
-#define MDTX_WRAPPER_CONF_H 1
+#ifndef MDTX_CLIENT_CONF_H
+#define MDTX_CLIENT_CONF_H 1
 
-#include "../memory/confTree.h"
-#include "../memory/supportTree.h"
+#include "mediatex-types.h"
 
 /* API */
 int upgradeWrapper(int doCollection, Collection* coll);
@@ -40,7 +39,7 @@ int mdtxAddNatServer(char* cLabel, char* proxy);
 int mdtxDelNatClient(char* cLabel, char* proxy);
 int mdtxDelNatServer(char* cLabel, char* proxy);
 
-#endif /* MDTX_WRAPPER_CONF_H */
+#endif /* MDTX_CLIENT_CONF_H */
 
 /* Local Variables: */
 /* mode: c */

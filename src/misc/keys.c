@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.3 2015/06/03 14:03:45 nroche Exp $
+ * Version: $Id: keys.c,v 1.4 2015/06/30 17:37:32 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
- * uuid and keys retrievals
+ * ssh keys retrievals
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,11 +22,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "alloc.h"
-#include "keys.h"
-
-#include <openssl/evp.h>
-#include <openssl/md5.h>
+#include "mediatex-config.h"
+#include <openssl/md5.h> // MD5_DIGEST_LENGTH
+#include <openssl/evp.h> // EVP_DecodeBlock
 
 
 /*=======================================================================
@@ -194,121 +192,6 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   if (key_unbase64) free(key_unbase64);
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually
- *                                  argv[0].
- * Output     : N/A
- =======================================================================*/
-static 
-void usage(char* programName)
-{
-  miscUsage(programName);
-  fprintf(stderr, "\n\t\t-i path");
-
-  miscOptions();
-  fprintf(stderr, "  ---\n"
-  	  "  -i, --input-key\tprint the key content\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 
- * Description: Unit test for md5sum module
- * Synopsis   : ./utkeys -d ici -u toto -g toto -p 777
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char* inputFile = 0;
-  char* key = 0;
-  char fingerprint[MAX_SIZE_HASH+1];
-  int i;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"i:";
-  struct option longOptions[] = {
-    MISC_LONG_OPTIONS,
-    {"input-key", required_argument, 0, 'i'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {					
-					
-    case 'i':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, "%s: nil or empty argument for the input device\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      if ((inputFile = malloc(strlen(optarg) + 1)) == 0) {
-	fprintf(stderr, "cannot malloc the input device path: %s", 
-		strerror(errno));
-	rc = ENOMEM;
-	break;
-      }
-      strncpy(inputFile, optarg, strlen(optarg)+1);
-      break;
-
-      GET_MISC_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (inputFile == 0) {
-    usage(programName);
-    goto error;	
-  }
-  
-  // load the dsa public key
-  if ((key = readPublicKey(inputFile)) == 0) goto error;
-  if (!getFingerPrint(key, fingerprint)) goto error;
-
-  // print the fingerprint
-  printf("%c%c", fingerprint[0], fingerprint[1]);
-  for (i=2; i<MAX_SIZE_HASH; i+=2)
-    printf(":%c%c", fingerprint[i], fingerprint[i+1]);
-  printf("\n");
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  if (inputFile) free(inputFile);
-  if (key) free(key);
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

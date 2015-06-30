@@ -1,8 +1,6 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: ssh.sh,v 1.3 2015/06/03 14:03:26 nroche Exp $
+# * Version: $Id: ssh.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -24,6 +22,8 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 ###
 # Rq: it helps a lot !
@@ -31,10 +31,16 @@ set -e
 # # ssh -vvv bibi
 ###
 
+if [ $(id -u) -ne 0 ]; then
+    echo -n "(root needed for this test) "
+    exit 77 # SKIP
+fi
+
 # includes
 MDTX_SH_SSH=1
 [ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
+[ -z $libdir ] && libdir=$srcdir/../scripts/lib
+[ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 
 MDTX_KEY_HAVE_CHANGE=0
@@ -45,9 +51,13 @@ function SSH_build_key()
 {
     Debug "$FUNCNAME: $1" 2
     [ ! -z "$1" ] || error "need a collection label"
-    SSH_KNOWNHOSTS=$CACHEDIR/$MDTX/home/$1/.ssh/known_hosts
-    COMMENT="$USER@$(hostname -f)"
-    cd $CACHEDIR/$MDTX/home/$1/.ssh
+
+    # /var/cache/mediatex/mdtx/home/$1/.ssh
+    COLL_SSHDIR=$HOMES/$1$CONF_SSHDIR
+    SSH_KNOWNHOSTS=$COLL_SSHDIR$CONF_SSHKNOWN
+    COMMENT="${1}@$(hostname -f)"
+
+    cd $COLL_SSHDIR
 
     if [ \( -e id_dsa \) -a \( -e id_dsa.pub \) ]; then
 	Info "re-use the previous keys we found"
@@ -70,18 +80,22 @@ function SSH_build_key()
 function SSH_bootstrapKeys()
 {
     Debug "$FUNCNAME $1 $2" 2
-    cd $CACHEDIR/$MDTX/home/$1/.ssh
 
-    # add a public key to accept login
+    # /var/cache/mediatex/mdtx/home/$1/.ssh
+    COLL_SSHDIR=$HOMES/$1$CONF_SSHDIR
+
+    cd $COLL_SSHDIR
+
+    # add our public key to accept self login
     install -m 644 id_dsa.pub authorized_keys
 
-    # add a server key to accept connection 
+    # add localhost public key to accept blind connection
     echo -n "localhost " > known_hosts
     cat /etc/ssh/ssh_host_rsa_key.pub >> known_hosts
     ssh-keygen -H -f known_hosts 2>&1
     rm -f known_hosts.old
-    chmod 644 known_hosts
 
+    chmod 644 known_hosts
     chown $1:$1 authorized_keys
     chown $1:$1 known_hosts
     cd - >/dev/null
@@ -94,11 +108,13 @@ function SSH_bootstrapKeys()
 function SSH_configure_client()
 {
     Debug "$FUNCNAME $1 $2 $3" 2
-    SSH_CONFIG=$CACHEDIR/$MDTX/home/$1/.ssh/config
+
+    # /var/cache/mediatex/mdtx/home/$1/.ssh/config
+    SSH_CONFIG=$HOMES/$1$CONF_SSHDIR$CONF_SSHCONF
 
     echo -e "Host *\n" > $SSH_CONFIG
-    echo -e " VerifyHostKeyDNS yes\n" >> $SSH_CONFIG
-    echo -e " HostKeyAlgorithms ssh-rsa,ssh-dss\n\n" >> $SSH_CONFIG
+    echo -e "\tVerifyHostKeyDNS yes\n" >> $SSH_CONFIG
+    echo -e "\tHostKeyAlgorithms ssh-rsa,ssh-dss\n\n" >> $SSH_CONFIG
     echo -e "Host $2:\n\tPort $3\n" >> $SSH_CONFIG
     chown $1:$1 $SSH_CONFIG
 }
@@ -109,7 +125,9 @@ function SSH_chroot_login()
 {
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error $0 $LINENO "need to be root"
-    JAIL=$CACHEDIR/$MDTX/jail
+
+    # /var/cache/mediatex/mdtx/home
+    JAIL=$MDTXHOME/jail
     PATTERN="$MDTX-*"
 
     # protect stars from shell expension
@@ -128,41 +146,4 @@ EOF
     fi
     invoke-rc.d ssh reload
 }
-
-# unitary tests
-if UNIT_TEST_start "ssh"; then
-    [ ! -z $MDTX_SH_USERS ] || source $libdir/users.sh
-
-    MDTX="ut3-mdtx"
-    COLL="hello"
-    USER="$MDTX-$COLL"
-
-    # cleanup if previous test has failed
-    USERS_mdtx_remove_user
-    USERS_coll_remove_user $USER
-    USERS_mdtx_disease
-
-    # cf init.sh
-    USERS_root_populate
-    USERS_mdtx_create_user
-
-    # cf new.sh
-    USERS_coll_create_user $USER
-    SSH_build_key $USER
-    SSH_bootstrapKeys $USER
-    SSH_configure_client $USER "localhost" 22
-
-    ## check ssh connection
-    QUERY="ssh -o PasswordAuthentication=no ${USER}@localhost ls"
-    Info "su USER -c \"$QUERY\""
-    su $USER -c "$QUERY" || Error "Cannot connect via ssh"
-    
-    # cf free.sh
-    USERS_coll_disease $USER
-    USERS_coll_remove_user $USER
-    USERS_mdtx_remove_user
-
-    Info "success"
-    UNIT_TEST_stop "ssh"
-fi
 

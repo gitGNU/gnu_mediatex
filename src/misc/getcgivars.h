@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: getcgivars.h,v 1.3 2015/06/03 14:03:45 nroche Exp $
+ * Version: $Id: getcgivars.h,v 1.4 2015/06/30 17:37:32 nroche Exp $
  * Project: CGIVARS
  * Module : mediatex
  *
@@ -29,13 +29,13 @@
  *
 =======================================================================*/
 
-#ifndef MISC_CGI_CGIVARS_H
-#define MISC_CGI_CGIVARS_H 1
+#ifndef MDTX_MISC_CGI_CGIVARS_H
+#define MDTX_MISC_CGI_CGIVARS_H 1
 
 char **getcgivars();
 void freecgivars(char **cgivars);
 
-#endif /* MISC_CGI__CGIVARS_H */
+#endif /* MDTX_MISC_CGI__CGIVARS_H */
 
 /* Local Variables: */
 /* mode: c */

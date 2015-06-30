@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.3 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -26,21 +26,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/address.h"
-#include "../misc/perm.h"
-#include "recordTree.h"
-
-#include <string.h> // memset
-
-#include <sys/socket.h> // inet_ntoa
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
-#include <sys/types.h> // open
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "mediatex-config.h"
 
 /*=======================================================================
  * Function   : cmpRecordQuick
@@ -286,13 +272,9 @@ serializeRecord(RecordTree* tree, Record* self)
 	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
 	  self->extra?self->extra:"");
 
-#ifndef utMAIN
-  if (!strcmp(env.logSeverity, "debug")) {
-#endif
+  if (env.logHandler->severity->code >=  LOG_INFO) {
     aesPrint(&tree->aes, "# ^ %s\n", strRecordType(self));
-#ifndef utMAIN
   }
-#endif
 
  end:
   return TRUE;
@@ -790,114 +772,6 @@ diseaseRecordTree(RecordTree* self)
   }
   return(rc);
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "utFunc.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, " [ -d repository ]");
-
-  memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main
- * Author     : Nicolas Roche
- * modif      : 2012/02/11
- * Description: Unit test for md5sumTree module.
- * Synopsis   : utmd5sumTree
- * Input      : N/A
- * Output     : /tmp/mdtx/var/local/cache/mdtx/md5sums.txt
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  char key[MAX_SIZE_AES+1] = "1000000000000000";
-  AESData* aes = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MEMORY_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-       
-  // import mdtx environment
-  env.dryRun = FALSE;
-  env.debugMemory = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MEMORY_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!createExempleConfiguration()) goto error;
-  if (!(coll = getCollection("coll1"))) goto error;
-  if (!createExempleRecordTree(coll)) goto error;
-
-  aes = &coll->cacheTree->recordTree->aes;
-  if (!aesInit(aes, key, ENCRYPT)) goto error;
-
-  aes = &coll->cacheTree->recordTree->aes;
-  if (!aesInit(aes, key, ENCRYPT)) goto error;
-
-  // serialize uncrypted file
-  if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB,
-			   0)) goto error;
-
-  // serialize crypted file
-  strncpy(coll->md5sumsDB + strlen(coll->md5sumsDB) -3, "aes", 3);
-  coll->cacheTree->recordTree->doCypher = TRUE;
-  if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB, 
-			   0)) goto error;
-
-  // disease
-  aes->doCypher = FALSE;
-  aes->fd = STDOUT_FILENO;
-  if (!diseaseRecordTree(coll->cacheTree->recordTree)) goto error;
-  env.dryRun = TRUE;
-  if (coll->cacheTree->recordTree->records->nbItems != 0) goto error;
-  /************************************************************************/
-
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

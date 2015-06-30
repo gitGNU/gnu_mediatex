@@ -1,8 +1,15 @@
-# autoreconf -i
+# autoreconf
 Makefile.in
-# ./configure
+
+# configure
 Makefile
+
 # make
+.libs
 .deps
-# make check
+libmediatex.la
+cgi
+mediatex
+mediatexd
+
 

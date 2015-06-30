@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: log.c,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -64,267 +64,12 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "log.h"
-
-LogHandler* DefaultLog = 0;
-
-/*=======================================================================
- * Function   : logDefault (log) [MediaTeX]
- * Description: Set the default log handler --- i.e., all the log
- *              is done using this handler.
- * Synopsis   : LogHandler* logDefault(LogHandler* logHandler)
- * Input      : LogHandler* logHandler = the new default log;
- * Output     : the handler of the new log; nil if error.
- =======================================================================*/
-LogHandler* 
-logDefault(LogHandler* logHandler)
-{
-  LogHandler* rc = 0;
-
-  if(logHandler != 0) {
-    DefaultLog = logHandler;
-  }
-
-  rc = DefaultLog;	
-  return(rc);
-}
-
-/*=======================================================================
- * Function   : logOpen (log) [MediaTeX]
- * Description: Depending on the facility, severity and log handler
- *              given, the logging is set up.
- * Synopsis   : LogHandler* logOpen(char* name, int facility, int severity,
- *              ioStream* hlog)
- * Input      : char* name = name to recordin the log line's prefix
- *              int facility = facility code
- *              int severity = severity code
- *              char* logFile = the log stream file name if the
- *              facility is MISC_LOG_FILE.
- * Output     : the address of the associated log handler or nil if
- *              the opening failed.
- =======================================================================*/
-LogHandler* 
-logOpen(char* name, int facility, int severity, char* logFile)
-{
-  static const char* NilName = "unknown:nil";
-  static const char* EmptyName = "unknown:empty";
-	
-  LogHandler* rc = 0;
-  int fopenError = FALSE;
-	
-  rc = (LogHandler*)malloc(sizeof(LogHandler));
-
-  // rc->hlog is sometine already defined when re-opening the log
-  memset(rc, 0, sizeof(LogHandler)); 
-				
-  if(rc != 0) {
-    if(name == 0) {
-      name = (char*)NilName;
-    }
-    else {
-      if(strlen(name) == 0){
-	name = (char*)EmptyName;
-      }
-    }
-
-    char* baseName = strrchr(name, '/');
-    name = (baseName == 0) ? name : (baseName + 1);
-    
-    rc->name = (char*)malloc(sizeof(char) * (strlen(name) + 1));
-    if(rc->name != 0) {
-      strcpy(rc->name, name);
-      
-      rc->facility = getLogFacilityByCode(facility);
-      if(rc->facility == 0) {
-	rc->facility = getLogFacilityByCode(MISC_LOG_FILE);
-	logFile = 0;
-      }
-      
-      rc->severity = getLogSeverityByCode(severity);
-      if(rc->severity == 0) {
-	rc->severity = getLogSeverityByCode(LOG_INFO);
-      }
-      
-      if(rc->facility->code != MISC_LOG_FILE) {
-	openlog(rc->name,
-		LOG_PID|LOG_NDELAY|LOG_NOWAIT,
-		rc->facility->code);
-      }
-      else {
-	if(logFile != 0 && *logFile != (char)0) {
-	  rc->hlog = fopen(logFile, "a");
-	  if(rc->hlog == 0) {
-	    fopenError = TRUE;
-	  }
-	}
-      }
-
-      //memset((void*)(&(rc->uname)), '\0', sizeof(struct utsname));
-      //uname(&(rc->uname));
-      //rc->pid = getpid();			
-
-      if(rc->facility->code == MISC_LOG_FILE && rc->hlog == 0) {
-	if(rc->hlog == 0) {
-	  rc->hlog = (FILE*)stderr;
-	  if(fopenError) {
-	    logEmit(LOG_WARNING, 
-		    "cannot open '%s' file for logging, "
-		    "will try to revert to the standard error", 
-		    logFile);
-	  }
-	  //logEmit(LOG_INFO, "logging to the standard error");
-	}
-      }
-      
-      //logEmit(LOG_INFO, "started");
-    }
-    else {
-      free(rc);
-      rc = 0;
-    }
-  }
-	
-  return(rc);
-}
+/* Note: Do not include "mediatex-config.h" here as to not use
+ * malloc. (because malloc use logging and we need it enabled first) */
+#include "mediatex.h"
 
 
-#define TimeBufLen 32
-
-/*=======================================================================
- * Function   : logEmitFunc (log) [MediaTeX]
- * Description: Emit a log message.
- * Synopsis   : void logEmitFunc(LogHandler* logHandler, int priority,
- *              const char* message, va_list ap)
- * Input      : LogHandler* logHandler = the log handler returned by a
- *				openLog()
- *              int priority = the priority of the message --- see
- *              syslog(3);
- *              const char* format = the format of the message --- see
- *              vsyslog(3).
- *              va_list ap = the pointer to the begining of the
- *              variable list of argument.
- * Output     : N/A
- =======================================================================*/
-void 
-logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
-{
-  LogSeverity* severity = 0;
-  va_list args;
-
-  if(logHandler != 0) {
-    if(format != 0) {
-      //severity = getLogSeverityByCode(priority); // speed-up
-      severity = LogSeverities + priority;
-      if(severity == 0) {
-	severity = getLogSeverityByCode(LOG_INFO);
-      }
-
-      if(severity->code <= logHandler->severity->code) {
-	va_start(args, format);
-	if(logHandler->hlog == 0) {
-	  vsyslog(priority, format, args);
-	}
-	else {
-	  // The above code simulate the vsyslog output on stderr
-
-/* 	  time_t tloc; */
-/* 	  if(time(&tloc) != (time_t)-1) { */
-/* 	    struct tm* ltime = localtime(&tloc); */
-/* 	    if(ltime != (struct tm*)0) { */
-/* 	      char timeBuf[TimeBufLen]; */
-	      
-/* 	      memset(timeBuf, '\0', TimeBufLen); */
-/* 	      if(strftime(timeBuf, TimeBufLen, "%b %d %H:%M:%S",ltime)) { */
-/* 		fprintf(logHandler->hlog, */
-/* #if defined(__sun__) */
-/* 			"%s %s[%d]: [ID 123456 %s.%s] ", */
-/* #endif /\* : defined(__sun_) *\/ */
-/* #if defined(__gnu_linux__) */
-/* 			"%s %s[%d] %s: ", */
-/* #endif /\* defined(__gnu_linux__) *\/ */
-/* 			timeBuf, */
-/* 			//logHandler->uname.nodename, */
-/* 			logHandler->name, */
-/* 			logHandler->pid, */
-/* #if defined(__sun__) */
-/* 			logHandler->facility->name, */
-/* 			severity->name */
-/* #endif /\* : defined(__sun_) *\/ */
-/* #if defined(__gnu_linux__) */
-/* 			severity->name */
-/* #endif /\* defined(__gnu_linux__) *\/ */
-/* 			); */
-/* 	      } */
-/* 	      else { */
-/* 		fprintf(logHandler->hlog, "error: too many characters in the time prefix "); */
-/* 	      } */
-/* 	    } */
-/* 	    else { */
-/* 	      fprintf(logHandler->hlog, "error: cannot get the local time "); */
-/* 	    } */
-/* 	  } */
-/* 	  else { */
-/* 	    fprintf(logHandler->hlog, "error: cannot get the time "); */
-/* 	  } */
-
-	  /* TODO: I would like to have an ioVPrintf: */
-	  vfprintf(logHandler->hlog, format, args);
-	  if(*(format + strlen(format)) != '\n') {
-	    fprintf(logHandler->hlog, "\n");
-	  }
-	}
-
-	va_end(args);
-      }
-    }
-    else {
-      logEmitFunc(DefaultLog, LOG_WARNING, "nil log format");
-    }
-  }
-  else {
-    fprintf((FILE*)stderr, "\nerror: nil log handler\n");
-  }
-  
-  return;
-}
-
-
-/*=======================================================================
- * Function   : logClose (log) [MediaTeX]
- * Description: Close the syslog.
- * Synopsis   : void logClose(LogHandler* logHandler)
- * Input      : LogHandler* logHandler = the handler of the log to
- *              close.
- * Output     : N/A
- =======================================================================*/
-LogHandler* 
-logClose(LogHandler* logHandler)
-{
-  if(logHandler != 0) {
-      //logEmit(LOG_INFO, "stopped");
-		
-      if(logHandler->hlog == 0) {
-	closelog();
-      }
-      else {
-	if(logHandler->hlog != (FILE*)stderr) {
-	  fclose(logHandler->hlog);
-	}
-	logHandler->hlog = 0;
-      }
-
-      if(logHandler->name != 0) {
-	free(logHandler->name);
-      }
-      
-      free(logHandler);
-  }
-  
-  return (LogHandler*)0;
-}
-
-
-LogFacility LogFacilities[] = {
+static LogFacility LogFacilities[] = {
   {LOG_KERN,      "kernel"},
   {LOG_USER,      "user"},
   {LOG_MAIL,      "mail"},
@@ -350,7 +95,7 @@ LogFacility LogFacilities[] = {
   {LOG_LOCAL5,    "local5"},
   {LOG_LOCAL6,    "local6"},
   {LOG_LOCAL7,    "local7"},
-  {MISC_LOG_FILE, "file"},
+  {99,            "file"},
   {-1,            (char*)0}};
  
 /*=======================================================================
@@ -430,6 +175,7 @@ getLogFacilityByCode(int code)
 }
 
 
+// see values in /usr/include/i386-linux-gnu/sys/syslog.h (from 0 to 7)
 LogSeverity LogSeverities[] = {
   {LOG_EMERG,   "emerg"},
   {LOG_ALERT,   "alert"},
@@ -484,9 +230,9 @@ getLogSeverityByName(char* name)
     LogSeverity* severity = LogSeverities;
     
     for(; severity->name != 0; severity++) {
-	if(strcmp(severity->name, name) == 0) {
-	  rc = severity;
-	}
+      if(strcmp(severity->name, name) == 0) {
+	rc = severity;
+      }
     }
   }
   
@@ -517,273 +263,191 @@ getLogSeverityByCode(int code)
   return(rc);
 }
 
-/************************************************************************/
-
-#ifdef utMAIN
-GLOBAL_STRUCT_DEF;
-
 /*=======================================================================
- * Function   : usage (log) [MediaTeX]
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : char* programName = the name of the program; usually
- *                                  argv[0].
- * Output     : N/A
+ * Function   : logOpen (log) [MediaTeX]
+ * Description: Depending on the facility, severity and log handler
+ *              given, the logging is set up.
+ * Synopsis   : LogHandler* logOpen(char* name, int facility, int severity,
+ *              ioStream* hlog)
+ * Input      : char* name = name to recordin the log line's prefix
+ *              int facility = facility code
+ *              int severity = severity code
+ *              char* logFile = the log stream file name if the
+ *              facility is MISC_LOG_FILE.
+ * Output     : the address of the associated log handler or nil if
+ *              the opening failed.
  =======================================================================*/
-static void 
-usage(char* programName)
+LogHandler* 
+logOpen(char* name, int facility, int severity, char* logFile)
 {
-  fprintf(stderr, "The usage for %s is:\n", programName);
-  fprintf(stderr, "\t%s ", programName);
-  fprintf(stderr, "{ -h | "
-	  "[ -f facility ] [ -s severity ] [ -l logFileName ] }");
-  fprintf(stderr, "\twhere:\n");
-  fprintf(stderr, "\t\t-f   : use facility for logging\n");
-  fprintf(stderr, "\t\t-s   : use severity for logging\n");
-  fprintf(stderr, "\t\t-l   : log to logFile\n");
+  static const char* NilName = "unknown:nil";
+  static const char* EmptyName = "unknown:empty";
+	
+  LogHandler* rc = 0;
+  int fopenError = FALSE;
+	
+  if (!(rc = (LogHandler*)malloc(sizeof(LogHandler)))) {
+    fprintf(stderr, "error: fails to allocate log handler\n");
+    goto error;
+  }
 
+  memset(rc, 0, sizeof(LogHandler)); 
+				
+  if(name == 0) {
+    name = (char*)NilName;
+  }
+  else {
+    if(strlen(name) == 0){
+      name = (char*)EmptyName;
+    }
+  }
+
+  char* baseName = strrchr(name, '/');
+  name = (baseName == 0) ? name : (baseName + 1);
+    
+  rc->name = (char*)malloc(sizeof(char) * (strlen(name) + 1));
+  if(rc->name != 0) {
+    strcpy(rc->name, name);
+      
+    rc->facility = getLogFacilityByCode(facility);
+    if(rc->facility == 0) {
+      rc->facility = getLogFacilityByCode(MISC_LOG_FILE);
+      logFile = 0;
+    }
+      
+    rc->severity = getLogSeverityByCode(severity);
+    if(rc->severity == 0) {
+      rc->severity = getLogSeverityByCode(LOG_INFO);
+    }
+      
+    if(rc->facility->code != MISC_LOG_FILE) {
+      openlog(rc->name,
+	      LOG_PID|LOG_NDELAY|LOG_NOWAIT,
+	      rc->facility->code);
+    }
+    else {
+      if(logFile != 0 && *logFile != (char)0) {
+	rc->hlog = fopen(logFile, "a");
+	if(rc->hlog == 0) {
+	  fopenError = TRUE;
+	}
+      }
+    }		
+
+    if(rc->facility->code == MISC_LOG_FILE && rc->hlog == 0) {
+      if(rc->hlog == 0) {
+	rc->hlog = stderr;
+	if(fopenError) {
+	  logEmitMacro(rc, LOG_WARNING, __FILE__, __LINE__,
+		      "cannot open '%s' file for logging, "
+		      "will try to revert to the standard error", 
+		      logFile);
+	}
+	logEmitMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
+		     "logging to the standard error");
+      }
+    }
+    logEmitMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
+		"started");
+  }
+  else {
+    free(rc);
+    rc = 0;
+  }
+
+ error:
+  return(rc);
+}
+
+
+/*=======================================================================
+ * Function   : logEmitFunc (log) [MediaTeX]
+ * Description: Emit a log message.
+ * Synopsis   : void logEmitFunc(LogHandler* logHandler, int priority,
+ *              const char* message, va_list ap)
+ * Input      : LogHandler* logHandler = the log handler returned by a
+ *				openLog()
+ *              int priority = the priority of the message --- see
+ *              syslog(3);
+ *              const char* format = the format of the message --- see
+ *              vsyslog(3).
+ *              va_list ap = the pointer to the begining of the
+ *              variable list of argument.
+ * Output     : N/A
+ * Note       : you should better call the logEmit variadic macro that 
+ *              add expected values into the variadic argument list.
+ =======================================================================*/
+void 
+logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
+{
+  LogSeverity* severity = 0;
+  va_list args;
+  char* ptr = 0;
+
+  // print messages to stderr if logger is not yet initialise
+  if(!logHandler) {
+    fprintf(stderr, "logger not yet initialized... "); 
+    va_start(args, format);
+    fprintf(stderr, format, args);
+    fprintf(stderr, "\n");
+    va_end(args);
+    goto end;
+  }
+
+  if (priority > logHandler->severity->code) goto end;
+  
+  va_start(args, format);
+
+  if (!(logHandler->hlog)) {
+    // call syslog
+    vsyslog(priority, format, args);
+  }
+  else {  
+    // call fprintf
+    vfprintf(logHandler->hlog, format, args);
+    fprintf(logHandler->hlog, "\n");
+  }
+  
+  va_end(args);
+
+  end:
   return;
 }
 
+
 /*=======================================================================
- * Function   : main (log) [MediaTeX]
- * Author     : Peter FELECAN
- * modif      : 2006/05/24 15:48:50
- * Description: Unit test for log module.
- * Synopsis   : utlog
- * Input      : N/A
+ * Function   : logClose (log) [MediaTeX]
+ * Description: Close the syslog.
+ * Synopsis   : void logClose(LogHandler* logHandler)
+ * Input      : LogHandler* logHandler = the handler of the log to
+ *              close.
  * Output     : N/A
  =======================================================================*/
-int 
-main(int argc, char** argv)
+LogHandler* 
+logClose(LogHandler* logHandler)
 {
-  int rc = 0;
-
-  extern char* optarg;
-  extern int optind;
-  extern int opterr;
-  extern int optopt;
-  
-  int cOption = EOF;
-
-  char* programName = *argv;
-  char* logFile = 0;
-	
-  int logFacility = -1;
-  int logSeverity = -1;
-	
-  LogHandler* logHandler = 0;
-	
-  while(TRUE) {
-    cOption = getopt(argc, argv, ":f:s:l:h");
-    
-    if(cOption == EOF) {
-      break;
+  if(logHandler != 0) {
+    // "stopped"
+		
+    if(logHandler->hlog == 0) {
+      closelog();
     }
-    
-    switch(cOption) {
+    else {
+      if(logHandler->hlog != stderr) {
+	fclose(logHandler->hlog);
+      }
+      logHandler->hlog = 0;
+    }
 
-    case 'f':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the facility name\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the facility name\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logFacility = getLogFacility(optarg);
-	  if(logFacility == -1) {
-	    fprintf(stderr, "%s: incorrect facility name '%s'\n", 
-		    programName, optarg);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
+    if(logHandler->name != 0) {
+      free(logHandler->name);
+    }
       
-    case 's':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the severity name\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the severity name\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logSeverity = getLogSeverity(optarg);
-	  if(logSeverity == -1) {
-	    fprintf(stderr, "%s: incorrect severity name '%s'\n", 
-		    programName, optarg);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
-	
-    case 'l':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the log stream\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the log stream\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logFile = (char*)malloc(sizeof(char) * strlen(optarg) + 1);
-	  if(logFile != 0) {
-	    strcpy(logFile, optarg);
-	  }
-	  else {
-	    fprintf(stderr, 
-		    "%s: cannot allocate memory for the log stream name\n",
-		    programName);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
-      
-    case 'h':
-      usage(programName);
-	  rc = 4;
-	  
-	  break;
-	  
-    case ':':
-	  usage(programName);
-	  rc = 125;
-
-	  break;
-
-	case '?':
-	  usage(programName);
-	  rc = 126;
-
-	  break;
-
-	default:
-	  usage(programName);
-	  rc = 127;
-			
-	  break;
-	}
-    }
-
-  if(!rc)
-    {
-      logHandler = logOpen(programName, logFacility, logSeverity, logFile);
-      if(logHandler != 0) {
-
-	  logDefault(logHandler);
-	  logEmit(LOG_EMERG, "%s", 
-		  "A panic condition was reported to all processes.");
-	  logEmit(LOG_ALERT, "%s", 
-		  "A condition that should be corrected immediately.");
-	  logEmit(LOG_CRIT, "%s", 
-		  "A critical condition.");
-	  logEmit(LOG_ERR, "%s", 
-		  "An error message.");
-	  logEmit(LOG_WARNING, "%s", 
-		  "A warning message.");
-	  logEmit(LOG_NOTICE, "%s", 
-		  "A condition requiring special handling.");
-	  logEmit(LOG_INFO, "%s (%lli)", 
-		  "A general information message.", (off_t)42);
-	  logEmit(LOG_DEBUG, "%s (%i)", 
-		  "A message useful for debugging programs.", 42);
-
-	  logEmit(LOG_INFO, "%s", "");
-	  logEmit(LOG_INFO, "%s", "here is somes explanation :");
-	  logEmit(LOG_INFO, "%s", "");
-
-	  logEmit(LOG_INFO, "%s", 
-		  "try \'./utlog -f file\' for testing");
-	  logEmit(LOG_INFO, "%s", 
-		  "this will not send log to syslog but display them "
-		  "at screen");
-	  logEmit(LOG_INFO, "%s", 
-		  "do it because syslog is configured to hide debug "
-		  "informations.");
-	  logEmit(LOG_INFO, "%s", "");
-
-	  logEmit(LOG_INFO, "%s", 
-		  "\'./utlog -f file -l xxx.log\' will put them "
-		  "into the file");
-	  logEmit(LOG_INFO, "%s", 
-		  "To use syslog you must provide a facility");
-	  logEmit(LOG_INFO, "%s", 
-		  "I advice you to use \'-f user\' or \'-f local[0..7]\'");
-	  logEmit(LOG_INFO, "%s", "");
-
-	  logEmit(LOG_INFO, "%s", 
-		  "Severity allows to ignore messages from lower severity");
-	  logEmit(LOG_INFO, "%s", 
-		  "default severity is \'-s info\' as you can read it");
-	  logEmit(LOG_INFO, "%s", 
-		  "in fact this only hide debug messages");
-	  logEmit(LOG_INFO, "%s", "");
-
-	  logEmit(LOG_INFO, "%s", 
-		  "try \'./utlog -f file -s debug\' to see debug info");
-	  logEmit(LOG_INFO, "%s", "");	
-	  logEmit(LOG_DEBUG, "%s", 
-		  "like that, ok now you can have debuging info");
-	  logEmit(LOG_DEBUG, "%s", "");
-
-	  // test the parser maccro
-	  logParser(LOG_INFO, "%s", 
-		    "You shouldn't read this !");
-	  logParser(LOG_INFO, "%s", 
-		    "This is a message from the parser macro");
-      }
-	
-      // test re-opening the logs
-      logClose(logHandler);
-      logHandler = logOpen(programName, 
-			   getLogFacility("local4"), logSeverity, logFile);
-      logDefault(logHandler);
-
-      logEmit(LOG_INFO, "%s", 
-	      "test fails: re-opening log using local4 facility");
-      logClose(logHandler);
-
-      logHandler = logOpen(programName, 
-			   getLogFacility("file"), logSeverity, logFile);
-      logDefault(logHandler);
-
-      logEmit(LOG_INFO, "%s", 
-	      "test success for re-opening log using file facility");
-      logClose(logHandler);
-
-      logHandler = logOpen(programName, 
-			   getLogFacility("local4"), logSeverity, logFile);
-      logDefault(logHandler);
-
-      logEmit(LOG_INFO, "%s", 
-	      "second test fails: re-opening log using local4 facility");
-      logClose(logHandler);
-    }
-
-  if(logFile != 0) {
-    free(logFile);
+    free(logHandler);
   }
-	
-  exit(rc);
+  
+  return (LogHandler*)0;
 }
-#endif	/*	: utMAIN	*/
 
 /* Local Variables: */
 /* mode: c */

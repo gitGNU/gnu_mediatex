@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.h,v 1.3 2015/06/03 14:03:43 nroche Exp $
+ * Version: $Id: address.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
  * Project: 
  * Module : socket
 
@@ -22,11 +22,11 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ======================================================================= */
 
-#ifndef MISC_SOCKET_ADDRESS_H
+#ifndef MDTX_MISC_ADDRESS_H
+#define MDTX_MISC_ADDRESS_H 1
 
 #include <netinet/in.h>
 
-// not re-entrant, please copy the host name if needed
 char* getHostNameByAddr(struct in_addr* inAddr);
 
 int getIpFromHostname(struct in_addr *ipv4, const char* hostname);
@@ -40,4 +40,4 @@ int buildSocketAddress(struct sockaddr_in* rc,
 		       const char* protocol, 
 		       const char* service);
 
-#endif /* MISC_SOCKET_ADDRESS_H*/
+#endif /* MDTX_MISC_ADDRESS_H*/

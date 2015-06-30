@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: update.sh,v 1.3 2015/06/03 14:03:25 nroche Exp $
+# * Version: $Id: update.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: deliver.h,v 1.3 2015/06/03 14:03:55 nroche Exp $
+ * Version: $Id: deliver.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/deliver
+ * Module : deliver
  *
  * Manage delivering mail
 
@@ -22,17 +22,17 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_DELIVER_H
-#define MDTX_WRAPPER_DELIVER_H 1
+#ifndef MDTX_SERVER_DELIVER_H
+#define MDTX_SERVER_DELIVER_H 1
 
-//#include "../mediatex.h"
+#include "mediatex-types.h"
 
 /* API */
 
 int deliverMail(Collection* coll, Archive* record);
 int deliverMails(Collection* coll);
 
-#endif /* MDTX_WRAPPER_DELIVER_H */
+#endif /* MDTX_SERVER_DELIVER_H */
 
 /* Local Variables: */
 /* mode: c */

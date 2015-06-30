@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.h,v 1.3 2015/06/03 14:03:40 nroche Exp $
+ * Version: $Id: supportTree.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -22,12 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MEMORY_ADMSUPP_H
-#define MEMORY_ADMSUPP_H 1
+#ifndef MDTX_MEMORY_SUPP_H
+#define MDTX_MEMORY_SUPP_H 1
 
-#include "confTree.h"
-
-#include <sys/types.h>
+#include "mediatex-types.h"
 
 struct Support
 {
@@ -67,7 +65,7 @@ Support* getSupport(char* label);
 Support* addSupport(char* label);
 int delSupport(Support* self);
 
-#endif /* MEMORY_ADMSUPP_H */
+#endif /* MDTX_MEMORY_SUPP_H */
 
 /* Local Variables: */
 /* mode: c */

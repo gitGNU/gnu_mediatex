@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: mount.sh,v 1.3 2015/06/03 14:03:24 nroche Exp $
+# * Version: $Id: mount.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
 # * Project: MediaTex
 # * Module : mount script
 # *

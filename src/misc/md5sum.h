@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.h,v 1.3 2015/06/03 14:03:46 nroche Exp $
+ * Version: $Id: md5sum.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,17 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MISC_CHECKSUMS_MD5SUM_H
-#define MISC_CHECKSUMS_MD5SUM_H 1
+#ifndef MDTX_MISC_MD5SUM_H
+#define MDTX_MISC_MD5SUM_H 1
 
-#include "../mediatex.h"
-#include <openssl/md5.h>
-
-#if MAX_SIZE_HASH != (MD5_DIGEST_LENGTH << 1)
-#error Bad size used to store md5sums !!
-#endif
-
-#define MEGABYTE 1048576
+#include "mediatex-types.h"
 
 // Operation supported by API:
 typedef enum Md5Opp { 
@@ -61,12 +54,19 @@ typedef struct Md5Data {
   Md5Rc rc;            // only used by MD5_SUPP_CHECK
 } Md5Data;
 
+typedef struct MdtxProgBar {
+  ProgBar bar;
+  char* label;
+  off_t max;
+  off_t cur;
+} MdtxProgBar;
+
 int startProgBar(char* label);
 void stopProgBar();
 
 int doMd5sum(Md5Data* data);
 
-#endif /* MISC_CHECKSUMS__MD5SUM_H */
+#endif /* MDTX_MISC_MD5SUM_H */
 
 /* Local Variables: */
 /* mode: c */

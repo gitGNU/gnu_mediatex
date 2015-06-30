@@ -1,9 +1,9 @@
- /*=======================================================================
- * Version: $Id: misc.c,v 1.3 2015/06/03 14:03:29 nroche Exp $
+/*=======================================================================
+ * Version: $Id: misc.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/make
+ * Module : misc
  *
- * Front-end for the html sub modules
+ * Miscelanous client queries
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -20,22 +20,10 @@
  
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-=======================================================================*/
+ =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../misc/device.h"
-#include "../misc/progbar.h"
-#include "../misc/md5sum.h"
-#include "../misc/tcp.h"
-#include "../common/connect.h"
-#include "../common/openClose.h"
-#include "../common/extractScore.h"
-#include "commonHtml.h"
-#include "catalogHtml.h"
-#include "extractHtml.h"
-#include "misc.h"
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 
 /*=======================================================================
  * Function   : mdtxMake
@@ -118,9 +106,10 @@ mdtxClean(char* label)
   argv[0] = createString(conf->scriptsDir);
   argv[0] = catString(argv[0], "/clean.sh");
   argv[1] = label;
-#ifndef utMAIN
-  if (!execScript(argv, "root", 0, FALSE)) goto error;
-#endif
+
+  if (!env.noRegression) {
+    if (!execScript(argv, "root", 0, FALSE)) goto error;
+  }
 
   rc = TRUE;
  error:
@@ -203,7 +192,7 @@ mdtxRemove()
  * Synopsis   : int mdtxPurge()
  * Input      : N/A
  * Output     : TRUE on success
-* Note       : must be call by root
+ * Note       : must be call by root
  =======================================================================*/
 int 
 mdtxPurge()
@@ -252,9 +241,9 @@ mdtxAddUser(char* user)
   if (!(argv[0] = catString(argv[0], "/addUser.sh"))) goto error;
   argv[1] = user;
   
-#ifndef utMAIN
-  if (!execScript(argv, 0, 0, FALSE)) goto error;
-#endif
+  if (!env.noRegression) {
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  }
 
   rc = TRUE;
  error:  
@@ -287,9 +276,9 @@ mdtxDelUser(char* user)
   if (!(argv[0] = catString(argv[0], "/delUser.sh"))) goto error;
   argv[1] = user;
   
-#ifndef utMAIN
-  if (!execScript(argv, 0, 0, FALSE)) goto error;
-#endif
+  if (!env.noRegression) {
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  }
 
   rc = TRUE;
  error:  
@@ -306,7 +295,7 @@ mdtxDelUser(char* user)
  * Synopsis   : int mdtxBind()
  * Input      : N/A
  * Output     : TRUE on success
-* Note       : must be call by root
+ * Note       : must be call by root
  =======================================================================*/
 int 
 mdtxBind()
@@ -339,7 +328,7 @@ mdtxBind()
  * Synopsis   : int mdtxUnind()
  * Input      : N/A
  * Output     : TRUE on success
-* Note       : must be call by root
+ * Note       : must be call by root
  =======================================================================*/
 int 
 mdtxUnbind()
@@ -465,7 +454,7 @@ mdtxScp(char* label, char* fingerPrint, char* target)
     goto error2;
   rc = TRUE;
  error2:
-   if (!releaseCollection(coll, SERV)) goto error;
+  if (!releaseCollection(coll, SERV)) goto error;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "mdtxScp fails");
@@ -496,25 +485,23 @@ mdtxUploadFile(char* label, char* path)
   struct stat statBuffer;
   Md5Data md5; 
   char* extra = 0;
-#ifndef utMAIN
   char* message = 0;
   char reply[256];
   int status = 0;
   int n = 0;
-#endif
 
   if (isEmptyString(path)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, EXTR)) goto error;
 
-/* #ifndef utMAIN */
-/*   // check if daemon is awake */
-/*   if (access(conf->pidFile, R_OK) == -1) { */
-/*     logEmit(LOG_INFO, "cannot read daemon's pid file: %s",  */
-/* 	    strerror(errno)); */
-/*     goto end; */
-/*   } */
-/* #endif */
+  /* if (!env.noRegression) { */
+  /*   // check if daemon is awake */
+  /*   if (access(conf->pidFile, R_OK) == -1) { */
+  /*     logEmit(LOG_INFO, "cannot read daemon's pid file: %s",  */
+  /* 	    strerror(errno)); */
+  /*     goto end; */
+  /*   } */
+  /* } */
 
   if (!(tree = createRecordTree())) goto error2; 
   tree->collection = coll;
@@ -546,28 +533,29 @@ mdtxUploadFile(char* label, char* path)
   if (!rgInsert(tree->records, record)) goto error2;
   record = 0;
   
-#ifdef utMAIN
-  logEmit(LOG_INFO, "upload file to %s collection", label);
-#else
-  if ((socket = connectServer(coll->localhost)) == -1) goto error2;
-  if (!upgradeServer(socket, tree, 0)) goto error2;
-
-  // read reply
-  n = tcpRead(socket, reply, 255);
-  tcpRead(socket, reply, 1);
-
-  // erase the \n send by server
-  if (n<=0) n = 1;
-  reply[n-1] = (char)0;
-
-  if (sscanf(reply, "%i %s", &status, message) < 1) {
-    logEmit(LOG_ERR, "error reading reply: %s", reply);
-    goto error2;
+  if (env.noRegression) {
+    logEmit(LOG_INFO, "upload file to %s collection", label);
   }
+  else {
+    if ((socket = connectServer(coll->localhost)) == -1) goto error2;
+    if (!upgradeServer(socket, tree, 0)) goto error2;
     
-  logEmit(LOG_INFO, "local server tels (%i) %s", status, message);
-  if (status != 200) goto error2;
-#endif
+    // read reply
+    n = tcpRead(socket, reply, 255);
+    tcpRead(socket, reply, 1);
+    
+    // erase the \n send by server
+    if (n<=0) n = 1;
+    reply[n-1] = (char)0;
+    
+    if (sscanf(reply, "%i %s", &status, message) < 1) {
+      logEmit(LOG_ERR, "error reading reply: %s", reply);
+      goto error2;
+    }
+    
+    logEmit(LOG_INFO, "local server tels (%i) %s", status, message);
+    if (status != 200) goto error2;
+  }
 
   // add extraction rule
   if (!(container = addContainer(coll, REC, archive))) goto error;
@@ -587,110 +575,6 @@ mdtxUploadFile(char* label, char* path)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, " [ -d repository ]");
-
-  mdtxOptions();
-  fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2010/12/10
- * Description: entry point for make module
- * Synopsis   : ./utmake
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char inputRep[255] = ".";
-  char* path = 0;
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"d:";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, 0, 'd'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  //env.dryRun = FALSE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'd':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, 
-		"%s: nil or empty argument for the input repository\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      strncpy(inputRep, optarg, strlen(optarg)+1);
-      break; 
-
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-  
-  /************************************************************************/
-  // build the HTML catalog
-  if (!mdtxMake("coll1")) goto error;
-
-  // upload a file
-  if (!(path = createString(inputRep))) goto error;
-  if (!(path = catString(path, "/../../examples/logo.png"))) goto error;
-  if (!mdtxUploadFile("coll1", path)) goto error;
-  if (!(coll = addCollection("coll1"))) goto error;
-  if (!saveCollection(coll, EXTR)) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  path = destroyString(path);
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

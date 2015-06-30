@@ -1,14 +1,14 @@
 /*=======================================================================
- * Version: $Id: getcgivars.c,v 1.3 2015/06/03 14:03:45 nroche Exp $
- * Project: CGIVARS
- * Module : mediatex
+ * Version: $Id: getcgivars.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
+ * Project: Mediatex
+ * Module : misc
  *
  * Get cgi variables
  *
  * Do not find the true origin licence but all occurences I found of
  * this code looks compatible with GPLv3+ (x2c function for instance
  * seems taken from the NCSA server exemples)
- ------------------------------------------------------------------------
+ *------------------------------------------------------------------------
  * Written by:	Ilya G. Goldberg <igg@nih.gov>   11/2003
  *
  *  Copyright (C) 2003 Open Microscopy Environment
@@ -31,6 +31,9 @@
  *    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA02111-1307
  *    USA
  =======================================================================*/
+
+/* Note: Do not include "mediatex-config.h" here as there is no memory 
+ * leaks here and this code will not evolute. */
 
 #include <stdio.h>
 #include <string.h>
@@ -63,8 +66,8 @@ unescape_url(char *url) {
 
 /** Read the CGI input and place all name/val pairs into list.        **/
 /** Returns list containing name1, value1, name2, value2, ... , 0  **/
-char
-**getcgivars() {
+char**
+getcgivars() {
   register int i ;
   char *request_method ;
   int content_length;
@@ -168,53 +171,6 @@ freecgivars(char **cgivars) {
  if (cgivars) for (i=0; cgivars[i]; i++) free(cgivars[i]);
  free(cgivars);
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-
-// Standard "hello, world" program, that also shows all CGI input
-int 
-main() {
-  char **cgivars ; int i ;
-    
-  /** Print the CGI response header, required for all HTML output.**/
-  /** Note the extra \n, to send the blank line.                  **/
-  printf("Content-type: text/html\n\n") ;
-    
-  /** Finally, print out the complete HTML response page.         **/
-  printf("<html>\n") ;
-  printf("<head><title>CGI Results</title></head>\n") ;
-  printf("<body>\n") ;
-  printf("<h1>Hello, world.</h1>\n") ;
-  printf("Your CGI input variables were:\n") ;
-  printf("<ul>\n") ;
-
-  /** First, get the CGI variables into a list of strings         **/
-  cgivars= getcgivars() ;
-
-  if (cgivars == (char**)0) {
-      fprintf(stdout, "usage: you must call this CGI script via apache\n");
-      exit(0);
-    }
-    
-  /** Print the CGI variables sent by the user.  Note the list of **/
-  /**   variables alternates names and values, and ends in 0.  **/
-  for (i=0; cgivars[i]; i+= 2)
-    printf("<li>[%s] = [%s]\n", cgivars[i], cgivars[i+1]) ;
-        
-  printf("</ul>\n") ;
-  printf("</body>\n") ;
-  printf("</html>\n") ;
-
-  /** Free anything that needs to be freed **/
-  for (i=0; cgivars[i]; i++) free(cgivars[i]) ;
-  free(cgivars) ;
-
-  exit(0) ;
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
+ * Version: $Id: supp.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/supp
+ * Module : supp
  *
- * Manage local supports data-base
+ * Manage local supports
 
   MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,32 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../misc/device.h"
-#include "../misc/md5sum.h"
-#include "../misc/tcp.h"
-#include "../memory/confTree.h"
-#include "../memory/supportTree.h"
-#include "../common/connect.h"
-#include "../common/register.h"
-#include "../common/upgrade.h"
-#include "../common/openClose.h"
-
-#ifndef utMAIN
-#include "conf.h"
-#endif
-#include "supp.h"
-
-#include <sys/stat.h>
-#include <time.h>
-#include <avl.h>
-
-#ifdef utMAIN
-// reduce the tests scope to the supports.txt file
-#define mdtxWithdrawSupport(...) TRUE
-#endif
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 
 /*=======================================================================
  * Function   : mdtxMount
@@ -294,7 +270,7 @@ mdtxLsSupport()
 
   logEmit(LOG_DEBUG, "%s", "mdtxLsSupport");
   if (!(conf = getConfiguration())) goto error;
-  if (!loadConfiguration(CONF | SUPP)) goto error;
+  if (!loadConfiguration(CFG | SUPP)) goto error;
   supports = conf->supports;
 
   rgRewind(supports);
@@ -448,9 +424,7 @@ notifyHave(Support* supp, char* path, char* mnt)
   RGIT* curr2 = 0;
   char* name = 0;
   int isShared = FALSE;
-#ifndef utMAIN
   char reply[1];
-#endif
 
   logEmit(LOG_DEBUG, "%s", "notifyHave");
   if (supp == 0) goto error;
@@ -461,7 +435,7 @@ notifyHave(Support* supp, char* path, char* mnt)
   }
 
   conf = getConfiguration();
-  if (!loadConfiguration(CONF)) goto error;
+  if (!loadConfiguration(CFG)) goto error;
   if (!expandConfiguration()) goto error;
   if (!(tree = createRecordTree())) goto error;    
   tree->messageType = HAVE;
@@ -480,22 +454,25 @@ notifyHave(Support* supp, char* path, char* mnt)
     // add final supplies    
     if (!addFinalSupplies(coll, supp, path, mnt, tree)) goto error;
 
-#ifndef utMAIN
-    // trick to use 127.0.0.1 instead of www IP address
-    buildSocketAddressEasy(&coll->localhost->address, 
-			   0x7f000001, coll->localhost->mdtxPort);
+    if (!env.noRegression) {
+      // trick to use 127.0.0.1 instead of www IP address
+      buildSocketAddressEasy(&coll->localhost->address, 
+			     0x7f000001, coll->localhost->mdtxPort);
+      
+      if ((socket = connectServer(coll->localhost)) == -1) goto error;
+      if (!upgradeServer(socket, tree, 0)) goto error;
 
-    if ((socket = connectServer(coll->localhost)) == -1) goto error;
-    if (!upgradeServer(socket, tree, 0)) goto error;
-    coll->localhost->address.sin_family = 0; // do not use 127.0.0.1 anymore
+      // do not use 127.0.0.1 anymore
+      coll->localhost->address.sin_family = 0;
 
-    // wait until server shut down the sockect
-    tcpRead(socket, reply, 1);
-#else
-    fprintf(stderr, "%s", "\n");
-    logEmit(LOG_INFO, "notify support to %s collection", 
-	    tree->collection->label);
-#endif
+      // wait until server shut down the sockect
+      tcpRead(socket, reply, 1);
+    }
+    else {
+      fprintf(stderr, "%s", "\n");
+      logEmit(LOG_INFO, "notify support to %s collection", 
+	      tree->collection->label);
+    }
     
     // del final supplies
     while((record = rgHead(tree->records)) != 0) {
@@ -583,14 +560,14 @@ mdtxHaveSupport(char* label, char* path)
   // maybe we should updgrade daemon's md5sumsDB 
   // before to launch extraction ?
 
-#ifndef utMAIN
-  // check if daemon is awake
-  if (access(conf->pidFile, R_OK) == -1) {
-    logEmit(LOG_INFO, "cannot read daemon's pid file: %s", 
-	    strerror(errno));
-    goto end;
+  if (!env.noRegression) {
+    // check if daemon is awake
+    if (access(conf->pidFile, R_OK) == -1) {
+      logEmit(LOG_INFO, "cannot read daemon's pid file: %s", 
+	      strerror(errno));
+      goto end;
+    }
   }
-#endif
  
   // mount the iso if we have one
   if (isIsoFile(path)) {
@@ -605,9 +582,7 @@ mdtxHaveSupport(char* label, char* path)
   if (!(absPath = absolutePath(path))) goto error2;
   if (!notifyHave(supp, absPath, mnt)) goto error2;
 
-#ifndef utMAIN
  end:
-#endif
   // update support's dates
   conf->fileState[iSUPP] = MODIFIED;
   rc = TRUE;
@@ -616,9 +591,6 @@ mdtxHaveSupport(char* label, char* path)
   if (!isEmptyString(mnt) && !mdtxUmount(mnt)) rc = FALSE;
  error:
   if (!rc) {
-#ifdef utMAIN
-    fprintf(stderr, "%s", "\n");
-#endif
     logEmit(LOG_ERR, "have query on %s support failed", 
 	    supp?supp->name:"unknown");
   }
@@ -659,132 +631,6 @@ error:
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, " [ -d repository ]");
-
-  mdtxOptions();
-  fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
-  return;
-}
-
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2010/12/10
- * Description: entry point for supp module
- * Synopsis   : ./utsupp
- * Input      : N/A
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  char inputRep[255] = "../../examples";
-  char* supp = "SUPP21_logo.part1";
-  char path[1024];
-  Configuration* conf = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"d:";
-  struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, 0, 'd'},
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'd':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, 
-		"%s: nil or empty argument for the input repository\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      strncpy(inputRep, optarg, strlen(optarg)+1);
-      break; 
-
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!(conf = getConfiguration())) goto error;
-  
-  conf->checkTTL = 100;
-  logEmit(LOG_DEBUG, "%s", "*** Start like this:");
-  conf->checkTTL = 946080000;
-  mdtxLsSupport();
-  if (!saveConfiguration("topo")) goto error;
-  
-  logEmit(LOG_DEBUG, "%s", "*** Add a support:");
-  sprintf(path, "%s/logo.tgz", inputRep);
-  if (!mdtxAddSupport("me", path)) goto error;
-  if (!saveConfiguration("topo")) goto error;
-  
-  logEmit(LOG_DEBUG, "%s", "*** Add second time:");
-  if (mdtxAddSupport("me", path)) goto error;
-  if (!saveConfiguration("topo")) goto error;
-  
-  logEmit(LOG_DEBUG, "%s", "*** Have a bad support:");
-  sprintf(path, "%s/logo.png", inputRep);
-  if (mdtxHaveSupport(supp, path)) goto error;
-  
-  logEmit(LOG_DEBUG, "%s", "*** Have a support:");
-  sprintf(path, "%s/logoP1.iso", inputRep);
-  if (!mdtxHaveSupport(supp, path)) goto error;
-  
-  logEmit(LOG_DEBUG, "%s", "*** Update a support:");
-  if (!mdtxUpdateSupport(supp, "too much caracteres => troncated")) 
-    goto error;
-  if (!saveConfiguration("topo")) goto error;
-
-  logEmit(LOG_DEBUG, "%s", "*** Remove a support:");
-  if (!mdtxDelSupport(supp)) goto error;
-  if (!saveConfiguration("topo")) goto error;
-  /************************************************************************/
-
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

@@ -1,13 +1,10 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
-# * Version: $Id: include.src,v 1.3 2015/06/03 14:03:26 nroche Exp $
+# * Version: $Id: include.src,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
-# * Execute non-regression tests on modules :
-#   "module.out" output is match against "module.exp" expected outpout
+# * load mediatex path and variables
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 Nicolas Roche
@@ -25,67 +22,88 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 # includes
 MDTX_SH_INCLUDE=1
 [ -z $srcdir ] && srcdir=.
-[ -z $libdir ] && libdir=$srcdir
-[ ! -z $MDTX_SH_UNIT ] || source $libdir/unitTest.sh
-[ ! -z $MDTX_SH_LOG ]  || source $libdir/log.sh
+[ -z $libdir ] && libdir=$srcdir/scripts/lib
+[ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 
-Debug "include"
+# running variables from env (command.c)
+DRY_RUN=${MDTX_DRY_RUN-0}
+MDTX=${MDTX_MDTXUSER-mdtx}
 
-# set global variables from config.h
+Debug "load $MDTX's paths"
+
+# from automake (./configure)
 MEDIATEX=CONF_MEDIATEXDIR
 BINDIR=CONF_BINDIR
 DATAROOTDIR=CONF_DATAROOTDIR
 EXEC_PREFIX=CONF_EXEC_PREFIX
-LIBDIR=CONF_LIBDIR
 LOCALSTATEDIR=CONF_LOCALSTATEDIR
 PREFIX=CONF_PREFIX
 SYSCONFDIR=CONF_SYSCONFDIR
 
-# set global variables from env
-DRY_RUN=${MDTX_DRY_RUN-0}
-MDTX=${MDTX_MDTXUSER}
+## copy/paste from mediatex.config
+# note: values for unit tests are differents due to jails (utscripts.sh)
 
-# global path variables by scripts
+# path configuration variables for scripts
 ETCDIR="${SYSCONFDIR}${MEDIATEX}"
 DATADIR="${DATAROOTDIR}${MEDIATEX}"
 STATEDIR="${LOCALSTATEDIR}/lib${MEDIATEX}"
 CACHEDIR="${LOCALSTATEDIR}/cache${MEDIATEX}"
 PIDDIR="${LOCALSTATEDIR}/run${MEDIATEX}"
+SCRIPTS="${DATADIR}/scripts"
+MISC="${DATADIR}/misc"
+HOSTSSH="${SYSCONFDIR}/ssh"
+
+# running variables from env (command.c)
+DRY_RUN=${MDTX_DRY_RUN-0}
+MDTX=${MDTX_MDTXUSER}
+
+## NOT USED BY SHOULD BE
+
+# relative paths
+CONF_MD5SUMS="/md5sums"
+CONF_CACHES="/cache"
+CONF_EXTRACT="/tmp"
+CONF_HOME="/home"
+CONF_CVSCLT="/cvs"
+CONF_SSHDIR="/.ssh"
+CONF_HTMLDIR="/public_html"
+CONF_CONFFILE=".conf"
+CONF_PIDFILE="d.pid"
+
+# basenames
+CONF_SUPPFILE="/supports.txt"
+CONF_SERVFILE="/servers"
+CONF_CATHFILE="/catalog"
+CONF_EXTRFILE="/extract"
+CONF_RSAUSERKEY="/id_rsa.pub"
+CONF_DSAUSERKEY="/id_dsa.pub"
+CONF_RSAHOSTKEY="/ssh_host_rsa_key.pub"
+CONF_DSAHOSTKEY="/ssh_host_dsa_key.pub"
+CONF_SSHKNOWN="/known_hosts"
+CONF_SSHAUTH="/authorized_keys"
+CONF_SSHCONF="/config"
+CONF_COLLKEY="/aesKey.txt"
+TESTING_PORT=6560
+CONF_PORT=6561
+SSH_PORT=22
+
+# recurent variables
+CVSROOT="${STATEDIR}/$MDTX"
+MDTXHOME="${CACHEDIR}/$MDTX"
+MD5SUMS="${MDTXHOME}${CONF_MD5SUMS}"
+CACHES="${MDTXHOME}${CONF_CACHES}"
+EXTRACT="${MDTXHOME}${CONF_EXTRACT}"
+CVSCLT="${MDTXHOME}${CONF_CVSCLT}"
+HOMES="${MDTXHOME}${CONF_HOME}"
+MDTXCVS="${CVSCLT}/$MDTX"
+CONFFILE="${MDTXCVS}/$MDTX${CONF_CONFFILE}"
+PIDFILE="${PIDDIR}/$MDTX${CONF_PIDFILE}"
 
 FALSE=1
 TRUE=0
-
-# unitary tests
-if UNIT_TEST_start "include"; then
-    MDTX="ut-mdtx"
-
-    echo -e "\n* Autotools inputs:"
-    echo "MEDIATEX=$MEDIATEX"
-    echo "BINDIR=$BINDIR"
-    echo "DATAROOTDIR=$DATAROOTDIR"
-    echo "EXEC_PREFIX=$EXEC_PREFIX"
-    echo "LIBDIR=$LIBDIR"
-    echo "LOCALSTATEDIR=$LOCALSTATEDIR"
-    echo "PREFIX=$PREFIX"
-    echo "SYSCONFDIR=$SYSCONFDIR"
-
-    echo -e "\n* Command line inputs:"
-    echo "LOG_FILE=$LOG_FILE"
-    echo "LOG_FACILITY=$LOG_FACILITY"
-    echo "LOG_SEVERITY=$LOG_SEVERITY"
-    echo "DRY_RUN=$DRY_RUN"
-    echo "MDTX=$MDTX"
- 
-    echo -e "\n * New variables:"
-    echo "ETCDIR=$ETCDIR"
-    echo "DATADIR=$DATADIR"
-    echo "STATEDIR=$STATEDIR"
-    echo "CACHEDIR=$CACHEDIR"
-    echo "PIDDIR=$PIDDIR"
-
-    UNIT_TEST_stop "include"
-fi

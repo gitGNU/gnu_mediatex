@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: supp.h,v 1.3 2015/06/03 14:03:31 nroche Exp $
+ * Version: $Id: supp.h,v 1.4 2015/06/30 17:37:26 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/supp
+ * Module : supp
  *
- * Manage local supports data-base
+ * Manage local supports
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,10 +22,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#ifndef MDTX_WRAPPER_SUPP_H
-#define MDTX_WRAPPER_SUPP_H 1
+#ifndef MDTX_CLIENT_SUPP_H
+#define MDTX_CLIENT_SUPP_H 1
 
-#include "../memory/supportTree.h"
+#include "mediatex-types.h"
 
 int checkValidity(Support* supp, int* obsolete);
 int mdtxMount(char* iso, char* target);
@@ -39,7 +39,7 @@ int mdtxAddSupport(char* label, char* path);
 int mdtxHaveSupport(char* label, char* path);
 int mdtxDelSupport(char* label);
 
-#endif /* MDTX_WRAPPER_SUPP_H */
+#endif /* MDTX_CLIENT_SUPP_H */
 
 /* Local Variables: */
 /* mode: c */

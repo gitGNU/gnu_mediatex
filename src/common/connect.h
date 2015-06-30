@@ -1,9 +1,9 @@
 /*=======================================================================
- * Version: $Id: connect.h,v 1.3 2015/06/03 14:03:34 nroche Exp $
+ * Version: $Id: connect.h,v 1.4 2015/06/30 17:37:26 nroche Exp $
  * Project: MediaTeX
- * Module : server/connect
+ * Module : connect
  *
- * Manage socket connexion to the server and sending archiveTree
+ * Open and write to servers socket
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -22,16 +22,16 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
 
-#include "../memory/recordTree.h"
+#include "mediatex-types.h"
 
-#ifndef MDTX_BUS_CONNECT_H
-#define MDTX_BUS_CONNECT_H 1
+#ifndef MDTX_COMMON_CONNECT_H
+#define MDTX_COMMON_CONNECT_H 1
 
 int buildServerAddress(Server* server);
 int connectServer(Server* server);
 int upgradeServer(int socket, RecordTree* tree, char* fingerPrint);
 
-#endif /* MDTX_BUS_CONNECT_H */
+#endif /* MDTX_COMMON_CONNECT_H */
 
 /* Local Variables: */
 /* mode: c */

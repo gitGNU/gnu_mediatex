@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.3 2015/06/03 14:03:38 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -22,11 +22,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "catalogTree.h"
-
-#include <avl.h>
+#include "mediatex-config.h"
 
 
 /*=======================================================================
@@ -2224,104 +2220,6 @@ diseaseCatalogTree(Collection* coll)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "utFunc.h"
-GLOBAL_STRUCT_DEF;
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  memoryUsage(programName);
-
-  memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
-  return;
-}
-
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for confTree module.
- * Synopsis   : utconfTree
- * Input      : N/A
- * Output     : N/A
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
-  struct option longOptions[] = {
-    MEMORY_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  env.dryRun = FALSE;
-  env.debugMemory = TRUE;
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-      GET_MEMORY_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  if (!createExempleConfiguration()) goto error;
-  if (!(coll = getCollection("coll1"))) goto error;
-  if (!createExempleCatalogTree(coll)) goto error;
-  
-  // test serializing
-  if (!serializeCatalogTree(coll)) {
-    logMemory(LOG_ERR, "%s", "Error while serializing the catalog exemple");
-    goto error;
-  }
-
-  // test disease
-  if (!diseaseCatalogTree(coll)) goto error;
-  env.dryRun = TRUE;
-  if (!serializeCatalogTree(coll)) goto error;
-  if (coll->catalogTree->roles->nbItems != 0) goto error;
-  if (avl_count(coll->catalogTree->humans) != 0) goto error;
-  if (avl_count(coll->catalogTree->documents) != 0) goto error;
-  if (coll->catalogTree->categories->nbItems != 0) goto error;
-  if (coll->catalogTree->caracs->nbItems != 0) goto error;
-  /************************************************************************/
-
-  freeConfiguration();
-  rc = TRUE;
- error:
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

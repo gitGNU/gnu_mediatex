@@ -1,7 +1,7 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.3 2015/06/03 14:03:30 nroche Exp $
+ * Version: $Id: serv.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
  * Project: MediaTeX
- * Module : wrapper/serv
+ * Module : serv
  *
  * Manage servers.txt modifications
 
@@ -22,14 +22,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../memory/confTree.h"
-#include "../common/ssh.h"
-#include "../common/openClose.h"
-
-#include <sys/types.h>
-#include <sys/ipc.h>
+#include "mediatex-config.h"
+#include "client/mediatex-client.h"
 #include <sys/sem.h>
 
 typedef union semun {
@@ -73,9 +67,7 @@ static int setConcurentAccessLock()
 
   logEmit(LOG_INFO, "client ipc key: {%s, %i}", 
 	  conf->confFile, COMMON_OPEN_CLOSE_PROJECT_ID); 
-#ifndef utMAIN
-  logEmit(LOG_INFO, "client ipc key: 0x%x", key); 
-#endif
+  logEmit(LOG_DEBUG, "client ipc key: 0x%x", key); 
 
   // Try to match an existing semaphore with the key
   if (( conf->sem = semget(key, 1, 0)) == -1) {
@@ -456,154 +448,6 @@ delKey(char* label, char* key)
   }
   return rc;
 }
-
-/************************************************************************/
-
-#ifdef utMAIN
-#include "../misc/command.h"
-#include "../misc/signals.h"
-
-GLOBAL_STRUCT_DEF;
-int running = TRUE;
-
-void* 
-sigManager(void* arg)
-{
-  int sigNumber = 0;
-
-  (void) arg;
-  logEmit(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
-  logEmit(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
-
-  if ((sigNumber = sigwaitinfo(&signalsToManage, 0)) == -1) {
-    logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
-    goto error;
-  }
- 
-  running = FALSE;
-  return (void*)TRUE;
- error:
-  return (void*)FALSE;
-}
-
-/*=======================================================================
- * Function   : usage
- * Description: Print the usage.
- * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually argv[0].
- * Output     : N/A
- =======================================================================*/
-static void 
-usage(char* programName)
-{
-  mdtxUsage(programName);
-  fprintf(stderr, " [ -k ]");
-  mdtxOptions();
-  fprintf(stderr, 
-	  "  -k, --lock\t\ttest the concurrent lock\n");
-  return;
-}
-
-  
-/*=======================================================================
- * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2012/05/01
- * Description: Unit test for cache module.
- * Synopsis   : ./utupgrade
- * Input      : -i mediatex.conf
- * Output     : stdout
- =======================================================================*/
-int 
-main(int argc, char** argv)
-{
-  Collection* coll = 0;
-  pthread_t thread;
-  int doLock = FALSE;
-  int err = 0;
-  // ---
-  int rc = 0;
-  int cOption = EOF;
-  char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"k";
-  struct option longOptions[] = {
-    {"lock", no_argument, 0, 'k'},
-    MDTX_LONG_OPTIONS,
-    {0, 0, 0, 0}
-  };
-
-  // import mdtx environment
-  getEnv(&env);
-
-  // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
-	!= EOF) {
-    switch(cOption) {
-      
-    case 'k':
-      doLock = TRUE;
-      break;			
-
-      GET_MDTX_OPTIONS; // generic options
-    }
-    if (rc) goto optError;
-  }
-
-  // export mdtx environment
-  if (!setEnv(programName, &env)) goto optError;
-
-  /************************************************************************/
-  // test writter lock
-  if (doLock) {
-    if (!clientWriteLock()) goto error;
-
-    // infinite loop (file descriptor should not be available)
-    if (!manageSignals(sigManager, &thread)) goto error;
-    while (running) usleep(200000);
-    
-    if (!clientWriteUnlock()) goto error;
-    if ((err = pthread_join(thread, 0))) {
-      logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
-      goto error;
-    }
-  }
-
-  // others tests
-  if (!(coll = addCollection("coll1"))) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** upgrade:");
-  env.noCollCvs = FALSE;
-  if (!mdtxUpgrade("coll1")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** refuse to del localhost key: ");
-  if (delKey("coll1", "746d6ceeb76e05cfa2dea92a1c5753cd")) goto error;
-    
-  logEmit(LOG_NOTICE, "%s", "*** del a key: ");
-  if (!delKey("coll1", "bedac32422739d7eced624ba20f5912e")) goto error;
-  
-  logEmit(LOG_NOTICE, "%s", "*** refuse to add localhost key: ");
-  if (addKey("coll1", "user1Key_rsa.pub")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** add a key: ");
-  if (!addKey("coll1", "user3Key_dsa.pub")) goto error;
-
-  logEmit(LOG_NOTICE, "%s", "*** save and disease test: ");
-  if (!saveCollection(coll, SERV)) goto error;
-  if (!diseaseCollection(coll, SERV)) goto error;
-  /************************************************************************/
-  
-  rc = TRUE;
- error:
-  freeConfiguration();
-  ENDINGS;
-  rc=!rc;
- optError:
-  exit(rc);
-}
-
-#endif // utMAIN
 
 /* Local Variables: */
 /* mode: c */

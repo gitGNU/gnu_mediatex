@@ -1,4 +1,4 @@
-#  * Version: $Id: ld.src,v 1.3 2015/06/03 14:03:21 nroche Exp $
+#  * Version: $Id: ld.src,v 1.4 2015/06/30 17:36:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -20,4 +20,4 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-LIBDIR/mediatex
+CONF_LIBDIR/mediatex

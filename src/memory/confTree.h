@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.4 2015/06/03 14:03:39 nroche Exp $
+ * Version: $Id: confTree.h,v 1.5 2015/06/30 17:37:29 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -27,30 +27,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MEMORY_ADMCONF_H
-#define MEMORY_ADMCONF_H 1
+#ifndef MDTX_MEMORY_CONF_H
+#define MDTX_MEMORY_CONF_H 1
 
-#include "../mediatex.h"
-#include "../misc/alloc.h"
-#include "../misc/log.h"
-#include "../misc/locks.h"
-#include "../misc/keys.h"
-#include "../misc/setuid.h"
-#include "../misc/perm.h"
-#include "ardsm.h"
-#include "strdsm.h"
-#include "archive.h"
-#include "cvsPrint.h"
-#include "recordTree.h"
-#include "supportTree.h"
-#include "serverTree.h"
-#include "extractTree.h"
-#include "catalogTree.h"
-#include "cacheTree.h"
-
-#include <string.h> // memset
-#include <avl.h>
-#include <pthread.h>
+#include "mediatex-types.h"
 
 // Object status :
 // EXPANDED: path allocated and checked
@@ -59,8 +39,9 @@ typedef enum {EXPANDED=1, POPULATED=2} MemoryState;
 
 // Load/Save data files
 // Note: LOADED FileState implies POPULATED MemoryState
-typedef enum {iCONF=0, iSUPP=1} ConfFileIdx;
-typedef enum {CONF=1, SUPP=2} ConfFile;
+#undef CONF // openssl/ossl_typ.h:165:24: typedef struct conf_st CONF;
+typedef enum {iCFG=0, iSUPP=1} ConfFileIdx;
+typedef enum {CFG=1, SUPP=2} ConfFile;
 typedef enum {iCTLG=0, iEXTR=1, iSERV=2, iCACH=3} CollFileIdx;
 typedef enum {CTLG=1, EXTR=2, SERV=4, CACH=8} CollFile;
 typedef enum {DISEASED=0, LOADED=1, MODIFIED=2} FileState;
@@ -229,7 +210,7 @@ char* addNetwork(char *label);
 int addNetworkToRing(RG* ring, char *label);
 Server* getLocalHost(Collection* coll);
 
-#endif /* MEMORY_ADMCONF_H */
+#endif /* MDTX_MEMORY_CONF_H */
 
 /* Local Variables: */
 /* mode: c */
