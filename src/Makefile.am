@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:37:24 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/07/01 11:12:46 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -255,4 +255,4 @@ endif
 
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
-
+ACLOCAL_AMFLAGS= -I m4
