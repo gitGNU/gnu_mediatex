@@ -1,7 +1,0 @@
-[notice alloc.c] soft memory limit set to 32 MB
-[notice alloc.c] nice memory limit set to 16 MB 
-[notice udp.c] server mode
-[info address.c] build socket address 0.0.0.0:65000
-[info udp.c] Listenning on 0.0.0.0:65000
-[notice udp.c] server read 14 char> Hello from UDP (from 127.0.0.1:XXX)
-[info udp.c] exit on success

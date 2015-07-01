@@ -1,6 +1,0 @@
-[info recordTree.c] Serializing DISK record tree in file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
-[warning recordTree.c] get a malloc record ?!
-[info recordTree.c] Serializing DISK record tree in file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.aes
-[warning recordTree.c] get a malloc record ?!
-[info confTree.c] free configuration
-[info recordTree.c] exit on success
