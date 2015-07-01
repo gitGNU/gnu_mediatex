@@ -3,3 +3,8 @@ Makefile.in
 
 # configure
 Makefile
+
+# make
+cron_daily.sh
+cron_hourly.sh
+mediatexd

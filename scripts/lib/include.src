@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: include.src,v 1.4 2015/06/30 17:37:23 nroche Exp $
+# * Version: $Id: include.src,v 1.5 2015/07/01 11:33:50 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -32,6 +32,7 @@ MDTX_SH_INCLUDE=1
 [ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 
 # running variables from env (command.c)
+UNIT_TEST_RUNNING=0
 DRY_RUN=${MDTX_DRY_RUN-0}
 MDTX=${MDTX_MDTXUSER-mdtx}
 
