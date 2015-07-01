@@ -17,8 +17,9 @@ missing
 test-driver
 ABOUT-NLS
 config.rpath
+configure
 
-# configure
+# ./configure
 Makefile
 config.h
 config.log
