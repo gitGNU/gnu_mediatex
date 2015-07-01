@@ -1,0 +1,239 @@
+[debug uthtdocs.sh] test for htdocs.sh
+[debug uthtdocs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut2-mdtx_md
+[debug users.sh] USERS_disease_group: ut2-mdtx_md
+[info users.sh] ut2-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut2-mdtx
+[debug users.sh] USERS_disease_group: ut2-mdtx
+[info users.sh] ut2-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug uthtdocs.sh] USERS_coll_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut2-mdtx-hello
+[info users.sh] ut2-mdtx-hello user already removed from ut2-mdtx_md group
+[debug users.sh] USERS_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_disease_group: ut2-mdtx-hello
+[info users.sh] ut2-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut2-mdtx-hello
+[debug uthtdocs.sh] USERS_root_populate
+[debug uthtdocs.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut2-mdtx LOCALSTATEDIR/cache/mediatex/ut2-mdtx
+[debug users.sh] USERS_add_to_group: ut2-mdtx cdrom
+Ajout de l'utilisateur « ut2-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut2-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx
+Fait.
+[debug users.sh] USERS_create_group: ut2-mdtx_md
+[debug users.sh] USERS_add_to_group: ut2-mdtx ut2-mdtx_md
+Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx_md
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug uthtdocs.sh] HTDOCS_configure_mdtx_apache2:
+[debug uthtdocs.sh] HTDOCS_configure_mdtx_viewvc:
+[debug uthtdocs.sh] USERS_coll_create_user: ut2-mdtx-hello
+[debug users.sh] USERS_create_user: ut2-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
+[debug users.sh] USERS_add_to_group: ut2-mdtx-hello ut2-mdtx_md
+Ajout de l'utilisateur « ut2-mdtx-hello » au groupe « ut2-mdtx_md »...
+Ajout de l'utilisateur ut2-mdtx-hello au groupe ut2-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut2-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut2-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut2-mdtx ut2-mdtx-hello
+Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx-hello »...
+Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut2-mdtx-hello
+[debug uthtdocs.sh] HTDOCS_configure_coll_apache2: ut2-mdtx-hello
+[debug uthtdocs.sh] HTDOCS_configure_coll_viewvc: ut2-mdtx-hello
+* files : *
+          root           root drwxr-xr-x /var/ut/ut2-mdtx
+          root           root drwxr-xr-x /var/ut/ut2-mdtx/usr
+          root           root drwxr-xr-x EXEC_PREFIX
+          root           root drwxr-xr-x SYSCONFDIR
+          root           root drwxr-xr-x SYSCONFDIR/apache2
+          root           root drwxr-xr-x SYSCONFDIR/apache2/conf-available
+          root           root -r--r--r-- SYSCONFDIR/apache2/conf-available/mediatex-ut2-mdtx.conf
+          root           root drwxr-xr-x SYSCONFDIR/cron.d
+          root           root -rw-r----- SYSCONFDIR/cron.d/mediatex_cron
+          root           root drwxr-xr-x SYSCONFDIR/mediatex
+          root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut2-mdtx.conf
+          root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut2-mdtx-hello
+          root           root drwxr-xr-x DATAROOTDIR
+          root           root drwxr-xr-x DATAROOTDIR/mediatex
+          root           root drwxr-xr-x DATAROOTDIR/mediatex/misc
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/catalog00.txt
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/extract00.txt
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/header.ezt
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/viewvc.conf
+          root           root drwxr-xr-x LOCALSTATEDIR
+          root           root drwxr-xr-x LOCALSTATEDIR/cache
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx
+      ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello/.htaccess
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello/toKeep
+      ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs
+      ut2-mdtx       ut2-mdtx drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx
+      ut2-mdtx ut2-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx-hello
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home
+ut2-mdtx-hello       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cache
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cvs
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cache
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/get.cgi
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/.htaccess
+ut2-mdtx-hello       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/viewvc.cgi
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/.htaccess
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/icons
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/.htaccess
+      ut2-mdtx ut2-mdtx-hello -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo.png
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
+      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
+ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/.ssh
+ut2-mdtx-hello       www-data drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/diff.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/directory.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/dir_new.ezt
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/docroot
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/error.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/file.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/graph.ezt
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/diff_form.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/dir_footer.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/dir_header.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/file_header.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/footer.ezt
+ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/header.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/log_footer.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/log_header.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/paging.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/pathrev_form.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/props.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/sort.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/log.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/log_table.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/query.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/query_form.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/query_results.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/revision.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/roots.ezt
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/rss.ezt
+ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/viewvc.conf
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/index.html
+      ut2-mdtx       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/viewvc.cgi
+      ut2-mdtx       ut2-mdtx drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/.ssh
+      ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp
+      ut2-mdtx ut2-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp/ut2-mdtx-hello
+      ut2-mdtx       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/viewvc.conf
+          root           root drwxr-xr-x LOCALSTATEDIR/lib
+          root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
+      ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx
+      ut2-mdtx    ut2-mdtx_md drwxrws--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
+      ut2-mdtx       ut2-mdtx drwxr-s--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx
+          root           root drwxr-xr-x LOCALSTATEDIR/run
+          root           root drwxr-xr-x LOCALSTATEDIR/run/mediatex
+[debug uthtdocs.sh] HTDOCS_unconfigure_mdtx_apache2:
+[debug uthtdocs.sh] USERS_coll_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut2-mdtx-hello
+Suppression de l'utilisateur « ut2-mdtx-hello » du groupe « ut2-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut2-mdtx-hello
+[debug users.sh] USERS_disease_group: ut2-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx » du groupe « ut2-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx-hello »...
+Attention ! Le groupe « ut2-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut2-mdtx-hello
+[debug uthtdocs.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut2-mdtx_md
+[debug users.sh] USERS_disease_group: ut2-mdtx_md
+Suppression de l'utilisateur « ut2-mdtx » du groupe « ut2-mdtx_md »...
+Fait.
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx_md »...
+Fait.
+Suppression du groupe « ut2-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut2-mdtx
+[debug users.sh] USERS_disease_group: ut2-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut2-mdtx »...
+Attention ! Le groupe « ut2-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+* cleanup : *
+drwxr-xr-x /var/ut/ut2-mdtx
+drwxr-xr-x /var/ut/ut2-mdtx/usr
+drwxr-xr-x EXEC_PREFIX
+drwxr-xr-x SYSCONFDIR
+drwxr-xr-x SYSCONFDIR/apache2
+drwxr-xr-x SYSCONFDIR/apache2/conf-available
+drwxr-xr-x SYSCONFDIR/cron.d
+drwxr-xr-x SYSCONFDIR/mediatex
+drwxr-xr-x DATAROOTDIR
+drwxr-xr-x DATAROOTDIR/mediatex
+drwxr-xr-x DATAROOTDIR/mediatex/misc
+drwxr-xr-x LOCALSTATEDIR
+drwxr-xr-x LOCALSTATEDIR/cache
+drwxr-xr-x LOCALSTATEDIR/cache/mediatex
+drwxr-xr-x LOCALSTATEDIR/lib
+drwxr-xr-x LOCALSTATEDIR/lib/mediatex
+drwxr-xr-x LOCALSTATEDIR/run
+drwxr-xr-x LOCALSTATEDIR/run/mediatex
+-r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
+-r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/catalog00.txt
+-r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/extract00.txt
+-r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
+-r--r--r-- DATAROOTDIR/mediatex/misc/header.ezt
+-r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
+-r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+-r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
+-r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
+-r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+-r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
+-r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
+-r--r--r-- DATAROOTDIR/mediatex/misc/viewvc.conf
+-rw-r----- SYSCONFDIR/cron.d/mediatex_cron
+[info uthtdocs.sh] success

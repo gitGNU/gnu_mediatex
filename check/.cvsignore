@@ -1,0 +1,14 @@
+# autoreconf
+Makefile.in
+
+# configure
+Makefile
+
+# make check
+.deps
+utmediatex.sh
+test-suite.log
+*.out
+*.log
+*.trs
+tmp

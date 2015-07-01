@@ -1,0 +1,28 @@
+[debug utinclude.sh] test for include.sh
+
+* Autotools inputs:
+MEDIATEX=/mediatex
+BINDIR=BINDIR
+DATAROOTDIR=DATAROOTDIR
+EXEC_PREFIX=EXEC_PREFIX
+LOCALSTATEDIR=LOCALSTATEDIR
+PREFIX=EXEC_PREFIX
+SYSCONFDIR=SYSCONFDIR
+
+* absolute paths:
+ETCDIR=SYSCONFDIR/mediatex
+DATADIR=DATAROOTDIR/mediatex
+STATEDIR=LOCALSTATEDIR/lib/mediatex
+CACHEDIR=LOCALSTATEDIR/cache/mediatex
+PIDDIR=LOCALSTATEDIR/run/mediatex
+SCRIPTS=DATAROOTDIR/mediatex/scripts
+MISC=DATAROOTDIR/mediatex/misc
+HOSTSSH=SYSCONFDIR/ssh
+
+* Command line inputs:
+LOG_FILE=
+LOG_FACILITY=file
+LOG_SEVERITY=debug
+DRY_RUN=0
+MDTX=mdtx
+[info utinclude.sh] success

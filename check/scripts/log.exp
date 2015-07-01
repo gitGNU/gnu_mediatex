@@ -1,0 +1,7 @@
+[info utlog.sh] indirection level=0
+[info utlog.sh] indirection level=1
+[info utlog.sh] indirection level=2
+[info utlog.sh] indirection level=3
+[warn utlog.sh] warning message
+[info utlog.sh] info message
+[debug utlog.sh] debug message

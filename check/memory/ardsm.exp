@@ -1,0 +1,26 @@
+E1: ABDE
+E2: BCD
+E1 /\ E2: BD
+E1 \/ E2: ABCDE
+E1 - E2: AE
+Enter items, one per line.
+End the list by EOF (ctl-d)
+fw : Hello
+fw : world
+fw : !!
+bk : !!
+bk : world
+bk : Hello
+bk2 : !!
+bk2 : world
+bk2 : Hello
+sorting ring ...
+first ring (your inputs)
+fw : Hello
+fw : world
+fw : !!
+ring sorted
+fw : !!
+fw : Hello
+fw : world
+[info utardsm.c] exit on success

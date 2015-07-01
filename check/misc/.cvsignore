@@ -1,0 +1,14 @@
+# configure
+.deps
+
+# make check
+.dirstamp
+.libs
+ut*[^.]?
+*.out*
+*.txt
+*.html
+key
+key.pub
+*.log
+*.trs

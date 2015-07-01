@@ -1,0 +1,179 @@
+[debug utjail.sh] test for jail.sh
+[debug utjail.sh] JAIL_unbind
+[debug utjail.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut5-mdtx_md
+[debug users.sh] USERS_disease_group: ut5-mdtx_md
+[info users.sh] ut5-mdtx_md group already removed
+[debug users.sh] USERS_remove_user: ut5-mdtx
+[debug users.sh] USERS_disease_group: ut5-mdtx
+[info users.sh] ut5-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug utjail.sh] USERS_coll_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut5-mdtx-hello
+[info users.sh] ut5-mdtx-hello user already removed from ut5-mdtx_md group
+[debug users.sh] USERS_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_disease_group: ut5-mdtx-hello
+[info users.sh] ut5-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut5-mdtx-hello
+[debug utjail.sh] USERS_mdtx_disease
+[debug utjail.sh] USERS_root_populate
+[debug utjail.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut5-mdtx LOCALSTATEDIR/cache/mediatex/ut5-mdtx
+[debug users.sh] USERS_add_to_group: ut5-mdtx cdrom
+Ajout de l'utilisateur « ut5-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut5-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx
+Fait.
+[debug users.sh] USERS_create_group: ut5-mdtx_md
+[debug users.sh] USERS_add_to_group: ut5-mdtx ut5-mdtx_md
+Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx_md
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug utjail.sh] CVS_mdtx_setup:
+[debug cvs.sh] CVS_init_cvsroot
+[debug cvs.sh] CVS_mdtx_import 
+[info cvs.sh] CVSUMASK=027 cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx import -m 'Mediatex initial setup' ut5-mdtx ut5-mdtx v1
+
+
+No conflicts created by this import
+N ut5-mdtx/supports.txt
+N ut5-mdtx/ut5-mdtx.conf
+[debug cvs.sh] CVS_mdtx_checkout:
+[info cvs.sh] su MDTX -c "cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx co ut5-mdtx"
+cvs checkout: Updating ut5-mdtx
+U ut5-mdtx/supports.txt
+U ut5-mdtx/ut5-mdtx.conf
+[debug cvs.sh] CVS_update: ut5-mdtx
+[info cvs.sh] cvs update -d
+cvs update: Updating .
+[debug cvs.sh] CVS_commit: ut5-mdtx utjail.sh
+[info cvs.sh] su ut5-mdtx -c 'cvs commit -m "utjail.sh"'
+cvs commit: Examining .
+[debug utjail.sh] SSH_chroot_login: yes
+[debug utjail.sh] JAIL_build:
+[debug jail.sh] JAIL_add_binary: /bin/ls
+[debug jail.sh] JAIL_add_binary: /bin/bash
+[debug jail.sh] JAIL_add_binary: /usr/bin/id
+[debug jail.sh] JAIL_add_binary: /usr/bin/scp
+[debug jail.sh] JAIL_add_binary: /usr/bin/cvs
+[info utjail.sh] chroot LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail ls
+bin
+dev
+etc
+lib
+tmp
+usr
+var
+[debug utjail.sh] USERS_coll_create_user: ut5-mdtx-hello
+[debug users.sh] USERS_create_user: ut5-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello
+[debug users.sh] USERS_add_to_group: ut5-mdtx-hello ut5-mdtx_md
+Ajout de l'utilisateur « ut5-mdtx-hello » au groupe « ut5-mdtx_md »...
+Ajout de l'utilisateur ut5-mdtx-hello au groupe ut5-mdtx_md
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut5-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut5-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut5-mdtx ut5-mdtx-hello
+Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx-hello »...
+Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut5-mdtx-hello
+[debug utjail.sh] CVS_coll_import: ut5-mdtx-hello
+[info cvs.sh] CVSUMASK=007 cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx import -m 'Mediatex exemple files' ut5-mdtx-hello ut5-mdtx-hello v1
+
+
+cvs import: Importing LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello/apache2
+cvs import: Importing LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello/icons
+No conflicts created by this import
+N ut5-mdtx-hello/apache2/cache.htaccess
+N ut5-mdtx-hello/apache2/cgi.htaccess
+N ut5-mdtx-hello/apache2/home.htaccess
+N ut5-mdtx-hello/apache2/htgroup
+N ut5-mdtx-hello/apache2/index.htaccess
+N ut5-mdtx-hello/apache2/score.htaccess
+N ut5-mdtx-hello/catalog00.txt
+N ut5-mdtx-hello/.cvsignore
+N ut5-mdtx-hello/extract00.txt
+N ut5-mdtx-hello/icons/floppy-icon.png
+N ut5-mdtx-hello/logo.png
+N ut5-mdtx-hello/mediatex.css
+N ut5-mdtx-hello/servers.txt
+[debug utjail.sh] SSH_build_key: ut5-mdtx-hello
+[debug utjail.sh] SSH_bootstrapKeys ut5-mdtx-hello 
+known_hosts updated.
+Original contents retained as known_hosts.old
+[debug utjail.sh] SSH_configure_client ut5-mdtx-hello localhost 22
+[debug utjail.sh] JAIL_add_user: ut5-mdtx-hello
+[info utjail.sh] su LABEL -c "ssh -o PasswordAuthentication=no ut5-mdtx-hello@localhost ls /"
+bin
+dev
+etc
+lib
+tmp
+usr
+var
+[debug utjail.sh] JAIL_bind
+[info utjail.sh] su USER -c "scp ut5-mdtx-hello@localhost:/var/cache/ut5-mdtx-hello/hello.txt LOCALSTATEDIR/cache/mediatex/ut5-mdtx/tmp/ut5-mdtx-hello"
+[debug utjail.sh] CVS_coll_checkout: ut5-mdtx-hello ut5-mdtx-hello@localhost
+[info cvs.sh] su USER -c "cvs -d :ext:ut5-mdtx-hello@localhost:/var/lib/cvsroot co ut5-mdtx-hello"
+cvs checkout: Updating ut5-mdtx-hello
+U ut5-mdtx-hello/.cvsignore
+U ut5-mdtx-hello/catalog00.txt
+U ut5-mdtx-hello/extract00.txt
+U ut5-mdtx-hello/logo.png
+U ut5-mdtx-hello/mediatex.css
+U ut5-mdtx-hello/servers.txt
+cvs checkout: Updating ut5-mdtx-hello/apache2
+U ut5-mdtx-hello/apache2/cache.htaccess
+U ut5-mdtx-hello/apache2/cgi.htaccess
+U ut5-mdtx-hello/apache2/home.htaccess
+U ut5-mdtx-hello/apache2/htgroup
+U ut5-mdtx-hello/apache2/index.htaccess
+U ut5-mdtx-hello/apache2/score.htaccess
+cvs checkout: Updating ut5-mdtx-hello/icons
+U ut5-mdtx-hello/icons/floppy-icon.png
+[debug utjail.sh] JAIL_unbind
+[debug utjail.sh] JAIL_del_user: ut5-mdtx-hello
+[debug utjail.sh] SSH_chroot_login: no
+[debug utjail.sh] USERS_coll_disease: ut5-mdtx-hello
+[debug utjail.sh] USERS_coll_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_del_from_group: ut5-mdtx-hello
+Suppression de l'utilisateur « ut5-mdtx-hello » du groupe « ut5-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut5-mdtx-hello
+[debug users.sh] USERS_disease_group: ut5-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx » du groupe « ut5-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx-hello »...
+Attention ! Le groupe « ut5-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut5-mdtx-hello
+[debug utjail.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_group: ut5-mdtx_md
+[debug users.sh] USERS_disease_group: ut5-mdtx_md
+Suppression de l'utilisateur « ut5-mdtx » du groupe « ut5-mdtx_md »...
+Fait.
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx_md »...
+Fait.
+Suppression du groupe « ut5-mdtx_md »...
+Fait.
+[debug users.sh] USERS_remove_user: ut5-mdtx
+[debug users.sh] USERS_disease_group: ut5-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut5-mdtx »...
+Attention ! Le groupe « ut5-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+[info utjail.sh] success

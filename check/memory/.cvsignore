@@ -1,0 +1,10 @@
+# configure
+.deps
+
+# make check
+.dirstamp
+.libs
+ut*[^.]?
+*.out
+*.log
+*.trs

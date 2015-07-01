@@ -1,0 +1,8 @@
+# autoreconf
+Makefile.in
+
+# configure
+Makefile
+
+# make check
+test-suite.log

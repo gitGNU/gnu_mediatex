@@ -1,0 +1,367 @@
+[notice utFunc.c] ask for logo.png
+[notice utFunc.c] add a generic demand for
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] Clean the cache:
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 1) try to extract the demand
+[notice utcgiSrv.c] ..........................................................
+[info extract.c] not found archive de5008799752552b7963a2670dc5eb18:391168
+[info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
+[info extract.c] not found archive 1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extract.c] not found container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extract.c] not found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
+[info extract.c] not found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
+[info extract.c] not found archive 65f1464142f405dbbeeea4830c95ddd3:25600
+[info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
+[info extract.c] not found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[info extract.c] not found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[info extract.c] not found archive fa2b0b536bf61f61617528c474e0bf61:24973
+[info extract.c] not found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
+[info extract.c] not found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[info extract.c] not found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
+[info extract.c] not found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
+[info extract.c] not found archive 7808473c7db9a9e3493a6b61f44f8805:20480
+[info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
+[info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
+[info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cgiSrv.c] write to socket: 300 not here
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+              
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 2) retry with it on cache
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] copy logo.png to the coll3 cache
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: ./../misc/logo.png
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] /bin/cp execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
+[info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
+[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice cgiSrv.c] query for logo.png
+[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+# ^ LOCALE_SUPPLY
+       
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 3) retry with tgz on cache
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[notice utFunc.c] copy logo.tgz to the coll3 cache
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: ./../misc/logo.tgz
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] /bin/cp execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
+[info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
+[info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
+[info cache.c] need   =        24075
+[info cache.c] total  =    104857600
+[info cache.c] use    =        24546
+[info cache.c] free   =    104833054
+[info cache.c] frozen =        24546
+[info cache.c] avail  =    104833054
+[info command.c] execScript: /bin/tar
+[info command.c]  arg1: -C
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
+[info command.c]  arg3: -zxf
+[info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[info command.c]  arg5: logo/logo.png
+[info command.c] /bin/tar execution returns 0
+[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[info cache.c] access fails: No such file or directory
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
+[info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice cgiSrv.c] query for logo/logo.png
+[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+# ^ LOCALE_SUPPLY
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+# ^ LOCALE_SUPPLY
+           
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 4) try with only part1 on cache
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[notice utFunc.c] copy logoP1.cat to the coll3 cache
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: ./../misc/logoP1.cat
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] /bin/cp execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
+[info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
+[info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extract.c] not found container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extract.c] not found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
+[info extract.c] not found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
+[info extract.c] not found archive 65f1464142f405dbbeeea4830c95ddd3:25600
+[info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
+[info extract.c] not found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[info extract.c] not found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[info extract.c] not found archive fa2b0b536bf61f61617528c474e0bf61:24973
+[info extract.c] not found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
+[info extract.c] not found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[info extract.c] not found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
+[info extract.c] not found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
+[info extract.c] not found archive 7808473c7db9a9e3493a6b61f44f8805:20480
+[info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
+[info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
+[info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cgiSrv.c] write to socket: 300 not here
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+# ^ LOCALE_SUPPLY
+     
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 5) try with part2 added on cache too
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] copy logoP2.cat to the coll3 cache
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: ./../misc/logoP2.cat
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] /bin/cp execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[info md5sum.c] c0c055a0829982bd646e2fafff01aaa6 quick md5sum computed on 4066 bytes
+[info md5sum.c] c0c055a0829982bd646e2fafff01aaa6  full md5sum computed on 4066 bytes
+[info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
+[info cache.c] need   =        24546
+[info cache.c] total  =    104857600
+[info cache.c] use    =        24546
+[info cache.c] free   =    104833054
+[info cache.c] frozen =        24546
+[info cache.c] avail  =    104833054
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
+[info command.c] /bin/bash execution returns 0
+[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[info cache.c] access fails: No such file or directory
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[notice extract.c] extract 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
+[info extract.c] del to-keep on c0c055a0829982bd646e2fafff01aaa6:4066
+[info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
+[info cache.c] need   =        24075
+[info cache.c] total  =    104857600
+[info cache.c] use    =        49092
+[info cache.c] free   =    104808508
+[info cache.c] frozen =        24546
+[info cache.c] avail  =    104833054
+[info command.c] execScript: /bin/tar
+[info command.c]  arg1: -C
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
+[info command.c]  arg3: -zxf
+[info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[info command.c]  arg5: logo/logo.png
+[info command.c] /bin/tar execution returns 0
+[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[info cache.c] access fails: No such file or directory
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
+[info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice cgiSrv.c] query for logo/logo.png
+[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+# ^ LOCALE_SUPPLY
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+# ^ LOCALE_SUPPLY
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+# ^ LOCALE_SUPPLY
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+# ^ LOCALE_SUPPLY
+         
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] 6) register a mail
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[notice utFunc.c] ask for logo.png
+[notice utFunc.c] add a generic demand for
+[notice cgiSrv.c] final demand for 022a34b2f9b893fba5774237e1aa80ea:24075 test@test.com
+[info cgiSrv.c] write to socket: 200 
+
+[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] Now we have :
+[notice utcgiSrv.c] ..........................................................
+# Collection's records:
+Headers
+	Collection	coll3               
+	Type		UNKNOWN
+	Server		bedac32422739d7eced624ba20f5912e
+	DoCypher	FALSE       
+Body          
+#                date                             host                             hash                size extra
+D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+# ^ FINALE_DEMAND
+  
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] Clean the cache:
+[notice utcgiSrv.c] ..........................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info utcgiSrv.c] exit on success

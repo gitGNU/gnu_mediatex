@@ -1,0 +1,40 @@
+S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 /logo.png
+# ^ FINALE_SUPPLY
+        
+[info cacheTree.c] state: UNUSED -> USED
+[info cacheTree.c] state: USED -> UNUSED
+[warning recordTree.c] get a malloc record ?!
+S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !malloc
+# ^ MALLOC_SUPPLY
+          
+[info cacheTree.c] state: UNUSED -> ALLOCATED
+[info cacheTree.c] state: ALLOCATED -> UNUSED
+S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+# ^ LOCALE_SUPPLY
+         
+[info cacheTree.c] state: UNUSED -> AVAILABLE
+[info cacheTree.c] state: AVAILABLE -> TOKEEP
+[info cacheTree.c] state: TOKEEP -> AVAILABLE
+[info cacheTree.c] state: AVAILABLE -> UNUSED
+S 1970-01-01,01:00:04 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+# ^ REMOTE_SUPPLY
+         
+[info cacheTree.c] state: UNUSED -> USED
+[info cacheTree.c] state: USED -> UNUSED
+D 1970-01-01,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+# ^ FINALE_DEMAND
+    
+[info cacheTree.c] state: UNUSED -> WANTED
+[info cacheTree.c] state: WANTED -> UNUSED
+D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+# ^ LOCALE_DEMAND
+          
+[info cacheTree.c] state: UNUSED -> WANTED
+[info cacheTree.c] state: WANTED -> UNUSED
+D 1970-01-01,01:00:07 7af51aceb06864e690fa6a9e00000002 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+# ^ REMOTE_DEMAND
+          
+[info cacheTree.c] state: UNUSED -> WANTED
+[info cacheTree.c] state: WANTED -> UNUSED
+[info confTree.c] free configuration
+[info utcacheTree.c] exit on success

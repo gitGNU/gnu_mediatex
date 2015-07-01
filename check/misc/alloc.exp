@@ -1,0 +1,37 @@
+[notice utalloc.c] allocating slot 1...
+[notice utalloc.c] ...slot 1 allocated
+[notice utalloc.c] allocating slot 2...
+[notice utalloc.c] ...slot 2 allocated
+[notice utalloc.c] allocating slot 3...
+[notice utalloc.c] ...slot 3 allocated
+[notice utalloc.c] allocating slot 4...
+[notice utalloc.c] ...slot 4 allocated
+[notice utalloc.c] allocating slot 5...
+[notice utalloc.c] ...slot 5 allocated
+[notice utalloc.c] allocating slot 6...
+[notice utalloc.c] try to free some memory
+[info utalloc.c] disease callback: 600
+[info utalloc.c] free slot 1
+[info utalloc.c] free slot 2
+[info utalloc.c] free slot 3
+[notice utalloc.c] ...slot 6 allocated
+[notice utalloc.c] allocating slot 7...
+[notice utalloc.c] try to free some memory
+[info utalloc.c] disease callback: 700
+[info utalloc.c] free slot 4
+[info utalloc.c] free slot 5
+[notice utalloc.c] ...slot 7 allocated
+[notice utalloc.c] allocating slot 8...
+[notice utalloc.c] try to free some memory
+[info utalloc.c] disease callback: 800
+[info utalloc.c] free slot 6
+[notice utalloc.c] ...slot 8 allocated
+[notice utalloc.c] allocating slot 9...
+[notice utalloc.c] try to free some memory
+[info utalloc.c] disease callback: 900
+[info utalloc.c] free slot 7
+[info utalloc.c] free slot 8
+[notice utalloc.c] ...slot 9 allocated
+[notice utalloc.c] freeing slot 9...
+[notice utalloc.c] ...slot 9 is free
+[info utalloc.c] exit on success

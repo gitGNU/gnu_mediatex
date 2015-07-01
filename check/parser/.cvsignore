@@ -1,0 +1,12 @@
+# configure
+.deps
+
+# make check
+.dirstamp
+.libs
+ut*[^.]?
+*.out
+*.aes
+*.txt
+*.log
+*.trs

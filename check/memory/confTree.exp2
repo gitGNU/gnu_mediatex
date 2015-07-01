@@ -1,0 +1,7 @@
+[info confTree.c] Serializing configuration into: LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confTree.c] free configuration
+[info confTree.c] Serializing configuration into: LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2/mdtx2.conf
+[info confTree.c] free configuration
+[info confTree.c] Serializing configuration into: LOCALSTATEDIR/cache/mediatex/mdtx3/cvs/mdtx3/mdtx3.conf
+[info confTree.c] free configuration
+[info utconfTree.c] exit on success

@@ -1,0 +1,8 @@
+[notice utsignals.c] please send me HUP, USR1 or TERM signals:
+[notice utsignals.c] signal reçu: 1
+[notice utsignals.c] => HUP
+[notice utsignals.c] signal reçu: 10
+[notice utsignals.c] => SIGUSR1
+[notice utsignals.c] signal reçu: 15
+[notice utsignals.c] => SIGTERM
+[info utsignals.c] exit on success

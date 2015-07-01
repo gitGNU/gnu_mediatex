@@ -1,0 +1,4 @@
+# make check
+*.out
+*.log
+*.trs

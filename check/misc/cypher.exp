@@ -1,0 +1,14 @@
+[notice utcypher.c] *** low level functions
+[notice utcypher.c] message: top secret messg
+[notice utcypher.c] encrypt:  B†¬8[>¥/MjX¹æ
+[notice utcypher.c] decrypt: top secret messg
+[notice utcypher.c] ***  encrypt API
+[notice utcypher.c] ***  decrypt API
+# Collection's archives:
+Headers
+	Collection	unit-test           
+	DoCypher	TRUE
+               
+Body          
+#                 date            host                             hash                size path
+               
