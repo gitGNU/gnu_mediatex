@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.3 2015/06/03 14:03:33 nroche Exp $
+ * Version: $Id: cgi.c,v 1.1 2015/07/01 10:21:01 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -22,32 +22,9 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#include "../mediatex.h"
-#include "../misc/log.h"
-#include "../misc/command.h"
-#include "../misc/getcgivars.h"
-#include "../misc/perm.h"
-#include "../misc/tcp.h"
-#include "../memory/strdsm.h"
-#include "../memory/ardsm.h"
-#include "../memory/recordTree.h"
-#include "../parser/confFile.tab.h"
-#include "../parser/serverFile.tab.h"
-#include "../common/connect.h"
-#include "../common/openClose.h"
-
-#include <signal.h>
-#include <setjmp.h>
-#include <unistd.h>
-#include <libgen.h> // basename
+#include "mediatex-config.h"
 #include <regex.h>
-
-
-#ifdef utMAIN // cgi
-MdtxEnv env = GLOBAL_MDTX_STRUCT_UT;
-#else // utcgi
-MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN;
-#endif
+GLOBAL_STRUCT_DEF_BIN;
 
 static char* confLabel = 0;
 
@@ -451,9 +428,9 @@ RecordTree* scanCgiQuery(Collection* coll)
   logEmit(LOG_DEBUG, "querying for %s %i", 
 	  record->archive->hash, record->archive->size);
 
-#ifdef utMAIN  
+  if (env.noRegression) {
   serializeRecordTree(tree, 0, 0);
-#endif
+  }
   rc = tree;
   tree = 0;
  error:
@@ -685,11 +662,12 @@ main(int argc, char** argv)
   if (isEmptyString(record->extra) || record->extra[0]=='!') {
     // first call: ask if servers have the record in cache
     if (!loadCollection(coll, SERV)) goto error;
-    if (!mdtxFind(tree)) goto error2;
+    if (!mdtxFind(tree)) goto error;
+    if (!releaseCollection(coll, SERV)) goto error;
   }
   else {
     // second call: ask local server remind the provided mail
-    if (!mdtxRegister(tree)) goto error2;
+    if (!mdtxRegister(tree)) goto error;
   }
 
   rc = TRUE;
@@ -697,8 +675,6 @@ main(int argc, char** argv)
 
  htmlError:
   if (!rc) usageHtml(coll, programName);
- error2:
-  if (!releaseCollection(coll, SERV)) goto error;
  error:
   destroyString(label);
   destroyRecordTree(tree);
