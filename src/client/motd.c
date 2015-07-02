@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: motd.c,v 1.5 2015/07/02 17:59:11 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -279,6 +279,7 @@ updateMotd()
   Collection* coll = 0;
   char* text = 0;
   off_t badSize = 0;
+  char buf[30];
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
@@ -328,21 +329,8 @@ updateMotd()
       goto error2;
 
     if (badSize == 0) goto next;
-    printf("- %s (%5.2f): ", coll->label, coll->extractTree->score);
-
-    if (badSize >= GIGA) {
-      printf("%lli Go\n", badSize / GIGA);
-      goto next;
-    }
-    if (badSize >= MEGA) {
-      printf("%lli Mo\n", badSize / MEGA);
-      goto next;
-    }
-    if (badSize >= KILO) {
-      printf("%lli Ko\n", badSize / KILO);
-      goto next;
-    }
-    printf("%lli o\n", badSize);
+    sprintSize(buf, badSize);
+    printf("- %s (%5.2f): %s", coll->label, coll->extractTree->score, buf);
 
   next:
     text = destroyString(text);

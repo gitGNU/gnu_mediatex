@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.1 2015/07/01 10:21:01 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.2 2015/07/02 17:59:10 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -172,41 +172,48 @@ struct ScoreParam {
 
 #define DEFAULT_SCORE_PARAM {10, 1, 2, 2, DEFAULT_TTL_SUPP}
 
-// void printCacheSize(FILE* fd, char *fmt, char *lbl, off_t size);
 #define printCacheSize(fd, fmt, lbl, size) {		\
     fprintf(fd, fmt, lbl);				\
     do {						\
       if ((size) % GIGA == 0) {				\
-	fprintf(fd, " %llu Go\n", (size) >> 30);	\
+	fprintf(fd, " %llu Go\n",			\
+		(unsigned long long int) (size) >> 30);	\
 	break;						\
       }							\
       if ((size) % MEGA == 0) {				\
-	fprintf(fd, " %llu Mo\n", (size) >> 20);	\
+	fprintf(fd, " %llu Mo\n",			\
+		(unsigned long long int) (size) >> 20);	\
 	break;						\
       }							\
       if ((size) % KILO == 0) {				\
-	fprintf(fd, " %llu Ko\n", (size) >> 10);	\
+	fprintf(fd, " %llu Ko\n",			\
+		(unsigned long long int) (size) >> 10);	\
 	break;						\
       }							\
-      fprintf(fd, " %llu o\n", size);			\
+      fprintf(fd, " %llu o\n",				\
+	      (unsigned long long int) size);		\
     } while (0);					\
   }
 
 #define sprintSize(buf, size) {				\
     do {						\
       if ((size) >= GIGA) {				\
-	sprintf(buf, "%llu Go", (size) >> 30);		\
+	sprintf(buf, "%llu Go",				\
+		(unsigned long long int) (size) >> 30);	\
 	break;						\
       }							\
       if ((size) >= MEGA) {				\
-	sprintf(buf, "%llu Mo", (size) >> 20);		\
+	sprintf(buf, "%llu Mo",				\
+		(unsigned long long int) (size) >> 20);	\
 	break;						\
       }							\
       if ((size) >= KILO) {				\
-	sprintf(buf, "%llu Ko", (size) >> 10);		\
+	sprintf(buf, "%llu Ko",				\
+		(unsigned long long int) (size) >> 10);	\
 	break;						\
       }							\
-      sprintf(buf, "%llu o", size);			\
+      sprintf(buf, "%llu o",				\
+	      (unsigned long long int) size);		\
     } while (0);					\
   }
 

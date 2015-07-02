@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.5 2015/07/02 17:59:11 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -323,7 +323,7 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
 
   [[:digit:]]+ {
     BEGIN(INITIAL);
-    sscanf(yytext, "%llu", &yylval->number);
+    sscanf(yytext, "%llu", (unsigned long long int*) &yylval->number);
     return(servNUMBER);
   }
 

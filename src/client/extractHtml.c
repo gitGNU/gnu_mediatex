@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.5 2015/07/02 17:59:10 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -901,6 +901,7 @@ serializeHtmlBadLists(Collection* coll)
   int nb = 0;
   int i = 0;
   int n = 0;
+  char buf[30];
 
   logEmit(LOG_DEBUG, "%s", "serializeHtmsBadLists");
 
@@ -939,20 +940,8 @@ serializeHtmlBadLists(Collection* coll)
   htmlPClose(fd);
   
   if (badSize > 0) {
-    if (badSize >= GIGA) {
-      if (!fprintf(fd, "%lli Go\n", badSize / GIGA)) goto error;
-      goto next;
-    }
-    if (badSize >= MEGA) {
-      if (!fprintf(fd, "%lli Mo\n", badSize / MEGA)) goto error;
-      goto next;
-    }
-    if (badSize >= KILO) {
-      if (!fprintf(fd, "%lli Ko\n", badSize / KILO)) goto error;
-      goto next;
-    }
-    if (!fprintf(fd, "%lli o\n", badSize)) goto error;
-  next:
+    sprintSize(buf, badSize);
+    if (!fprintf(fd, "%s\n", buf)) goto error;
     if (!fprintf(fd, "%s", _("should be burned into supports:")))
       goto error;
   }
