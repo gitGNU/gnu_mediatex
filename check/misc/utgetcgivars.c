@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utgetcgivars.c,v 1.1 2015/07/01 10:49:55 nroche Exp $
+ * Version: $Id: utgetcgivars.c,v 1.2 2015/07/02 17:22:05 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -119,7 +119,7 @@ main(int argc, char** argv)
   /************************************************************************/
 
   rc = TRUE;
- error:
+  //error:
   ENDINGS;
   rc=!rc;
  optError:

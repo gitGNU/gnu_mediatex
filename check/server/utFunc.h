@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.h,v 1.1 2015/07/01 10:50:08 nroche Exp $
+ * Version: $Id: utFunc.h,v 1.2 2015/07/02 17:22:06 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -52,14 +52,14 @@ RecordTree* providePart2(Collection* coll, char* path);
   if (coll == 0) {							\
     logEmit(LOG_NOTICE, "%s",						\
 	    "----------------------------------------------------------"); \
-    logEmit(LOG_NOTICE, format, topo);					\
+    logEmit(LOG_NOTICE, format, (char*)topo);				\
     logEmit(LOG_NOTICE, "%s",						\
 	    ".........................................................."); \
   }									\
   else {								\
     logEmit(LOG_NOTICE, "%s",						\
 	    ".........................................................."); \
-    logEmit(LOG_NOTICE, format, topo);					\
+    logEmit(LOG_NOTICE, format, (char*)topo);				\
     logEmit(LOG_NOTICE, "%s",						\
 	    ".........................................................."); \
     serializeRecordTree(((Collection*)coll)->cacheTree->recordTree, 0, 0); \

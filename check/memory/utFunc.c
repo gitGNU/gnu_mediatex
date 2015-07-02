@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.1 2015/07/01 10:49:43 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.2 2015/07/02 17:22:05 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -538,7 +538,6 @@ createExempleServerTree(Collection* coll)
 
   char* labels[] = {
     "mdtx1", "mdtx2", "mdtx3"};
-  char* users[3];
   char* comments[] = {
     "this is server1", "this is server2", "this is server3"};
   char hosts[][MAX_SIZE_HOST+1] = {

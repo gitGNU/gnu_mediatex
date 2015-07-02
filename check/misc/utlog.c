@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlog.c,v 1.1 2015/07/01 10:49:56 nroche Exp $
+ * Version: $Id: utlog.c,v 1.2 2015/07/02 17:22:06 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -74,8 +74,6 @@ main(int argc, char** argv)
 	
   int logFacility = -1;
   int logSeverity = -1;
-	
-  LogHandler* logHandler = 0;
 	
   while(TRUE) {
     cOption = getopt(argc, argv, ":f:s:l:h");

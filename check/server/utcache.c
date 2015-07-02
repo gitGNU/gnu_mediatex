@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.1 2015/07/01 10:50:08 nroche Exp $
+ * Version: $Id: utcache.c,v 1.2 2015/07/02 17:22:06 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -25,6 +25,9 @@
 #include "mediatex.h"
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
+
+extern int cacheUpload(Collection* coll, Record* record);
+
 GLOBAL_STRUCT_DEF;
 
 /*=======================================================================

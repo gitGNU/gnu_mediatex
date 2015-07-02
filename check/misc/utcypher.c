@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.1 2015/07/01 10:49:54 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.2 2015/07/02 17:22:05 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -23,6 +23,9 @@
  =======================================================================*/
 
 #include "mediatex.h"
+
+extern int doCypher(AESData* data);
+
 GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
