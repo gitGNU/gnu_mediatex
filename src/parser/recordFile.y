@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.y,v 1.1 2015/07/01 07:08:24 nroche Exp $
+ * Version: $Id: recordFile.y,v 1.2 2015/07/02 12:14:08 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -252,7 +252,6 @@ parseRecords(int fd)
   yyscan_t scanner;
   RecordExtra extra;
   RecordTree* tree = 0;
-  Collection* coll = 0;
 
   logParser(LOG_NOTICE, "parse records");
 

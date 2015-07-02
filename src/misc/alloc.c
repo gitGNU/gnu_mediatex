@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
+ * Version: $Id: alloc.c,v 1.5 2015/07/02 12:14:07 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -75,7 +75,6 @@ initMalloc(size_t niceLimit, int (*callback)(long))
  setNewValues:
   if (niceLimit > 0) alloc->limAllocated = niceLimit;
   alloc->diseaseCallBack = callback;
- end:
   rc = TRUE;
  error:
   if (!rc) {
@@ -147,7 +146,6 @@ void* mdtxMalloc(size_t size, char* file, int line)
 	     alloc->sumAllocated, alloc->limAllocated);
   }
   
- error:
   return rc;
 }
 
@@ -186,7 +184,7 @@ void mdtxFakeMalloc(void* ptr, char* file, int line)
 	   "malloc n%i: %i (sum= %i / lim= %i)",
 	   alloc->nbAlloc+1, size, 
 	   alloc->sumAllocated, alloc->limAllocated);
- error:
+ 
   return;
 }
 

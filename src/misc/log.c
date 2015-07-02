@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.4 2015/06/30 17:37:33 nroche Exp $
+ * Version: $Id: log.c,v 1.5 2015/07/02 12:14:08 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -380,9 +380,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
 void 
 logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
 {
-  LogSeverity* severity = 0;
   va_list args;
-  char* ptr = 0;
 
   // print messages to stderr if logger is not yet initialise
   if(!logHandler) {

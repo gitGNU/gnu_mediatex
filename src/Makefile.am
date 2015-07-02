@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/07/01 11:12:46 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.6 2015/07/02 12:14:07 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -142,7 +142,10 @@ mediatex_sources = \
 	common/ssh.c \
 	common/upgrade.c \
 	common/openClose.c \
-	common/extractScore.c
+	common/extractScore.c \
+	client/commonHtml.c \
+	client/catalogHtml.c \
+	client/extractHtml.c
 
 client_sources = \
 	parser/shellQuery.c \
@@ -151,9 +154,6 @@ client_sources = \
 	client/conf.c \
 	client/supp.c \
 	client/motd.c \
-	client/commonHtml.c \
-	client/catalogHtml.c \
-	client/extractHtml.c \
 	client/misc.c
 
 server_sources = \
@@ -205,6 +205,12 @@ dist_memory_headers_HEADERS = \
 common_headersdir = $(headersdir)/common
 dist_common_headers_HEADERS = \
 	$(common_headers)
+
+client_headersdir = $(headersdir)/client
+dist_client_headers_HEADERS = \
+	client/commonHtml.h \
+	client/catalogHtml.h \
+	client/extractHtml.h
 
 BUILT_SOURCES = \
 	parser/supportFile.h \

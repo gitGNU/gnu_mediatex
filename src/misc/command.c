@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.5 2015/06/30 17:37:31 nroche Exp $
+ * Version: $Id: command.c,v 1.6 2015/07/02 12:14:07 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -226,7 +226,6 @@ setEnv(char* programName, MdtxEnv *self)
   int rc = FALSE;
   int logFacility = -1;
   int logSeverity = -1;
-  LogHandler* logHandler = 0;
 
   // no logging available yet here
 

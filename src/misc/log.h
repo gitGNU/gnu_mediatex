@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
+ * Version: $Id: log.h,v 1.5 2015/07/02 12:14:08 nroche Exp $
  * Project: MediaTex
  * Module : log
  *
@@ -80,7 +80,7 @@ extern LogSeverity LogSeverities[];
 #define logEmitMacro(log, priority, file, line, format, ...) {		\
     if (priority <= log->severity->code) {				\
       char* ptr = file + strlen(file);					\
-      while (ptr > file && *(ptr-1) != '/') --ptr;			\
+      while (ptr > (char*)file && *(ptr-1) != '/') --ptr;		\
       logEmitFunc(log, priority, "[%s %s:%i] " format,			\
 		  LogSeverities[priority].name, ptr, line,		\
 		  ## __VA_ARGS__);					\
@@ -90,7 +90,7 @@ extern LogSeverity LogSeverities[];
 #define logEmitMacro(log, priority, file, line, format, ...) {		\
     if (priority <= log->severity->code) {				\
       char* ptr = file + strlen(file);					\
-      while (ptr > file && *(ptr-1) != '/') --ptr;			\
+      while (ptr > (char*)file && *(ptr-1) != '/') --ptr;		\
       logEmitFunc(log, priority, "[%s %s] " format,			\
 		  LogSeverities[priority].name, ptr,			\
 		  ## __VA_ARGS__);					\

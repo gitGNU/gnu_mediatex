@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.4 2015/06/30 17:37:38 nroche Exp $
+ * Version: $Id: threads.c,v 1.5 2015/07/02 12:14:08 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -24,10 +24,6 @@
 
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
-
-//#include <pthread.h>
-//#include <netinet/in.h> // for inet_ntoa
-//#include <arpa/inet.h>  // for inet_ntoa
 
 // global variables
 int hold = FALSE;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: confFile.y,v 1.5 2015/07/02 12:14:08 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -145,15 +145,9 @@ collection: confCOLL confSTRING confMINUS confSTRING confAROBASE confSTRING conf
 	    " confCOLON confNUMBER");
   if (!(coll = addCollection($4))) YYERROR;
 
-#warning to remove
-  /*
-  // do not overide master parameters set by mdtxAddCollection
-  if (!coll->masterLabel) {
-  */
-    if (!(coll->masterLabel = createString($2))) YYERROR;
-    strncpy(coll->masterHost, $6, MAX_SIZE_HOST);
-    coll->masterPort = $8;
-    //}
+  if (!(coll->masterLabel = createString($2))) YYERROR;
+  strncpy(coll->masterHost, $6, MAX_SIZE_HOST);
+  coll->masterPort = $8;
 }
 ;
 
@@ -384,7 +378,7 @@ parseConfiguration(const char* path)
     logEmit(LOG_ERR, "configuration parser fails on line %i", 
 	    conf_get_lineno(scanner));
     logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
-    goto error2;
+    goto error3;
   }
 
   rc = TRUE;

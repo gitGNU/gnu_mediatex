@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.1 2015/07/01 07:04:21 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.2 2015/07/02 12:14:08 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -310,7 +310,7 @@
 
   [+-]?[[:digit:]]+ {
     BEGIN(INITIAL);
-    sscanf(yytext, "%llu", &yylval->number);
+    sscanf(yytext, "%i", &yylval->number);
     return(shellNUMBER);
   }
 

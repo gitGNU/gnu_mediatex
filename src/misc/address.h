@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: address.h,v 1.5 2015/07/02 12:14:07 nroche Exp $
  * Project: 
  * Module : socket
 
@@ -26,6 +26,7 @@
 #define MDTX_MISC_ADDRESS_H 1
 
 #include <netinet/in.h>
+#include <arpa/inet.h>  // for inet_ntoa
 
 char* getHostNameByAddr(struct in_addr* inAddr);
 
