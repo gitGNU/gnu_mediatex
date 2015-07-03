@@ -4,10 +4,15 @@
 
 Top Category "media"
   "topo" = "Welcome !"
+
 Top Category "image": "media"
+
 Top Category "drawing": "image"
+
 Top Category "animal"
+
 Category "\"hand\"": "drawing", "animal"
+
 Category "hand"
 
 # Humans:
@@ -19,6 +24,7 @@ Human	 "Me" "": "drawing"
 
 Archive	 022a34b2f9b893fba5774237e1aa80ea:24075
   "format" = "PNG"
+
 Archive	 b281449c229bcc4a3556cdcc0d3ebcec:815
   "format" = "XPM"
   "licence" = "GPLv3"

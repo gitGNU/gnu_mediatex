@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.5 2015/06/30 17:37:23 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.6 2015/07/03 16:02:14 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -109,8 +109,8 @@ function CVS_coll_import()
 
 	sed apache2/htgroup -i -e "s!MDTX!$MDTX!"
 
-	for f in logo.png mediatex.css ${CONF_CATHFILE}00.txt \
-	    ${CONF_EXTRFILE}00.txt ${CONF_SERVFILE}.txt 
+	for f in logo.png mediatex.css ${CONF_CATHFILE}000.txt \
+	    ${CONF_EXTRFILE}000.txt ${CONF_SERVFILE}.txt 
 	do
 	    install -o $USER -g $USER -m 660 $MISC/$f .
 	done
@@ -128,7 +128,7 @@ function CVS_coll_import()
 	done
 
 	cat > .cvsignore <<EOF
-*NN.txt
+*NNN.txt
 EOF
 	chown $USER:$USER .cvsignore
 

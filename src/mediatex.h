@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.5 2015/07/03 16:02:14 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -123,7 +123,7 @@ extern MdtxEnv env;
       /* allocating */							\
       0, (int (*)(long))0, 0,						\
       /* configuration */						\
-      DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 10*MEGA,			\
+      DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,			\
       /* debug */							\
       FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
       /* global data structure */					\
@@ -139,7 +139,7 @@ extern MdtxEnv env;
       /* allocating */							\
       128, (int (*)(long))0, 0,						\
       /* configration */						\
-      DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 10*MEGA,			\
+      DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
       /* debug and tests */						\
       FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
       /* global data structure */					\

@@ -126,6 +126,10 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 
 *** FEATURES (to document)
 
+- find into cvs's collection (to optimize)
+$ awk -vRS= '/Document "13421830"/' catalog*.txt
+$ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
+
 - ease SSH/CVS configuration
 - compatible with DNS round robin
 - cvsroot migration from one host to other (cf example/test.sh#16)

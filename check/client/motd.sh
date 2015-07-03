@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: motd.sh,v 1.1 2015/07/01 10:49:26 nroche Exp $
+# * Version: $Id: motd.sh,v 1.2 2015/07/03 16:02:13 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-#set -x
+set -x
 set -e
 
 # retrieve environment

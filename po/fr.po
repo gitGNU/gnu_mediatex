@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-06-25 18:46+0200\n"
+"POT-Creation-Date: 2015-07-03 14:56+0200\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
 "Last-Translator: nroche <nroche@narval.tk>\n"
 "Language-Team: French\n"
@@ -253,42 +253,42 @@ msgstr ""
 msgid "Provide images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:764 src/client/extractHtml.c:1139
+#: src/client/extractHtml.c:764 src/client/extractHtml.c:1128
 msgid "All archives"
 msgstr ""
 
-#: src/client/extractHtml.c:934 src/client/extractHtml.c:1144
+#: src/client/extractHtml.c:935 src/client/extractHtml.c:1133
 msgid "Bad archives"
 msgstr ""
 
-#: src/client/extractHtml.c:956
+#: src/client/extractHtml.c:945
 msgid "should be burned into supports:"
 msgstr ""
 
-#: src/client/extractHtml.c:1030 src/client/extractHtml.c:1131
+#: src/client/extractHtml.c:1019 src/client/extractHtml.c:1120
 msgid "score"
 msgstr ""
 
-#: src/client/extractHtml.c:1034
+#: src/client/extractHtml.c:1023
 #, c-format
 msgid ""
 "\n"
 "Score parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1059
+#: src/client/extractHtml.c:1048
 #, c-format
 msgid ""
 "\n"
 "All images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1079
+#: src/client/extractHtml.c:1068
 #, c-format
 msgid "No image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1130
+#: src/client/extractHtml.c:1119
 msgid "Score"
 msgstr ""
 

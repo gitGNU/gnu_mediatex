@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utscripts.sh,v 1.1 2015/07/01 10:49:22 nroche Exp $
+# * Version: $Id: utscripts.sh,v 1.2 2015/07/03 16:02:12 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -36,7 +36,7 @@ function UNIT_TEST_populate_datadir()
     mkdir -p $MISC
 
     for f in mediatex_cron mediatex.conf supports.txt logo.png \
-	catalog00.txt extract00.txt servers.txt htgroup \
+	catalog000.txt extract000.txt servers.txt htgroup \
 	mediatex.css floppy-icon.png \
 	viewvc.conf apache-mdtx.conf header.ezt \
 	; do

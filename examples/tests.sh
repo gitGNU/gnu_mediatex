@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.1 2015/07/01 10:45:55 nroche Exp $
+# * Version: $Id: tests.sh,v 1.2 2015/07/03 16:02:13 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -318,7 +318,7 @@ function test6()
     else
 	topo "Cleanup"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/incoming
-	sed -i -e "/(REC/, /)/ d" /etc/mediatex/serv1-hello/extract00.txt
+	sed -i -e "/(REC/, /)/ d" /etc/mediatex/serv1-hello/extract000.txt
 	/etc/init.d/mediatexd-serv1 reload
     fi
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utcvs.sh,v 1.1 2015/07/01 10:50:15 nroche Exp $
+# * Version: $Id: utcvs.sh,v 1.2 2015/07/03 16:02:13 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -83,10 +83,10 @@ su $USER -c "cvs -d :ext:$USER@localhost:$STATEDIR/$MDTX co $USER" |
 sort
 cd - >/dev/null
 cd $CVSCLT/$USER
-echo -e "\n# test\n" >> $CVSCLT/$USER/catalog00.txt
+echo -e "\n# test\n" >> $CVSCLT/$USER/catalog000.txt
 su $USER -c "cvs commit -m \"unit-test\"" 2>&1 | sort
 su $USER -c "cvs update -d" 2>&1 | sort
-su $USER -c "cvs log catalog00.txt"
+su $USER -c "cvs log catalog000.txt"
 cd - >/dev/null
    
 # cf free.sh & remove.sh

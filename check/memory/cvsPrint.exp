@@ -1,4 +1,4 @@
-[info cvsPrint.c] serialize into filename00.txt
+[info cvsPrint.c] serialize into filename000.txt
 the lines should not be cut
 put 2nd line in same file
 
@@ -6,14 +6,14 @@ put 2nd line in same file
 # mode: conf
 # mode: font-lock
 # End:
-[info cvsPrint.c] serialize into filename01.txt
+[info cvsPrint.c] serialize into filename001.txt
 3rd line ...
 
 # Local Variables:
 # mode: conf
 # mode: font-lock
 # End:
-[info cvsPrint.c] serialize into filename02.txt
+[info cvsPrint.c] serialize into filename002.txt
 4rth line ...
 
 # Local Variables:

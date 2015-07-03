@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -396,6 +396,8 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
     }
   }
 
+  cvsPrint(fd, "\n");
+  
   fd->doCut = TRUE;
   rc = TRUE;
  error:
@@ -539,6 +541,7 @@ serializeHuman(Human* self, CvsFile* fd)
       serializeAssoCarac(assoCarac, fd);
     }
   }
+  cvsPrint(fd, "\n");
 
   ++env.progBar.cur;
   fd->doCut = TRUE;
@@ -703,6 +706,8 @@ serializeDocument(Document* self, CvsFile* fd)
     }
   }
 
+  cvsPrint(fd, "\n");
+
   ++env.progBar.cur;
   fd->doCut = TRUE;
   rc = TRUE;
@@ -834,6 +839,7 @@ serializeCategory(Category* self, CvsFile* fd)
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
+  cvsPrint(fd, "\n");
 
   fd->doCut = TRUE;
   rc = TRUE;
@@ -969,7 +975,6 @@ serializeCatalogTree(Collection* coll)
     while((category = rgNext(self->categories)) != 0) {
       if (!serializeCategory(category, &fd)) goto error;
     }
-    cvsPrint(&fd, "\n");
   }
 
   cvsPrint(&fd, "# Humans:\n\n");
@@ -978,7 +983,6 @@ serializeCatalogTree(Collection* coll)
       human = (Human*)node->item;
       if (!serializeHuman(human, &fd)) goto error;
     }
-    cvsPrint(&fd, "\n");
   }
 
   cvsPrint(&fd, "# Archives:\n\n");
@@ -989,7 +993,6 @@ serializeCatalogTree(Collection* coll)
 	if (!serializeCatalogArchive(archive, &fd)) goto error;
       }
     }
-    cvsPrint(&fd, "\n");
   }
 
   cvsPrint(&fd, "# Documents:\n\n");
@@ -998,7 +1001,6 @@ serializeCatalogTree(Collection* coll)
       document = (Document*)node->item;
       if (!serializeDocument(document, &fd)) goto error;
     }
-    cvsPrint(&fd, "\n");
   }
 
   rc = TRUE;

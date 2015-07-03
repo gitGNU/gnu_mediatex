@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -85,13 +85,13 @@ int cvsOpenFile(CvsFile* fd)
 
   l = strlen(fd->path);
   if (!(path = createString(fd->path))
-      || !(path = catString(path, "00.txt"))) goto error;
+      || !(path = catString(path, "000.txt"))) goto error;
 
   // first call: unlink existing files
   if (fd->nb == 0 && fd->fd != stdout) {
     // empty part files
     do {
-      if (!sprintf(path+l, "%02i.txt", i)) goto error;
+      if (!sprintf(path+l, "%03i.txt", i)) goto error;
       if (access(path, R_OK) != 0) break;
       if (!env.dryRun) {
 	logMemory(LOG_INFO, "empty %s", path);
@@ -106,10 +106,10 @@ int cvsOpenFile(CvsFile* fd)
 	fd->fd = 0;
       }
     }
-    while (++i < 100);
+    while (++i < 1000);
     
     // unlink last addon
-    if (!sprintf(path+l, "%s", "NN.txt")) goto error;
+    if (!sprintf(path+l, "%s", "NNN.txt")) goto error;
     if (access(path, R_OK) == 0) {
       logMemory(LOG_INFO, "unlink %s", path);
       if (unlink(path) == -1) {
@@ -125,7 +125,7 @@ int cvsOpenFile(CvsFile* fd)
   }
 
   // open file
-  if (!sprintf(path+l, "%02i.txt", fd->nb)) goto error;
+  if (!sprintf(path+l, "%03i.txt", fd->nb)) goto error;
   logMemory(LOG_INFO, "serialize into %s", path);
   if (fd->fd == stdout) goto end;
   if ((fd->fd = fopen(path, "w")) == 0) {

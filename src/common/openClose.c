@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
+ * Version: $Id: openClose.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -285,11 +285,11 @@ loadCvsFiles(Collection* coll, int fileIdx)
   }
 
   l = strlen(path);
-  if (!(path = catString(path, "00.txt"))) goto error;
+  if (!(path = catString(path, "000.txt"))) goto error;
 
   // load from part files
   do {
-    if (!sprintf(path+l, "%02i.txt", i)) goto error;
+    if (!sprintf(path+l, "%03i.txt", i)) goto error;
     if (access(path, R_OK) != 0) break;
     if (!parser(coll, path)) goto error;
   }
@@ -297,7 +297,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
   coll->fileState[fileIdx] = LOADED;
 
   // load last addon
-  if (!sprintf(path+l, "%s", "NN.txt")) goto error;
+  if (!sprintf(path+l, "%s", "NNN.txt")) goto error;
   if (access(path, R_OK) == 0) {
     if (!parser(coll, path)) goto error;
     i=1;
@@ -423,11 +423,11 @@ loadCollectionNbSteps(Collection* coll, int collFiles)
       
       i = 0;
       l = strlen(path);
-      if (!(path = catString(path, "00.txt"))) goto error;
+      if (!(path = catString(path, "000.txt"))) goto error;
       
       // part files
       do {
-	if (!sprintf(path+l, "%02i.txt", i)) goto error;
+	if (!sprintf(path+l, "%03i.txt", i)) goto error;
 	if (access(path, R_OK) != 0) break;
 	
 	// roughtly estimate the number of steps (number of lines)
@@ -436,10 +436,10 @@ loadCollectionNbSteps(Collection* coll, int collFiles)
 	  ++env.progBar.max;
 	fclose(fd);
       }
-      while (++i < 100);
+      while (++i < 1000);
       
       // load last addon
-      if (!sprintf(path+l, "%s", "NN.txt")) goto error;
+      if (!sprintf(path+l, "%s", "NNN.txt")) goto error;
       if (access(path, R_OK) == 0) {
 	fd = fopen(path, "r");
 	while (EOF != (fscanf(fd, "%*[^\n]"), fscanf(fd, "%*c")))

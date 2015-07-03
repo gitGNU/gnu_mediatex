@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utmediatex.src,v 1.1 2015/07/01 10:49:22 nroche Exp $
+# * Version: $Id: utmediatex.src,v 1.2 2015/07/03 16:02:12 nroche Exp $
 # * Project: MediaTex
 # * Module : C codes
 # *
@@ -92,8 +92,8 @@ function loadPaths()
     # files with relatives path
     SUPPFILE="${CONF_SUPPFILE}"
     SERVFILE="${CONF_SERVFILE}.txt"
-    CATHFILE="${CONF_CATHFILE}00.txt"
-    EXTRFILE="${CONF_EXTRFILE}00.txt"
+    CATHFILE="${CONF_CATHFILE}000.txt"
+    EXTRFILE="${CONF_EXTRFILE}000.txt"
 
     # recurent variables
     CVSROOT="${STATEDIR}/${MDTXUSER}"

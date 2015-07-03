@@ -1,2 +1,0 @@
-Such stanza are not executed by scripts that source modules.
-This should only appears into the unitTests.out file.
