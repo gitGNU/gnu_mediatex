@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: address.sh,v 1.3 2015/07/03 13:20:44 nroche Exp $
+# * Version: $Id: address.sh,v 1.4 2015/07/03 17:36:39 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -38,5 +38,7 @@ misc/ut$TEST > misc/$TEST.out 2>&1
 # compare with the expected output
 mrProperOutputs misc/$TEST.out
 HOST=$(hostname -f)
-sed misc/$TEST.out -i -e "s/$HOST/localhost/"
+sed misc/$TEST.out -i \
+	-e "s/$HOST/localhost/" \
+	-e "s/localhost.localdomain/localhost/"
 diff $srcdir/misc/$TEST.exp misc/$TEST.out

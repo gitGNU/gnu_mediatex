@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: threads.sh,v 1.3 2015/07/03 13:20:44 nroche Exp $
+# * Version: $Id: threads.sh,v 1.4 2015/07/03 17:36:39 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -80,7 +80,8 @@ HOST=$(hostname -f)
 sed server/$TEST.out -i \
     -e 's/Daemon (.*)/Daemon (XXXX)/' \
     -e 's/from 127\.0\.0\.1:.*$/from 127.0.0.1:XXXXX (localhost)/' \
-    -e "s/$HOST/localhost/"
+    -e "s/$HOST/localhost/" \
+    -e "s/localhost.localdomain/localhost/"
 
 diff $srcdir/server/$TEST.exp server/$TEST.out
 
