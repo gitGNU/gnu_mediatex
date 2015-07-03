@@ -1,4 +1,4 @@
-dnl  * Version: $Id: configure.ac,v 1.4 2015/06/30 17:36:57 nroche Exp $
+dnl  * Version: $Id: configure.ac,v 1.5 2015/07/03 11:53:58 nroche Exp $
 dnl  * Project: MediaTex
 dnl  * Module:  autotools
 dnl  *
@@ -21,7 +21,7 @@ dnl  You should have received a copy of the GNU General Public License
 dnl  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_INIT([mediatex], [0.4], [nroche@narval.tk])
-AM_INIT_AUTOMAKE([subdir-objects -Wall silent-rules])
+AM_INIT_AUTOMAKE([subdir-objects])
 
 # i18n support from GNU gettext.
 AM_GNU_GETTEXT_VERSION([0.19])

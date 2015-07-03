@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.6 2015/07/02 12:14:07 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.7 2015/07/03 11:53:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -19,6 +19,8 @@
 # 
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+AM_CFLAGS = "-Wall"
 
 misc_headers = \
 	misc/getcgivars.h \

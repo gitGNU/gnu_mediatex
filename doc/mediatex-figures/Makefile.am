@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:36:59 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/07/03 11:53:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  figures for the documentation
 #  *
@@ -54,5 +54,5 @@ install-html-local:
 uninstall-local:
 	rm -fr $(INFO_DIR) $(HTML_DIR)
 
-clean-local:
+distclean-local:
 	rm -f *.{png,eps}

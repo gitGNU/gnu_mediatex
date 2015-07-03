@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/07/01 11:12:45 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.6 2015/07/03 11:53:58 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  root
 #  *
@@ -22,5 +22,4 @@
 
 # Build recursively
 SUBDIRS = doc misc etc scripts po src check check_as_root man examples
-
 ACLOCAL_AMFLAGS= -I m4
