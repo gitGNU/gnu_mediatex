@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: cache.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -608,9 +608,9 @@ makeDir(char* base, char* path, mode_t mode)
   int l = 0;
   mode_t mask;
 
+  mask = umask(0000);
   checkLabel(path);
   logEmit(LOG_DEBUG, "makeDir %s", path);
-  mask = umask(0000);
 
   // build the target directory into the cache
   i = strlen(base)+1;

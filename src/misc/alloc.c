@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.5 2015/07/02 12:14:07 nroche Exp $
+ * Version: $Id: alloc.c,v 1.6 2015/07/03 13:20:45 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -45,7 +45,7 @@ int
 initMalloc(size_t niceLimit, int (*callback)(long))
 {
   int rc = FALSE;
-  Alloc* alloc;
+  Alloc* alloc = 0;
   int err = 0;
 
   if (!(env.logHandler)) {

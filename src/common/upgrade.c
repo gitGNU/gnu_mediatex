@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.4 2015/06/30 17:37:27 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -232,6 +232,7 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
   ServerTree* self = 0;
   mode_t mask;
 
+  mask = umask(0117);
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
   checkServer(self->master);
@@ -242,7 +243,6 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
       !(path = catString(path, "Root"))) goto error;
       
   // output file
-  mask = umask(0117);
   if (!env.dryRun) {
     if ((fd = fopen(path, "w")) == 0) {
       logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 

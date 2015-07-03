@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ssh.c,v 1.4 2015/06/30 17:37:27 nroche Exp $
+ * Version: $Id: ssh.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
  * Project: MediaTeX
  * Module : ssh
 
@@ -42,6 +42,7 @@ serializeAuthKeys(Collection* coll)
   RGIT* curr = 0;
   mode_t mask;
 
+  mask = umask(0177);
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
   logCommon(LOG_DEBUG, "%s", "serialize authorized_keys file");
@@ -51,7 +52,6 @@ serializeAuthKeys(Collection* coll)
 	  path?path:"stdout");
       
   // output file
-  mask = umask(0177);
   if (!env.dryRun) {
     if ((fd = fopen(path, "w")) == 0) {
       logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
