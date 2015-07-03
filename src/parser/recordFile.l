@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.l,v 1.1 2015/07/01 07:08:23 nroche Exp $
+ * Version: $Id: recordFile.l,v 1.2 2015/07/03 11:39:04 nroche Exp $
  * Project: Mediatex
  * Module : record scanner
 
@@ -288,7 +288,7 @@ STRING  [^[:blank:]\r\n]{1,511}
   
   [[:digit:]]+ {
     BEGIN(STATE4);
-    sscanf(yytext, "%llu", &yylval->size);
+    sscanf(yytext, "%llu", (unsigned long long int*)&yylval->size);
     return(recordSIZE);
   }
  }  

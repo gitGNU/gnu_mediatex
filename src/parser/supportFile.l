@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.5 2015/07/03 11:39:05 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -156,7 +156,7 @@ NAME    [^[:blank:]\r\n]{1,64}
   
   [[:digit:]]+ {
     BEGIN(STATE2);
-    sscanf(yytext, "%llu", &yylval->size);
+    sscanf(yytext, "%llu", (unsigned long long int*)&yylval->size);
     return(suppSIZE);
     }
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: threads.sh,v 1.1 2015/07/01 10:50:08 nroche Exp $
+# * Version: $Id: threads.sh,v 1.2 2015/07/03 11:39:01 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -78,7 +78,8 @@ while [ "$(ps -ef | grep [u]t$TEST)" ]; do :; done
 mrProperOutputs server/$TEST.out
 sed server/$TEST.out -i \
     -e 's/Daemon (.*)/Daemon (XXXX)/' \
-    -e 's/from 127\.0\.0\.1:.*$/from 127.0.0.1:XXXXX (localhost)/'
+    -e 's/from 127\.0\.0\.1:.*$/from 127.0.0.1:XXXXX (localhost)/' \
+    -e 's/localhost.localdomain/localhost/'
 
 diff $srcdir/server/$TEST.exp server/$TEST.out
 

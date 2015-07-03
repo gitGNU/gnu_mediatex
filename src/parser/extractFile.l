@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.5 2015/07/03 11:39:03 nroche Exp $
  * Project: Mediatex
  * Module : extract scanner
 
@@ -222,7 +222,7 @@ STRING  [^[:blank:]:,\)\n\r]{1,511}
   }
 
   [[:digit:]]+ {
-    sscanf(yytext, "%llu", &yylval->size);
+    sscanf(yytext, "%llu", (unsigned long long int*)&yylval->size);
     return(extrSIZE);
   }
  }
@@ -231,7 +231,7 @@ STRING  [^[:blank:]:,\)\n\r]{1,511}
 
   [[:digit:]]+ {
      BEGIN(PATH);
-    sscanf(yytext, "%llu", &yylval->size);
+    sscanf(yytext, "%llu", (unsigned long long int*)&yylval->size);
     return(extrSIZE);
   }
  }

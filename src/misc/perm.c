@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.4 2015/06/30 17:37:33 nroche Exp $
+ * Version: $Id: perm.c,v 1.5 2015/07/03 11:39:02 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -51,7 +51,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "checkDirectory %s %s %s %lo", 
+  logEmit(LOG_DEBUG, "checkDirectory %s %s %s %o", 
 	  path, user, group, mode);
 
   if (stat(path, &sb) == -1) {
@@ -63,7 +63,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   // check permissions
   if (env.noRegression) mask = 00777;
   if ((sb.st_mode & mask) != (mode & mask)) {
-    logEmit(LOG_ERR, "%s should be share as %lo, not %lo",
+    logEmit(LOG_ERR, "%s should be share as %o, not %o",
 	    path, mode & mask, sb.st_mode & mask);
     goto error;
   }

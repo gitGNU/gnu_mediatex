@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlocks.c,v 1.1 2015/07/01 10:49:55 nroche Exp $
+ * Version: $Id: utlocks.c,v 1.2 2015/07/03 11:39:01 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -32,18 +32,17 @@ sigManager(void* arg)
 {
   int sigNumber = 0;
   sigset_t mask;
-  int rc = TRUE;
+  void* rc = FALSE;
+  (void) arg;
 
   // signal we are looking for:
-  rc=rc&& (sigemptyset(&mask) == 0);
-  rc=rc&& (sigaddset(&mask, SIGHUP) == 0);
-  rc=rc&& (sigaddset(&mask, SIGUSR1) == 0);
-  rc=rc&& (sigaddset(&mask, SIGTERM) == 0);
-  rc=rc&& (sigaddset(&mask, SIGSEGV) == 0);
-  rc=rc&& (sigaddset(&mask, SIGINT) == 0);
-  if (!rc) goto error;
+  if (sigemptyset(&mask)) goto error;
+  if (sigaddset(&mask, SIGHUP)) goto error;
+  if (sigaddset(&mask, SIGUSR1)) goto error;
+  if (sigaddset(&mask, SIGTERM)) goto error;
+  if (sigaddset(&mask, SIGSEGV)) goto error;
+  if (sigaddset(&mask, SIGINT)) goto error;
 
-  (void) arg;
   logEmit(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
   logEmit(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
   logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
@@ -51,15 +50,16 @@ sigManager(void* arg)
 
   if ((sigNumber = sigwaitinfo(&mask, 0)) == -1) {
     logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
-    rc = FALSE;
+    goto error;
   }
  
+  rc = (void*)TRUE;
  error:
   if (!rc) {
     logEmit(LOG_ERR, "sigManager fails");
   }
   running = FALSE;
-  return (void*)rc;
+  return rc;
 }
 
 /*=======================================================================

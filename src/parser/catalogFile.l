@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: catalogFile.l,v 1.5 2015/07/03 11:39:03 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -160,7 +160,7 @@ QUOTED_STRING  \"(\\\"|[^\n\"]){0,511}\"
   }
 
   [[:digit:]]+ {
-    sscanf(yytext, "%llu", &yylval->size);
+    sscanf(yytext, "%llu", (unsigned long long int*)&yylval->size);
     return(cataNUMBER);
   }
 

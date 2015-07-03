@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.1 2015/07/01 10:49:56 nroche Exp $
+ * Version: $Id: utperm.c,v 1.2 2015/07/03 11:39:01 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -143,7 +143,7 @@ main(int argc, char** argv)
 	rc = EINVAL;
 	break;
       }
-      if (sscanf(optarg, "%lo", (long unsigned int *)&mode) != 1) {
+      if (sscanf(optarg, "%o", (unsigned int *)&mode) != 1) {
 	fprintf(stderr, "sscanf: %s\n", strerror(errno));
 	rc = EINVAL;
 	break;

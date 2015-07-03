@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.2 2015/07/02 17:22:06 nroche Exp $
+ * Version: $Id: utcache.c,v 1.3 2015/07/03 11:39:02 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -140,7 +140,7 @@ main(int argc, char** argv)
   if (!(archive = addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   			     size))) goto error;
   if (cacheAlloc(&record, coll, archive)) goto error;
-  utLog("reply : %i", (void*)(record!=0), coll); // 0: too much
+  utLog("reply : %i", record?1:0, coll); // 0: too much
   
   /*--------------------------------------------------------*/
   utLog("%s", "Ask for little place so do not suppress anything :", 0);
@@ -151,7 +151,7 @@ main(int argc, char** argv)
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
   record->extra[0]='*';
-  utLog("reply : %i", (void*)(record!=0), coll); // 1: already avail
+  utLog("reply : %i", record?1:0, coll); // 1: already avail
   if (!delCacheEntry(coll, record)) goto error;
   if (!delRecord(coll, record)) goto error;
 
@@ -165,7 +165,7 @@ main(int argc, char** argv)
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
   record->extra[0]='*';
-  utLog("reply : %i", (void*)(record!=0), coll); // 1: del some entries
+  utLog("reply : %i", record?1:0, coll); // 1: del some entries
 
   /*--------------------------------------------------------*/
   utLog("%s", "API to upload files :", 0);
