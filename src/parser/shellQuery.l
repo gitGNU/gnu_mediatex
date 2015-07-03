@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.2 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.3 2015/07/03 17:37:32 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -351,6 +351,7 @@
 	  let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(shellERROR);
   }
 }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.5 2015/07/03 17:37:31 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -94,6 +94,7 @@ void cata_error(yyscan_t yyscanner, Collection* coll, Category* category,
 
 %start file
 
+%token            cataERROR
 %token            cataTOP
 %token            cataCATEGORY
 %token            cataDOCUMENT

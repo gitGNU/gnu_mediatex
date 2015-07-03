@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.5 2015/07/03 11:39:03 nroche Exp $
+ * Version: $Id: catalogFile.l,v 1.6 2015/07/03 17:37:31 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -197,6 +197,7 @@ QUOTED_STRING  \"(\\\"|[^\n\"]){0,511}\"
 	 let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(cataERROR);
   }
  }
    

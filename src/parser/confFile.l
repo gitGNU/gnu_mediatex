@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: confFile.l,v 1.5 2015/07/03 17:37:31 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -340,6 +340,7 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
 	 let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(confERROR);
   }
  }
 

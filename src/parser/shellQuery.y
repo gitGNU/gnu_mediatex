@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.1 2015/07/01 07:04:21 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.2 2015/07/03 17:37:32 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -87,9 +87,11 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
  
 %start queries
 
+%token            shellERROR
+%token            shellEOL
+
 %token <string>   shellSTRING
 %token <number>   shellNUMBER
-%token            shellEOL
 
 %token            shellCOLL
 %token            shellSUPP

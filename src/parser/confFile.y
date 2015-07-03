@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.5 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: confFile.y,v 1.6 2015/07/03 17:37:31 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -89,6 +89,7 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 
 %start stanzas
 
+%token          confERROR
 %token          confHOST
 %token          confNETWORKS
 %token          confGATEWAYS

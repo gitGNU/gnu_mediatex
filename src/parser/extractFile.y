@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.y,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: extractFile.y,v 1.5 2015/07/03 17:37:32 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *
@@ -90,6 +90,7 @@ void extr_error(yyscan_t yyscanner, Collection* coll,
   
 %start file
 
+%token            extrERROR
 %token            extrOPEN
 %token            extrCLOSE
 %token <type>     extrTYPE

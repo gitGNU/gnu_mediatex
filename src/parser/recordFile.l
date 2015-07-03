@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.l,v 1.2 2015/07/03 11:39:04 nroche Exp $
+ * Version: $Id: recordFile.l,v 1.3 2015/07/03 17:37:32 nroche Exp $
  * Project: Mediatex
  * Module : record scanner
 
@@ -326,6 +326,7 @@ STRING  [^[:blank:]\r\n]{1,511}
 	 let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(recordERROR);
   }
  }
    

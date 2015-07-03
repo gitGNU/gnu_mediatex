@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.5 2015/07/03 11:39:03 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.6 2015/07/03 17:37:32 nroche Exp $
  * Project: Mediatex
  * Module : extract scanner
 
@@ -273,6 +273,7 @@ STRING  [^[:blank:]:,\)\n\r]{1,511}
 	 let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(extrERROR);
   }
  }
    

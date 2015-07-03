@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.5 2015/07/03 11:39:05 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.6 2015/07/03 17:37:32 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -192,6 +192,7 @@ NAME    [^[:blank:]\r\n]{1,64}
 	 let bison manage the errors */
     logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(suppERROR);
   }
  }
    
