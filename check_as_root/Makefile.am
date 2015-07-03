@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/07/03 11:56:56 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 11:53:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -20,7 +20,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AM_CFLAGS = -Wall -I $(top_srcdir)/src
+AM_CFLAGS = "-Wall"
 
 check_PROGRAMS = \
 	misc/utsetuid
@@ -44,6 +44,8 @@ dist_check_DATA = \
 	scripts/ssh.exp \
 	scripts/cvs.exp \
 	scripts/jail.exp
+
+AM_CFLAGS = -DutMAIN -I $(top_srcdir)/src
 
 misc_utsetuid_SOURCES = misc/utsetuid.c
 misc_utsetuid_LDADD = ../src/.libs/libmediatex.a

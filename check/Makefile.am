@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/07/03 11:56:55 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 11:53:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -22,7 +22,7 @@
 
 include $(top_srcdir)/Make-rules
 
-AM_CFLAGS = -Wall -I $(top_srcdir)/src
+AM_CFLAGS = "-Wall"
 
 check_PROGRAMS = \
 	misc/utgetcgivars \
@@ -240,6 +240,7 @@ utmediatex.sh: utmediatex.src Makefile
 # Note: 2 choices for LDADD
 # - ../src/libmediatex.la : should be better
 # - ../src/.libs/libmediatex.a : easier to debug and no ps's hangup
+AM_CFLAGS = -I $(top_srcdir)/src
 AM_LDFLAGS = -pthread -lcrypto -lavl -lm
 LDADD = ../src/.libs/libmediatex.a
 memory_ldadd = \
