@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.1 2015/07/01 10:50:16 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 15:59:47 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  inital configuration files (and testing/exemple purpose)
 #  *
@@ -23,7 +23,7 @@
 miscdir = $(datarootdir)@mdtx_mediatexdir@/misc
 dist_misc_DATA = \
 	mediatex_cron mediatex.conf \
-	supports.txt catalog00.txt extract00.txt servers.txt \
+	supports.txt catalog000.txt extract000.txt servers.txt \
 	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
 	apache-mdtx.conf htgroup viewvc.conf header.ezt \
 	mediatex.css floppy-icon.png home.htaccess \
