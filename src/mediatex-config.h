@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-config.h,v 1.1 2015/07/01 10:21:01 nroche Exp $
+ * Version: $Id: mediatex-config.h,v 1.2 2015/07/06 16:05:18 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -102,6 +102,7 @@
 #define TESTING_PORT  6560
 #define CONF_PORT     6561 // (as default)
 #define SSH_PORT      22
+#define WWW_PORT      80
 
 #endif /* MDTX_CONFIG_H */
 

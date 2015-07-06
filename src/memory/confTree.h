@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.5 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: confTree.h,v 1.6 2015/07/06 16:05:18 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -132,6 +132,7 @@ struct Configuration {
   char  host[MAX_SIZE_HOST+1]; // hostname
   int   mdtxPort;  // listening port for incoming requests (daemon)
   int   sshPort;   // listening port for incoming ssh queries
+  int   wwwPort;   // listening port for incoming web queries
   off_t uploadRate; // average upload rate
 
   /* default values for collections */

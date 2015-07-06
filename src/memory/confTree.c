@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: confTree.c,v 1.5 2015/07/06 16:05:18 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -615,6 +615,7 @@ createConfiguration(void)
   conf->scoreParam = defaultScoreParam;
   strncpy(conf->host, DEFAULT_HOST, MAX_SIZE_HOST);
   conf->sshPort = SSH_PORT;
+  conf->wwwPort = WWW_PORT;
   conf->mdtxPort = env.noRegression?TESTING_PORT:CONF_PORT;
 
   rc = conf;
@@ -667,6 +668,7 @@ destroyConfiguration(Configuration* self)
     self->host[0] = (char)0;
     self->mdtxPort = 0;
     self->sshPort = 0;
+    self->wwwPort = 0;
     self->cacheTTL = 0;
     self->queryTTL = 0;
     self->checkTTL = 0;
@@ -861,6 +863,9 @@ serializeConfiguration(Configuration* self)
   fprintf(fd, "\n# port: listening port for SSHd\n");
   fprintf(fd, "%-10s %i\n", "sshPort", self->sshPort);
 
+  fprintf(fd, "\n# port: listening port for Apache\n");
+  fprintf(fd, "%-10s %i\n", "wwwPort", self->wwwPort);
+  
   fprintf(fd, "\n# networks: networks the host belongs to\n");
   fprintf(fd, "%-10s ", "networks");
   if (isEmptyRing(self->networks)) {

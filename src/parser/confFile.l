@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.5 2015/07/03 17:37:31 nroche Exp $
+ * Version: $Id: confFile.l,v 1.6 2015/07/06 16:05:19 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -143,6 +143,11 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
   sshport {
     BEGIN(USERVALUE);
     return(confSSHPORT);
+  }
+
+  wwwport {
+    BEGIN(USERVALUE);
+    return(confWWWPORT);
   }
 
   cachesize {

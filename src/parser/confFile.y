@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.6 2015/07/03 17:37:31 nroche Exp $
+ * Version: $Id: confFile.y,v 1.7 2015/07/06 16:05:19 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -95,6 +95,7 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 %token          confGATEWAYS
 %token          confMDTXPORT
 %token          confSSHPORT
+%token          confWWWPORT
 %token          confCACHESIZE
 %token          confCACHETTL
 %token          confQUERYTTL
@@ -222,6 +223,11 @@ confLine: confHOST confSTRING
 {
   logParser(LOG_NOTICE, "line %-3i sshPort = %i", LINENO, $2);
   getConfiguration()->sshPort = $2;
+}
+       | confWWWPORT confNUMBER
+{
+  logParser(LOG_NOTICE, "line %-3i wwwPort = %i", LINENO, $2);
+  getConfiguration()->wwwPort = $2;
 }
        | confCACHESIZE confNUMBER confSIZE
 {
