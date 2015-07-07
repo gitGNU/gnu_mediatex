@@ -28,37 +28,33 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 *** TO TEST
 
 - upgrade current collections to NNN.txt
-- manage www port
+- manage cgi header within port-forwarding
 - pgrof: test with more than 100k entries
 - find historical event into cvs's collections
 
 *** TO CORRECT
 
-- vhost mediatex (manage /etc/init.d, cron... from adm init)
-- upload (manage all 5-E-C combinaisons)
+- move dirname into extract rule header to reduce extract.txt file size
 - cache: add host-ro directory and score ; scores for incoming files
+- notify: do not notify bad archive when nbGeo remote copies exists ?
 - extract.txt add a path for REC from host-ro and incoming
+- upload (manage all 5-E-C combinaisons)
 - motd: add to burn and orphanes
+- allocate/freeing cache policy (optimize ; assert no diseases)
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- move dirname into extract rule header to reduce extract.txt file size
-- manage ECDSA key too
-- add supp: wait CD doors is locked (cf v3)
 - i10n for french
-- allocate/freeing cache policy (optimize ; assert no diseases)
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
-- manage cgi header within port-forwarding
-- plugin system (sql,xml) and hooks (mail) with defaults overidable
-- replaced Peter's code by mqueue
+- manage ECDSA keys
+- add supp: wait CD doors is locked (cf v3)
+- ease several servers conf: manage /etc/init.d, cron... from adm init
+- replace ardsm by mqueue
 - add thread ID to the log
-- shouldn't we use absolute link for cgi? (catalog copy)
-- notify: do not notify bad archive when nbGeo remote copies exists ?
-- sort categories on serializer (... no silver bullet order)
-- replace cvs+viewvc by git+cgit (no debian package available yet)
-- upload from cgi (not really the USER purpose => www-data as publisher)
+- replace cvs+viewvc by git+cgit
+
 
