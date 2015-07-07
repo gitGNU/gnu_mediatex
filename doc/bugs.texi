@@ -98,6 +98,7 @@ $ mediatex make
 $ ls gmon.out
 $ gprof /usr/bin/mediatex > gprof.txt
 @end example
+
 @item 
 reload the info page into emacs
 @example
@@ -106,4 +107,26 @@ info:/home/user/cvs/mediatex/doc/mediatex.info
 info:/usr/share/info/mediatex.info
 place cursor on a line and type C-c C-o
 @end example
+
+@item 
+investigate memory leaks on setuid binary (valgring refusing)
+@example
+$ QUERY -A -sdebug 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
+$ QUERY -A -sdebug 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
+@end example
+Otherwise, you needs setuid on binary and to run it as root.
+
+@item 
+check memory in use
+@example
+$ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
+@end example
+
+@item 
+Diff between 2 @acronym{CVS}'s check out directories
+@example
+$ cd dir1
+$ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' @{@} ../dir2/@{@} \; \)
+@end example
+
 @end itemize

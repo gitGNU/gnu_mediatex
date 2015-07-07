@@ -50,7 +50,8 @@ $ ./configure \
   --mandir=/usr/share/man \
   --infodir=/usr/share/info \
   --sysconfdir=/etc \
-  --localstatedir=/var
+  --localstatedir=/var \
+  --libexecdir=/usr/lib/mediatex
 $ make CFLAGS="-Wall -O0 -g"
 # make install
 @end example
