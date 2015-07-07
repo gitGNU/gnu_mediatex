@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.3 2015/07/03 17:37:32 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.4 2015/07/07 14:26:52 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -166,6 +166,16 @@
 	  return(shellUPLOAD);
 	}
 
+	upload\+ {
+	  BEGIN(USERVALUE);
+	  return(shellUPLOADP);
+	}
+
+	upload\+\+ {
+	  BEGIN(USERVALUE);
+	  return(shellUPLOADPP);
+	}
+
 	get {
 	  BEGIN(USERVALUE);
 	  return(shellGET);
@@ -239,12 +249,16 @@
 	  return(shellLIST);
 	}
 
-	update? {
+	update {
 	  return(shellUPDATE);
 	}
 
 	up(grade)? {
 	  return(shellUPGRADE);
+	}
+
+	up(grade)?\+ {
+	  return(shellUPGRADEP);
 	}
 
 	commit {

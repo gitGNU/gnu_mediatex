@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.2 2015/07/03 17:37:32 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.3 2015/07/07 14:26:52 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -117,6 +117,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
 %token            shellLIST
 %token            shellUPDATE
 %token            shellUPGRADE
+%token            shellUPGRADEP
 %token            shellCOMMIT
 %token            shellMAKE
 %token            shellCHECK
@@ -125,6 +126,8 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
 %token            shellMOUNT
 %token            shellUMOUNT
 %token            shellUPLOAD
+%token            shellUPLOADP
+%token            shellUPLOADPP
 %token            shellGET
 %token            shellSU
 %token            shellMOTD
@@ -544,6 +547,28 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
     if (!clientWriteUnlock()) YYABORT;
   }
 }
+            | shellUPLOADP shellSTRING shellTO collection shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "upload+ a file to a collection");
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    if (!mdtxUploadFile($4, $2)) YYABORT;
+    if (!clientLoop(mdtxUpgrade)) YYABORT;
+    if (!clientLoop(mdtxMake)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
+  }
+}
+            | shellUPLOADPP shellSTRING shellTO collection shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "upload++ a file to a collection");
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    if (!mdtxUploadFile($4, $2)) YYABORT;
+    if (!mdtxUpgrade($4)) YYABORT;
+    if (!mdtxMake($4)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
+  }
+}
 ;
 
  /* collection queries API */
@@ -628,7 +653,6 @@ apiCollQuery: shellADD key shellTO collection shellEOL
     if (!clientLoop(mdtxClean)) YYABORT;
   }
 }
-;
             | shellCLEAN collection shellEOL
 {
   logParser(LOG_NOTICE, "clean an HTML catalog", $2);
@@ -636,7 +660,6 @@ apiCollQuery: shellADD key shellTO collection shellEOL
     if (!mdtxClean($2)) YYABORT;
   }
 }
-;
             | shellSU shellEOL
 {
   logParser(LOG_NOTICE, "%s", "change to mediatex user");
@@ -649,6 +672,31 @@ apiCollQuery: shellADD key shellTO collection shellEOL
   logParser(LOG_NOTICE, "%s", "change to collection user");
   if (!env.noRegression) {
     if (!mdtxSu($2)) YYABORT;
+  }
+}
+            | shellUPGRADEP shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "upgrade+ all");
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    
+    // needed if there is still no collection
+    if (!loadConfiguration(CFG)) YYABORT;
+    getConfiguration()->fileState[iCFG] = MODIFIED; 
+
+    if (!clientLoop(mdtxUpgrade)) YYABORT;
+    if (!clientLoop(mdtxMake)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
+  }
+}
+            | shellUPGRADEP collection shellEOL
+{
+  logParser(LOG_NOTICE, "%s", "upgrade+ a collection");
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    if (!mdtxUpgrade($2)) YYABORT;
+    if (!mdtxMake($2)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
   }
 }
 ;

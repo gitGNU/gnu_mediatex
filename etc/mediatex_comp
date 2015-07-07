@@ -1,4 +1,4 @@
-#  * Version: $Id: mediatex_comp,v 1.4 2015/06/30 17:37:00 nroche Exp $
+#  * Version: $Id: mediatex_comp,v 1.5 2015/07/07 14:26:52 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -88,8 +88,8 @@ _mediatex()
 	    return 0
 	    ;;
 	adm)
-	    WORDS="init remove purge add del update commit bind \
-unbind mount umount get"
+	    WORDS="init remove purge add del update update+ update++ \
+commit bind unbind mount umount get"
 	    COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
 	    return 0
 	    ;;
@@ -120,7 +120,7 @@ unbind mount umount get"
 	    COMPREPLY=( $( compgen -u -- $cur ) )
 	    return 0
 	    ;;
-	update|commit|upgrade|make|clean)
+	update|update+|update++|commit|upgrade|upgrade+|make|clean)
 	    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
 	    return 0
 	    ;;
@@ -128,7 +128,7 @@ unbind mount umount get"
 	    _cd_devices
 	    return 0
 	    ;;
-	umount|get|on|upload|key)
+	umount|get|on|upload|upload+|upload++|key)
 	    _filedir
 	    return 0
 	    ;;
@@ -143,7 +143,7 @@ unbind mount umount get"
 		    COMPREPLY=( $( compgen -W "coll ALL" -- $cur ) )
 		    return 0
 		    ;;
-		upload|key|natClt|natSrv)
+		upload|upload+|upload++|key|natClt|natSrv)
 		    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
 		    return 0
 		    ;;
@@ -153,8 +153,8 @@ unbind mount umount get"
     esac
 
     if [ $COMP_CWORD -eq 1 ]; then
-	WORDS="adm serv list new add del note check upload motd upgrade \
-make clean su"
+	WORDS="adm serv list new add del note check upload upload+ \
+upload++ motd upgrade upgrade+ make clean su"
 	COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
 	return 0;
     fi
@@ -168,7 +168,7 @@ make clean su"
 	    COMPREPLY=( $( compgen -W "as" -- $cur ) )
 	    return 0
 	    ;;
-	    upload)
+	upload|upload+|upload++)
 	    COMPREPLY=( $( compgen -W "to" -- $cur ) )
 	    return 0
 	    ;;
