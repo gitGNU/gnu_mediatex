@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.5 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: extract.c,v 1.6 2015/07/07 16:08:07 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -171,9 +171,9 @@ getUniqCachePath(Collection* coll, char* path)
 }
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
+ * Function   : getArchivePath
+ * Description: check we erase nothing
+ * Synopsis   : char* getArchivePath(Collection* coll, Archive* archive) 
  * Input      : Collection* coll = the related collection
  *              Archive* archive = the releted archive
  * Output     : absolute path, 0 on failure
@@ -407,6 +407,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
  *                                                   char* options)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* options: -zxf, -jxf or -xf
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -734,7 +735,7 @@ cacheSet(ExtractData* data, Record* record, char* path)
     goto error;
   }
 
-  // here we should remove extract dirs ~/tmp/... (if empty)
+  // * TODO: here we should remove extract dirs ~/tmp/... (if empty)
 
   // toggle !malloc record to local-supply...
   record->extra = destroyString(record->extra);

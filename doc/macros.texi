@@ -92,7 +92,7 @@
 @end macro
 
 @macro dataCatalogO
-@file{/etc/@/mediatex/@/mdtx-COLL/@/catalogXX.txt}
+@file{/etc/@/mediatex/@/mdtx-COLL/@/catalogXXX.txt}
 @end macro
 @macro dataCatalog
 @cindex index catalog file
@@ -100,7 +100,7 @@
 @end macro
 
 @macro dataExtractO
-@file{/etc/@/mediatex/@/mdtx-COLL/@/extractXX.txt}
+@file{/etc/@/mediatex/@/mdtx-COLL/@/extractXXX.txt}
 @end macro
 @macro dataExtract
 @cindex extraction rules file

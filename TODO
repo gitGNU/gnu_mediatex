@@ -9,11 +9,20 @@
 *** TO CORRECT
 
 - move dirname into extract rule header to reduce extract.txt file size
+
+-- extract.c::extractTar modify asso->path -> getAssoPath()
+-- extractFile.y: container: extrTYPE archive ++extrSTRING
+-- extractTree.h: struct Container { ++char* pathPrefix;
+-- memory/utFunc.c
+-- misc/extract000.txt
+
 - cache: add host-ro directory and score ; scores for incoming files
+-- extract.c::extractRecord modify tmpBasename
 - notify: do not notify bad archive when nbGeo remote copies exists ?
 - extract.txt add a path for REC from host-ro and incoming
 - upload (manage all 5-E-C combinaisons)
 - motd: add to burn and orphanes
+-- archive.h: USED, WANTED, ALLOCATED, AVAILABLE, TOKEEP... TOBURN?
 - allocate/freeing cache policy (optimize ; assert no diseases)
 
 *** TODO
