@@ -62,6 +62,8 @@ browse and download archives. (@procToolsApache{})
 The @mediatexO{} 
 system allow several Server to share data and meta-data
 related to a collection of archives.
+It manages @acronym{SSH} accounts and @acronym{CVS} repositories
+in order to decentralize them.
 
 @image{mediatex-figures/what,,,,}
 
@@ -152,6 +154,8 @@ The
 
 @image{mediatex-figures/where2,,,,}
 
+As the catalogs provide static @acronym{HTML} content, @acronym{DNS}'s round robbin will be usefull to prevent from a site crash.
+
 @end itemize
 
 @node When
@@ -182,6 +186,13 @@ By reading the ``message of the day'', the
 is asked to provide supports needed for extraction
 or needed to perform a periodic checkup.
 @end itemize
+
+History will be accessible from the @acronym{CVS} modules.
+@example
+$ awk -vRS= '/Document "13421830"/' catalog*.txt
+$ grep 13421830 catalog*,v.txt
+$ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
+@end example
 
 @node How
 @section How
@@ -216,6 +227,67 @@ via the host's @sc{Motd}.
 @item 
 The support index and servers list files are internally managed 
 by the @mediatex{} system.
+@end itemize
+
+Involved licences:
+@itemize @bullet
+@item Copy/past codes
+@multitable @columnfractions .2 .2 .6
+@headitem name @tab licence @tab website
+@item getcgivar @tab MIT/NCSA? @tab from NCSA server exemples
+@item e2fsck @tab GPLv2* @tab http://e2fsprogs.sourceforge.net/
+@end multitable
+
+(*) Author agree to relicense e2fsck's progress bar code under the LGPLv2
+
+@item Compilation
+@multitable @columnfractions .2 .2 .6
+@headitem name @tab licence @tab website
+@item automake @tab   GPLv2+ @tab  http://www.gnu.org/software/automake/
+@item bison @tab      GPLv3+ @tab  http://www.gnu.org/software/bison/
+@item gettext @tab    GPLv3+ @tab  http://www.gnu.org/software/gettext/
+@item flex @tab       BSD @tab     http://flex.sourceforge.net/
+@item help2man @tab   GPLv3+ @tab  http://www.gnu.org/software/help2man/
+@item libavl @tab     LGPLv2+ @tab http://adtinfo.org/
+@item libtool @tab    GPLv2+ @tab  http://www.gnu.org/software/libtool/
+@item make @tab       GPLv3+ @tab  http://www.gnu.org/software/make/
+@item texinfo @tab    GPLv3+ @tab  http://www.gnu.org/software/texinfo/
+@item transfig @tab   MIT @tab     http://www.xfig.org/ ?
+@item libssl-dev @tab BSD @tab     http://www.openssl.org/
+@end multitable
+
+@item Documentation (others format than texinfo and man)
+@multitable @columnfractions .2 .2 .6
+@headitem name @tab licence @tab website
+@item imagemagick @tab Apache2 @tab http://www.imagemagick.org/
+@item texlive @tab     LPPL @tab    https://www.tug.org/texlive/
+@end multitable
+
+@item Installation
+@multitable @columnfractions .2 .2 .6
+@headitem name @tab licence @tab website
+@item apache2 @tab        Apache2 @tab  http://httpd.apache.org/
+@item bc @tab              GPLv3+ @tab   http://www.gnu.org/software/bc/
+@item bzip2 @tab           GPLv3? @tab   http://www.bzip.org/
+@item cpio @tab            GPLv3+ @tab   http://www.gnu.org/software/cpio/
+@item cvs @tab             GPLv2+ @tab   http://cvs.nongnu.org/
+@item findutils @tab       GPLv3+ @tab   http://www.gnu.org/software/findutils/
+@item gzip @tab            GPLv2+ @tab   http://www.gnu.org/software/gzip/
+@item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
+@item ssh @tab             BSD @tab      http://www.openssh.com/
+@item tar @tab             GPLv3+ @tab   http://www.gnu.org/software/tar/
+@item unzip @tab           BSD @tab      http://info-zip.org/
+@item viewvc @tab          BSD @tab      http://www.viewvc.org/
+@end multitable
+
+@item Optionnal: (and non-free)
+@multitable @columnfractions .2 .2 .6
+@headitem name @tab licence @tab website
+@item rar @tab             EULA @tab     http://www.rarlab.com/
+@item afio @tab               * @tab http://members.chello.nl/~k.holtman/afio.html
+@end multitable
+
+(*) not a standard OSI/FSF approved free software
 @end itemize
 
 @node How much

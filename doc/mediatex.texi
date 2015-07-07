@@ -67,7 +67,7 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 * Communication model::	        Main specifications.
 * Relational schema::           Data files descriptions.
 * Conceptual model::	        Details specifications.
-* Simple use case::             Simple use case.
+* Use cases::                   Configuration examples.
 * Consistency howto::           Consistency howto.
 * Reporting bugs::              Sending bug reports and feature suggestions.
 * Documentation License::       Copying and sharing this documentation.
@@ -94,8 +94,8 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @chapter Conceptual model
 @include specs.texi
 
-@node Simple use case
-@chapter Simple use case
+@node Use cases
+@chapter Use cases
 @include useCase.texi
 
 @node Consistency howto

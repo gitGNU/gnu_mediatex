@@ -2,10 +2,16 @@
 @cindex api
 @cindex oais
 
+@menu
+* Firewall::    Configuration behind a firewall
+* Portail::	Minimal Php inerface
+* Linking::	Library API
+@end menu
+
 @sc{Mediatex} should help building a whole @sc{oais} system.
 @itemize @bullet
 @item 
-It divides the application complexity nearly by two,
+It divides the application complexity 
 as the ``Administration'' and ``Preservation planing'' functionalities
 are already taken into account for many features.
 @item 
@@ -13,7 +19,46 @@ It make the application modulable: we can easily replace a
 layer since the API beween them remains clear.
 @end itemize
 
-@unnumberedsec CakePhp
+@node Firewall
+@section Configuration behind a firewall
+
+This configuration is needed when you cannot install mediatex on the
+routeur of your private network
+(the bellow configuration cannot serv collections hosted on the true gateway as @file{ssh/config} file cannot handle 2 ports for the same hostname).
+
+Mediatex must be configured as if it was hosted on the gateway.
+
+@file{/etc/mediatex/mdtx.conf}:
+@example
+host     GATEWAY
+mdtxPort 6562
+sshPort  2222
+wwwPort  4443
+@end example
+
+GATEWAY:
+@example
+iptables -t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to $HOST:22
+iptables -t nat -A PREROUTING -p tcp --dport 4443 -j DNAT --to $HOST:443
+iptables -t nat -A PREROUTING -p tcp --dport 6562 -j DNAT --to $HOST:6562
+iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 6562 -j ACCEPT
+@end example
+
+Localy if your server own collections, you will have to skip the gateway.
+(GATEWAY must match the gateway IP on the WWW_NET interface)
+
+HOST:
+@example
+iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 2222 -j DNAT --to $HOST:22
+iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 4443 -j DNAT --to $HOST:443
+iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 6561 -j DNAT --to $HOST:6561
+@end example
+
+@node Portail
+@section Minimal Php inerface
+@c @unnumberedsec CakePhp
 
 A minimal @sc{cakePhp} application is provided with the sources
 (@file{/usr/@/share/@/mediatex/@/useCases/@/cake.tgz}),
@@ -114,7 +159,9 @@ EOF
 @}
 @end example
 
-@unnumberedsec C library
+@node Linking
+@section Library API
+@c @unnumberedsec C library
 
 @cindex library
 @cindex linking

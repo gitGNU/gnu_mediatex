@@ -1,46 +1,3 @@
-*** Dependencies (find a place where to put that list => doc/how)
-
-                 name, license, website
-
-- Copy/past codes
-getcgivar, MIT/NCSA?, no sure but shall be find into NCSA sever exemples
-log-ardsm-strdsm, (none yet), http://www.felecan.org/ (Peter Felecan agree me to put this code into GPL)
-e2fsck (progbar), GPLv2, http://e2fsprogs.sourceforge.net/ (Theodore Ts'o agree to relicense e2fsck's progress bar code under the LGPLv2)
-
-- Compilation
-automake,   GPLv2+,  http://www.gnu.org/software/automake/
-bison,      GPLv3+,  http://www.gnu.org/software/bison/
-gettext,    GPLv3+,  http://www.gnu.org/software/gettext/
-flex,       BSD,     http://flex.sourceforge.net/
-help2man,   GPLv3+,  http://www.gnu.org/software/help2man/
-libavl,     LGPLv2+, http://adtinfo.org/
-libtool,    GPLv2+,  http://www.gnu.org/software/libtool/
-make,       GPLv3+,  http://www.gnu.org/software/make/
-texinfo,    GPLv3+,  http://www.gnu.org/software/texinfo/
-transfig,   MIT,     http://www.xfig.org/ ?
-libssl-dev, BSD,     http://www.openssl.org/
-
-- Documentation (others format than texinfo and man) :
-imagemagick, Apache2, http://www.imagemagick.org/
-texlive,     LPPL,    https://www.tug.org/texlive/
-
-- Installation:
-apache2,        Apache2,  http://httpd.apache.org/
-bc,              GPLv3+,   http://www.gnu.org/software/bc/
-bzip2,           GPLv3?,   http://www.bzip.org/
-cpio,            GPLv3+,   http://www.gnu.org/software/cpio/
-cvs,             GPLv2+,   http://cvs.nongnu.org/
-findutils,       GPLv3+,   http://www.gnu.org/software/findutils/
-gzip,            GPLv2+,   http://www.gnu.org/software/gzip/
-initramfs-tools, GPLv2+,   https://wiki.debian.org/initramfs-tools
-ssh,             BSD,      http://www.openssh.com/
-tar,             GPLv3+,   http://www.gnu.org/software/tar/
-unzip,           BSD,      http://info-zip.org/
-viewvc,          BSD,      http://www.viewvc.org/
-
-- Optionnal: (and non-free)
-rar,             EULA,     http://www.rarlab.com/
-afio, not a standard OSI/FSF approved free software, http://members.chello.nl/~k.holtman/afio.html
 
 *** Reminder for copy/paste
 
@@ -60,37 +17,9 @@ $ ./configure \
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep malloc | sort | uniq -c
 $ QUERY -M 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | grep free   | sort | uniq -c
 
+** check memory in use
 
 $ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
-
-archives       .CVS        RAM     HTML    HTML    time
-                          VmSize          inodes
-----------------------------------------------------------
-10k            4M         20M     135M    32k     10"
-27k            12M        40M     377M    90k     20"
-55k            21M        67M     638M    151k    32"
-82k            31M        94M     913M    212k    51"
-110k           40M        122M    1.2G    273k    1'3
-137k           50M        145M    1.4G    334k    1'20
-
-archives    CVS     VmSize   HTML   HTML    time*
-          cat+ext  clt/serv        inodes     make
-----------------------------------------------------------
-27550      28+3M     68/ M   367M   89809    2'  (853278/ 89645)
-54848      58+4M    123/ M   644M  153579    4'       (?/149928)
-82456      87+6M    180/ M   898M  214835    6' (2527416/211099)
-
-
-81359      85+7M    176/60M  876M  211412    6'43"
-109000    113+9M    232/     1.2G  275971    8'06"
-
-
-
-*: Time for cvs merge is removed (using -w) as it depends on you internet connection. For instance it seems as long as parsing time using 150kb (Adsl upload link) but spends only seconds on a local network.
-
-AMD Sempron(tm) Processor 3200+
-
-
 
 ** Diff between 2 arbos
 
@@ -110,6 +39,7 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 - cache: add host-ro directory and score ; scores for incoming files
 - extract.txt add a path for REC from host-ro and incoming
 - motd: add to burn and orphanes
+- find historical event into cvs's collections
 
 *** TODO
 
@@ -133,38 +63,3 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 - replace cvs+viewvc by git+cgit (no debian package available yet)
 - upload from cgi (not really the USER purpose => www-data as publisher)
 
-*** FEATURES (to document)
-
-- find into cvs's collection (to optimize)
-$ awk -vRS= '/Document "13421830"/' catalog*.txt
-$ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
-
-- ease SSH/CVS configuration
-- compatible with DNS round robin
-- cvsroot migration from one host to other (cf example/test.sh#16)
-- Port forwarding is not compatible with gateway hosted collections
-
-It means if your localhost is using the gateway address into mdtx.conf,
-thanks to port forwarding on the gateway.
-
-mdtx.conf:
-host     GATEWAY
-mdtxPort 6562
-sshPort  222
-
-GATEWAY:
-iptables -t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to $HOST:22
-iptables -t nat -A PREROUTING -p tcp --dport 6562 -j DNAT --to $HOST:6562
-iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
-iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 6562 -j ACCEPT
-
-Localy if your server own collections, you will have to skip the gateway.
-
-(GATEWAY is the IP on the WWW_NET interface)
-HOST:
-iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 2222 -j DNAT --to $HOST:22
-iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 6561 -j DNAT --to $HOST:6561
-
-Unfortunaly, the cgi script will not works on your local instance as it search for url (port 80) on the gateway too.
-
-More over, you cannot have both collecion hosted on your localhost and the gateway as your .ssh/config provide 2 different ports for the gateway. 
