@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
+ * Version: $Id: commonHtml.h,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
  *
@@ -38,7 +38,7 @@ int getArchiveUri(char* buf, char* path, Archive* archive);
 int getDocumentUri(char* buf, char* path, int id);
 int serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N);
 int htmlAssoCarac(FILE* fd, AssoCarac* self);
-
+int getServerUrl(Server* server, char* txt, char* url);
 int serializeHtmlCache(Collection* coll);
 
 #endif /* MDTX_CLIENT_ADMSERVER_H */

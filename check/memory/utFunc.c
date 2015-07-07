@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.2 2015/07/02 17:22:05 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.3 2015/07/07 09:33:34 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -544,6 +544,7 @@ createExempleServerTree(Collection* coll)
     "host1", "localhost", "127.0.0.2"};
   int mdtxPorts[] = {11111, 6560, 33333};
   int sshPorts[] = {22, 22, 2222};
+  int wwwPorts[] = {80, 80, 8080};
   char serverId[][MAX_SIZE_HASH+1] = { // fingerprints
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "6b18ed0194b0fbadd08e0a13cccda00e",
@@ -610,6 +611,7 @@ createExempleServerTree(Collection* coll)
     if (!(server->comment = createString(comments[i]))) goto error;
     server->mdtxPort = mdtxPorts[i];
     server->sshPort = sshPorts[i];
+    server->wwwPort = wwwPorts[i];
 
     // keys
     if (!(server->userKey = createString(userKeys[i]))) goto error;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.5 2015/07/02 17:59:11 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.6 2015/07/07 09:33:35 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -153,6 +153,11 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
   sshport {
     BEGIN(USERVALUE);
     return(servSSHPORT);
+  }
+
+  wwwport {
+    BEGIN(USERVALUE);
+    return(servWWWPORT);
   }
 
   comment {

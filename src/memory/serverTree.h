@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -48,6 +48,7 @@ struct Server {
   char  host[MAX_SIZE_HOST+1];
   int   mdtxPort;
   int   sshPort;
+  int   wwwPort;
   RG*   networks;
   RG*   gateways;
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -206,6 +206,7 @@ destroyServer(Server* self)
   self->comment = destroyString(self->comment);
   self->mdtxPort = 0;
   self->sshPort = 0;
+  self->wwwPort = 0;
   self->userKey = destroyString(self->userKey);
   self->hostKey = destroyString(self->hostKey);
   
@@ -259,6 +260,9 @@ serializeServer(Server* self, FILE* fd)
   }
   if (self->sshPort) {
     fprintf(fd, "\t%-9s %i\n", "sshPort", self->sshPort);
+  }
+  if (self->wwwPort) {
+    fprintf(fd, "\t%-9s %i\n", "wwwPort", self->wwwPort);
   }
 
   if (!isEmptyRing(self->networks)) {

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -99,6 +99,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servGATEWAYS
 %token            servMDTXPORT
 %token            servSSHPORT
+%token            servWWWPORT
 %token            servCOLLKEY
 %token            servUSERKEY
 %token            servHOSTKEY
@@ -249,6 +250,10 @@ line: servLABEL servSTRING
     | servSSHPORT servNUMBER
 {
   if (server) server->sshPort = (int)$2;
+}
+    | servWWWPORT servNUMBER
+{
+  if (server) server->wwwPort = (int)$2;
 }
     | servUSERKEY servSTRING
 {

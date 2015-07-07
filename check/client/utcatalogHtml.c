@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogHtml.c,v 1.1 2015/07/01 10:49:27 nroche Exp $
+ * Version: $Id: utcatalogHtml.c,v 1.2 2015/07/07 09:33:34 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *
@@ -84,9 +84,9 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
-  if (!loadCollection(coll, CTLG)) goto error;
+  if (!loadCollection(coll, CTLG|SERV)) goto error;
   if (!serializeHtmlIndex(coll)) goto error;
-  if (!releaseCollection(coll, CTLG)) goto error;
+  if (!releaseCollection(coll, CTLG|SERV)) goto error;
   /************************************************************************/
 
   freeConfiguration();

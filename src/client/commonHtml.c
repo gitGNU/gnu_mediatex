@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.4 2015/06/30 17:37:24 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -418,6 +418,44 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
 
 
 /*=======================================================================
+ * Function   : getServerUrl
+ * Description: get base url for a server
+ * Synopsis   : int serializeHtmlCacheTop(Collection* coll)
+ * Input      : Server* server
+ *              char* url: an allocated string
+ *              char* txt: text to cat at the end of the url
+ * Output     : TRUE on success
+ =======================================================================*/
+int getServerUrl(Server* server, char* txt, char* url)
+{
+  int rc = FALSE;
+
+  checkServer(server);
+  if (!server->wwwPort) {
+    logEmit(LOG_ERR, "%s", "getServerUrl fails");
+    goto error;
+  }
+  
+  //if (server->wwwPort == 80) {
+    if (!sprintf(url, "https://%s/~%s%s", 
+		 server->host, server->user, txt)) goto error;
+  /* } */
+  /* else { */
+  /*   if (!sprintf(url, "https://%s:%i/~%s%s", */
+  /* 		 server->host, server->wwwPort, server->user, txt)) */
+  /*     goto error; */
+  /* } */
+  
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "getServerUrl fails");
+  }
+  return rc;
+}
+
+
+/*=======================================================================
  * Function   : serializeHtmlCacheTop
  * Description: This template will be used by apache SSI
  * Synopsis   : int serializeHtmlCacheTop(Collection* coll)
@@ -454,9 +492,10 @@ serializeHtmlCacheHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr)) != 0) {
-      if (!sprintf(url, "https://%s/~%s/cache/", 
-		   server->host, server->user)) goto error;
-
+      //if (!sprintf(url, "https://%s/~%s/cache/", 
+      //	   server->host, server->user)) goto error;
+      if (!getServerUrl(server, "/cache", url)) goto error;
+      
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);      
@@ -465,9 +504,10 @@ serializeHtmlCacheHeader(Collection* coll)
   }
   
   // master url (other are relatives ones)
-  if (!sprintf(url, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-    goto error;
-
+  //if (!sprintf(url, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
+  //goto error;
+  if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
+  
   if (!htmlLeftPageTail(fd)) goto error;
   if (!htmlRightHead(fd, url)) goto error;
   
@@ -517,8 +557,9 @@ serializeHtmlCgiHeader(Collection* coll)
     goto error;
   }  
 
-  if (!sprintf(url1, "https://%s/~%s", conf->host, coll->user))
-    goto error;
+  //if (!sprintf(url1, "https://%s/~%s", conf->host, coll->user))
+  //goto error;
+  if (!getServerUrl(getLocalHost(coll), "", url1)) goto error;
 
   if (!htmlMainHeadBasic(fd, _("Cache"), url1)) goto error;
   if (!htmlLeftPageHeadBasic(fd, _("cache"), url1)) goto error;
@@ -529,9 +570,11 @@ serializeHtmlCgiHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr)) != 0) {
-      if (!sprintf(url2, "https://%s/~%s/cache/", 
-		   server->host, server->user)) goto error;
 
+      //if (!sprintf(url2, "https://%s/~%s/cache/", 
+      //	   server->host, server->user)) goto error;
+      if (!getServerUrl(server, "/cache", url2)) goto error;
+      
       htmlLiOpen(fd);
       htmlLink(fd, 0, url2, server->host);
       htmlLiClose(fd);      
@@ -539,8 +582,9 @@ serializeHtmlCgiHeader(Collection* coll)
     htmlUlClose(fd);
   }
   
-  if (!sprintf(url2, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-    goto error;
+  //if (!sprintf(url2, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
+  //goto error;
+   if (!getServerUrl(coll->serverTree->master, "", url2)) goto error;
 
   if (!htmlLeftPageTail(fd)) goto error;
   if (!htmlRightHeadBasic(fd, url2, url1)) goto error;

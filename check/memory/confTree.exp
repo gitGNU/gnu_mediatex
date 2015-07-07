@@ -12,6 +12,9 @@ mdtxPort   6560
 # port: listening port for SSHd
 sshPort    22
 
+# port: listening port for Apache
+wwwPort    80
+
 # networks: networks the host belongs to
 networks   private1, www
 
