@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.5 2015/07/06 16:05:18 nroche Exp $
+ * Version: $Id: confTree.c,v 1.6 2015/07/07 10:08:44 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -182,7 +182,7 @@ expandCollection(Collection* self)
 {
   int rc = FALSE;
   Configuration* conf = 0;
-  char* urlPart = 0;
+  char urlPart[128];
   int i,j;
   char* dataV[] = {CONF_CATHFILE, CONF_SERVFILE, CONF_EXTRFILE, "/cgi"};
   char** dataP[] = {
@@ -298,9 +298,14 @@ expandCollection(Collection* self)
     goto error;
 
   // urls
-  if (!(urlPart = createString("/~"))
-      || !(urlPart = catString(urlPart, self->user)))
-    goto error;
+  if (conf->wwwPort == 443) {
+    if (sprintf(urlPart, "/~%s", self->user) <= 0)
+      goto error;
+  }
+  else {
+    if (sprintf(urlPart, ":%i/~%s", conf->wwwPort, self->user) <= 0)
+      goto error;
+  }
 
   if (!(self->cacheUrl = createString("https://")) 
       || !(self->cacheUrl = catString(self->cacheUrl, conf->host))
@@ -355,7 +360,6 @@ expandCollection(Collection* self)
   if (!rc) {
     logMemory(LOG_ERR, "%s", "fails to expand collection");
   }
-  urlPart = destroyString(urlPart);
   label = destroyString(label);
   return rc;
 }
