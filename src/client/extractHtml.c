@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.6 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.7 2015/07/07 09:46:21 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -1152,8 +1152,6 @@ serializeHtmlScoreHeader(Collection* coll)
   }
 
   // master url (other are relatives ones)
-  //if (!sprintf(url, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-  //goto error;
   if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
 
   if (!htmlLeftPageTail(fd)) goto error;

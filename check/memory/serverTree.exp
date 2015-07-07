@@ -18,7 +18,7 @@ Server 6b18ed0194b0fbadd08e0a13cccda00e
 	host      localhost
 	mdtxPort  6560
 	sshPort   22
-	wwwPort   80
+	wwwPort   443
 	networks  private, www
 	gateways  private
 	cacheSize 200 Mo
@@ -37,7 +37,7 @@ Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	host      host1
 	mdtxPort  11111
 	sshPort   22
-	wwwPort   80
+	wwwPort   443
 	networks  www
 	cacheSize 100 Mo
 	cacheTTL  15 Day
@@ -54,7 +54,7 @@ Server bedac32422739d7eced624ba20f5912e
 	host      127.0.0.2
 	mdtxPort  33333
 	sshPort   2222
-	wwwPort   8080
+	wwwPort   4443
 	networks  private
 	cacheSize 300 Mo
 	cacheTTL  45 Day

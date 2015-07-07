@@ -24,7 +24,7 @@ Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	host      host1.mediatex.org
 	mdtxPort  6560
 	sshPort   22
-	wwwPort   80
+	wwwPort   443
 	networks  www
 	cacheSize 100 Mo
 	cacheTTL  15 Day

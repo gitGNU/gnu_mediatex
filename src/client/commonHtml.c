@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.5 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.6 2015/07/07 09:46:21 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -436,15 +436,15 @@ int getServerUrl(Server* server, char* txt, char* url)
     goto error;
   }
   
-  //if (server->wwwPort == 80) {
+  if (server->wwwPort == 443) {
     if (!sprintf(url, "https://%s/~%s%s", 
 		 server->host, server->user, txt)) goto error;
-  /* } */
-  /* else { */
-  /*   if (!sprintf(url, "https://%s:%i/~%s%s", */
-  /* 		 server->host, server->wwwPort, server->user, txt)) */
-  /*     goto error; */
-  /* } */
+  }
+  else {
+    if (!sprintf(url, "https://%s:%i/~%s%s",
+  		 server->host, server->wwwPort, server->user, txt))
+      goto error;
+  }
   
   rc = TRUE;
  error:
@@ -492,8 +492,6 @@ serializeHtmlCacheHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr)) != 0) {
-      //if (!sprintf(url, "https://%s/~%s/cache/", 
-      //	   server->host, server->user)) goto error;
       if (!getServerUrl(server, "/cache", url)) goto error;
       
       htmlLiOpen(fd);
@@ -504,8 +502,6 @@ serializeHtmlCacheHeader(Collection* coll)
   }
   
   // master url (other are relatives ones)
-  //if (!sprintf(url, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-  //goto error;
   if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
   
   if (!htmlLeftPageTail(fd)) goto error;
@@ -557,10 +553,7 @@ serializeHtmlCgiHeader(Collection* coll)
     goto error;
   }  
 
-  //if (!sprintf(url1, "https://%s/~%s", conf->host, coll->user))
-  //goto error;
   if (!getServerUrl(getLocalHost(coll), "", url1)) goto error;
-
   if (!htmlMainHeadBasic(fd, _("Cache"), url1)) goto error;
   if (!htmlLeftPageHeadBasic(fd, _("cache"), url1)) goto error;
 
@@ -570,9 +563,6 @@ serializeHtmlCgiHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr)) != 0) {
-
-      //if (!sprintf(url2, "https://%s/~%s/cache/", 
-      //	   server->host, server->user)) goto error;
       if (!getServerUrl(server, "/cache", url2)) goto error;
       
       htmlLiOpen(fd);
@@ -582,10 +572,7 @@ serializeHtmlCgiHeader(Collection* coll)
     htmlUlClose(fd);
   }
   
-  //if (!sprintf(url2, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-  //goto error;
-   if (!getServerUrl(coll->serverTree->master, "", url2)) goto error;
-
+  if (!getServerUrl(coll->serverTree->master, "", url2)) goto error;
   if (!htmlLeftPageTail(fd)) goto error;
   if (!htmlRightHeadBasic(fd, url2, url1)) goto error;
   

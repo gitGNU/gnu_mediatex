@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.5 2015/07/07 09:33:34 nroche Exp $
+ * Version: $Id: catalogHtml.c,v 1.6 2015/07/07 09:46:20 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *
@@ -1357,8 +1357,6 @@ serializeHtmlIndexHeader(Collection* coll)
   }
 
   // master url (other are relatives ones)
-  //if (!sprintf(url, "https://%s/~%s", coll->masterHost, coll->masterUser)) 
-  //goto error;
   if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
 
   if (!htmlLeftPageTail(fd)) goto error;

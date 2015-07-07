@@ -21,19 +21,19 @@ factSupp   2.00
 minGeoDup  2
 
 Server 6b18ed0194b0fbadd08e0a13cccda00e
-	wwwPort   80
+	wwwPort   443
 #	keys:
 	userKey   "(null)"
 end
 
 Server 746d6ceeb76e05cfa2dea92a1c5753cd
-	wwwPort   80
+	wwwPort   443
 #	keys:
 	userKey   "(null)"
 end
 
 Server bedac32422739d7eced624ba20f5912e
-	wwwPort   8080
+	wwwPort   4443
 #	keys:
 	userKey   "(null)"
 end
