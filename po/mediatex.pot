@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mediatex 0.4\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-07-03 14:56+0200\n"
+"POT-Creation-Date: 2015-07-07 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -300,10 +300,10 @@ msgid ""
 "Deep %i/%i"
 msgstr ""
 
-#: src/client/commonHtml.c:448 src/client/commonHtml.c:523
+#: src/client/commonHtml.c:486 src/client/commonHtml.c:557
 msgid "Cache"
 msgstr ""
 
-#: src/client/commonHtml.c:449 src/client/commonHtml.c:524
+#: src/client/commonHtml.c:487 src/client/commonHtml.c:558
 msgid "cache"
 msgstr ""

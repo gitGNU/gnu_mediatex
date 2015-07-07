@@ -1,4 +1,4 @@
-*** Dependencies (find a place where to put that list)
+*** Dependencies (find a place where to put that list => doc/how)
 
                  name, license, website
 
@@ -101,6 +101,15 @@ $ find . -name "CVS" -prune -o \( -type f -exec diff -I '$Id:' {} ../../savannah
 - pgrof: test with more than 100k entries
 
 *** TO CORRECT
+
+- upgrade current collections to NNN.txt
+- manage www port
+- vhost mediatex (manage /etc/init.d, cron... from adm init)
+- upgrade+
+- upload++ (manage all 5-E-C combinaisons)
+- cache: add host-ro directory and score ; scores for incoming files
+- extract.txt add a path for REC from host-ro and incoming
+- motd: add to burn and orphanes
 
 *** TODO
 

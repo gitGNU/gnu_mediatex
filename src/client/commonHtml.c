@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.6 2015/07/07 09:46:21 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.7 2015/07/07 11:16:58 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -432,17 +432,17 @@ int getServerUrl(Server* server, char* txt, char* url)
 
   checkServer(server);
   if (!server->wwwPort) {
-    logEmit(LOG_ERR, "%s", "getServerUrl fails");
-    goto error;
+    logEmit(LOG_WARNING, "%s", "no www port define for this server");
+    server->wwwPort = WWW_PORT;
   }
   
   if (server->wwwPort == 443) {
-    if (!sprintf(url, "https://%s/~%s%s", 
-		 server->host, server->user, txt)) goto error;
+    if (sprintf(url, "https://%s/~%s%s", 
+		 server->host, server->user, txt) <= 0) goto error;
   }
   else {
-    if (!sprintf(url, "https://%s:%i/~%s%s",
-  		 server->host, server->wwwPort, server->user, txt))
+    if (sprintf(url, "https://%s:%i/~%s%s",
+  		 server->host, server->wwwPort, server->user, txt) <= 0)
       goto error;
   }
   
