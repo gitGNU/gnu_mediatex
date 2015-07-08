@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.3 2015/07/07 14:26:52 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.4 2015/07/08 17:58:03 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -552,9 +552,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   logParser(LOG_NOTICE, "%s", "upload+ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUploadFile($4, $2)) YYABORT;
-    if (!clientLoop(mdtxUpgrade)) YYABORT;
-    if (!clientLoop(mdtxMake)) YYABORT;
+    if (!mdtxUploadPlus($4, $2)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -563,9 +561,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   logParser(LOG_NOTICE, "%s", "upload++ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUploadFile($4, $2)) YYABORT;
-    if (!mdtxUpgrade($4)) YYABORT;
-    if (!mdtxMake($4)) YYABORT;
+    if (!mdtxUploadPlusPlus($4, $2)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -684,8 +680,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
     if (!loadConfiguration(CFG)) YYABORT;
     getConfiguration()->fileState[iCFG] = MODIFIED; 
 
-    if (!clientLoop(mdtxUpgrade)) YYABORT;
-    if (!clientLoop(mdtxMake)) YYABORT;
+    if (!clientLoop(mdtxUpgradePlus)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -694,8 +689,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
   logParser(LOG_NOTICE, "%s", "upgrade+ a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUpgrade($2)) YYABORT;
-    if (!mdtxMake($2)) YYABORT;
+    if (!mdtxUpgradePlus($2)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }

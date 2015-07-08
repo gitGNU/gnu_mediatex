@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: misc.c,v 1.5 2015/07/08 17:58:02 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -30,7 +30,7 @@
  * Author     : Nicolas ROCHE
  * modif      : 2013/10/23
  * Description: Serialize collections into LaTex files
- * Synopsis   : int mdtxPp(char* label)
+ * Synopsis   : int mdtxMake(char* label)
  * Input      : char* label = collection to pre-process
  * Output     : TRUE on success
  =======================================================================*/
@@ -78,6 +78,83 @@ int mdtxMake(char* label)
  error:
   if (!rc) {
     logEmit(LOG_ERR, "%s", "mdtxMake fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : mdtxUpgradePlus
+ * Author     : Nicolas ROCHE
+ * modif      : 2013/10/23
+ * Description: Upgrade and make (order as no inpact)
+ * Synopsis   : int mdtxUpgradePlus(char* label)
+ * Input      : char* label = collection to pre-process
+ * Output     : TRUE on success
+ =======================================================================*/
+int mdtxUpgradePlus(char* label)
+{
+  int rc = FALSE;
+
+  checkLabel(label);
+  if (!mdtxUpgrade(label)) goto error;
+  if (!mdtxMake(label)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "mdtxUpgradePlus fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : mdtxUploadPlus
+ * Author     : Nicolas ROCHE
+ * modif      : 2013/10/23
+ * Description: Upload + upgrade
+ * Synopsis   : int mdtxUploadPlus(char* label, char* path)
+ * Input      : char* label = collection to pre-process
+ *              char* path = path to the file to upload
+ * Output     : TRUE on success
+ =======================================================================*/
+int mdtxUploadPlus(char* label, char* path)
+{
+  int rc = FALSE;
+
+  checkLabel(label);
+  if (!mdtxUploadFile(label, path)) goto error;
+  if (!mdtxUpgrade(label)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "mdtxUploadPlus fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : mdtxUploadPlusPlus
+ * Author     : Nicolas ROCHE
+ * modif      : 2013/10/23
+ * Description: Upload + upgrade + make
+ * Synopsis   : int mdtxUploadPlusPlus(char* label, char* path)
+ * Input      : char* label = collection to pre-process
+ *              char* path = path to the file to upload
+ * Output     : TRUE on success
+ =======================================================================*/
+int mdtxUploadPlusPlus(char* label, char* path)
+{
+  int rc = FALSE;
+
+  checkLabel(label);
+  if (!mdtxUploadPlus(label, path)) goto error;
+  if (!mdtxMake(label)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logEmit(LOG_ERR, "%s", "mdtxUploadPlusPlus fails");
   }
   return rc;
 }

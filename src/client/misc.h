@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: misc.h,v 1.5 2015/07/08 17:58:03 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -31,6 +31,9 @@ int mdtxInit();
 int mdtxRemove();
 int mdtxPurge();
 int mdtxMake(char* label);
+int mdtxUpgradePlus(char* label);
+int mdtxUploadPlus(char* label, char* path);
+int mdtxUploadPlusPlus(char* label, char* path);
 int mdtxClean(char* label);
 int mdtxAddUser(char* user);
 int mdtxDelUser(char* user);

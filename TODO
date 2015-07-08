@@ -17,7 +17,9 @@
 -- misc/extract000.txt
 
 - cache: add host-ro directory and score ; scores for incoming files
+  score computation also use md5sums.txt file
 -- extract.c::extractRecord modify tmpBasename
+
 - notify: do not notify bad archive when nbGeo remote copies exists ?
 - extract.txt add a path for REC from host-ro and incoming
 - upload (manage all 5-E-C combinaisons)
@@ -36,6 +38,7 @@
 - manage ECDSA keys
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init
+  vhost for apache logs and one mdtx.log for each daemon
 - replace ardsm by mqueue
 - add thread ID to the log
 - replace cvs+viewvc by git+cgit
