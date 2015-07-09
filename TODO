@@ -31,6 +31,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - i10n for french
+- replace gethostby*_r by getaddrinfo and co
 
 *** TODO MAYBE
 

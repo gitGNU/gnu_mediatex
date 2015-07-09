@@ -30,17 +30,17 @@ common_mandeps = $(top_srcdir)/configure.ac
 mediatex.cgi.1: $(top_srcdir)/src/cgi $(common_mandeps)
 	$(HELP2MAN) --no-discard-stderr --name="Mediatex cgi program" \
 	--info-page=mediatex \
-	$(top_srcdir)/src/cgi -o $@
+	../src/cgi -o $@
 
 mediatex.1: $(top_srcdir)/src/mediatex $(common_mandeps)
 	$(HELP2MAN) --no-discard-stderr --name="Mediatex client program" \
 	--info-page=mediatex \
-	$(top_srcdir)/src/mediatex -o $@
+	../src/mediatex -o $@
 
 mediatexd.1: $(top_srcdir)/src/mediatexd $(common_mandeps)
 	$(HELP2MAN) --no-discard-stderr --name="Mediatex server program" \
 	--info-page=mediatex \
-	$(top_srcdir)/src/mediatexd -o $@
+	../src/mediatexd -o $@
 
 clean-local:
 	rm -f *.1
