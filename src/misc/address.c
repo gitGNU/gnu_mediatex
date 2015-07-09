@@ -1,10 +1,8 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.6 2015/07/09 12:00:13 nroche Exp $
- * Project: 
+ * Version: $Id: address.c,v 1.7 2015/07/09 14:06:59 nroche Exp $
+ * Project: Mediatex
  * Module : socket address
-
- * affect socket address
- * note: 
+ *
  * The  gethostbyname*()  and  gethostbyaddr*()  functions  are  obsolete.
  * Applications should use getaddrinfo(3) and getnameinfo(3) instead.
 
@@ -27,11 +25,15 @@
 
 #include "mediatex-config.h"
 
-#include <netdb.h> // gethostbyaddr
+#include <netdb.h> // gethostbyaddr_r
 
 #include <sys/socket.h>  //
 #include <netinet/tcp.h> // inet_ntoa
 #include <arpa/inet.h>   //
+
+// It seems that gethostby*_r functions are obsolete too:
+//  https://sourceware.org/bugzilla/show_bug.cgi?id=515
+#define GETHOSTBY_BUFFER_SIZE 1024
 
 
 /*=======================================================================
@@ -50,11 +52,11 @@ getHostNameByAddr(struct in_addr* inAddr)
   char* rc = 0;
   struct hostent sHost;
   struct hostent *result = 0;
-  char buf[256];
+  char buf[GETHOSTBY_BUFFER_SIZE];
   int h_errnop = 0;
 
   if ((gethostbyaddr_r(inAddr, sizeof(struct in_addr), AF_INET,
-		       &sHost, buf, 256, &result, &h_errnop)) 
+		       &sHost, buf, GETHOSTBY_BUFFER_SIZE, &result, &h_errnop)) 
       || !result) {
     logEmit(LOG_NOTICE, 
 	    "gethostbyaddr_r: cannot retrieve host name for %s: %s",
@@ -117,7 +119,7 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
   int a,b,c,d;
   struct hostent sHost;
   struct hostent *result = 0;
-  char buf[256];
+  char buf[GETHOSTBY_BUFFER_SIZE];
   int h_errnop = 0;
 
   logEmit(LOG_DEBUG, "getIpFromHostname %s", hostname);
@@ -131,10 +133,11 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
     }
   }
   else {
-    if (gethostbyname_r(hostname, &sHost, buf, 256, &result, &h_errnop)
+    if (gethostbyname_r(hostname, &sHost, buf, GETHOSTBY_BUFFER_SIZE,
+			&result, &h_errnop)
 	|| !result) {
-      logEmit(LOG_ERR, "gethostbyname_r %s: (%i) %s", 
-	      hostname, h_errnop, hstrerror(h_errnop));
+      logEmit(LOG_ERR, "gethostbyname_r %s: %s", 
+	      hostname, hstrerror(h_errnop));
       goto error;
     }
     *ipv4 = *((struct in_addr *) sHost.h_addr);
