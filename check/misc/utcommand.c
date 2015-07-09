@@ -1,6 +1,6 @@
 /*=======================================================================
- * Version: $Id: utcommand.c,v 1.1 2015/07/01 10:49:54 nroche Exp $
- * Project: MediaTeX
+ * Version: $Id: utcommand.c,v 1.2 2015/07/09 14:06:59 nroche Exp $
+ * Project: Mediatex
  * Module : unit tests
  *
  * test for system API

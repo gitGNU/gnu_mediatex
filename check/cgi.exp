@@ -11,6 +11,7 @@ D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810
 # ^ LOCALE_DEMAND
         
 [err address.c] gethostbyname_r host1.mediatex.org: Unknown host
+[err address.c] getIpFromHostname fails
 [err address.c] buildSocketAddress fails
 [err connect.c] buildServerAddress fails
 [err connect.c] connectServer fails

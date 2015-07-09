@@ -1,12 +1,7 @@
 /* ======================================================================= 
- * Version: $Id: utaddress.c,v 1.2 2015/07/09 11:59:54 nroche Exp $
- * Project: 
+ * Version: $Id: utaddress.c,v 1.3 2015/07/09 14:06:59 nroche Exp $
+ * Project: Mediatex
  * Module : socket address
-
- * affect socket address
- * note: 
- * The  gethostbyname*()  and  gethostbyaddr*()  functions  are  obsolete.
- * Applications should use getaddrinfo(3) and getnameinfo(3) instead.
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche

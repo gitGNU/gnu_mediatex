@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.7 2015/07/09 14:06:59 nroche Exp $
+ * Version: $Id: address.c,v 1.8 2015/07/09 14:08:38 nroche Exp $
  * Project: Mediatex
  * Module : socket address
  *
@@ -33,6 +33,7 @@
 
 // It seems that gethostby*_r functions are obsolete too:
 //  https://sourceware.org/bugzilla/show_bug.cgi?id=515
+//  using 256 we get: gethostbyname_r fails: (-1) Resolver internal error
 #define GETHOSTBY_BUFFER_SIZE 1024
 
 
