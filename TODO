@@ -1,12 +1,14 @@
 
 *** TO TEST
 
-- upgrade current collections to NNN.txt
-- manage cgi header within port-forwarding
 - pgrof: test with more than 100k entries
 - find historical event into cvs's collections
 
 *** TO CORRECT
+
+- extractNNN.txt: agregate uploaded files into one uniq REC container
+- cache: look for ls's date for uploaded files (REC) so as to ignore
+  them for score computation for a given period (to add into conf) only.
 
 - move dirname into extract rule header to reduce extract.txt file size
 
@@ -20,12 +22,14 @@
   score computation also use md5sums.txt file
 -- extract.c::extractRecord modify tmpBasename
 
-- notify: do not notify bad archive when nbGeo remote copies exists ?
 - extract.txt add a path for REC from host-ro and incoming
 - upload (manage all 5-E-C combinaisons)
 - motd: add to burn and orphanes
 -- archive.h: USED, WANTED, ALLOCATED, AVAILABLE, TOKEEP... TOBURN?
 - allocate/freeing cache policy (optimize ; assert no diseases)
+
+- notify: do not notify bad archive when nbGeo remote copies exists ?
+--> I think its better all server get the archive for to ease user copy
 
 *** TODO
 
