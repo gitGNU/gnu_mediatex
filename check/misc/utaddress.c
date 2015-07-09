@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: utaddress.c,v 1.1 2015/07/01 10:49:54 nroche Exp $
+ * Version: $Id: utaddress.c,v 1.2 2015/07/09 11:59:54 nroche Exp $
  * Project: 
  * Module : socket address
 
@@ -26,12 +26,6 @@
  ======================================================================= */
 
 #include "mediatex.h"
-
-//#include <netdb.h>
-
-//#include <netinet/tcp.h> /* for TCP_NODELAY */
-//#include <sys/socket.h>
-//#include <arpa/inet.h>
 GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
@@ -45,10 +39,11 @@ static void
 usage(char* programName)
 {
   miscUsage(programName);
+  fprintf(stderr, "\n\t\t[ -H hostname ]");
 
   miscOptions();
-  //fprintf(stderr, "\t\t---\n");
-
+  fprintf(stderr, "  ---\n" 
+	  "  -H, --host\thostname or IP address\n");
   return;
 }
 
@@ -67,14 +62,16 @@ main(int argc, char** argv)
   struct sockaddr_in address;
   struct in_addr ipv4;
   char* text = 0;
+  char* localhost = "localhost";
+  char* inputHost = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"";
+  char* options = MISC_SHORT_OPTIONS "H:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
-    //{"input-file", required_argument, 0, 'i'},
+    {"host", required_argument, 0, 'H'},
     {0, 0, 0, 0}
   };
 
@@ -86,6 +83,21 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
+    case 'H':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for the hostname\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if (!(inputHost = createString(optarg))) {
+	fprintf(stderr, "cannot malloc the input hostname: %s", 
+		strerror(errno));
+	rc = ENOMEM;
+	break;
+      }
+      break;
+
       GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -95,28 +107,38 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (!getIpFromHostname(&ipv4, "localhost")) goto error;;
-  printf("IP of localhost is: %s\n", inet_ntoa(ipv4)); 
-  
+
+  // test on 127.0.0.1
   if (!buildSocketAddressEasy(&address, 0x7f000001, 7)) {
     logEmit(LOG_ERR, "%s", "error while building socket address (1)");
     goto error;
   } 
- 
   if ((text = getHostNameByAddr(&address.sin_addr)) == 0)
     goto error;
-
+  
   printf("host name of 0x7f000001 is: %s\n", text);
   free(text);
 
-  if (!buildSocketAddress(&address, "localhost", "udp", "echo")) {
+  // test in localhost (default) or input host parameter
+  if (!inputHost) inputHost = localhost;
+  if (!getIpFromHostname(&ipv4, inputHost)) goto error;;
+  printf("IP of %s is: %s\n", inputHost, inet_ntoa(ipv4)); 
+
+  if (!buildSocketAddress(&address, inputHost, "udp", "echo")) {
     logEmit(LOG_ERR, "%s", "error while building socket address (2)");
     goto error;
   }
+  
+  if ((text = getHostNameByAddr(&address.sin_addr)) == 0)
+    goto error;
+
+  printf("host name of %s is: %s\n", inet_ntoa(ipv4), text);
+  free(text);
   /************************************************************************/
 
   rc = TRUE;
  error:
+  if (inputHost != localhost) destroyString(inputHost);
   ENDINGS;
   rc=!rc;
  optError:

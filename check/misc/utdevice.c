@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utdevice.c,v 1.1 2015/07/01 10:49:55 nroche Exp $
+ * Version: $Id: utdevice.c,v 1.2 2015/07/09 11:59:55 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -36,7 +36,7 @@ GLOBAL_STRUCT_DEF;
 static void usage(char* programName)
 {
   miscUsage(programName);
-  fprintf(stderr, "\n\t\t[ -i device ]");
+  fprintf(stderr, "\n\t\t -i device ");
 
   miscOptions();
   fprintf(stderr, "  ---\n" 

@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.5 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: address.c,v 1.6 2015/07/09 12:00:13 nroche Exp $
  * Project: 
  * Module : socket address
 
@@ -113,12 +113,14 @@ getHostNameByAddr(struct in_addr* inAddr)
 int
 getIpFromHostname(struct in_addr *ipv4, const char* hostname)
 {
+  int rc = FALSE;
   int a,b,c,d;
   struct hostent sHost;
   struct hostent *result = 0;
   char buf[256];
   int h_errnop = 0;
 
+  logEmit(LOG_DEBUG, "getIpFromHostname %s", hostname);
   memset(ipv4, 0, sizeof(struct in_addr));
 
   // It should be an ipv4 address or a host name.
@@ -129,18 +131,21 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
     }
   }
   else {
-    if ((gethostbyname_r(hostname, &sHost, buf, 256, &result, &h_errnop)) 
+    if (gethostbyname_r(hostname, &sHost, buf, 256, &result, &h_errnop)
 	|| !result) {
-      logEmit(LOG_ERR, "gethostbyname_r %s: %s", 
-	      hostname, hstrerror(h_errnop));
+      logEmit(LOG_ERR, "gethostbyname_r %s: (%i) %s", 
+	      hostname, h_errnop, hstrerror(h_errnop));
       goto error;
     }
     *ipv4 = *((struct in_addr *) sHost.h_addr);
   }
 
-  return TRUE;
+  rc = TRUE;
  error:
-  return FALSE;
+  if(!rc) {
+    logEmit(LOG_ERR, "%s", "getIpFromHostname fails");
+  }
+  return rc;
 }
 
 

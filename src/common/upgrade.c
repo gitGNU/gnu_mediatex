@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.6 2015/07/09 11:59:55 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -388,6 +388,7 @@ upgradeCollection(Collection* coll)
   strncpy(localhost->host, conf->host, MAX_SIZE_HOST);
   localhost->mdtxPort = conf->mdtxPort;
   localhost->sshPort = conf->sshPort;
+  localhost->wwwPort = conf->wwwPort;
   if (!(localhost->comment = createString(conf->comment))) goto error;
   if (!(localhost->userKey = createString(coll->userKey))) goto error;
   if (!(localhost->hostKey = createString(conf->hostKey))) goto error;
