@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.5 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: archive.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -49,8 +49,8 @@ createArchive(void)
   if ((rc->demands = createRing()) == 0) goto error;
   if ((rc->remoteSupplies = createRing()) == 0) goto error;
   if ((rc->finaleSupplies = createRing()) == 0) goto error;
-  rc->extractScore = -1; // still not computed
   rc->imageScore = -1;   // still not computed
+  rc->extractScore = -1; // still not computed
   rc->state = UNUSED;
 
   return rc;
@@ -333,10 +333,9 @@ delArchive(Collection* coll, Archive* self)
   if (!delContainer(coll, self->toContainer)) goto error;
 
   // delete archive from content association
-  // (should be already done by above call)
   curr = 0;
   while((af = rgNext_r(self->fromContainers, &curr)) != 0)
-    if (!delFromAsso(coll, af, TRUE)) goto error;
+    if (!delFromAsso(coll, af)) goto error;
   
   // delete archive from document ring
   curr = 0;

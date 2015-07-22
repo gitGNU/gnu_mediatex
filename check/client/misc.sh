@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: misc.sh,v 1.1 2015/07/01 10:49:25 nroche Exp $
+# * Version: $Id: misc.sh,v 1.2 2015/07/22 10:45:13 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -35,10 +35,28 @@ TEST=${TEST%.sh}
 # run the unit test
 client/ut$TEST -d $srcdir >client/$TEST.out 2>&1
 
+[ -z "$1" ] || {
+    cat >${HOME}/mdtx1-coll1/public_html/.htaccess <<EOF
+# Server side includes
+Options +Includes
+DirectoryIndex index.shtml
+EOF
+
+    echo "please try browsing: "
+    echo " file://${HOME}/mdtx1-coll1/public_html/"
+    echo "or:"
+    echo " $ cp -r ${HOME}/mdtx1-coll1/public_html/ /var/www/html/ut"
+    echo " $ chown www-data -R /var/www/html/ut"
+    echo "modify apache configuration:"
+    echo "        <Directory /var/www/html/ut>"
+    echo "            Require all granted"
+    echo "            AllowOverride All"
+    echo "        </Directory>"
+    echo "and browse:"
+    echo " http://localhost/ut/"
+    exit 0
+}
+
 # compare with the expected output
 mrProperOutputs client/$TEST.out
 diff $srcdir/client/$TEST.exp client/$TEST.out
-
-[ -z "$1" ] && exit 0
-echo "please try browsing: "
-echo " file://${HOME}/mdtx-coll1/public_html/"

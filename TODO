@@ -3,33 +3,50 @@
 
 - pgrof: test with more than 100k entries
 - find historical event into cvs's collections
+======
+- extractNNN.txt: agregate uploaded files into one uniq INC container
 
-*** TO CORRECT
+- Problème avec le cache et les scores ?!
+--> computeArchiveStatus => ComputeExtractScore
 
-- extractNNN.txt: agregate uploaded files into one uniq REC container
-- cache: look for ls's date for uploaded files (REC) so as to ignore
-  them for score computation for a given period (to add into conf) only.
+- attention, à ne pas utiliser delRecord !
+utrecordTree segfault
+
+--> utFunc.c ... extractScore.c
+- score: look INC date to decide if score inpact or not on collection
+cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10) 
+
+- remove REC code
+
+*** TO CORRECT: cache policy
+
+- tests.sh: mediatex.css n'est pas recopie par serv2
+- upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+- add supp to coll remove REC entry from extract.txt
+- motd: add to burn and orphanes
+- catalogHtml: add warning for orphanes
+
+- cache/toKeep directory: 
+-- rename to cache/external
+-- replace path on extraction
+-- follow simlinks
+-- replace toKeep facility (date++) or not ? 
+---> md5sum not computed all times
+
+- score computation also use md5sums.txt file
+-- extract.c::extractRecord modify tmpBasename
 
 - move dirname into extract rule header to reduce extract.txt file size
-
 -- extract.c::extractTar modify asso->path -> getAssoPath()
 -- extractFile.y: container: extrTYPE archive ++extrSTRING
 -- extractTree.h: struct Container { ++char* pathPrefix;
 -- memory/utFunc.c
 -- misc/extract000.txt
 
-- cache: add host-ro directory and score ; scores for incoming files
-  score computation also use md5sums.txt file
--- extract.c::extractRecord modify tmpBasename
+- do not notify archive when nbGeo remote copies exists or not ?
+--> ease user copy as all servers get the archive
 
-- extract.txt add a path for REC from host-ro and incoming
-- upload (manage all 5-E-C combinaisons)
-- motd: add to burn and orphanes
--- archive.h: USED, WANTED, ALLOCATED, AVAILABLE, TOKEEP... TOBURN?
-- allocate/freeing cache policy (optimize ; assert no diseases)
-
-- notify: do not notify bad archive when nbGeo remote copies exists ?
---> I think its better all server get the archive for to ease user copy
+- explain tests (and configuration from utFunc)
 
 *** TODO
 

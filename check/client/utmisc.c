@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.1 2015/07/01 10:49:28 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.2 2015/07/22 10:45:14 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -102,7 +102,9 @@ main(int argc, char** argv)
   
   /************************************************************************/
   // build the HTML catalog
+  env.dryRun = FALSE;
   if (!mdtxMake("coll1")) goto error;
+  env.dryRun = TRUE;
 
   // upload a file
   if (!(path = createString(inputRep))) goto error;

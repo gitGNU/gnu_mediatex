@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.5 2015/07/03 16:02:14 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.6 2015/07/22 10:45:16 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -65,6 +65,10 @@
 #include "common/upgrade.h"
 #include "common/openClose.h"
 #include "common/extractScore.h"
+
+// alloc (alloc.h is not included by library user)
+extern void memoryStatus(int priority, char* file, int line);
+extern void exitMalloc();
 
 // parsers
 extern int parseSupports(const char* path);

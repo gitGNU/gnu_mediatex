@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
+ * Version: $Id: cache.c,v 1.6 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -163,9 +163,11 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
 
   if (toKeep) {
     record->date = 0x7FFFFFFF; // maximum date: server will restart before
-    logEmit(LOG_DEBUG, "%s", "is read-only file (will never try to delete it)");
+    logEmit(LOG_DEBUG, "%s", 
+	    "is read-only file (will never try to delete it)");
   }
 
+  // add file as local supply and compute its archive status
   if (!addCacheEntry(coll, record)) goto error;
 
  end:
@@ -324,7 +326,6 @@ quickScan(Collection* coll)
     // del the record from the cache
     logEmit(LOG_WARNING, "file not found in cache as expected: %s", path);
     if (!delCacheEntry(coll, supply)) goto error3;
-    //    if (!delRecord(coll, supply)) goto error4;
   } 
   while ((archive = next));
  end:
@@ -378,11 +379,59 @@ quickScanAll(void)
 }
 
 /*=======================================================================
+ * Function   : cacheStatus
+ * Description: log cache status
+ * Synopsis   : static void cacheStatus(Collection* coll)
+ * Input      : CacheTree* self
+ * Output     : off_t* free : free place on cache
+ *              off_t* available : free place if we remove perenials
+ *                                 archives
+ =======================================================================*/
+static void cacheSizes(CacheTree* self, off_t* free, off_t* available)
+{
+  /*
+  RG* archives = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
+  off_t used = 0;
+  off_t frozen = 0;
+  */
+
+  *free = self->totalSize - self->useSize;
+  *available = self->totalSize - self->frozenSize;
+
+  logEmit(LOG_INFO, "cache sizes:");
+  logEmit(LOG_INFO, "  total  %12llu", self->totalSize);
+  logEmit(LOG_INFO, "- used   %12llu", self->useSize);
+  logEmit(LOG_INFO, "= free   %12llu", *free);
+  logEmit(LOG_INFO, "  total  %12llu", self->totalSize);
+  logEmit(LOG_INFO, "- frozen %12llu", self->frozenSize);
+  logEmit(LOG_INFO, "= avail  %12llu", *available);
+
+  // was usefull to debug cache content:
+  // -----------------------------------
+  /* archives = self->archives; */
+  /* while ((archive = rgNext_r(archives, &curr))) { */
+  /*   //if (archive->state < ) continue; */
+  /*   record = archive->localSupply; */
+  /*   logEmit(LOG_INFO, "%-10s %20lli %s",  */
+  /* 	    strAState(archive->state), */
+  /* 	    archive->size, */
+  /* 	    record?record->extra:"-"); */
+  /*   if (archive->state >= ALLOCATED) used += archive->size; */
+  /*   if (archive->state == TOKEEP) frozen += archive->size; */
+  /* } */
+  /* logEmit(LOG_INFO, "used   = %12llu", used); */
+  /* logEmit(LOG_INFO, "frozen = %12llu", frozen); */
+}
+
+/*=======================================================================
  * Function   : freeAlloc
  * Description: try to make some place on cache
  * Synopsis   : static int 
  *              freeCache(Collection* coll, off_t need, int* success)
- * Input      : Collection* collection : collections to scan
+ * Input      : Collection* coll : collections to scan
  *              off_t need : the place we must found
  *              int* success : TRUE if there is room
  * Output     : FALSE on internal error
@@ -394,7 +443,6 @@ freeCache(Collection* coll, off_t need, int* success)
   Configuration* conf = 0;
   CacheTree* self = 0;
   Archive* archive = 0;
-  //Archive* next = 0;
   Record* record = 0;
   RG* archives = 0;
   off_t free = 0;
@@ -403,6 +451,7 @@ freeCache(Collection* coll, off_t need, int* success)
   char* path = 0;
   RGIT* curr = 0;
 
+  checkCollection(coll);
   logEmit(LOG_DEBUG, "free the %s cache", coll->label);
   *success = FALSE; 
   if (!(conf = getConfiguration())) goto error;
@@ -410,14 +459,8 @@ freeCache(Collection* coll, off_t need, int* success)
   self = coll->cacheTree;
 
   // cache sizes
-  free = self->totalSize - self->useSize;
-  available = self->totalSize - self->frozenSize;
-  logEmit(LOG_INFO, "need   = %12llu", need);
-  logEmit(LOG_INFO, "total  = %12llu", self->totalSize);
-  logEmit(LOG_INFO, "use    = %12llu", self->useSize);
-  logEmit(LOG_INFO, "free   = %12llu", free);
-  logEmit(LOG_INFO, "frozen = %12llu", self->frozenSize);
-  logEmit(LOG_INFO, "avail  = %12llu", available);
+  cacheSizes(self, &free, &available);
+  logEmit(LOG_INFO, "need     %12llu", need);
 
   // different cases :
   if (need > self->totalSize) {
@@ -438,8 +481,9 @@ freeCache(Collection* coll, off_t need, int* success)
   }
 
   // We will free some archive from the cache.
-  // some optimisation shoule great here: maybe sort on size ...
-  // but better sort on date (for tokeep...)
+  // some optimisation should be great here: maybe sort on size or
+  // date
+#warning to optimize
   //if (!rgSort(tree->records, cmpRecordDate)) goto error;
 
   // - compute scores (do not delete archive with bad score)
@@ -449,14 +493,14 @@ freeCache(Collection* coll, off_t need, int* success)
   archives = coll->cacheTree->archives;
   while (need > free && (archive = rgNext_r(archives, &curr))) {
 
-    // - orphane LOCAL_SUPPLY (not to keep nor final)
+    // looking for archive that resides into the cache
     if (archive->state < AVAILABLE) continue;
     record = archive->localSupply;
-    if (record->date > date) continue; // toKeep
-    
-    // - archive known in extract.txt and own a good score
-    if (archive->extractScore <= coll->serverTree->scoreParam.badScore)
-      continue;
+    logEmit(LOG_DEBUG, "check file: %s", record->extra);
+
+    // looking for perenial archive we can safely delete from the cache
+    if (!computeArchiveStatus(coll, archive)) goto error;
+    if (archive->state >= TOKEEP) continue;
 
     if (!(path = getAbsRecordPath(coll, record))) goto error;
 
@@ -473,13 +517,13 @@ freeCache(Collection* coll, off_t need, int* success)
       path = destroyString(path);
     }
 
-    free = self->totalSize - self->useSize;    
+    free = self->totalSize - self->useSize;
   }
-  free = self->totalSize - self->useSize;
+  
+  cacheSizes(self, &free, &available);
  
   if (!(*success = (need <= free))) {
-    logEmit(LOG_INFO, "*free* = %12llu", free);
-    logEmit(LOG_NOTICE, "%s's cache have no more room available now", 
+    logEmit(LOG_NOTICE, "%s's cache have no more room available", 
 	    coll->label);
   }
  end:
@@ -497,12 +541,17 @@ freeCache(Collection* coll, off_t need, int* success)
 /*=======================================================================
  * Function   : cacheAlloc
  * Description: try to make place on cache
- * Synopsis   : int cacheAlloc(Record** record, Collection* coll, Archive* archive)
+ * Synopsis   : int cacheAlloc(Record** record, Collection* coll, 
+ *                             Archive* archive)
  * Input      : Collection* collection : collections to scan
  *              Archive* archive : input archive to alloc
  *              int* success: TRUE on success
  * Output     : Record** record: the allocated record
  *              FALSE on internal error
+ *
+ * Note       : cacheAlloc use the MUTEX_ALLOC to be threads-safe
+ *              and share this mutex with keepArchive/unKeepArchive
+ *              (from cacheTree.c)
  =======================================================================*/
 int
 cacheAlloc(Record** record, Collection* coll, Archive* archive)

@@ -1,7 +1,7 @@
 [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
-[notice extractScore.c] coll1 collection: Very good perenniality (8.75)
-[notice extractScore.c] coll2 collection: Very good perenniality (8.75)
-[notice extractScore.c] coll3 collection: Very good perenniality (8.75)
+[emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
+[emerg extractScore.c] coll2 collection: Perenniality lost (0.00)
+[emerg extractScore.c] coll3 collection: Perenniality lost (0.00)
 [info utmotd.c] exit on success
 
 *****************************
@@ -16,4 +16,4 @@ Need to check your local supports:
 - SUPP23_logo.part1
 Looking for content from your shared supports:
 Looking for content to burn:
-
+- coll1 ( 0.00): 595 Ko- coll2 ( 0.00): 595 Ko- coll3 ( 0.00): 595 Ko

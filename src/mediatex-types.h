@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.2 2015/07/02 17:59:10 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.3 2015/07/22 10:45:16 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -131,10 +131,9 @@ typedef void* yyscan_t;
 #define DEFAULT_TTL_QUERY 7*DAY     // final-query  TTL 
 #define DEFAULT_TTL_CHECK 6*MONTH   // support check TTL
 #define DEFAULT_TTL_SUPP  5*YEAR    // support TTL
-#define DEFAULT_MAX_SCORE 20 // cf above
+#define DEFAULT_MAX_SCORE 10 // cf above
 #define DEFAULT_BAD_SCORE 1  // cf above
 #define DEFAULT_POW_SUPP  2  // cf above
-#define DEFAULT_POW_IMAGE 2  // cf above
 #define DEFAULT_FACT_SUPP 2  // cf above
 #define DEFAULT_MIN_GEO   2  // number of distantes copies expected
 
@@ -170,7 +169,13 @@ struct ScoreParam {
   time_t suppTTL;  // support time to live (around 5 years)
 };
 
-#define DEFAULT_SCORE_PARAM {10, 1, 2, 2, DEFAULT_TTL_SUPP}
+#define DEFAULT_SCORE_PARAM {			\
+    DEFAULT_MAX_SCORE,				\
+      DEFAULT_BAD_SCORE,			\
+      DEFAULT_POW_SUPP,				\
+      DEFAULT_FACT_SUPP,			\
+      DEFAULT_TTL_SUPP				\
+      }
 
 #define printCacheSize(fd, fmt, lbl, size) {		\
     fprintf(fd, fmt, lbl);				\

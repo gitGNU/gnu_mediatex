@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.6 2015/07/07 16:08:07 nroche Exp $
+ * Version: $Id: extract.c,v 1.7 2015/07/22 10:45:19 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -969,11 +969,15 @@ int extractContainer(ExtractData* data, Container* container)
   int found = FALSE;
 
   checkCollection(data->coll);
+
+#warning modif 15/7
+  // INC container are not designed for extraction (no parent)
+  if (container->type == INC) goto end;
+  //if (isEmptyRing(container->parents)) goto end;
+
   logEmit(LOG_DEBUG, "extract container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
-
-  if (isEmptyRing(container->parents)) goto end;
 
   // we extract all parents (only one for TGZ, several for CAT...)
   curr = 0;
@@ -982,6 +986,10 @@ int extractContainer(ExtractData* data, Container* container)
     if (!extractArchive(data, archive)) goto error;
     found = found && data->found;
   }
+
+  logEmit(LOG_INFO, "%sfound container %s/%s:%lli", data->found?"":"not ", 
+	  strEType(container->type), container->parent->hash,
+	  (long long int)container->parent->size);
 
   // postfix: copy container parts from final supplies
   if (!found) {
@@ -1001,15 +1009,13 @@ int extractContainer(ExtractData* data, Container* container)
   	}
       }
     }
+#warning modif 15/7
     // here we have only copy parts for next try
-    data->found = FALSE;
+    //data->found = FALSE;
   }
 
  end:
   data->found = found;
-  logEmit(LOG_INFO, "%sfound container %s/%s:%lli", data->found?"":"not ", 
-	  strEType(container->type), container->parent->hash,
-	  (long long int)container->parent->size);
   rc = TRUE;
  error:
   if (!rc) {
@@ -1150,14 +1156,12 @@ getWantedArchives(Collection* coll)
 
   // add top archives with bad score
   if (!computeExtractScore(coll)) goto error;
-   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= 0) {
+   while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
      if (archive->state < USED) continue;
      if (archive->state > WANTED) continue;
      if (archive->fromContainers->nbItems != 0) continue;
      if (archive->remoteSupplies->nbItems == 0) continue;
-     if (archive->extractScore > 10 
-	 /*coll->serverTree->scoreParam.badScore*/)
+     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
        continue;
     if (!rgInsert(ring, archive)) goto error;
   }

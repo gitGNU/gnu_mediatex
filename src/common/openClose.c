@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
+ * Version: $Id: openClose.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -237,7 +237,10 @@ collectionLoop(Collection* coll, int collFiles,
   logCommon(LOG_DEBUG, "file loop on %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
-  for (i=iCTLG; i<=iCACH; ++i) {
+#warning plouf
+  // cache need computeExtractScore so cache must be disease first
+  //for (i=iCTLG; i<=iCACH; ++i) {
+  for (i=iCACH; i>=iCTLG; --i) {
     if (collFiles & (1<<i)) {
       if (!callback(coll, i)) goto error;
     }

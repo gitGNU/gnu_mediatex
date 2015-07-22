@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: utaddress.c,v 1.3 2015/07/09 14:06:59 nroche Exp $
+ * Version: $Id: utaddress.c,v 1.4 2015/07/22 10:45:15 nroche Exp $
  * Project: Mediatex
  * Module : socket address
 
@@ -21,6 +21,7 @@
  ======================================================================= */
 
 #include "mediatex.h"
+extern void mdtxFree(void* ptr, char* file, int line);
 GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
@@ -112,7 +113,7 @@ main(int argc, char** argv)
     goto error;
   
   printf("host name of 0x7f000001 is: %s\n", text);
-  free(text);
+  mdtxFree(text, __FILE__, __LINE__);
 
   // test in localhost (default) or input host parameter
   if (!inputHost) inputHost = localhost;
@@ -128,7 +129,7 @@ main(int argc, char** argv)
     goto error;
 
   printf("host name of %s is: %s\n", inet_ntoa(ipv4), text);
-  free(text);
+  mdtxFree(text, __FILE__, __LINE__);
   /************************************************************************/
 
   rc = TRUE;

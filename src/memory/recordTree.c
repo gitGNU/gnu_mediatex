@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.5 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -294,6 +294,8 @@ RecordType
 getRecordType(Record* self)
 {
   RecordType rc = UNDEF_RECORD;
+
+  checkRecord(self);
 
   if (self->server->isLocalhost && isEmptyString(self->extra)) {
     logMemory(LOG_ERR, "%s", 
@@ -729,13 +731,9 @@ int delRecord(Collection* coll, Record* self)
     rgRemove_r(self->server->records, &curr);
   }
 
-  // del record to collection's cache
-  if ((curr = rgHaveItem(coll->cacheTree->recordTree->records, self))) {
-    rgRemove_r(coll->cacheTree->recordTree->records, &curr);
-  }
-
   // free the record
   self = destroyRecord(self);
+
   rc = TRUE;
  error:
  if (!rc) {
@@ -762,8 +760,10 @@ diseaseRecordTree(RecordTree* self)
   logMemory(LOG_DEBUG, "Disease %s related record tree", 
 	  self->collection->label);
   
-  while((record = rgHead(self->records)) != 0)
+  while((record = rgHead(self->records)) != 0) {
     if (!delRecord(self->collection, record)) goto error;
+    rgDelete(self->records);
+  }
   
   rc = TRUE;
  error:

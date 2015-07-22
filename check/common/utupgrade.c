@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupgrade.c,v 1.1 2015/07/01 10:49:34 nroche Exp $
+ * Version: $Id: utupgrade.c,v 1.2 2015/07/22 10:45:14 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/upgrade
  *
@@ -85,8 +85,6 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-   env.dryRun = TRUE;
-
   if (!(conf = getConfiguration())) goto error;
   if (!parseConfiguration(conf->confFile)) goto error;
   if (!parseSupports(conf->supportDB)) goto error;

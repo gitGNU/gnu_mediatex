@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.5 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -27,16 +27,20 @@
 
 #include "mediatex-types.h"
 
-typedef enum {UNDEF=0, REC, ISO, 
+// Container types
+typedef enum {UNDEF=0, 
+	      INC,                   // for uploads not already burned
+	      ISO,                   // CD image
 	      CAT,                   // generic way to do multi-volume
 	      TGZ, TBZ, AFIO,        // GNU/Linux agregation + compression
 	      TAR, CPIO,             // GNU/Linux agregation only
 	      GZIP, BZIP,            // GNU/Linux compression only  
 	      ZIP, RAR,              // windows agregation + compression
 	      ETYPE_MAX} EType;
+
 // note: native multi-volume is only managed for rar archives
 //       (this should be done later for the others too)
-//       however, split provide a generic way to do that for all
+//       however, split/cat provide a generic way to do that for all
 
 // Record from container association
 struct FromAsso {
@@ -58,9 +62,9 @@ struct Container {
 
 struct ExtractTree {
   AVLTree* containers;
+  Container* incoming;   // special container with no parent
 
   float score;           // global score for the collection
-  int   maxNodeNumber;   // use to set id to containers
 };
 
 
@@ -91,7 +95,7 @@ int delFromArchive(Collection* coll, Container* container,
 
 FromAsso* addFromAsso(Collection* coll, Archive* archive, 
 		      Container* container, char* path);
-int delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer);
+int delFromAsso(Collection* coll, FromAsso* self);
 
 Container* addContainer(Collection* coll, EType type, Archive* parent);
 int delContainer(Collection* coll, Container* self);

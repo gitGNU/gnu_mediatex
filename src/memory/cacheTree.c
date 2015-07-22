@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.5 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -27,10 +27,13 @@
 
 /*=======================================================================
  * Function   : lockCacheRead
- * Description: lock cache for read
+ * Description: lock cache for read (use and insert records)
  * Synopsis   : int lockCacheRead(CacheTree* self)
  * Input      : CacheTree* self
  * Output     : TRUE on success
+ *
+ * Note       : Server's threads use the cache for reading
+ *              simultaneously (using 3 mutexes)
  =======================================================================*/
 int lockCacheRead(Collection* coll)
 {
@@ -56,7 +59,7 @@ int lockCacheRead(Collection* coll)
 
 /*=======================================================================
  * Function   : lockCacheWrite
- * Description: lock cache for write
+ * Description: lock cache for write (remove records marked 'removed')
  * Synopsis   : int lockCacheWrite(CacheTree* self)
  * Input      : CacheTree* self
  * Output     : TRUE on success
@@ -242,8 +245,11 @@ haveRecords(RG* ring)
  * Synopsis   : int computeArchiveStatus(Archive* self)
  * Input      : Archive* self = the archive
  * Output     : TRUE on success
+ *
+ * Note       : This function and only this one use the
+ *              MUTEX_COMPUTE mutex so as to be threads-safe
  =======================================================================*/
-static int 
+int 
 computeArchiveStatus(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
@@ -258,6 +264,10 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   previousState = archive->state;
   logMemory(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
 	  archive->hash, archive->size);
+
+  // compute scores (keep archive with bad score)
+#warning need to be protected (or not) ?
+  if (!computeExtractScore(coll)) goto error;
 
   if ((date = currentTime()) == -1) goto error; 
 
@@ -298,13 +308,17 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   }
 
   // state 5: to keep
-  if (archive->localSupply->date > date) {
+  // unknown in extract.txt or having a bad score
+  // or archive still in use for extraction
+  if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2
+      || archive->localSupply->date > date) {
     archive->state = TOKEEP;
   }
     
  end:
-  logMemory(LOG_INFO, "state: %s -> %s", 
-	  strAState(previousState), strAState(archive->state));
+  logMemory(LOG_INFO, "archive status %s%lli: %s -> %s", 
+	    archive->hash, (long long int)archive->size,
+	    strAState(previousState), strAState(archive->state));
 
   // become allocated
   if (previousState < ALLOCATED && archive->state >= ALLOCATED)
@@ -315,11 +329,11 @@ computeArchiveStatus(Collection* coll, Archive* archive)
     coll->cacheTree->useSize -= archive->size;
 
   // become to be keept
-  if (previousState < TOKEEP && archive->state == TOKEEP)
+  if (previousState < TOKEEP && archive->state >= TOKEEP)
      coll->cacheTree->frozenSize += archive->size;
 
   // become not to keept anymore
-  if (previousState == TOKEEP && archive->state <= TOKEEP)
+  if (previousState >= TOKEEP && archive->state < TOKEEP)
     coll->cacheTree->frozenSize -= archive->size;
 
   rc = TRUE;
@@ -375,7 +389,7 @@ int addCacheEntry(Collection* coll, Record* record)
   }
 
   if (record->type & REMOVE) {
-    logMemory(LOG_ERR, "%s", "cannot add a record marked as removed");
+    logMemory(LOG_ERR, "%s", "cannot add a record marked 'removed'");
     goto error;
   }
 
@@ -503,6 +517,11 @@ int delCacheEntry(Collection* coll, Record* record)
  *              Archive* archive = archive to keep
  *              RecordType type = use to compute time to keep
  * Output     : TRUE on success
+ *
+ * Note       : keepArchive and unKeepArchive are using MUTEX_KEEP
+ *              manage the concurents calls.
+ *              Keeping archive is only related to extraction delay, 
+ *              but it is not related with scores 
  =======================================================================*/
 int
 keepArchive(Collection* coll, Archive* archive, RecordType type)
@@ -548,7 +567,7 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
     date += archive->size / (conf->uploadRate >> 5);
     break;
   case REMOTE_DEMAND:
-    // scp (time between 2 extraction on local server)
+    // scp (time between 2 extractions on local server)
     date += 1*DAY;
     break;
   default:
@@ -594,7 +613,8 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
  *              Archive* archive = archive to un-keep
  *              time_t prevDate = date to set
  * Output     : TRUE on success
- * Note       : only the temporary record use during extraction 
+ *
+ * Note       : only the temporary records used during extraction 
  *              should be unkeep
  =======================================================================*/
 int

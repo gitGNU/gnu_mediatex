@@ -125,12 +125,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
-[info cache.c] need   =        24546
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24546
-[info cache.c] free   =    104833054
-[info cache.c] frozen =        24546
-[info cache.c] avail  =    104833054
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24546
+[info cache.c] = free      104833054
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24546
+[info cache.c] = avail     104833054
+[info cache.c] need            24546
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
@@ -143,12 +145,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info extract.c] del to-keep on c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        49092
-[info cache.c] free   =    104808508
-[info cache.c] frozen =        24546
-[info cache.c] avail  =    104833054
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          49092
+[info cache.c] = free      104808508
+[info cache.c]   total     104857600
+[info cache.c] - frozen        28612
+[info cache.c] = avail     104828988
+[info cache.c] need            24075
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -240,12 +244,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e b5810aba99ed0d15f1f0a073e
 [info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
 [info extract.c] found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        25045
-[info cache.c] free   =    104832555
-[info cache.c] frozen = 18446744073709504436
-[info cache.c] avail  =    104904780
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          25045
+[info cache.c] = free      104832555
+[info cache.c]   total     104857600
+[info cache.c] - frozen        25045
+[info cache.c] = avail     104832555
+[info cache.c] need            24075
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -345,12 +351,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e d79581b67ec1932fd276dcf3b
 [info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
 [info extract.c] found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
 [info extract.c] found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24733
-[info cache.c] free   =    104832867
-[info cache.c] frozen = 18446744073709431899
-[info cache.c] avail  =    104977317
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24733
+[info cache.c] = free      104832867
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24733
+[info cache.c] = avail     104832867
+[info cache.c] need            24075
 [info command.c] execScript: /usr/bin/unzip
 [info command.c]  arg1: -d
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -441,12 +449,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e f54fba7d2e070d48051ac3f8f
 [info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
 [info extract.c] found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
 [info extract.c] found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        30720
-[info cache.c] free   =    104826880
-[info cache.c] frozen = 18446744073709365661
-[info cache.c] avail  =    105043555
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          30720
+[info cache.c] = free      104826880
+[info cache.c]   total     104857600
+[info cache.c] - frozen        30720
+[info cache.c] = avail     104826880
+[info cache.c] need            24075
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -540,12 +550,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
 [info extract.c] found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
 [info extract.c] found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
-[info cache.c] need   =        25088
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24457
-[info cache.c] free   =    104833143
-[info cache.c] frozen = 18446744073709287173
-[info cache.c] avail  =    105122043
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24457
+[info cache.c] = free      104833143
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24457
+[info cache.c] = avail     104833143
+[info cache.c] need            25088
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/zcat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio.gz >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio
@@ -557,12 +569,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info extract.c] del to-keep on 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
 [info extract.c] found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
 [info extract.c] found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        49545
-[info cache.c] free   =    104808055
-[info cache.c] frozen = 18446744073709287804
-[info cache.c] avail  =    105121412
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          49545
+[info cache.c] = free      104808055
+[info cache.c]   total     104857600
+[info cache.c] - frozen        49545
+[info cache.c] = avail     104808055
+[info cache.c] need            24075
 [info command.c] execScript PWD=LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3: /bin/cpio
 [info command.c]  arg1: -i
 [info command.c]  arg2: --file
@@ -660,12 +674,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
 [info extract.c] found archive fa2b0b536bf61f61617528c474e0bf61:24973
 [info extract.c] found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
-[info cache.c] need   =        25088
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24973
-[info cache.c] free   =    104832627
-[info cache.c] frozen = 18446744073709215464
-[info cache.c] avail  =    105193752
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24973
+[info cache.c] = free      104832627
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24973
+[info cache.c] = avail     104832627
+[info cache.c] need            25088
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/bzcat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio.bz2 >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio
@@ -677,12 +693,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info extract.c] del to-keep on fa2b0b536bf61f61617528c474e0bf61:24973
 [info extract.c] found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
 [info extract.c] found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        50061
-[info cache.c] free   =    104807539
-[info cache.c] frozen = 18446744073709215579
-[info cache.c] avail  =    105193637
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          50061
+[info cache.c] = free      104807539
+[info cache.c]   total     104857600
+[info cache.c] - frozen        50061
+[info cache.c] = avail     104807539
+[info cache.c] need            24075
 [info command.c] execScript PWD=LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3: /bin/cpio
 [info command.c]  arg1: -i
 [info command.c]  arg2: --file

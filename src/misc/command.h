@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.5 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: command.h,v 1.6 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -224,17 +224,11 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Input      : N/A
  * Output     : N/A
  =======================================================================*/
-#ifdef MDTX_MISC_ALLOC_H
 #define ENDINGS								\
   logEmit(LOG_INFO, "exit on %s", rc?"success":"error");		\
   if (env.debugAlloc) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);	\
   exitMalloc();								\
   env.logHandler = logClose(env.logHandler)
-#else
-#define ENDINGS								\
-  logEmit(LOG_INFO, "exit on %s", rc?"success":"error");		\
-  env.logHandler = logClose(env.logHandler)
-#endif
 
 #endif /* MDTX_MISC_COMMAND_H */
 

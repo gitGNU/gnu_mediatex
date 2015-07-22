@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.4 2015/06/30 17:37:38 nroche Exp $
+ * Version: $Id: notify.c,v 1.5 2015/07/22 10:45:19 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -232,7 +232,7 @@ int addBadTopLocalSupplies(NotifyData* data)
 	!= 0) {
     if (archive->state < AVAILABLE) continue;
     if (archive->fromContainers->nbItems != 0) continue;
-    if (archive->extractScore > 10) 
+    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2) 
       continue;
 
     /* check minGeoDup and nb REMOTE_SUPPLY

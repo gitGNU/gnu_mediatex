@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.5 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -140,6 +140,7 @@ computeContainer(Container* self, int depth)
   Archive* archive = 0;
 
   checkContainer(self);
+  if (self->type == INC) goto error; // no score for incoming container
   if (self->score != -1) goto quit; // already computed
   logCommon(LOG_DEBUG, "%*s computeContainer %s/%s:%lli", 
 	  depth, "", strEType(self->type),
@@ -168,11 +169,66 @@ computeContainer(Container* self, int depth)
 
 
 /*=======================================================================
+ * Function   : checkIncoming
+ * Description: Check incoming status (no penalty for new incomings)
+ * Synopsis   : int checkIncoming(Container* self, FromAsso* asso)
+ * Input      : Archive* self
+ *              FromAsso* asso
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+checkIncoming(Archive* self, FromAsso* asso, int depth)
+{
+  int rc = FALSE;
+  struct tm date;
+  time_t time = 0;
+
+  checkArchive(self);
+  logCommon(LOG_DEBUG, "%*s checkIncoming %s:%lli", 
+	    depth, "", self->hash, (long long int)self->size);
+
+  memset(&date, 0, sizeof(struct tm));
+  if (sscanf(asso->path, "%d-%d-%d,%d:%d:%d",
+	       &date.tm_year, &date.tm_mon, &date.tm_mday,
+	       &date.tm_hour, &date.tm_min, &date.tm_sec)
+	!= 6) {
+      logEmit(LOG_ERR, "sscanf: error parsing date %s", asso->path);
+      goto error;
+    }
+  date.tm_year -= 1900; // from GNU/Linux burning date
+  date.tm_mon -= 1;     // month are managed from 0 to 11 
+  date.tm_isdst = -1; // no information available about spring horodatage
+  if ((time = mktime(&date)) == -1) {
+    logEmit(LOG_ERR, "%s", "mktime: error parsing date");
+    goto error;
+  }
+
+  // affect display score only if too old
+  if (currentTime() < time + 1*MONTH) {
+    self->isIncoming = TRUE;
+    logCommon(LOG_DEBUG, "%*s incoming archive: %s:%lli", 
+	      depth, "", self->hash, (long long int)self->size); 
+  }
+  else {
+    logCommon(LOG_DEBUG, "%*s too old incoming archive: %s:%lli", 
+	      depth, "", self->hash, (long long int)self->size); 
+  }
+  
+  rc = TRUE;
+ error:
+ if (!rc) {
+    logCommon(LOG_ERR, "%s", "checkIncoming fails");
+  }
+  return rc;
+}
+
+
+/*=======================================================================
  * Function   : computeArchive
  * Description: Compute content score (from container's scores)
  * Synopsis   : int computeArchive(Archive* self)
  * Input      : ExtractTree* self
- * Output     : ??
+ * Output     : TRUE on success
  =======================================================================*/
 int 
 computeArchive(Archive* self, int depth)
@@ -192,9 +248,15 @@ computeArchive(Archive* self, int depth)
   if (self->fromContainers != 0) {
     rgRewind(self->fromContainers);
     while((asso = rgNext(self->fromContainers)) != 0) {
-      if (!computeContainer(asso->container, depth+1)) goto error;
-      if (self->extractScore < asso->container->score) {
-	self->extractScore = asso->container->score;
+
+      if (asso->container->type != INC) {
+	if (!computeContainer(asso->container, depth+1)) goto error;
+	if (self->extractScore < asso->container->score) {
+	  self->extractScore = asso->container->score;
+	}
+      }
+      else {
+	if (!checkIncoming(self, asso, depth+1)) goto error;
       }
     }
   }
@@ -252,26 +314,10 @@ computeExtractScore(Collection* coll)
       archive = (Archive*)node->item;
       if (!computeArchive(archive, 0)) goto error2;
 
-      // do not dumb score with outdated rules, only looks for
-      // final contents and images
-      //       imageScore  toContainer  toContainer->type
-      // IMG       x          x            x      <--
-      // REC      -1          x            REC
-      // CONT     -1          x            x
-      // content  -1          0         -      <--
-      if (archive->imageScore == -1 && archive->toContainer) continue;
+      // do not display a global bad score due to incomings
+      if (archive->isIncoming) continue;
 
-      /*
-      // do not consider archives that do not figure into the
-      // extraction rule meta-data file (from md5sums file for instance)
-      //                                         fromContainer
-      // IMG       x          x            x      *       <--
-      // content  -1          0         -      +       <--
-      // record   -1          0         -      0
-      if (archive->imageScore == -1 && !archive->fromContainers->nbItems)
-	continue;
-      */
-
+      // global score = min ( archive's score )
       if (archive->extractScore > -1) {
 	if (self->score > archive->extractScore) 
 	  self->score = archive->extractScore;
@@ -326,27 +372,10 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
   for(node = coll->archives->head; node; node = node->next) {
     archive = (Archive*) node->item;
     
-    // only look for content files and REC containers (uploaded files)
-    //       imageScore  toContainer  toContainer->type
-    // IMG       x          x            x     
-    // REC      -1          x            REC    <--
-    // CONT     -1          x            x
-    // content  -1          0         -      <--
-    if (archive->toContainer && archive->toContainer->type != REC) 
-      continue;
+    // do not display a global bad score due to incomings
+    if (archive->isIncoming) continue;
 
-    /*
-    // do not consider archives that do not figure into the
-    // extraction rule meta-data file (from md5sums file for instance)
-    //                                         fromContainer
-    // REC      -1          x            REC    0       <--
-    // content  -1          0         -      +       <--
-    // record   -1          0         -      0
-    if (!archive->toContainer && !archive->fromContainers->nbItems)
-      continue;
-    */
-
-    if (archive->extractScore < 5) {
+    if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2) {
       if (badArchives && !rgInsert(*badArchives, archive)) goto error;
       *badSize += archive->size;
     }

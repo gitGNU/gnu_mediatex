@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.6 2015/07/03 13:20:45 nroche Exp $
+ * Version: $Id: alloc.c,v 1.7 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -227,7 +227,7 @@ void mdtxFree(void* ptr, char* file, int line)
 
 /*=======================================================================
  * Function   : exitMalloc
- * Description: Initialize internal mutex
+ * Description: Check memory leaks before exiting
  * Synopsis   : void exitMalloc()
  * Input      : N/A
  * Output     : TRUE on success

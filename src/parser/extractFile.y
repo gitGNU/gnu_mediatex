@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.y,v 1.5 2015/07/03 17:37:32 nroche Exp $
+ * Version: $Id: extractFile.y,v 1.6 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *
@@ -126,7 +126,19 @@ stanza: extrOPEN container parents extrIMPLIES childs extrCLOSE
 
 container: extrTYPE archive
 {
+  if ($1 == INC) {
+    logParser(LOG_ERR, "INC container cannot have parent");
+    YYERROR;
+  }
   if (!(container = addContainer(coll, $1, $2))) YYERROR;
+}
+         | extrTYPE
+{
+  if ($1 != INC) {
+    logParser(LOG_ERR, "basic containers must have parent");
+    YYERROR;
+  }
+  container = coll->extractTree->incoming;
 }
 ;
 

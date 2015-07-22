@@ -123,12 +123,14 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Ask for too much place :
 [notice utcache.c] ..........................................................
-[info cache.c] need   =    104855552
-[info cache.c] total  =    104857600
-[info cache.c] use    =       839119
-[info cache.c] free   =    104018481
-[info cache.c] frozen =       765952
-[info cache.c] avail  =    104091648
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used         839119
+[info cache.c] = free      104018481
+[info cache.c]   total     104857600
+[info cache.c] - frozen       794564
+[info cache.c] = avail     104063036
+[info cache.c] need        104857600
 [notice cache.c] coll3's cache have no more room available now
 [info cache.c] fails add record into coll3 cache
 [notice utcache.c] ..........................................................
@@ -159,12 +161,14 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Ask for little place so do not suppress anything :
 [notice utcache.c] ..........................................................
-[info cache.c] need   =    104016433
-[info cache.c] total  =    104857600
-[info cache.c] use    =       839119
-[info cache.c] free   =    104018481
-[info cache.c] frozen =       765952
-[info cache.c] avail  =    104091648
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used         839119
+[info cache.c] = free      104018481
+[info cache.c]   total     104857600
+[info cache.c] - frozen       794564
+[info cache.c] = avail     104063036
+[info cache.c] need        104018481
 [notice utcache.c] ..........................................................
 [notice utcache.c] reply : 1
 [notice utcache.c] ..........................................................
@@ -184,7 +188,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c55
 # ^ LOCALE_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
 # ^ LOCALE_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           104016433 *malloc
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           104018481 *malloc
 # ^ LOCALE_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 # ^ LOCALE_SUPPLY
@@ -195,16 +199,23 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Ask for place so as we need to suppress files :
 [notice utcache.c] ..........................................................
-[info cache.c] need   =    104089600
-[info cache.c] total  =    104857600
-[info cache.c] use    =       839119
-[info cache.c] free   =    104018481
-[info cache.c] frozen =       765952
-[info cache.c] avail  =    104091648
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used         839119
+[info cache.c] = free      104018481
+[info cache.c]   total     104857600
+[info cache.c] - frozen       794564
+[info cache.c] = avail     104063036
+[info cache.c] need        104063036
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.png
-[notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
-[notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used         794564
+[info cache.c] = free      104063036
+[info cache.c]   total     104857600
+[info cache.c] - frozen       794564
+[info cache.c] = avail     104063036
 [notice utcache.c] ..........................................................
 [notice utcache.c] reply : 1
 [notice utcache.c] ..........................................................
@@ -216,23 +227,27 @@ Headers
 	DoCypher	FALSE       
 Body          
 #                date                             host                             hash                size extra
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+# ^ LOCALE_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 # ^ LOCALE_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb           104089600 *malloc
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 # ^ LOCALE_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 # ^ LOCALE_SUPPLY
-      
+            
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] API to upload files :
 [notice utcache.c] ..........................................................
-[info cache.c] need   =         1937
-[info cache.c] total  =    104857600
-[info cache.c] use    =    104855552
-[info cache.c] free   =         2048
-[info cache.c] frozen =       765952
-[info cache.c] avail  =    104091648
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used         794564
+[info cache.c] = free      104063036
+[info cache.c]   total     104857600
+[info cache.c] - frozen       794564
+[info cache.c] = avail     104063036
+[info cache.c] need             1937
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/README
@@ -249,15 +264,17 @@ Headers
 	DoCypher	FALSE       
 Body          
 #                date                             host                             hash                size extra
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+# ^ LOCALE_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 # ^ LOCALE_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3f18841537668dcf4fafd1471c64d52d                1937 incoming/2010-01/README
 # ^ LOCALE_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb           104089600 *malloc
+S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 # ^ LOCALE_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 # ^ LOCALE_SUPPLY
-
+      
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Clean the cache:

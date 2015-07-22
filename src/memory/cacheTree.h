@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.5 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -84,6 +84,8 @@ CacheTree* destroyCacheTree(CacheTree* self);
 int lockCacheRead(Collection* coll);
 int lockCacheWrite(Collection* coll);
 int unLockCache(Collection* coll);
+
+int computeArchiveStatus(Collection* coll, Archive* archive);
 
 int addCacheEntry(Collection* coll, Record* record);
 int delCacheEntry(Collection* coll, Record* record);

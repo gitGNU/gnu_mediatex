@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: have.c,v 1.5 2015/07/22 10:45:19 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -241,11 +241,12 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
   if (!haveArchive(&data, iso->archive)) goto error4;
 
   // if we still have room, dump the iso if it is not perenne
+#warning test for place before to dump the iso ?
   if (iso->archive->fromContainers->nbItems == 0
       && iso->archive->state < AVAILABLE) {
     if (!computeExtractScore(data.coll)) goto error4;
     if (iso->archive->extractScore 
-	<= 10 /*data.coll->serverTree->scoreParam.badScore*/) {
+	<= data.coll->serverTree->scoreParam.maxScore /2) {
       data.target = iso->archive;
       if (!extractArchive(&data, iso->archive)) {
 	logEmit(LOG_WARNING, "%s", "need more place ?");

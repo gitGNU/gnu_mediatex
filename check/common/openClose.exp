@@ -1,4 +1,8 @@
-[info openClose.c] estimate 131 steps for load
+[info openClose.c] estimate 137 steps for load
 [info openClose.c] parse coll1 collection (5SXC)
 [info openClose.c] load coll1 records
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection ( SX )
+[info openClose.c] steps: 93 / 93
+[info openClose.c] steps: 137 / 93
 [info utopenClose.c] exit on success

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.5 2015/07/22 10:45:18 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -38,7 +38,8 @@ strEType(EType self)
 {
 
   static char* typeLabels[ETYPE_MAX] =
-    {"UNDEF", "REC", "ISO", "CAT", 
+    {"UNDEF", 
+     "INC", "ISO", "CAT", 
      "TGZ", "TBZ", "AFIO",
      "TAR", "CPIO", 
      "GZIP", "BZIP",
@@ -63,7 +64,7 @@ strEType(EType self)
 EType
 getEType(char* label)
 {
-  if (!strcasecmp(label, "REC")) return REC;
+  if (!strcasecmp(label, "INC")) return INC;
   if (!strcasecmp(label, "ISO")) return ISO;
   if (!strcasecmp(label, "CAT")) return CAT;
   if (!strcasecmp(label, "TGZ")) return TGZ;
@@ -163,7 +164,7 @@ createContainer(void)
 	avl_alloc_tree(cmpFromAssoAvl, 
 		       (avl_freeitem_t)destroyFromAsso)))
     goto error;
-  rc->score = -1; // still not comuted
+  rc->score = -1; // still not computed
 
   return rc;  
  error:  
@@ -220,13 +221,17 @@ serializeContainer(Container* self, CvsFile* fd)
   cvsPrint(fd, "\n(%s\n", strEType(self->type));
   fd->doCut = FALSE;
  
-  rgRewind(self->parents);
-  if ((archive = rgNext(self->parents)) == 0) goto error;
-  do {
-    if (!serializeExtractRecord(archive, fd)) goto error;
-    cvsPrint(fd, "\n");
-  }  while ((archive = rgNext(self->parents)) != 0);
+  // serialise parents (only INC container doesn't have parent)
+  if (self->type != INC) {
+    rgRewind(self->parents);
+    if ((archive = rgNext(self->parents)) == 0) goto error;
+    do {
+      if (!serializeExtractRecord(archive, fd)) goto error;
+      cvsPrint(fd, "\n");
+    }  while ((archive = rgNext(self->parents)) != 0);
+  }
 
+  // serialize childs
   if (avl_count(self->childs) > 0) {
     cvsPrint(fd, "=>\n");
 
@@ -263,8 +268,13 @@ cmpContainerAvl(const void *p1, const void *p2)
   Container* v2 = (Container*)p2;
 
   rc = v1->type - v2->type;
-  if (!rc) rc = cmpArchive(&v1->parent, &v2->parent);
 
+  // manage INC container (which has no parent)
+  if (!v1->parent && !v2->parent) return 0;
+  if (!v1->parent) return -1;
+  if (!v2->parent) return +1;
+
+  if (!rc) rc = cmpArchive(&v1->parent, &v2->parent);
   return rc;
 }
 
@@ -313,6 +323,11 @@ createExtractTree(void)
 	avl_alloc_tree(cmpContainerAvl, 
 		       (avl_freeitem_t)destroyContainer)))
     goto error;
+
+  // special INC container for newly uploaded files
+  if (!(rc->incoming = createContainer())) goto error;
+  rc->incoming->type = INC;
+
   rc->score = -1;
 
   return rc;
@@ -335,6 +350,8 @@ destroyExtractTree(ExtractTree* self)
   if (!self) goto error;
 
   avl_free_tree(self->containers);
+  self->incoming = destroyContainer(self->incoming);
+
   free(self);
 
  error:
@@ -379,6 +396,12 @@ serializeExtractTree(Collection* coll)
   cvsPrint(&fd, "# MediaTeX extraction metadata: %s\n", coll->label);
   //cvsPrint(&fd, "# Version: $" "Id" "$\n");
 
+  // serialize INC container if not empty
+  if (avl_count(self->incoming->childs) > 0) {
+    if (!serializeContainer(self->incoming, &fd)) goto error;
+  }
+
+  // serialize all other containers
   if (avl_count(self->containers)) {
     for(node = self->containers->head; node; node = node->next) {
       container = node->item;
@@ -415,16 +438,23 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   checkCollection(coll);
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "addFromArchive %s/%s:%lli -> %s:%lli",
-	  strEType(container->type), container->parent->hash,
-	  (long long int)container->parent->size,
-	  archive->hash, (long long int)archive->size);
+	    strEType(container->type), 
+	    container->type == INC?"-":container->parent->hash,
+	    container->type == INC?0:
+	    (long long int)container->parent->size,
+	    archive->hash, (long long int)archive->size);
 
+  if (container->type == INC) {
+    logMemory(LOG_ERR, "%s", 
+	      "INC container cannot have parent");
+    goto error;
+  }
+  
   if (container->parents->nbItems == 0) goto next;
   switch (container->type) {
-  case REC:
   case ISO:
     logMemory(LOG_ERR, "%s", 
-	    "REC and ISO containers must only comes from one archive");
+	    "ISO containers must only comes from one archive");
     goto error;
   case TGZ:
   case TBZ:
@@ -454,7 +484,10 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
 
   // link container to archive
   if (archive->toContainer) {
-    logMemory(LOG_ERR, "%s", "archive already comes from another container");
+    logMemory(LOG_ERR, "archive already comes from %s/%s:%lli container",
+	      strEType(archive->toContainer->type),
+	      archive->toContainer->parent->hash, 
+	      (long long int)archive->toContainer->parent->size);
     goto error;
   }
   archive->toContainer = container;
@@ -470,7 +503,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
 
 /*=======================================================================
  * Function   : delFromArchive
- * Description: Del an archive prents to a container
+ * Description: Del an archive parent from a container
  * Synopsis   : int getFromArchive(Collection* coll, 
  *                               Container* container, Archive* archive);
  * Input      : Collection* coll : where to del
@@ -488,9 +521,11 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
   checkCollection(coll);
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "delFromArchive %s/%s:%lli -> %s:%lli",
-	  strEType(container->type), container->parent->hash, 
-	  (long long int)container->parent->size,
-	  archive->hash, (long long int)archive->size);
+	    strEType(container->type), 
+	    container->type == INC?"-":container->parent->hash,
+	    container->type == INC?0:
+	    (long long int)container->parent->size,
+	    archive->hash, (long long int)archive->size);
 
   // del archive to container's parents ring
   if ((curr = rgHaveItem(container->parents, archive))) {
@@ -537,15 +572,13 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   checkCollection(coll);
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "addFromAsso %s:%lli -> %s/%s:%lli",
-	  archive->hash, (long long int)archive->size,
-	  strEType(container->type), container->parent->hash,
-	  (long long int)container->parent->size);
+	    archive->hash, (long long int)archive->size,
+	    strEType(container->type), 
+	    container->type == INC?"-":container->parent->hash,
+	    container->type == INC?0:
+	    (long long int)container->parent->size);
 
   switch (container->type) {
-  case REC:
-    logMemory(LOG_ERR, "%s", 
-	    "REC containers must not contains archive");
-    goto error;
   case GZIP:
   case BZIP:
     if (avl_count(container->childs) > 0) {
@@ -571,7 +604,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
  error:
   if (!rc) {
     logMemory(LOG_ERR, "%s", "addFromAsso fails");
-    if (asso) delFromAsso(coll, asso, TRUE);
+    if (asso) delFromAsso(coll, asso);
   }
   return rc;
 }
@@ -582,11 +615,10 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
  * Synopsis   : void delFromAsso(Collection* coll, FromAsso* self)
  * Input      : Collection* coll: where to del
  *              FromAsso* self: association to del
- *              int doUnlinkContainer: FALSE if job done by delContainer
  * Output     : TRUE on success
  =======================================================================*/
 int
-delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
+delFromAsso(Collection* coll, FromAsso* self)
 {
   int rc = FALSE;
   RGIT* curr = 0;
@@ -594,9 +626,11 @@ delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
   checkCollection(coll);
   if (!self) goto error;
   logMemory(LOG_DEBUG, "delFromAsso %s:%lli -> %s/%s:%lli",
-	  self->archive->hash, (long long int)self->archive->size,
-	  strEType(self->container->type), self->container->parent->hash,
-	  (long long int)self->container->parent->size);
+	    self->archive->hash, (long long int)self->archive->size,
+	    strEType(self->container->type), 
+	    self->container->type == INC?"-":self->container->parent->hash,
+	    self->container->type == INC?0:
+	    (long long int)self->container->parent->size);
 
   // delete asso from archive
   if ((curr = rgHaveItem(self->archive->fromContainers, self))) {
@@ -604,9 +638,7 @@ delFromAsso(Collection* coll, FromAsso* self, int doUnlinkContainer)
   }
 
   // delete asso from container and free the fromAsso
-  if (doUnlinkContainer) {
-    avl_delete(self->container->childs, self);
-  }
+  avl_delete(self->container->childs, self);
     
   rc = TRUE;
  error:
@@ -707,12 +739,14 @@ delContainer(Collection* coll, Container* self)
   checkCollection(coll);
   if (!self) goto error;
   logMemory(LOG_DEBUG, "delContainer %s/%s:%lli", 
-	  strEType(self->type), self->parent->hash,
-	  (long long int)self->parent->size);
+	    strEType(self->type), 
+	    self->type == INC?"-":self->parent->hash,
+	    self->type == INC?0:
+	    (long long int)self->parent->size);
 
   // delete content associations to archives
-  for(node = self->childs->head; node; node = node->next) {
-    if (!delFromAsso(coll, node->item, FALSE)) goto error;
+  while ((node = self->childs->head)) {
+    if (!delFromAsso(coll, node->item)) goto error;
   }
 
   // delete container link with archives
@@ -721,7 +755,7 @@ delContainer(Collection* coll, Container* self)
     rgDelete(self->parents);
   }
 
-  // delete container from catalog tree and free it
+  // delete container from extract tree and free it
   avl_delete(coll->extractTree->containers, self);
 
   rc = TRUE;
@@ -747,11 +781,15 @@ diseaseExtractTree(Collection* coll)
   logMemory(LOG_DEBUG, "diseaseExtractTree %s", coll);
 
   // diseases containers
+  if (!delContainer(coll, coll->extractTree->incoming)) goto error;
   while ((node = coll->extractTree->containers->head))
     if (!delContainer(coll, node->item)) goto error;
 
   // force scores to be re-computed next
   coll->extractTree->score = -1;
+
+  // try to disease archives
+  if (!diseaseArchives(coll)) goto error;
 
   rc = TRUE;
  error:

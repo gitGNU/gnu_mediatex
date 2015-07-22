@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.6 2015/07/03 17:37:32 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.7 2015/07/22 10:45:18 nroche Exp $
  * Project: Mediatex
  * Module : extract scanner
 
@@ -111,7 +111,7 @@
 HASH    [[:xdigit:]]{32}
 
  /* MAX_SIZE_STRING = 511 */
-STRING  [^[:blank:]:,\)\n\r]{1,511}
+STRING  [^[:blank:]\)\n\r]{1,511}
 
 %%
    /* rules: ==========================================================*/
@@ -123,9 +123,9 @@ STRING  [^[:blank:]:,\)\n\r]{1,511}
     return(extrOPEN);
   }
 
-  rec {
+  inc {
     BEGIN(CONTAINERS);
-    yylval->type = REC;
+    yylval->type = INC;
     return(extrTYPE);
   }
 

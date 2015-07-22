@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordTree.c,v 1.1 2015/07/01 10:49:46 nroche Exp $
+ * Version: $Id: utrecordTree.c,v 1.2 2015/07/22 10:45:15 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -111,13 +111,8 @@ main(int argc, char** argv)
   coll->cacheTree->recordTree->doCypher = TRUE;
   if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB, 
 			   0)) goto error;
-
-  // disease
   aes->doCypher = FALSE;
   aes->fd = STDOUT_FILENO;
-  if (!diseaseRecordTree(coll->cacheTree->recordTree)) goto error;
-  env.dryRun = TRUE;
-  if (coll->cacheTree->recordTree->records->nbItems != 0) goto error;
   /************************************************************************/
 
   freeConfiguration();

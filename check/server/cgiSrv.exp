@@ -122,12 +122,14 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
 [info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24546
-[info cache.c] free   =    104833054
-[info cache.c] frozen =        24546
-[info cache.c] avail  =    104833054
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24546
+[info cache.c] = free      104833054
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24546
+[info cache.c] = avail     104833054
+[info cache.c] need            24075
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -247,12 +249,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
-[info cache.c] need   =        24546
-[info cache.c] total  =    104857600
-[info cache.c] use    =        24546
-[info cache.c] free   =    104833054
-[info cache.c] frozen =        24546
-[info cache.c] avail  =    104833054
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          24546
+[info cache.c] = free      104833054
+[info cache.c]   total     104857600
+[info cache.c] - frozen        24546
+[info cache.c] = avail     104833054
+[info cache.c] need            24546
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
@@ -265,12 +269,14 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info extract.c] del to-keep on c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info cache.c] need   =        24075
-[info cache.c] total  =    104857600
-[info cache.c] use    =        49092
-[info cache.c] free   =    104808508
-[info cache.c] frozen =        24546
-[info cache.c] avail  =    104833054
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used          49092
+[info cache.c] = free      104808508
+[info cache.c]   total     104857600
+[info cache.c] - frozen        28612
+[info cache.c] = avail     104828988
+[info cache.c] need            24075
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3

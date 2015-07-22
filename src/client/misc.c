@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.5 2015/07/08 17:58:02 nroche Exp $
+ * Version: $Id: misc.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -491,9 +491,10 @@ mdtxSu(char* label)
 /*=======================================================================
  * Function   : mdtxScp
  * Description: call scp so as to not need setuid bit on daemon
- * Synopsis   : 
- * Input      : 
- *              
+ * Synopsis   : int mdtxScp(char* label, char* fingerPrint, char* target)
+ * Input      : char* label : collection label
+ *              char* fingerPrint : source server's fingerprint
+ *              char* target : relative path to target in cache
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -566,6 +567,10 @@ mdtxUploadFile(char* label, char* path)
   char reply[256];
   int status = 0;
   int n = 0;
+  FromAsso* asso = 0;
+  time_t time = 0;
+  struct tm date;
+  char dateString[32];
 
   if (isEmptyString(path)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -635,7 +640,17 @@ mdtxUploadFile(char* label, char* path)
   }
 
   // add extraction rule
-  if (!(container = addContainer(coll, REC, archive))) goto error;
+  if (!(time = currentTime())) goto error;
+  if (localtime_r(&time, &date) == (struct tm*)0) {
+    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    goto error2;
+  }
+  sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec);
+  if (!(container = coll->extractTree->incoming)) goto error2;
+  if (!(asso = addFromAsso(coll, archive, container, dateString))) 
+    goto error2;
   if (!wasModifiedCollection(coll, EXTR)) goto error2;
 
   rc = TRUE;

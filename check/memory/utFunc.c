@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.4 2015/07/07 09:46:20 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.5 2015/07/22 10:45:15 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -40,7 +40,12 @@ static char supportNames[3][3][64] = {
  * Output     : TRUE on success
  * Note       : As we use addSupport, we must use a Configuration
  .........................................................................
- * See        : utSupportTree.exp
+ * See        : utsupportTree, utsupportFile, utupgrade, utmotd
+ *
+ * Add 9 supports from 1970 to 2010 in order to check scores
+ * - logo.png: 3 supports (1970, 1996, 1998)
+ * - logo.part1: 3 supports (2000, 2002, 2004)
+ * - logo.part2: 3 supports (2006, 2008, 2010)
  =======================================================================*/
 int
 createExempleSupportTree()
@@ -50,9 +55,8 @@ createExempleSupportTree()
   int i=0, j=0, k=0;
 
   /*
-    #!/bin/sh
-    for i in $(seq 1994 2 2010); do
-    date -d "$i-01-01 00:00:00 +00:00" +"%s"
+    for i in $(seq 1994 2 2010); do \
+    date -d "$i-01-01 00:00:00 +00:00" +"%s"; \
     done
   */
 
@@ -172,7 +176,11 @@ createExempleSupportTree()
  * Input      : N/A
  * Output     : N/A
  -------------------------------------------------------------------------
- * See        : utExtractTree.exp
+ * See        : utextractTree, utextractFile, utextractScore,
+ *              utextractHtml, utcache, utextract
+ *
+ * Add extraction rules for all containers,
+ * and add 2 uploaded file (INC container)
  =======================================================================*/
 int createExempleExtractTree(Collection* coll)
 {
@@ -181,6 +189,9 @@ int createExempleExtractTree(Collection* coll)
     *tar, *cpio, *gzip, *bzip;
   Container* container = 0;
   FromAsso* asso = 0;
+  time_t time = 0;
+  struct tm date;
+  char dateString[32];
 
   // documentTree
   if (coll->extractTree == 0) goto error;
@@ -311,6 +322,20 @@ int createExempleExtractTree(Collection* coll)
   if (!(asso = addFromAsso(coll, cpio, container,
 			   "logo.cpio"))) goto error;
 
+  // INC
+  if (!(time = currentTime())) goto error;
+  if (localtime_r(&time, &date) == (struct tm*)0) {
+    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    goto error;
+  }
+  sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec);
+  if (!(container = coll->extractTree->incoming)) goto error;
+  if (!(asso = addFromAsso(coll, iso1, container, dateString))) goto error;
+  if (!(asso = addFromAsso(coll, iso2, container, "1994-01-01,00:00:00"))) 
+    goto error;
+
   return TRUE;
  error:
   logMemory(LOG_ERR, "%s", 
@@ -325,7 +350,9 @@ int createExempleExtractTree(Collection* coll)
  * Input      : Collection* coll
  * Output     : N/A
  -------------------------------------------------------------------------
- * See        : utCatalogTree.exp
+ * See        : utcatalogTree, utcatalogFile, utcatalogHtml
+ *
+ * Add information about logo.png
  =======================================================================*/
 int 
 createExempleCatalogTree(Collection* coll)
@@ -435,10 +462,10 @@ createExempleCatalogTree(Collection* coll)
  * Synopsis   : int buildTestConfiguration()
  * Input      : N/A
  * Output     : TRUE on success
- * Note       : Networks and Gateways are not used here (see confTree.c)
+ * Note       : Networks and Gateways are not used here (see utconfTree.c)
  *              except for coll3, using the collection settings
  .........................................................................
- * See        : utConfTree.exp
+ * See        : utconfTree, utconfFile, ...
  =======================================================================*/
 int 
 createExempleConfiguration()
@@ -525,7 +552,7 @@ createExempleConfiguration()
  * Input      : Collection* coll
  * Output     : TRUE on success
  ------------------------------------------------------------------------
- * See        : utServerTree.exp
+ * See        : utserverTree, utserverFile, utextractScore
  =======================================================================*/
 int 
 createExempleServerTree(Collection* coll)
@@ -564,7 +591,7 @@ createExempleServerTree(Collection* coll)
     {"\0"}
   };
 
-  // images
+  // 3 images on 3 servers
   char* hashs[][3] = {
     {"de5008799752552b7963a2670dc5eb18",
      "\0", "\0"},
@@ -583,7 +610,7 @@ createExempleServerTree(Collection* coll)
   float scores[][3] = {
     {2, 0, 0},
     {7.5, 10, 0},
-    {14, 12, 17.5}
+    {9, 9, 7.5}
   };
 
   char* userKeys[] = {

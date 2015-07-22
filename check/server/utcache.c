@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.3 2015/07/03 11:39:02 nroche Exp $
+ * Version: $Id: utcache.c,v 1.4 2015/07/22 10:45:16 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -123,6 +123,7 @@ main(int argc, char** argv)
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan gives :", coll);
 
+  /*--------------------------------------------------------*/
   utLog("%s", "Keep logoP1.iso and logoP2.iso:", 0);
   if (!(archive =
   	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
@@ -136,7 +137,7 @@ main(int argc, char** argv)
 
   /*--------------------------------------------------------*/
   utLog("%s", "Ask for too much place :", 0);
-  size = coll->cacheTree->totalSize - 2*KILO;
+  size = coll->cacheTree->totalSize;
   if (!(archive = addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   			     size))) goto error;
   if (cacheAlloc(&record, coll, archive)) goto error;
@@ -144,27 +145,23 @@ main(int argc, char** argv)
   
   /*--------------------------------------------------------*/
   utLog("%s", "Ask for little place so do not suppress anything :", 0);
-  size = coll->cacheTree->totalSize;
-  size -= coll->cacheTree->useSize; // free size
-  size -= 2*KILO;
+  size = coll->cacheTree->totalSize - coll->cacheTree->useSize;
   archive->size = size;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
   record->extra[0]='*';
   utLog("reply : %i", record?1:0, coll); // 1: already avail
   if (!delCacheEntry(coll, record)) goto error;
-  if (!delRecord(coll, record)) goto error;
 
   /*--------------------------------------------------------*/
   utLog("%s", "Ask for place so as we need to suppress files :", 0);
-  size = coll->cacheTree->totalSize;
-  size -= coll->cacheTree->frozenSize; // available size
-  size -= 2*KILO;
+  size = coll->cacheTree->totalSize - coll->cacheTree->frozenSize;
   if (!(archive = addArchive(coll, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   			    size))) goto error;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
-  record->extra[0]='*';
+  record->extra[0]='*'; // ALLOCATED -> AVAILABLE
+  if (!delCacheEntry(coll, record)) goto error;
   utLog("reply : %i", record?1:0, coll); // 1: del some entries
 
   /*--------------------------------------------------------*/

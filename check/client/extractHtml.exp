@@ -42,8 +42,8 @@ Gateway for:
 <P>
 Provide images: 2
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/005.shtml">( 7.50)</A></LI>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/002.shtml">(10.00)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">( 7.50)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">(10.00)</A></LI>
 </UL>
 
 </P>
@@ -82,7 +82,7 @@ On networks:
 <P>
 Provide images: 1
 <UL>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/002.shtml">( 2.00)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">( 2.00)</A></LI>
 </UL>
 
 </P>
@@ -93,7 +93,7 @@ Provide images: 1
 
 <P>
 
-<SPAN  CLASS="textbf">Server </SPAN><SMALL>127.0.0.2</SMALL> (12.00)
+<SPAN  CLASS="textbf">Server </SPAN><SMALL>127.0.0.2</SMALL> (7.50)
 
 <BR>
 <SPAN  CLASS="textit">this is server3</SPAN>
@@ -121,9 +121,9 @@ On networks:
 <P>
 Provide images: 3
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/005.shtml">(14.00)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../archives/0000/000.shtml">(17.50)</A></LI>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/002.shtml">(12.00)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">( 9.00)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../archives/0000/002.shtml">( 7.50)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">( 9.00)</A></LI>
 </UL>
 
 </P>
@@ -137,7 +137,7 @@ Provide images: 3
 <SPAN  CLASS="textbf">Record:</SPAN><code>022a34b2f9b893fba5774237e1aa80ea:24075</code>
 <BR><A HREF="../../../cgi/get.cgi?hash=022a34b2f9b893fba5774237e1aa80ea&size=24075">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A> (10.00)<UL>
+</A> (8.25)<UL>
 <LI>format = PNG</LI>
 </UL>
 
@@ -157,7 +157,7 @@ Catalog reference as documents:
 Provided by servers:
 <UL>
 <LI><A HREF="../../servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">localhost</A> (7.50)</LI>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (14.00)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (9.00)</LI>
 </UL>
 
 </P>
@@ -167,7 +167,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from TGZ <A HREF="../../archives/0000/004.shtml"> ( 8.75)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml"> ( 3.75)</A></LI>
 
 <LI>
 <SPAN  CLASS="textit">logo/logo.png</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml"> ( 0.00)</A></LI>
@@ -217,7 +217,7 @@ Content: 0
 <SPAN  CLASS="textbf">Record:</SPAN><code>0387eee9820fa224525ff8b2e0dfa9be:24546</code>
 <BR><A HREF="../../../cgi/get.cgi?hash=0387eee9820fa224525ff8b2e0dfa9be&size=24546">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A> (8.75)
+</A> (3.75)
 </P>
 
 <P>
@@ -245,12 +245,12 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo.tgz</SPAN> from CAT (8.75)
+<SPAN  CLASS="textit">logo.tgz</SPAN> from CAT (3.75)
 <UL>
 <LI>
-<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/003.shtml"> (10.00)</A></LI>
+<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/004.shtml"> (10.00)</A></LI>
 <LI>
-<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/001.shtml"> ( 8.75)</A></LI>
+<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/003.shtml"> ( 3.75)</A></LI>
 </UL>
 </LI>
 
@@ -262,10 +262,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>TGZ ( 8.75)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI>TGZ ( 3.75)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -283,7 +283,7 @@ Content: 2
 <SPAN  CLASS="textbf">Record:</SPAN><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784</code>
 <BR><A HREF="../../../cgi/get.cgi?hash=0a7ecd447ef2acb3b5c6e4c550e6636f&size=374784">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A> (8.75)
+</A> (3.75)
 </P>
 
 <P>
@@ -300,7 +300,7 @@ Catalog reference as documents:
 
 Provided by servers:
 <UL>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (17.50)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (7.50)</LI>
 </UL>
 
 </P>
@@ -309,7 +309,9 @@ Provided by servers:
 
 Comes from:
 <UL>
-<LI>External source</LI>
+<LI>
+<SPAN  CLASS="textit">1994-01-01,00:00:00</SPAN> from INC </LI>
+
 </UL>
 
 </P>
@@ -318,7 +320,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>ISO <A HREF="../../archives/0000/001.shtml">( 8.75)</A> 
+<LI>ISO <A HREF="../../archives/0000/003.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logoP2.cat</SPAN></LI>
 
 </UL>
@@ -362,7 +364,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logoP1.cat</SPAN> from ISO <A HREF="../../archives/0000/002.shtml"> (10.00)</A></LI>
+<SPAN  CLASS="textit">logoP1.cat</SPAN> from ISO <A HREF="../../archives/0000/001.shtml"> (10.00)</A></LI>
 
 </UL>
 
@@ -372,7 +374,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>CAT <A HREF="../../archives/0000/004.shtml">( 8.75)</A> 
+<LI>CAT <A HREF="../../archives/0000/005.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo.tgz</SPAN></LI>
 
 </UL>
@@ -477,9 +479,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>AFIO ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -534,9 +536,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>RAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -554,7 +556,7 @@ Content: 2
 <SPAN  CLASS="textbf">Record:</SPAN><code>b281449c229bcc4a3556cdcc0d3ebcec:815</code>
 <BR><A HREF="../../../cgi/get.cgi?hash=b281449c229bcc4a3556cdcc0d3ebcec&size=815">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A> (8.75)<UL>
+</A> (3.75)<UL>
 <LI>format = XPM</LI>
 <LI>licence = GPLv3</LI>
 </UL>
@@ -585,7 +587,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TGZ <A HREF="../../archives/0000/004.shtml"> ( 8.75)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml"> ( 3.75)</A></LI>
 
 <LI>
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml"> ( 0.00)</A></LI>
@@ -677,9 +679,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>CPIO ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -734,9 +736,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>TBZ ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -754,7 +756,7 @@ Content: 2
 <SPAN  CLASS="textbf">Record:</SPAN><code>c0c055a0829982bd646e2fafff01aaa6:4066</code>
 <BR><A HREF="../../../cgi/get.cgi?hash=c0c055a0829982bd646e2fafff01aaa6&size=4066">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A> (8.75)
+</A> (3.75)
 </P>
 
 <P>
@@ -782,7 +784,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logoP2.cat</SPAN> from ISO <A HREF="../../archives/0000/000.shtml"> ( 8.75)</A></LI>
+<SPAN  CLASS="textit">logoP2.cat</SPAN> from ISO <A HREF="../../archives/0000/002.shtml"> ( 3.75)</A></LI>
 
 </UL>
 
@@ -792,7 +794,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>CAT <A HREF="../../archives/0000/004.shtml">( 8.75)</A> 
+<LI>CAT <A HREF="../../archives/0000/005.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo.tgz</SPAN></LI>
 
 </UL>
@@ -845,9 +847,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>ZIP ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -902,9 +904,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>RAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -941,7 +943,7 @@ Provided by servers:
 <UL>
 <LI><A HREF="../../servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">localhost</A> (10.00)</LI>
 <LI><A HREF="../../servers/srv_746d6ceeb76e05cfa2dea92a1c5753cd.shtml">host1</A> (2.00)</LI>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (12.00)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (9.00)</LI>
 </UL>
 
 </P>
@@ -950,7 +952,9 @@ Provided by servers:
 
 Comes from:
 <UL>
-<LI>External source</LI>
+<LI>
+<SPAN  CLASS="textit">2010-01-01,01:00:00</SPAN> from INC </LI>
+
 </UL>
 
 </P>
@@ -959,7 +963,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>ISO <A HREF="../../archives/0000/003.shtml">(10.00)</A> 
+<LI>ISO <A HREF="../../archives/0000/004.shtml">(10.00)</A> 
 <SPAN  CLASS="textit">logoP1.cat</SPAN></LI>
 
 </UL>
@@ -1012,9 +1016,9 @@ Comes from:
 Content: 2
 <UL>
 <LI>TAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/005.shtml">(10.00)</A> 
+<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 8.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -1087,20 +1091,20 @@ Content: 1
 <!--#include virtual='../header.shtml' -->
 <P>
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../../archives/0000/005.shtml">(10.00)</A></LI>
-<LI><code>0387eee9820fa224525ff8b2e0dfa9be:24546 </code><A HREF="../../archives/0000/004.shtml">( 8.75)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/000.shtml">( 8.75)</A></LI>
-<LI><code>1a167d608e76a6a4a8b16d168580873c:20480 </code><A HREF="../../archives/0000/003.shtml">(10.00)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../../archives/0000/000.shtml">( 8.25)</A></LI>
+<LI><code>0387eee9820fa224525ff8b2e0dfa9be:24546 </code><A HREF="../../archives/0000/005.shtml">( 3.75)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>1a167d608e76a6a4a8b16d168580873c:20480 </code><A HREF="../../archives/0000/004.shtml">(10.00)</A></LI>
 <LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">( 0.00)</A></LI>
 <LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">( 0.00)</A></LI>
 <LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">( 0.00)</A></LI>
-<LI><code>b281449c229bcc4a3556cdcc0d3ebcec:815 </code><A HREF="../../archives/0000/006.shtml">( 8.75)</A></LI>
+<LI><code>b281449c229bcc4a3556cdcc0d3ebcec:815 </code><A HREF="../../archives/0000/006.shtml">( 3.75)</A></LI>
 <LI><code>b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 </code><A HREF="../../archives/0000/010.shtml">( 0.00)</A></LI>
 <LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">( 0.00)</A></LI>
-<LI><code>c0c055a0829982bd646e2fafff01aaa6:4066 </code><A HREF="../../archives/0000/001.shtml">( 8.75)</A></LI>
+<LI><code>c0c055a0829982bd646e2fafff01aaa6:4066 </code><A HREF="../../archives/0000/003.shtml">( 3.75)</A></LI>
 <LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">( 0.00)</A></LI>
 <LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">( 0.00)</A></LI>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../../archives/0000/002.shtml">(10.00)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../../archives/0000/001.shtml">(10.00)</A></LI>
 <LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">( 0.00)</A></LI>
 <LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">( 0.00)</A></LI>
 </UL>
@@ -1108,20 +1112,34 @@ Content: 1
 </P>
 
 <!--#include virtual='../../../footer.html' -->
-[notice extractScore.c] coll1 collection: Very good perenniality (8.75)
+[emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 <!--#set var='HOME' value='../../..' -->
 <!--#include virtual='../../scoreHeader.shtml' -->
 
 <P>
 
-<SPAN  CLASS="textbf">Bad archives</SPAN> : 0
+<SPAN  CLASS="textbf">Bad archives</SPAN> : 13
 <BR>
-<SPAN  CLASS="textit">Very good perenniality</SPAN>
+<SPAN  CLASS="textit">Perenniality lost</SPAN>
 <BR>
 </P>
-<!--#include virtual='../header.shtml' -->
+595 Ko
+should be burned into supports:<!--#include virtual='../header.shtml' -->
 <P>
 <UL>
+<LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">( 0.00)</A></LI>
+<LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">( 0.00)</A></LI>
+<LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">( 0.00)</A></LI>
+<LI><code>b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 </code><A HREF="../../archives/0000/010.shtml">( 0.00)</A></LI>
+<LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">( 0.00)</A></LI>
+<LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">( 0.00)</A></LI>
+<LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">( 0.00)</A></LI>
+<LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">( 0.00)</A></LI>
+<LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">( 0.00)</A></LI>
+<LI><code>0387eee9820fa224525ff8b2e0dfa9be:24546 </code><A HREF="../../archives/0000/005.shtml">( 3.75)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>b281449c229bcc4a3556cdcc0d3ebcec:815 </code><A HREF="../../archives/0000/006.shtml">( 3.75)</A></LI>
+<LI><code>c0c055a0829982bd646e2fafff01aaa6:4066 </code><A HREF="../../archives/0000/003.shtml">( 3.75)</A></LI>
 </UL>
 
 </P>
@@ -1153,9 +1171,9 @@ Score parameters:
 
 All images: 3
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="archives/0000/005.shtml">(10.00)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="archives/0000/000.shtml">( 8.75)</A></LI>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="archives/0000/002.shtml">(10.00)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="archives/0000/000.shtml">( 8.25)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="archives/0000/001.shtml">(10.00)</A></LI>
 </UL>
 
 </P>
@@ -1191,7 +1209,7 @@ HREF='<!--#echo var='HOME' -->/score'><IMG
 ALIGN='BOTTOM' BORDER='0' SRC='<!--#echo var='HOME' -->/logo.png'
 ALT='top'></A>
 <P>
-(8.75)
+(0.00)
 
 <BR><A HREF="<!--#echo var='HOME' -->/score/lists/0000/000.shtml">All archives</A>
 <BR><A HREF="<!--#echo var='HOME' -->/score/badLists/0000/000.shtml">Bad archives</A>

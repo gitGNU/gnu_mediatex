@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.1 2015/07/01 10:49:45 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.2 2015/07/22 10:45:15 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -129,6 +129,9 @@ main(int argc, char** argv)
 
     if (!addCacheEntry(coll, record)) goto error;
     if (record->archive->state >= AVAILABLE) {
+      logMemory(LOG_INFO, "score=%.2f toKeep: %s\n",
+		record->archive->extractScore, 
+		record->archive->state == TOKEEP?"yes":"no");
       if (!keepArchive(coll, record->archive, 0)) goto error;
       if (!unKeepArchive(coll, record->archive)) goto error;
     }
