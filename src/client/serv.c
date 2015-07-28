@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: serv.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : serv
  *
@@ -49,7 +49,7 @@ static int setConcurentAccessLock()
   unsigned short table[1];
   int uid = getuid();
 
-  logEmit(LOG_DEBUG, "%s", "initialise the concurrent access"); 
+  logMain(LOG_DEBUG, "%s", "initialise the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (conf->sem != 0) goto end;
@@ -60,23 +60,23 @@ static int setConcurentAccessLock()
   // Create a new IPC key base on an i-node + minor peripherical
   // number and a project number
   if ((key = ftok(conf->confFile, COMMON_OPEN_CLOSE_PROJECT_ID)) == -1) {
-    logEmit(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
-    logEmit(LOG_NOTICE, "ftok using path: %s", conf->confFile); 
+    logMain(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
+    logMain(LOG_NOTICE, "ftok using path: %s", conf->confFile); 
     goto error;
   }
 
-  logEmit(LOG_INFO, "client ipc key: {%s, %i}", 
+  logMain(LOG_INFO, "client ipc key: {%s, %i}", 
 	  conf->confFile, COMMON_OPEN_CLOSE_PROJECT_ID); 
-  logEmit(LOG_DEBUG, "client ipc key: 0x%x", key); 
+  logMain(LOG_DEBUG, "client ipc key: 0x%x", key); 
 
   // Try to match an existing semaphore with the key
   if (( conf->sem = semget(key, 1, 0)) == -1) {
 
     // Create a new semaphore matched with the key
     if ((conf->sem = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600)) == -1) {
-      logEmit(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
+      logMain(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
 	      strerror(errno)); 
-      logEmit(LOG_NOTICE, "%s", "(semaphore as gone)");
+      logMain(LOG_NOTICE, "%s", "(semaphore as gone)");
       goto error;
     }
   
@@ -84,7 +84,7 @@ static int setConcurentAccessLock()
     table[0] = 1;
     u_semun.table = table;
     if (semctl(conf->sem, 0, SETALL, u_semun) <0) {
-      logEmit(LOG_ERR, "semctl fails to initialize semaphore value: %s", 
+      logMain(LOG_ERR, "semctl fails to initialize semaphore value: %s", 
 	      strerror(errno)); 
       goto error;
     }
@@ -95,7 +95,7 @@ static int setConcurentAccessLock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to set concurrent access lock"); 
+    logMain(LOG_ERR, "%s", "fails to set concurrent access lock"); 
   }
   return rc;
 }
@@ -114,12 +114,12 @@ int clientWriteLock()
   struct sembuf sembuf;
   int uid = getuid();
 
-  logEmit(LOG_DEBUG, "%s", "get the concurrent access"); 
+  logMain(LOG_DEBUG, "%s", "get the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (!setConcurentAccessLock()) goto error;
   if (conf->sem == 0) {
-    logEmit(LOG_ERR, "%s", "concurrent access lock is not initialized"); 
+    logMain(LOG_ERR, "%s", "concurrent access lock is not initialized"); 
     goto error;
   }
 
@@ -127,18 +127,18 @@ int clientWriteLock()
   if (!becomeUser(env.confLabel, FALSE)) goto error;
 
   // P (may I ?)
-  logEmit(LOG_DEBUG, "%s", "get writter lock");
+  logMain(LOG_DEBUG, "%s", "get writter lock");
   sembuf.sem_num = 0;
   sembuf.sem_op = -1;
   sembuf.sem_flg = SEM_UNDO | IPC_NOWAIT; // for crash recovery...
   //... + do not asleep process if not available but exit with EAGAIN
   if (semop(conf->sem, &sembuf, 1) < 0) {
     if (errno == EAGAIN) {
-      logEmit(LOG_ERR, "%s", 
+      logMain(LOG_ERR, "%s", 
 	      "cannot take concurent access as it is already locked");
     }
     else {
-      logEmit(LOG_ERR, "semop fails asking for semaphore: %s", 
+      logMain(LOG_ERR, "semop fails asking for semaphore: %s", 
 	      strerror(errno)); 
     }
     goto error;
@@ -150,7 +150,7 @@ int clientWriteLock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to get writter lock"); 
+    logMain(LOG_ERR, "%s", "fails to get writter lock"); 
   }
   return rc;
 }
@@ -169,11 +169,11 @@ int clientWriteUnlock()
   union semun arg;
   int uid = getuid();
 
-  logEmit(LOG_DEBUG, "%s", "release the concurrent access"); 
+  logMain(LOG_DEBUG, "%s", "release the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (conf->sem == 0) {
-    logEmit(LOG_ERR, "%s", "concurrent access lock already unlock"); 
+    logMain(LOG_ERR, "%s", "concurrent access lock already unlock"); 
     goto error;
   }
 
@@ -188,7 +188,7 @@ int clientWriteUnlock()
   // Free semaphore IPC ressource
   arg.val = 0;
   if (semctl(conf->sem, 0, IPC_RMID, arg) == -1) {
-    logEmit(LOG_ERR, "semctl fails: %s", strerror(errno)); 
+    logMain(LOG_ERR, "semctl fails: %s", strerror(errno)); 
     goto error;
   }
 
@@ -197,7 +197,7 @@ int clientWriteUnlock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to release the writter lock"); 
+    logMain(LOG_ERR, "%s", "fails to release the writter lock"); 
   }
   return rc;
 }
@@ -219,7 +219,7 @@ mdtxUpdate(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logEmit(LOG_DEBUG, "%s", "update collection");
+  logMain(LOG_DEBUG, "%s", "update collection");
 
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!callUpdate(coll->user)) goto error;
@@ -227,7 +227,7 @@ mdtxUpdate(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to update collection");
+    logMain(LOG_ERR, "%s", "fails to update collection");
   }
   return(rc);
 }
@@ -250,7 +250,7 @@ mdtxCommit(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logEmit(LOG_DEBUG, "%s", "commit collection");
+  logMain(LOG_DEBUG, "%s", "commit collection");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -261,7 +261,7 @@ mdtxCommit(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to commit collection");
+    logMain(LOG_ERR, "%s", "fails to commit collection");
   }
   return(rc);
 }
@@ -288,7 +288,7 @@ mdtxUpgrade(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logEmit(LOG_DEBUG, "plan to upgrade %s collection", label);
+  logMain(LOG_DEBUG, "plan to upgrade %s collection", label);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -302,7 +302,7 @@ mdtxUpgrade(char* label)
   if (!releaseCollection(coll, CTLG|EXTR|SERV)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUpgrade fails");
+    logMain(LOG_ERR, "%s", "mdtxUpgrade fails");
   }
   return rc;
 }
@@ -330,7 +330,7 @@ addKey(char* label, char* path)
 
   if (label == 0) goto error;
   if (path == 0) goto error;
-  logEmit(LOG_INFO, "add %s key to %s collection", path, label);
+  logMain(LOG_INFO, "add %s key to %s collection", path, label);
 
   // parse server DB for merge
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -340,7 +340,7 @@ addKey(char* label, char* path)
   if (!(key = readPublicKey(path))) goto error;
   if (!getFingerPrint(key, hash)) goto error;
   if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_HASH)) {
-    logEmit(LOG_WARNING, "key \"%s\" is our %s collection key", 
+    logMain(LOG_WARNING, "key \"%s\" is our %s collection key", 
 	    hash, coll->label);
     goto error;
   }
@@ -353,7 +353,7 @@ addKey(char* label, char* path)
   }
 
   if (server != 0) {
-    logEmit(LOG_WARNING, "key \"%s\" is already added to %s collection", 
+    logMain(LOG_WARNING, "key \"%s\" is already added to %s collection", 
 	    hash, coll->label);
     goto error2;
   }
@@ -373,7 +373,7 @@ addKey(char* label, char* path)
   if (!releaseCollection(coll, SERV)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "cannot add %s key to %s collection", path, label);
+    logMain(LOG_ERR, "cannot add %s key to %s collection", path, label);
   }
   if (key) free(key);
   return rc;
@@ -401,7 +401,7 @@ delKey(char* label, char* key)
 
   if (label == 0) goto error;
   if (key == 0) goto error;
-  logEmit(LOG_INFO, "del %s key from %s collection", key, label);
+  logMain(LOG_INFO, "del %s key from %s collection", key, label);
 
   // we are expecting a fingerprint
   strncpy(hash, key, MAX_SIZE_HASH+1);
@@ -412,7 +412,7 @@ delKey(char* label, char* key)
 
   // look if key is ouself
   if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_HASH)) {
-    logEmit(LOG_WARNING, "key \"%s\" is our %s collection key", 
+    logMain(LOG_WARNING, "key \"%s\" is our %s collection key", 
 	    hash, coll->label);
     goto error;
   }
@@ -425,7 +425,7 @@ delKey(char* label, char* key)
   }
 
   if (server == 0) {
-    logEmit(LOG_WARNING, 
+    logMain(LOG_WARNING, 
 	    "key \"%s\" not share with %s collection", 
 	    hash, coll->label);
     goto error2;
@@ -444,7 +444,7 @@ delKey(char* label, char* key)
   if (!releaseCollection(coll, SERV)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "cannot del %s key to %s collection", key, coll);
+    logMain(LOG_ERR, "cannot del %s key to %s collection", key, coll);
   }
   return rc;
 }

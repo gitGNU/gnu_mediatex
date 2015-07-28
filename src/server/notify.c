@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.5 2015/07/22 10:45:19 nroche Exp $
+ * Version: $Id: notify.c,v 1.6 2015/07/28 11:45:50 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -42,7 +42,7 @@ int notifyContainer(NotifyData* data, Container* container)
   Archive* archive = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "notify a container %s/%s:%lli", 
+  logMain(LOG_DEBUG, "notify a container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
@@ -61,7 +61,7 @@ int notifyContainer(NotifyData* data, Container* container)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "notifyContainer fails");
+    logMain(LOG_ERR, "%s", "notifyContainer fails");
   }
   return rc;
 } 
@@ -81,7 +81,7 @@ int notifyArchive(NotifyData* data, Archive* archive)
   FromAsso* asso = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "notify an archive: %s:%lli", 
+  logMain(LOG_DEBUG, "notify an archive: %s:%lli", 
 	  archive->hash, archive->size);
 
   data->found = FALSE;
@@ -111,7 +111,7 @@ int notifyArchive(NotifyData* data, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "notifyArchive fails");
+    logMain(LOG_ERR, "%s", "notifyArchive fails");
   }
   return rc;
 } 
@@ -134,7 +134,7 @@ getWantedRemoteArchives(Collection* coll)
   RGIT* curr2 = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "getWantedArchives");
+  logMain(LOG_DEBUG, "%s", "getWantedArchives");
 
   if (!(ring = createRing())) goto error;
 
@@ -152,7 +152,7 @@ getWantedRemoteArchives(Collection* coll)
   rc = ring;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getWantedRemoteArchives fails");
+    logMain(LOG_ERR, "%s", "getWantedRemoteArchives fails");
     destroyOnlyRing(ring);
   }
   return rc;
@@ -178,7 +178,7 @@ int addFinalDemands(NotifyData* data)
 
   coll = data->coll;
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "addFinalDemands");
+  logMain(LOG_DEBUG, "%s", "addFinalDemands");
 
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= 0) {
@@ -202,7 +202,7 @@ int addFinalDemands(NotifyData* data)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addFinalDemands fails");
+    logMain(LOG_ERR, "%s", "addFinalDemands fails");
   }
   return rc;
 } 
@@ -225,7 +225,7 @@ int addBadTopLocalSupplies(NotifyData* data)
 
   coll = data->coll;
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "addBadTopLocalSupplies");
+  logMain(LOG_DEBUG, "%s", "addBadTopLocalSupplies");
 
   // add local iso (or other top containers) if it own a bad score
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
@@ -247,7 +247,7 @@ int addBadTopLocalSupplies(NotifyData* data)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addBadTopLocalSupplies fails");
+    logMain(LOG_ERR, "%s", "addBadTopLocalSupplies fails");
   }
   return rc;
 } 
@@ -268,7 +268,7 @@ RG* buildNotifyRings(Collection* coll, RG* records)
   NotifyData data;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "buildNotifyRings %s collection", coll->label);
+  logMain(LOG_DEBUG, "buildNotifyRings %s collection", coll->label);
   data.coll = coll;
   data.toNotify = records;
   if (!(archives = getWantedRemoteArchives(coll))) goto error;
@@ -288,7 +288,7 @@ RG* buildNotifyRings(Collection* coll, RG* records)
   rc = data.toNotify;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "buildNotifyRings fails");
+    logMain(LOG_ERR, "%s", "buildNotifyRings fails");
   }
   destroyOnlyRing(archives);
   return rc;
@@ -318,13 +318,13 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   if (recordTree == 0) goto error;
   coll = recordTree->collection;
 
-  logEmit(LOG_DEBUG, "sendRemoteNotifyServer for %s/%s:%i",
+  logMain(LOG_DEBUG, "sendRemoteNotifyServer for %s/%s:%i",
  	  coll->label, server->host, server->mdtxPort);
   
   if (!env.dryRun) {
     // get a socket to the server
     if ((socket = connectServer(server)) == -1) {
-      logEmit(LOG_NOTICE, "cannot connect %s", server->host);
+      logMain(LOG_NOTICE, "cannot connect %s", server->host);
       goto end;
     }
   }
@@ -338,12 +338,12 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
     if (!upgradeServer(socket, recordTree, serverFP)) goto error;
   }
 
-  logEmit(LOG_NOTICE, "%s:%i notified", server->host, server->mdtxPort);
+  logMain(LOG_NOTICE, "%s:%i notified", server->host, server->mdtxPort);
  end:
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "sendRemoteNotifyServer fails");
+    logMain(LOG_ERR, "%s", "sendRemoteNotifyServer fails");
   }
   if (socket != -1) close(socket);
   return rc;
@@ -365,7 +365,7 @@ int sendRemoteNotify(Collection* coll)
   Record* record = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "sendRemoteNotify for %s collections", 
+  logMain(LOG_DEBUG, "sendRemoteNotify for %s collections", 
 	  coll->label);
 
   if (!(recordTree = createRecordTree())) goto error;
@@ -410,7 +410,7 @@ int sendRemoteNotify(Collection* coll)
   if (!releaseCollection(coll, SERV|EXTR|CACH)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "sendRemoteNotify %s collection fails", 
+    logMain(LOG_ERR, "sendRemoteNotify %s collection fails", 
 	    coll->label);
   }
   recordTree->records = destroyOnlyRing(recordTree->records);
@@ -443,7 +443,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   source = connexion->server;
   checkCollection(coll);
   checkServer(source);
-  logEmit(LOG_DEBUG, "%s", "acceptRemoteNotify");
+  logMain(LOG_DEBUG, "%s", "acceptRemoteNotify");
 
   if (!loadCollection(tree->collection, CACH)) goto error;
 
@@ -462,7 +462,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
       // skip server if not on our gateway networks
       if (!rgShareItems(localhost->gateways, target->networks)) continue;
 
-      logEmit(LOG_NOTICE, "forward message to %s:%i nat client",
+      logMain(LOG_NOTICE, "forward message to %s:%i nat client",
 	      target->host, target->mdtxPort);
       if (!sendRemoteNotifyServer(target, tree, source)) goto error2;
     }
@@ -493,7 +493,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   if (!releaseCollection(tree->collection, CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_DEBUG, "%s", "acceptRemoteNotify fails");
+    logMain(LOG_DEBUG, "%s", "acceptRemoteNotify fails");
   }
   return rc;
 }

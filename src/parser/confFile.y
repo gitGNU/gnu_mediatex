@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.7 2015/07/06 16:05:19 nroche Exp $
+ * Version: $Id: confFile.y,v 1.8 2015/07/28 11:45:48 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -134,7 +134,7 @@ stanzas: stanzas confLine
  
 collectionStanza: collection collectionLines confENDBLOCK
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, 
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, 
 	    "collectionStanza: newCollection collectionLines confENDBLOCK");
   coll = 0;
 }
@@ -142,7 +142,7 @@ collectionStanza: collection collectionLines confENDBLOCK
 
 collection: confCOLL confSTRING confMINUS confSTRING confAROBASE confSTRING confCOLON confNUMBER
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, 
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, 
 	    "newCollection: confCOLL confSTRING confAROBASE confSTRING"
 	    " confCOLON confNUMBER");
   if (!(coll = addCollection($4))) YYERROR;
@@ -160,24 +160,24 @@ collectionLines: collectionLines collectionLine
 collectionLine: confSHARE supports
               | confLOCALHOST confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i localhost = %s", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i localhost = %s", LINENO, $2);
   strncpy(coll->userFingerPrint, $2, MAX_SIZE_HASH+1);
 }
               | confNETWORKS cnetworks
               | confGATEWAYS cgateways
               | confCACHESIZE confNUMBER confSIZE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "cache size");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "cache size");
   coll->cacheSize = $2*$3;
 }
               | confCACHETTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "cache TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "cache TTL");
   coll->cacheTTL = $2*$3;
 }
               | confQUERYTTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "query TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "query TTL");
   coll->queryTTL = $2*$3;
 }
 ;
@@ -189,7 +189,7 @@ supports: supports confCOMMA support
 support: confSTRING
 {
   Support* supp = 0;
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "support");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "support");
   if (!(supp = addSupport($1))) YYERROR;
   if (!addSupportToCollection(supp, coll)) YYERROR;
 }
@@ -197,81 +197,81 @@ support: confSTRING
 
 confLine: confHOST confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i host = %s", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i host = %s", LINENO, $2);
   strncpy(getConfiguration()->host, $2, MAX_SIZE_HOST);
 }
        | confNETWORKS Cnetworks
 {
-  logParser(LOG_NOTICE, "line %-3i networks", LINENO);
+  logParser(LOG_DEBUG, "line %-3i networks", LINENO);
 }
        | confGATEWAYS Cgateways
 {
-  logParser(LOG_NOTICE, "line %-3i gateways", LINENO);
+  logParser(LOG_DEBUG, "line %-3i gateways", LINENO);
 }
        | confCOMMENT confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i comment = %s", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i comment = %s", LINENO, $2);
   destroyString(getConfiguration()->comment);
   if (!(getConfiguration()->comment = createString($2))) YYERROR;
 }
        | confMDTXPORT confNUMBER
 {
-  logParser(LOG_NOTICE, "line %-3i mdtxPort = %i", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i mdtxPort = %i", LINENO, $2);
   getConfiguration()->mdtxPort = $2;
 }
        | confSSHPORT confNUMBER
 {
-  logParser(LOG_NOTICE, "line %-3i sshPort = %i", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i sshPort = %i", LINENO, $2);
   getConfiguration()->sshPort = $2;
 }
        | confWWWPORT confNUMBER
 {
-  logParser(LOG_NOTICE, "line %-3i wwwPort = %i", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i wwwPort = %i", LINENO, $2);
   getConfiguration()->wwwPort = $2;
 }
        | confCACHESIZE confNUMBER confSIZE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "cache size");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "cache size");
   getConfiguration()->cacheSize = $2*$3;
 }
        | confCACHETTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "cache TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "cache TTL");
   getConfiguration()->cacheTTL = $2*$3;
 }
        | confQUERYTTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "query TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "query TTL");
   getConfiguration()->queryTTL = $2*$3;
 }
        | confCHECKTTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "check TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "check TTL");
   getConfiguration()->checkTTL = $2*$3;
 }
        | confSUPPTTL confNUMBER confTIME
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "supp TTL");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "supp TTL");
   getConfiguration()->scoreParam.suppTTL = $2*$3;
 }
        | confMAXSCORE confSCORE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "score: max");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "score: max");
   getConfiguration()->scoreParam.maxScore = $2;
 }
        | confBADSCORE confSCORE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "score: bad");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "score: bad");
   getConfiguration()->scoreParam.badScore = $2;
 }
        | confPOWSUPP confSCORE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "score: pow supp");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "score: pow supp");
   getConfiguration()->scoreParam.powSupp = $2;
 }
        | confFACTSUPP confSCORE
 {
-  logParser(LOG_NOTICE, "line %-3i %s", LINENO, "score: fact supp");
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "score: fact supp");
   getConfiguration()->scoreParam.factSupp = $2;
 }
 ;
@@ -295,28 +295,28 @@ Cgateways: Cgateways confCOMMA Cgateway
 
 cnetwork: confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i network: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i network: %s", LINENO, $1);
   if (!addNetworkToRing(coll->networks, $1)) YYABORT;
 }
 ;
 
 cgateway: confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i gateway: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i gateway: %s", LINENO, $1);
   if (!addNetworkToRing(coll->gateways, $1)) YYABORT;
 }
 ;
 
 Cnetwork: confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i network: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i network: %s", LINENO, $1);
   if (!addNetworkToRing(getConfiguration()->networks, $1)) YYABORT;
 }
 ;
 
 Cgateway: confSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i gateway: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i gateway: %s", LINENO, $1);
   if (!addNetworkToRing(getConfiguration()->gateways, $1)) YYABORT;
 }
 ;
@@ -338,7 +338,7 @@ Cgateway: confSTRING
 void 
 conf_error(yyscan_t yyscanner, Collection* coll, const char* message)
 {
-  logEmit(LOG_ERR, "%s on token '%s' line %i\n", message, 
+  logParser(LOG_ERR, "%s on token '%s' line %i\n", message, 
 	  conf_get_text(yyscanner), LINENO);
 }
 
@@ -357,18 +357,18 @@ parseConfiguration(const char* path)
   yyscan_t scanner;
   Collection* coll = 0;
  
-  logParser(LOG_NOTICE, "parse configuration from %s",
+  logParser(LOG_INFO, "parse configuration from %s",
 	    path?path:"stdin");
 
   // initialise scanner
   if (conf_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   if (path != 0) {
     if ((inputStream = fopen(path, "r")) == 0) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream: %s", path); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;
@@ -382,9 +382,9 @@ parseConfiguration(const char* path)
 
   // call the parser
   if (conf_parse(scanner, coll)) {
-    logEmit(LOG_ERR, "configuration parser fails on line %i", 
+    logParser(LOG_ERR, "configuration parser fails on line %i", 
 	    conf_get_lineno(scanner));
-    logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
+    logParser(LOG_ERR, "please edit %s", path?path:"stdin");
     goto error3;
   }
 
@@ -399,7 +399,7 @@ error3:
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "configuration parser fails");
+    logParser(LOG_ERR, "%s", "configuration parser fails");
   }
   conf_lex_destroy(scanner);
   return rc;

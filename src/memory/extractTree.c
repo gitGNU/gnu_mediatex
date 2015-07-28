@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.5 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -683,9 +683,11 @@ getContainer(Collection* coll, EType type, Archive* parent)
 /*=======================================================================
  * Function   : addContainer
  * Description: Add a new extraction container
- * Synopsis   : Container* addContainer(Collection* coll, EType type)
+ * Synopsis   : Container* addContainer(Collection* coll, EType type,
+                           Archive* parent)
  * Input      : Collection* coll : where to add
  *              EType type : type of the new container
+ *              Archive* parent : first parent
  * Output     : Container* : the container we have just add
  =======================================================================*/
 Container*
@@ -697,6 +699,11 @@ addContainer(Collection* coll, EType type, Archive* parent)
   checkCollection(coll);
   checkArchive(parent);
   logMemory(LOG_DEBUG, "addContainer %s", strEType(type));
+
+  if (type == INC) {
+    logMemory(LOG_ERR, "INC container already exists and cannot be add");
+    goto error;
+  }
 
   // already there
   if ((container = getContainer(coll, type, parent))) {

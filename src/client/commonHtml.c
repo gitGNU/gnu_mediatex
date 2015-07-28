@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.7 2015/07/07 11:16:58 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.8 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -89,7 +89,7 @@ int htmlMakeDirs(char* path, int max)
     if (!sprintf(number, "/%0*i", MAX_NUM_DIR_SIZE+1, j)) goto error;
     if (mkdir(string, 0755)) {
       if (errno != EEXIST) {
-	logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+	logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
 	goto error;
       }
     }
@@ -258,7 +258,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
   int x = 0;
   int c = 0;
 
-  logEmit(LOG_DEBUG, "serializeHtmlScoreListBar %i/%i", n, N);
+  logMain(LOG_DEBUG, "serializeHtmlScoreListBar %i/%i", n, N);
   if (n<1 || n>N) goto error;
   if (N == 1) goto end; // do not display the bar
 
@@ -381,7 +381,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlListBar fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlListBar fails");
   }
   return rc;
 }
@@ -400,7 +400,7 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
   int rc = FALSE;
 
   if(self == 0) goto error;
-  logEmit(LOG_DEBUG, "htmlAssoCarac: %s=%s", 
+  logMain(LOG_DEBUG, "htmlAssoCarac: %s=%s", 
 	  self->carac->label, self->value);
 
   htmlLiOpen(fd);
@@ -411,7 +411,7 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "htmlAssoCarac fails");
+    logMain(LOG_ERR, "%s", "htmlAssoCarac fails");
   }
   return rc;
 }
@@ -432,7 +432,7 @@ int getServerUrl(Server* server, char* txt, char* url)
 
   checkServer(server);
   if (!server->wwwPort) {
-    logEmit(LOG_WARNING, "%s", "no www port define for this server");
+    logMain(LOG_WARNING, "%s", "no www port define for this server");
     server->wwwPort = WWW_PORT;
   }
   
@@ -449,7 +449,7 @@ int getServerUrl(Server* server, char* txt, char* url)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getServerUrl fails");
+    logMain(LOG_ERR, "%s", "getServerUrl fails");
   }
   return rc;
 }
@@ -477,9 +477,9 @@ serializeHtmlCacheHeader(Collection* coll)
   if (!(self = coll->serverTree)) goto error;
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cacheHeader.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -515,7 +515,7 @@ serializeHtmlCacheHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlCacheHeader fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlCacheHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -547,9 +547,9 @@ serializeHtmlCgiHeader(Collection* coll)
   if (!(self = coll->serverTree)) goto error;
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cgiHeader.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -584,7 +584,7 @@ serializeHtmlCgiHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlCgiHeader fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlCgiHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -610,16 +610,16 @@ serializeHtmlFooter(Collection* coll)
 
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/footer.html"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
 
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
   if ((now = currentTime()) == -1) goto error;
   if (localtime_r(&now, &date) == (struct tm*)0) {
-    logEmit(LOG_ERR, "%s", "localtime_r returns on error");
+    logMain(LOG_ERR, "%s", "localtime_r returns on error");
     goto error;
   }
 
@@ -637,7 +637,7 @@ serializeHtmlFooter(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlAllBottom fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlAllBottom fails");
   }
   path = destroyString(path);
   return rc;
@@ -657,7 +657,7 @@ serializeHtmlCache(Collection* coll)
   int rc = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "serializeHtmlCache: %s collection", coll->label);
+  logMain(LOG_DEBUG, "serializeHtmlCache: %s collection", coll->label);
 
   if (!serializeHtmlCacheHeader(coll)) goto error;
   if (!serializeHtmlCgiHeader(coll)) goto error;
@@ -666,7 +666,7 @@ serializeHtmlCache(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlCache fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlCache fails");
   }
   return rc;
 }

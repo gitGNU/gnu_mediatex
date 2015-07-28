@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.6 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: command.h,v 1.7 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -37,8 +37,7 @@
   {"log-file", required_argument, 0, 'l'},		\
   {"dry-run", no_argument, 0, 'n'},			\
   {"alloc-limit", required_argument, 0, 'a'},		\
-  {"debug-alloc", no_argument, 0, 'A'},			\
-  {"debug-script", required_argument, 0, 'S'}
+  {"script-out", required_argument, 0, 'S'}
 
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS "M"
 #define MEMORY_LONG_OPTIONS				\
@@ -108,7 +107,11 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
 	      programName);						\
       rc = EINVAL;							\
     }									\
-    env.logFacility = optarg;						\
+    if ((env.logFacility = getLogFacility(optarg)) == -1) {		\
+      fprintf(stderr, "%s: incorrect facility name '%s'\n",		\
+	      programName, optarg);					\
+      rc = EINVAL;							\
+    }									\
     break;								\
 									\
   case 's':								\
@@ -118,7 +121,9 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
 	      programName);						\
       rc = EINVAL;							\
     }									\
-    env.logSeverity = optarg;						\
+    if (!parseLogSeverityOption(optarg, env.logSeverity)) {		\
+      rc = EINVAL;							\
+    }									\
     break;								\
 									\
   case 'l':								\
@@ -144,10 +149,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
       rc = 1;								\
     }									\
     env.allocLimit = atoi(optarg);					\
-    break;								\
-									\
-  case 'A':								\
-    env.debugAlloc = 1;							\
     break;								\
 									\
   case 'S':								\
@@ -225,7 +226,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Output     : N/A
  =======================================================================*/
 #define ENDINGS								\
-  logEmit(LOG_INFO, "exit on %s", rc?"success":"error");		\
+  logMain(LOG_INFO, "exit on %s", rc?"success":"error");		\
   if (env.debugAlloc) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);	\
   exitMalloc();								\
   env.logHandler = logClose(env.logHandler)

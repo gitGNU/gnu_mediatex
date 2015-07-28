@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsetuid.c,v 1.1 2015/07/01 10:50:12 nroche Exp $
+ * Version: $Id: utsetuid.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -74,15 +74,15 @@ main (int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"i:u:";
+  char* options = MISC_SHORT_OPTIONS"i:u:";
   struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
+    MISC_LONG_OPTIONS,
     {"sudo-user", required_argument, 0, 'u'},
     {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
 
-  // import mdtx environment
+  // import misc environment
   env.noRegression = FALSE;
   getEnv (&env);
 
@@ -110,7 +110,7 @@ main (int argc, char** argv)
       env.confLabel = optarg;
       break;
       
-      GET_MDTX_OPTIONS; // generic options
+      GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
   }
@@ -121,12 +121,12 @@ main (int argc, char** argv)
   /************************************************************************/
   if (env.confLabel == 0) {
     usage (programName);
-    logEmit (LOG_ERR, "%s", "Please provide a user to become");
+    logMain (LOG_ERR, "%s", "Please provide a user to become");
     goto error;
   }
   if (inputFile == 0) {
     usage (programName);
-    logEmit (LOG_ERR, "%s", "Please provide an input file");
+    logMain (LOG_ERR, "%s", "Please provide an input file");
     goto error;
   }
   argvExec[0] = inputFile;
@@ -135,28 +135,28 @@ main (int argc, char** argv)
   if (!undo_seteuid ()) goto error;
 
   // first layer
-  logEmit (LOG_NOTICE, "%s", "** first layer");
+  logMain (LOG_NOTICE, "%s", "** first layer");
   for (i=0; i<2; ++i) {
 
     // get privileges
     if ((rc = setresuid (0, 0, -1))) {
-      logEmit (LOG_ERR, "setresuid fails: %s", strerror (errno));
+      logMain (LOG_ERR, "setresuid fails: %s", strerror (errno));
       goto error;
     }
 
-    logEmit (LOG_INFO, "> ruid=%i euid=%i", getuid (), geteuid ());
+    logMain (LOG_INFO, "> ruid=%i euid=%i", getuid (), geteuid ());
 
     // change to label user
     if ((rc = setresuid (uid, uid, 0))) {
-      logEmit (LOG_ERR, "setrsuid fails: %s", strerror (errno));
+      logMain (LOG_ERR, "setrsuid fails: %s", strerror (errno));
       goto error;
     }
 
-    logEmit (LOG_INFO, "< ruid=%i euid=%i", getuid (), geteuid ());
+    logMain (LOG_INFO, "< ruid=%i euid=%i", getuid (), geteuid ());
   }
 
   // API for wrapper
-  logEmit (LOG_NOTICE, "%s", "** API for wrapper");
+  logMain (LOG_NOTICE, "%s", "** API for wrapper");
   uid = getuid();
   for (i=0; i<2; ++i) {
     if (!(rc = execScript (argvExec, 0, 0, FALSE))) goto error;
@@ -166,7 +166,7 @@ main (int argc, char** argv)
   }
 
   // API for thread
-  logEmit (LOG_NOTICE, "%s", "** API for thread");
+  logMain (LOG_NOTICE, "%s", "** API for thread");
   for (i=0; i<2; ++i) {
     if (!execScript(argvExec, env.confLabel, 0, FALSE)) goto error;
     if (!execScript(argvExec, 0, 0, FALSE)) goto error;

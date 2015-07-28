@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.y,v 1.2 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: recordFile.y,v 1.3 2015/07/28 11:45:48 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -161,7 +161,7 @@ lines: lines newLine
 
 newLine: line
 {
-  logParser(LOG_NOTICE, "%s", "add new record");
+  logParser(LOG_DEBUG, "%s", "add new record");
 
   struct tm date;
   if (localtime_r(&$1->date, &date) == (struct tm*)0) {
@@ -169,7 +169,7 @@ newLine: line
     YYABORT;
   }
 
-  logParser(LOG_NOTICE, "line %i: %c "
+  logParser(LOG_DEBUG, "line %i: %c "
 	    "%04i-%02i-%02i,%02i:%02i:%02i "
 	    "%*s %*s %*lli %s", 
 	    LINENO, 
@@ -194,16 +194,16 @@ line: recordTYPE recordDATE recordHASH recordHASH recordSIZE recordPATH
   Server* server = 0;
   Archive* archive = 0;
   char* extra = 0;
-  logParser(LOG_NOTICE, "%s", "new record");
+  logParser(LOG_DEBUG, "%s", "new record");
 
   /* maybe we should refuse unknown servers ?
   if (!(server = getServer(recordTree->collection, $3))) {
-    logEmit(LOG_ERR, "unknown server: %s", $3);
+    logParser(LOG_ERR, "unknown server: %s", $3);
     YYERROR;
   }
   */
   if (!(server = addServer(recordTree->collection, $3))) {
-    logEmit(LOG_ERR, "unknown server: %s", $3);
+    logParser(LOG_ERR, "unknown server: %s", $3);
     YYERROR;
   }
 
@@ -233,7 +233,7 @@ void
 record_error(yyscan_t yyscanner, RecordTree* recordTree,
 		  const char* message)
 {
-  logEmit(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i\n",
 	  message, record_get_text(yyscanner), LINENO);
 }
 
@@ -253,24 +253,24 @@ parseRecords(int fd)
   RecordExtra extra;
   RecordTree* tree = 0;
 
-  logParser(LOG_NOTICE, "parse records");
+  logParser(LOG_INFO, "parse records");
 
   // scanner input file
   if (fd == -1) {
-    logEmit(LOG_ERR, "%s", 
+    logParser(LOG_ERR, "%s", 
 	    "recordList parser need a file descriptor parameter");
     goto error;
   }
   
   // initialise parser
   if (record_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   // debug mode for scanner
   record_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "record_set_debug = %i", record_get_debug(scanner));
+  logParser(LOG_DEBUG, "record_set_debug = %i", record_get_debug(scanner));
 
   // initialise parser parameter
   if (!(tree = createRecordTree())) goto error2;
@@ -283,7 +283,7 @@ parseRecords(int fd)
 
   // call the parser
   if (record_parse(scanner, tree)) {
-    logEmit(LOG_ERR, "record file parser error on line %i",
+    logParser(LOG_ERR, "record file parser error on line %i",
 	    record_get_lineno(scanner));
     goto error2;
   }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
+ * Version: $Id: setuid.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -44,7 +44,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
   size_t bufsize = 0;
   int err = 0;
 
-  logEmit (LOG_DEBUG, "%s", "find an /etc/passwd line");
+  logMisc (LOG_DEBUG, "%s", "find an /etc/passwd line");
 
   // allocate buffer
   *buffer = 0;
@@ -52,26 +52,26 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
     bufsize = 16384;        // Should be more than enough
   }
   if ((*buffer = malloc(bufsize)) == 0) {
-    logEmit (LOG_ERR, "cannot malloc: %s", strerror (errno));
+    logMisc (LOG_ERR, "cannot malloc: %s", strerror (errno));
     goto error;
   }
 
   // use the uid if no label is provided
   if (label == 0 || *label == (char)0) {
     if ((err = getpwuid_r(uid, pw, *buffer, bufsize, &result))) {
-	logEmit (LOG_ERR, "getpwuid_r fails: %s", strerror (err));
+	logMisc (LOG_ERR, "getpwuid_r fails: %s", strerror (err));
 	goto error;
       }
   }
   else {
     if ((err = getpwnam_r(label, pw, *buffer, bufsize, &result))) {
-      logEmit (LOG_ERR, "getpwnam_r fails: %s", strerror (err));
+      logMisc (LOG_ERR, "getpwnam_r fails: %s", strerror (err));
       goto error;
     }
   }
 
   if (result == 0) {
-    logEmit (LOG_WARNING, "%s/%i user not found", label, uid);
+    logMisc (LOG_WARNING, "%s/%i user not found", label, uid);
     goto error;
   }
   
@@ -100,7 +100,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   size_t bufsize = 0;
   int s;
 
-  logEmit (LOG_DEBUG, "%s", "find an /etc/group line");
+  logMisc (LOG_DEBUG, "%s", "find an /etc/group line");
 
   // allocate buffer
   *buffer = 0;
@@ -108,7 +108,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
     bufsize = 16384;        /* I do not know what to put here ? */
   }
   if ((*buffer = malloc(bufsize)) == 0) {
-    logEmit (LOG_ERR, "cannot malloc: %s", strerror (errno));
+    logMisc (LOG_ERR, "cannot malloc: %s", strerror (errno));
     goto error;
   }
 
@@ -121,10 +121,10 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   }
   if (result == 0) {
     if (s == 0) {
-      logEmit (LOG_WARNING, "group not found: %s", label);
+      logMisc (LOG_WARNING, "group not found: %s", label);
     }
     else {
-      logEmit (LOG_ERR, "getgrnam_r error: %s", strerror (s));
+      logMisc (LOG_ERR, "getgrnam_r error: %s", strerror (s));
     }
     goto error;
   }
@@ -152,27 +152,27 @@ undo_seteuid (void)
   int rc = FALSE;
   int uid = getuid();
 
-  logEmit (LOG_DEBUG, "%s", "hide euid");
+  logMisc (LOG_DEBUG, "%s", "hide euid");
 
   // we do not return on error for unit tests
   if (geteuid() != 0) {
-    logEmit (LOG_ERR, "%s", 
+    logMisc (LOG_ERR, "%s", 
 	     "binary not owned by root or setuid bit not set");
     goto error;
   } 
 
-  //logEmit (LOG_DEBUG, "= ruid=%i euid=%i", getuid (), geteuid ());     
+  //logMisc (LOG_DEBUG, "= ruid=%i euid=%i", getuid (), geteuid ());     
 
   if ((rc = setresuid (-1, uid, 0))) {
-    logEmit (LOG_ERR, "setrsuid fails: %s", strerror (errno));
+    logMisc (LOG_ERR, "setrsuid fails: %s", strerror (errno));
     goto error;
   }
   
   rc = TRUE;
  error:
-  //logEmit (LOG_DEBUG, "> ruid=%i euid=%i", getuid (), geteuid ());
+  //logMisc (LOG_DEBUG, "> ruid=%i euid=%i", getuid (), geteuid ());
   if (!rc) {
-    logEmit (LOG_ERR, "%s", "fails to hide eid");
+    logMisc (LOG_ERR, "%s", "fails to hide eid");
   }
   return rc;
 }
@@ -196,19 +196,19 @@ allowedUser (char* label)
   int belongs = 0;
 
   if (!label) goto error;
-  logEmit (LOG_DEBUG, "check permissions to become %s user", label);
+  logMisc (LOG_DEBUG, "check permissions to become %s user", label);
 
   if (env.noRegression) return TRUE;
 
   if (strncmp(label, env.confLabel, strlen(env.confLabel))) {
-    logEmit (LOG_ERR, "the %s user account is not manage by mediatex", 
+    logMisc (LOG_ERR, "the %s user account is not manage by mediatex", 
 	     label);
     goto error;
   }
 
   // get current user name
   if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
-  logEmit (LOG_INFO, "you are %s", pw.pw_name);
+  logMisc (LOG_INFO, "you are %s", pw.pw_name);
 
   // if current user is already label
   if (strlen(label) == strlen(pw.pw_name) &&
@@ -230,7 +230,7 @@ allowedUser (char* label)
     }
     ++(gr.gr_mem);
   }
-  logEmit (LOG_INFO, "you do%s belongs to the %s group", 
+  logMisc (LOG_INFO, "you do%s belongs to the %s group", 
 	   belongs?"":" NOT", env.confLabel);
   if (!belongs) goto error; 
 
@@ -240,7 +240,7 @@ allowedUser (char* label)
   if (buf1) free (buf1);
   if (buf2) free (buf2);
   if (!rc) {
-    logEmit (LOG_ERR, "%s", "allowedUser fails");
+    logMisc (LOG_ERR, "%s", "allowedUser fails");
   }
   return rc;
 }
@@ -266,7 +266,7 @@ becomeUser (char* label, int doCheck)
   char *buf2 = 0;
 
   if (!label) goto error;
-  logEmit (LOG_DEBUG, "becomeUser %s", label);
+  logMisc (LOG_DEBUG, "becomeUser %s", label);
 
   if (env.noRegression) return TRUE;
   if (doCheck && !allowedUser (label)) goto error;
@@ -283,7 +283,7 @@ becomeUser (char* label, int doCheck)
 
   // get privileges  
   if ((rc = setresuid (0, 0, -1))) {
-    logEmit (LOG_ERR, "setresuid fails: %s", strerror (errno));
+    logMisc (LOG_ERR, "setresuid fails: %s", strerror (errno));
     goto error;
   }
   
@@ -292,36 +292,36 @@ becomeUser (char* label, int doCheck)
   // => need to call initgroups("mdtx", 0) as root before setuid
   // to give group indirect access (like cdrom).
   if (initgroups(label, gr.gr_gid) == -1) {
-    logEmit (LOG_ERR, "fails to reset groups list: %s", strerror (errno));
+    logMisc (LOG_ERR, "fails to reset groups list: %s", strerror (errno));
     goto error;
   }
 
   // change group
   if ((rc = setgid (gr.gr_gid))) {
-    logEmit (LOG_ERR, "setgid fails: %s", strerror (errno));
+    logMisc (LOG_ERR, "setgid fails: %s", strerror (errno));
     goto error;
   }
 
   // export the HOME environment variable
   if (setenv("HOME", pw.pw_dir, 1) == -1) {
-    logEmit(LOG_ERR, "setenv home variable failed: ", strerror(errno));
+    logMisc(LOG_ERR, "setenv home variable failed: ", strerror(errno));
     goto error;
   }
   
   // change to label user
   if ((rc = setresuid (pw.pw_uid, pw.pw_uid, 0))) {
-    logEmit (LOG_ERR, "setrsuid fails: %s", strerror (errno));
+    logMisc (LOG_ERR, "setrsuid fails: %s", strerror (errno));
     goto error;
   }
 
-  logEmit (LOG_INFO, "current user is %s", label);
+  logMisc (LOG_INFO, "current user is %s", label);
  nothingToDo:
   rc = TRUE;
  error:
   if (buf1) free (buf1);
   if (buf2) free (buf2);
   if (!rc) {
-    logEmit (LOG_ERR, "%s", "becomeUser fails");
+    logMisc (LOG_ERR, "%s", "becomeUser fails");
   }
   return rc;
 }
@@ -343,7 +343,7 @@ logoutUser (int uid)
   char* buf = 0;
 
   //if (uid == 0) goto error; // needed by setConcurentAccessLock
-  logEmit (LOG_DEBUG, "logoutUser %i", uid);
+  logMisc (LOG_DEBUG, "logoutUser %i", uid);
 
   if (env.noRegression) return TRUE;
   if (uid == getuid()) goto nothingToDo;
@@ -356,7 +356,7 @@ logoutUser (int uid)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit (LOG_ERR, "%s", "logoutUser fails");
+    logMisc (LOG_ERR, "%s", "logoutUser fails");
   }
   if (buf) free (buf);
   return rc;

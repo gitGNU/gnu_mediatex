@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utdevice.c,v 1.2 2015/07/09 11:59:55 nroche Exp $
+ * Version: $Id: utdevice.c,v 1.3 2015/07/28 11:45:40 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -107,28 +107,28 @@ main(int argc, char** argv)
   /************************************************************************/
   if (inputPath == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide an input device path");
+    logMain(LOG_ERR, "%s", "Please provide an input device path");
     goto error;
   }
 
   if (!getDevice(inputPath, &devicePath)) goto error;
   if (!isBlockDevice(devicePath, &isBlockDev)) goto error;
-  logEmit(LOG_NOTICE, "%s -> %s (is %sa block device)",
+  logMain(LOG_NOTICE, "%s -> %s (is %sa block device)",
 	  inputPath, devicePath, isBlockDev?"":"not ");
 
   if ((fd = open(devicePath, O_RDONLY)) == -1) {
-    logEmit(LOG_ERR, "open: %s", strerror(errno));
+    logMain(LOG_ERR, "open: %s", strerror(errno));
     goto error;
   }
   
   // compute iso size if block device
   if (!getIsoSize(fd, &size, &count, &bs)) goto error;
-  logEmit(LOG_NOTICE, "%s is %san iso",
+  logMain(LOG_NOTICE, "%s is %san iso",
 	  devicePath, (size > 0)?"":"not ");
   if (size > 0) {
-    logEmit(LOG_NOTICE, "volume size = %lu", count);
-    logEmit(LOG_NOTICE, "block size = %hu", bs);
-    logEmit(LOG_NOTICE, "size = %lli", (long long int)size);
+    logMain(LOG_NOTICE, "volume size = %lu", count);
+    logMain(LOG_NOTICE, "block size = %hu", bs);
+    logMain(LOG_NOTICE, "size = %lli", (long long int)size);
   }
   /************************************************************************/
 

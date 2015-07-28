@@ -1,9 +1,12 @@
 [notice utconf.c] *** List collections: 
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 coll1 coll2 coll3
 [notice utconf.c] *** Add a collection:
+[info serverFile.y] parse coll4 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll4/servers.txt
 [notice utconf.c] *** List collections:
 coll1 coll2 coll3 coll4
 [notice utconf.c] *** Del collection coll 4:
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -65,6 +68,11 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	localhost bedac32422739d7eced624ba20f5912e
 end
 [notice utconf.c] *** Share a support:
+[info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
+[info confTree.c] configuration already expanded
+[info confTree.c] configuration already populated
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -128,6 +136,11 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 end
 [notice utconf.c] *** Share a support second time:
 [notice utconf.c] *** Share support with all collections:
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/servers.txt
+[info confTree.c] configuration already expanded
+[info confTree.c] configuration already populated
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -191,6 +204,9 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	share	  SUPP21_logo.part1
 end
 [notice utconf.c] *** Withdraw a support:
+[info confTree.c] configuration already expanded
+[info confTree.c] configuration already populated
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -254,6 +270,9 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 end
 [notice utconf.c] *** Withdraw second time:
 [notice utconf.c] *** Withdraw support from all collections:
+[info confTree.c] configuration already expanded
+[info confTree.c] configuration already populated
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -313,4 +332,5 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	# --
 	localhost bedac32422739d7eced624ba20f5912e
 end
+[info confTree.c] free configuration
 [info utconf.c] exit on success

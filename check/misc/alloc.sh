@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: alloc.sh,v 1.1 2015/07/01 10:49:47 nroche Exp $
+# * Version: $Id: alloc.sh,v 1.2 2015/07/28 11:45:40 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run units tests
-misc/ut$TEST -sinfo >misc/$TEST.out 2>&1
+misc/ut$TEST >misc/$TEST.out 2>&1
 
 # compare with the expected output
 sed misc/$TEST.out -i -e "/Memory: VSZ/,/EOF/ d"

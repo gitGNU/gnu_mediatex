@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: locks.c,v 1.4 2015/06/30 17:37:32 nroche Exp $
+ * Version: $Id: locks.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -39,17 +39,17 @@ int lock(int fd, int mode)
   int rc = FALSE;
   struct flock lock;
   
-  logEmit(LOG_DEBUG, "lock file for %s",
+  logMisc(LOG_DEBUG, "lock file for %s",
 	  mode == F_RDLCK?"read":
 	  mode == F_WRLCK?"write":"??");
 
   if (fd == -1) {
-    logEmit(LOG_ERR, "%s", "please provide a file descriptor to lock");
+    logMisc(LOG_ERR, "%s", "please provide a file descriptor to lock");
     goto error;
   }
 
   if (mode != F_RDLCK && mode != F_WRLCK) {
-    logEmit(LOG_ERR, "please provide %i or %i mode, not %i",
+    logMisc(LOG_ERR, "please provide %i or %i mode, not %i",
 	    F_RDLCK, F_WRLCK, mode);
     goto error;
   }
@@ -59,14 +59,14 @@ int lock(int fd, int mode)
   lock.l_start = 0;
   lock.l_len = 0;
   if (fcntl(fd, F_SETLK, &lock)) {
-    logEmit(LOG_ERR, "fcntl(F_SETLK) lock fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fcntl(F_SETLK) lock fails: %s", strerror(errno));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "lock fails");
+    logMisc(LOG_ERR, "%s", "lock fails");
   }
   return rc;
 }
@@ -84,10 +84,10 @@ int unLock(int fd)
   int rc = FALSE;
   struct flock lock;
 
-  logEmit(LOG_DEBUG, "%s", "unlock file");
+  logMisc(LOG_DEBUG, "%s", "unlock file");
   
   if (fd == -1) {
-    logEmit(LOG_ERR, "%s", "please provide a file descriptor to lock");
+    logMisc(LOG_ERR, "%s", "please provide a file descriptor to lock");
     goto error;
   }
 
@@ -96,14 +96,14 @@ int unLock(int fd)
   lock.l_start = 0;
   lock.l_len = 0;
   if (fcntl(fd, F_SETLK, &lock)) {
-    logEmit(LOG_ERR, "fcntl(F_SETLK) unlock fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fcntl(F_SETLK) unlock fails: %s", strerror(errno));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "lock fails");
+    logMisc(LOG_ERR, "%s", "lock fails");
   }
   return rc;
 }

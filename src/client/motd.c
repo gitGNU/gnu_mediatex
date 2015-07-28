@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.5 2015/07/02 17:59:11 nroche Exp $
+ * Version: $Id: motd.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -41,7 +41,7 @@ updateMotdFromSupportDB()
   Configuration* conf = 0;
   Support *support = 0;
 
-  logEmit(LOG_DEBUG, "%s", "update motd from supports");
+  logMain(LOG_DEBUG, "%s", "update motd from supports");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(rc = createRing())) goto error;
@@ -56,7 +56,7 @@ updateMotdFromSupportDB()
   
   return rc;
  error:
-  logEmit(LOG_ERR, "%s", "fails to update motd from supports");
+  logMain(LOG_ERR, "%s", "fails to update motd from supports");
   destroyOnlyRing(rc); // do not free support objetcs
   return (RG*)0;
 }
@@ -76,7 +76,7 @@ int motdContainer(MotdData* data, Container* container)
   Archive* archive = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "motd a container %s/%s:%lli", 
+  logMain(LOG_DEBUG, "motd a container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
@@ -95,7 +95,7 @@ int motdContainer(MotdData* data, Container* container)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "motdContainer fails");
+    logMain(LOG_ERR, "%s", "motdContainer fails");
   }
   return rc;
 } 
@@ -115,7 +115,7 @@ int motdArchive(MotdData* data, Archive* archive)
   FromAsso* asso = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "motd an archive: %s:%lli", 
+  logMain(LOG_DEBUG, "motd an archive: %s:%lli", 
 	  archive->hash, archive->size);
 
   data->found = FALSE;
@@ -128,7 +128,7 @@ int motdArchive(MotdData* data, Archive* archive)
 
   // look for a matching image 
   if (archive->images->nbItems > 0) {
-    logEmit(LOG_DEBUG, "archive match %i images", archive->images->nbItems);
+    logMain(LOG_DEBUG, "archive match %i images", archive->images->nbItems);
     if (!rgInsert(data->outArchives, archive)) goto error;
   }
 
@@ -142,7 +142,7 @@ int motdArchive(MotdData* data, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "motdArchive fails");
+    logMain(LOG_ERR, "%s", "motdArchive fails");
   }
   return rc;
 } 
@@ -164,7 +164,7 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
   RGIT* curr = 0;
   MotdData data;
 
-  logEmit(LOG_DEBUG, "update motd from server for %s collection",
+  logMain(LOG_DEBUG, "update motd from server for %s collection",
 	  coll->label);
   memset(&data, 0, sizeof(MotdData));
 
@@ -204,7 +204,7 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
   if (!releaseCollection(coll, SERV|EXTR|CACH)) rc = 0;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to update motd from server for %s collection",
+    logMain(LOG_ERR, "fails to update motd from server for %s collection",
 	    coll->label);
     destroyOnlyRing(ring); // do not free support objetcs
   }
@@ -227,14 +227,14 @@ updateMotdFromAllMd5sumsDB()
   Configuration* conf = 0;
   Collection* coll = 0;
 
-  logEmit(LOG_DEBUG, "%s", "update motd from server");
+  logMain(LOG_DEBUG, "%s", "update motd from server");
   if (!(conf = getConfiguration())) goto error;
   if (!(ring = createRing())) goto error;
 
   if (!env.noRegression) {
     // ask daemon to update md5sumsDB file
     if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
-      logEmit(LOG_WARNING, "%s", "fail to update md5sumsDB file");
+      logMain(LOG_WARNING, "%s", "fail to update md5sumsDB file");
     }
   }
 
@@ -252,7 +252,7 @@ updateMotdFromAllMd5sumsDB()
   rc = ring;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to update motd from server");
+    logMain(LOG_ERR, "%s", "fails to update motd from server");
     rgDelete(ring); // do not free support objects
   }
   return rc;
@@ -287,12 +287,12 @@ updateMotd()
   if (!expandConfiguration()) goto error2;
 
   if (!(tree1 = updateMotdFromSupportDB()))  {
-    logEmit(LOG_ERR, "%s", "cannot update motd from supportDB");
+    logMain(LOG_ERR, "%s", "cannot update motd from supportDB");
     goto error2;
   }
   
   if (!(tree2 = updateMotdFromAllMd5sumsDB())) {
-    logEmit(LOG_ERR, "%s", "cannot update motd from md5sumsDB");
+    logMain(LOG_ERR, "%s", "cannot update motd from md5sumsDB");
     goto error2;
   }
 
@@ -342,7 +342,7 @@ updateMotd()
   if (!loadConfiguration(CFG|SUPP)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to update motd");
+    logMain(LOG_ERR, "%s", "fails to update motd");
   }
   tree1 = destroyOnlyRing(tree1);
   tree2 = destroyOnlyRing(tree2);

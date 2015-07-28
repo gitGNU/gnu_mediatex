@@ -1,3 +1,13 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection ( SX )
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info openClose.c] estimate 44 steps for load
+[info openClose.c] parse coll1 collection ( SXC)
+[info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/catalog000.txt
+[info openClose.c] steps: 44 / 44
 <!--#set var='HOME' value='../..' -->
 <!--#include virtual='../../scoreHeader.shtml' -->
 
@@ -1239,4 +1249,5 @@ HREF='https://localhost/~mdtx2-coll1/cgi/viewvc.cgi'>Version</A></TD>
 
 </DIV>
 
+[info confTree.c] free configuration
 [info utextractHtml.c] exit on success

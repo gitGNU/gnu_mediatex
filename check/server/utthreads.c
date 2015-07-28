@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utthreads.c,v 1.1 2015/07/01 10:50:10 nroche Exp $
+ * Version: $Id: utthreads.c,v 1.2 2015/07/28 11:45:43 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -41,7 +41,7 @@ GLOBAL_STRUCT_DEF;
 int
 termManager()
 {
-  logEmit(LOG_NOTICE, "%s", "daemon exiting");
+  logMain(LOG_NOTICE, "%s", "daemon exiting");
   return TRUE;
 }
 
@@ -55,7 +55,7 @@ termManager()
 int
 hupManager()
 {
-  logEmit(LOG_NOTICE, "%s", "daemon wake-up");
+  logMain(LOG_NOTICE, "%s", "daemon wake-up");
   return TRUE;
 }
 
@@ -83,20 +83,20 @@ signalJob(void* arg)
   	       mdtxShmRead, (void*)&param))
     goto error;
 
-  logEmit(LOG_INFO, "in  shm: (%s)", param.buf);  
+  logMain(LOG_INFO, "in  shm: (%s)", param.buf);  
 
   if (strcmp(param.buf, "0000")) {
     usleep(50000);
-    logEmit(LOG_NOTICE, "doing job %i for signal", me);
+    logMain(LOG_NOTICE, "doing job %i for signal", me);
     usleep(50000);
-    logEmit(LOG_NOTICE, "finish job %i for signal", me);
+    logMain(LOG_NOTICE, "finish job %i for signal", me);
     usleep(50000);
     strcpy(param.buf, "0000");
     rc = shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE,
     		  mdtxShmCopy, (void*)&param);
   }
 
-  logEmit(LOG_INFO, "out shm: (%s)", param.buf);  
+  logMain(LOG_INFO, "out shm: (%s)", param.buf);  
   rc = TRUE;
  error:
   signalJobEnds();
@@ -122,9 +122,9 @@ void* socketJob(void* arg)
 
   close(connexion->sock);
   usleep(50000);
-  logEmit(LOG_NOTICE, "doing job %i for %s", me, connexion->host);
+  logMain(LOG_NOTICE, "doing job %i for %s", me, connexion->host);
   usleep(50000);
-  logEmit(LOG_NOTICE, "finish job %i for %s", me, connexion->host);
+  logMain(LOG_NOTICE, "finish job %i for %s", me, connexion->host);
   usleep(50000); 
 
   rc = TRUE;

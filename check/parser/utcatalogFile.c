@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.c,v 1.1 2015/07/01 10:49:59 nroche Exp $
+ * Version: $Id: utcatalogFile.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -102,16 +102,16 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (cata_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logMain(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   cata_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "cata_set_debug = %i", cata_get_debug(scanner));
+  logMain(LOG_DEBUG, "cata_set_debug = %i", cata_get_debug(scanner));
   
   if (inputPath != 0) {
     if ((inputStream = fopen(inputPath, "r")) == 0) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", inputPath); 
+      logMain(LOG_ERR, "cannot open input stream: %s", inputPath); 
       goto error;
     }
   }
@@ -166,7 +166,7 @@ main(int argc, char** argv)
       break;
     default:
       strcpy(token, "?UNKNOWN?");
-      logEmit(LOG_ERR, "%s (line %i: '%s')", token,
+      logMain(LOG_ERR, "%s (line %i: '%s')", token,
 	      cata_get_lineno(scanner), cata_get_text(scanner));
       goto error;
     }

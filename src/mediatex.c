@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.1 2015/07/01 10:21:02 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -144,7 +144,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
  
   /************************************************************************/
-  logEmit(LOG_INFO, "%s", "** mdtx-wrapper **");
+  logMain(LOG_INFO, "%s", "** mdtx-wrapper **");
   if (!undo_seteuid()) goto error;
 
   // become mdtx user if we are not root

@@ -1,6 +1,11 @@
 S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 /logo.png
 # ^ FINALE_SUPPLY
         
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection ( SX )
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info openClose.c] steps: 93 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> USED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> UNUSED
 [warning recordTree.c] get a malloc record ?!

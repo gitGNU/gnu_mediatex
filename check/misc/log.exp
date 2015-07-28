@@ -1,3 +1,20 @@
+test using logEmitFunc
+[info utlog.c] test using logEmitMacro
+[info utlog.c] test using logEmit
+[info utlog.c] 
+[info utlog.c] *******************************
+[info utlog.c] * here is somes explanation : *
+[info utlog.c] *******************************
+[info utlog.c] - default is './utlog -f file'
+[info utlog.c]   this will not send log to syslog but directely at screen
+[info utlog.c] - try './utlog -f file -l xxx.log'
+[info utlog.c]   this will write logs into the file
+[info utlog.c] - try './utlog -f user'
+[info utlog.c]   in order to use syslog daemon (check /var/log/syslog)
+[info utlog.c] 
+[info utlog.c] **************
+[info utlog.c] * severities *
+[info utlog.c] **************
 [emerg utlog.c] A panic condition was reported to all processes.
 [alert utlog.c] A condition that should be corrected immediately.
 [crit utlog.c] A critical condition.
@@ -6,20 +23,24 @@
 [notice utlog.c] A condition requiring special handling.
 [info utlog.c] A general information message. (42)
 [info utlog.c] 
-[info utlog.c] here is somes explanation :
-[info utlog.c] 
-[info utlog.c] try './utlog -f file' for testing
-[info utlog.c] this will not send log to syslog but display them at screen
-[info utlog.c] do it because syslog is configured to hide debug informations.
-[info utlog.c] 
-[info utlog.c] './utlog -f file -l xxx.log' will put them into the file
-[info utlog.c] To use syslog you must provide a facility
-[info utlog.c]'
-[info utlog.c] 
 [info utlog.c] Severity allows to ignore messages from lower severity
-[info utlog.c] default severity is '-s info' as you can read it
-[info utlog.c] in fact this only hide debug messages
+[info utlog.c] default severity is '-s info' for unit tests,
+[info utlog.c] and '-s notice' for mediatex binaries
+[info utlog.c] - try './utlog -f file -s debug' to see debug message
 [info utlog.c] 
-[info utlog.c] try './utlog -f file -s debug' to see debug info
+[info utlog.c] **************
+[info utlog.c] * modules *
+[info utlog.c] **************
+[info utlog.c] test using logAlloc
+[info utlog.c] test using logScript
+[info utlog.c] test using logMisc
+[info utlog.c] test using logMemory
+[info utlog.c] test using logParser
+[info utlog.c] test using logCommon
+[info utlog.c] test using logMain
 [info utlog.c] 
-[info utlog.c] test success for re-opening log using file facility
+[info utlog.c] Each module has its own severity
+[info utlog.c] - try './utlog -s error -s info:misc,main'
+[info utlog.c]   this select >=info messages from main and misc modules
+[info utlog.c] <<< this is an info message from MISC module >>>
+[info utlog.c] re-open log success

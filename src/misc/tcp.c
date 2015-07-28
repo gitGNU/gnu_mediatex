@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: tcp.c,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: tcp.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -46,37 +46,37 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
   struct sockaddr_in address_accepted;
   int autorisation = 1;
 
-  logEmit(LOG_DEBUG, "%s", "acceptTcpSocket");
+  logMisc(LOG_DEBUG, "%s", "acceptTcpSocket");
 
   if ((sock_listening = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-    logEmit(LOG_ERR, "socket: %s", strerror(errno));
+    logMisc(LOG_ERR, "socket: %s", strerror(errno));
     goto error;
   }
 
   // so as to re-use socket address
   if (setsockopt(sock_listening, SOL_SOCKET, SO_REUSEADDR, &autorisation, 
 		 sizeof(int)) == -1){
-      logEmit(LOG_ERR, "setsockopt: %s", strerror(errno));
+      logMisc(LOG_ERR, "setsockopt: %s", strerror(errno));
       goto error;
     }
   
   while (bind(sock_listening, (struct sockaddr*) address_listening, 
 	      sizeof(struct sockaddr_in)) < 0) {
     if (errno != EADDRINUSE) {
-      logEmit(LOG_ERR, "bind: ", strerror(errno));
+      logMisc(LOG_ERR, "bind: ", strerror(errno));
       goto error;
     }
 
-    logEmit(LOG_WARNING, "%s", "address in use: exiting");
+    logMisc(LOG_WARNING, "%s", "address in use: exiting");
     goto error; // maybe to comment here in production mode
   }
 
   if (listen(sock_listening, 5) != 0) {
-    logEmit(LOG_ERR, "listen: %s", strerror(errno));
+    logMisc(LOG_ERR, "listen: %s", strerror(errno));
     goto error;
   }
 
-  logEmit(LOG_NOTICE, "Listenning on %s:%u",
+  logMisc(LOG_NOTICE, "Listenning on %s:%u",
 	  inet_ntoa(address_listening->sin_addr),
 	  ntohs(address_listening->sin_port));
 
@@ -85,7 +85,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
     if ((sock_accepted 
 	 = accept(sock_listening,
 		  (struct sockaddr *) &address_accepted, &length)) < 0) {
-      logEmit(LOG_ERR, "accept: %s", strerror(errno));
+      logMisc(LOG_ERR, "accept: %s", strerror(errno));
       goto error;
     }
     
@@ -97,7 +97,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
  error:
   //env.running = FALSE; // do not exit
   if(!rc) {
-    logEmit(LOG_ERR, "%s", "acceptTcpSocket fails");
+    logMisc(LOG_ERR, "%s", "acceptTcpSocket fails");
   }
   return rc;
 }
@@ -116,17 +116,17 @@ connectTcpSocket(const struct sockaddr_in* address_server)
   int rc = -1;
   
   if ((rc = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-    logEmit(LOG_ERR, "socket: %s", strerror(errno));
+    logMisc(LOG_ERR, "socket: %s", strerror(errno));
     goto error;
   }
   
-  logEmit(LOG_INFO, "connecting to %s:%u",
+  logMisc(LOG_INFO, "connecting to %s:%u",
 	  inet_ntoa(address_server->sin_addr),
 	  ntohs(address_server->sin_port));
 
   if (connect(rc, (struct sockaddr*) address_server, 
 	      sizeof(struct sockaddr_in)) != 0) {
-    logEmit(LOG_INFO, "connect fails: %s", strerror(errno));
+    logMisc(LOG_INFO, "connect fails: %s", strerror(errno));
     goto error;
   }
 
@@ -134,7 +134,7 @@ connectTcpSocket(const struct sockaddr_in* address_server)
  error:
   close(rc);
   // not really an error as remote server may be offline
-  //logEmit(LOG_ERR, "%s", "connectTcpSocket fails");
+  //logMisc(LOG_ERR, "%s", "connectTcpSocket fails");
   return -1;
 }
 
@@ -162,20 +162,20 @@ tcpWrite(int sd, char* buffer, size_t bufferSize)
 	errorNb = errno;
 
 	if (errorNb == EINTR) {
-	  logEmit(LOG_WARNING, "writting socket interrupted by kernel: %s",
+	  logMisc(LOG_WARNING, "writting socket interrupted by kernel: %s",
 		  strerror(errorNb));
 	  continue;
 	}
 	if (errorNb != EAGAIN) {
-	  logEmit(LOG_ERR, "writting socket error: %s", strerror(errorNb));
+	  logMisc(LOG_ERR, "writting socket error: %s", strerror(errorNb));
 	  goto error;
 	}
-	logEmit(LOG_WARNING, "writting socket keep EAGAIN error: %s", 
+	logMisc(LOG_WARNING, "writting socket keep EAGAIN error: %s", 
 		strerror(errorNb));
       }
     remaining -= writen;
     next += writen;
-    logEmit(LOG_DEBUG, "written %d ; remain %d", writen, remaining);
+    logMisc(LOG_DEBUG, "written %d ; remain %d", writen, remaining);
   }
 
   rc = (remaining == 0);
@@ -208,16 +208,16 @@ tcpRead(int sd, char* buffer, size_t bufferSize)
 	 errorNb = errno;
 
 	 if (errno != EINTR) {
-	   logEmit(LOG_ERR, "reading socket error: %s", strerror(errorNb));
+	   logMisc(LOG_ERR, "reading socket error: %s", strerror(errorNb));
 	   goto error;
 	 }
-	 logEmit(LOG_WARNING, "reading socket interrupted by kernel: %s", 
+	 logMisc(LOG_WARNING, "reading socket interrupted by kernel: %s", 
 		 strerror(errorNb));
        }
        else {
 	 rc += read;
 	 next += read;
-	 logEmit(LOG_DEBUG, "read %d ; remain %d", rc, bufferSize - rc);
+	 logMisc(LOG_DEBUG, "read %d ; remain %d", rc, bufferSize - rc);
        }
      }
 

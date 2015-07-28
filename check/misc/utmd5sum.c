@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmd5sum.c,v 1.1 2015/07/01 10:49:56 nroche Exp $
+ * Version: $Id: utmd5sum.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -113,7 +113,7 @@ main(int argc, char** argv)
   /************************************************************************/
   if (inputPath == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a file to compute checksums");
+    logMain(LOG_ERR, "%s", "Please provide a file to compute checksums");
     goto error;
   }
 
@@ -121,20 +121,20 @@ main(int argc, char** argv)
   data.path = inputPath;
   data.size = 0; // undef
   
-  logEmit(LOG_DEBUG, "%s", 
+  logMain(LOG_DEBUG, "%s", 
 	  "Quick computation, no path resolution, no progbar");
   data.opp = MD5_CACHE_ID;
   if (!doMd5sum(&data)) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "Quick computation, path resolution, progbar");
+  logMain(LOG_NOTICE, "%s", "Quick computation, path resolution, progbar");
   data.opp = MD5_SUPP_ID;
   if (!doMd5sum(&data)) goto error;
       
-  logEmit(LOG_NOTICE, "%s", "Full computation, path resolution, progbar");
+  logMain(LOG_NOTICE, "%s", "Full computation, path resolution, progbar");
   data.opp = MD5_SUPP_ADD;
   if (!doMd5sum(&data)) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "Full check, path resolution, progbar");
+  logMain(LOG_NOTICE, "%s", "Full check, path resolution, progbar");
   data.opp = MD5_SUPP_CHECK;
   if (!doMd5sum(&data)) goto error;
   

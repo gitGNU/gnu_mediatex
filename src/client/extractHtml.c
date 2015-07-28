@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.7 2015/07/07 09:46:21 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.8 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -87,7 +87,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   int i = 0;
 
   if(self == 0) goto error;
-  logEmit(LOG_DEBUG, "%s", "htmlFromAsso");
+  logMain(LOG_DEBUG, "%s", "htmlFromAsso");
 
   container = self->container;
   many = (container->parents->nbItems > 1);
@@ -126,7 +126,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "htmlFromAsso fails");
+    logMain(LOG_ERR, "%s", "htmlFromAsso fails");
   }
   return rc;
 }
@@ -151,7 +151,7 @@ htmlContainer(Container* self, FILE* fd)
   char score[8];
 
   if(self == 0) goto error;
-  logEmit(LOG_DEBUG, "%s", "htmlContainer");
+  logMain(LOG_DEBUG, "%s", "htmlContainer");
 
   //many = (self->childs->nbItems > 1);
   many = (avl_count(self->childs) > 1);
@@ -182,7 +182,7 @@ htmlContainer(Container* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "htmlContainer fails");
+    logMain(LOG_ERR, "%s", "htmlContainer fails");
   }
   return rc;
 }
@@ -215,9 +215,9 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
 
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
+    logMain(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }
 
@@ -259,7 +259,7 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlContentList fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlContentList fails");
   }
   path = destroyString(path);
   return rc;
@@ -315,7 +315,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
     if (!(path = catString(path, url))) goto error;
     if (mkdir(path, 0755)) {
       if (errno != EEXIST) {
-    	logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+    	logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
     	goto error;
       }
     }
@@ -333,9 +333,9 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   }
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
+    logMain(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
     goto error;
   }
   
@@ -491,7 +491,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlScoreArchive fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlScoreArchive fails");
   }
   path = destroyString(path);
   return rc;
@@ -523,9 +523,9 @@ serializeHtmlServer(Collection* coll, Server* server)
   if (!(path = catString(path, "/servers/srv_"))) goto error;
   if (!(path = catString(path, server->fingerPrint))) goto error;
   if (!(path = catString(path, ".shtml"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -633,7 +633,7 @@ serializeHtmlServer(Collection* coll, Server* server)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlServer fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlServer fails");
   }
   path = destroyString(path);
   return rc;
@@ -665,9 +665,9 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
   getArchiveListUri(url, "/", i);
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -709,7 +709,7 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlArchiveList fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlArchiveList fails");
   }
   path = destroyString(path);
   return rc;
@@ -736,7 +736,7 @@ serializeHtmlArchiveLists(Collection* coll)
   int i = 0;
   int n = 0;
 
-  logEmit(LOG_DEBUG, "%s", "serializeHtmsScoreLists");
+  logMain(LOG_DEBUG, "%s", "serializeHtmsScoreLists");
 
   nb = avl_count(coll->archives);
   if (!getArchiveListUri(tmp, "/", 0)) goto error;
@@ -746,16 +746,16 @@ serializeHtmlArchiveLists(Collection* coll)
   // build the directory
   if (mkdir(path, 0755)) {
     if (errno != EEXIST) {
-      logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+      logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
       goto error;
     }
   }
   // serialize header file for the document list
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  logMain(LOG_DEBUG, "Serialize %s", path2); 
   if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
+    logMain(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }  
 
@@ -774,7 +774,7 @@ serializeHtmlArchiveLists(Collection* coll)
 
   // get the total number of lists of archives
   n = (nb - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_DEBUG, "have %i archive, so %i lists", nb, n);
+  logMain(LOG_DEBUG, "have %i archive, so %i lists", nb, n);
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
   if (!htmlMakeDirs(path, n)) goto error;
@@ -794,7 +794,7 @@ serializeHtmlArchiveLists(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlScoreScoreLists fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlScoreScoreLists fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -829,9 +829,9 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, url))) goto error;
 
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -873,7 +873,7 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlBadList fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlBadList fails");
   }
   path = destroyString(path);
   return rc;
@@ -903,7 +903,7 @@ serializeHtmlBadLists(Collection* coll)
   int n = 0;
   char buf[30];
 
-  logEmit(LOG_DEBUG, "%s", "serializeHtmsBadLists");
+  logMain(LOG_DEBUG, "%s", "serializeHtmsBadLists");
 
   // put bad archives into a new ring  
   if (!(badArchives = createRing())) goto error;
@@ -917,16 +917,16 @@ serializeHtmlBadLists(Collection* coll)
   // build the directory
   if (mkdir(path, 0755)) {
     if (errno != EEXIST) {
-      logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+      logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
       goto error;
     }
   }
   // serialize header file for the document list
   if (!(path2 = createString(path))) goto error;
   if (!(path2 = catString(path2, "/header.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "Serialize %s", path2); 
+  logMain(LOG_DEBUG, "Serialize %s", path2); 
   if (!env.dryRun && (fd = fopen(path2, "w")) == 0) {
-    logEmit(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
+    logMain(LOG_ERR, "fopen %s fails: %s", path2, strerror(errno)); 
     goto error;
   }
   
@@ -957,7 +957,7 @@ serializeHtmlBadLists(Collection* coll)
 
   // get the total number of lists of documents
   n = (nb - 1) / MAX_INDEX_PER_PAGE +1;
-  logEmit(LOG_DEBUG, "have %i bad archives, so %i lists", nb, n);
+  logMain(LOG_DEBUG, "have %i bad archives, so %i lists", nb, n);
 
   // build lists sub-directories (group by MAX_FILES_PER_DIR)
   if (!htmlMakeDirs(path, n)) goto error;
@@ -977,7 +977,7 @@ serializeHtmlBadLists(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlBadLists fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlBadLists fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -1010,9 +1010,9 @@ serializeHtmsScoreIndex(Collection* coll)
 
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, "/index.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -1081,7 +1081,7 @@ serializeHtmsScoreIndex(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmsScoreIndex fails");
+    logMain(LOG_ERR, "%s", "serializeHtmsScoreIndex fails");
   }
   path = destroyString(path);
   return rc;
@@ -1110,9 +1110,9 @@ serializeHtmlScoreHeader(Collection* coll)
 
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/scoreHeader.shtml"))) goto error;
-  logEmit(LOG_DEBUG, "serialize %s", path);
+  logMain(LOG_DEBUG, "serialize %s", path);
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logEmit(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
@@ -1165,7 +1165,7 @@ serializeHtmlScoreHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlScoreHeader fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlScoreHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -1194,14 +1194,14 @@ serializeHtmlScore(Collection* coll)
 
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
-  logEmit(LOG_DEBUG, "serializeHtmlScore: %s collection", coll->label);
+  logMain(LOG_DEBUG, "serializeHtmlScore: %s collection", coll->label);
  
   // servers directories
   if (!(path1 = createString(coll->htmlScoreDir))) goto error;
   if (!(path1 = catString(path1, "/servers"))) goto error;
   if (mkdir(path1, 0755)) {
     if (errno != EEXIST) {
-      logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+      logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
       goto error;
     }
   }
@@ -1221,13 +1221,13 @@ serializeHtmlScore(Collection* coll)
   if (!(path1 = catString(path1, tmp))) goto error;
   if (mkdir(path1, 0755)) {
     if (errno != EEXIST) {
-      logEmit(LOG_ERR, "mkdir %s fails: %s", path1, strerror(errno));
+      logMain(LOG_ERR, "mkdir %s fails: %s", path1, strerror(errno));
       goto error;
     }
   }
 
   if ((nb = avl_count(coll->archives))) {
-    logEmit(LOG_DEBUG, "have %i archives", nb);
+    logMain(LOG_DEBUG, "have %i archives", nb);
     if (!htmlMakeDirs(path1, nb)) goto error;
   }
 
@@ -1248,7 +1248,7 @@ serializeHtmlScore(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "serializeHtmlScore fails");
+    logMain(LOG_ERR, "%s", "serializeHtmlScore fails");
   }
   path1 = destroyString(path1);
   path2 = destroyString(path2);

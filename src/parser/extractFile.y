@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.y,v 1.6 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: extractFile.y,v 1.7 2015/07/28 11:45:48 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *
@@ -116,54 +116,89 @@ file: stanzas
 ;
 
 stanzas: stanzas stanza
+{
+  logParser(LOG_DEBUG, "line %i: stanzas: stanzas stanza", LINENO);
+}
        | stanza
+{
+  logParser(LOG_DEBUG, "line %i: stanzas: stanza", LINENO);
+}
        ;
 
-stanza: extrOPEN container parents extrIMPLIES childs extrCLOSE
-      | extrOPEN container extrIMPLIES childs extrCLOSE
-      | extrOPEN container extrCLOSE
+stanza: extrOPEN container extrIMPLIES childs extrCLOSE
+{
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
+	    "stanza: (container => childs)");
+}
 ;
 
-container: extrTYPE archive
+container: incContainer
 {
-  if ($1 == INC) {
-    logParser(LOG_ERR, "INC container cannot have parent");
-    YYERROR;
-  }
-  if (!(container = addContainer(coll, $1, $2))) YYERROR;
+  logParser(LOG_DEBUG, "line %i: incContainer", LINENO);
 }
-         | extrTYPE
+         | stdContainer
 {
-  if ($1 != INC) {
-    logParser(LOG_ERR, "basic containers must have parent");
-    YYERROR;
-  }
+  logParser(LOG_DEBUG, "line %i: stdContainer", LINENO);
+}
+         | stdContainer parents
+{
+  logParser(LOG_DEBUG, "line %i: stdContainer parents", LINENO);
+}
+;
+
+
+incContainer: extrTYPE 
+{
+  logParser(LOG_DEBUG, "line %i: incContainer: %s", 
+	    LINENO, strEType($1));
   container = coll->extractTree->incoming;
+}
+
+stdContainer: extrTYPE archive
+{
+  logParser(LOG_DEBUG, "line %i: stdContainer: %s archive",
+	    LINENO, strEType($1));
+  if (!(container = addContainer(coll, $1, $2))) YYERROR;
 }
 ;
 
 parents: parents parent
+{
+  logParser(LOG_DEBUG, "line %i: parents: parents parent", LINENO);
+}
        | parent
+{
+  logParser(LOG_DEBUG, "line %i: parents: parent", LINENO);
+}
 ;
 
 childs: childs child
+{
+  logParser(LOG_DEBUG, "line %i: childs: childs child", LINENO);
+}
       | child
+{
+  logParser(LOG_DEBUG, "line %i: childs: child", LINENO);
+}
 ;
 
 parent: archive 
 {
+  logParser(LOG_DEBUG, "line %i: parent: archive", LINENO);
   if (!addFromArchive(coll, container, $1)) YYERROR;
 }
 ;
 
 child: archive extrSTRING
 {
+  logParser(LOG_DEBUG, "line %i: child: archive %s", LINENO, $2);
   if (!(addFromAsso(coll, $1, container, $2))) YYERROR;
 }
 ;
 
 archive: extrHASH extrCOLON extrSIZE
 {
+  logParser(LOG_DEBUG, "line %i: archive: %s:%lli", LINENO, $1, $3);
   if (!($$ = addArchive(coll, $1, $3))) YYERROR;
 }
 ;
@@ -184,7 +219,7 @@ archive: extrHASH extrCOLON extrSIZE
 void extr_error(yyscan_t yyscanner, Collection* coll,
 		Container* container, const char* message)
 {
-  logEmit(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i\n",
 	  message, extr_get_text(yyscanner), LINENO);
 }
 
@@ -205,18 +240,18 @@ int parseExtractFile(Collection* coll, const char* path)
   Container* container = 0;
 
   checkCollection(coll);
-  logParser(LOG_NOTICE, "parse %s extraction data from %s",
+  logParser(LOG_INFO, "parse %s extraction data from %s",
 	    coll->label, path?path:"stdin");
 
   // initialise scanner
   if (extr_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   if (path != 0) {
     if (!(inputStream = fopen(path, "r"))) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream: %s", path); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;
@@ -226,13 +261,13 @@ int parseExtractFile(Collection* coll, const char* path)
 
   // debug mode for scanner
   extr_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "extr_set_debug = %i", extr_get_debug(scanner));
+  logParser(LOG_DEBUG, "extr_set_debug = %i", extr_get_debug(scanner));
 
   // call the parser
   if (extr_parse(scanner, coll, container)) {
-    logEmit(LOG_ERR, "extract parser fails on line %i",
+    logParser(LOG_ERR, "extract parser fails on line %i",
 	    extr_get_lineno(scanner));
-    logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
+    logParser(LOG_ERR, "please edit %s", path?path:"stdin");
     goto error3;
   }
 
@@ -247,7 +282,7 @@ int parseExtractFile(Collection* coll, const char* path)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extract parser error");
+    logParser(LOG_ERR, "%s", "extract parser error");
   }
   extr_lex_destroy(scanner);
   return rc;

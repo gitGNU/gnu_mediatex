@@ -1,16 +1,6 @@
-[debug log.c] logging to the standard error
-[debug log.c] started
-[debug command.c] set the environment variables
 [debug openClose.c] get coll1 collection
 [debug openClose.c] load configuration
-[debug locks.c] lock file for read
-[debug locks.c] unlock file
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1 mdtx1-coll1 mdtx1 750
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1 mdtx1 mdtx1-coll1 2750
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1 mdtx1 mdtx1-coll1 2770
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1 mdtx1 mdtx1-coll1 2770
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh mdtx1-coll1 mdtx1-coll1 700
-[debug perm.c] checkDirectory LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/public_html mdtx1 mdtx1-coll1 2750
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [debug extractScore.c] computeExtractScore: coll1
 [debug openClose.c] load coll1 collection ( SX )
 [debug openClose.c] loadCollectionNbSteps
@@ -18,14 +8,10 @@
 [info openClose.c] parse coll1 collection ( SX )
 [debug openClose.c] file loop on coll1 collection ( SX )
 [debug openClose.c] do load coll1 collection ( S  )
-[debug locks.c] lock file for read
-[debug serverFile.y] serv_set_debug = 0
-[debug locks.c] unlock file
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
 [debug openClose.c] do load coll1 collection (  X )
 [debug openClose.c] load   X  files
-[debug locks.c] lock file for read
-[debug extractFile.y] extr_set_debug = 0
-[debug locks.c] unlock file
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
 [debug extractScore.c] populateExtractTree: coll1
 [debug extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
@@ -138,4 +124,5 @@
 [debug extractScore.c] getExtractStatus: coll1
 [debug extractScore.c] extraction score = 0.00
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
+[info confTree.c] free configuration
 [info utextractScore.c] exit on success

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.5 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -192,14 +192,14 @@ checkIncoming(Archive* self, FromAsso* asso, int depth)
 	       &date.tm_year, &date.tm_mon, &date.tm_mday,
 	       &date.tm_hour, &date.tm_min, &date.tm_sec)
 	!= 6) {
-      logEmit(LOG_ERR, "sscanf: error parsing date %s", asso->path);
+      logCommon(LOG_ERR, "sscanf: error parsing date %s", asso->path);
       goto error;
     }
   date.tm_year -= 1900; // from GNU/Linux burning date
   date.tm_mon -= 1;     // month are managed from 0 to 11 
   date.tm_isdst = -1; // no information available about spring horodatage
   if ((time = mktime(&date)) == -1) {
-    logEmit(LOG_ERR, "%s", "mktime: error parsing date");
+    logCommon(LOG_ERR, "%s", "mktime: error parsing date");
     goto error;
   }
 
@@ -410,7 +410,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
   if (!rc) goto error;
 
   // display an alert message if bad score
-  logEmit((self->score < 0)?LOG_ERR:
+  logCommon((self->score < 0)?LOG_ERR:
 	  ((self->score == 0)?LOG_EMERG:
 	   ((self->score < coll->serverTree->scoreParam.badScore)
 	    ?LOG_ALERT:(self->score < 5)?LOG_CRIT:LOG_NOTICE)),

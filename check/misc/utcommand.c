@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcommand.c,v 1.2 2015/07/09 14:06:59 nroche Exp $
+ * Version: $Id: utcommand.c,v 1.3 2015/07/28 11:45:40 nroche Exp $
  * Project: Mediatex
  * Module : unit tests
  *
@@ -35,10 +35,10 @@ GLOBAL_STRUCT_DEF;
 static void 
 usage(char* programName)
 {
-  mdtxUsage(programName);
-  fprintf(stderr, "\n\t\t[ -i scriptPath ]");
+  miscUsage(programName);
+  fprintf(stderr, "\n\t\t  -i scriptPath");
 
-  mdtxOptions();
+  miscOptions();
   fprintf(stderr, "  ---\n");
   fprintf(stderr, "  -i, --input-file\tinput script to exec\n");
 
@@ -64,9 +64,9 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"i:";
+  char* options = MISC_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
+    MISC_LONG_OPTIONS,
     {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
@@ -88,7 +88,7 @@ main(int argc, char** argv)
       inputFile = optarg;
       break;
       
-      GET_MDTX_OPTIONS; // generic options
+      GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
   }
@@ -99,7 +99,6 @@ main(int argc, char** argv)
   /************************************************************************/
   if (inputFile == 0) {
     usage(programName);
-    //logEmit(LOG_ERR, "%s", "Please provide an input file");
     goto error;
   }
 

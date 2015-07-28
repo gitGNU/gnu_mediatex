@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsignals.c,v 1.1 2015/07/01 10:49:57 nroche Exp $
+ * Version: $Id: utsignals.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -39,7 +39,7 @@ int running = TRUE;
 static void 
 sigalarmManager(int unused)
 {
-   logEmit(LOG_NOTICE, "sigalarmManager get %i", unused);
+   logMain(LOG_NOTICE, "sigalarmManager get %i", unused);
    return;
 }
 
@@ -84,43 +84,43 @@ sigManager(void* arg)
   if (sigaddset(&mask, SIGINT)) goto error;
  
   (void) arg;
-  logEmit(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
-  logEmit(LOG_DEBUG, "- kill -SIGHUP %i", getpid());
-  logEmit(LOG_DEBUG, "- kill -SIGUSR1 %i", getpid());
-  logEmit(LOG_DEBUG, "- kill -SIGTERM %i", getpid());
+  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_DEBUG, "- kill -SIGHUP %i", getpid());
+  logMain(LOG_DEBUG, "- kill -SIGUSR1 %i", getpid());
+  logMain(LOG_DEBUG, "- kill -SIGTERM %i", getpid());
 
   while (running) {
 
     // suspends  execution of the calling thread until one of the
     // signals in set is pending
     if ((sigNumber = sigwaitinfo(&mask, 0)) == -1) {
-      logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
+      logMain(LOG_ERR, "sigwait fails: %s", strerror(errno));
       goto error;
     }
   
-    logEmit(LOG_NOTICE, "signal reçu: %i", sigNumber);
+    logMain(LOG_NOTICE, "signal reçu: %i", sigNumber);
     switch (sigNumber) {
     case SIGHUP:
-      logEmit(LOG_NOTICE, "%s", "=> HUP");
+      logMain(LOG_NOTICE, "%s", "=> HUP");
       break;
     case SIGUSR1:
-      logEmit(LOG_NOTICE, "%s", "=> SIGUSR1");
+      logMain(LOG_NOTICE, "%s", "=> SIGUSR1");
       break;
     case SIGTERM:
-      logEmit(LOG_NOTICE, "%s", "=> SIGTERM");
+      logMain(LOG_NOTICE, "%s", "=> SIGTERM");
       running = FALSE;
       break;
     case SIGSEGV:
-      logEmit(LOG_NOTICE, "%s", "=> SIGSEGV");
+      logMain(LOG_NOTICE, "%s", "=> SIGSEGV");
       reEnableALL();
       kill(getpid(), SIGSEGV);
     case SIGINT:
-      logEmit(LOG_NOTICE, "%s", "=> SIGINT");
+      logMain(LOG_NOTICE, "%s", "=> SIGINT");
       reEnableALL();
       kill(getpid(), SIGINT);
       break;
     default:
-      logEmit(LOG_NOTICE, "%s", "=> ???");
+      logMain(LOG_NOTICE, "%s", "=> ???");
     }
     fflush(stdout);
   }
@@ -205,12 +205,12 @@ main(int argc, char** argv)
 
   // test threads "rendez-vous"
   if ((err = pthread_create(&thread, 0, empty, (void *)0))) {
-    logEmit(LOG_ERR, "pthread_create fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_create fails: %s", strerror(err));
     goto error;
   }
 
   if ((err = pthread_join(thread, 0))) {
-    logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
 
@@ -221,7 +221,7 @@ main(int argc, char** argv)
   }
 
   if ((err = pthread_join(thread, 0))) {
-    logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
   /************************************************************************/

@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: utaddress.c,v 1.4 2015/07/22 10:45:15 nroche Exp $
+ * Version: $Id: utaddress.c,v 1.5 2015/07/28 11:45:40 nroche Exp $
  * Project: Mediatex
  * Module : socket address
 
@@ -106,7 +106,7 @@ main(int argc, char** argv)
 
   // test on 127.0.0.1
   if (!buildSocketAddressEasy(&address, 0x7f000001, 7)) {
-    logEmit(LOG_ERR, "%s", "error while building socket address (1)");
+    logMain(LOG_ERR, "%s", "error while building socket address (1)");
     goto error;
   } 
   if ((text = getHostNameByAddr(&address.sin_addr)) == 0)
@@ -121,7 +121,7 @@ main(int argc, char** argv)
   printf("IP of %s is: %s\n", inputHost, inet_ntoa(ipv4)); 
 
   if (!buildSocketAddress(&address, inputHost, "udp", "echo")) {
-    logEmit(LOG_ERR, "%s", "error while building socket address (2)");
+    logMain(LOG_ERR, "%s", "error while building socket address (2)");
     goto error;
   }
   

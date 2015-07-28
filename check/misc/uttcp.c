@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: uttcp.c,v 1.1 2015/07/01 10:49:57 nroche Exp $
+ * Version: $Id: uttcp.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -46,7 +46,7 @@ tcpServerExemple(int sock, struct sockaddr_in* address_accepted)
 
   // rq: getpeername can retrieve struct sockaddr* from sock
   addr = getHostNameByAddr(&address_accepted->sin_addr);
-  logEmit(LOG_INFO, "Accepting connexion from %s (%s)",
+  logMain(LOG_INFO, "Accepting connexion from %s (%s)",
 	  inet_ntoa(address_accepted->sin_addr),
 	  //ntohs(address_accepted->sin_port),
 	  addr);
@@ -55,7 +55,7 @@ tcpServerExemple(int sock, struct sockaddr_in* address_accepted)
   /* read a word an reply by an anagrame */
   n = tcpRead(sock, buffer, 98);
   buffer[n] = (char)0;
-  logEmit(LOG_NOTICE, "server read>  %s", buffer);
+  logMain(LOG_NOTICE, "server read>  %s", buffer);
 
   for (i=0; i<n/2; ++i){
     buffer[99] = buffer[i];
@@ -65,17 +65,17 @@ tcpServerExemple(int sock, struct sockaddr_in* address_accepted)
 
   buffer[n] = (char)0;
   if (!tcpWrite(sock, buffer, n)) {
-    logEmit(LOG_ERR, "%s", "server error writing");
+    logMain(LOG_ERR, "%s", "server error writing");
   }
   else {
-    logEmit(LOG_NOTICE, "server write> %s", buffer);
+    logMain(LOG_NOTICE, "server write> %s", buffer);
   }
 
   /* end */
   close(sock);
 
   addr = getHostNameByAddr(&address_accepted->sin_addr);
-  logEmit(LOG_INFO, "Connexion closed with %s (%s)",
+  logMain(LOG_INFO, "Connexion closed with %s (%s)",
 	  inet_ntoa(address_accepted->sin_addr),
 	  //ntohs(address_accepted->sin_port),
 	  addr);
@@ -100,19 +100,19 @@ tcpClientExemple(int sock_connected)
   char buffer[100];
   int n = 0;
 
-  logEmit(LOG_NOTICE, "client write> %s", query);
+  logMain(LOG_NOTICE, "client write> %s", query);
   if (!tcpWrite(sock_connected, query, strlen(query))) {
-    logEmit(LOG_ERR, "%s", "client error writing");
+    logMain(LOG_ERR, "%s", "client error writing");
     goto error;
   }
   
   if (shutdown(sock_connected, SHUT_WR) != 0) {
-    logEmit(LOG_ERR, "shutdown: %s", strerror(errno));
+    logMain(LOG_ERR, "shutdown: %s", strerror(errno));
   }
 
   n = tcpRead(sock_connected, buffer, 99);
   buffer[n] = (char)0;
-  logEmit(LOG_NOTICE, "client read>  %s", buffer);
+  logMain(LOG_NOTICE, "client read>  %s", buffer);
 
  error:
   close(sock_connected);
@@ -191,17 +191,17 @@ main(int argc, char** argv)
   /************************************************************************/
   /* convert port into char* */
   if (sprintf(service, "%i", portToUse) < 0) {
-    logEmit(LOG_ERR, "%s", "cannot convert DEFAULT_PORT into service");
+    logMain(LOG_ERR, "%s", "cannot convert DEFAULT_PORT into service");
     goto error;
   }
   
   // Client
   if (isClient) {
     usleep(500);
-    logEmit(LOG_NOTICE, "%s",  "client mode");
+    logMain(LOG_NOTICE, "%s",  "client mode");
     
     if (!buildSocketAddress(&address, serverToConnect, "tcp", service)) {
-      logEmit(LOG_ERR, "%s", "error while building socket address");
+      logMain(LOG_ERR, "%s", "error while building socket address");
       goto error;
     }
     
@@ -216,10 +216,10 @@ main(int argc, char** argv)
   
   // Server
   else {
-    logEmit(LOG_NOTICE, "%s",  "server mode");
+    logMain(LOG_NOTICE, "%s",  "server mode");
     
     if (!buildSocketAddress(&address, (char*)0, "tcp", service)) {
-      logEmit(LOG_ERR, "%s", "error while building socket address");
+      logMain(LOG_ERR, "%s", "error while building socket address");
       goto error;
     }
     

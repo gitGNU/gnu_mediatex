@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.h,v 1.5 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: log.h,v 1.6 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTex
  * Module : log
  *
@@ -31,6 +31,17 @@
 #include <syslog.h>
 #include <stdarg.h>
 
+typedef enum {
+   LOG_ALLOC,
+   LOG_SCRIPT,
+   LOG_MISC,
+   LOG_MEMORY,
+   LOG_PARSER,
+   LOG_COMMON,
+   LOG_MAIN,
+   LOG_MAX_MODULE
+} LogModule;
+
 typedef struct LogFacility {
   int code;
   char* name;
@@ -52,16 +63,15 @@ LogSeverity* getLogSeverityByCode(int code);
 typedef struct LogHandler {
   char* name;
   LogFacility* facility;
-  LogSeverity* severity;
+  LogSeverity* severity[LOG_MAX_MODULE];
   FILE* hlog;
 } LogHandler;
 
-LogHandler* logOpen(char* name, int facility, int severity, 
+int parseLogSeverityOption(char* parameter, int* logSeverity);
+LogHandler* logOpen(char* name, int facility, int* logSeverity,
 		    char* logFile);
-
 void logEmitFunc(LogHandler* logHandler, int priority,
 		 const char* format, ...);
-
 LogHandler* logClose(LogHandler* logHandler);
 
 extern LogSeverity LogSeverities[];
@@ -78,23 +88,19 @@ extern LogSeverity LogSeverities[];
  =======================================================================*/
 #if MISC_LOG_LINES    
 #define logEmitMacro(log, priority, file, line, format, ...) {		\
-    if (priority <= log->severity->code) {				\
-      char* ptr = file + strlen(file);					\
-      while (ptr > (char*)file && *(ptr-1) != '/') --ptr;		\
-      logEmitFunc(log, priority, "[%s %s:%i] " format,			\
-		  LogSeverities[priority].name, ptr, line,		\
-		  ## __VA_ARGS__);					\
-    }									\
+    char* ptr = file + strlen(file);					\
+    while (ptr > (char*)file && *(ptr-1) != '/') --ptr;			\
+    logEmitFunc(log, priority, "[%s %s:%i] " format,			\
+		LogSeverities[priority].name, ptr, line,		\
+		## __VA_ARGS__);					\
   }
 #else
 #define logEmitMacro(log, priority, file, line, format, ...) {		\
-    if (priority <= log->severity->code) {				\
-      char* ptr = file + strlen(file);					\
-      while (ptr > (char*)file && *(ptr-1) != '/') --ptr;		\
-      logEmitFunc(log, priority, "[%s %s] " format,			\
-		  LogSeverities[priority].name, ptr,			\
-		  ## __VA_ARGS__);					\
-    }									\
+    char* ptr = file + strlen(file);					\
+    while (ptr > (char*)file && *(ptr-1) != '/') --ptr;			\
+    logEmitFunc(log, priority, "[%s %s] " format,			\
+		LogSeverities[priority].name, ptr,			\
+		## __VA_ARGS__);					\
   }
 #endif
 
@@ -105,9 +111,12 @@ extern LogSeverity LogSeverities[];
  * Input      : Wrapper for logEmitFunc function
  * Output     : N/A
  =======================================================================*/
-#define logEmit(priority, format, ...)					\
-  logEmitMacro(env.logHandler, priority, __FILE__, __LINE__,		\
-	       format, ## __VA_ARGS__);
+#define logEmit(module, priority, format, ...)	{			\
+    if (priority <= env.logHandler->severity[module]->code) {		\
+      logEmitMacro(env.logHandler, priority, __FILE__, __LINE__,	\
+		    format, ## __VA_ARGS__);				\
+    }									\
+  }
 
 /*=======================================================================
  * Macro      : logAlloc
@@ -119,11 +128,39 @@ extern LogSeverity LogSeverities[];
  * Input      : wrapper for logEmit maccro
  * Output     : N/A
  =======================================================================*/
-#define logAlloc(priority, file, line, format, ...) {		\
-    if (priority < LOG_NOTICE || env.debugAlloc) {		\
-      logEmitMacro(env.logHandler, priority, file, line,	\
-		   format, ## __VA_ARGS__);			\
-    }								\
+#define logAlloc(priority, file, line, format, ...) {			\
+    if (priority <= env.logHandler->severity[LOG_ALLOC]->code) {	\
+      logEmitMacro(env.logHandler, priority, file, line,		\
+		    format, ## __VA_ARGS__);				\
+    }									\
+  }
+
+/*=======================================================================
+ * Macro      : logScript
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the scripts
+ * Synopsis   : void logScript(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logScript(priority, format, ...) {			\
+    logEmit(LOG_SCRIPT, priority, format, ## __VA_ARGS__);	\
+  }
+
+/*=======================================================================
+ * Macro      : logMisc
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the misc modules
+ * Synopsis   : void logMisc(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logMisc(priority, format, ...) {			\
+    logEmit(LOG_MISC, priority, format, ## __VA_ARGS__);	\
   }
 
 /*=======================================================================
@@ -137,9 +174,7 @@ extern LogSeverity LogSeverities[];
  * Output     : N/A
  =======================================================================*/
 #define logMemory(priority, format, ...) {			\
-    if (priority < LOG_NOTICE || env.debugMemory) {		\
-      logEmit(priority, format, ## __VA_ARGS__);		\
-    }								\
+    logEmit(LOG_MEMORY, priority, format, ## __VA_ARGS__);	\
   }
     
 /*=======================================================================
@@ -153,9 +188,7 @@ extern LogSeverity LogSeverities[];
  * Output     : N/A
  =======================================================================*/
 #define logParser(priority, format, ...) {			\
-    if (priority < LOG_NOTICE || env.debugParser) {		\
-      logEmit(priority, format, ## __VA_ARGS__);		\
-    }								\
+    logEmit(LOG_PARSER, priority, format, ## __VA_ARGS__);	\
   }
 
 /*=======================================================================
@@ -169,9 +202,21 @@ extern LogSeverity LogSeverities[];
  * Output     : N/A
  =======================================================================*/
 #define logCommon(priority, format, ...) {			\
-    if (priority < LOG_NOTICE || env.debugCommon) {		\
-      logEmit(priority, format, ## __VA_ARGS__);		\
-    }								\
+    logEmit(LOG_COMMON, priority, format, ## __VA_ARGS__);	\
+  }
+
+/*=======================================================================
+ * Macro      : logMain
+ * Author(s)  : Nicolas Roche
+ * Date begin : 2012/05/01
+ *     change : 2012/05/01
+ * Description: Special log function for the common code
+ * Synopsis   : void logCommon(level, format, ...)
+ * Input      : wrapper for logEmit maccro
+ * Output     : N/A
+ =======================================================================*/
+#define logMain(priority, format, ...) {			\
+    logEmit(LOG_MAIN, priority, format, ## __VA_ARGS__);	\
   }
 
 #endif /* MDTX_MISC_LOG_H */

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.6 2015/07/22 10:45:16 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.7 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -83,9 +83,9 @@ extern RecordTree* parseRecords(int fd);
 typedef struct MdtxEnv {
 
   // loggin
+  int logFacility;
   char *logFile;
-  char *logFacility;
-  char *logSeverity;
+  int logSeverity[LOG_MAX_MODULE];
   LogHandler* logHandler;
 
   // allocating
@@ -123,32 +123,38 @@ extern MdtxEnv env;
 #define GLOBAL_MDTX_STRUCT_UT						\
   {									\
     /* logging */							\
-    0, "file", "info", 0,						\
-      /* allocating */							\
-      0, (int (*)(long))0, 0,						\
-      /* configuration */						\
-      DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,			\
-      /* debug */							\
-      FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
-      /* global data structure */					\
-      0, TRUE								\
-      }
+    99,	0,								\
+      {LOG_INFO, LOG_INFO, LOG_INFO, LOG_INFO,				\
+	  LOG_INFO, LOG_INFO, LOG_INFO},				\
+      0,								\
+	/* allocating */						\
+	0, (int (*)(long))0, 0,						\
+	/* configuration */						\
+	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,		\
+	/* debug */							\
+	FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,			\
+	/* global data structure */					\
+	0, TRUE								\
+	}
 
 // Global variable definition having its default values for binaries
 // file -> local2 for mdtxd (set by /etc/init.d/mediatexd)
 #define GLOBAL_MDTX_STRUCT_BIN						\
   {									\
     /* logging */							\
-    0, "file", "notice", 0,						\
-      /* allocating */							\
-      128, (int (*)(long))0, 0,						\
-      /* configration */						\
-      DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
-      /* debug and tests */						\
-      FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,				\
-      /* global data structure */					\
-      0, TRUE								\
-      }
+    99, 0,								\
+      {	LOG_NOTICE, LOG_NOTICE, LOG_NOTICE, LOG_NOTICE,			\
+	  LOG_NOTICE, LOG_NOTICE, LOG_NOTICE},				\
+      0,								\
+	/* allocating */						\
+	128, (int (*)(long))0, 0,					\
+	/* configration */						\
+	DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
+	/* debug and tests */						\
+	FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,			\
+	/* global data structure */					\
+	0, TRUE								\
+	}
 
 #define GLOBAL_STRUCT_DEF MdtxEnv env =	GLOBAL_MDTX_STRUCT_UT
 #define GLOBAL_STRUCT_DEF_BIN MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN

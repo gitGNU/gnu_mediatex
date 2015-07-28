@@ -1,3 +1,10 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info openClose.c] estimate 137 steps for load
+[info openClose.c] parse coll1 collection ( SXC)
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/catalog000.txt
+[info openClose.c] steps: 137 / 137
 [info misc.c] Make HTML for coll1
 [info misc.c] estimate 17 steps for archives
 [info misc.c] estimate 19 steps for all
@@ -9,6 +16,7 @@
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [info device.c] absolute path is /HERE/misc/logo.png
 [info misc.c] upload file to coll1 collection
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 # MediaTeX extraction metadata: coll1
 
 (INC
@@ -103,4 +111,6 @@ b281449c229bcc4a3556cdcc0d3ebcec:815	logo/logo.xpm
 # mode: conf
 # mode: font-lock
 # End:
+[info openClose.c] steps: 13 / 0
+[info confTree.c] free configuration
 [info utmisc.c] exit on success

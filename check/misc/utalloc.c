@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utalloc.c,v 1.1 2015/07/01 10:49:54 nroche Exp $
+ * Version: $Id: utalloc.c,v 1.2 2015/07/28 11:45:40 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -45,7 +45,7 @@ int disease(long size)
   long goal = 0;
   int i=0;
 
-  logEmit(LOG_INFO, "disease callback: %i", size);
+  logMain(LOG_INFO, "disease callback: %i", size);
 
   goal = alloc->maxAllocated - size;
   if (goal < 0) goal = 0;
@@ -53,7 +53,7 @@ int disease(long size)
   while (i<BLOCK_MAX && alloc->sumAllocated > goal) {
     while (i<BLOCK_MAX && !ptr[i]) ++i;
     if (i<BLOCK_MAX) {
-      logEmit(LOG_INFO, "free slot %i", i);
+      logMain(LOG_INFO, "free slot %i", i);
       free(ptr[i]);
       ptr[i] = 0;
       rc = TRUE;
@@ -63,7 +63,7 @@ int disease(long size)
 
   // check if something was free
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fail to disease memory");
+    logMain(LOG_ERR, "%s", "fail to disease memory");
   }
   return rc;
 }
@@ -100,9 +100,9 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MISC_SHORT_OPTIONS;
   struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
+    MISC_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
 
@@ -117,7 +117,7 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-      GET_MDTX_OPTIONS; // generic options
+      GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
   }
@@ -127,19 +127,19 @@ main(int argc, char** argv)
 
   /************************************************************************/
   for (i=1; i<BLOCK_MAX; ++i) {
-    logEmit(LOG_NOTICE, "allocating slot %i...", i);
+    logMain(LOG_NOTICE, "allocating slot %i...", i);
     if (!(ptr[i] = malloc(BLOCK_SIZE*i))) goto error;
     memset(ptr[i], 42, BLOCK_SIZE*i);
-    logEmit(LOG_NOTICE, "...slot %i allocated", i);
+    logMain(LOG_NOTICE, "...slot %i allocated", i);
     memoryStatus(LOG_DEBUG, __FILE__, __LINE__);
   }
 
   // Finished
   for (i=1; i<BLOCK_MAX; ++i) {
     if (ptr[i]) {
-      logEmit(LOG_NOTICE, "freeing slot %i...", i);
+      logMain(LOG_NOTICE, "freeing slot %i...", i);
       free(ptr[i]);
-      logEmit(LOG_NOTICE, "...slot %i is free", i);
+      logMain(LOG_NOTICE, "...slot %i is free", i);
     }
   }
   /************************************************************************/

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.4 2015/06/30 17:37:32 nroche Exp $
+ * Version: $Id: keys.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
@@ -44,15 +44,15 @@ readPublicKey(char* path)
   int n = 0;
 
   if (path == 0 || *path == (char)0) {
-    logEmit(LOG_ERR, "%s", 
+    logMisc(LOG_ERR, "%s", 
 	    "please provide a path for the public key to read");
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "readPublicKey: %s", path);
+  logMisc(LOG_DEBUG, "readPublicKey: %s", path);
 
   if ((fd = fopen(path, "r")) == 0) {
-    logEmit(LOG_ERR, "fopen fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
 
@@ -63,12 +63,12 @@ readPublicKey(char* path)
   }
 
   if (ferror(fd)) {
-    logEmit(LOG_ERR, "%s", "fread fails.");
+    logMisc(LOG_ERR, "%s", "fread fails.");
     goto error;
   }
 
   if (fclose(fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
@@ -78,14 +78,14 @@ readPublicKey(char* path)
   }
 
   if ((rc = malloc (strlen(buf)+1)) == 0) {
-    logEmit(LOG_ERR, "malloc fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "malloc fails: %s", strerror(errno));
     goto error;
   }
 
   strcpy(rc, buf);
  error:
   if (rc == 0) {
-    logEmit(LOG_ERR, "%s", "readPublicKey fails");
+    logMisc(LOG_ERR, "%s", "readPublicKey fails");
   }
   return rc;
 }
@@ -123,7 +123,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   char* ptr;
   int nbEquals = 0;
   
-  logEmit(LOG_DEBUG, "%s", "getFingerPrint");
+  logMisc(LOG_DEBUG, "%s", "getFingerPrint");
 
   // get only the key
   while (*key != ' ') ++key;
@@ -139,7 +139,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
 
   // we just use the size of the public key for now
   if ((key_unbase64 = malloc(strlen(key))) == 0) {
-    logEmit(LOG_ERR, "malloc fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "malloc fails: %s", strerror(errno));
     goto error;
   }
 
@@ -151,7 +151,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   key_unbased64_length = 
     EVP_DecodeBlock(key_unbase64, (unsigned char *) key, strlen(key));
   if (key_unbased64_length <= 0) {
-    logEmit(LOG_ERR, "EVP_DecodeBlock fails: %i", key_unbased64_length);
+    logMisc(LOG_ERR, "EVP_DecodeBlock fails: %i", key_unbased64_length);
     goto error;
   }
 
@@ -162,7 +162,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
 
   // initialize our context to use MD5 as the hashing algorithm
   if (EVP_DigestInit_ex(&mdctx, EVP_md5(), 0) != 1) {
-    logEmit(LOG_ERR, "%s", "EVP_DigestInit_ex fails");
+    logMisc(LOG_ERR, "%s", "EVP_DigestInit_ex fails");
     goto error;
   }
 
@@ -170,13 +170,13 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   // -nbEquals is neeeded to work by looks very strange
   if (EVP_DigestUpdate(&mdctx, key_unbase64,
   		       key_unbased64_length - nbEquals) != 1) {
-    logEmit(LOG_ERR, "%s", "EVP_DigestUpdate fails");
+    logMisc(LOG_ERR, "%s", "EVP_DigestUpdate fails");
     goto error;
   }
 
   // finish the hashing and get us the hash value in md_value
   if (EVP_DigestFinal_ex(&mdctx, md_value, &md_len) != 1) {
-    logEmit(LOG_ERR, "%s", "EVP_DigestFinal fails");
+    logMisc(LOG_ERR, "%s", "EVP_DigestFinal fails");
     goto error;
   }
 

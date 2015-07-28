@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.6 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: cache.c,v 1.7 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -41,7 +41,7 @@ getAbsCachePath(Collection* coll, char* path)
 
   checkCollection(coll);
   checkLabel(path);
-  logEmit(LOG_DEBUG, "getAbsCachePath %s", path);
+  logMain(LOG_DEBUG, "getAbsCachePath %s", path);
 
   if (!(rc = createString(coll->cacheDir))) goto error;
   if (!(rc = catString(rc, "/"))) goto error;
@@ -49,7 +49,7 @@ getAbsCachePath(Collection* coll, char* path)
   
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getAbsCachePath fails");
+    logMain(LOG_ERR, "%s", "getAbsCachePath fails");
   }
   return rc;
 }
@@ -69,7 +69,7 @@ getAbsRecordPath(Collection* coll, Record* record)
 
   checkCollection(coll);
   checkRecord(record);
-  logEmit(LOG_DEBUG, "getAbsRecordPath: %s", strRecordType(record));
+  logMain(LOG_DEBUG, "getAbsRecordPath: %s", strRecordType(record));
 
   switch (getRecordType(record)) {
   case FINALE_SUPPLY:
@@ -79,12 +79,12 @@ getAbsRecordPath(Collection* coll, Record* record)
     if (!(rc = getAbsCachePath(coll, record->extra))) goto error;
     break;
   default:
-    logEmit(LOG_ERR, "cannot return path for %s", strRecordType(record));
+    logMain(LOG_ERR, "cannot return path for %s", strRecordType(record));
   }
   
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getAbsRecordPath fails");
+    logMain(LOG_ERR, "%s", "getAbsRecordPath fails");
   }
   return rc;
 }
@@ -117,15 +117,15 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   memset(&md5, 0, sizeof(Md5Data));
 
   if (isEmptyString(path)) {
-    logEmit(LOG_ERR, "%s", "please provide a path for the entry");
+    logMain(LOG_ERR, "%s", "please provide a path for the entry");
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "scaning file: %s", path);
+  logMain(LOG_DEBUG, "scaning file: %s", path);
 
   // get file attributes (size)
   if (stat(path, &statBuffer)) {
-    logEmit(LOG_ERR, "status error on %s: %s", path, strerror(errno));
+    logMain(LOG_ERR, "status error on %s: %s", path, strerror(errno));
     goto error;
   }
 
@@ -138,7 +138,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
     if (strcmp(record->extra, relativePath)) continue;
 
     // if already there do not compute the md5sums
-    logEmit(LOG_DEBUG, "%s match: md5sum skipped", relativePath);
+    logMain(LOG_DEBUG, "%s match: md5sum skipped", relativePath);
     goto end;
   }
 
@@ -163,7 +163,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
 
   if (toKeep) {
     record->date = 0x7FFFFFFF; // maximum date: server will restart before
-    logEmit(LOG_DEBUG, "%s", 
+    logMain(LOG_DEBUG, "%s", 
 	    "is read-only file (will never try to delete it)");
   }
 
@@ -174,7 +174,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "error scanning file");
+    logMain(LOG_ERR, "%s", "error scanning file");
   }
   return rc;
 }
@@ -208,7 +208,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
   char* absolutePath2= 0;
 
   if (path == 0) {
-    logEmit(LOG_ERR, "%s", 
+    logMain(LOG_ERR, "%s", 
 	    "please provide at least an empty string for path");
     goto error;
   }
@@ -218,12 +218,12 @@ scanRepository(Collection* coll, const char* path, int toKeep)
       (absolutePath = catString(absolutePath, path)) == 0)
     goto error;
 
-  logEmit(LOG_INFO, "scaning directory: %s", absolutePath);
+  logMain(LOG_INFO, "scaning directory: %s", absolutePath);
 
   entries = 0;
   if ((nbEntries 
        = scandir(absolutePath, &entries, 0, alphasort)) == -1) {
-    logEmit(LOG_ERR, "scandir fails on %s: %s", 
+    logMain(LOG_ERR, "scandir fails on %s: %s", 
 	    absolutePath, strerror(errno));
     goto error;
   }
@@ -238,7 +238,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
 	(relativePath = catString(relativePath, entry->d_name)) == 0)
       goto error;
     
-    //logEmit(LOG_INFO, "scaning '%s'", relativePath);
+    //logMain(LOG_INFO, "scaning '%s'", relativePath);
     
       switch (entry->d_type) {
 
@@ -255,12 +255,12 @@ scanRepository(Collection* coll, const char* path, int toKeep)
 	break;
 	
       case DT_LNK:
-	logEmit(LOG_INFO, "%s", "do not handle simlink up today"); 
+	logMain(LOG_INFO, "%s", "do not handle simlink up today"); 
 	break;
 
       case DT_UNKNOWN:
       default: 
-	logEmit(LOG_INFO, "ignore not regular file \'%s%s\'", 
+	logMain(LOG_INFO, "ignore not regular file \'%s%s\'", 
 		absolutePath, entry->d_name);
 	break;
       }   
@@ -272,7 +272,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails scaning directory: %s", absolutePath);
+    logMain(LOG_ERR, "fails scaning directory: %s", absolutePath);
   }
   if (entries != 0) {
     for (n=0; n<nbEntries; ++n) {
@@ -303,7 +303,7 @@ quickScan(Collection* coll)
   RGIT* curr = 0;
   Record* supply = 0;
 
-  logEmit(LOG_DEBUG, "updating cache for %s collection", coll->label);
+  logMain(LOG_DEBUG, "updating cache for %s collection", coll->label);
   checkCollection(coll);
 
   if (!loadCollection(coll, CACH)) goto error;
@@ -324,7 +324,7 @@ quickScan(Collection* coll)
     if (access(path, R_OK) != -1) continue;
 
     // del the record from the cache
-    logEmit(LOG_WARNING, "file not found in cache as expected: %s", path);
+    logMain(LOG_WARNING, "file not found in cache as expected: %s", path);
     if (!delCacheEntry(coll, supply)) goto error3;
   } 
   while ((archive = next));
@@ -336,7 +336,7 @@ quickScan(Collection* coll)
   if (!releaseCollection(coll, CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "fails to update cache for %s collection%",
+    logMain(LOG_INFO, "fails to update cache for %s collection%",
 	    coll?coll->label:"?");
   } 
   path = destroyString(path);
@@ -358,7 +358,7 @@ quickScanAll(void)
   Collection* coll = 0;
   RGIT* curr = 0;
 
-  logEmit(LOG_DEBUG, "%s", "updating cache for all collections");
+  logMain(LOG_DEBUG, "%s", "updating cache for all collections");
 
   // for all collection
   conf = getConfiguration();
@@ -373,7 +373,7 @@ quickScanAll(void)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "%s", "fails to update cache for all collections");
+    logMain(LOG_INFO, "%s", "fails to update cache for all collections");
   } 
   return rc;
 }
@@ -401,13 +401,13 @@ static void cacheSizes(CacheTree* self, off_t* free, off_t* available)
   *free = self->totalSize - self->useSize;
   *available = self->totalSize - self->frozenSize;
 
-  logEmit(LOG_INFO, "cache sizes:");
-  logEmit(LOG_INFO, "  total  %12llu", self->totalSize);
-  logEmit(LOG_INFO, "- used   %12llu", self->useSize);
-  logEmit(LOG_INFO, "= free   %12llu", *free);
-  logEmit(LOG_INFO, "  total  %12llu", self->totalSize);
-  logEmit(LOG_INFO, "- frozen %12llu", self->frozenSize);
-  logEmit(LOG_INFO, "= avail  %12llu", *available);
+  logMain(LOG_INFO, "cache sizes:");
+  logMain(LOG_INFO, "  total  %12llu", self->totalSize);
+  logMain(LOG_INFO, "- used   %12llu", self->useSize);
+  logMain(LOG_INFO, "= free   %12llu", *free);
+  logMain(LOG_INFO, "  total  %12llu", self->totalSize);
+  logMain(LOG_INFO, "- frozen %12llu", self->frozenSize);
+  logMain(LOG_INFO, "= avail  %12llu", *available);
 
   // was usefull to debug cache content:
   // -----------------------------------
@@ -415,15 +415,15 @@ static void cacheSizes(CacheTree* self, off_t* free, off_t* available)
   /* while ((archive = rgNext_r(archives, &curr))) { */
   /*   //if (archive->state < ) continue; */
   /*   record = archive->localSupply; */
-  /*   logEmit(LOG_INFO, "%-10s %20lli %s",  */
+  /*   logMain(LOG_INFO, "%-10s %20lli %s",  */
   /* 	    strAState(archive->state), */
   /* 	    archive->size, */
   /* 	    record?record->extra:"-"); */
   /*   if (archive->state >= ALLOCATED) used += archive->size; */
   /*   if (archive->state == TOKEEP) frozen += archive->size; */
   /* } */
-  /* logEmit(LOG_INFO, "used   = %12llu", used); */
-  /* logEmit(LOG_INFO, "frozen = %12llu", frozen); */
+  /* logMain(LOG_INFO, "used   = %12llu", used); */
+  /* logMain(LOG_INFO, "frozen = %12llu", frozen); */
 }
 
 /*=======================================================================
@@ -452,7 +452,7 @@ freeCache(Collection* coll, off_t need, int* success)
   RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "free the %s cache", coll->label);
+  logMain(LOG_DEBUG, "free the %s cache", coll->label);
   *success = FALSE; 
   if (!(conf = getConfiguration())) goto error;
   if (!(date = currentTime())) goto error;
@@ -460,21 +460,21 @@ freeCache(Collection* coll, off_t need, int* success)
 
   // cache sizes
   cacheSizes(self, &free, &available);
-  logEmit(LOG_INFO, "need     %12llu", need);
+  logMain(LOG_INFO, "need     %12llu", need);
 
   // different cases :
   if (need > self->totalSize) {
-    logEmit(LOG_WARNING, "%s's total cache size is to few", 
+    logMain(LOG_WARNING, "%s's total cache size is to few", 
 	    coll->label);
     goto end;
   }
   if (need > available) {
-    logEmit(LOG_NOTICE, "%s's cache have no more room available now", 
+    logMain(LOG_NOTICE, "%s's cache have no more room available now", 
 	    coll->label);
     goto end;
   }
   if (need <= free) {
-    logEmit(LOG_DEBUG, "%s's cache have room already available", 
+    logMain(LOG_DEBUG, "%s's cache have room already available", 
 	    coll->label);
     *success = TRUE;
     goto end;
@@ -496,7 +496,7 @@ freeCache(Collection* coll, off_t need, int* success)
     // looking for archive that resides into the cache
     if (archive->state < AVAILABLE) continue;
     record = archive->localSupply;
-    logEmit(LOG_DEBUG, "check file: %s", record->extra);
+    logMain(LOG_DEBUG, "check file: %s", record->extra);
 
     // looking for perenial archive we can safely delete from the cache
     if (!computeArchiveStatus(coll, archive)) goto error;
@@ -508,10 +508,10 @@ freeCache(Collection* coll, off_t need, int* success)
     if (!delCacheEntry(coll, record)) goto error;
 
     // free file on disk
-    logEmit(LOG_NOTICE, "unlink %s", path);
+    logMain(LOG_NOTICE, "unlink %s", path);
     if (!env.dryRun) {
       if (unlink(path) == -1) {
-	logEmit(LOG_ERR, "error with unlink %s:", strerror(errno));
+	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
 	goto error;
       }
       path = destroyString(path);
@@ -523,7 +523,7 @@ freeCache(Collection* coll, off_t need, int* success)
   cacheSizes(self, &free, &available);
  
   if (!(*success = (need <= free))) {
-    logEmit(LOG_NOTICE, "%s's cache have no more room available", 
+    logMain(LOG_NOTICE, "%s's cache have no more room available", 
 	    coll->label);
   }
  end:
@@ -531,7 +531,7 @@ freeCache(Collection* coll, off_t need, int* success)
  error:
   if (!rc) {
     *success = FALSE;
-    logEmit(LOG_INFO, "no more room into %s cache", 
+    logMain(LOG_INFO, "no more room into %s cache", 
 	    coll->label);
   } 
   path = destroyString(path);
@@ -565,17 +565,17 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
   checkCollection(coll);
   checkArchive(archive);
   cache = coll->cacheTree;
-  logEmit(LOG_DEBUG, "allocate new record into %s cache", coll->label);
+  logMain(LOG_DEBUG, "allocate new record into %s cache", coll->label);
   *record = 0; // default output (allocation fails)
 
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_ALLOC]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
 
   // look for already available record
   if (archive->state >= ALLOCATED) {
-    logEmit(LOG_WARNING, "%s", "archive is already allocated");
+    logMain(LOG_WARNING, "%s", "archive is already allocated");
     goto error2;
   }
 
@@ -599,12 +599,12 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
   rc = TRUE;
  error2:
   if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_ALLOC]))) {
-    logEmit(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
  error:
   if (!rc) {
-    logEmit(LOG_INFO, "fails add record into %s cache", coll->label);
+    logMain(LOG_INFO, "fails add record into %s cache", coll->label);
     *record = destroyRecord(*record);
   } 
   extra = destroyString(extra);
@@ -625,7 +625,7 @@ callAccess(char* path)
   int rc = 0;
 
   checkLabel(path);
-  logEmit(LOG_INFO, "call access on %s", path);
+  logMain(LOG_INFO, "call access on %s", path);
 
   if (access(path, R_OK) != 0) {
     rc = errno;
@@ -634,7 +634,7 @@ callAccess(char* path)
 
  error:
   if (rc) {
-    logEmit(LOG_INFO, "access fails: %s", strerror(errno));
+    logMain(LOG_INFO, "access fails: %s", strerror(errno));
   }
   return rc;
 }
@@ -659,7 +659,7 @@ makeDir(char* base, char* path, mode_t mode)
 
   mask = umask(0000);
   checkLabel(path);
-  logEmit(LOG_DEBUG, "makeDir %s", path);
+  logMain(LOG_DEBUG, "makeDir %s", path);
 
   // build the target directory into the cache
   i = strlen(base)+1;
@@ -671,7 +671,7 @@ makeDir(char* base, char* path, mode_t mode)
 
       if (mkdir(path, mode)) { // (mode & ~umask & 0777)
 	if (errno != EEXIST) {
-	  logEmit(LOG_ERR, "mkdir fails: %s", strerror(errno));
+	  logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
 	  goto error;
 	}
 	else {
@@ -688,7 +688,7 @@ makeDir(char* base, char* path, mode_t mode)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "makeDir fails");
+    logMain(LOG_ERR, "%s", "makeDir fails");
   }
   umask(mask);
   return rc;
@@ -711,7 +711,7 @@ removeDir(char* base, char* path)
   int l = 0;
 
   checkLabel(path);
-  logEmit(LOG_DEBUG, "removeDir %s", path);
+  logMain(LOG_DEBUG, "removeDir %s", path);
 
   // remove the temporary extraction directory into the cache
   i = strlen(path)-1;
@@ -725,10 +725,10 @@ removeDir(char* base, char* path)
   while (--i > l) {
     while (i>l && path[i] != '/') --i;
 
-    logEmit(LOG_INFO, "rmdir %s", path);
+    logMain(LOG_INFO, "rmdir %s", path);
     if (rmdir(path)) {
       if (errno != ENOTEMPTY || errno != EBUSY) {
-	logEmit(LOG_ERR, "rmdir fails: %s", strerror(errno));
+	logMain(LOG_ERR, "rmdir fails: %s", strerror(errno));
 	goto error;
       }
       else {
@@ -743,7 +743,7 @@ removeDir(char* base, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "removeDir fails");
+    logMain(LOG_ERR, "%s", "removeDir fails");
   }
   return rc;
 }
@@ -764,7 +764,7 @@ extractCp(char* source, char* target)
 
   checkLabel(source);
   checkLabel(target);
-  logEmit(LOG_DEBUG, "extractCp %s", target);
+  logMain(LOG_DEBUG, "extractCp %s", target);
 
   argv[2] = source;
   argv[3] = target;
@@ -774,7 +774,7 @@ extractCp(char* source, char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractCp fails");
+    logMain(LOG_ERR, "%s", "extractCp fails");
   } 
   return rc;
 }
@@ -802,15 +802,15 @@ cacheUpload(Collection* coll, Record* record)
 
   checkCollection(coll);
   if (isEmptyString(record->extra)) {
-    logEmit(LOG_ERR, "%s", "please provide a file to upload");
+    logMain(LOG_ERR, "%s", "please provide a file to upload");
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "upload file: %s", record->extra);
+  logMain(LOG_DEBUG, "upload file: %s", record->extra);
 
   // build target paths: .../upload/AAAAMM/basename
   if (localtime_r(&record->date, &date) == (struct tm*)0) {
-    logEmit(LOG_ERR, "%s", "localtime_r returns on error");
+    logMain(LOG_ERR, "%s", "localtime_r returns on error");
     goto error;
   }
   basename = strrchr(record->extra, '/');
@@ -827,13 +827,13 @@ cacheUpload(Collection* coll, Record* record)
 
   // assert target path is not already used
   if (stat(targetAbsPath, &statBuffer) == 0) {
-    logEmit(LOG_WARNING, "target path already exists: %s", targetAbsPath);
+    logMain(LOG_WARNING, "target path already exists: %s", targetAbsPath);
     goto end;
   }
 
   // assert archive is new
   if ((record->archive->localSupply) != 0) {
-    logEmit(LOG_WARNING, "%s", "archive already exists");
+    logMain(LOG_WARNING, "%s", "archive already exists");
     goto end;
   }
 
@@ -853,7 +853,7 @@ cacheUpload(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_WARNING, "%s", "fails to upload file");
+    logMain(LOG_WARNING, "%s", "fails to upload file");
     if (record2) delCacheEntry(coll, record2);
   } 
   targetRelPath = destroyString(targetRelPath);
@@ -879,17 +879,17 @@ uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
   Archive* archive = 0;
   (void) connexion;
 
-  logEmit(LOG_DEBUG, "%s", "work on upload message");
+  logMain(LOG_DEBUG, "%s", "work on upload message");
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logEmit(LOG_ERR, "%s", "unknown collection for archiveTree");
+    logMain(LOG_ERR, "%s", "unknown collection for archiveTree");
     goto error;
   }
   
   // check we get final supplies
   if (isEmptyRing(recordTree->records)) {
-    logEmit(LOG_ERR, "%s", "please provide records for have query");
+    logMain(LOG_ERR, "%s", "please provide records for have query");
     goto error;
   }
 
@@ -908,7 +908,7 @@ uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
   if (!releaseCollection(coll, EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "remote extraction fails");
+    logMain(LOG_ERR, "%s", "remote extraction fails");
     tcpWrite(connexion->sock, "500 fails\n", 10);
   }
   return rc;

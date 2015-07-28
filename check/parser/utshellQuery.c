@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.c,v 1.1 2015/07/01 10:50:02 nroche Exp $
+ * Version: $Id: utshellQuery.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -98,7 +98,7 @@ main(int argc, char** argv)
   buffer = shell__scan_string(env.commandLine, scanner);
 
   shell_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "shell_set_debug = %i", shell_get_debug(scanner));
+  logMain(LOG_DEBUG, "shell_set_debug = %i", shell_get_debug(scanner));
   
   // call scanner 
   do {
@@ -238,7 +238,7 @@ main(int argc, char** argv)
       break;
     default:
       strcpy(token, "?UNKNOWN?");
-      logEmit(LOG_ERR, "%s ('%s')", token, shell_get_text(scanner));
+      logMain(LOG_ERR, "%s ('%s')", token, shell_get_text(scanner));
       goto error;
     }
 

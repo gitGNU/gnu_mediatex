@@ -1,3 +1,4 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [notice utnotify.c] ----------------------------------------------------------
 [notice utnotify.c] Clean the cache:
 [notice utnotify.c] ..........................................................
@@ -18,6 +19,13 @@
 [notice utnotify.c] ----------------------------------------------------------
 [notice utnotify.c] add a demands and local supplies:
 [notice utnotify.c] ..........................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection ( SX )
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
 [notice utFunc.c] copy logoP1.cat to the coll1 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
@@ -33,11 +41,14 @@
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: UNUSED -> TOKEEP
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: UNUSED -> AVAILABLE
 [notice utnotify.c] ..........................................................
 [notice utnotify.c] we have :
 [notice utnotify.c] ..........................................................
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll1               
@@ -59,6 +70,11 @@ S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168
 [notice utnotify.c] ----------------------------------------------------------
 [notice utnotify.c] here we send
 [notice utnotify.c] ..........................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection (5SX )
+[info openClose.c] steps: 0 / 93
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
+[info recordTree.c] Serializing NOTIFY record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll1               
@@ -78,6 +94,10 @@ S 2010-01-02,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e
 [notice utnotify.c] ..........................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
@@ -90,4 +110,5 @@ S 2010-01-02,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
+[info confTree.c] free configuration
 [info utnotify.c] exit on success

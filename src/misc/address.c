@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.8 2015/07/09 14:08:38 nroche Exp $
+ * Version: $Id: address.c,v 1.9 2015/07/28 11:45:46 nroche Exp $
  * Project: Mediatex
  * Module : socket address
  *
@@ -59,33 +59,33 @@ getHostNameByAddr(struct in_addr* inAddr)
   if ((gethostbyaddr_r(inAddr, sizeof(struct in_addr), AF_INET,
 		       &sHost, buf, GETHOSTBY_BUFFER_SIZE, &result, &h_errnop)) 
       || !result) {
-    logEmit(LOG_NOTICE, 
+    logMisc(LOG_NOTICE, 
 	    "gethostbyaddr_r: cannot retrieve host name for %s: %s",
 	    inet_ntoa(*inAddr), hstrerror(h_errnop));
 
     switch (h_errnop) {
     case HOST_NOT_FOUND:
-      logEmit(LOG_INFO, "gethostbyaddr: %s", "HOST_NOT_FOUND");
+      logMisc(LOG_INFO, "gethostbyaddr: %s", "HOST_NOT_FOUND");
       
       // do not found an hostname: use IP instead
       if ((rc = (char*)malloc(16)) == 0) {
-	logEmit(LOG_ERR, "%s", "malloc cannot allocate string for IP");
+	logMisc(LOG_ERR, "%s", "malloc cannot allocate string for IP");
 	goto error;
       }
       memset(rc, 0, 16);
       strcpy(rc, inet_ntoa(*inAddr));
       goto end;
     case NO_ADDRESS:
-      logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_ADDRESS");
+      logMisc(LOG_ERR, "gethostbyaddr: %s", "NO_ADDRESS");
       goto error;
     case NO_RECOVERY:
-      logEmit(LOG_ERR, "gethostbyaddr: %s", "NO_RECOVERY");
+      logMisc(LOG_ERR, "gethostbyaddr: %s", "NO_RECOVERY");
       goto error;
     case TRY_AGAIN:
-      logEmit(LOG_ERR, "gethostbyaddr: %s", "TRY_AGAIN");
+      logMisc(LOG_ERR, "gethostbyaddr: %s", "TRY_AGAIN");
       goto error;
     case ERANGE:
-      logEmit(LOG_ERR, "gethostbyaddr: %s", "ERANGE");
+      logMisc(LOG_ERR, "gethostbyaddr: %s", "ERANGE");
       goto error;
     }
     goto error;
@@ -93,7 +93,7 @@ getHostNameByAddr(struct in_addr* inAddr)
 
   // normal case (found a hostname)
   if ((rc = (char*)malloc(strlen(sHost.h_name)+1)) == 0) {
-    logEmit(LOG_ERR, "malloc cannot allocate string of len %i+1",
+    logMisc(LOG_ERR, "malloc cannot allocate string of len %i+1",
 	    strlen(sHost.h_name));
     goto error;
   }
@@ -123,13 +123,13 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
   char buf[GETHOSTBY_BUFFER_SIZE];
   int h_errnop = 0;
 
-  logEmit(LOG_DEBUG, "getIpFromHostname %s", hostname);
+  logMisc(LOG_DEBUG, "getIpFromHostname %s", hostname);
   memset(ipv4, 0, sizeof(struct in_addr));
 
   // It should be an ipv4 address or a host name.
   if (sscanf(hostname, "%d.%d.%d.%d", &a, &b, &c, &d) == 4) {
     if (inet_aton(hostname, ipv4) == 0) {
-      logEmit(LOG_ERR, "inet_aton: ", strerror(errno));
+      logMisc(LOG_ERR, "inet_aton: ", strerror(errno));
       goto error;
     }
   }
@@ -137,7 +137,7 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
     if (gethostbyname_r(hostname, &sHost, buf, GETHOSTBY_BUFFER_SIZE,
 			&result, &h_errnop)
 	|| !result) {
-      logEmit(LOG_ERR, "gethostbyname_r %s: %s", 
+      logMisc(LOG_ERR, "gethostbyname_r %s: %s", 
 	      hostname, hstrerror(h_errnop));
       goto error;
     }
@@ -147,7 +147,7 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
   rc = TRUE;
  error:
   if(!rc) {
-    logEmit(LOG_ERR, "%s", "getIpFromHostname fails");
+    logMisc(LOG_ERR, "%s", "getIpFromHostname fails");
   }
   return rc;
 }
@@ -175,7 +175,7 @@ buildSocketAddressEasy(struct sockaddr_in* rc,
   rc->sin_port        = htons(port);
   rc->sin_addr.s_addr = htonl(host);
 
-  logEmit(LOG_INFO, "build socket address %i.%i.%i.%i:%i", 
+  logMisc(LOG_INFO, "build socket address %i.%i.%i.%i:%i", 
 	  (ntohl(rc->sin_addr.s_addr) & 0xFF000000) >> 24,
 	  (ntohl(rc->sin_addr.s_addr) & 0x00FF0000) >> 16,
 	  (ntohl(rc->sin_addr.s_addr) & 0x0000FF00) >> 8,
@@ -214,11 +214,11 @@ buildSocketAddress(struct sockaddr_in* address,
   int port = -1;
   struct in_addr ipv4;
 
-  logEmit(LOG_DEBUG, "%s", "buildSocketAddress");
+  logMisc(LOG_DEBUG, "%s", "buildSocketAddress");
 
   // Convert protocol parameter (we need it for service conversion)
   if ((sProtocol = getprotobyname(protocol)) == (struct protoent *)0) {
-    logEmit(LOG_ERR, "getprotoyname: %s", strerror(errno));
+    logMisc(LOG_ERR, "getprotoyname: %s", strerror(errno));
     perror("getprotobyname");
     goto error;
   }
@@ -226,7 +226,7 @@ buildSocketAddress(struct sockaddr_in* address,
   // Convert service parameter. (we need to build socket address)
   // It should be a number or a string.
   if (service == 0 || *service == (char)0) {
-    logEmit(LOG_WARNING, "no port defined for %s address", host);
+    logMisc(LOG_WARNING, "no port defined for %s address", host);
     port = htons(CONF_PORT);
   }
   else if (sscanf(service, "%d", &port) == 1) {
@@ -235,7 +235,7 @@ buildSocketAddress(struct sockaddr_in* address,
   else {
     if ((sService = getservbyname(service, sProtocol->p_name)) 
 	== (struct servent*)0) {
-      logEmit(LOG_ERR, "getservbyname: cannot find '%s' in /etc/services", 
+      logMisc(LOG_ERR, "getservbyname: cannot find '%s' in /etc/services", 
 	      service);
       goto error;
     }
@@ -256,7 +256,7 @@ buildSocketAddress(struct sockaddr_in* address,
   rc = TRUE;
  error:
   if(!rc) {
-    logEmit(LOG_ERR, "%s", "buildSocketAddress fails");
+    logMisc(LOG_ERR, "%s", "buildSocketAddress fails");
   }
   return rc;
 }

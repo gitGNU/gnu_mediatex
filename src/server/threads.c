@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.5 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: threads.c,v 1.6 2015/07/28 11:45:50 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -48,7 +48,7 @@ initMutex()
 
   if (!isMutexInitialized) {
     if ((rc = pthread_mutex_init(&jobsMutex, (pthread_mutexattr_t*)0))) {
-      logEmit(LOG_INFO, "pthread_mutex_init: %s", strerror(rc));
+      logMain(LOG_INFO, "pthread_mutex_init: %s", strerror(rc));
       rc = FALSE;
       goto error;
     }
@@ -72,13 +72,13 @@ initThreadParamaters(pthread_attr_t *attr)
   int rc = 0;
     
   if((rc = pthread_attr_init(attr)) != 0) {
-    logEmit(LOG_ERR, "Create thread attributes: %d (%s)",
+    logMain(LOG_ERR, "Create thread attributes: %d (%s)",
 	    rc, strerror(rc));
     goto error;
   }
   
   if((rc = pthread_attr_setdetachstate(attr, PTHREAD_CREATE_DETACHED))) {
-    logEmit(LOG_ERR, "fails to set thread detach attr: %d (%s)",
+    logMain(LOG_ERR, "fails to set thread detach attr: %d (%s)",
 	    rc, strerror(rc));
     goto error;
   }
@@ -128,20 +128,20 @@ sigManager(void* arg)
     sigNumber = -1;
     if ((sigNumber = sigwaitinfo(&mask, 0)) == -1) {
       if (errno == EINTR) continue; // so as to manage debugging with gdb
-      logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
+      logMain(LOG_ERR, "sigwait fails: %s", strerror(errno));
       goto error;
     }
     
     switch (sigNumber) {
 
     case SIGSEGV:
-      logEmit(LOG_ERR, "%s", "segfault (SIGSEGV)");
+      logMain(LOG_ERR, "%s", "segfault (SIGSEGV)");
       reEnableALL();
       kill(getpid(), SIGSEGV);
       goto error;
       break;
     case SIGINT:
-      logEmit(LOG_ERR, "%s", "stopped by user (SIGINT)");
+      logMain(LOG_ERR, "%s", "stopped by user (SIGINT)");
       reEnableALL();
       kill(getpid(), SIGINT);
       goto error;
@@ -150,7 +150,7 @@ sigManager(void* arg)
     case SIGHUP:
       // wait until no more job are running
       hold = TRUE;
-      logEmit(LOG_NOTICE, "%s", "accepting signal HUP");
+      logMain(LOG_NOTICE, "%s", "accepting signal HUP");
     retry1:
       while (taskSocketNumber > 0 || taskSignalNumber > 0)
 	usleep(100000);
@@ -174,7 +174,7 @@ sigManager(void* arg)
 
       // wait until no more job are running
       hold = TRUE;
-      logEmit(LOG_NOTICE, "%s", "accepting signal TERM");
+      logMain(LOG_NOTICE, "%s", "accepting signal TERM");
     retry2:
       while (taskSocketNumber > 0 || taskSignalNumber > 0)
 	usleep(100000);
@@ -201,18 +201,18 @@ sigManager(void* arg)
       if (!rc) exit(3); // force exit if socket fails
 
     case SIGUSR1:
-      logEmit(LOG_NOTICE, "%s", "accepting signal USR1");    
+      logMain(LOG_NOTICE, "%s", "accepting signal USR1");    
       break;
 
     default:
-      logEmit(LOG_INFO, "receive unexpected signal %i", sigNumber);
+      logMain(LOG_INFO, "receive unexpected signal %i", sigNumber);
       continue;
     }
 
     // wait for a dedicated thread allocation
     while (taskSignalNumber+1 > MAX_TASK_SIGNAL_THREAD) {
       if (!env.running) goto error;
-      logEmit(LOG_WARNING, "%s", "pending USR1 signal");
+      logMain(LOG_WARNING, "%s", "pending USR1 signal");
       sleep(20);
     };
 
@@ -223,7 +223,7 @@ sigManager(void* arg)
     // create dedicated thread for signal query
     while ((rc = pthread_create(&signalTaskThread, &taskAttr,
   				signalJob, 0))) {
-      logEmit(LOG_ERR, "pthread_create fails: %s", strerror(rc));
+      logMain(LOG_ERR, "pthread_create fails: %s", strerror(rc));
       if (rc == EAGAIN && try--) {
   	usleep(100000);
   	continue;
@@ -277,7 +277,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
 
   // connexion informations 
   if (!(connexion = (Connexion*)malloc(sizeof(Connexion)))) {
-    logEmit(LOG_ERR, "malloc cannot create connexion objet: %s", 
+    logMain(LOG_ERR, "malloc cannot create connexion objet: %s", 
 	    strerror(errno));
     goto error;
   }
@@ -292,7 +292,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
  retry:
   while (hold || taskSocketNumber+1 > MAX_TASK_SOCKET_THREAD) {
     if (!env.running) goto end;
-    logEmit(LOG_WARNING, "pending connexion from %s:%u (%s)",
+    logMain(LOG_WARNING, "pending connexion from %s:%u (%s)",
 	    inet_ntoa(address_accepted->sin_addr),
 	    port, connexion->host);
     sleep(2);
@@ -307,14 +307,14 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
   ++taskSocketNumber;
   pthread_mutex_unlock(&jobsMutex);
 
-  logEmit(LOG_INFO, "accepting connexion from %s:%u (%s)",
+  logMain(LOG_INFO, "accepting connexion from %s:%u (%s)",
 	  inet_ntoa(address_accepted->sin_addr),
 	  port, connexion->host);
   
   // create dedicated thread for socket query
   while ((rc = pthread_create(&socketTaskThread, &taskAttr, 
 			      socketJob, (void *)connexion))) {
-    logEmit(LOG_ERR, "pthread_create fails: %s", strerror(rc));
+    logMain(LOG_ERR, "pthread_create fails: %s", strerror(rc));
     if (rc == EAGAIN && try--) {
       usleep(100000);
       continue;
@@ -389,31 +389,31 @@ mainLoop()
 
   // convert port into char*
   if (sprintf(service, "%i", getConfiguration()->mdtxPort) < 0) {
-    logEmit(LOG_ERR, "cannot convert %i port number into service", 
+    logMain(LOG_ERR, "cannot convert %i port number into service", 
 	    getConfiguration()->mdtxPort);
     goto error;
   }
   
   // build the listenning socket for both remote and local connection
   if (!buildSocketAddress(&address, 0, "tcp", service)) {
-    logEmit(LOG_ERR, "%s", "error while building socket address");
+    logMain(LOG_ERR, "%s", "error while building socket address");
     goto error;
   }
   
   // main loop (listen to socket)
-  logEmit(LOG_NOTICE, "Daemon (%i) started", getpid());
+  logMain(LOG_NOTICE, "Daemon (%i) started", getpid());
   if (!acceptTcpSocket(&address, serverManager)) goto error;
   
   rc = TRUE;
  error:
   env.running = FALSE;
   if (!kill(getpid(), SIGTERM) == -1) {
-    logEmit(LOG_ERR, "killing signal handler failed: %s", errno);
+    logMain(LOG_ERR, "killing signal handler failed: %s", errno);
     rc = FALSE;
   }
   if (!mdtxShmFree()) rc = FALSE;
   if (thread && (err = pthread_join(thread, 0))) {
-    logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
   pthread_attr_destroy(&taskAttr);

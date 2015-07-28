@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.1 2015/07/01 10:50:00 nroche Exp $
+ * Version: $Id: utconfFile.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -101,16 +101,16 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (conf_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logMain(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   conf_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "conf_set_debug = %i", conf_get_debug(scanner));
+  logMain(LOG_DEBUG, "conf_set_debug = %i", conf_get_debug(scanner));
   
   if (inputPath != 0) {
     if ((inputStream = fopen(inputPath, "r")) == 0) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", inputPath); 
+      logMain(LOG_ERR, "cannot open input stream: %s", inputPath); 
       goto error;
     }
   }
@@ -218,7 +218,7 @@ main(int argc, char** argv)
       break;
     default:
       strcpy(token, "?UNKNOWN?");
-      logEmit(LOG_ERR, "%s (line %i: '%s')", token,
+      logMain(LOG_ERR, "%s (line %i: '%s')", token,
 	      conf_get_lineno(scanner), conf_get_text(scanner));
       goto error;
     }

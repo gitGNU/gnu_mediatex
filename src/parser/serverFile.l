@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.6 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.7 2015/07/28 11:45:48 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -368,7 +368,7 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
 <*>{
   . { /* : eat up any unmatched character and 
 	 let bison manage the errors */
-    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+    logParser(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
   }
  }

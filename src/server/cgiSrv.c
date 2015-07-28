@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.5 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -52,7 +52,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   Configuration* conf = 0;
   ExtractData data;
 
-  logEmit(LOG_DEBUG, "%s", "local extraction");
+  logMain(LOG_DEBUG, "%s", "local extraction");
   *found = FALSE;
   data.coll = coll;
   data.context = X_CGI;
@@ -69,7 +69,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   if (!releaseCollection(coll, SERV | EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "local extraction fails");
+    logMain(LOG_ERR, "%s", "local extraction fails");
   }
   destroyOnlyRing(data.toKeeps);
   return rc;
@@ -97,20 +97,20 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   char* extra = 0;
   int cgiErrno = 0;
 
-  logEmit(LOG_DEBUG, "%s", "cgiServer: serving cgi query");
+  logMain(LOG_DEBUG, "%s", "cgiServer: serving cgi query");
 
-  /* logEmit(LOG_INFO, "%s", "input archive tree:"); */
+  /* logMain(LOG_INFO, "%s", "input archive tree:"); */
   /* serializeRecordTree(recordTree, 0); */
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logEmit(LOG_ERR, "%s", "unknown collection for archiveTree");
+    logMain(LOG_ERR, "%s", "unknown collection for archiveTree");
     cgiErrno = 5;
     goto error;
   }
 
   if (isEmptyRing(recordTree->records)) {
-    logEmit(LOG_ERR, "%s", "please provide a Record tree for cgiServer");
+    logMain(LOG_ERR, "%s", "please provide a Record tree for cgiServer");
     cgiErrno = 4;
     goto error;
   }
@@ -119,7 +119,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   if (!(record = (Record*)recordTree->records->head->it)) goto error;
   if (!(archive = record->archive)) goto error;
 
-  /* logEmit(LOG_INFO, "%s", "first archive:"); */
+  /* logMain(LOG_INFO, "%s", "first archive:"); */
   /* serializeRecord(recordTree, record); */
 
   if (!lockCacheRead(coll)) goto error;
@@ -130,15 +130,15 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
     cgiErrno = 3;
     if (!extractCgiArchive(coll, archive, &found)) goto error2;
     if (!found) {
-      logEmit(LOG_NOTICE, "not found %s:%i", archive->hash, archive->size);
+      logMain(LOG_NOTICE, "not found %s:%i", archive->hash, archive->size);
     }
     else {
-      logEmit(LOG_NOTICE, "query for %s", archive->localSupply->extra);
+      logMain(LOG_NOTICE, "query for %s", archive->localSupply->extra);
       sprintf(buffer, "200 %s/%s\n", 
 	      coll->cacheUrl, archive->localSupply->extra);
 
       // tcpWrite only deal with sockets (on unit test we use stdout)
-      logEmit(LOG_INFO, "write to socket: %s", buffer);
+      logMain(LOG_INFO, "write to socket: %s", buffer);
       if (!env.noRegression) {
 	tcpWrite(connexion->sock, buffer, strlen(buffer));
       }
@@ -147,7 +147,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   }
   else {
     // register query: merge archive trees
-    logEmit(LOG_NOTICE, "final demand for %s:%lli %s", 
+    logMain(LOG_NOTICE, "final demand for %s:%lli %s", 
 	    archive->hash, archive->size, record->extra);
     cgiErrno = 4;
     if (!(extra = createString(record->extra))) goto error2;
@@ -155,7 +155,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
 			      DEMAND, extra))) goto error2;
     if (!addCacheEntry(coll, record2)) goto error2;
 
-    logEmit(LOG_INFO, "write to socket: 200 \n");
+    logMain(LOG_INFO, "write to socket: 200 \n");
     if (!env.noRegression) {
       tcpWrite(connexion->sock, "200 \n", 5);
     }
@@ -170,7 +170,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   if (cgiErrno != 2) {
     sprintf(buffer, "%s", message[cgiErrno]);
 
-    logEmit(LOG_INFO, "write to socket: %s", buffer);
+    logMain(LOG_INFO, "write to socket: %s", buffer);
     if (!env.noRegression) {
       tcpWrite(connexion->sock, buffer, strlen(buffer));
     }
@@ -178,10 +178,10 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
 
   if (connexion->sock != STDOUT_FILENO && 
       shutdown(connexion->sock, SHUT_WR) == -1) {
-    logEmit(LOG_ERR, "shutdown fails: %s", strerror(errno));
+    logMain(LOG_ERR, "shutdown fails: %s", strerror(errno));
   }
   if (cgiErrno == 4) {
-    logEmit(LOG_ERR, "%s", "fails to serve cgi query");
+    logMain(LOG_ERR, "%s", "fails to serve cgi query");
   }
   return rc;
 }

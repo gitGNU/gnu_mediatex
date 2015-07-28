@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utprogbar.c,v 1.2 2015/07/02 17:22:06 nroche Exp $
+ * Version: $Id: utprogbar.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -63,7 +63,7 @@ e2fsck_progress2(struct ProgBar* progbar, const char *label,
     // Put a messages disturbing the progbar
     integer = ((int) percent);
     if ((integer % 20) == 0 && integer > moduloDone) {
-      logEmit(LOG_INFO, "Message to disturb output");
+      logMain(LOG_INFO, "Message to disturb output");
       moduloDone = integer;
     }
 
@@ -109,9 +109,9 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"i:";
+  char* options = MISC_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
+    MISC_LONG_OPTIONS,
     {"input-file", required_argument, 0, 'i'},
     {0, 0, 0, 0}
   };
@@ -124,7 +124,7 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-      GET_MDTX_OPTIONS; // generic options
+      GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
   }

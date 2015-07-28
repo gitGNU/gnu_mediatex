@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.3 2015/07/22 10:45:16 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.4 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -258,67 +258,67 @@ struct ScoreParam {
 
 #define checkLabel(label) {					\
     if (label == (char*)0 || *label == (char)0)	{		\
-      logEmit(LOG_ERR, "%s", "please provide a label");		\
+      logMisc(LOG_ERR, "%s", "please provide a label");		\
       goto error;						\
     }								\
   }
 
 #define checkCollection(coll) {					\
     if (coll == (Collection*)0) {				\
-      logEmit(LOG_ERR, "%s", "please provide a collection");	\
+      logMisc(LOG_ERR, "%s", "please provide a collection");	\
       goto error;						\
     }								\
   }
 
 #define checkSupport(coll) {					\
     if (coll == (Support*)0) {					\
-      logEmit(LOG_ERR, "%s", "please provide a support");	\
+      logMisc(LOG_ERR, "%s", "please provide a support");	\
       goto error;						\
     }								\
   }
 
 #define checkServer(server) {					\
     if (server == (Server*)0) {					\
-      logEmit(LOG_ERR, "%s", "please provide a server");	\
+      logMisc(LOG_ERR, "%s", "please provide a server");	\
       goto error;						\
     }								\
   }
 
 #define checkImage(image) {					\
     if (image == (Image*)0) {					\
-      logEmit(LOG_ERR, "%s", "please provide an image");	\
+      logMisc(LOG_ERR, "%s", "please provide an image");	\
       goto error;						\
     }								\
   }
 
 #define checkArchive(archive) {					\
     if (archive == (Archive*)0) {				\
-      logEmit(LOG_ERR, "%s", "please provide an archive");	\
+      logMisc(LOG_ERR, "%s", "please provide an archive");	\
       goto error;						\
     }								\
   }
 
 #define checkContainer(container) {				\
     if(container == (Container*)0) {				\
-      logEmit(LOG_ERR, "%s", "please provide a container");	\
+      logMisc(LOG_ERR, "%s", "please provide a container");	\
       goto error;						\
     }								\
   }
 
 #define checkRecord(record) {					\
     if (record == (Record*)0) {					\
-      logEmit(LOG_ERR, "%s", "please provide a record");	\
+      logMisc(LOG_ERR, "%s", "please provide a record");	\
       goto error;						\
     }								\
   }
 
 #define checkRecordTree(recordTree) {				\
     if (recordTree == (RecordTree*)0) {				\
-      logEmit(LOG_ERR, "%s", "please provide a record tree");	\
+      logMisc(LOG_ERR, "%s", "please provide a record tree");	\
       goto error;						\
     }								\
     if (recordTree->collection == (Collection*)0) {		\
-      logEmit(LOG_ERR, "%s", "recordTree without collection");	\
+      logMisc(LOG_ERR, "%s", "recordTree without collection");	\
       goto error;						\
     }								\
   }

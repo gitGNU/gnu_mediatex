@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.1 2015/07/01 10:21:02 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -48,7 +48,7 @@ signalJob(void* arg)
   int rc3 = MDTX_DONE;
 
   (void) arg;
-  logEmit(LOG_DEBUG, "signalJob: %i", me);
+  logMain(LOG_DEBUG, "signalJob: %i", me);
   if (!(conf = getConfiguration())) goto error;
 
   do {
@@ -59,7 +59,7 @@ signalJob(void* arg)
       goto error;
     
     if (param.buf[MDTX_SAVEMD5] == MDTX_QUERY) {
-      logEmit(LOG_NOTICE, "signalJob %i: SAVEMD5", me);
+      logMain(LOG_NOTICE, "signalJob %i: SAVEMD5", me);
       if (!serverSaveAll()) rc2 = MDTX_ERROR;
       param.flag = MDTX_SAVEMD5;
       loop = TRUE;
@@ -67,7 +67,7 @@ signalJob(void* arg)
     }
     
     if (param.buf[MDTX_EXTRACT] == MDTX_QUERY) {
-      logEmit(LOG_NOTICE, "signalJob %i: EXTRACT", me);
+      logMain(LOG_NOTICE, "signalJob %i: EXTRACT", me);
       if (!serverLoop(extractArchives)) rc2 = MDTX_ERROR;
       param.flag = MDTX_EXTRACT;
       loop = TRUE;
@@ -75,7 +75,7 @@ signalJob(void* arg)
     }
     
     if (param.buf[MDTX_NOTIFY] == MDTX_QUERY) {
-      logEmit(LOG_NOTICE, "signalJob %i: NOTIFY", me);
+      logMain(LOG_NOTICE, "signalJob %i: NOTIFY", me);
       if (!serverLoop(sendRemoteNotify)) rc2 = MDTX_ERROR;
       param.flag = MDTX_NOTIFY;
       loop = TRUE;
@@ -83,7 +83,7 @@ signalJob(void* arg)
     }
 
     if (param.buf[MDTX_DELIVER] == MDTX_QUERY) {
-      logEmit(LOG_NOTICE, "signalJob %i: DELIVER", me);
+      logMain(LOG_NOTICE, "signalJob %i: DELIVER", me);
       if (!serverLoop(deliverMails)) rc2 = MDTX_ERROR;
       param.flag = MDTX_DELIVER;
       loop = TRUE;
@@ -106,12 +106,12 @@ signalJob(void* arg)
  error:
   if (rc) {
     if (rc3) {
-      logEmit(LOG_NOTICE, "signalJob %i: success", me);
+      logMain(LOG_NOTICE, "signalJob %i: success", me);
     } else {
-      logEmit(LOG_ERR, "signalJob %i: fails", me);
+      logMain(LOG_ERR, "signalJob %i: fails", me);
     }
   } else {
-    logEmit(LOG_ERR, "signalJob %i: internal fails", me);
+    logMain(LOG_ERR, "signalJob %i: internal fails", me);
   }
   signalJobEnds();
   return (void*)rc;
@@ -133,27 +133,27 @@ hupManager()
 
   
   if (!serverSaveAll()) {
-    logEmit(LOG_ERR, "%s", "Fails to save md5sums before reloading");
+    logMain(LOG_ERR, "%s", "Fails to save md5sums before reloading");
     goto error;
   }
 
   freeConfiguration();
 
   if (!loadConfiguration(CFG)) {
-    logEmit(LOG_ERR, "%s", "HUP: fails to reload configuration");
+    logMain(LOG_ERR, "%s", "HUP: fails to reload configuration");
     goto error;
   }
   
   if (!quickScanAll()) {
-    logEmit(LOG_ERR, "%s", "HUP: fails to scan caches");
+    logMain(LOG_ERR, "%s", "HUP: fails to scan caches");
     goto error;
   }
 
   rc = TRUE;
-  logEmit(LOG_NOTICE, "%s", "daemon is HUP");
+  logMain(LOG_NOTICE, "%s", "daemon is HUP");
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "daemon fails to update: exiting");
+    logMain(LOG_ERR, "%s", "daemon fails to update: exiting");
   }
   return rc;
 }
@@ -172,11 +172,11 @@ termManager()
   int rc = FALSE;
 
   if (!serverSaveAll()) {
-    logEmit(LOG_ERR, "%s", "Fails to save md5sums while exiting");
+    logMain(LOG_ERR, "%s", "Fails to save md5sums while exiting");
     goto error;
   }
 
-  logEmit(LOG_NOTICE, "%s", "mdtx-cache-daemon exiting");
+  logMain(LOG_NOTICE, "%s", "mdtx-cache-daemon exiting");
   rc = TRUE;
  error:
   return rc;
@@ -203,10 +203,10 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   coll = tree->collection;
   connexion->server = 0;
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "matchServer");
+  logMain(LOG_DEBUG, "%s", "matchServer");
 
   if (tree->messageType != NOTIFY && isEmptyRing(tree->records)) {
-    logEmit(LOG_INFO, "%s", "receive empty ring");
+    logMain(LOG_INFO, "%s", "receive empty ring");
     goto error;
   }
 
@@ -217,24 +217,24 @@ int matchServer(RecordTree* tree, Connexion* connexion)
       break;
   }
   if (server == 0) {
-    logEmit(LOG_WARNING, 
+    logMain(LOG_WARNING, 
 	    "server %s is not register into collection %s",
 	    connexion->host, coll->label);
     goto error;
   }
 
   // display message for debugging
-  logEmit(LOG_INFO, "receive message about server %s (%s)", 
+  logMain(LOG_INFO, "receive message about server %s (%s)", 
 	  server->host, server->fingerPrint);
 
   if (isEmptyRing(tree->records)) {
-    logEmit(LOG_INFO, "%s", "receive empty content");
+    logMain(LOG_INFO, "%s", "receive empty content");
   }
   else {
     curr = 0;
     while((record = rgNext_r(tree->records, &curr))) {
       localtime_r(&record->date, &date);
-      logEmit(LOG_INFO, "%c "
+      logMain(LOG_INFO, "%c "
 	      "%04i-%02i-%02i,%02i:%02i:%02i "
 	      "%*s %*s %*llu %s\n",
 	      (record->type & 0x3) == DEMAND?'D':
@@ -250,17 +250,17 @@ int matchServer(RecordTree* tree, Connexion* connexion)
 
   /* // match a Nat server */
   /* if (rgHaveItem(coll->localhost->natServers, server)) { */
-  /*   logEmit(LOG_NOTICE, "%s", "receive message from Nat server"); */
+  /*   logMain(LOG_NOTICE, "%s", "receive message from Nat server"); */
 
   /*   // note: get a private incoming IP so we cannot match it. */
   /*   // just check all records have the same server's fingerprint */
   /*   curr = 0; */
   /*   relayed = rgNext_r(tree->records, &curr); */
-  /*   logEmit(LOG_NOTICE, "%s", "original message from %s (%s)", */
+  /*   logMain(LOG_NOTICE, "%s", "original message from %s (%s)", */
   /* 	    relayed->host, relayed->fingerPrint); */
   /*   while((record = rgNext_r(tree->records, &curr))) { */
   /*     if (relayed != record->server) { */
-  /* 	logEmit(LOG_WARNING,  */
+  /* 	logMain(LOG_WARNING,  */
   /* 		"message contains records related to other host: %s", */
   /* 		record->server->fingerPrint); */
   /* 	goto error; */
@@ -274,7 +274,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   /*   if (server->address.sin_family == 0 &&  */
   /* 	!buildServerAddress(server)) goto error; */
   /*   if (ntohl(server->address.sin_addr.s_addr) != connexion->ipv4) { */
-  /*     logEmit(LOG_WARNING,  */
+  /*     logMain(LOG_WARNING,  */
   /* 	      "ip from %s do not match server fingerprint on message: %s", */
   /* 	      connexion->host, record->server->fingerPrint); */
   /*     goto error; */
@@ -286,7 +286,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   if (isEmptyRing(tree->records)) {
     while((record = rgNext_r(tree->records, &curr))) {
       if (server != record->server) {
-	logEmit(LOG_WARNING, 
+	logMain(LOG_WARNING, 
 		"message contains a record related to an other host: %s",
 		record->server->fingerPrint);
 	goto error;
@@ -299,7 +299,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "matchServer fails");
+    logMain(LOG_ERR, "%s", "matchServer fails");
   }
   return rc;
 }
@@ -321,12 +321,12 @@ socketJob(void* arg)
   RecordTree* tree = 0;
 
   connexion = (Connexion*)arg; // to be free as we own it as a thread
-  logEmit(LOG_DEBUG, "socketJob %i", me);
+  logMain(LOG_DEBUG, "socketJob %i", me);
   
   // read the socket
   if ((tree = parseRecords(connexion->sock))
       == 0) {
-    logEmit(LOG_ERR, "%s", "fail to parse RecordTree");
+    logMain(LOG_ERR, "%s", "fail to parse RecordTree");
     goto error;
   }
 
@@ -336,35 +336,35 @@ socketJob(void* arg)
   if (!getLocalHost(tree->collection)) goto error2; // minimal upgrade
   if (!(matchServer(tree, connexion))) goto error2;
 
-  logEmit(LOG_INFO, "%s: %s message from %s server (%s)",
+  logMain(LOG_INFO, "%s: %s message from %s server (%s)",
 	  tree->collection->label, strMessageType(tree->messageType),
 	  connexion->server->fingerPrint, connexion->host);
 
   switch (tree->messageType) {
 
   case UPLOAD:
-    logEmit(LOG_NOTICE, "socketJob %i: UPLOAD", me);
+    logMain(LOG_NOTICE, "socketJob %i: UPLOAD", me);
     if (!uploadFinaleArchive(tree, connexion)) goto error2;
     break;
 
   case CGI:
-    logEmit(LOG_NOTICE, "socketJob %i: CGI", me);
+    logMain(LOG_NOTICE, "socketJob %i: CGI", me);
     if (!cgiServer(tree, connexion)) goto error2;
     break;
     
   case HAVE:
-    logEmit(LOG_NOTICE, "socketJob %i: HAVE", me);
+    logMain(LOG_NOTICE, "socketJob %i: HAVE", me);
     if (!extractFinaleArchives(tree, connexion)) goto error2;
     break;
     
   case NOTIFY:
-    logEmit(LOG_NOTICE, "socketJob %i: NOTIFY (from %s)",
+    logMain(LOG_NOTICE, "socketJob %i: NOTIFY (from %s)",
 	    me, connexion->host);
     if (!acceptRemoteNotify(tree, connexion)) goto error2;
     break;
     
   default:
-    logEmit(LOG_INFO, "server do not accept %s messages",
+    logMain(LOG_INFO, "server do not accept %s messages",
 	    strMessageType(tree->messageType));
     goto error2;
   }
@@ -375,9 +375,9 @@ socketJob(void* arg)
   if (!releaseCollection(tree->collection, SERV)) rc = FALSE;
  error:
   if (rc) {
-    logEmit(LOG_NOTICE, "socketJob %i: success", me);
+    logMain(LOG_NOTICE, "socketJob %i: success", me);
   } else {
-    logEmit(LOG_ERR, "socketJob %i: fails", me);
+    logMain(LOG_ERR, "socketJob %i: fails", me);
   }
   tree = destroyRecordTree(tree);
   
@@ -444,7 +444,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (getuid() == 0) {
-    logEmit(LOG_ERR, "%s",  "do not lunch me as root");
+    logMain(LOG_ERR, "%s",  "do not lunch me as root");
     goto error;
   }
   if (!hupManager()) goto error;

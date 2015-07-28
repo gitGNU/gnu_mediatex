@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.1 2015/07/01 10:50:08 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.2 2015/07/28 11:45:43 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -37,14 +37,14 @@ utCleanCaches(void)
 {
   int rc = FALSE;
  
-  logEmit(LOG_NOTICE, "%s", "clean the cache");
+  logMain(LOG_NOTICE, "%s", "clean the cache");
   Configuration* conf = 0;
   Collection* coll = 0;
   RGIT* curr = 0;
   char* argv[] = {"/bin/bash", "-c", 0, 0};
   char* cmd = "rm -fr ";
 
-  logEmit(LOG_NOTICE, "%s", "clean cache for all collections");
+  logMain(LOG_NOTICE, "%s", "clean cache for all collections");
 
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
@@ -62,7 +62,7 @@ utCleanCaches(void)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to clean the cache");
+    logMain(LOG_ERR, "%s", "fails to clean the cache");
   } 
   argv[2] = destroyString(argv[2]);
   return rc;
@@ -85,7 +85,7 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
 
   char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
 
-  logEmit(LOG_NOTICE, "copy %s to the %s cache", srcfile, coll->label);
+  logMain(LOG_NOTICE, "copy %s to the %s cache", srcfile, coll->label);
 
   if (!(argv[2] = createString(srcdir))) goto error;
   if (!(argv[2] = catString(argv[2], "/../misc/"))) goto error;
@@ -97,7 +97,7 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to copy %s to the %s cache",
+    logMain(LOG_ERR, "fails to copy %s to the %s cache",
 	    srcfile, coll->label);
   } 
   if (argv[2]) destroyString(argv[2]);
@@ -121,7 +121,7 @@ utNewRecord(Collection* coll, char* hash, off_t size,
   Archive* archive = 0;
   Record *record = 0;
  
-  logEmit(LOG_NOTICE, "add a generic demand for", hash);
+  logMain(LOG_NOTICE, "add a generic demand for", hash);
   checkCollection(coll);
 
   // assert we have the localhost server object
@@ -134,7 +134,7 @@ utNewRecord(Collection* coll, char* hash, off_t size,
   rc = record;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to add a generic demand for", hash);
+    logMain(LOG_ERR, "fails to add a generic demand for", hash);
   }
   return rc;
 }
@@ -155,7 +155,7 @@ utDemand(Collection* coll, char* hash, off_t size, char* mail)
   Record *record = 0;
   char* extra = 0;
  
-  logEmit(LOG_NOTICE, "ask for %s file", hash);
+  logMain(LOG_NOTICE, "ask for %s file", hash);
   checkCollection(coll);
 
   if (!(extra = createString(mail))) goto error;
@@ -165,7 +165,7 @@ utDemand(Collection* coll, char* hash, off_t size, char* mail)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to ask for %s file", hash);
+    logMain(LOG_ERR, "fails to ask for %s file", hash);
   }
   return rc;
 }
@@ -184,7 +184,7 @@ RecordTree* ask4logo(Collection* coll, char* mail)
   RecordTree *tree = 0;
   char* extra = 0;
 
-  logEmit(LOG_NOTICE, "%s", "ask for logo.png");
+  logMain(LOG_NOTICE, "%s", "ask for logo.png");
 
   if (mail != 0) {
     if (!(extra = createString(mail))) goto error;
@@ -210,7 +210,7 @@ RecordTree* ask4logo(Collection* coll, char* mail)
   tree = 0;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to ask for logo.png");
+    logMain(LOG_ERR, "%s", "fails to ask for logo.png");
   }
   tree = destroyRecordTree(tree);
   record = destroyRecord(record);
@@ -231,7 +231,7 @@ RecordTree* providePart1(Collection* coll, char* path)
   RecordTree *tree = 0;
   char* extra = 0;
 
-  logEmit(LOG_NOTICE, "%s", "provide logoP1.cat");
+  logMain(LOG_NOTICE, "%s", "provide logoP1.cat");
 
   if (!(extra = createString(path))) goto error;
   if (!(record = 
@@ -251,7 +251,7 @@ RecordTree* providePart1(Collection* coll, char* path)
   tree = 0;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to provide logoP1.cat");
+    logMain(LOG_ERR, "%s", "fails to provide logoP1.cat");
   }
   tree = destroyRecordTree(tree);
   record = destroyRecord(record);
@@ -272,7 +272,7 @@ RecordTree* providePart2(Collection* coll, char* path)
   RecordTree *tree = 0;
   char* extra = 0;
   
-  logEmit(LOG_NOTICE, "%s", "provide logoP2.cat");
+  logMain(LOG_NOTICE, "%s", "provide logoP2.cat");
 
   if (!(extra = createString(path))) goto error;
   if (!(record = 
@@ -292,7 +292,7 @@ RecordTree* providePart2(Collection* coll, char* path)
   tree = 0;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to provide logoP2.cat");
+    logMain(LOG_ERR, "%s", "fails to provide logoP2.cat");
   }
   tree = destroyRecordTree(tree);
   record = destroyRecord(record);

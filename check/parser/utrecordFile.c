@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordFile.c,v 1.1 2015/07/01 10:50:01 nroche Exp $
+ * Version: $Id: utrecordFile.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: Mediatex
  * Module : record scanner
 
@@ -107,16 +107,16 @@ main(int argc, char** argv)
   /************************************************************************/
   // init scanner
   if (record_lex_init (&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logMain(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
   record_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "record_set_debug = %i", 
+  logMain(LOG_DEBUG, "record_set_debug = %i", 
 	  record_get_debug(scanner));
   
   if (inputPath) {
     if ((inputFd = open(inputPath, O_RDONLY)) == 0) {
-      logEmit(LOG_ERR, "cannot open input file: %s", inputPath); 
+      logMain(LOG_ERR, "cannot open input file: %s", inputPath); 
       goto error;
     }
   }
@@ -175,7 +175,7 @@ main(int argc, char** argv)
       break;
     case recordERROR:
       strcpy(token, "!ERROR!");
-      logEmit(LOG_ERR, "%s (line %i: '%s')", token,
+      logMain(LOG_ERR, "%s (line %i: '%s')", token,
 	      record_get_lineno(scanner), record_get_text(scanner));
       goto error;
 
@@ -184,7 +184,7 @@ main(int argc, char** argv)
       break;
     default:
       strcpy(token, "?UNKNOWN?");
-      logEmit(LOG_ERR, "%s (line %i: '%s')", token,
+      logMain(LOG_ERR, "%s (line %i: '%s')", token,
 	      record_get_lineno(scanner), record_get_text(scanner));
       goto error;
     }

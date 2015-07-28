@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.5 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -272,7 +272,7 @@ serializeRecord(RecordTree* tree, Record* self)
 	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
 	  self->extra?self->extra:"");
 
-  if (env.logHandler->severity->code >=  LOG_INFO) {
+  if (env.logHandler->severity[LOG_MEMORY]->code >=  LOG_INFO) {
     aesPrint(&tree->aes, "# ^ %s\n", strRecordType(self));
   }
 

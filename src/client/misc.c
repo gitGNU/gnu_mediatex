@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: misc.c,v 1.7 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -46,29 +46,29 @@ int mdtxMake(char* label)
   if (!loadCollection(coll, SERV|CTLG|EXTR)) goto error;
   if (!computeExtractScore(coll)) goto error2;
 
-  logEmit(LOG_INFO, "Make HTML for %s", label);
+  logMain(LOG_INFO, "Make HTML for %s", label);
 
   // roughtly estimate the number of steps
   env.progBar.cur = 0;
   env.progBar.max = 0;
   n = avl_count(coll->archives);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
-  logEmit(LOG_INFO, "estimate %i steps for archives", env.progBar.max);
+  logMain(LOG_INFO, "estimate %i steps for archives", env.progBar.max);
   n = avl_count(coll->catalogTree->documents);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
   n = avl_count(coll->catalogTree->humans);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
-  logEmit(LOG_INFO, "estimate %i steps for all", env.progBar.max);
+  logMain(LOG_INFO, "estimate %i steps for all", env.progBar.max);
 
-  logEmit(LOG_INFO, "%s", "html");
+  logMain(LOG_INFO, "%s", "html");
   if (!becomeUser(env.confLabel, TRUE)) goto error2;
   startProgBar("make");
   if (!serializeHtmlCache(coll)) goto error3;
   if (!serializeHtmlIndex(coll)) goto error3;
   if (!serializeHtmlScore(coll)) goto error3;
   stopProgBar();
-  logEmit(LOG_INFO, "steps: %lli / %lli", env.progBar.cur, env.progBar.max);
-  logEmit(LOG_INFO, "%s", "ending");
+  logMain(LOG_INFO, "steps: %lli / %lli", env.progBar.cur, env.progBar.max);
+  logMain(LOG_INFO, "%s", "ending");
 
   rc = TRUE;
  error3:
@@ -77,7 +77,7 @@ int mdtxMake(char* label)
   if (!releaseCollection(coll, SERV|CTLG|EXTR)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxMake fails");
+    logMain(LOG_ERR, "%s", "mdtxMake fails");
   }
   return rc;
 }
@@ -102,7 +102,7 @@ int mdtxUpgradePlus(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUpgradePlus fails");
+    logMain(LOG_ERR, "%s", "mdtxUpgradePlus fails");
   }
   return rc;
 }
@@ -128,7 +128,7 @@ int mdtxUploadPlus(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUploadPlus fails");
+    logMain(LOG_ERR, "%s", "mdtxUploadPlus fails");
   }
   return rc;
 }
@@ -154,7 +154,7 @@ int mdtxUploadPlusPlus(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUploadPlusPlus fails");
+    logMain(LOG_ERR, "%s", "mdtxUploadPlusPlus fails");
   }
   return rc;
 }
@@ -175,7 +175,7 @@ mdtxClean(char* label)
   //Collection* coll = 0;
   char* argv[3] = {0, 0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "del a collection");
+  logMain(LOG_DEBUG, "%s", "del a collection");
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
@@ -191,7 +191,7 @@ mdtxClean(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to clean collection");
+    logMain(LOG_ERR, "%s", "fails to clean collection");
   }
   if (argv[0]) free(argv[0]);
   return rc;
@@ -211,7 +211,7 @@ mdtxInit()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "initializing mdtx software");
+  logMain(LOG_DEBUG, "%s", "initializing mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -224,7 +224,7 @@ mdtxInit()
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mtdx software initialization fails");
+    logMain(LOG_ERR, "%s", "mtdx software initialization fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -244,7 +244,7 @@ mdtxRemove()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "removing mdtx software");
+  logMain(LOG_DEBUG, "%s", "removing mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -257,7 +257,7 @@ mdtxRemove()
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mtdx software removal fails");
+    logMain(LOG_ERR, "%s", "mtdx software removal fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -277,7 +277,7 @@ mdtxPurge()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "purging mdtx software");
+  logMain(LOG_DEBUG, "%s", "purging mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -290,7 +290,7 @@ mdtxPurge()
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtx software purge fails");
+    logMain(LOG_ERR, "%s", "mdtx software purge fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -311,7 +311,7 @@ mdtxAddUser(char* user)
   char *argv[] = {0, 0, 0};
 
   checkLabel(user);
-  logEmit(LOG_DEBUG, "mdtxAddUser %s:", user);
+  logMain(LOG_DEBUG, "mdtxAddUser %s:", user);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
@@ -325,7 +325,7 @@ mdtxAddUser(char* user)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxAddUser fails");
+    logMain(LOG_ERR, "%s", "mdtxAddUser fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -346,7 +346,7 @@ mdtxDelUser(char* user)
   char *argv[] = {0, 0, 0};
 
   checkLabel(user);
-  logEmit(LOG_DEBUG, "mdtxDelUser %s:", user);
+  logMain(LOG_DEBUG, "mdtxDelUser %s:", user);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
@@ -360,7 +360,7 @@ mdtxDelUser(char* user)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxDelUser fails");
+    logMain(LOG_ERR, "%s", "mdtxDelUser fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -380,7 +380,7 @@ mdtxBind()
   int rc = FALSE;
   char *argv[] = {0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "bind mdtx directories");
+  logMain(LOG_DEBUG, "%s", "bind mdtx directories");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/bind.sh"))) 
@@ -393,7 +393,7 @@ mdtxBind()
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtx bind fails");
+    logMain(LOG_ERR, "%s", "mdtx bind fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -413,7 +413,7 @@ mdtxUnbind()
   int rc = FALSE;
   char *argv[] = {0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "unbind mdtx directories");
+  logMain(LOG_DEBUG, "%s", "unbind mdtx directories");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/unbind.sh"))) 
@@ -426,7 +426,7 @@ mdtxUnbind()
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtx unbind fails");
+    logMain(LOG_ERR, "%s", "mdtx unbind fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -450,7 +450,7 @@ mdtxSu(char* label)
   char* home = 0;
   char* user = 0;
 
-  logEmit(LOG_DEBUG, "mdtxSu %s", label?label:"");
+  logMain(LOG_DEBUG, "mdtxSu %s", label?label:"");
 
   // set the HOME directory environment variable
   if (label == 0) {
@@ -483,7 +483,7 @@ mdtxSu(char* label)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtx su has failed");
+    logMain(LOG_ERR, "%s", "mdtx su has failed");
   }
   return(rc);
 }
@@ -508,7 +508,7 @@ mdtxScp(char* label, char* fingerPrint, char* target)
   checkLabel(label);
   checkLabel(fingerPrint);
   checkLabel(target);
-  logEmit(LOG_DEBUG, "mdtxScp %s", target);
+  logMain(LOG_DEBUG, "mdtxScp %s", target);
 
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV)) goto error;
@@ -535,7 +535,7 @@ mdtxScp(char* label, char* fingerPrint, char* target)
   if (!releaseCollection(coll, SERV)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxScp fails");
+    logMain(LOG_ERR, "%s", "mdtxScp fails");
   } 
   argv[1] = destroyString(argv[1]);
   argv[2] = destroyString(argv[2]);
@@ -579,7 +579,7 @@ mdtxUploadFile(char* label, char* path)
   /* if (!env.noRegression) { */
   /*   // check if daemon is awake */
   /*   if (access(conf->pidFile, R_OK) == -1) { */
-  /*     logEmit(LOG_INFO, "cannot read daemon's pid file: %s",  */
+  /*     logMain(LOG_INFO, "cannot read daemon's pid file: %s",  */
   /* 	    strerror(errno)); */
   /*     goto end; */
   /*   } */
@@ -592,7 +592,7 @@ mdtxUploadFile(char* label, char* path)
 
   // get file attributes (size)
   if (stat(path, &statBuffer)) {
-    logEmit(LOG_ERR, "status error on %s: %s", path, strerror(errno));
+    logMain(LOG_ERR, "status error on %s: %s", path, strerror(errno));
     goto error2;
   }
 
@@ -616,7 +616,7 @@ mdtxUploadFile(char* label, char* path)
   record = 0;
   
   if (env.noRegression) {
-    logEmit(LOG_INFO, "upload file to %s collection", label);
+    logMain(LOG_INFO, "upload file to %s collection", label);
   }
   else {
     if ((socket = connectServer(coll->localhost)) == -1) goto error2;
@@ -631,11 +631,11 @@ mdtxUploadFile(char* label, char* path)
     reply[n-1] = (char)0;
     
     if (sscanf(reply, "%i %s", &status, message) < 1) {
-      logEmit(LOG_ERR, "error reading reply: %s", reply);
+      logMain(LOG_ERR, "error reading reply: %s", reply);
       goto error2;
     }
     
-    logEmit(LOG_INFO, "local server tels (%i) %s", status, message);
+    logMain(LOG_INFO, "local server tels (%i) %s", status, message);
     if (status != 200) goto error2;
   }
 
@@ -662,7 +662,7 @@ mdtxUploadFile(char* label, char* path)
   if (!releaseCollection(coll, EXTR)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "upload query failed");
+    logMain(LOG_ERR, "%s", "upload query failed");
     if (record) delRecord(coll, record);
   }
   return rc;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
+ * Version: $Id: device.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -49,7 +49,7 @@ absolutePath(char* path)
 
   // remind the current directory for cd back into
   if ((pwd1 = getcwd(0, 0)) == 0) {
-    logEmit(LOG_ERR, "getcwd: %s", strerror(errno));
+    logMisc(LOG_ERR, "getcwd: %s", strerror(errno));
     goto error;
   }
   remind(pwd1);
@@ -71,20 +71,20 @@ absolutePath(char* path)
 
     // change directory to dirname
     if (chdir(path) != 0) {
-      logEmit(LOG_ERR, "chdir %s: %s", path, strerror(errno));
+      logMisc(LOG_ERR, "chdir %s: %s", path, strerror(errno));
       goto error;
     }
 
     // get the absolute dirname
     if ((pwd2 = getcwd(0, 0)) == 0) {
-      logEmit(LOG_ERR, "getcwd: %s", strerror(errno));
+      logMisc(LOG_ERR, "getcwd: %s", strerror(errno));
       goto error;
     }
     remind(pwd2);
 
     // cd back to the previous current directory 
     if (chdir(pwd1) != 0) {
-      logEmit(LOG_ERR, "chdir %s: %s", path, strerror(errno));
+      logMisc(LOG_ERR, "chdir %s: %s", path, strerror(errno));
       goto error;
     }
    
@@ -97,7 +97,7 @@ absolutePath(char* path)
   // concatenate absolute dirname and the basename
   len2 = strlen(pwd2);
   if ((rc = malloc(len2 + 1 + strlen(base) + 1)) == 0) {
-    logEmit(LOG_ERR, "cannot malloc absolute path: %s", strerror(errno));
+    logMisc(LOG_ERR, "cannot malloc absolute path: %s", strerror(errno));
     goto error;
   }
 
@@ -105,12 +105,12 @@ absolutePath(char* path)
   rc[len2] = '/';
   strncpy(rc + 1 + len2, base, strlen(base)+1);
 
-  logEmit(LOG_INFO, "absolute path is %s", rc);
+  logMisc(LOG_INFO, "absolute path is %s", rc);
   
  error:
   if (!rc) {
     if (car != (char)0) path[i+1] = car; // path rewind as it was provided
-    logEmit(LOG_ERR, "fails to get absolute path for: %s", path);
+    logMisc(LOG_ERR, "fails to get absolute path for: %s", path);
   }
   free(pwd1);
   free(pwd2);
@@ -130,35 +130,35 @@ char* symlinkTarget(char* path) {
   struct stat statBuffer;
 
   if (path == 0 || *path == (char)0) {
-    logEmit(LOG_ERR, "%s", "please provide a path for the path");
+    logMisc(LOG_ERR, "%s", "please provide a path for the path");
     goto error;
   }
  
   // get file attributes
   if (lstat(path, &statBuffer)) {
-    logEmit(LOG_ERR, "status error on %s: %s", path, strerror(errno));
+    logMisc(LOG_ERR, "status error on %s: %s", path, strerror(errno));
     goto error;
   }
   
   if (!S_ISLNK(statBuffer.st_mode)) {
-      logEmit(LOG_INFO, "not a symlink: %s", path);
+      logMisc(LOG_INFO, "not a symlink: %s", path);
     goto end;
   }
 
   /* The size of a symbolic  link  is the length of the pathname 
      it contains, without a terminating null byte. */
   if ((rc = malloc(statBuffer.st_size+1)) == 0) {
-    logEmit(LOG_ERR, "cannot malloc symlink path: %s", strerror(errno));
+    logMisc(LOG_ERR, "cannot malloc symlink path: %s", strerror(errno));
     goto error;
   }
     
   if (readlink(path, rc, statBuffer.st_size) == -1) {
-    logEmit(LOG_ERR, "cannot copy symlink path: %s", strerror(errno));
+    logMisc(LOG_ERR, "cannot copy symlink path: %s", strerror(errno));
     goto error;
   }
   
   rc[statBuffer.st_size] = (char)0;
-  logEmit(LOG_INFO, "find a symlink: %s -> %s", path, rc);
+  logMisc(LOG_INFO, "find a symlink: %s -> %s", path, rc);
  end:
  error:
   return rc;
@@ -183,7 +183,7 @@ char* mount2device(char* absPath)
 
   // loop on mtab
   if ((mtab = setmntent(MISC_CHECKSUMS_MTAB, "r")) == 0) {
-    logEmit(LOG_ERR, "setmntent error on %s: %s", 
+    logMisc(LOG_ERR, "setmntent error on %s: %s", 
 	    MISC_CHECKSUMS_MTAB, strerror(errno));
     goto error;
   }
@@ -192,31 +192,31 @@ char* mount2device(char* absPath)
   while(1) {
     if (getmntent_r(mtab, &mntEntry, buf, buflen) == 0)  {
       if (errno == 0) break;
-      logEmit(LOG_ERR, "getmntent_r error: %s", strerror(errno));
+      logMisc(LOG_ERR, "getmntent_r error: %s", strerror(errno));
       goto error;
     }
 
     // looking for matchin dirname
     if (!strncmp(mntEntry.mnt_dir, absPath, strlen(absPath))) {
       if ((rc = malloc(strlen(mntEntry.mnt_fsname)+1)) == 0) {
-	logEmit(LOG_ERR, "cannot malloc device path: %s", strerror(errno));
+	logMisc(LOG_ERR, "cannot malloc device path: %s", strerror(errno));
 	goto error;
       }
 
       strcpy(rc, mntEntry.mnt_fsname);
-      logEmit(LOG_INFO, "found mounted device %s", rc);
+      logMisc(LOG_INFO, "found mounted device %s", rc);
       break;
     }
   }
   
   if (fclose(mtab) != 0) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
   return rc;
  error:
-  logEmit(LOG_INFO, "cannot match a device path: %s", absPath);
+  logMisc(LOG_INFO, "cannot match a device path: %s", absPath);
   return rc;
 }
 
@@ -240,11 +240,11 @@ int normalizePath(char* inPath, char** outPath)
 
   path = inPath;
   if (path == 0 || *path == (char)0) {
-    logEmit(LOG_ERR, "%s", "please provide a path for the device");
+    logMisc(LOG_ERR, "%s", "please provide a path for the device");
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "%s", "normalizePath");
+  logMisc(LOG_DEBUG, "%s", "normalizePath");
   
   do {
     if (basename) free(basename);
@@ -270,7 +270,7 @@ int normalizePath(char* inPath, char** outPath)
       
       if ((path = malloc(strlen(absPath) + strlen(basename) + 1))
   	  == 0) {
-  	logEmit(LOG_ERR, "cannot malloc path: %s", strerror(errno));
+  	logMisc(LOG_ERR, "cannot malloc path: %s", strerror(errno));
   	goto error;
       }
 
@@ -288,7 +288,7 @@ int normalizePath(char* inPath, char** outPath)
 
   } while (nbLink < MISC_CHECKSUMS_MAX_NBLINK && basename != 0);
   if (nbLink >= MISC_CHECKSUMS_MAX_NBLINK) {
-    logEmit(LOG_ERR, "reach %i symlinks (is there a loop ?)",
+    logMisc(LOG_ERR, "reach %i symlinks (is there a loop ?)",
   	    MISC_CHECKSUMS_MAX_NBLINK);
     goto error;
   }
@@ -298,7 +298,7 @@ int normalizePath(char* inPath, char** outPath)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "normalizePath fails");
+    logMisc(LOG_ERR, "%s", "normalizePath fails");
   }
   free(absPath);   
   free(basename);
@@ -320,7 +320,7 @@ int getDevice(char* inPath, char** outPath)
   char *oldPath = 0;
   char *newPath = 0;
 
-  logEmit(LOG_DEBUG, "%s", "getDevice");
+  logMisc(LOG_DEBUG, "%s", "getDevice");
   
   oldPath = inPath;
   if (!normalizePath(oldPath, &newPath)) goto error;
@@ -339,7 +339,7 @@ int getDevice(char* inPath, char** outPath)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getDevice fails");
+    logMisc(LOG_ERR, "%s", "getDevice fails");
   }
   return rc;
 }
@@ -355,37 +355,37 @@ int isBlockDevice(char* path, int* isB) {
   int rc = FALSE;
   struct stat statBuffer;
 
-  logEmit(LOG_DEBUG, "%s", "isBlockDevice");
+  logMisc(LOG_DEBUG, "%s", "isBlockDevice");
   *isB = FALSE;
 
   if (path == 0 || *path == (char)0) {
-    logEmit(LOG_ERR, "%s", "please provide a path for the device");
+    logMisc(LOG_ERR, "%s", "please provide a path for the device");
     goto error;
   }
 
   // get file attributes
   if (stat(path, &statBuffer)) {
-    logEmit(LOG_ERR, "status error on %s: %s", path, strerror(errno));
+    logMisc(LOG_ERR, "status error on %s: %s", path, strerror(errno));
     goto error;
   }
 
   rc = TRUE;
 
   if (S_ISCHR(statBuffer.st_mode)) {
-    logEmit(LOG_INFO, "find character device: %s", path);
+    logMisc(LOG_INFO, "find character device: %s", path);
     goto end;
   }
     
   if (S_ISBLK(statBuffer.st_mode)) {
-    logEmit(LOG_INFO, "find bloc device: %s", path);
+    logMisc(LOG_INFO, "find bloc device: %s", path);
     *isB = TRUE;
     goto end;
   }
   
-  logEmit(LOG_INFO, "do not match a block device: %s", path);
+  logMisc(LOG_INFO, "do not match a block device: %s", path);
  end:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "isBlockDevice fails");
+    logMisc(LOG_ERR, "%s", "isBlockDevice fails");
   }
  error:
   return rc;
@@ -412,7 +412,7 @@ int getIsoSize(int fd, off_t *size,
   char invariant[8] = ".CD001.";
   char buffer[8]    = "       "; 
 
-  logEmit(LOG_DEBUG, "%s", "getIsoSize");
+  logMisc(LOG_DEBUG, "%s", "getIsoSize");
   invariant[0] = 1;
   invariant[6] = 1;
   *size = 0;
@@ -422,15 +422,15 @@ int getIsoSize(int fd, off_t *size,
   // Identifier: invariant on iso
   offset = (8<<12);
   if ((lseek(fd, offset, SEEK_SET)) == -1) {
-    logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+    logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }	
   if (read(fd, buffer, 8) < 0) {
-    logEmit(LOG_ERR, "read: %s", strerror(errno));
+    logMisc(LOG_ERR, "read: %s", strerror(errno));
     goto error;
   }
   if (strncmp(buffer, invariant, 7)) {
-    logEmit(LOG_INFO, "%s", "is not an iso");
+    logMisc(LOG_INFO, "%s", "is not an iso");
     goto end;
   }
 
@@ -441,11 +441,11 @@ int getIsoSize(int fd, off_t *size,
 #endif
 
   if ((lseek(fd, offset, SEEK_SET)) == -1) {
-    logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+    logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }	
   if (read(fd, count, 4) < 0) {
-    logEmit(LOG_ERR, "read: %s", strerror(errno));
+    logMisc(LOG_ERR, "read: %s", strerror(errno));
     goto error;
   }
  
@@ -456,21 +456,21 @@ int getIsoSize(int fd, off_t *size,
 #endif
 
   if ((lseek(fd, offset, SEEK_SET)) == -1) {
-    logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+    logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }	
   if (read(fd, bs, 2) < 0) {
-    logEmit(LOG_ERR, "read: %s", strerror(errno));
+    logMisc(LOG_ERR, "read: %s", strerror(errno));
     goto error;
   }
 
   *size = (*count)*(*bs);
-  logEmit(LOG_INFO, "iso size: %lli", *size);
+  logMisc(LOG_INFO, "iso size: %lli", *size);
  end:
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getIsoSize fails");
+    logMisc(LOG_ERR, "%s", "getIsoSize fails");
   }
   return rc;
 }

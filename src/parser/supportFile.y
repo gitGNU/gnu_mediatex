@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.y,v 1.4 2015/06/30 17:37:36 nroche Exp $
+ * Version: $Id: supportFile.y,v 1.5 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -122,7 +122,7 @@ line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
     YYABORT;
   }
 
-  logParser(LOG_NOTICE, "line %-3i: %04i-%02i-%02i,%02i:%02i:%02i "
+  logParser(LOG_DEBUG, "line %-3i: %04i-%02i-%02i,%02i:%02i:%02i "
 	    "%04i-%02i-%02i,%02i:%02i:%02i %04i-%02i-%02i,%02i:%02i:%02i "
 	    "%*s %*s %*lli %*s %s",
 	    LINENO,
@@ -182,18 +182,18 @@ parseSupports(const char* path)
   FILE* inputStream = stdin;
   yyscan_t scanner;
 
-  logParser(LOG_NOTICE, "parse supports from %s",
+  logParser(LOG_INFO, "parse supports from %s",
 	    path?path:"stdin");
 
   // initialise scanner
   if (supp_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   if (path != 0) {
     if ((inputStream = fopen(path, "r")) == 0) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream: %s", path); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;
@@ -207,9 +207,9 @@ parseSupports(const char* path)
 
   // call the parser
   if (supp_parse(scanner)) {
-    logEmit(LOG_ERR, "support parser fails on line %i", 
+    logParser(LOG_ERR, "support parser fails on line %i", 
 	    supp_get_lineno(scanner));
-    logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
+    logParser(LOG_ERR, "please edit %s", path?path:"stdin");
     goto error3;
   }
 
@@ -224,7 +224,7 @@ parseSupports(const char* path)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "support parser fails");
+    logParser(LOG_ERR, "%s", "support parser fails");
   }
   supp_lex_destroy(scanner);
   return rc;

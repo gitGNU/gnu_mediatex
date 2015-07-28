@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.5 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.6 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -134,27 +134,27 @@ file: //empty file
 }
     | headers
 {
-  logParser(LOG_NOTICE, "line %3-i: file: headers", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: file: headers", LINENO);
 }
     | headers stanzas
 {
-  logParser(LOG_NOTICE, "line %3-i: file: headers stanzas", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: file: headers stanzas", LINENO);
 }
 ;
 
 headers: headers header
 {
-  logParser(LOG_NOTICE, "line %3-i: headers: headers header", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: headers: headers header", LINENO);
 }
        | header
 {
-  logParser(LOG_NOTICE, "line %3-i: headers: header", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: headers: header", LINENO);
 }
 ;
 
 header: servMASTER servHASH
 {
-  logParser(LOG_NOTICE, "line %-3i master server: %s", LINENO, $2);
+  logParser(LOG_DEBUG, "line %-3i master server: %s", LINENO, $2);
   if (!(coll->serverTree->master = addServer(coll, $2))) YYABORT;
 }
       | servCOLLKEY servSTRING
@@ -191,17 +191,17 @@ header: servMASTER servHASH
 
 stanzas: stanzas stanza
 {
-  logParser(LOG_NOTICE, "line %3-i: stanzas: stanzas stanza", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: stanzas: stanzas stanza", LINENO);
 }
        | stanza
 {
-  logParser(LOG_NOTICE, "line %3-i: stanzas: stanza", LINENO);
+  logParser(LOG_DEBUG, "line %3-i: stanzas: stanza", LINENO);
 }
 ;
 
 stanza: servSERVER server lines servENDBLOCK
 {
-  logParser(LOG_NOTICE, "line %3-i: servSERVER server lines servENDBLOCK", 
+  logParser(LOG_DEBUG, "line %3-i: servSERVER server lines servENDBLOCK", 
 	    LINENO);
   server->user = destroyString(server->user);
   if (isEmptyString(server->label)) {
@@ -218,7 +218,7 @@ stanza: servSERVER server lines servENDBLOCK
 
 server: servHASH
 {
-  logParser(LOG_NOTICE, "line %-3i new server: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i new server: %s", LINENO, $1);
   if (!(server = addServer(coll, $1))) YYABORT;
 }
 ;
@@ -291,15 +291,16 @@ image: servHASH servCOLON servNUMBER servEQUAL servSCORE
 
   // score is log as 0 if we log it in 4rst position ?!
   // score is log as previous value if we log it in 3rd position ?!
-  logParser(LOG_NOTICE, "line %-3i new image %s:%lli", LINENO, $1, $3);
-  logParser(LOG_NOTICE, "score = %.2f", $5);
+  logParser(LOG_DEBUG, "line %-3i new image %s:%lli", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "score = %.2f", $5);
 
   if (server) {
     if (!(archive = addArchive(coll, $1, $3))) YYERROR;
     if (!(image = addImage(coll, server, archive))) YYERROR;
     image->score = $5;
   } else {
-    logParser(LOG_NOTICE, "%s", "line %3-i: a mon avis ne passe jamais là");
+    logParser(LOG_ERR, "line %-3i: server not found (internal error)",
+	      LINENO);
     YYABORT;
   }
 }
@@ -315,14 +316,14 @@ gateways: gateways servCOMMA gateway
 
 network: servSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i network: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i network: %s", LINENO, $1);
   if (!addNetworkToRing(server->networks, $1)) YYABORT;
 }
 ;
 
 gateway: servSTRING
 {
-  logParser(LOG_NOTICE, "line %-3i gateway: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %-3i gateway: %s", LINENO, $1);
   if (!addNetworkToRing(server->gateways, $1)) YYABORT;
 }
 ;
@@ -343,7 +344,7 @@ gateway: servSTRING
 void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 		const char* message)
 {
-  logEmit(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i\n",
 	  message, serv_get_text(yyscanner), LINENO);
 }
 
@@ -363,18 +364,18 @@ int parseServerFile(Collection* coll, const char* path)
   Server* server = 0;
 
   checkCollection(coll);
-  logParser(LOG_NOTICE, "parse %s servers from %s",
+  logParser(LOG_INFO, "parse %s servers from %s",
 	    coll->label, path?path:"stdin");
 
   // initialise scanner
   if (serv_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   if (path != 0) {
     if (!(inputStream = fopen(path, "r"))) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream: %s", path); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;
@@ -384,13 +385,13 @@ int parseServerFile(Collection* coll, const char* path)
 
   // debug mode for scanner
   serv_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "serv_set_debug = %i", serv_get_debug(scanner));
+  logParser(LOG_DEBUG, "serv_set_debug = %i", serv_get_debug(scanner));
 
   // call the parser
   if (serv_parse(scanner, coll, server)) {
-    logEmit(LOG_ERR, "servers file parser error on line %i",
+    logParser(LOG_ERR, "servers file parser error on line %i",
 	    serv_get_lineno(scanner));
-    logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
+    logParser(LOG_ERR, "please edit %s", path?path:"stdin");
     goto error3;
   }
 
@@ -405,7 +406,7 @@ int parseServerFile(Collection* coll, const char* path)
   }
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "servers file parser error");
+    logParser(LOG_ERR, "%s", "servers file parser error");
   }
   serv_lex_destroy(scanner);
   return rc;

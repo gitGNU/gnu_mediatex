@@ -1,4 +1,5 @@
 *** no server:
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info address.c] build socket address 127.0.0.1:12345
 [info tcp.c] connecting to 127.0.0.1:12345
 [info tcp.c] connect fails: Connection refused
@@ -9,14 +10,18 @@
 [info tcp.c] connecting to 127.0.0.1:12345
 [info tcp.c] connect fails: Connection refused
 [notice connect.c] cannot reach localhost:12345
+[info confTree.c] free configuration
 [info utconnect.c] exit on success
 *** with server:
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info address.c] build socket address 127.0.0.1:12345
 [info tcp.c] connecting to 127.0.0.1:12345
 [info connect.c] connected to localhost (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)
 [info connect.c] upgradeServer coll1 UNKNOWN
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 [info connect.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1
 [info connect.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash2                 456 path2
+[info confTree.c] free configuration
 [info utconnect.c] exit on success
 *** server receive:
 # Collection's records:

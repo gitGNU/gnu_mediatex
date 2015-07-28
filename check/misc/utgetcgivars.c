@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utgetcgivars.c,v 1.2 2015/07/02 17:22:05 nroche Exp $
+ * Version: $Id: utgetcgivars.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -35,8 +35,8 @@ GLOBAL_STRUCT_DEF;
 static void 
 usage(char* programName)
 {
-  mdtxUsage(programName);
-  mdtxOptions();
+  miscUsage(programName);
+  miscOptions();
 
   return;
 }
@@ -62,9 +62,9 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MISC_SHORT_OPTIONS;
   struct option longOptions[] = {
-    MDTX_LONG_OPTIONS,
+    MISC_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
 
@@ -76,7 +76,7 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-      GET_MDTX_OPTIONS; // generic options
+      GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
   }
@@ -102,7 +102,7 @@ main(int argc, char** argv)
 
   if (cgivars == (char**)0) {
       fprintf(stdout, "usage: you must call this CGI script via apache\n");
-      exit(0);
+      goto error;
     }
     
   /** Print the CGI variables sent by the user.  Note the list of **/
@@ -119,7 +119,7 @@ main(int argc, char** argv)
   /************************************************************************/
 
   rc = TRUE;
-  //error:
+ error:
   ENDINGS;
   rc=!rc;
  optError:

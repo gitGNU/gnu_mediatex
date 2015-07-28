@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordFile.tab.c,v 1.1 2015/07/01 10:50:01 nroche Exp $
+ * Version: $Id: utrecordFile.tab.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -75,7 +75,6 @@ main(int argc, char** argv)
   };
 
   // add comments on output file
-  env.logSeverity = "debug";
   env.debugMemory = TRUE;
 
   // disable stdout by default because we need no ending cariage
@@ -123,7 +122,7 @@ main(int argc, char** argv)
 
   if (!isEmptyString(inputPath)) {
     if ((inputFd = open(inputPath, O_RDONLY)) == -1) {
-      logEmit(LOG_ERR, "cannot open input file: %s", inputPath); 
+      logMain(LOG_ERR, "cannot open input file: %s", inputPath); 
       goto error;
     }
   }

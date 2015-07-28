@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthtml.c,v 1.1 2015/07/01 10:49:55 nroche Exp $
+ * Version: $Id: uthtml.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
@@ -37,7 +37,7 @@ htmlLeftPageMiddle(FILE* fd)
 {
   int rc = FALSE;
 
-  logEmit(LOG_DEBUG, "%s", "htmlLeftPageMiddle");
+  logMain(LOG_DEBUG, "%s", "htmlLeftPageMiddle");
   
   htmlLink(fd, "tex2html2", "titles.html", "tous les documents");
   if (!fprintf(fd, "%s","\n")) goto error;
@@ -77,7 +77,7 @@ htmlLeftPageMiddle(FILE* fd)
   rc = TRUE;
  error:
   if(!rc) {
-    logEmit(LOG_ERR, "%s", "htmlLeftPage fails");
+    logMain(LOG_ERR, "%s", "htmlLeftPage fails");
   }
   return rc;
 }
@@ -94,7 +94,7 @@ htmlRightTail(FILE* fd)
 {
   int rc = FALSE;
 
-  logEmit(LOG_DEBUG, "%s", "htmlRightTail");
+  logMain(LOG_DEBUG, "%s", "htmlRightTail");
   
   if (!fprintf(fd, "%s", "<P><P>")) goto error;
   htmlBr(fd);
@@ -162,7 +162,7 @@ htmlRightTail(FILE* fd)
   rc = TRUE;
  error:
   if(!rc) {
-    logEmit(LOG_ERR, "%s", "htmlRightTail fails");
+    logMain(LOG_ERR, "%s", "htmlRightTail fails");
   }
   return rc;
 }
@@ -225,7 +225,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(fd = fopen(htmlPath, "w"))) {
-    logEmit(LOG_ERR, "fopen fails: %s", strerror(errno));
+    logMain(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
 
@@ -240,7 +240,7 @@ main(int argc, char** argv)
   if (!htmlMainTail(fd, "2013-12-17")) goto error;
 
   if (fclose(fd)) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logMain(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
   /************************************************************************/

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractScore.c,v 1.1 2015/07/01 10:49:33 nroche Exp $
+ * Version: $Id: utextractScore.c,v 1.2 2015/07/28 11:45:39 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -70,7 +70,6 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.debugCommon = TRUE;
-  env.logSeverity = "debug";
   getEnv(&env);
 
   // parse the command line

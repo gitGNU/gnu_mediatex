@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlocks.c,v 1.2 2015/07/03 11:39:01 nroche Exp $
+ * Version: $Id: utlocks.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -43,20 +43,20 @@ sigManager(void* arg)
   if (sigaddset(&mask, SIGSEGV)) goto error;
   if (sigaddset(&mask, SIGINT)) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
-  logEmit(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
+  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
+  logMain(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
+  logMain(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
 
   if ((sigNumber = sigwaitinfo(&mask, 0)) == -1) {
-    logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
+    logMain(LOG_ERR, "sigwait fails: %s", strerror(errno));
     goto error;
   }
  
   rc = (void*)TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "sigManager fails");
+    logMain(LOG_ERR, "sigManager fails");
   }
   running = FALSE;
   return rc;
@@ -169,28 +169,28 @@ main(int argc, char** argv)
 
   /************************************************************************/
   /*
-  logEmit(LOG_DEBUG, "%s", "For information, constants are:");
-  logEmit(LOG_DEBUG, "F_UNLCK = %i", F_UNLCK);
-  logEmit(LOG_DEBUG, "F_RDLCK = %i", F_RDLCK);
-  logEmit(LOG_DEBUG, "F_WRLCK = %i", F_WRLCK);
+  logMain(LOG_DEBUG, "%s", "For information, constants are:");
+  logMain(LOG_DEBUG, "F_UNLCK = %i", F_UNLCK);
+  logMain(LOG_DEBUG, "F_RDLCK = %i", F_RDLCK);
+  logMain(LOG_DEBUG, "F_WRLCK = %i", F_WRLCK);
   */
 
   if (inputPath == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a file to lock");
+    logMain(LOG_ERR, "%s", "Please provide a file to lock");
     goto error;
   }
 
   if (mode != F_RDLCK && mode != F_WRLCK) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a lock mode");
+    logMain(LOG_ERR, "%s", "Please provide a lock mode");
     goto error;
   }
   
   // file descriptor to lock 
   // (the opening mode must be compatible with lock mode)
   if ((fd = open(inputPath, O_RDWR)) < 0) {
-    logEmit(LOG_ERR, "open failed on %s: %s", inputPath, strerror(errno));
+    logMain(LOG_ERR, "open failed on %s: %s", inputPath, strerror(errno));
     goto error;
   }
 
@@ -205,7 +205,7 @@ main(int argc, char** argv)
   if (!unLock(fd)) goto error;
 
   if ((err = pthread_join(thread, 0))) {
-    logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
+    logMain(LOG_ERR, "pthread_join fails: %s", strerror(err));
     goto error;
   }
   /************************************************************************/

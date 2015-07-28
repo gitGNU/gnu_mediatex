@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserv.c,v 1.1 2015/07/01 10:49:29 nroche Exp $
+ * Version: $Id: utserv.c,v 1.2 2015/07/28 11:45:38 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/serv
  *
@@ -42,13 +42,13 @@ sigManager(void* arg)
   sigaddset(&mask, SIGSEGV);
   sigaddset(&mask, SIGINT);
 
-  logEmit(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
-  logEmit(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
-  logEmit(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
+  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
+  logMain(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
+  logMain(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
 
   if ((sigNumber = sigwaitinfo(&mask, 0)) == -1) {
-    logEmit(LOG_ERR, "sigwait fails: %s", strerror(errno));
+    logMain(LOG_ERR, "sigwait fails: %s", strerror(errno));
     goto error;
   }
  
@@ -135,7 +135,7 @@ main(int argc, char** argv)
     
     if (!clientWriteUnlock()) goto error;
     if ((err = pthread_join(thread, 0))) {
-      logEmit(LOG_ERR, "pthread_join fails: %s", strerror(err));
+      logMain(LOG_ERR, "pthread_join fails: %s", strerror(err));
       goto error;
     }
   }
@@ -143,23 +143,23 @@ main(int argc, char** argv)
   // others tests
   if (!(coll = addCollection("coll1"))) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "*** upgrade:");
+  logMain(LOG_NOTICE, "%s", "*** upgrade:");
   env.noCollCvs = FALSE;
   if (!mdtxUpgrade("coll1")) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "*** refuse to del localhost key: ");
+  logMain(LOG_NOTICE, "%s", "*** refuse to del localhost key: ");
   if (delKey("coll1", "746d6ceeb76e05cfa2dea92a1c5753cd")) goto error;
     
-  logEmit(LOG_NOTICE, "%s", "*** del a key: ");
+  logMain(LOG_NOTICE, "%s", "*** del a key: ");
   if (!delKey("coll1", "bedac32422739d7eced624ba20f5912e")) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** refuse to add localhost key: ");
+  logMain(LOG_NOTICE, "%s", "*** refuse to add localhost key: ");
   if (addKey("coll1", "client/user1Key_rsa.pub")) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "*** add a key: ");
+  logMain(LOG_NOTICE, "%s", "*** add a key: ");
   if (!addKey("coll1", "client/user3Key_dsa.pub")) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "*** save and disease test: ");
+  logMain(LOG_NOTICE, "%s", "*** save and disease test: ");
   if (!saveCollection(coll, SERV)) goto error;
   if (!diseaseCollection(coll, SERV)) goto error;
   /************************************************************************/

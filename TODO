@@ -1,5 +1,25 @@
 
+*** CLEAN-UP
+
+- src/misc/host.c (to remove)
+- src/misc/udp.c (to remove)
+
 *** TO TEST
+
+- explain tests (and configuration from utFunc) 
+
+src/memory/recordTree.c
+src/memory/cacheTree.c
+src/common/upgrade.c
+src/common/extractScore.c
+src/common/openClose.c
+src/cgi.c
+src/client/motd.c
+src/client/conf.c
+src/server/cache.c
+src/server/notify.c
+src/server/have.c
+src/server/extract.c
 
 - pgrof: test with more than 100k entries
 - find historical event into cvs's collections
@@ -20,7 +40,7 @@ cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10)
 
 *** TO CORRECT: cache policy
 
-- tests.sh: mediatex.css n'est pas recopie par serv2
+- !!! tests.sh: mediatex.css n'est pas recopie par serv2
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - add supp to coll remove REC entry from extract.txt
 - motd: add to burn and orphanes
@@ -45,8 +65,6 @@ cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10)
 
 - do not notify archive when nbGeo remote copies exists or not ?
 --> ease user copy as all servers get the archive
-
-- explain tests (and configuration from utFunc)
 
 *** TODO
 

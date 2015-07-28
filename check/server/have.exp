@@ -1,3 +1,4 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] Clean the cache and add part1:
 [notice uthave.c] ..........................................................
@@ -15,15 +16,24 @@
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
+[info openClose.c] load coll3 records
+[notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] add a demand for logo.png
 [notice uthave.c] ..........................................................
 [notice utFunc.c] ask for 022a34b2f9b893fba5774237e1aa80ea file
 [notice utFunc.c] add a generic demand for
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection ( SX )
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
+[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
 [notice uthave.c] ..........................................................
 [notice uthave.c] Now we have :
 [notice uthave.c] ..........................................................
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -41,6 +51,10 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [notice uthave.c] ..........................................................
 [notice utFunc.c] provide logoP1.cat
 [notice utFunc.c] add a generic demand for
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5SX )
+[info openClose.c] steps: 0 / 93
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: UNUSED -> USED
 [notice have.c] have an archive to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
@@ -56,6 +70,7 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] - frozen            0
 [info cache.c] = avail     104857600
 [info cache.c] need            20480
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: USED -> ALLOCATED
 [info device.c] absolute path is /tmp/logoP1.cat
 [info device.c] not a symlink: /tmp/logoP1.cat
 [info device.c] do not match a block device: /tmp/logoP1.cat
@@ -67,8 +82,10 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logoP1.cat to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: ALLOCATED -> TOKEEP
 [notice extract.c] extract 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> AVAILABLE
 [info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
@@ -89,9 +106,11 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> AVAILABLE
 [notice uthave.c] ..........................................................
 [notice uthave.c] Now we have :
 [notice uthave.c] ..........................................................
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -111,7 +130,12 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [notice uthave.c] ..........................................................
 [notice utFunc.c] provide logoP2.cat
 [notice utFunc.c] add a generic demand for
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5SX )
+[info openClose.c] steps: 0 / 93
+[info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: UNUSED -> USED
 [notice have.c] have an archive to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> TOKEEP
 [info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
 [info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
@@ -123,6 +147,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] - frozen        20480
 [info cache.c] = avail     104837120
 [info cache.c] need            24546
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: UNUSED -> ALLOCATED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat /tmp/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
@@ -130,8 +155,10 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: ALLOCATED -> TOKEEP
 [notice extract.c] extract 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> AVAILABLE
 [info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cache.c] cache sizes:
@@ -142,6 +169,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] - frozen        24546
 [info cache.c] = avail     104833054
 [info cache.c] need            24075
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> ALLOCATED
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -152,13 +180,20 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
 [info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
+[info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: USED -> UNUSED
 [notice uthave.c] ..........................................................
 [notice uthave.c] Now we have :
 [notice uthave.c] ..........................................................
+[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 # Collection's records:
 Headers
 	Collection	coll3               
@@ -188,8 +223,12 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> UNUSED
+[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
+[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
+[info confTree.c] free configuration
 [info uthave.c] exit on success

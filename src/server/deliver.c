@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: deliver.c,v 1.5 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -43,7 +43,7 @@ callMail(Collection* coll, Record* record, char* address)
   char available[16];
   char url[256];
   
-  logEmit(LOG_DEBUG, "send a mail to %s", address);
+  logMain(LOG_DEBUG, "send a mail to %s", address);
 
   sprintf(available, "%i", (int)(coll->cacheTTL / DAY));
   sprintf(url, "%s?hash=%s&size=%lli", coll->cgiUrl, 
@@ -67,7 +67,7 @@ callMail(Collection* coll, Record* record, char* address)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to send a mail");
+    logMain(LOG_ERR, "%s", "fails to send a mail");
   }
   if (argv[0]) destroyString(argv[0]);
   return(rc);
@@ -98,7 +98,7 @@ deliverMail(Collection* coll, Archive* archive)
   checkArchive(archive);
   record = archive->localSupply;
   checkRecord(record);
-  logEmit(LOG_DEBUG, "deliverMail %s:%lli", archive->hash, archive->size);
+  logMain(LOG_DEBUG, "deliverMail %s:%lli", archive->hash, archive->size);
   if (!(conf = getConfiguration())) goto error;
 
   // send same message for all record
@@ -122,7 +122,7 @@ deliverMail(Collection* coll, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_DEBUG, "%s", "deliverMail fails");
+    logMain(LOG_DEBUG, "%s", "deliverMail fails");
   }
   return rc;
 }
@@ -148,7 +148,7 @@ deliverMails(Collection* coll)
   RGIT* curr2 = 0;
   int deliver = FALSE;
 
-  logEmit(LOG_DEBUG, "delivering %s collection files to users",
+  logMain(LOG_DEBUG, "delivering %s collection files to users",
 	  coll->label);
 
   if (!(conf = getConfiguration())) goto error;
@@ -170,7 +170,7 @@ deliverMails(Collection* coll)
       goto error3;
 
     if (access(path, R_OK) == -1) {
-      logEmit(LOG_WARNING,
+      logMain(LOG_WARNING,
 	      "file not find in cache as expected: %s", path);
       continue;
     }
@@ -196,7 +196,7 @@ deliverMails(Collection* coll)
   if (!releaseCollection(coll, CACH)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_DEBUG, "%s", "deliverMails fails");
+    logMain(LOG_DEBUG, "%s", "deliverMails fails");
   }
   path = destroyString(path);
   return rc;

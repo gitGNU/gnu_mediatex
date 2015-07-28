@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupp.c,v 1.1 2015/07/01 10:49:29 nroche Exp $
+ * Version: $Id: utsupp.c,v 1.2 2015/07/28 11:45:38 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -103,34 +103,34 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(conf = getConfiguration())) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Start like this:");
+  logMain(LOG_NOTICE, "%s", "*** Start like this:");
   conf->checkTTL = 946080000;
   mdtxLsSupport();
   if (!saveConfiguration("topo")) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Add a support:");
+  logMain(LOG_NOTICE, "%s", "*** Add a support:");
   sprintf(path, "%s/logo.tgz", inputRep);
   if (!mdtxAddSupport("me", path)) goto error;
   if (!saveConfiguration("topo")) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Add second time:");
+  logMain(LOG_NOTICE, "%s", "*** Add second time:");
   if (mdtxAddSupport("me", path)) goto error;
   if (!saveConfiguration("topo")) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Have a bad support:");
+  logMain(LOG_NOTICE, "%s", "*** Have a bad support:");
   sprintf(path, "%s/logo.png", inputRep);
   if (mdtxHaveSupport(supp, path)) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Have a support:");
+  logMain(LOG_NOTICE, "%s", "*** Have a support:");
   sprintf(path, "%s/logoP1.iso", inputRep);
   if (!mdtxHaveSupport(supp, path)) goto error;
   
-  logEmit(LOG_NOTICE, "%s", "*** Update a support:");
+  logMain(LOG_NOTICE, "%s", "*** Update a support:");
   if (!mdtxUpdateSupport(supp, "too much caracteres => troncated")) 
     goto error;
   if (!saveConfiguration("topo")) goto error;
 
-  logEmit(LOG_NOTICE, "%s", "*** Remove a support:");
+  logMain(LOG_NOTICE, "%s", "*** Remove a support:");
   if (!mdtxDelSupport(supp)) goto error;
   if (!saveConfiguration("topo")) goto error;
   /************************************************************************/

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.5 2015/07/03 11:39:02 nroche Exp $
+ * Version: $Id: perm.c,v 1.6 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -47,23 +47,23 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   mode_t mask = 07777;
 
   if (path == 0 || *path == (char)0) {
-    logEmit(LOG_ERR, "%s", "cannot check empty directory path");
+    logMisc(LOG_ERR, "%s", "cannot check empty directory path");
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "checkDirectory %s %s %s %o", 
+  logMisc(LOG_DEBUG, "checkDirectory %s %s %s %o", 
 	  path, user, group, mode);
 
   if (stat(path, &sb) == -1) {
-    logEmit(LOG_ERR, "stat fails on path %s", path);
-    logEmit(LOG_ERR, "stat: %s", strerror(errno));
+    logMisc(LOG_ERR, "stat fails on path %s", path);
+    logMisc(LOG_ERR, "stat: %s", strerror(errno));
     goto error;
   }
   
   // check permissions
   if (env.noRegression) mask = 00777;
   if ((sb.st_mode & mask) != (mode & mask)) {
-    logEmit(LOG_ERR, "%s should be share as %o, not %o",
+    logMisc(LOG_ERR, "%s should be share as %o, not %o",
 	    path, mode & mask, sb.st_mode & mask);
     goto error;
   }
@@ -77,7 +77,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   // check user
   if (!getPasswdLine (0, sb.st_uid, &pw, &buf)) goto error;
   if (strcmp(user, pw.pw_name) != 0) {
-    logEmit(LOG_ERR, "%s should be owne by %s user, not %s",
+    logMisc(LOG_ERR, "%s should be owne by %s user, not %s",
 	    path, user, pw.pw_name);
     goto error;
   }
@@ -86,7 +86,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   if (buf) free (buf);
   if (!getGroupLine (0, sb.st_gid, &gr, &buf)) goto error;
   if (strcmp(group, gr.gr_name) != 0) {
-    logEmit(LOG_ERR, "%s should be owne by %s group, not %s",
+    logMisc(LOG_ERR, "%s should be owne by %s group, not %s",
 	    path, group, gr.gr_name);
     goto error;
   }
@@ -94,7 +94,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "checkDirectory fails");
+    logMisc(LOG_ERR, "%s", "checkDirectory fails");
   } 
 
   if (buf) free (buf);
@@ -125,7 +125,7 @@ currentTime()
   }
 
   if (time(&rc) == -1) {
-    logEmit(LOG_ERR, "time error: %s", strerror(errno));
+    logMisc(LOG_ERR, "time error: %s", strerror(errno));
   }
  end:
  return rc;

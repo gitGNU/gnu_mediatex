@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shm.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
+ * Version: $Id: shm.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTeX
  * Module : shm
  *
@@ -61,32 +61,32 @@ shmWrite(char* pathFile, int shmSize,
   unsigned short table[1];
   void* buffer = 0;
 
-  logEmit(LOG_DEBUG, "%s", "shmWrite");
+  logMisc(LOG_DEBUG, "%s", "shmWrite");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
   
   // Create a new IPC key base on an i-node + minor peripherical
   // number and a project number
   if ((key = ftok(pathFile, MISC_SHM_PROJECT_ID)) == -1) {
-    logEmit(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
-    logEmit(LOG_ERR, "ftok using path: %s", pathFile); 
+    logMisc(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "ftok using path: %s", pathFile); 
     goto error;
   }
 
   // Create a new share memory segmment matched with the key 
   // or use the pre-existing one
   if ((shm = shmget(key, shmSize, IPC_CREAT | 0600)) == -1) {
-    logEmit(LOG_ERR, "semget fails to create share memory: %s", 
+    logMisc(LOG_ERR, "semget fails to create share memory: %s", 
 	    strerror(errno)); 
     goto error;
   }
 
   // Attach the share memory segment to the space memory of the processus
   if ((buffer = shmat(shm, 0, 0)) == 0) {
-    logEmit(LOG_ERR, "shmat fails to attach share memory: %s", 
+    logMisc(LOG_ERR, "shmat fails to attach share memory: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -96,7 +96,7 @@ shmWrite(char* pathFile, int shmSize,
 
     // Create a new semaphore matched with the key
     if ((sem = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600)) == -1) {
-      logEmit(LOG_ERR, "semget fails to create new semaphore: %s", 
+      logMisc(LOG_ERR, "semget fails to create new semaphore: %s", 
 	      strerror(errno)); 
       goto error;
     }
@@ -108,7 +108,7 @@ shmWrite(char* pathFile, int shmSize,
     table[0] = 1;
     u_semun.table = table;
     if (semctl(sem, 0, SETALL, u_semun) <0) {
-      logEmit(LOG_ERR, "semctl fails to initialize semaphore value: %s", 
+      logMisc(LOG_ERR, "semctl fails to initialize semaphore value: %s", 
 	      strerror(errno)); 
       goto error;
     }
@@ -119,7 +119,7 @@ shmWrite(char* pathFile, int shmSize,
   sembuf.sem_op = -1;
   sembuf.sem_flg = SEM_UNDO; // for crash recovery
   if (semop(sem, &sembuf, 1) < 0) {
-    logEmit(LOG_ERR, "semop fails asking for semaphore: %s", 
+    logMisc(LOG_ERR, "semop fails asking for semaphore: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -130,14 +130,14 @@ shmWrite(char* pathFile, int shmSize,
   // V (Please)
   sembuf.sem_op = 1;
   if (semop(sem, &sembuf, 1) < 0) {
-    logEmit(LOG_ERR, "semop fails returning back semaphore: %s", 
+    logMisc(LOG_ERR, "semop fails returning back semaphore: %s", 
 	    strerror(errno)); 
     goto error;
   }
 
   // Detach the share memory segment to the space memory of the processus
   if (shmdt(buffer)) {
-    logEmit(LOG_ERR, "shdt fails to detach share memory: %s", 
+    logMisc(LOG_ERR, "shdt fails to detach share memory: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -145,7 +145,7 @@ shmWrite(char* pathFile, int shmSize,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to write share memory"); 
+    logMisc(LOG_ERR, "%s", "fails to write share memory"); 
   }
   return rc;
 }
@@ -172,40 +172,40 @@ shmRead(char* pathFile, int shmSize,
   struct sembuf sembuf;
   void* buffer = 0;
 
-  logEmit(LOG_DEBUG, "%s", "shmRead");
+  logMisc(LOG_DEBUG, "%s", "shmRead");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
   
   // Create a new IPC key base on an i-node + minor peripherical 
   // number and a project number
   if ((key = ftok(pathFile, MISC_SHM_PROJECT_ID)) == -1) {
-    logEmit(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
-    logEmit(LOG_NOTICE, "ftok using path: %s", pathFile); 
+    logMisc(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
+    logMisc(LOG_NOTICE, "ftok using path: %s", pathFile); 
     goto error;
   }
   
   // Try to match an existing semaphore with the key
   if ((sem = semget(key, 1, 0)) == -1) {
-    logEmit(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
+    logMisc(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
 	    key, strerror(errno)); 
-    logEmit(LOG_NOTICE, "%s", "(semaphore as gone)");
+    logMisc(LOG_NOTICE, "%s", "(semaphore as gone)");
     goto error;
   }
 
   // Try to match an existing share memory segment with the key
   if ((shm = shmget(key, 0, 0)) == -1) {
-    logEmit(LOG_ERR, "shmget fails matching  0x%x IPC key: %s", 
+    logMisc(LOG_ERR, "shmget fails matching  0x%x IPC key: %s", 
 	    key, strerror(errno)); 
-    logEmit(LOG_NOTICE, "%s", "(share memory as gone)");
+    logMisc(LOG_NOTICE, "%s", "(share memory as gone)");
     goto error;
   }
   
   // Attach the share memory segment to the space memory of the processus
   if ((buffer = shmat(shm, 0, SHM_RDONLY)) == 0) {
-    logEmit(LOG_ERR, "shmat fails to attach share memory: %s", 
+    logMisc(LOG_ERR, "shmat fails to attach share memory: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -215,7 +215,7 @@ shmRead(char* pathFile, int shmSize,
   sembuf.sem_op = -1;
   sembuf.sem_flg = 0;
   if (semop(sem, &sembuf, 1) < 0) {
-    logEmit(LOG_ERR, "semop fails asking for semaphore: %s", 
+    logMisc(LOG_ERR, "semop fails asking for semaphore: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -226,14 +226,14 @@ shmRead(char* pathFile, int shmSize,
   // V (Please)
   sembuf.sem_op = 1;
   if (semop(sem, &sembuf, 1) < 0) {
-    logEmit(LOG_ERR, "semop fails returning back semaphore: %s", 
+    logMisc(LOG_ERR, "semop fails returning back semaphore: %s", 
 	    strerror(errno)); 
     goto error;
   }
 
   // Detach the share memory segment to the space memory of the processus
   if (shmdt(buffer)) {
-    logEmit(LOG_ERR, "shdt fails to detach share memory: %s", 
+    logMisc(LOG_ERR, "shdt fails to detach share memory: %s", 
 	    strerror(errno)); 
     goto error;
   }
@@ -241,7 +241,7 @@ shmRead(char* pathFile, int shmSize,
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to read share memory"); 
+    logMisc(LOG_ERR, "%s", "fails to read share memory"); 
   }
   return rc;
 }
@@ -263,50 +263,50 @@ shmFree(char* pathFile, int shmSize)
   int shm = 0;
   union semun arg;
 
-  logEmit(LOG_DEBUG, "%s", "shmFree");
+  logMisc(LOG_DEBUG, "%s", "shmFree");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logEmit(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
     goto error;
   }
   
   // Create a new IPC key base on an i-node + minor peripherical 
   // number and a project number
   if ((key = ftok(pathFile, MISC_SHM_PROJECT_ID)) == -1) {
-    logEmit(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
-    logEmit(LOG_ERR, "ftok using path: %s", pathFile); 
+    logMisc(LOG_ERR, "ftok fails to create IPC key: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "ftok using path: %s", pathFile); 
     goto error;
   }
   
   // Try to match an existing semaphore with the key
   if ((sem = semget(key, 1, 0)) == -1) {
-    logEmit(LOG_ERR, "semget fails matching IPC key: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "semget fails matching IPC key: %s", strerror(errno)); 
     goto error;
   }
 
   // Try to match an existing share memory segment with the key
   if ((shm = shmget(key, shmSize, 0)) == -1) {
-    logEmit(LOG_ERR, "shmget fails matching IPC key: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "shmget fails matching IPC key: %s", strerror(errno)); 
     goto error;
   }
 
   // Free share memory IPC ressource
   if (shmctl(shm, IPC_RMID, 0) == -1) {
-    logEmit(LOG_ERR, "shmctl fails: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "shmctl fails: %s", strerror(errno)); 
     goto error;
   }
 
   // Free semaphore IPC ressource
   arg.val = 0;
   if (semctl(sem, 0, IPC_RMID, arg) == -1) {
-    logEmit(LOG_ERR, "semctl fails: %s", strerror(errno)); 
+    logMisc(LOG_ERR, "semctl fails: %s", strerror(errno)); 
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to free share memory"); 
+    logMisc(LOG_ERR, "%s", "fails to free share memory"); 
   }
   return rc;
 }

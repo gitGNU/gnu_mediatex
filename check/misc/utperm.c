@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.2 2015/07/03 11:39:01 nroche Exp $
+ * Version: $Id: utperm.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -159,23 +159,23 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  logEmit(LOG_NOTICE, "unit test's current date : %d", currentTime());
+  logMain(LOG_NOTICE, "unit test's current date : %d", currentTime());
 
   if (inputPath == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a directory to check");
+    logMain(LOG_ERR, "%s", "Please provide a directory to check");
     goto error;
   }
 
   if (user == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a user");
+    logMain(LOG_ERR, "%s", "Please provide a user");
     goto error;
   }
 
   if (group == 0) {
     usage(programName);
-    logEmit(LOG_ERR, "%s", "Please provide a group");
+    logMain(LOG_ERR, "%s", "Please provide a group");
     goto error;
   }
 

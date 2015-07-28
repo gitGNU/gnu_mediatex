@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.6 2015/07/03 17:37:32 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.7 2015/07/28 11:45:49 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -136,14 +136,14 @@ NAME    [^[:blank:]\r\n]{1,64}
 	       &date.tm_year, &date.tm_mon, &date.tm_mday,
 	       &date.tm_hour, &date.tm_min, &date.tm_sec)
 	!= 6) {
-      logEmit(LOG_ERR, "sscanf: error parsing date %s", yytext);
+      logParser(LOG_ERR, "sscanf: error parsing date %s", yytext);
       return(suppERROR);
     }
     date.tm_year -= 1900; // from GNU/Linux burning date
     date.tm_mon -= 1;     // month are managed from 0 to 11 
     date.tm_isdst = -1;   // no informatio available about spring horodation
     if ((yylval->time = mktime(&date)) == -1) {
-      logEmit(LOG_ERR, "%s", "mktime: error while parsing date");
+      logParser(LOG_ERR, "%s", "mktime: error while parsing date");
       return(suppERROR);
     }
     return(suppDATE);
@@ -190,7 +190,7 @@ NAME    [^[:blank:]\r\n]{1,64}
 <*>{
   . { /* : eat up any unmatched character and 
 	 let bison manage the errors */
-    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+    logParser(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
     return(suppERROR);
   }

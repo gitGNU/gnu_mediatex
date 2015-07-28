@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: signals.sh,v 1.1 2015/07/01 10:49:53 nroche Exp $
+# * Version: $Id: signals.sh,v 1.2 2015/07/28 11:45:40 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-misc/ut$TEST -sinfo >misc/$TEST.out 2>&1 &
+misc/ut$TEST >misc/$TEST.out 2>&1 &
 PID=$!
 
 # wait until ready

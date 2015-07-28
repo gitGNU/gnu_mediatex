@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.5 2015/07/02 12:14:08 nroche Exp $
+ * Version: $Id: log.c,v 1.6 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -99,7 +99,7 @@ static LogFacility LogFacilities[] = {
   {-1,            (char*)0}};
  
 /*=======================================================================
- * Function   : getLogFacility (log) [MediaTeX]
+ * Function   : getLogFacility
  * Description: Get the log facility corresponding to a given name.
  * Synopsis   : int getLogFacility(char* name)
  * Input      : char* name = the sought facility name.
@@ -125,7 +125,7 @@ getLogFacility(char* name)
 }
 
 /*=======================================================================
- * Function   : getLogFacilityByName (log) [MediaTeX]
+ * Function   : getLogFacilityByName
  * Description: Get the log facility corresponding to a given name.
  * Synopsis   : LogFacility* getLogFacilityByName(char* name)
  * Input      : char* name = the sought facility name.
@@ -151,7 +151,7 @@ getLogFacilityByName(char* name)
 }
 
 /*=======================================================================
- * Function   : getLogFacilityByCode (log) [MediaTeX]
+ * Function   : getLogFacilityByCode
  * Description: Get the log facility corresponding to a given code.
  * Synopsis   : LogFacility* getLogFacilityByCode(int code)
  * Input      : int code = the sought facility code.
@@ -188,7 +188,7 @@ LogSeverity LogSeverities[] = {
   {-1,      (char*)0}};
 
 /*=======================================================================
- * Function   : getLogSeverity (log) [MediaTeX]
+ * Function   : getLogSeverity
  * Description: Get the log severity corresponding to a given name.
  * Synopsis   : int getLogSeverity(char* name)
  * Input      : char* name = the sought severity name.
@@ -214,7 +214,7 @@ getLogSeverity(char* name)
 }
 
 /*=======================================================================
- * Function   : getLogSeverityByName (log) [MediaTeX]
+ * Function   : getLogSeverityByName
  * Description: Get the log severity corresponding to a given name.
  * Synopsis   : LogSeverity* getLogSeverityByName(char* name)
  * Input      : char* name = the sought severity name.
@@ -240,7 +240,7 @@ getLogSeverityByName(char* name)
 }
 
 /*=======================================================================
- * Function   : getLogSeverityByCode (log) [MediaTeX]
+ * Function   : getLogSeverityByCode
  * Description: Get the log severity corresponding to a given name.
  * Synopsis   : LogSeverity* getLogSeverityByCode(int code)
  * Input      : int code = the sought severity code.
@@ -264,27 +264,29 @@ getLogSeverityByCode(int code)
 }
 
 /*=======================================================================
- * Function   : logOpen (log) [MediaTeX]
- * Description: Depending on the facility, severity and log handler
- *              given, the logging is set up.
- * Synopsis   : LogHandler* logOpen(char* name, int facility, int severity,
- *              ioStream* hlog)
+ * Function   : logOpen
+ * Description: create a log handler
+ * Synopsis   : LogHandler* logOpen(char* name, 
+ *                  LogSeverity** logSeverity, int severity, char* hlog)
  * Input      : char* name = name to recordin the log line's prefix
  *              int facility = facility code
- *              int severity = severity code
+ *              int* logSeverity = severity codes
  *              char* logFile = the log stream file name if the
  *              facility is MISC_LOG_FILE.
  * Output     : the address of the associated log handler or nil if
  *              the opening failed.
  =======================================================================*/
 LogHandler* 
-logOpen(char* name, int facility, int severity, char* logFile)
+logOpen(char* name, int facility, int* logSeverity, 
+	char* logFile)
 {
   static const char* NilName = "unknown:nil";
   static const char* EmptyName = "unknown:empty";
 	
   LogHandler* rc = 0;
   int fopenError = FALSE;
+  char* baseName = 0;
+  int i = 0;
 	
   if (!(rc = (LogHandler*)malloc(sizeof(LogHandler)))) {
     fprintf(stderr, "error: fails to allocate log handler\n");
@@ -302,7 +304,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
     }
   }
 
-  char* baseName = strrchr(name, '/');
+  baseName = strrchr(name, '/');
   name = (baseName == 0) ? name : (baseName + 1);
     
   rc->name = (char*)malloc(sizeof(char) * (strlen(name) + 1));
@@ -314,10 +316,12 @@ logOpen(char* name, int facility, int severity, char* logFile)
       rc->facility = getLogFacilityByCode(MISC_LOG_FILE);
       logFile = 0;
     }
-      
-    rc->severity = getLogSeverityByCode(severity);
-    if(rc->severity == 0) {
-      rc->severity = getLogSeverityByCode(LOG_INFO);
+
+    for (i=0; i<LOG_MAX_MODULE; ++i) {
+      rc->severity[i] = getLogSeverityByCode(logSeverity[i]);
+      if(rc->severity[i] == 0) {
+	rc->severity[i] = getLogSeverityByCode(LOG_NOTICE);
+      }
     }
       
     if(rc->facility->code != MISC_LOG_FILE) {
@@ -343,12 +347,12 @@ logOpen(char* name, int facility, int severity, char* logFile)
 		      "will try to revert to the standard error", 
 		      logFile);
 	}
-	logEmitMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
-		     "logging to the standard error");
+	//logMiscMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
+	//	       "logging to the standard error");
       }
     }
-    logEmitMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
-		"started");
+    //logEmitMacro(rc, LOG_DEBUG, __FILE__, __LINE__,
+    //             "started");
   }
   else {
     free(rc);
@@ -361,7 +365,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
 
 
 /*=======================================================================
- * Function   : logEmitFunc (log) [MediaTeX]
+ * Function   : logEmitFunc
  * Description: Emit a log message.
  * Synopsis   : void logEmitFunc(LogHandler* logHandler, int priority,
  *              const char* message, va_list ap)
@@ -374,8 +378,7 @@ logOpen(char* name, int facility, int severity, char* logFile)
  *              va_list ap = the pointer to the begining of the
  *              variable list of argument.
  * Output     : N/A
- * Note       : you should better call the logEmit variadic macro that 
- *              add expected values into the variadic argument list.
+ * Note       : You should better call the logEmit variadic macros
  =======================================================================*/
 void 
 logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
@@ -392,8 +395,6 @@ logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
     goto end;
   }
 
-  if (priority > logHandler->severity->code) goto end;
-  
   va_start(args, format);
 
   if (!(logHandler->hlog)) {
@@ -414,7 +415,7 @@ logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
 
 
 /*=======================================================================
- * Function   : logClose (log) [MediaTeX]
+ * Function   : logClose
  * Description: Close the syslog.
  * Synopsis   : void logClose(LogHandler* logHandler)
  * Input      : LogHandler* logHandler = the handler of the log to
@@ -445,6 +446,88 @@ logClose(LogHandler* logHandler)
   }
   
   return (LogHandler*)0;
+}
+
+
+/*=======================================================================
+ * Function   : parseLogSeverityOption
+ * Description: parse the --severity option value
+ * Synopsis   : int parseLogOption(char* parameter)
+ * Input      : char* parameter: the option value
+ * Output     : TRUE on success
+ =======================================================================*/
+int parseLogSeverityOption(char* parameter, int* logSeverity)
+{
+  int rc = 0;
+  int i = 0;
+  int iSev = -1;
+  int iMod = -1;
+  char delim = ':';
+  char* ptr = parameter;
+  LogSeverity* severity = LogSeverities;
+
+  static char* module[] = {
+    "alloc",
+    "script",
+    "misc",
+    "memory",
+    "parser",
+    "common",
+    "main",
+  };
+
+  // severity
+  for(i=0; severity->name != 0; ++severity,++i) {
+    if (!strncmp(ptr, severity->name, strlen(severity->name))) {
+      iSev = i;
+      break;
+    }
+  }
+  if (iSev == -1) {
+    printf("incorrect severity name: %s\n", ptr);
+    goto error;
+  }
+
+  // no module specified so all modules are inpacted
+  if (strlen(ptr) == strlen(severity->name)) {
+    for (i=0; i<LOG_MAX_MODULE; ++i) {
+      logSeverity[i] = severity->code;
+    }
+    goto end;
+  }
+
+  // severity:module(,module)*
+  do {
+    if (!(ptr = strchr(ptr, delim))) {
+      fprintf(stderr, "bad syntaxe: '%s', "
+	      "expected 'severity[:module(,module)*]'\n", parameter);
+      goto error;
+    }
+    *ptr++ = 0;
+    if (!*ptr) {
+      *(ptr-1) = delim;
+      fprintf(stderr, "null module: '%s', "
+	      "expected 'severity[:module(,module)*]'\n", parameter);
+      goto error;
+    }
+    for (i=0; i<LOG_MAX_MODULE; ++i) {
+      if (!strncmp(ptr, module[i], strlen(module[i]))) {
+	iMod = i;
+	break;
+      }
+    }
+    if (i == LOG_MAX_MODULE) {
+      printf("incorrect module name: '%s'\n", ptr);
+      goto error;
+    }
+    logSeverity[iMod] = severity->code;
+    delim = ',';
+  } while (strlen(ptr) > strlen(module[iMod]));
+  
+ end:
+  rc = 1;
+ error:
+  return rc;
 }
 
 /* Local Variables: */

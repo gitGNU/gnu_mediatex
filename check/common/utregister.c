@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utregister.c,v 1.1 2015/07/01 10:49:34 nroche Exp $
+ * Version: $Id: utregister.c,v 1.2 2015/07/28 11:45:39 nroche Exp $
  * Project: MediaTeX
  * Module : register
  
@@ -178,8 +178,8 @@ main(int argc, char** argv)
   }
   /************************************************************************/
 
-  freeConfiguration();
  error:
+  freeConfiguration();
   ENDINGS;
   rc=!rc;
  optError:

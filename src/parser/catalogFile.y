@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.5 2015/07/03 17:37:31 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.6 2015/07/28 11:45:48 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -126,30 +126,30 @@ file: stanzas
 
 stanzas: stanzas stanza
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "stanzas: stanzas stanza");
 }
        | stanza
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "stanzas: stanza");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "stanzas: stanza");
 }
 ;
 
 stanza: defCategory
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "stanza: defCategory");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "stanza: defCategory");
 }
       | defHuman
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "stanza: defHuman");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "stanza: defHuman");
 }
       | defDocument
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "stanza: defDocument");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "stanza: defDocument");
 }
       | defArchive
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "stanza: deFaRCHIVE");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "stanza: deFaRCHIVE");
 }
 ;
 
@@ -157,72 +157,72 @@ stanza: defCategory
 
 cateCaracs: cateCaracs cateCarac
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "cateCaracs: cateCaracs cateCarac");
 }
           | cateCarac
 {
- logParser(LOG_NOTICE, "line %i: %s", LINENO, "cateCaracs: cateCarac");
+ logParser(LOG_DEBUG, "line %i: %s", LINENO, "cateCaracs: cateCarac");
 }
 
 cateCarac: cataSTRING cataEQUAL cataSTRING
 {
   Carac* carac = 0;
-  logParser(LOG_NOTICE, "line %i: cateCarac: %s = %s", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "line %i: cateCarac: %s = %s", LINENO, $1, $3);
   if (!(carac = addCarac(coll, $1))) YYERROR;
   if (!addAssoCarac(coll, carac, CATE, category, $3)) YYERROR;
 }
 
 docCaracs: docCaracs docCarac
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCaracs: docCaracs docCarac");
 }
          | docCarac
 {
- logParser(LOG_NOTICE, "line %i: %s", LINENO, "docCaracs: docCarac");
+ logParser(LOG_DEBUG, "line %i: %s", LINENO, "docCaracs: docCarac");
 }
 
 docCarac: cataSTRING cataEQUAL cataSTRING
 {
   Carac* carac = 0;
-  logParser(LOG_NOTICE, "line %i: docCarac: %s = %s", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "line %i: docCarac: %s = %s", LINENO, $1, $3);
   if (!(carac = addCarac(coll, $1))) YYERROR;
   if (!addAssoCarac(coll, carac, DOC, document, $3)) YYERROR;
 }
 
 humCaracs: humCaracs humCarac
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "humCaracs: humCaracs humCarac");
 }
          | humCarac
 {
- logParser(LOG_NOTICE, "line %i: %s", LINENO, "humCaracs: humCarac");
+ logParser(LOG_DEBUG, "line %i: %s", LINENO, "humCaracs: humCarac");
 }
 
 humCarac: cataSTRING cataEQUAL cataSTRING
 {
   Carac* carac = 0;
-  logParser(LOG_NOTICE, "line %i: humCarac: %s = %s", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "line %i: humCarac: %s = %s", LINENO, $1, $3);
   if (!(carac = addCarac(coll, $1))) YYERROR;
   if (!addAssoCarac(coll, carac, HUM, human, $3)) YYERROR;
 }
 
 archCaracs: archCaracs archCarac
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "archCaracs: archCaracs archCarac");
 }
          | archCarac
 {
- logParser(LOG_NOTICE, "line %i: %s", LINENO, "archCaracs: archCarac");
+ logParser(LOG_DEBUG, "line %i: %s", LINENO, "archCaracs: archCarac");
 }
 
 archCarac: cataSTRING cataEQUAL cataSTRING
 {
   Carac* carac = 0;
-  logParser(LOG_NOTICE, "line %i: archCarac: %s = %s", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "line %i: archCarac: %s = %s", LINENO, $1, $3);
   if (!(carac = addCarac(coll, $1))) YYERROR;
   if (!addAssoCarac(coll, carac, ARCH, archive, $3)) YYERROR;
 }
@@ -231,39 +231,39 @@ archCarac: cataSTRING cataEQUAL cataSTRING
 
 defCategory: newCategory cataCOLON categories cateCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newCategory : category caracs");
   category = 0;
 }
             | newCategory cataCOLON categories
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newCategory : category");
   category = 0;
 }
             | newCategory cateCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newCategory cateCaracs");
   category = 0;
 }
             | newCategory
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "newCategory");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "newCategory");
   category = 0;
 }
 ;
 
 newCategory: cataTOP cataCATEGORY cataSTRING
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newCategory: TOP CATEGORY category");
   if (!($$ = addCategory(coll, $3, TRUE))) YYERROR;
   category = $$;
 }
            | cataCATEGORY cataSTRING
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newCategory: CATEGORY category");
   if (!($$ = addCategory(coll, $2, FALSE))) YYERROR;
   category = $$;
@@ -271,20 +271,20 @@ newCategory: cataTOP cataCATEGORY cataSTRING
 
 categories: categories cataCOMMA category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "categories: categories , category");
   if (!addCategoryLink(coll, $3, category)) YYERROR;
 }
           | category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "categories: category");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "categories: category");
   if (!addCategoryLink(coll, $1, category)) YYERROR;
 }
 ;
 
 category: cataSTRING
 {
-  logParser(LOG_NOTICE, "line %i: category: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %i: category: %s", LINENO, $1);
   if (!($$ = addCategory(coll, $1, FALSE))) YYERROR;
 }
 ;
@@ -293,32 +293,32 @@ category: cataSTRING
 
 defHuman: newHuman cataCOLON humCategories humCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defHuman: newHuman COLON humCategories humCaracs");
   human = 0;
 }
         | newHuman cataCOLON humCategories
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defHuman: newHuman : humCategories");
   human = 0;
 }
         | newHuman humCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defHuman: newHuman humCaracs");
   human = 0;
 }
         | newHuman
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "defHuman: newHuman");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "defHuman: newHuman");
   human = 0;
 }
 ;
 
 newHuman: cataHUMAN human
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newHuman: HUMAN human");
   human = $2;
 }
@@ -326,20 +326,20 @@ newHuman: cataHUMAN human
 
 human: cataSTRING cataSTRING
 {
-    logParser(LOG_NOTICE, "line %i: human: %s %s", LINENO, $1, $2);
+    logParser(LOG_DEBUG, "line %i: human: %s %s", LINENO, $1, $2);
     if (!($$ = addHuman(coll, $1, $2))) YYERROR;
 }
 ;
 
 humCategories: humCategories cataCOMMA category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO,
+  logParser(LOG_DEBUG, "line %i: %s", LINENO,
 	    "humCategories: humCategories , category");
   if (!addHumanToCategory(coll, human, $3)) YYERROR;
 }
           | category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "humCategories: category");
   if (!addHumanToCategory(coll, human, $1)) YYERROR;
 }
@@ -349,13 +349,13 @@ humCategories: humCategories cataCOMMA category
 
 defArchive: newArchive archCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defArchive: newArchive caracs");
   archive = 0;
 }
          | newArchive
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defArchive: neWArchive");
   archive = 0;
 }
@@ -363,7 +363,7 @@ defArchive: newArchive archCaracs
 
 newArchive: cataARCHIVE archive
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newArchive: ARCHIVE archive");
   archive = $2;
 }
@@ -371,7 +371,7 @@ newArchive: cataARCHIVE archive
 
 archive: cataHASH cataCOLON cataNUMBER
 {
-  logParser(LOG_NOTICE, "line %i: archive: %s:%lli", LINENO, $1, $3);
+  logParser(LOG_DEBUG, "line %i: archive: %s:%lli", LINENO, $1, $3);
   if (!($$ = addArchive(coll, $1, $3))) YYERROR;
 }
 ;
@@ -380,7 +380,7 @@ archive: cataHASH cataCOLON cataNUMBER
 
 defDocument: newDocument docCategories2 docWiths docCaracs2 docArchives 
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "defDocument: newDocument docCategories "
 	    "docWiths docCaracs docArchives");
   document = 0;
@@ -389,7 +389,7 @@ defDocument: newDocument docCategories2 docWiths docCaracs2 docArchives
 
 newDocument: cataDOCUMENT document
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "newDocument: DOCUMENT document");
   document = $2;
 }
@@ -397,32 +397,32 @@ newDocument: cataDOCUMENT document
 
 document: cataSTRING
 {
-  logParser(LOG_NOTICE, "line %i: document: %s", LINENO, $1);
+  logParser(LOG_DEBUG, "line %i: document: %s", LINENO, $1);
   if (!($$ = addDocument(coll, $1))) YYERROR;
 }
 ;
 
 docCategories2: cataCOLON docCategories
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCategories2: : docCategories");
 }
              | 
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCategories: nil");
 }
 ;
 
 docCategories: docCategories cataCOMMA category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCategories: docCategories , category");
   if (!addDocumentToCategory(coll, document, $3)) YYERROR;
 }
           | category
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCategories: category");
   if (!addDocumentToCategory(coll, document, $1)) YYERROR;
 }
@@ -430,60 +430,60 @@ docCategories: docCategories cataCOMMA category
 
 docCaracs2: docCaracs
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCaracs2: docCaracs");
 }
           | 
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, 
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCaracs2: (0)");
 }
 ;
 
 docWiths: roles
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "docWiths: roles");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "docWiths: roles");
 }
        | 
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "docWiths: (0)");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "docWiths: (0)");
 }
 
 roles: roles role
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "roles: roles role");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "roles: roles role");
 }
       | role
 {
- logParser(LOG_NOTICE, "line %i: %s", LINENO, "roles: role");
+ logParser(LOG_DEBUG, "line %i: %s", LINENO, "roles: role");
 }
 
 role: cataWITH cataSTRING cataEQUAL human
 {
   Role* role = 0;
-  logParser(LOG_NOTICE, "line %i: role: WITH %s = human", LINENO, $2);
+  logParser(LOG_DEBUG, "line %i: role: WITH %s = human", LINENO, $2);
   if (!(role = addRole(coll, $2))) YYERROR;
   if (!addAssoRole(coll, role, $4, document)) YYERROR;
 }
 
 docArchives: archives
 {
-  logParser(LOG_NOTICE, "line %i: docArchives: archives", LINENO);
+  logParser(LOG_DEBUG, "line %i: docArchives: archives", LINENO);
 }
           | 
 {
-  logParser(LOG_NOTICE, "line %i: docArchives: (0)", LINENO);
+  logParser(LOG_DEBUG, "line %i: docArchives: (0)", LINENO);
 }
 
 archives: archives archive
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO,
+  logParser(LOG_DEBUG, "line %i: %s", LINENO,
 	    "archives: archives archive");
   if (!addArchiveToDocument(coll, $2, document)) YYERROR;
 }
         | archive
 {
-  logParser(LOG_NOTICE, "line %i: %s", LINENO, "archives: archive");
+  logParser(LOG_DEBUG, "line %i: %s", LINENO, "archives: archive");
  if (!addArchiveToDocument(coll, $1, document)) YYERROR;
 }
 
@@ -504,7 +504,7 @@ void cata_error(yyscan_t yyscanner, Collection* coll, Category* category,
 		Human* human, Document* document, Archive* archive,
 		const char* message)
 {
-  logEmit(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i\n",
 	  message, cata_get_text(yyscanner), LINENO);
 }
 
@@ -528,18 +528,18 @@ int parseCatalogFile(Collection* coll, const char* path)
   Archive*  archive = 0;
   
   checkCollection(coll);
-  logParser(LOG_NOTICE, "parse %s catalog from %s",
+  logParser(LOG_INFO, "parse %s catalog from %s",
 	    coll->label, path?path:"stdin");
 
   // initialise scanner
   if (cata_lex_init(&scanner)) {
-    logEmit(LOG_ERR, "%s", "error initializing scanner");
+    logParser(LOG_ERR, "%s", "error initializing scanner");
     goto error;
   }
 
   if (path != 0) {
     if ((inputStream = fopen(path, "r")) == 0) {
-      logEmit(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream: %s", path); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;
@@ -549,13 +549,13 @@ int parseCatalogFile(Collection* coll, const char* path)
 
   // debug mode for scanner
   cata_set_debug(env.debugLexer, scanner);
-  logEmit(LOG_DEBUG, "cata_set_debug = %i", cata_get_debug(scanner));
+  logParser(LOG_DEBUG, "cata_set_debug = %i", cata_get_debug(scanner));
 
   // call the parser
   if (cata_parse(scanner, coll, category, human, document, archive)) {
-    logEmit(LOG_ERR, "catalog parser fails on line %i",
+    logParser(LOG_ERR, "catalog parser fails on line %i",
 	    cata_get_lineno(scanner));
-    logEmit(LOG_ERR, "please edit %s", path?path:"stdin");
+    logParser(LOG_ERR, "please edit %s", path?path:"stdin");
     goto error3;
   }
 

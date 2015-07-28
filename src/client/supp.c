@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
+ * Version: $Id: supp.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -42,7 +42,7 @@ mdtxMount(char* iso, char* target)
 
   checkLabel(iso);
   checkLabel(target);
-  logEmit(LOG_DEBUG, "mdtx mount %s", iso);
+  logMain(LOG_DEBUG, "mdtx mount %s", iso);
   
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/mount.sh"))) 
@@ -62,7 +62,7 @@ mdtxMount(char* iso, char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxMount fails");
+    logMain(LOG_ERR, "%s", "mdtxMount fails");
   } 
   if (argv[0]) destroyString(argv[0]);
   if (argv[1]) destroyString(argv[1]);
@@ -84,7 +84,7 @@ mdtxUmount(char* target)
   char *argv[] = {0, 0, 0};
 
   checkLabel(target);
-  logEmit(LOG_DEBUG, "mdtx umount %s", target);
+  logMain(LOG_DEBUG, "mdtx umount %s", target);
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
     || !(argv[0] = catString(argv[0], "/umount.sh"))) 
@@ -99,7 +99,7 @@ mdtxUmount(char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUmount fails");
+    logMain(LOG_ERR, "%s", "mdtxUmount fails");
   } 
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -120,7 +120,7 @@ mdtxUpdateSupport(char* label, char* status)
   Configuration* conf = 0;
   Support *supp = 0;
 
-  logEmit(LOG_DEBUG, "%s", "mdtxUpdateSupport");
+  logMain(LOG_DEBUG, "%s", "mdtxUpdateSupport");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(label))) goto error;
@@ -132,7 +132,7 @@ mdtxUpdateSupport(char* label, char* status)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtxUpdateSupport fails");
+    logMain(LOG_ERR, "%s", "mdtxUpdateSupport fails");
   } 
   return rc;
 }
@@ -156,11 +156,11 @@ doCheckSupport(Support *supp, char* path)
   time_t laps = 0;
   Md5Data data;
 
-  logEmit(LOG_DEBUG, "%s", "doCheckSupport");
+  logMain(LOG_DEBUG, "%s", "doCheckSupport");
   memset(&data, 0, sizeof(Md5Data));
   
   if ((data.path = createString(path)) == 0) {
-    logEmit(LOG_ERR, "%s", "cannot dupplicate path string");
+    logMain(LOG_ERR, "%s", "cannot dupplicate path string");
     goto error;
   }
   
@@ -179,7 +179,7 @@ doCheckSupport(Support *supp, char* path)
 	laps > getConfiguration()->checkTTL/2) {
       // nearly obsolete: full check
       data.opp = MD5_SUPP_CHECK;
-      logEmit(LOG_NOTICE, "support no checked since %d days: checking...", 
+      logMain(LOG_NOTICE, "support no checked since %d days: checking...", 
 	      laps/60/60/24);
     }
   }
@@ -198,7 +198,7 @@ doCheckSupport(Support *supp, char* path)
   // checksum computation
   rc = TRUE;
   if (!doMd5sum(&data)) {
-      logEmit(LOG_DEBUG, 
+      logMain(LOG_DEBUG, 
 	      "internal error on md5sum computation for \"%s\" support", 
 	      supp->name);
       rc = FALSE;
@@ -206,23 +206,23 @@ doCheckSupport(Support *supp, char* path)
   }
 
   if (data.rc == MD5_FALSE_SIZE) {
-    logEmit(LOG_WARNING, "wrong size on \"%s\" support", supp->name);
+    logMain(LOG_WARNING, "wrong size on \"%s\" support", supp->name);
     rc = FALSE;
   }
   if (data.rc == MD5_FALSE_QUICK) {
-    logEmit(LOG_WARNING, "wrong quick hash on \"%s\" support", supp->name);
+    logMain(LOG_WARNING, "wrong quick hash on \"%s\" support", supp->name);
     rc = FALSE;
   }
   if (data.rc == MD5_FALSE_FULL) {
-    logEmit(LOG_WARNING, "wrong full hash on \"%s\" support", supp->name);
+    logMain(LOG_WARNING, "wrong full hash on \"%s\" support", supp->name);
     rc = FALSE;
   }
 
   if (!rc) {
-    logEmit(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
-    logEmit(LOG_WARNING, "either this is not \"%s\" support at %s", 
+    logMain(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
+    logMain(LOG_WARNING, "either this is not \"%s\" support at %s", 
 	    supp->name, env.noRegression?"xxx":path);
-    logEmit(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
+    logMain(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
 	    supp->name);
     goto error;
   }
@@ -268,7 +268,7 @@ mdtxLsSupport()
   RG* supports = 0;
   Support *supp = 0;
 
-  logEmit(LOG_DEBUG, "%s", "mdtxLsSupport");
+  logMain(LOG_DEBUG, "%s", "mdtxLsSupport");
   if (!(conf = getConfiguration())) goto error;
   if (!loadConfiguration(CFG | SUPP)) goto error;
   supports = conf->supports;
@@ -289,7 +289,7 @@ mdtxLsSupport()
   rc = TRUE;
  error:
  if (!rc) {
-   logEmit(LOG_ERR, "%s", "mdtxLsSupport fails");
+   logMain(LOG_ERR, "%s", "mdtxLsSupport fails");
   } 
   return rc;
 }
@@ -310,7 +310,7 @@ mdtxAddSupport(char* label, char* path)
   Support *supp = 0;
   time_t now = 0;
 
-  logEmit(LOG_DEBUG, "%s", "mdtxAddSupport");
+  logMain(LOG_DEBUG, "%s", "mdtxAddSupport");
   if (isEmptyString(path)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if ((now = currentTime()) == -1) goto error;
@@ -318,7 +318,7 @@ mdtxAddSupport(char* label, char* path)
   // look for this name in the support Ring
   if (!loadConfiguration(SUPP)) goto error;
   if ((supp = getSupport(label))) {
-    logEmit(LOG_ERR, "a support labeled \"%s\" already exist", label);
+    logMain(LOG_ERR, "a support labeled \"%s\" already exist", label);
     goto error;
   }
 
@@ -331,7 +331,7 @@ mdtxAddSupport(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "error while adding support %s from %s", 
+    logMain(LOG_ERR, "error while adding support %s from %s", 
 	    label, env.noRegression?"xxx":path);
     if (supp) delSupport(supp);
   }
@@ -359,13 +359,13 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
   AVLNode *node = 0;
   char* extra = 0;
 
-  logEmit(LOG_DEBUG, "addFinalSupplies: %s:%lli",
+  logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
 
   if (!loadCollection(coll, EXTR)) goto error;
   if (!getLocalHost(coll)) goto error2;
   if (!(archive = getArchive(coll, supp->fullHash, supp->size))) {
-    logEmit(LOG_ERR, "%s", "archive is not defined into the extract tree");
+    logMain(LOG_ERR, "%s", "archive is not defined into the extract tree");
     goto error;
   }
 
@@ -398,7 +398,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
   if (!releaseCollection(coll, EXTR)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "addFinalSupplies fails");
+    logMain(LOG_ERR, "%s", "addFinalSupplies fails");
   }
   return rc;
 }
@@ -426,10 +426,10 @@ notifyHave(Support* supp, char* path, char* mnt)
   int isShared = FALSE;
   char reply[1];
 
-  logEmit(LOG_DEBUG, "%s", "notifyHave");
+  logMain(LOG_DEBUG, "%s", "notifyHave");
   if (supp == 0) goto error;
   if (isEmptyString(path) || *path != '/') {
-    logEmit(LOG_ERR, "%s", 
+    logMain(LOG_ERR, "%s", 
 	    "daemon need an absolute path for support extraction");
     goto error;
   }
@@ -470,7 +470,7 @@ notifyHave(Support* supp, char* path, char* mnt)
     }
     else {
       fprintf(stderr, "%s", "\n");
-      logEmit(LOG_INFO, "notify support to %s collection", 
+      logMain(LOG_INFO, "notify support to %s collection", 
 	      tree->collection->label);
     }
     
@@ -482,13 +482,13 @@ notifyHave(Support* supp, char* path, char* mnt)
   }
 
   if (!isShared) {
-    logEmit(LOG_DEBUG, "the %s support is not share by any collection",
+    logMain(LOG_DEBUG, "the %s support is not share by any collection",
   	    supp->name);
   }
   rc = TRUE;
  error:
   if (!rc) {
-  logEmit(LOG_ERR, "fails to launch extraction on the %s support", 
+  logMain(LOG_ERR, "fails to launch extraction on the %s support", 
 	  supp?supp->name:"unknown");
   }
   if (socket) close(socket);
@@ -511,10 +511,10 @@ int isIsoFile(char* path)
   unsigned short int bs = 0;
   off_t size = 0;
 
-  logEmit(LOG_DEBUG, "%s", "isIsoFile");
+  logMain(LOG_DEBUG, "%s", "isIsoFile");
 
   if ((fd = open(path, O_RDONLY)) == -1) {
-    logEmit(LOG_ERR, "open: %s", strerror(errno));
+    logMain(LOG_ERR, "open: %s", strerror(errno));
     goto error;
   }
   
@@ -522,11 +522,11 @@ int isIsoFile(char* path)
   rc = (size > 0);
  error:
   if (fd != -1 && close(fd) == -1) {
-    logEmit(LOG_ERR, "close: %s", strerror(errno));
+    logMain(LOG_ERR, "close: %s", strerror(errno));
     rc = FALSE;
   }
  if (!rc) {
-    logEmit(LOG_INFO, "%s", "not an iso");
+    logMain(LOG_INFO, "%s", "not an iso");
   }
   return rc;
 }
@@ -550,7 +550,7 @@ mdtxHaveSupport(char* label, char* path)
   char* mnt = 0;
   char pid[12];
 
-  logEmit(LOG_DEBUG, "%s", "mdtxHaveSupport");
+  logMain(LOG_DEBUG, "%s", "mdtxHaveSupport");
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(label))) goto error;
   if (supp == 0) goto error;
@@ -563,7 +563,7 @@ mdtxHaveSupport(char* label, char* path)
   if (!env.noRegression) {
     // check if daemon is awake
     if (access(conf->pidFile, R_OK) == -1) {
-      logEmit(LOG_INFO, "cannot read daemon's pid file: %s", 
+      logMain(LOG_INFO, "cannot read daemon's pid file: %s", 
 	      strerror(errno));
       goto end;
     }
@@ -591,7 +591,7 @@ mdtxHaveSupport(char* label, char* path)
   if (!isEmptyString(mnt) && !mdtxUmount(mnt)) rc = FALSE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "have query on %s support failed", 
+    logMain(LOG_ERR, "have query on %s support failed", 
 	    supp?supp->name:"unknown");
   }
   absPath = destroyString(absPath);
@@ -613,7 +613,7 @@ mdtxDelSupport(char* label)
   Configuration* conf = 0;
   Support *supp = 0;
 
-  logEmit(LOG_DEBUG, "%s", "mdtxDelSupport");
+  logMain(LOG_DEBUG, "%s", "mdtxDelSupport");
 
   // withdraw support
   if (!mdtxWithdrawSupport(label, 0)) goto error;
@@ -627,7 +627,7 @@ mdtxDelSupport(char* label)
   rc = TRUE;
 error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to remove the %s support", supp->name);
+    logMain(LOG_ERR, "fails to remove the %s support", supp->name);
   }
   return rc;
 }

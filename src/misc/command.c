@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.6 2015/07/02 12:14:07 nroche Exp $
+ * Version: $Id: command.c,v 1.7 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -61,8 +61,10 @@ miscUsage(char* programName)
 {
   fprintf(stderr, "The usage for %s is:\n", basename(programName));
   fprintf(stderr, "%s\t{ -h | -v |\n", basename(programName));
-  fprintf(stderr, "\t\t[ -f facility ] [ -s severity ] [ -l logFile ]");
-  fprintf(stderr, "\n\t\t[-a memoryLimit ] [ -n ] [ -A ] [ -S ]");
+  fprintf(stderr, 
+	  "\t\t[ -f facility ] [ -l logFile ]\n"
+	  "\t\t[ -s severity[:module(,module)*] ]\n"
+	  "\t\t[ -a memoryLimit ] [ -S ] [ -n ]");
 }
 
 /*=======================================================================
@@ -124,14 +126,15 @@ miscOptions()
 	  " software version\n"
 	  "  -f, --facility\tuse facility for logging\n"
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"
+	  "  -l, --log-file\tlog into a file\n"
+	  "\t\t\tneeds 'file' facility (default)\n"
 	  "  -s, --severity\tuse severity for logging\n"
-	  "\t\t\tamongs 'err' 'warning' 'notice' 'info' 'debug'\n"
-	  "  -l, --log-file\tlog to logFile\n"
-	  "\t\t\tneed to be coupled with the 'file' facility\n"
+	  "\t\t\tseverity amongs 'err' 'warning' 'notice' 'info' 'debug'\n"
+	  "\t\t\tmodule amongs 'alloc' 'script' 'misc' 'memory' 'parser'\n"
+	  "\t\t\t              'common' and 'main'\n"
 	  "  -a, --memory-limit\tlimit for malloc in Mo\n"
-	  "  -n, --dry-run\t\tdo a dry run\n"
-	  "  -A, --debug-alloc\tenable logs from malloc/free\n"
-	  "  -S, --debug-script\tdo not hide outpouts from scripts\n");
+	  "  -S, --script-out\tenable stdout for scripts\n"
+	  "  -n, --dry-run\t\tdo a dry run\n");
 }
 
 /*=======================================================================
@@ -200,9 +203,9 @@ getEnv(MdtxEnv* self)
   if ((tmpValue = getenv("MDTX_LOG_FILE")) != 0)
     self->logFile = tmpValue;
   if ((tmpValue = getenv("MDTX_LOG_FACILITY")) != 0)
-    self->logFacility = tmpValue;
+    self->logFacility = getLogFacility(tmpValue);
   if ((tmpValue = getenv("MDTX_LOG_SEVERITY")) != 0)
-    self->logSeverity = tmpValue;
+    self->logSeverity[LOG_SCRIPT] = getLogSeverity(tmpValue);
   if ((tmpValue = getenv("MDTX_MDTXUSER")) != 0)
     self->confLabel = tmpValue;
   if ((tmpValue = getenv("MDTX_DRY_RUN")) != 0)
@@ -224,41 +227,33 @@ int
 setEnv(char* programName, MdtxEnv *self)
 {
   int rc = FALSE;
-  int logFacility = -1;
-  int logSeverity = -1;
-
   // no logging available yet here
 
   // unset previous log handler if it exists (on bad malloc init)
   self->logHandler = logClose(self->logHandler);
 
   // set the log handler
-  if ((logFacility = getLogFacility(self->logFacility)) == -1) {
-    fprintf(stderr, "%s: incorrect facility name '%s'\n", 
-	    programName, optarg); goto error;
-  }
-  if ((logSeverity = getLogSeverity(self->logSeverity)) == -1) {
-    fprintf(stderr, "%s: incorrect severity name '%s'\n", 
-	    programName, optarg); goto error;
-  }
   if(!(self->logHandler = 
-       logOpen(programName, logFacility, logSeverity, self->logFile))) {
+       logOpen(programName, self->logFacility, self->logSeverity, 
+	       self->logFile))) {
     fprintf(stderr, "%s: cannot allocate the logHandler\n", programName);
     goto error;
   }
 
-  logEmit(LOG_DEBUG, "%s", "set the environment variables");
+  logMisc(LOG_DEBUG, "%s", "set the environment variables");
 
   // export the environment
   if (setenv("MDTX_LOG_FILE", self->logFile, 1) == -1
-      || setenv("MDTX_LOG_FACILITY", self->logFacility, 1) == -1
-      || setenv("MDTX_LOG_SEVERITY", self->logSeverity, 1) == -1
+      || setenv("MDTX_LOG_FACILITY", 
+		self->logHandler->facility->name, 1) == -1
+      || setenv("MDTX_LOG_SEVERITY", 
+		self->logHandler->severity[LOG_SCRIPT]->name, 1) == -1
       || setenv("MDTX_MDTXUSER", self->confLabel, 1) == -1
       || setenv("MDTX_DRY_RUN", self->dryRun?"1":"0", 1) == -1
       || setenv("LD_LIBRARY_PATH", "", 1) == -1
       || setenv("IFS", "", 1) == -1
       ) {
-    logEmit(LOG_ERR, "setenv variables failed: ", strerror(errno));
+    logMisc(LOG_ERR, "setenv variables failed: ", strerror(errno));
     goto error2;
   }
 
@@ -275,7 +270,7 @@ setEnv(char* programName, MdtxEnv *self)
   rc = TRUE;
  error2:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to set the environment variables");
+    logMisc(LOG_ERR, "%s", "fails to set the environment variables");
   }
  error:
   return rc;
@@ -296,7 +291,7 @@ execChild(char** argv, int doHideStderr)
   int fd;
 
   if (argv[0][0] != '/') {
-    logEmit(LOG_ERR, "%s", "refuse to exec from a relative path");
+    logMisc(LOG_ERR, "%s", "refuse to exec from a relative path");
     goto error;
   }
 
@@ -312,9 +307,9 @@ execChild(char** argv, int doHideStderr)
   rc = execve(argv[0], argv, environ);
  error:
   if (rc == -1) {
-    logEmit(LOG_ERR, "execve failed: ", strerror(errno));
+    logMisc(LOG_ERR, "execve failed: ", strerror(errno));
   } else {
-    logEmit(LOG_ERR, "%s", "execve returns: you should improve ram");
+    logMisc(LOG_ERR, "%s", "execve returns: you should improve ram");
   }
 }
 
@@ -339,22 +334,22 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   int i = 0;
   
   if (argv[0] == 0 || *argv[0] == (char)0) {
-    logEmit(LOG_ERR, "%s", "please provide a script to exec");
+    logMisc(LOG_ERR, "%s", "please provide a script to exec");
     goto error;
   }
 
-  logEmit(LOG_INFO, "execScript%s%s%s%s: %s", 
+  logMisc(LOG_INFO, "execScript%s%s%s%s: %s", 
 	  user?" as ":"", user?user:"", 
 	  pwd?" PWD=":"", pwd?pwd:"",
 	  argv[0]);
 
   while (argv[++i] != 0 && *argv[i] != (char)0) {
-    logEmit(LOG_INFO, " arg%i: %s", i, argv[i]);
+    logMisc(LOG_INFO, " arg%i: %s", i, argv[i]);
   }
 
   // fork: new process
   if ((childId = fork()) == -1) {
-      logEmit(LOG_ERR, "fork failed: ", strerror(errno));
+      logMisc(LOG_ERR, "fork failed: ", strerror(errno));
       goto error;
     }
   
@@ -367,23 +362,23 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
 
     // change working directory
     if (pwd && chdir(pwd)) {
-      logEmit(LOG_ERR, "chdir fails: %s", strerror(errno));
+      logMisc(LOG_ERR, "chdir fails: %s", strerror(errno));
       goto error;
     }
 
     execChild(argv, doHideStderr);
-    logEmit(LOG_ERR, "failed to exec %s", argv[0]);
+    logMisc(LOG_ERR, "failed to exec %s", argv[0]);
     exit(EXIT_FAILURE);
     break;
  
   default:
    // father
     if ((pid = waitpid(childId, &status, 0)) == -1) {
-      logEmit(LOG_ERR, "wait failed (%i): %s", errno, strerror(errno));
+      logMisc(LOG_ERR, "wait failed (%i): %s", errno, strerror(errno));
       goto error;
     }
     if (pid != childId) {
-      logEmit(LOG_ERR, 
+      logMisc(LOG_ERR, 
 	      "wait exit with unexpected process %i (waiting for %i)", 
 	      rc, childId);
       goto error;
@@ -391,14 +386,14 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   }
 
   if (WIFEXITED(status)) rcChild = WEXITSTATUS(status);
-  logEmit(LOG_INFO, "%s execution returns %i", argv[0], rcChild);
+  logMisc(LOG_INFO, "%s execution returns %i", argv[0], rcChild);
   if (rcChild == -1) {
-    logEmit(LOG_INFO, "%s", "if -1 you may try to improve ram");
+    logMisc(LOG_INFO, "%s", "if -1 you may try to improve ram");
   }
   rc = (rcChild == EXIT_SUCCESS);
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "execScript fails");
+    logMisc(LOG_ERR, "%s", "execScript fails");
   }
   return rc;
 }

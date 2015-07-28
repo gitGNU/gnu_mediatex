@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: signals.c,v 1.4 2015/06/30 17:37:35 nroche Exp $
+ * Version: $Id: signals.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -54,13 +54,13 @@ disableALL()
   // with the difference that its use in multithreaded programs is 
   // explicitly specified by POSIX.1-2001.
   if (pthread_sigmask(SIG_BLOCK, &mask, 0)) {
-    logEmit(LOG_ERR, "sigprocmask fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "sigprocmask fails: %s", strerror(errno));
     rc = FALSE;
   }
 
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "disableALL fails");
+    logMisc(LOG_ERR, "%s", "disableALL fails");
   }
   return rc;
 }
@@ -89,13 +89,13 @@ reEnableALL()
   if (!rc) goto error;
 
   if (pthread_sigmask(SIG_UNBLOCK, &mask, 0)) {
-    logEmit(LOG_ERR, "sigprocmask fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "sigprocmask fails: %s", strerror(errno));
     rc = FALSE;
   }
 
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "disableALL fails");
+    logMisc(LOG_ERR, "%s", "disableALL fails");
   }
   return rc;
 }
@@ -120,7 +120,7 @@ enableAlarm(void (*sigalarmManager)(int))
   action.sa_flags = 0;
   action.sa_handler = sigalarmManager;
   if (sigaction(SIGALRM, &action, 0) != 0) {
-    logEmit(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
     goto error;
   }
 
@@ -128,14 +128,14 @@ enableAlarm(void (*sigalarmManager)(int))
   if (sigaddset(&mask, SIGALRM)) goto error;
 
   if ((err = pthread_sigmask(SIG_UNBLOCK, &mask, 0))) {
-    logEmit(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
+    logMisc(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "enableAlarm fails");
+    logMisc(LOG_ERR, "%s", "enableAlarm fails");
   }
   return rc;
 }
@@ -158,14 +158,14 @@ disableAlarm()
   if (sigaddset(&mask, SIGALRM)) goto error;;
 
   if ((err = pthread_sigmask(SIG_BLOCK, &mask, 0))) {
-    logEmit(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
+    logMisc(LOG_ERR, "pthread_sigmask fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "disableAlarm fails");
+    logMisc(LOG_ERR, "%s", "disableAlarm fails");
   }
   return rc;
 }
@@ -183,7 +183,7 @@ manageSignals(void* manager(void*), pthread_t* thread)
   int rc = FALSE;
   int err = 0;
 
-  logEmit(LOG_DEBUG, "%s", "manageSignals");
+  logMisc(LOG_DEBUG, "%s", "manageSignals");
  
   // current thread no more handle 
   //  SIGHUP, SIGUSR1, SIGTERM, SIGSEGV, SIGINT and SIGALRM
@@ -192,14 +192,14 @@ manageSignals(void* manager(void*), pthread_t* thread)
   // new thread that will have to explicitely manage (or not) blocked 
   // signals using sigwaitinfo
   if ((err = pthread_create(thread, 0, manager, (void *)0))) {
-    logEmit(LOG_ERR, "pthread_create fails: %s", strerror(err));
+    logMisc(LOG_ERR, "pthread_create fails: %s", strerror(err));
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "manageSignals fails");
+    logMisc(LOG_ERR, "%s", "manageSignals fails");
   }
   return rc;
 }

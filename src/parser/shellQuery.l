@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.4 2015/07/07 14:26:52 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.5 2015/07/28 11:45:49 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -363,7 +363,7 @@
 
   . {  /* : eat up any unmatched character and 
 	  let bison manage the errors */
-    logEmit(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
+    logParser(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
     return(shellERROR);
   }
@@ -390,7 +390,7 @@ int getCommandLine(int argc, char** argv, int optind)
   int lenght = 0;
   char* ptr = env.commandLine;
 
-  logEmit(LOG_DEBUG, "%s", "getCommandLine"); 
+  logParser(LOG_DEBUG, "%s", "getCommandLine"); 
   for (i=optind; i<argc; ++i) {
     lenght = strlen(argv[i]);
     strcpy(ptr, argv[i]);
@@ -399,13 +399,13 @@ int getCommandLine(int argc, char** argv, int optind)
   }
   *(ptr) = (char)0;
   if (ptr == env.commandLine) goto error;
-  logEmit(LOG_DEBUG, "command line: %s", env.commandLine);
+  logParser(LOG_DEBUG, "command line: %s", env.commandLine);
   *(--ptr) = '\n';
   rc = TRUE;
 
  error:
   if (!rc) {
-    logEmit(LOG_WARNING, "%s", "empty comand line");
+    logParser(LOG_WARNING, "%s", "empty comand line");
   }
   return rc;
 } 

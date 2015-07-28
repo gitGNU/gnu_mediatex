@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlog.c,v 1.2 2015/07/02 17:22:06 nroche Exp $
+ * Version: $Id: utlog.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -26,32 +26,23 @@
 GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
- * Function   : usage (log) [MediaTeX]
+ * Function   : usage
  * Description: Print the usage.
  * Synopsis   : static void usage(char* programName)
- * Input      : char* programName = the name of the program; usually
- *                                  argv[0].
+ * Input      : programName = the name of the program; usually argv[0].
  * Output     : N/A
  =======================================================================*/
 static void 
 usage(char* programName)
 {
-  fprintf(stderr, "The usage for %s is:\n", programName);
-  fprintf(stderr, "\t%s ", programName);
-  fprintf(stderr, "{ -h | "
-	  "[ -f facility ] [ -s severity ] [ -l logFileName ] }");
-  fprintf(stderr, "\twhere:\n");
-  fprintf(stderr, "\t\t-f   : use facility for logging\n");
-  fprintf(stderr, "\t\t-s   : use severity for logging\n");
-  fprintf(stderr, "\t\t-l   : log to logFile\n");
+  miscUsage(programName);
+  miscOptions();
 
   return;
 }
 
 /*=======================================================================
- * Function   : main (log) [MediaTeX]
- * Author     : Peter FELECAN
- * modif      : 2006/05/24 15:48:50
+ * Function   : main
  * Description: Unit test for log module.
  * Synopsis   : utlog
  * Input      : N/A
@@ -60,219 +51,127 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  // ---
   int rc = 0;
-
-  extern char* optarg;
-  extern int optind;
-  extern int opterr;
-  extern int optopt;
-  
   int cOption = EOF;
-
   char* programName = *argv;
-  char* logFile = 0;
-	
-  int logFacility = -1;
-  int logSeverity = -1;
-	
-  while(TRUE) {
-    cOption = getopt(argc, argv, ":f:s:l:h");
-    
-    if(cOption == EOF) {
-      break;
-    }
-    
+  char* options = MISC_SHORT_OPTIONS;
+  struct option longOptions[] = {
+    MISC_LONG_OPTIONS,
+    {0, 0, 0, 0}
+  };
+
+  // parse the command line
+  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+	!= EOF) {
     switch(cOption) {
-
-    case 'f':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the facility name\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the facility name\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logFacility = getLogFacility(optarg);
-	  if(logFacility == -1) {
-	    fprintf(stderr, "%s: incorrect facility name '%s'\n", 
-		    programName, optarg);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
       
-    case 's':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the severity name\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the severity name\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logSeverity = getLogSeverity(optarg);
-	  if(logSeverity == -1) {
-	    fprintf(stderr, "%s: incorrect severity name '%s'\n", 
-		    programName, optarg);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
-	
-    case 'l':
-      if(optarg == 0) {
-	fprintf(stderr, "%s: nil argument for the log stream\n", 
-		programName);
-	rc = 2;
-      }
-      else {
-	if(!strlen(optarg)) {
-	  fprintf(stderr, "%s: empty argument for the log stream\n", 
-		  programName);
-	  rc = 2;
-	}
-	else {
-	  logFile = (char*)malloc(sizeof(char) * strlen(optarg) + 1);
-	  if(logFile != 0) {
-	    strcpy(logFile, optarg);
-	  }
-	  else {
-	    fprintf(stderr, 
-		    "%s: cannot allocate memory for the log stream name\n",
-		    programName);
-	    rc = 2;
-	  }
-	}
-      }
-      break;
-      
-    case 'h':
-      usage(programName);
-      rc = 4;
-	  
-      break;
-	  
-    case ':':
-      usage(programName);
-      rc = 125;
-
-      break;
-
-    case '?':
-      usage(programName);
-      rc = 126;
-
-      break;
-
-    default:
-      usage(programName);
-      rc = 127;
-			
-      break;
+      GET_MISC_OPTIONS; // generic options
     }
+    if (rc) goto optError;
   }
-
-  if(rc) goto error;
-  rc = 1;
    
-  if (!(env.logHandler =
-	logOpen(programName, logFacility, logSeverity, logFile)))
-    goto error;
+  // set the log handler
+  if (!(env.logHandler = 
+	logOpen(programName, env.logFacility, env.logSeverity, 
+		env.logFile))) goto error;
 
-  logEmit(LOG_EMERG, "%s", 
-	  "A panic condition was reported to all processes.");
-  logEmit(LOG_ALERT, "%s", 
-	  "A condition that should be corrected immediately.");
-  logEmit(LOG_CRIT, "%s", 
-	  "A critical condition.");
-  logEmit(LOG_ERR, "%s", 
-	  "An error message.");
-  logEmit(LOG_WARNING, "%s", 
-	  "A warning message.");
-  logEmit(LOG_NOTICE, "%s", 
-	  "A condition requiring special handling.");
-  logEmit(LOG_INFO, "%s (%lli)", 
-	  "A general information message.", (off_t)42);
-  logEmit(LOG_DEBUG, "%s (%i)", 
-	  "A message useful for debugging programs.", 42);
+  // lowlevel API
+  logEmitFunc(env.logHandler, LOG_INFO, "test using %s", "logEmitFunc");
+  logEmitMacro(env.logHandler, LOG_INFO, __FILE__, __LINE__, 
+	       "test using %s", "logEmitMacro");
+  logEmit(LOG_MAIN, LOG_INFO, "test using %s", "logEmit");
 
-  logEmit(LOG_INFO, "%s", "");
-  logEmit(LOG_INFO, "%s", "here is somes explanation :");
-  logEmit(LOG_INFO, "%s", "");
+  // facilities
+  logMain(LOG_INFO, "");
+  logMain(LOG_INFO, "*******************************");
+  logMain(LOG_INFO, "* here is somes explanation : *");
+  logMain(LOG_INFO, "*******************************");
 
-  logEmit(LOG_INFO, "%s", 
-	  "try \'./utlog -f file\' for testing");
-  logEmit(LOG_INFO, "%s", 
-	  "this will not send log to syslog but display them "
-	  "at screen");
-  logEmit(LOG_INFO, "%s", 
-	  "do it because syslog is configured to hide debug "
-	  "informations.");
-  logEmit(LOG_INFO, "%s", "");
+  logMain(LOG_INFO, "- default is \'./utlog -f file\'");
+  logMain(LOG_INFO,
+  	  "  this will not send log to syslog but directely at screen");
+  logMain(LOG_INFO, "- try \'./utlog -f file -l xxx.log\'");
+  logMain(LOG_INFO, "  this will write logs into the file");
+  logMain(LOG_INFO, "- try \'./utlog -f user\'");
+  logMain(LOG_INFO, 
+	  "  in order to use syslog daemon (check /var/log/syslog)");
 
-  logEmit(LOG_INFO, "%s", 
-	  "\'./utlog -f file -l xxx.log\' will put them "
-	  "into the file");
-  logEmit(LOG_INFO, "%s", 
-	  "To use syslog you must provide a facility");
-  logEmit(LOG_INFO, "%s", 
-	  "I advice you to use \'-f user\' or \'-f local[0..7]\'");
-  logEmit(LOG_INFO, "%s", "");
-
-  logEmit(LOG_INFO, "%s", 
-	  "Severity allows to ignore messages from lower severity");
-  logEmit(LOG_INFO, "%s", 
-	  "default severity is \'-s info\' as you can read it");
-  logEmit(LOG_INFO, "%s", 
-	  "in fact this only hide debug messages");
-  logEmit(LOG_INFO, "%s", "");
-
-  logEmit(LOG_INFO, "%s", 
-	  "try \'./utlog -f file -s debug\' to see debug info");
-  logEmit(LOG_INFO, "%s", "");	
-  logEmit(LOG_DEBUG, "%s", 
-	  "like that, ok now you can have debuging info");
-  logEmit(LOG_DEBUG, "%s", "");
-
-  // test the parser maccro
-  logParser(LOG_INFO, "%s", 
-	    "You shouldn't read this !");
-  logParser(LOG_INFO, "%s", 
-	    "This is a message from the parser macro");
-	
+  // severities
+  logMain(LOG_INFO, "");
+  logMain(LOG_INFO, "**************");
+  logMain(LOG_INFO, "* severities *");
+  logMain(LOG_INFO, "**************");
+  logMain(LOG_EMERG, "%s",
+  	  "A panic condition was reported to all processes.");
+  logMain(LOG_ALERT, "%s",
+  	  "A condition that should be corrected immediately.");
+  logMain(LOG_CRIT, "A critical condition.");
+  logMain(LOG_ERR, "An error message.");
+  logMain(LOG_WARNING, "A warning message.");
+  logMain(LOG_NOTICE, "A condition requiring special handling.");
+  logMain(LOG_INFO, "%s (%lli)",
+  	  "A general information message.", (off_t)42);
+  logMain(LOG_DEBUG, "%s (%i)",
+  	  "A message useful for debugging programs.", 42);
+  logMain(LOG_INFO, "");
+  logMain(LOG_INFO,
+  	  "Severity allows to ignore messages from lower severity");
+  logMain(LOG_INFO,
+  	  "default severity is \'-s info\' for unit tests,");
+  logMain(LOG_INFO,
+  	  "and \'-s notice\' for mediatex binaries");
+  logMain(LOG_INFO,
+	 "- try \'./utlog -f file -s debug\' to see debug message");
+  logMain(LOG_DEBUG,
+  	    "<<< this is a debug message >>>");
+  
+  // modules
+  logMain(LOG_INFO, "");
+  logMain(LOG_INFO, "**************");
+  logMain(LOG_INFO, "* modules *");
+  logMain(LOG_INFO, "**************");
+  logAlloc(LOG_INFO, __FILE__, __LINE__, "test using %s", "logAlloc");
+  logScript(LOG_INFO, "test using %s", "logScript");
+  logMisc(LOG_INFO, "test using %s", "logMisc");
+  logMemory(LOG_INFO, "test using %s", "logMemory");
+  logParser(LOG_INFO, "test using %s", "logParser");
+  logCommon(LOG_INFO, "test using %s", "logCommon");
+  logMain(LOG_INFO, "test using %s", "logMain");
+  logMain(LOG_INFO, "");
+  logMain(LOG_INFO, "Each module has its own severity");
+  logMain(LOG_INFO, "- try \'./utlog -s error -s info:misc,main\'");
+  logMain(LOG_INFO, 
+	  "  this select >=info messages from main and misc modules");
+   logMisc(LOG_INFO,
+  	    "<<< this is an info message from MISC module >>>");
+  	
   // test re-opening the logs
   env.logHandler = logClose(env.logHandler);
-  if (!(env.logHandler = logOpen(programName, getLogFacility("local4"), 
-				 logSeverity, logFile))) goto error;
-
-  logEmit(LOG_INFO, "%s", 
-	  "re-opening log using local4 facility");
+  if (!(env.logHandler = 
+	logOpen(programName, getLogFacility("local4"),
+		env.logSeverity, 0))) goto error;
+  
+  logMain(LOG_INFO, "%s",
+  	  "re-open log using local4 facility");
   env.logHandler = logClose(env.logHandler);
 
-  if (!(env.logHandler = logOpen(programName, getLogFacility("file"), 
-				 logSeverity, logFile))) goto error;
+  if (!(env.logHandler = 
+	logOpen(programName, env.logFacility,
+		env.logSeverity, env.logFile))) 
+    goto error;
 
-  logEmit(LOG_INFO, "%s", 
-	  "test success for re-opening log using file facility");
-  env.logHandler = logClose(env.logHandler);
+  logMain(LOG_INFO, "%s",
+  	  "re-open log success");
 
-  if(logFile != 0) {
-    free(logFile);
-  }
-
-  rc = 0;
+  rc = TRUE;
  error:	
+  if(env.logFile != 0) {
+    free(env.logFile);
+  }
+  env.logHandler = logClose(env.logHandler);
+  rc=!rc;
+ optError:
   exit(rc);
 }
 

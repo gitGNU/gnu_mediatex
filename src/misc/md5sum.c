@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.4 2015/06/30 17:37:33 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -49,7 +49,7 @@ manageSIGALRM(void (*manager)(int))
   sigemptyset(&(action.sa_mask));
   action.sa_flags = SA_RESTART;
   if (sigaction(SIGALRM, &action, 0) != 0) {
-    logEmit(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
     goto error;
   }
 
@@ -58,7 +58,7 @@ manageSIGALRM(void (*manager)(int))
   rc = TRUE;
  error:
  if (!rc) {
-    logEmit(LOG_ERR, "%s", "manageSIGALRM fails");
+    logMisc(LOG_ERR, "%s", "manageSIGALRM fails");
   }
   return TRUE;
 }
@@ -96,7 +96,7 @@ gestionnaireSIGALRM(int i)
 int startProgBar(char* label)
 {
   // only run progbar for client (but not for cgi or server)
-  if (env.noRegression || strncmp(env.logFacility, "file", 4)) 
+  if (env.noRegression || env.logFacility != 99) 
     return TRUE; 
 
   env.progBar.label = label;
@@ -113,7 +113,7 @@ int startProgBar(char* label)
 void stopProgBar()
 {
   // only run progbar for client (but not for cgi or server)
-  if (env.noRegression || strncmp(env.logFacility, "file", 4)) return; 
+  if (env.noRegression || env.logFacility != 99) return; 
 
   e2fsck_clear_progbar(&env.progBar.bar);
   env.progBar.label = 0;
@@ -166,26 +166,26 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   unsigned char md5sum[MD5_DIGEST_LENGTH];
   MD5_CTX copy;
 
-  logEmit(LOG_DEBUG, "%s", "computeQuickMd5");
+  logMisc(LOG_DEBUG, "%s", "computeQuickMd5");
   env.progBar.max = size;
 
   if (fd <= 0) {
-    logEmit(LOG_ERR, "%s", "quickMd5: please provide a file descriptor");
+    logMisc(LOG_ERR, "%s", "quickMd5: please provide a file descriptor");
     goto error;
   }
 
   if (sum == 0) {
-  logEmit(LOG_ERR, "%s", "quickMd5: allocate provide a ssize_t argument");
+  logMisc(LOG_ERR, "%s", "quickMd5: allocate provide a ssize_t argument");
     goto error;
   }
 
   if (quickMd5sum == 0) {
-    logEmit(LOG_ERR, "%s", "quickMd5 please allocate quickMd5sum argument");
+    logMisc(LOG_ERR, "%s", "quickMd5 please allocate quickMd5sum argument");
     goto error;
   } 
 
   if (lseek(fd, 0, SEEK_SET) != 0) {
-    logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+    logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }
 
@@ -206,7 +206,7 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   MD5_Final(md5sum, &copy);
   quickMd5sum = md5sum2string(md5sum, quickMd5sum);
 
-  logEmit(LOG_INFO, "%s quick md5sum computed on %llu bytes", 
+  logMisc(LOG_INFO, "%s quick md5sum computed on %llu bytes", 
 	  quickMd5sum, (long long unsigned int)*sum);
 
   rc = (*sum > 0 && *sum <= MEGA);
@@ -238,31 +238,31 @@ computeFullMd5(int fd, ssize_t *sum, MD5_CTX *c,
   ssize_t bytes;
   unsigned char md5sum[MD5_DIGEST_LENGTH];
 
-  logEmit(LOG_DEBUG, "%s", "computeFullMd5");
+  logMisc(LOG_DEBUG, "%s", "computeFullMd5");
   env.progBar.max = size;
 
   if (fd <= 0) {
-    logEmit(LOG_ERR, "%s", "fullMd5: please provide a file descriptor");
+    logMisc(LOG_ERR, "%s", "fullMd5: please provide a file descriptor");
     goto error;
   }
   
   if (sum == (ssize_t*)0) {
-    logEmit(LOG_ERR, "%s", "fullMd5: please allocate a ssize_t argument");
+    logMisc(LOG_ERR, "%s", "fullMd5: please allocate a ssize_t argument");
     goto error;
   }
 
   if (c == (MD5_CTX*)0) {
-    logEmit(LOG_ERR, "%s", "fullMd5 please allocate MD5_CTX argument");
+    logMisc(LOG_ERR, "%s", "fullMd5 please allocate MD5_CTX argument");
     goto error;
   } 
 
   if (fullMd5sum == 0) {
-    logEmit(LOG_ERR, "%s", "fullMd5 please allocate fullMd5sum argument");
+    logMisc(LOG_ERR, "%s", "fullMd5 please allocate fullMd5sum argument");
     goto error;
   } 
   
   if (lseek(fd, *sum, SEEK_SET) != *sum) {
-    logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+    logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }
   
@@ -276,7 +276,7 @@ computeFullMd5(int fd, ssize_t *sum, MD5_CTX *c,
   
   MD5_Final(md5sum, c);
   fullMd5sum = md5sum2string(md5sum, fullMd5sum);
-  logEmit(LOG_INFO, "%s  full md5sum computed on %llu bytes", 
+  logMisc(LOG_INFO, "%s  full md5sum computed on %llu bytes", 
 	  fullMd5sum, (long long unsigned int)*sum);
 
   rc = TRUE;
@@ -306,7 +306,7 @@ doMd5sum(Md5Data* data)
   unsigned short int bs = 0;
   unsigned long int count = 0;
 
-  logEmit(LOG_DEBUG, "%s", "doMd5sum");
+  logMisc(LOG_DEBUG, "%s", "doMd5sum");
 
   // backup the parameter values
   backupPath = data->path;
@@ -315,7 +315,7 @@ doMd5sum(Md5Data* data)
   strncpy(fullMd5sum, data->fullMd5sum, MAX_SIZE_HASH+1); 
 
   if (data->path == 0 || *(data->path) == (char)0) {
-    logEmit(LOG_ERR, "%s", "Please provide a path for md5sum computing");
+    logMisc(LOG_ERR, "%s", "Please provide a path for md5sum computing");
     goto error;
   }
 
@@ -326,7 +326,7 @@ doMd5sum(Md5Data* data)
   }
   
   if ((fd = open(data->path, O_RDONLY)) == -1) {
-    logEmit(LOG_ERR, "open: %s", strerror(errno));
+    logMisc(LOG_ERR, "open: %s", strerror(errno));
     goto error;
   }
 
@@ -338,7 +338,7 @@ doMd5sum(Md5Data* data)
     }
     else {
       if ((data->size = lseek(fd, 0, SEEK_END)) == -1) {
-	logEmit(LOG_ERR, "lseek: %s", strerror(errno));
+	logMisc(LOG_ERR, "lseek: %s", strerror(errno));
 	goto error;
       }
     }
@@ -361,7 +361,7 @@ doMd5sum(Md5Data* data)
   case MD5_SUPP_ID:
   case MD5_SUPP_CHECK:
     if (size != 0 && data->size != size) {
-      logEmit(LOG_WARNING, "size doesn't match: %llu vs %llu expected", 
+      logMisc(LOG_WARNING, "size doesn't match: %llu vs %llu expected", 
 	      (long long unsigned int) data->size, 
 	      (long long unsigned int) size);
       data->rc |= MD5_FALSE_SIZE;
@@ -371,7 +371,7 @@ doMd5sum(Md5Data* data)
 
     rc = computeQuickMd5(fd, &sum, &c, data->size, data->quickMd5sum);
     if (strncmp(data->quickMd5sum, quickMd5sum, MAX_SIZE_HASH)) {
-      logEmit(LOG_INFO, "quick md5sum doesn't match: %s vs %s expected", 
+      logMisc(LOG_INFO, "quick md5sum doesn't match: %s vs %s expected", 
 	     data->quickMd5sum, quickMd5sum);
       data->rc |= MD5_FALSE_QUICK;
       goto error;
@@ -381,21 +381,21 @@ doMd5sum(Md5Data* data)
     
     rc = computeFullMd5(fd, &sum, &c, data->size, data->fullMd5sum);
     if (strncmp(data->fullMd5sum, fullMd5sum, MAX_SIZE_HASH)) {
-      logEmit(LOG_INFO, "full md5sum doesn't match: %s vs %s expected", 
+      logMisc(LOG_INFO, "full md5sum doesn't match: %s vs %s expected", 
 	      data->fullMd5sum, fullMd5sum);
       data->rc |= MD5_FALSE_QUICK;
       goto error;
     }
     break;
   default:
-    logEmit(LOG_ERR, "unknown value for Md5Opp parameter: %i", data->opp);
+    logMisc(LOG_ERR, "unknown value for Md5Opp parameter: %i", data->opp);
     goto error;
   }
 
  error:
   stopProgBar(); // stop progBar
   if (fd != -1 && close(fd) == -1) {
-    logEmit(LOG_ERR, "close: %s", strerror(errno));
+    logMisc(LOG_ERR, "close: %s", strerror(errno));
     rc = FALSE;
   }
   data->rc |= ((~rc) & 1); // |= MD5_ERROR (if !rc)

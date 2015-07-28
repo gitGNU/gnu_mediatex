@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.4 2015/06/30 17:37:24 nroche Exp $
+ * Version: $Id: conf.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -51,7 +51,7 @@ mdtxAddCollection(Collection* coll)
 
   checkCollection(coll);
   checkLabel(coll->label);
-  logEmit(LOG_DEBUG, "%s", "add a new collection (or re-add it)");
+  logMain(LOG_DEBUG, "%s", "add a new collection (or re-add it)");
   if (!(conf = getConfiguration())) goto error;
   
   // default value to mdtx if not provided
@@ -85,9 +85,9 @@ mdtxAddCollection(Collection* coll)
       || !(cvsFile =  catString(cvsFile, "/servers.txt")))
     goto error;
   if (stat(cvsFile, &sb) == -1) {
-    logEmit(LOG_INFO, "stat: %s", strerror(errno));
-    logEmit(LOG_DEBUG, "(stat was looking for %s)", cvsFile);
-    logEmit(LOG_NOTICE,
+    logMain(LOG_INFO, "stat: %s", strerror(errno));
+    logMain(LOG_DEBUG, "(stat was looking for %s)", cvsFile);
+    logMain(LOG_NOTICE,
 	    "Please send your collection key to %s server admin",
 	    coll->masterHost);
     goto end;
@@ -114,7 +114,7 @@ mdtxAddCollection(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to add new collection");
+    logMain(LOG_ERR, "%s", "fails to add new collection");
     if (self) delCollection(self);
   }
   argv[0] = destroyString(argv[0]);
@@ -141,7 +141,7 @@ mdtxDelCollection(char* label)
   Collection* coll = 0;
   char* argv[3] = {0, 0, 0};
 
-  logEmit(LOG_DEBUG, "%s", "del a collection");
+  logMain(LOG_DEBUG, "%s", "del a collection");
 
   //if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
@@ -160,7 +160,7 @@ mdtxDelCollection(char* label)
   // note: do not expand collection
   if (!loadConfiguration(CFG)) goto error;
   if (!(coll = getCollection(label))) {
-    logEmit(LOG_WARNING, "there was no collection named '%s'", label);
+    logMain(LOG_WARNING, "there was no collection named '%s'", label);
     goto end;
   }
   if (!delCollection(coll)) goto error;
@@ -170,7 +170,7 @@ mdtxDelCollection(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to del collection");
+    logMain(LOG_ERR, "%s", "fails to del collection");
   }
   if (argv[0]) free(argv[0]);
   return rc;
@@ -199,7 +199,7 @@ mdtxListCollection()
 
     if (conf->collections != 0) {
       if (!rgSort(conf->collections, cmpCollection)) {
-	logEmit(LOG_ERR, "%s", "fails to sort collections ring");
+	logMain(LOG_ERR, "%s", "fails to sort collections ring");
 	goto error;
       }
     }
@@ -259,7 +259,7 @@ mdtxShareSupport(char* sLabel, char* cLabel)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "fails to share \"%s\" support with %s collection%s", 
+    logMain(LOG_ERR, "fails to share \"%s\" support with %s collection%s", 
 	    supp?supp->name:"unknown", 
 	    cLabel?cLabel:"all", cLabel?"":"s");
   }
@@ -309,7 +309,7 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, 
+    logMain(LOG_ERR, 
 	    "fails to withdraw \"%s\" support from %s collection%s", 
 	    supp?supp->name:"unknown", 
 	    coll?coll->label:"all", coll?"":"s");

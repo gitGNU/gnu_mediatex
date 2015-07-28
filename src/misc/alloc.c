@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.7 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: alloc.c,v 1.8 2015/07/28 11:45:46 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -54,12 +54,12 @@ initMalloc(size_t niceLimit, int (*callback)(long))
   }
 
   if ((alloc = env.alloc)) {
-    logEmit(LOG_INFO, "%s", "malloc was already initialized");
+    logMisc(LOG_INFO, "%s", "malloc was already initialized");
     goto setNewValues;
   }
 
   if (!(alloc = malloc(sizeof(Alloc)))) {
-    logEmit(LOG_ERR, "%s", "malloc fails to allocate Alloc struct");
+    logMisc(LOG_ERR, "%s", "malloc fails to allocate Alloc struct");
     goto error;
   }
   memset(alloc, 0, sizeof(Alloc));
@@ -67,7 +67,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
 
   if ((err = pthread_mutex_init(&alloc->mallocMutex, 
 				(pthread_mutexattr_t*)0))) {
-    logEmit(LOG_ERR, "pthread_mutex_init: %s", strerror(err));
+    logMisc(LOG_ERR, "pthread_mutex_init: %s", strerror(err));
     goto error;
   }
 
@@ -78,7 +78,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "initMalloc fails");
+    logMisc(LOG_ERR, "%s", "initMalloc fails");
     if (alloc) free(alloc);
   }
   return rc;
@@ -243,12 +243,12 @@ exitMalloc()
   }
 
   if (!alloc) {
-    logEmit(LOG_WARNING, "%s", "malloc is not initialized");
+    logMisc(LOG_WARNING, "%s", "malloc is not initialized");
     goto end;
   }
 
   if (alloc->nbAlloc != 0 || alloc->sumAllocated != 0) {
-    logEmit(LOG_WARNING, "Memory leaks: n%i, sum= %i", 
+    logMisc(LOG_WARNING, "Memory leaks: n%i, sum= %i", 
 	    alloc->nbAlloc, alloc->sumAllocated);
   }
 
@@ -284,25 +284,25 @@ size_t getVmSize()
   long vm = 0;
 
   if ((file = fopen("/proc/self/statm", "r")) == 0) {
-    logEmit(LOG_ERR, "fopen fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
 
   // Just need the first num: vm size
   if (fscanf (file, "%li", &vm) < 1) {
-    logEmit(LOG_ERR, "fscanf fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fscanf fails: %s", strerror(errno));
     goto error;
   }
 
   if (fclose(file) != 0) {
-    logEmit(LOG_ERR, "fclose fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
 
   // this value match cat /proc/$$/status | grep VmSize
   rc = vm * getpagesize();
  error:
-  if (rc == -1) logEmit(LOG_ERR, "%s", "getVmSize fails");
+  if (rc == -1) logMisc(LOG_ERR, "%s", "getVmSize fails");
   return rc;
 }
 
@@ -323,7 +323,7 @@ memoryStatus(int priority, char* file, int line)
   Alloc* alloc = env.alloc;
   
   if (!alloc) {
-    logEmit(LOG_WARNING, "%s", "malloc is not initialized");
+    logMisc(LOG_WARNING, "%s", "malloc is not initialized");
     goto error;
   }
 

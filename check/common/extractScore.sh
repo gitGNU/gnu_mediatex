@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: extractScore.sh,v 1.1 2015/07/01 10:49:30 nroche Exp $
+# * Version: $Id: extractScore.sh,v 1.2 2015/07/28 11:45:39 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit tests
-common/ut$TEST >common/$TEST.out 2>&1
+common/ut$TEST -sdebug:common >common/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs common/$TEST.out

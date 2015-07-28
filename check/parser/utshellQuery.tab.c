@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.tab.c,v 1.1 2015/07/01 10:50:02 nroche Exp $
+ * Version: $Id: utshellQuery.tab.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -70,7 +70,9 @@ main(int argc, char** argv)
        
   // import mediatex environment
   getEnv(&env);
-  env.logSeverity = "notice";
+
+  env.logSeverity[LOG_MEMORY] = LOG_NOTICE;
+  env.logSeverity[LOG_MAIN] = LOG_NOTICE;
 
   // parse the command line
   while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 

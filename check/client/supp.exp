@@ -1,11 +1,31 @@
 [notice utsupp.c] *** Start like this:
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
 [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
+[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP31_logo.part2)
+[info upgrade.c] laps < suppTTL: pow ( 0.199452, 1/2.00 ) * 9.00 + 1.00 = 5.02
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP12_logo.png)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.80)) ) * 1.00 = 0.22
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP13_logo.png)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.40)) ) * 1.00 = 0.26
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP22_logo.part1)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (0.60)) ) * 1.00 = 0.45
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP23_logo.part1)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (0.20)) ) * 1.00 = 0.71
+[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP32_logo.part2)
+[info upgrade.c] laps < suppTTL: pow ( 0.599452, 1/2.00 ) * 9.00 + 1.00 = 7.97
+[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP33_logo.part2)
+[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
 [notice utsupp.c] *** Add a support:
 [info device.c] absolute path is /HERE/misc/logo.tgz
 [info device.c] not a symlink: /HERE/misc/logo.tgz
 [info device.c] do not match a block device: /HERE/misc/logo.tgz
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
+[info supportTree.c] Serializing the supports list file: stdout
 score      state label
  0.00         ?? SUPP11_logo.png
  0.33         ?? SUPP21_logo.part1
@@ -55,9 +75,14 @@ score      state label
 [info device.c] not a symlink: /HERE/misc/logoP1.iso
 [info device.c] do not match a block device: /HERE/misc/logoP1.iso
 [info device.c] absolute path is /HERE/misc/logoP1.iso
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection (  X )
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info openClose.c] steps: 93 / 93
 
 [info supp.c] notify support to coll1 collection
 [notice utsupp.c] *** Update a support:
+[info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.
 # Version:  XXX
 # Local Supports:
@@ -73,6 +98,11 @@ score      state label
 2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
 2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
 [notice utsupp.c] *** Remove a support:
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/servers.txt
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
+[info confTree.c] configuration already expanded
+[info confTree.c] Serializing configuration into: stdout
 # This is the MediaTeX software configuration file.
 
 # comment: greeter for this server
@@ -132,6 +162,7 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	# --
 	localhost bedac32422739d7eced624ba20f5912e
 end
+[info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.
 # Version:  XXX
 # Local Supports:
@@ -145,4 +176,5 @@ end
 2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP31_logo.part2
 2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
 2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
+[info confTree.c] free configuration
 [info utsupp.c] exit on success

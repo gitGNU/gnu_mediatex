@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.7 2015/07/22 10:45:19 nroche Exp $
+ * Version: $Id: extract.c,v 1.8 2015/07/28 11:45:49 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -44,7 +44,7 @@ mdtxCall(int nbArgs, ...)
     0, 0, 0, 0, 0, 0, 0, 0};
   int i = 0;
 
-  logEmit(LOG_DEBUG, "%s", "call mdtx client");
+  logMain(LOG_DEBUG, "%s", "call mdtx client");
 
   va_start(args, nbArgs);
   while (--nbArgs >= 0) {
@@ -59,7 +59,7 @@ mdtxCall(int nbArgs, ...)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "mdtx client call fails");
+    logMain(LOG_ERR, "%s", "mdtx client call fails");
   }
   return rc;
 }
@@ -79,7 +79,7 @@ getAbsExtractPath(Collection* coll, char* path)
 
   checkCollection(coll);
   checkLabel(path);
-  logEmit(LOG_DEBUG, "%s", "absCachePath");
+  logMain(LOG_DEBUG, "%s", "absCachePath");
 
   if (!(rc = createString(coll->extractDir))) goto error;
   if (!(rc = catString(rc, "/"))) goto error;
@@ -87,7 +87,7 @@ getAbsExtractPath(Collection* coll, char* path)
   
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "absExtractPath fails");
+    logMain(LOG_ERR, "%s", "absExtractPath fails");
   }
   return rc;
 }
@@ -105,17 +105,17 @@ thereIs(Collection* coll, char* path)
   int rc = FALSE;
 
   checkLabel(path);
-  logEmit(LOG_DEBUG, "thereIs: check %s path", path);
+  logMain(LOG_DEBUG, "thereIs: check %s path", path);
 
   if (access(path, R_OK) != 0) {
-    logEmit(LOG_ERR, "access fails: %s", strerror(errno));
+    logMain(LOG_ERR, "access fails: %s", strerror(errno));
     goto error;
   }
   
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "thereIs fails");    
+    logMain(LOG_ERR, "%s", "thereIs fails");    
   }
   return rc;
 }
@@ -139,13 +139,13 @@ getUniqCachePath(Collection* coll, char* path)
 
   checkCollection(coll);
   checkLabel(path);
-  logEmit(LOG_DEBUG, "%s", "uniqueCachePath");
+  logMain(LOG_DEBUG, "%s", "uniqueCachePath");
 
   // try with the native path
   if (!(res = getAbsCachePath(coll, path))) goto error;
   if ((err = callAccess(res))) {
     if (err == ENOENT) goto end;
-    logEmit(LOG_ERR, "access %s: %s", res, strerror(err));
+    logMain(LOG_ERR, "access %s: %s", res, strerror(err));
   }
 
   // add "_00" to the path and loop on number
@@ -164,7 +164,7 @@ getUniqCachePath(Collection* coll, char* path)
   rc = res;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "uniqueCachePath fails");
+    logMain(LOG_ERR, "%s", "uniqueCachePath fails");
     res = destroyString(res);
   }
   return rc;
@@ -186,7 +186,7 @@ getArchivePath(Collection* coll, Archive* archive)
 
   checkCollection(coll);
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "%s", "getArchivePath");
+  logMain(LOG_DEBUG, "%s", "getArchivePath");
 
   // local supply
   if (archive->state >= AVAILABLE) {
@@ -204,7 +204,7 @@ getArchivePath(Collection* coll, Archive* archive)
   rc = getAbsRecordPath(coll, record);
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getArchivePath fails");
+    logMain(LOG_ERR, "%s", "getArchivePath fails");
   }
   return rc;
 }
@@ -227,7 +227,7 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
   checkCollection(coll);
   checkLabel(device);
   checkLabel(target);
-  logEmit(LOG_DEBUG, "extractDd %s", target);
+  logMain(LOG_DEBUG, "extractDd %s", target);
   
   if (!(argv[1] = createString("if="))
       || !(argv[1] = catString(argv[1], device)))
@@ -246,7 +246,7 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractDd fails");
+    logMain(LOG_ERR, "%s", "extractDd fails");
   }
   argv[1] = destroyString(argv[1]);
   argv[2] = destroyString(argv[2]);
@@ -268,7 +268,7 @@ extractScp(Collection* coll, Record* record)
 
   checkCollection(coll);
   checkRecord(record);
-  logEmit(LOG_DEBUG, "extractScp %s", record->extra);
+  logMain(LOG_DEBUG, "extractScp %s", record->extra);
   
   if (!env.dryRun && 
       !mdtxCall(7, "adm", "get", record->extra, 
@@ -279,7 +279,7 @@ extractScp(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractScp fails");
+    logMain(LOG_ERR, "%s", "extractScp fails");
   } 
   return rc;
 }
@@ -302,7 +302,7 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
   char* path = 0;
   int i,j,l;
 
-  logEmit(LOG_DEBUG, "%s", "isoExtract");
+  logMain(LOG_DEBUG, "%s", "isoExtract");
 
   // should have one and only one parent
   if (!(archive = (Archive*)asso->container->parents->head->it)) 
@@ -345,7 +345,7 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
   if (!mdtxCall(3, "adm", "umount", mnt)) rc = FALSE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "isoExtract fails");
+    logMain(LOG_ERR, "%s", "isoExtract fails");
   }
   iso = destroyString(iso);
   mnt = destroyString(mnt);
@@ -372,7 +372,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
   char* argv[] = {"/bin/bash", "-c", 0, 0};
   char* path2 = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do cat");
+  logMain(LOG_DEBUG, "%s", "do cat");
   if (!(cmd = createString("/bin/cat "))) goto error;
  
   // all parts
@@ -393,7 +393,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
   rc = TRUE;
  error:  
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do cat");
+    logMain(LOG_ERR, "%s", "fails to do cat");
   }
   path2 = destroyString(path2);
   cmd = destroyString(cmd);
@@ -417,7 +417,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
   char *argv[] = {"/bin/tar", "-C", 0, 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "do tar %s", options);
+  logMain(LOG_DEBUG, "do tar %s", options);
 
   if (!env.dryRun) {
     argv[2] = coll->extractDir; 
@@ -434,7 +434,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do tar");
+    logMain(LOG_ERR, "%s", "fails to do tar");
   }
   destroyString(argv[4]);
   return(rc);
@@ -461,7 +461,7 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
   char* path = 0;
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "do Xunzip %s", bin);
+  logMain(LOG_DEBUG, "do Xunzip %s", bin);
 
   if (!(cmd = createString(bin))) goto error;
 
@@ -480,7 +480,7 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do Xzip");
+    logMain(LOG_ERR, "%s", "fails to do Xzip");
   }
   path = destroyString(path);
   cmd = destroyString(cmd);
@@ -502,7 +502,7 @@ extractAfio(Collection* coll, FromAsso* asso)
   char *argv[] = {"/bin/afio", "-i", "-y", 0, 0, 0};
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do afio -i");
+  logMain(LOG_DEBUG, "%s", "do afio -i");
 
   if (!env.dryRun) {
     argv[3] = asso->path;
@@ -517,7 +517,7 @@ extractAfio(Collection* coll, FromAsso* asso)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do afio");
+    logMain(LOG_ERR, "%s", "fails to do afio");
   }
   argv[4] = destroyString(argv[4]);
   return(rc);
@@ -539,7 +539,7 @@ extractCpio(Collection* coll, FromAsso* asso)
 		  "--make-directories", 0, 0};
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do cpio -i");
+  logMain(LOG_DEBUG, "%s", "do cpio -i");
 
   if (!env.dryRun) {
     if (asso->container->parents->nbItems <= 0) goto error;
@@ -554,7 +554,7 @@ extractCpio(Collection* coll, FromAsso* asso)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do cpio");
+    logMain(LOG_ERR, "%s", "fails to do cpio");
   }
   argv[3] = destroyString(argv[3]);
   return(rc);
@@ -575,7 +575,7 @@ extractZip(Collection* coll, FromAsso* asso)
   char *argv[] = {"/usr/bin/unzip", "-d", 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do unzip");
+  logMain(LOG_DEBUG, "%s", "do unzip");
 
   if (!env.dryRun) {
     argv[2] = coll->extractDir; 
@@ -591,7 +591,7 @@ extractZip(Collection* coll, FromAsso* asso)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do unzip");
+    logMain(LOG_ERR, "%s", "fails to do unzip");
   }
   destroyString(argv[3]);
   return(rc);
@@ -612,7 +612,7 @@ extractRar(Collection* coll, FromAsso* asso)
   char *argv[] = {"/usr/bin/rar", "x", 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logEmit(LOG_DEBUG, "%s", "do rar x");
+  logMain(LOG_DEBUG, "%s", "do rar x");
 
   if (!env.dryRun) {
     if (asso->container->parents->nbItems <= 0) goto error;
@@ -628,7 +628,7 @@ extractRar(Collection* coll, FromAsso* asso)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "fails to do rar e");
+    logMain(LOG_ERR, "%s", "fails to do rar e");
   }
   destroyString(argv[2]);
   return(rc);
@@ -650,7 +650,7 @@ extractAddToKeep(ExtractData* data, Archive* archive)
   coll = data->coll;
   checkCollection(coll);
   checkArchive(archive);
-  logEmit(LOG_DEBUG, "add to-keep on %s:%lli",   
+  logMain(LOG_DEBUG, "add to-keep on %s:%lli",   
 	  archive->hash, archive->size); 
 
   if (!keepArchive(coll, archive, UNDEF_RECORD)) goto error;
@@ -659,7 +659,7 @@ extractAddToKeep(ExtractData* data, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractAddToKeep fails");
+    logMain(LOG_ERR, "%s", "extractAddToKeep fails");
   }
   return rc;
 }
@@ -679,10 +679,10 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
   RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "del toKeeps"); 
+  logMain(LOG_DEBUG, "%s", "del toKeeps"); 
 
   while ((archive = rgNext_r(toKeeps, &curr))) {
-    logEmit(LOG_INFO, "del to-keep on %s:%lli", 
+    logMain(LOG_INFO, "del to-keep on %s:%lli", 
 	    archive->hash, archive->size);     
 
     if (!unKeepArchive(coll, archive)) goto error;
@@ -691,7 +691,7 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
   rc = TRUE;
  error:
     if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractDelToKeeps fails");
+    logMain(LOG_ERR, "%s", "extractDelToKeeps fails");
   }
   destroyOnlyRing(toKeeps);
   return rc;
@@ -722,16 +722,16 @@ cacheSet(ExtractData* data, Record* record, char* path)
   checkCollection(coll);
   checkRecord(record);
   checkLabel(path);
-  logEmit(LOG_DEBUG, "%s", "cacheSet");  
+  logMain(LOG_DEBUG, "%s", "cacheSet");  
 
   // move from extract dir into the cache dir
   if (!(source = getAbsExtractPath(coll, path))) goto error;
   if (!(target = getUniqCachePath(coll, path))) goto error;
-  logEmit(LOG_INFO, "move %s to %s", source, target);  
+  logMain(LOG_INFO, "move %s to %s", source, target);  
   
   if (!makeDir(coll->cacheDir, target, 0750)) goto error;  
   if (rename(source, target)) {
-    logEmit(LOG_ERR, "rename fails: %s", strerror(errno));
+    logMain(LOG_ERR, "rename fails: %s", strerror(errno));
     goto error;
   }
 
@@ -741,19 +741,19 @@ cacheSet(ExtractData* data, Record* record, char* path)
   record->extra = destroyString(record->extra);
   if (!(record->extra = createString(path))) goto error;
   if (path[0] == '/') {
-    logEmit(LOG_WARNING, "%s", "please remove absolute in the extract file");
-    logEmit(LOG_WARNING, "%s", "current extract will fails due to that");
+    logMain(LOG_WARNING, "%s", "please remove absolute in the extract file");
+    logMain(LOG_WARNING, "%s", "current extract will fails due to that");
   }
 
   // and add a toKepp on the new extracted archive
   if (!extractAddToKeep(data, record->archive)) goto error;
 
-  logEmit(LOG_NOTICE, "extract %s:%lli", 
+  logMain(LOG_NOTICE, "extract %s:%lli", 
 	  record->archive->hash, record->archive->size);
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "cacheSet fails");
+    logMain(LOG_ERR, "%s", "cacheSet fails");
   }
   source = destroyString(source);
   target = destroyString(target);
@@ -785,7 +785,7 @@ extractRecord(ExtractData* data, Record* record)
   coll = data->coll;
   checkCollection(coll);
   checkRecord(record);
-  logEmit(LOG_DEBUG, "extractRecord %s:%lli", 
+  logMain(LOG_DEBUG, "extractRecord %s:%lli", 
 	  record->archive->hash, record->archive->size);
 
   // allocate place on cache
@@ -833,7 +833,7 @@ extractRecord(ExtractData* data, Record* record)
     if (!extractScp(coll, record)) goto error;
     break;
   default:
-    logEmit(LOG_ERR, "cannot extract %s record", strRecordType(record));
+    logMain(LOG_ERR, "cannot extract %s record", strRecordType(record));
     goto error;
   }
   
@@ -846,7 +846,7 @@ extractRecord(ExtractData* data, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractRecord fails");
+    logMain(LOG_ERR, "%s", "extractRecord fails");
   }
   if (record2) delCacheEntry(coll, record2);
   tmpPath  = destroyString(tmpPath);
@@ -873,7 +873,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
 
   coll = data->coll;
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "extractFromAsso %s:%lli", 
+  logMain(LOG_DEBUG, "extractFromAsso %s:%lli", 
 	  asso->archive->hash, asso->archive->size);
 
   // allocate place on cache
@@ -928,7 +928,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
     break;
     
   default:
-    logEmit(LOG_ERR, "container %s not manage", 
+    logMain(LOG_ERR, "container %s not manage", 
 	    strEType(asso->container->type));
     goto error;
   }
@@ -941,7 +941,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "extractFromAsso fails");
+    logMain(LOG_ERR, "%s", "extractFromAsso fails");
   }
   if (record) delCacheEntry(coll, record);
   // destroyRecord(record); !! do not destroy it (done by cacheTree)
@@ -975,7 +975,7 @@ int extractContainer(ExtractData* data, Container* container)
   if (container->type == INC) goto end;
   //if (isEmptyRing(container->parents)) goto end;
 
-  logEmit(LOG_DEBUG, "extract container %s/%s:%lli", 
+  logMain(LOG_DEBUG, "extract container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
@@ -987,7 +987,7 @@ int extractContainer(ExtractData* data, Container* container)
     found = found && data->found;
   }
 
-  logEmit(LOG_INFO, "%sfound container %s/%s:%lli", data->found?"":"not ", 
+  logMain(LOG_INFO, "%sfound container %s/%s:%lli", data->found?"":"not ", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
@@ -999,7 +999,7 @@ int extractContainer(ExtractData* data, Container* container)
     while((archive = rgNext_r(container->parents, &curr))) {
       if (archive->state < AVAILABLE &&
   	  archive->finaleSupplies->nbItems > 0) {
-  	logEmit(LOG_INFO, "%s", "extract part from support");
+  	logMain(LOG_INFO, "%s", "extract part from support");
 
   	// stop on the first final-supply extraction that success
 	data->found = FALSE;
@@ -1019,7 +1019,7 @@ int extractContainer(ExtractData* data, Container* container)
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "container extraction error");
+    logMain(LOG_ERR, "%s", "container extraction error");
     data->found = FALSE;
   }
   return rc;
@@ -1045,7 +1045,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   RG* toKeepsBck = 0;
   RG* toKeepsTmp = 0;
 
-  logEmit(LOG_DEBUG, "extract an archive: %s:%lli", 
+  logMain(LOG_DEBUG, "extract an archive: %s:%lli", 
 	  archive->hash, archive->size);
   data->found = FALSE;
   checkCollection(data->coll);
@@ -1117,12 +1117,12 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (!extractDelToKeeps(data->coll, toKeepsTmp)) goto error;
 
  end:
-  logEmit(LOG_INFO, "%sfound archive %s:%lli", 
+  logMain(LOG_INFO, "%sfound archive %s:%lli", 
 	  data->found?"":"not ", archive->hash, archive->size);
   rc = TRUE;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "archive extraction error");
+    logMain(LOG_ERR, "%s", "archive extraction error");
   }
   path = destroyString(path);
   return rc;
@@ -1144,7 +1144,7 @@ getWantedArchives(Collection* coll)
   RGIT* curr = 0;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "%s", "getWantedArchives");
+  logMain(LOG_DEBUG, "%s", "getWantedArchives");
 
   if (!(ring = createRing())) goto error;
 
@@ -1169,7 +1169,7 @@ getWantedArchives(Collection* coll)
   rc = ring;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "getWantedArchives fails");
+    logMain(LOG_ERR, "%s", "getWantedArchives fails");
     destroyOnlyRing(ring);
   }
   return rc;
@@ -1194,7 +1194,7 @@ int extractArchives(Collection* coll)
   int deliver = FALSE;
 
   checkCollection(coll);
-  logEmit(LOG_DEBUG, "extractArchives %s collection", coll->label);
+  logMain(LOG_DEBUG, "extractArchives %s collection", coll->label);
   memset(&data, 0, sizeof(ExtractData));
   data.coll = coll;
 
@@ -1223,7 +1223,7 @@ int extractArchives(Collection* coll)
     if (!(data.toKeeps = createRing())) goto error3;
     data.target = archive;
     if (!extractArchive(&data, archive)) {
-      logEmit(LOG_WARNING, "%s", "need more place ?");
+      logMain(LOG_WARNING, "%s", "need more place ?");
       continue;
     }
 
@@ -1249,7 +1249,7 @@ int extractArchives(Collection* coll)
   if (!releaseCollection(coll, SERV|EXTR|CACH)) goto error;
  error:
   if (!rc) {
-    logEmit(LOG_ERR, "%s", "remote extraction fails");
+    logMain(LOG_ERR, "%s", "remote extraction fails");
   }
   curr = 0;
   destroyOnlyRing(archives);
