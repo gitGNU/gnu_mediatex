@@ -34,7 +34,7 @@
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
+[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
 [info openClose.c] steps: 93 / 93
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (5SX )

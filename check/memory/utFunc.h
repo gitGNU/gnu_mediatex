@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.h,v 1.1 2015/07/01 10:49:44 nroche Exp $
+ * Version: $Id: utFunc.h,v 1.2 2015/08/03 12:02:48 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -32,7 +32,7 @@ int createExempleSupportTree();
 int createExempleCatalogTree(Collection* coll);
 int createExempleExtractTree(Collection* coll);
 int createExempleServerTree(Collection* coll);
-int createExempleRecordTree(Collection* coll);
+RecordTree* createExempleRecordTree(Collection* coll);
 
 #endif /* MISC_MEMORY_UTFUNC_H */
 

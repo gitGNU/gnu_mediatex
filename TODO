@@ -8,8 +8,8 @@
 
 - explain tests (and configuration from utFunc) 
 
-src/memory/recordTree.c
-src/memory/cacheTree.c
+=> utdeliver should send tokeep archive !
+
 src/common/upgrade.c
 src/common/extractScore.c
 src/common/openClose.c

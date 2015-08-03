@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.2 2015/07/22 10:45:15 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.3 2015/08/03 12:02:48 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -73,8 +73,8 @@ int
 main(int argc, char** argv)
 {
   Collection* coll = 0;
+  RecordTree* tree = 0;
   Record* record = 0;
-  //pthread_t thread;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -116,29 +116,42 @@ main(int argc, char** argv)
   if (!unLockCache(coll)) goto error;
   if (!unLockCache(coll)) goto error;
 
-  if (!createExempleRecordTree(coll)) goto error;
+  if (!(tree = createExempleRecordTree(coll))) goto error;
 
-  // index the record tree
+  // index the record tree into cache
   logMemory(LOG_DEBUG, "%s", "___ test indexation ___");
-  coll->cacheTree->recordTree->aes.fd = STDERR_FILENO;
+  tree->aes.fd = STDERR_FILENO;
 
-  while ((record = rgHead(coll->cacheTree->recordTree->records))) {
-    if (!serializeRecord(coll->cacheTree->recordTree, record)) goto error;
-    aesFlush(&coll->cacheTree->recordTree->aes);
+  while ((record = rgHead(tree->records))) {
+    logMain(LOG_NOTICE, "---"); 
+    logMain(LOG_NOTICE, "add new record into cache"); 
+    if (!serializeRecord(tree, record)) goto error;
+    aesFlush(&tree->aes);
     fprintf(stderr, "\n");
 
     if (!addCacheEntry(coll, record)) goto error;
+    rgRemove(tree->records);
+
     if (record->archive->state >= AVAILABLE) {
-      logMemory(LOG_INFO, "score=%.2f toKeep: %s\n",
+      logMain(LOG_NOTICE, "available: score=%.2f toKeep: %s\n",
 		record->archive->extractScore, 
 		record->archive->state == TOKEEP?"yes":"no");
+
+      logMain(LOG_NOTICE, "keep record"); 
       if (!keepArchive(coll, record->archive, 0)) goto error;
+
+      logMain(LOG_NOTICE, "unkeep record"); 
       if (!unKeepArchive(coll, record->archive)) goto error;
     }
+
+    logMain(LOG_NOTICE, "del record from cache"); 
     if (!delCacheEntry(coll, record)) goto error;
     if (!cleanCacheTree(coll)) goto error;
   }
+
+  // free memory
   if (!diseaseCacheTree(coll)) goto error;
+  tree = destroyRecordTree(tree);
   /************************************************************************/
 
   freeConfiguration();

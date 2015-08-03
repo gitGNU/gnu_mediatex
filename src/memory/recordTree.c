@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.7 2015/08/03 12:02:48 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -762,7 +762,7 @@ diseaseRecordTree(RecordTree* self)
   
   while((record = rgHead(self->records)) != 0) {
     if (!delRecord(self->collection, record)) goto error;
-    rgDelete(self->records);
+    rgRemove(self->records);
   }
   
   rc = TRUE;

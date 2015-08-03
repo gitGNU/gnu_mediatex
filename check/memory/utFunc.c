@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.5 2015/07/22 10:45:15 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.6 2015/08/03 12:02:47 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -681,27 +681,29 @@ createExempleServerTree(Collection* coll)
 
 /*=======================================================================
  * Function   : createExempleRecordTree
- * Description: quick build for tests
+ * Description: create a record tree for tests
  * Synopsis   : int createExempleRecordTree
  * Input      : N/A
  * Output     : TRUE on success
  ------------------------------------------------------------------------
- * See        : utRecordTree.exp
+ * Used by    : utrecordTree.c, utcacheTree.c, utopenClose.c, utmotd.c
+ *              utdeliver.c
  =======================================================================*/
-int 
+RecordTree*
 createExempleRecordTree(Collection* coll)
 {
+  RecordTree* rc = 0;
   Record *record = 0;
   Archive* archive = 0;
   Server* server = 0;
   char* extra = 0;
-
   int i=0;
   
   // build all record type :
   // FINALE_SUPPLY
   // MALLOC_SUPPLY
-  // LOCALE_SUPPLY
+  // LOCALE_SUPPLY with good score
+  // LOCALE_SUPPLY with bad score
   // REMOTE_SUPPLY
   // FINALE_DEMAND
   // LOCALE_DEMAND
@@ -711,35 +713,41 @@ createExempleRecordTree(Collection* coll)
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "746d6ceeb76e05cfa2dea92a1c5753cd",
+    "746d6ceeb76e05cfa2dea92a1c5753cd",
     "7af51aceb06864e690fa6a9e00000001",
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "7af51aceb06864e690fa6a9e00000002"};
 
   Type types[] = {
-    SUPPLY, SUPPLY, SUPPLY, SUPPLY, DEMAND, DEMAND, DEMAND};
+    SUPPLY, SUPPLY, SUPPLY, SUPPLY, SUPPLY, 
+    DEMAND, DEMAND, DEMAND};
 
   time_t dates[] ={
-    1, 2, 3, 4, 5, 6, 7};
+    1, 2, 3, 4, 5, 6, 7, 8};
   
   char* hashs[] = {
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
+    "0a7ecd447ef2acb3b5c6e4c550e6636f",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea"};
   
   off_t sizes[] = {
-    24075ULL, 24075ULL, 24075ULL, 24075ULL, 24075ULL, 24075ULL, 24075ULL};
+    24075ULL, 24075ULL, 24075ULL, 374784ULL, 24075ULL,
+    24075ULL, 24075ULL, 24075ULL};
 
   char* extras[] = {
-    "/logo.png", "!malloc", "logo.png", "logo.png",
+    "/logo.png", "!malloc", "logo.png", "logoP2.iso", "logo.png",
     "test@test.com", "!wanted", "!wanted"};
 
-  coll->cacheTree->recordTree->collection = coll;
-  coll->cacheTree->recordTree->messageType = DISK;
+  if (!(rc = createRecordTree())) goto error;
+  rc->collection = coll;
+  rc->messageType = DISK;
+
   for (i=0; i<7; ++i) {
     if (!(server = addServer(coll, fingerPrints[i]))) goto error;
     if (!(archive = addArchive(coll, hashs[i], sizes[i]))) goto error;
@@ -750,15 +758,13 @@ createExempleRecordTree(Collection* coll)
     record->date = dates[i];
 
     // add the record to the tree
-    if (!rgInsert(coll->cacheTree->recordTree->records, record)) 
-      goto error;
+    if (!rgInsert(rc->records, record)) goto error;
   }
  
-  return TRUE;
+  return rc;
  error:
-  coll->cacheTree->recordTree = 
-    destroyRecordTree(coll->cacheTree->recordTree);
-  return FALSE;
+  rc = destroyRecordTree(rc);
+  return rc;
 }
 
 /* Local Variables: */

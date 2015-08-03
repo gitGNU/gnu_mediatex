@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: recordTree.h,v 1.5 2015/08/03 12:02:48 nroche Exp $
  * Project: MediaTeX
  * Module : record tree
  *
@@ -56,7 +56,7 @@ struct RecordTree
 {
   Collection* collection;
   MessageType messageType;
-  char        fingerPrint[MAX_SIZE_HASH+1]; /* servr id */
+  char        fingerPrint[MAX_SIZE_HASH+1]; /* server id */
   AESData     aes;
   int         doCypher;   // do AES cypher the body when serializing
   RG*         records;

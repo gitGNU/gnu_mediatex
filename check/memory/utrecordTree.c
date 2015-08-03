@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordTree.c,v 1.2 2015/07/22 10:45:15 nroche Exp $
+ * Version: $Id: utrecordTree.c,v 1.3 2015/08/03 12:02:48 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -61,6 +61,7 @@ int
 main(int argc, char** argv)
 {
   Collection* coll = 0;
+  RecordTree* tree = 0;
   char key[MAX_SIZE_AES+1] = "1234567890abcdef";
   AESData* aes = 0;
   // ---
@@ -94,25 +95,26 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!createExempleConfiguration()) goto error;
   if (!(coll = getCollection("coll1"))) goto error;
-  if (!createExempleRecordTree(coll)) goto error;
-
-  aes = &coll->cacheTree->recordTree->aes;
+  if (!(tree = createExempleRecordTree(coll))) goto error;
+  
+  aes = &tree->aes;
   if (!aesInit(aes, key, ENCRYPT)) goto error;
-
-  aes = &coll->cacheTree->recordTree->aes;
   if (!aesInit(aes, key, ENCRYPT)) goto error;
 
   // serialize uncrypted file
-  if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB,
-			   0)) goto error;
+  if (!serializeRecordTree(tree, coll->md5sumsDB, 0)) goto error;
 
   // serialize crypted file
   strncpy(coll->md5sumsDB + strlen(coll->md5sumsDB) -3, "aes", 3);
-  coll->cacheTree->recordTree->doCypher = TRUE;
-  if (!serializeRecordTree(coll->cacheTree->recordTree, coll->md5sumsDB, 
-			   0)) goto error;
+  tree->doCypher = TRUE;
+  if (!serializeRecordTree(tree, coll->md5sumsDB, 0)) goto error;
+  
   aes->doCypher = FALSE;
   aes->fd = STDOUT_FILENO;
+  
+  if (!(diseaseRecordTree(tree))) goto error;
+  if (tree->records->nbItems > 0) goto error;
+  tree = destroyRecordTree(tree);
   /************************************************************************/
 
   freeConfiguration();

@@ -16,15 +16,15 @@
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
+[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/catalog000.txt
 [info openClose.c] steps: 137 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> WANTED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> USED
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> UNUSED
+[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> UNUSED
 [info confTree.c] free configuration
 [info utopenClose.c] exit on success
