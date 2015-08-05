@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utnotify.c,v 1.1 2015/07/01 10:50:10 nroche Exp $
+ * Version: $Id: utnotify.c,v 1.2 2015/08/05 12:12:01 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -111,14 +111,21 @@ main(int argc, char** argv)
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
 
+  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
+
+  // available incoming
+  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
+
   utLog("%s", "add a demands and local supplies:", 0);
   
-  // remote demand
   if (!(archive = 
 	addArchive(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075))) 
     goto error;
   if (!(server = addServer(coll, "7af51aceb06864e690fa6a9e00000001")))
     goto error;
+
+  // remote demand
   if (!(extra = createString("!wanted"))) goto error;
   if (!(record = addRecord(coll, server, archive, DEMAND, extra)))
     goto error;
@@ -129,8 +136,7 @@ main(int argc, char** argv)
   if (!(record = addRecord(coll, coll->localhost, archive, DEMAND, extra)))
     goto error;
   if (!addCacheEntry(coll, record)) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
+
   if (!quickScan(coll)) goto error;
   utLog("%s", "we have :", coll);
   

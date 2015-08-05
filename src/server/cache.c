@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.7 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: cache.c,v 1.8 2015/08/05 12:12:02 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -585,6 +585,9 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
 
   // add record into trees
   if (success) {
+
+    // assert we have the localhost server object
+    if (!getLocalHost(coll)) goto error;
 
     // create the record object
     if (!(extra = createString("!malloc"))) goto error2;

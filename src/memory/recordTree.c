@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.7 2015/08/03 12:02:48 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.8 2015/08/05 12:12:02 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -695,7 +695,7 @@ Record* addRecord(Collection* coll, Server* server, Archive* archive,
   rc = record;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "newRecord fails");
+    logMemory(LOG_ERR, "%s", "addRecord fails");
     if (record) delRecord(coll, record); 
   }
   return rc;

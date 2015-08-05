@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.8 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: extract.c,v 1.9 2015/08/05 12:12:02 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -791,21 +791,22 @@ extractRecord(ExtractData* data, Record* record)
   // allocate place on cache
   if (!cacheAlloc(&record2, coll, record->archive)) goto error;
 
-  // retrieve the target name to use
+  // retrieve the canonical target name to use (from extract.txt)
   if (record->archive && 
       !isEmptyRing(record->archive->fromContainers) &&
+      !record->archive->isIncoming &&
       (asso = (FromAsso*)record->archive->fromContainers->head->it)) {
 
-    // if it exists, use the first asso name
+    // use the first asso path (may be severals)
     tmpBasename = asso->path;
   }
   else {
-    // else continue to use the source name 
+    // else continue to use the source path
     if (record->extra[0] != '/') {
       tmpBasename = record->extra;
     }
     else {
-      // or only the basename for final supply
+      // or the basename for final supply
       for (i = strlen(record->extra); i>=0 && record->extra[i] != '/'; --i);
       tmpBasename = record->extra + i + 1;
     }
@@ -1134,6 +1135,8 @@ int extractArchive(ExtractData* data, Archive* archive)
  * Synopsis   : RG* getWantedArchives(Collection* coll)
  * Input      : Collection* coll
  * Output     : a ring of arhives, 0 o error
+ *
+ * Warning    : there is still no unit test for this function !
  =======================================================================*/
 RG* 
 getWantedArchives(Collection* coll)
@@ -1144,7 +1147,7 @@ getWantedArchives(Collection* coll)
   RGIT* curr = 0;
 
   checkCollection(coll);
-  logMain(LOG_DEBUG, "%s", "getWantedArchives");
+  logMain(LOG_DEBUG, "getWantedArchives");
 
   if (!(ring = createRing())) goto error;
 
@@ -1154,22 +1157,25 @@ getWantedArchives(Collection* coll)
     if (!rgInsert(ring, archive)) goto error;
   }
 
-  // add top archives with bad score
+  // add top archives having a bad score
   if (!computeExtractScore(coll)) goto error;
-   while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
-     if (archive->state < USED) continue;
-     if (archive->state > WANTED) continue;
-     if (archive->fromContainers->nbItems != 0) continue;
-     if (archive->remoteSupplies->nbItems == 0) continue;
-     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
-       continue;
+  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+    if (archive->state > WANTED) continue;
+    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
+      continue;
+    if (archive->remoteSupplies->nbItems == 0) continue;
+    if (archive->fromContainers->nbItems > 0 && !archive->isIncoming) 
+      continue;
+
+    logMain(LOG_INFO, "looking for %s%lli",
+	    archive->hash, (long long int)archive->size);
     if (!rgInsert(ring, archive)) goto error;
   }
-
+  
   rc = ring;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "getWantedArchives fails");
+    logMain(LOG_ERR, "getWantedArchives fails");
     destroyOnlyRing(ring);
   }
   return rc;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.6 2015/07/28 11:45:50 nroche Exp $
+ * Version: $Id: threads.c,v 1.7 2015/08/05 12:12:03 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -251,7 +251,7 @@ void signalJobEnds()
   pthread_mutex_unlock(&jobsMutex);
 
   if (!env.noRegression) {
-    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+    memoryStatus(LOG_INFO, __FILE__, __LINE__);
   }
 }
 
@@ -361,7 +361,7 @@ void socketJobEnds(Connexion* connexion)
   }
 
   if (!env.noRegression) {
-    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+    memoryStatus(LOG_INFO, __FILE__, __LINE__);
   }
 }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.6 2015/08/03 12:02:47 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.7 2015/08/05 12:12:01 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -687,7 +687,7 @@ createExempleServerTree(Collection* coll)
  * Output     : TRUE on success
  ------------------------------------------------------------------------
  * Used by    : utrecordTree.c, utcacheTree.c, utopenClose.c, utmotd.c
- *              utdeliver.c
+ *              utnotify.c
  =======================================================================*/
 RecordTree*
 createExempleRecordTree(Collection* coll)

@@ -1,4 +1,22 @@
 
+
+*** DEBUG (to add into documentation)
+
+# xhost local:serv2
+# su serv2
+$ export DISPLAY=:0.0
+$ emacs23
+> M-x gdb 
+> Run gdb (like this): gdb --annotate=3 mediatexd
+(gdb) set args -sinfo -ffile -cserv2
+(gdb) b extractRecord
+(gdb) r
+
+# ps -ef | grep /usr/bin/mediatexd | grep serv2
+# echo 2804 > /var/run/mediatex/serv2d.pid
+# mediatex -c serv2 srv extract
+
+
 *** CLEAN-UP
 
 - src/misc/host.c (to remove)
@@ -6,24 +24,14 @@
 
 *** TO TEST
 
-- explain tests (and configuration from utFunc) 
-
-=> utdeliver should send tokeep archive !
-
-src/common/upgrade.c
-src/common/extractScore.c
-src/common/openClose.c
-src/cgi.c
-src/client/motd.c
-src/client/conf.c
-src/server/cache.c
-src/server/notify.c
-src/server/have.c
-src/server/extract.c
-
 - pgrof: test with more than 100k entries
 - find historical event into cvs's collections
 ======
+
+- explain tests (and configuration from utFunc) 
+-> no unit test for extract.c::getWantedArchives
+-> confTree::getLocalHost not call by parser
+
 - extractNNN.txt: agregate uploaded files into one uniq INC container
 
 - Problème avec le cache et les scores ?!
@@ -40,7 +48,6 @@ cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10)
 
 *** TO CORRECT: cache policy
 
-- !!! tests.sh: mediatex.css n'est pas recopie par serv2
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - add supp to coll remove REC entry from extract.txt
 - motd: add to burn and orphanes

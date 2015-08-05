@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: openClose.c,v 1.7 2015/08/05 12:12:02 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -1004,9 +1004,9 @@ diseaseCollection(Collection* coll, int collFiles)
   logCommon(LOG_DEBUG, "disease %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
-  if (!env.noRegression) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+  if (!env.noRegression) memoryStatus(LOG_INFO, __FILE__, __LINE__);
   if (!collectionLoop(coll, collFiles, diseaseColl)) goto error;
-  if (!env.noRegression) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+  if (!env.noRegression) memoryStatus(LOG_INFO, __FILE__, __LINE__);
 
   rc = TRUE;
  error:

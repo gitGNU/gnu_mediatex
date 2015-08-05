@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.2 2015/07/03 16:02:13 nroche Exp $
+# * Version: $Id: tests.sh,v 1.3 2015/08/05 12:12:01 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -555,7 +555,7 @@ function test14()
 	mdtxP "srv notify" serv3
 	mdtxP "srv extract" serv2
 	mdtxP "srv save" serv2
-	finalQuestion "part2 remotely copied by serv2 ?" \
+	finalQuestion "part2 remotely copied by serv2 ? (and mediatex.css too)" \
 		      "cat /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
     else
 	topo "Cleanup"

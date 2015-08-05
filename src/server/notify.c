@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.6 2015/07/28 11:45:50 nroche Exp $
+ * Version: $Id: notify.c,v 1.7 2015/08/05 12:12:03 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -227,12 +227,12 @@ int addBadTopLocalSupplies(NotifyData* data)
   checkCollection(coll);
   logMain(LOG_DEBUG, "%s", "addBadTopLocalSupplies");
 
-  // add local iso (or other top containers) if it own a bad score
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= 0) {
+  // add local iso (or other top containers) having a bad score
+  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state < AVAILABLE) continue;
-    if (archive->fromContainers->nbItems != 0) continue;
     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2) 
+      continue;
+    if (archive->fromContainers->nbItems > 0 && !archive->isIncoming) 
       continue;
 
     /* check minGeoDup and nb REMOTE_SUPPLY
