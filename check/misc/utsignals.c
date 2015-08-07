@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsignals.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: utsignals.c,v 1.3 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -84,7 +84,7 @@ sigManager(void* arg)
   if (sigaddset(&mask, SIGINT)) goto error;
  
   (void) arg;
-  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_NOTICE, "please send me HUP, USR1 or TERM signals:");
   logMain(LOG_DEBUG, "- kill -SIGHUP %i", getpid());
   logMain(LOG_DEBUG, "- kill -SIGUSR1 %i", getpid());
   logMain(LOG_DEBUG, "- kill -SIGTERM %i", getpid());
@@ -101,26 +101,26 @@ sigManager(void* arg)
     logMain(LOG_NOTICE, "signal reçu: %i", sigNumber);
     switch (sigNumber) {
     case SIGHUP:
-      logMain(LOG_NOTICE, "%s", "=> HUP");
+      logMain(LOG_NOTICE, "=> HUP");
       break;
     case SIGUSR1:
-      logMain(LOG_NOTICE, "%s", "=> SIGUSR1");
+      logMain(LOG_NOTICE, "=> SIGUSR1");
       break;
     case SIGTERM:
-      logMain(LOG_NOTICE, "%s", "=> SIGTERM");
+      logMain(LOG_NOTICE, "=> SIGTERM");
       running = FALSE;
       break;
     case SIGSEGV:
-      logMain(LOG_NOTICE, "%s", "=> SIGSEGV");
+      logMain(LOG_NOTICE, "=> SIGSEGV");
       reEnableALL();
       kill(getpid(), SIGSEGV);
     case SIGINT:
-      logMain(LOG_NOTICE, "%s", "=> SIGINT");
+      logMain(LOG_NOTICE, "=> SIGINT");
       reEnableALL();
       kill(getpid(), SIGINT);
       break;
     default:
-      logMain(LOG_NOTICE, "%s", "=> ???");
+      logMain(LOG_NOTICE, "=> ???");
     }
     fflush(stdout);
   }

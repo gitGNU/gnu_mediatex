@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.3 2015/08/03 12:02:48 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.4 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -119,7 +119,7 @@ main(int argc, char** argv)
   if (!(tree = createExempleRecordTree(coll))) goto error;
 
   // index the record tree into cache
-  logMemory(LOG_DEBUG, "%s", "___ test indexation ___");
+  logMemory(LOG_DEBUG, "___ test indexation ___");
   tree->aes.fd = STDERR_FILENO;
 
   while ((record = rgHead(tree->records))) {

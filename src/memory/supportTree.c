@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.5 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -69,7 +69,7 @@ createSupport(void)
 
   return(rc);
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Support");
+  logMemory(LOG_ERR, "malloc: cannot create Support");
   return destroySupport(rc);
 }
 
@@ -114,14 +114,14 @@ serializeSupport(Support* self, FILE *fd)
   if (fd == 0) fd = stdout;
 
   if(self == 0) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty support");
+    logMemory(LOG_ERR, "cannot serialize empty support");
     goto error;
   }
 
   if (localtime_r(&self->firstSeen, &firstSeen) == (struct tm*)0 ||
       localtime_r(&self->lastCheck, &lastCheck)  == (struct tm*)0 ||
       localtime_r(&self->lastSeen, &lastSeen) == (struct tm*)0 ) {
-    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
 
@@ -164,10 +164,10 @@ serializeSupports()
   RGIT* curr = 0;
   int uid = getuid();
 
-  logMemory(LOG_DEBUG, "%s", "serialize supports");
+  logMemory(LOG_DEBUG, "serialize supports");
 
   if ((conf = getConfiguration()) == 0) {
-    logMemory(LOG_ERR, "%s", "cannot load configuration");
+    logMemory(LOG_ERR, "cannot load configuration");
     goto error;
   }
 
@@ -275,7 +275,7 @@ addSupport(char* name)
   rc = supp;
  error:
   if (rc == 0) {
-    logMemory(LOG_ERR, "%s", "fails to add a support");
+    logMemory(LOG_ERR, "fails to add a support");
     supp = destroySupport(supp);
   }
   return rc;
@@ -315,7 +315,7 @@ delSupport(Support* self)
   rc = TRUE;
  error:
  if (!rc) {
-    logMemory(LOG_ERR, "%s", "delSupport fails");
+    logMemory(LOG_ERR, "delSupport fails");
   }
   return rc;
 }

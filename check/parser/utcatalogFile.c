@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
+ * Version: $Id: utcatalogFile.c,v 1.3 2015/08/07 17:50:25 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -102,7 +102,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (cata_lex_init(&scanner)) {
-    logMain(LOG_ERR, "%s", "error initializing scanner");
+    logMain(LOG_ERR, "error initializing scanner");
     goto error;
   }
 

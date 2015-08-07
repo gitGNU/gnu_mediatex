@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: serv.c,v 1.6 2015/08/07 17:50:28 nroche Exp $
  * Project: MediaTeX
  * Module : serv
  *
@@ -49,7 +49,7 @@ static int setConcurentAccessLock()
   unsigned short table[1];
   int uid = getuid();
 
-  logMain(LOG_DEBUG, "%s", "initialise the concurrent access"); 
+  logMain(LOG_DEBUG, "initialise the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (conf->sem != 0) goto end;
@@ -76,7 +76,7 @@ static int setConcurentAccessLock()
     if ((conf->sem = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600)) == -1) {
       logMain(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
 	      strerror(errno)); 
-      logMain(LOG_NOTICE, "%s", "(semaphore as gone)");
+      logMain(LOG_NOTICE, "(semaphore as gone)");
       goto error;
     }
   
@@ -95,7 +95,7 @@ static int setConcurentAccessLock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to set concurrent access lock"); 
+    logMain(LOG_ERR, "fails to set concurrent access lock"); 
   }
   return rc;
 }
@@ -114,12 +114,12 @@ int clientWriteLock()
   struct sembuf sembuf;
   int uid = getuid();
 
-  logMain(LOG_DEBUG, "%s", "get the concurrent access"); 
+  logMain(LOG_DEBUG, "get the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (!setConcurentAccessLock()) goto error;
   if (conf->sem == 0) {
-    logMain(LOG_ERR, "%s", "concurrent access lock is not initialized"); 
+    logMain(LOG_ERR, "concurrent access lock is not initialized"); 
     goto error;
   }
 
@@ -127,14 +127,14 @@ int clientWriteLock()
   if (!becomeUser(env.confLabel, FALSE)) goto error;
 
   // P (may I ?)
-  logMain(LOG_DEBUG, "%s", "get writter lock");
+  logMain(LOG_DEBUG, "get writter lock");
   sembuf.sem_num = 0;
   sembuf.sem_op = -1;
   sembuf.sem_flg = SEM_UNDO | IPC_NOWAIT; // for crash recovery...
   //... + do not asleep process if not available but exit with EAGAIN
   if (semop(conf->sem, &sembuf, 1) < 0) {
     if (errno == EAGAIN) {
-      logMain(LOG_ERR, "%s", 
+      logMain(LOG_ERR, 
 	      "cannot take concurent access as it is already locked");
     }
     else {
@@ -150,7 +150,7 @@ int clientWriteLock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to get writter lock"); 
+    logMain(LOG_ERR, "fails to get writter lock"); 
   }
   return rc;
 }
@@ -169,11 +169,11 @@ int clientWriteUnlock()
   union semun arg;
   int uid = getuid();
 
-  logMain(LOG_DEBUG, "%s", "release the concurrent access"); 
+  logMain(LOG_DEBUG, "release the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
   if (conf->sem == 0) {
-    logMain(LOG_ERR, "%s", "concurrent access lock already unlock"); 
+    logMain(LOG_ERR, "concurrent access lock already unlock"); 
     goto error;
   }
 
@@ -197,7 +197,7 @@ int clientWriteUnlock()
  error:
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to release the writter lock"); 
+    logMain(LOG_ERR, "fails to release the writter lock"); 
   }
   return rc;
 }
@@ -219,7 +219,7 @@ mdtxUpdate(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logMain(LOG_DEBUG, "%s", "update collection");
+  logMain(LOG_DEBUG, "update collection");
 
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!callUpdate(coll->user)) goto error;
@@ -227,7 +227,7 @@ mdtxUpdate(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to update collection");
+    logMain(LOG_ERR, "fails to update collection");
   }
   return(rc);
 }
@@ -250,7 +250,7 @@ mdtxCommit(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logMain(LOG_DEBUG, "%s", "commit collection");
+  logMain(LOG_DEBUG, "commit collection");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -261,7 +261,7 @@ mdtxCommit(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to commit collection");
+    logMain(LOG_ERR, "fails to commit collection");
   }
   return(rc);
 }
@@ -302,7 +302,7 @@ mdtxUpgrade(char* label)
   if (!releaseCollection(coll, CTLG|EXTR|SERV)) goto error;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUpgrade fails");
+    logMain(LOG_ERR, "mdtxUpgrade fails");
   }
   return rc;
 }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.8 2015/08/05 12:12:02 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.9 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -155,7 +155,7 @@ createRecord(void)
   memset(rc, 0, sizeof(Record));
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Record");
+  logMemory(LOG_ERR, "malloc: cannot create Record");
   return rc;
 }
 
@@ -218,7 +218,7 @@ destroyRecord(Record* self)
 
 /*   return destination; */
 /*  error: */
-/*   logMemory(LOG_ERR, "%s", "malloc: cannot copy Record"); */
+/*   logMemory(LOG_ERR, "malloc: cannot copy Record"); */
 /*   return destroyRecord(destination); */
 /* } */
 
@@ -248,14 +248,14 @@ serializeRecord(RecordTree* tree, Record* self)
   if (self->type & REMOVE) goto end;
 
   if (getRecordType(self) == MALLOC_SUPPLY) {
-     logMemory(LOG_WARNING, "%s", "get a malloc record ?!");
+     logMemory(LOG_WARNING, "get a malloc record ?!");
   }
   if (getRecordType(self) == UNDEF_RECORD) {
-     logMemory(LOG_WARNING, "%s", "get an undef record ?!");
+     logMemory(LOG_WARNING, "get an undef record ?!");
   }
 
   if (localtime_r(&self->date, &date) == (struct tm*)0) {
-    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
 
@@ -279,7 +279,7 @@ serializeRecord(RecordTree* tree, Record* self)
  end:
   return TRUE;
  error:
-  logMemory(LOG_ERR, "%s", "fails to serialize a record");
+  logMemory(LOG_ERR, "fails to serialize a record");
   return FALSE;
 }
 
@@ -298,7 +298,7 @@ getRecordType(Record* self)
   checkRecord(self);
 
   if (self->server->isLocalhost && isEmptyString(self->extra)) {
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "extra string is needed to get the local record type");
     goto error;
   }
@@ -338,7 +338,7 @@ getRecordType(Record* self)
 
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "getRecordType fails");
+    logMemory(LOG_ERR, "getRecordType fails");
   }
   return rc;
 }
@@ -403,7 +403,7 @@ createRecordTree(void)
 
   if ((rc = (RecordTree*) malloc (sizeof (RecordTree))) 
      == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create RecordTree");
+    logMemory(LOG_ERR, "malloc: cannot create RecordTree");
     goto error;
   }
 
@@ -419,7 +419,7 @@ createRecordTree(void)
   
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "fails to create RecordTree");
+  logMemory(LOG_ERR, "fails to create RecordTree");
   return destroyRecordTree(rc);
 }
 
@@ -487,7 +487,7 @@ destroyRecordTree(RecordTree* self)
   
 /*   return(rc); */
 /*  error: */
-/*   logMemory(LOG_ERR, "%s", "malloc: cannot copy RecordTree !"); */
+/*   logMemory(LOG_ERR, "malloc: cannot copy RecordTree !"); */
 /*   return destroyRecordTree(destination); */
 /* } */
 
@@ -631,7 +631,7 @@ newRecord(Server* server, Archive* archive, Type type, char* extra)
 	  archive->hash, (long long int)archive->size);
 
   if ((type&0x3) != SUPPLY && (type&0x3) != DEMAND) {
-    logMemory(LOG_ERR, "%s", "please choose a type (supply or demand) "
+    logMemory(LOG_ERR, "please choose a type (supply or demand) "
 	    "for the new Record");
     goto error;
   }
@@ -648,7 +648,7 @@ newRecord(Server* server, Archive* archive, Type type, char* extra)
   rc = record;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "newRecord fails");
+    logMemory(LOG_ERR, "newRecord fails");
     record = destroyRecord(record);
   }
   destroyString(extra);
@@ -695,7 +695,7 @@ Record* addRecord(Collection* coll, Server* server, Archive* archive,
   rc = record;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addRecord fails");
+    logMemory(LOG_ERR, "addRecord fails");
     if (record) delRecord(coll, record); 
   }
   return rc;
@@ -737,7 +737,7 @@ int delRecord(Collection* coll, Record* self)
   rc = TRUE;
  error:
  if (!rc) {
-    logMemory(LOG_ERR, "%s", "delRecord fails");
+    logMemory(LOG_ERR, "delRecord fails");
  }
   return rc;
 }
@@ -768,7 +768,7 @@ diseaseRecordTree(RecordTree* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_INFO, "%s", "diseaseRecordTree fails");
+    logMemory(LOG_INFO, "diseaseRecordTree fails");
   }
   return(rc);
 }

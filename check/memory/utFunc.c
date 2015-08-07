@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.7 2015/08/05 12:12:01 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.8 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -146,7 +146,7 @@ createExempleSupportTree()
   };
 
   if ((conf = getConfiguration()) == 0) {
-    logMemory(LOG_ERR, "%s", "cannot load configuration");
+    logMemory(LOG_ERR, "cannot load configuration");
     goto error;
   }
 
@@ -325,7 +325,7 @@ int createExempleExtractTree(Collection* coll)
   // INC
   if (!(time = currentTime())) goto error;
   if (localtime_r(&time, &date) == (struct tm*)0) {
-    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
   sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
@@ -338,7 +338,7 @@ int createExempleExtractTree(Collection* coll)
 
   return TRUE;
  error:
-  logMemory(LOG_ERR, "%s", 
+  logMemory(LOG_ERR, 
 	  "sorry, cannot build the extract exemple... gdb is your friend");
   return FALSE;
 }
@@ -450,7 +450,7 @@ createExempleCatalogTree(Collection* coll)
   rc=rc&& addDocumentToCategory(coll, document, category);
   
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "sorry, cannot build the catalog exemple");
+    logMemory(LOG_ERR, "sorry, cannot build the catalog exemple");
     coll->catalogTree = destroyCatalogTree(coll->catalogTree);
   }
   return rc;
@@ -479,7 +479,7 @@ createExempleConfiguration()
   char host[] = "hostX.mediatex.org";
   int i = 0, j = 0;
 
-  logMemory(LOG_DEBUG, "%s", "build the configuration exemple.");
+  logMemory(LOG_DEBUG, "build the configuration exemple.");
 
   if (!(self = getConfiguration())) goto error;
   host[4] = env.confLabel[4]; // same host numder as conf label number
@@ -538,7 +538,7 @@ createExempleConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "sorry, cannot build the configuration exemple.");  
     freeConfiguration();
   }
@@ -674,7 +674,7 @@ createExempleServerTree(Collection* coll)
 
   return TRUE;
  error:
-  logMemory(LOG_ERR, "%s", "sorry, cannot build the configuration exemple.");
+  logMemory(LOG_ERR, "sorry, cannot build the configuration exemple.");
   coll->serverTree = destroyServerTree(coll->serverTree);
   return FALSE;
 }

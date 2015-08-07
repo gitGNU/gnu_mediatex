@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: signals.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: signals.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -60,7 +60,7 @@ disableALL()
 
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "disableALL fails");
+    logMisc(LOG_ERR, "disableALL fails");
   }
   return rc;
 }
@@ -95,7 +95,7 @@ reEnableALL()
 
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "disableALL fails");
+    logMisc(LOG_ERR, "disableALL fails");
   }
   return rc;
 }
@@ -120,7 +120,7 @@ enableAlarm(void (*sigalarmManager)(int))
   action.sa_flags = 0;
   action.sa_handler = sigalarmManager;
   if (sigaction(SIGALRM, &action, 0) != 0) {
-    logMisc(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "sigaction fails: %s", strerror(errno));
     goto error;
   }
 
@@ -135,7 +135,7 @@ enableAlarm(void (*sigalarmManager)(int))
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "enableAlarm fails");
+    logMisc(LOG_ERR, "enableAlarm fails");
   }
   return rc;
 }
@@ -165,7 +165,7 @@ disableAlarm()
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "disableAlarm fails");
+    logMisc(LOG_ERR, "disableAlarm fails");
   }
   return rc;
 }
@@ -183,7 +183,7 @@ manageSignals(void* manager(void*), pthread_t* thread)
   int rc = FALSE;
   int err = 0;
 
-  logMisc(LOG_DEBUG, "%s", "manageSignals");
+  logMisc(LOG_DEBUG, "manageSignals");
  
   // current thread no more handle 
   //  SIGHUP, SIGUSR1, SIGTERM, SIGSEGV, SIGINT and SIGALRM
@@ -199,7 +199,7 @@ manageSignals(void* manager(void*), pthread_t* thread)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "manageSignals fails");
+    logMisc(LOG_ERR, "manageSignals fails");
   }
   return rc;
 }

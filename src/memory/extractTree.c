@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.7 2015/08/07 17:40:18 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.8 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -99,7 +99,7 @@ createFromAsso(void)
  
   return rc;  
  error:  
-  logMemory(LOG_ERR, "%s", "malloc: cannot create FromAsso");
+  logMemory(LOG_ERR, "malloc: cannot create FromAsso");
   return destroyFromAsso(rc);
 }
 
@@ -168,7 +168,7 @@ createContainer(void)
 
   return rc;  
  error:  
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Container");
+  logMemory(LOG_ERR, "malloc: cannot create Container");
   return destroyContainer(rc);
 }
 
@@ -214,7 +214,7 @@ serializeContainer(Container* self, CvsFile* fd)
   AVLNode *node = 0;
 
   if(self == 0) {
-    logMemory(LOG_INFO, "%s", "cannot serialize empty Container");
+    logMemory(LOG_INFO, "cannot serialize empty Container");
     goto error;
   }
 
@@ -294,7 +294,7 @@ serializeExtractRecord(Archive* self, CvsFile* fd)
   int rc = FALSE;
 
   if (self == 0) {
-    logMemory(LOG_WARNING, "%s", "do not serialize empty record"); 
+    logMemory(LOG_WARNING, "do not serialize empty record"); 
     goto error;
   }
 
@@ -333,7 +333,7 @@ createExtractTree(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create ExtractTree");
+  logMemory(LOG_ERR, "malloc: cannot create ExtractTree");
   return destroyExtractTree(rc);
 }
 
@@ -383,7 +383,7 @@ serializeExtractTree(Collection* coll)
 
   // we neeed to use the cvs collection directory
   if ((!coll->memoryState & EXPANDED)) {
-    logMemory(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "collection must be expanded first");
     goto error;
   }
 
@@ -415,7 +415,7 @@ serializeExtractTree(Collection* coll)
   if (!cvsCloseFile(&fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "serializeExtractTree fails");
+    logMemory(LOG_ERR, "serializeExtractTree fails");
   }
   return rc;
 }
@@ -446,7 +446,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
 	    archive->hash, (long long int)archive->size);
 
   if (container->type == INC) {
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	      "INC container cannot have parent");
     goto error;
   }
@@ -454,7 +454,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   if (container->parents->nbItems == 0) goto next;
   switch (container->type) {
   case ISO:
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "ISO containers must only comes from one archive");
     goto error;
   case TGZ:
@@ -463,12 +463,12 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   case TAR:
   case CPIO:
   case ZIP:
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "multi-volume archive is only implemented for RAR container");
     goto error;
   case GZIP:
   case BZIP:
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "compression only container must only comes from one archive");
     goto error;
   default:
@@ -478,7 +478,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
 
   // add archive to container's parents ring
   if (rgHaveItem(container->parents, archive)) {
-    logMemory(LOG_ERR, "%s", "parent already added to the container");
+    logMemory(LOG_ERR, "parent already added to the container");
     goto error;
   }
   if (!rgInsert(container->parents, archive)) goto error;
@@ -496,7 +496,7 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addFromArchive fails");
+    logMemory(LOG_ERR, "addFromArchive fails");
     if (container && archive) delFromArchive(coll, container, archive);
   }
   return rc;
@@ -544,7 +544,7 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delFromArchive fails");
+    logMemory(LOG_ERR, "delFromArchive fails");
   }
   return rc;
 }
@@ -585,7 +585,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   case GZIP:
   case BZIP:
     if (avl_count(container->childs) > 0) {
-      logMemory(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, 
 	      "compression only container must only provides one archive");
       goto error;
     }    break;
@@ -633,7 +633,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   rc = asso;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addFromAsso fails");
+    logMemory(LOG_ERR, "addFromAsso fails");
     if (asso) delFromAsso(coll, asso);
   }
   return rc;
@@ -746,7 +746,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
 
   // already there
   if ((container = getContainer(coll, type, parent))) {
-    logMemory(LOG_ERR, "%s", "container already there");
+    logMemory(LOG_ERR, "container already there");
     goto error;
   }
 
@@ -760,7 +760,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
   rc = container;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addContainer fails");
+    logMemory(LOG_ERR, "addContainer fails");
     container = destroyContainer(container);
   }
   return rc;
@@ -840,7 +840,7 @@ diseaseExtractTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "diseaseExtractTree fails");
+    logMemory(LOG_ERR, "diseaseExtractTree fails");
   }
   return rc;
 }

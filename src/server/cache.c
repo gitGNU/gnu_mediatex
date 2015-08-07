@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.8 2015/08/05 12:12:02 nroche Exp $
+ * Version: $Id: cache.c,v 1.9 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -49,7 +49,7 @@ getAbsCachePath(Collection* coll, char* path)
   
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "getAbsCachePath fails");
+    logMain(LOG_ERR, "getAbsCachePath fails");
   }
   return rc;
 }
@@ -84,7 +84,7 @@ getAbsRecordPath(Collection* coll, Record* record)
   
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "getAbsRecordPath fails");
+    logMain(LOG_ERR, "getAbsRecordPath fails");
   }
   return rc;
 }
@@ -117,7 +117,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   memset(&md5, 0, sizeof(Md5Data));
 
   if (isEmptyString(path)) {
-    logMain(LOG_ERR, "%s", "please provide a path for the entry");
+    logMain(LOG_ERR, "please provide a path for the entry");
     goto error;
   }
 
@@ -163,7 +163,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
 
   if (toKeep) {
     record->date = 0x7FFFFFFF; // maximum date: server will restart before
-    logMain(LOG_DEBUG, "%s", 
+    logMain(LOG_DEBUG, 
 	    "is read-only file (will never try to delete it)");
   }
 
@@ -174,7 +174,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "error scanning file");
+    logMain(LOG_ERR, "error scanning file");
   }
   return rc;
 }
@@ -208,7 +208,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
   char* absolutePath2= 0;
 
   if (path == 0) {
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, 
 	    "please provide at least an empty string for path");
     goto error;
   }
@@ -255,7 +255,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
 	break;
 	
       case DT_LNK:
-	logMain(LOG_INFO, "%s", "do not handle simlink up today"); 
+	logMain(LOG_INFO, "do not handle simlink up today"); 
 	break;
 
       case DT_UNKNOWN:
@@ -358,7 +358,7 @@ quickScanAll(void)
   Collection* coll = 0;
   RGIT* curr = 0;
 
-  logMain(LOG_DEBUG, "%s", "updating cache for all collections");
+  logMain(LOG_DEBUG, "updating cache for all collections");
 
   // for all collection
   conf = getConfiguration();
@@ -373,7 +373,7 @@ quickScanAll(void)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_INFO, "%s", "fails to update cache for all collections");
+    logMain(LOG_INFO, "fails to update cache for all collections");
   } 
   return rc;
 }
@@ -575,7 +575,7 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
 
   // look for already available record
   if (archive->state >= ALLOCATED) {
-    logMain(LOG_WARNING, "%s", "archive is already allocated");
+    logMain(LOG_WARNING, "archive is already allocated");
     goto error2;
   }
 
@@ -691,7 +691,7 @@ makeDir(char* base, char* path, mode_t mode)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "makeDir fails");
+    logMain(LOG_ERR, "makeDir fails");
   }
   umask(mask);
   return rc;
@@ -746,7 +746,7 @@ removeDir(char* base, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "removeDir fails");
+    logMain(LOG_ERR, "removeDir fails");
   }
   return rc;
 }
@@ -777,7 +777,7 @@ extractCp(char* source, char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "extractCp fails");
+    logMain(LOG_ERR, "extractCp fails");
   } 
   return rc;
 }
@@ -805,7 +805,7 @@ cacheUpload(Collection* coll, Record* record)
 
   checkCollection(coll);
   if (isEmptyString(record->extra)) {
-    logMain(LOG_ERR, "%s", "please provide a file to upload");
+    logMain(LOG_ERR, "please provide a file to upload");
     goto error;
   }
 
@@ -813,7 +813,7 @@ cacheUpload(Collection* coll, Record* record)
 
   // build target paths: .../upload/AAAAMM/basename
   if (localtime_r(&record->date, &date) == (struct tm*)0) {
-    logMain(LOG_ERR, "%s", "localtime_r returns on error");
+    logMain(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
   basename = strrchr(record->extra, '/');
@@ -836,7 +836,7 @@ cacheUpload(Collection* coll, Record* record)
 
   // assert archive is new
   if ((record->archive->localSupply) != 0) {
-    logMain(LOG_WARNING, "%s", "archive already exists");
+    logMain(LOG_WARNING, "archive already exists");
     goto end;
   }
 
@@ -856,7 +856,7 @@ cacheUpload(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_WARNING, "%s", "fails to upload file");
+    logMain(LOG_WARNING, "fails to upload file");
     if (record2) delCacheEntry(coll, record2);
   } 
   targetRelPath = destroyString(targetRelPath);
@@ -882,17 +882,17 @@ uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
   Archive* archive = 0;
   (void) connexion;
 
-  logMain(LOG_DEBUG, "%s", "work on upload message");
+  logMain(LOG_DEBUG, "work on upload message");
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "%s", "unknown collection for archiveTree");
+    logMain(LOG_ERR, "unknown collection for archiveTree");
     goto error;
   }
   
   // check we get final supplies
   if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "%s", "please provide records for have query");
+    logMain(LOG_ERR, "please provide records for have query");
     goto error;
   }
 
@@ -911,7 +911,7 @@ uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
   if (!releaseCollection(coll, EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "remote extraction fails");
+    logMain(LOG_ERR, "remote extraction fails");
     tcpWrite(connexion->sock, "500 fails\n", 10);
   }
   return rc;

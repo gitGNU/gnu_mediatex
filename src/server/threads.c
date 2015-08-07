@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.7 2015/08/05 12:12:03 nroche Exp $
+ * Version: $Id: threads.c,v 1.8 2015/08/07 17:50:33 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -135,13 +135,13 @@ sigManager(void* arg)
     switch (sigNumber) {
 
     case SIGSEGV:
-      logMain(LOG_ERR, "%s", "segfault (SIGSEGV)");
+      logMain(LOG_ERR, "segfault (SIGSEGV)");
       reEnableALL();
       kill(getpid(), SIGSEGV);
       goto error;
       break;
     case SIGINT:
-      logMain(LOG_ERR, "%s", "stopped by user (SIGINT)");
+      logMain(LOG_ERR, "stopped by user (SIGINT)");
       reEnableALL();
       kill(getpid(), SIGINT);
       goto error;
@@ -150,7 +150,7 @@ sigManager(void* arg)
     case SIGHUP:
       // wait until no more job are running
       hold = TRUE;
-      logMain(LOG_NOTICE, "%s", "accepting signal HUP");
+      logMain(LOG_NOTICE, "accepting signal HUP");
     retry1:
       while (taskSocketNumber > 0 || taskSignalNumber > 0)
 	usleep(100000);
@@ -174,7 +174,7 @@ sigManager(void* arg)
 
       // wait until no more job are running
       hold = TRUE;
-      logMain(LOG_NOTICE, "%s", "accepting signal TERM");
+      logMain(LOG_NOTICE, "accepting signal TERM");
     retry2:
       while (taskSocketNumber > 0 || taskSignalNumber > 0)
 	usleep(100000);
@@ -201,7 +201,7 @@ sigManager(void* arg)
       if (!rc) exit(3); // force exit if socket fails
 
     case SIGUSR1:
-      logMain(LOG_NOTICE, "%s", "accepting signal USR1");    
+      logMain(LOG_NOTICE, "accepting signal USR1");    
       break;
 
     default:
@@ -212,7 +212,7 @@ sigManager(void* arg)
     // wait for a dedicated thread allocation
     while (taskSignalNumber+1 > MAX_TASK_SIGNAL_THREAD) {
       if (!env.running) goto error;
-      logMain(LOG_WARNING, "%s", "pending USR1 signal");
+      logMain(LOG_WARNING, "pending USR1 signal");
       sleep(20);
     };
 
@@ -396,7 +396,7 @@ mainLoop()
   
   // build the listenning socket for both remote and local connection
   if (!buildSocketAddress(&address, 0, "tcp", service)) {
-    logMain(LOG_ERR, "%s", "error while building socket address");
+    logMain(LOG_ERR, "error while building socket address");
     goto error;
   }
   

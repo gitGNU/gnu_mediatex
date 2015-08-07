@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utconf.c,v 1.2 2015/07/28 11:45:38 nroche Exp $
+ * Version: $Id: utconf.c,v 1.3 2015/08/07 17:50:23 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -89,42 +89,42 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll3 = addCollection("coll3"))) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** List collections: ");
+  logMain(LOG_NOTICE, "*** List collections: ");
   if (!mdtxListCollection()) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Add a collection:");
+  logMain(LOG_NOTICE, "*** Add a collection:");
   if (!(coll4 = createCollection())) goto error;
   strncpy(coll4->label, "coll4", MAX_SIZE_COLL);
   strncpy(coll4->masterHost, "localhost", MAX_SIZE_HOST);
   if (!mdtxAddCollection(coll4)) goto error;
   coll4 = destroyCollection(coll4);
 
-  logMain(LOG_NOTICE, "%s", "*** List collections:");
+  logMain(LOG_NOTICE, "*** List collections:");
   if (!mdtxListCollection()) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Del collection coll 4:");
+  logMain(LOG_NOTICE, "*** Del collection coll 4:");
   if (!mdtxDelCollection("coll4")) goto error;
   if (!saveConfiguration("topo")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Share a support:");
+  logMain(LOG_NOTICE, "*** Share a support:");
   if (!mdtxShareSupport(supp, "coll3")) goto error;
   if (!saveConfiguration("topo")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Share a support second time:");
+  logMain(LOG_NOTICE, "*** Share a support second time:");
   if (!mdtxShareSupport(supp, "coll3")) goto error;
   
-  logMain(LOG_NOTICE, "%s", "*** Share support with all collections:");
+  logMain(LOG_NOTICE, "*** Share support with all collections:");
   if (!mdtxShareSupport(supp, 0)) goto error;
   if (!saveConfiguration("topo")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Withdraw a support:");
+  logMain(LOG_NOTICE, "*** Withdraw a support:");
   if (!mdtxWithdrawSupport(supp, "coll3")) goto error;
   if (!saveConfiguration("topo")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Withdraw second time:");
+  logMain(LOG_NOTICE, "*** Withdraw second time:");
   if (!mdtxWithdrawSupport(supp, "coll3")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** Withdraw support from all collections:");
+  logMain(LOG_NOTICE, "*** Withdraw support from all collections:");
   if (!mdtxWithdrawSupport(supp, 0)) goto error;
   if (!saveConfiguration("topo")) goto error;
   /************************************************************************/

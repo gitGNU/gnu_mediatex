@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: udp.c,v 1.3 2015/06/03 14:03:49 nroche Exp $
+ * Version: $Id: udp.c,v 1.4 2015/08/07 17:50:32 nroche Exp $
  * Project: 
  * Module : udp socket
 
@@ -126,7 +126,7 @@ connectUdpSocket(const struct sockaddr_in* address_server)
  error:
   close(rc);
   // not really an error as remote server may be offline
-  //logEmit(LOG_ERR, "%s", "connectUdpSocket fails");
+  //logEmit(LOG_ERR, "connectUdpSocket fails");
   return -1;
 }
 
@@ -290,7 +290,7 @@ udpClientExemple(int sock_client, struct sockaddr_in* address_server)
 	  ntohs(address_server->sin_port));
 
   if (!udpWrite(sock_client, address_server, query, strlen(query))) {
-      logEmit(LOG_ERR, "%s", "udpWrite failed");
+      logEmit(LOG_ERR, "udpWrite failed");
     }
 
   /* Udp client may connect (who know) */
@@ -376,17 +376,17 @@ main(int argc, char** argv)
   /************************************************************************/
   /* convert port into char* */
   if (sprintf(service, "%i", portToUse) < 0) {
-    logEmit(LOG_ERR, "%s", "cannot convert DEFAULT_PORT into service");
+    logEmit(LOG_ERR, "cannot convert DEFAULT_PORT into service");
     goto error;
   }
   
   // Client
   if (isClient) {
     usleep(500);
-    logEmit(LOG_NOTICE, "%s",  "client mode");
+    logEmit(LOG_NOTICE,  "client mode");
     
     if (!buildSocketAddress(&address, serverToConnect, "udp", service)) {
-      logEmit(LOG_ERR, "%s", "error while building socket address");
+      logEmit(LOG_ERR, "error while building socket address");
       goto error;
     }
     
@@ -400,10 +400,10 @@ main(int argc, char** argv)
   
   // Server
   else {
-    logEmit(LOG_NOTICE, "%s",  "server mode");
+    logEmit(LOG_NOTICE,  "server mode");
     
     if (!buildSocketAddress(&address, (char*)0, "udp", service)) {
-      logEmit(LOG_ERR, "%s", "error while building socket address");
+      logEmit(LOG_ERR, "error while building socket address");
       goto error;
     }
     

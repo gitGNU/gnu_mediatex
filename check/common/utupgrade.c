@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupgrade.c,v 1.2 2015/07/22 10:45:14 nroche Exp $
+ * Version: $Id: utupgrade.c,v 1.3 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/upgrade
  *
@@ -92,7 +92,7 @@ main(int argc, char** argv)
   if (!expandCollection(coll)) goto error;
   if (!parseServerFile(coll, coll->serversDB)) goto error;
 
-  logCommon(LOG_DEBUG, "%s", "*** upgrade: ");
+  logCommon(LOG_DEBUG, "*** upgrade: ");
   if (!(populateConfiguration())) goto error;
   if (!upgradeCollection(coll)) goto error;
   if (!serializeServer(coll->localhost, stdout)) goto error;

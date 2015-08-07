@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.7 2015/08/05 12:12:03 nroche Exp $
+ * Version: $Id: notify.c,v 1.8 2015/08/07 17:50:33 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -61,7 +61,7 @@ int notifyContainer(NotifyData* data, Container* container)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "notifyContainer fails");
+    logMain(LOG_ERR, "notifyContainer fails");
   }
   return rc;
 } 
@@ -111,7 +111,7 @@ int notifyArchive(NotifyData* data, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "notifyArchive fails");
+    logMain(LOG_ERR, "notifyArchive fails");
   }
   return rc;
 } 
@@ -134,7 +134,7 @@ getWantedRemoteArchives(Collection* coll)
   RGIT* curr2 = 0;
 
   checkCollection(coll);
-  logMain(LOG_DEBUG, "%s", "getWantedArchives");
+  logMain(LOG_DEBUG, "getWantedArchives");
 
   if (!(ring = createRing())) goto error;
 
@@ -152,7 +152,7 @@ getWantedRemoteArchives(Collection* coll)
   rc = ring;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "getWantedRemoteArchives fails");
+    logMain(LOG_ERR, "getWantedRemoteArchives fails");
     destroyOnlyRing(ring);
   }
   return rc;
@@ -178,7 +178,7 @@ int addFinalDemands(NotifyData* data)
 
   coll = data->coll;
   checkCollection(coll);
-  logMain(LOG_DEBUG, "%s", "addFinalDemands");
+  logMain(LOG_DEBUG, "addFinalDemands");
 
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= 0) {
@@ -202,7 +202,7 @@ int addFinalDemands(NotifyData* data)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "addFinalDemands fails");
+    logMain(LOG_ERR, "addFinalDemands fails");
   }
   return rc;
 } 
@@ -225,7 +225,7 @@ int addBadTopLocalSupplies(NotifyData* data)
 
   coll = data->coll;
   checkCollection(coll);
-  logMain(LOG_DEBUG, "%s", "addBadTopLocalSupplies");
+  logMain(LOG_DEBUG, "addBadTopLocalSupplies");
 
   // add local iso (or other top containers) having a bad score
   while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
@@ -247,7 +247,7 @@ int addBadTopLocalSupplies(NotifyData* data)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "addBadTopLocalSupplies fails");
+    logMain(LOG_ERR, "addBadTopLocalSupplies fails");
   }
   return rc;
 } 
@@ -288,7 +288,7 @@ RG* buildNotifyRings(Collection* coll, RG* records)
   rc = data.toNotify;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "buildNotifyRings fails");
+    logMain(LOG_ERR, "buildNotifyRings fails");
   }
   destroyOnlyRing(archives);
   return rc;
@@ -343,7 +343,7 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "sendRemoteNotifyServer fails");
+    logMain(LOG_ERR, "sendRemoteNotifyServer fails");
   }
   if (socket != -1) close(socket);
   return rc;
@@ -443,7 +443,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   source = connexion->server;
   checkCollection(coll);
   checkServer(source);
-  logMain(LOG_DEBUG, "%s", "acceptRemoteNotify");
+  logMain(LOG_DEBUG, "acceptRemoteNotify");
 
   if (!loadCollection(tree->collection, CACH)) goto error;
 
@@ -493,7 +493,7 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   if (!releaseCollection(tree->collection, CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_DEBUG, "%s", "acceptRemoteNotify fails");
+    logMain(LOG_DEBUG, "acceptRemoteNotify fails");
   }
   return rc;
 }

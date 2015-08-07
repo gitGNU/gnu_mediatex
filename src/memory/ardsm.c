@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.c,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: ardsm.c,v 1.5 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -42,7 +42,7 @@ rgCreate(void)
   RGIT *item = 0;
   
   if((item = (RGIT*)malloc(sizeof(RGIT))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot allocate a ring item");
+    logMemory(LOG_ERR, "malloc: cannot allocate a ring item");
     goto error;
   }
 
@@ -85,7 +85,7 @@ void
 rgInit(RG* ring)
 {
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -142,7 +142,7 @@ rgInsert(RG* ring, void* it)
   RGIT *item = 0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -201,7 +201,7 @@ rgHeadInsert(RG* ring, void* it)
   RGIT *item = 0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -239,7 +239,7 @@ rgRemove(RG* ring)
   RGIT *temp = (RGIT *)0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -297,7 +297,7 @@ void rgRemove_r(RG* ring, RGIT** curr)
   RGIT *temp = (RGIT *)0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -357,7 +357,7 @@ rgCurrent(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -383,7 +383,7 @@ rgPrevious(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -420,7 +420,7 @@ rgNext(RG* ring)
   void *rc = (void *)0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -457,7 +457,7 @@ rgNext(RG* ring)
 /*   void *rc = (void *)0; */
   
 /*   if(ring == (RG *)0) { */
-/*     logMemory(LOG_ERR, "%s", "please do not provide an empty ring"); */
+/*     logMemory(LOG_ERR, "please do not provide an empty ring"); */
 /*     goto error; */
 /*   } */
 
@@ -500,7 +500,7 @@ rgHead(RG* ring)
   void *rc = (void *)0;
   
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -525,7 +525,7 @@ void
 rgRewind(RG* ring)
 {
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
@@ -554,14 +554,14 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
   RGIT* curr = 0;
 
   if(ring == (RG *)0) {	
-    logMemory(LOG_ERR, "%s", "please do not provide an empty ring");
+    logMemory(LOG_ERR, "please do not provide an empty ring");
     goto error;
   }
 
   if(ring->nbItems > 1) {
     if ((pItemArray = (void**)malloc(ring->nbItems * sizeof(void*))) 
 	== (void**)0) {
-      logMemory(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, 
 	      "malloc: cannot allocate an array to sort the ring");
       goto error;
     }
@@ -587,7 +587,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "rgSort fails");
+    logMemory(LOG_ERR, "rgSort fails");
   }
   return rc;
 }
@@ -882,7 +882,7 @@ createRing()
   RG* rc = 0;
 
   if ((rc = (RG*)malloc(sizeof(RG))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot allocate a ring");
+    logMemory(LOG_ERR, "malloc: cannot allocate a ring");
     goto error;
   }
 							  
@@ -961,7 +961,7 @@ copyRing(RG* destination, RG* source,
   RGIT* curr = 0;
 
   if(source == 0) {
-    logMemory(LOG_ERR, "%s", "please do not provide an empty source ring");
+    logMemory(LOG_ERR, "please do not provide an empty source ring");
     goto error;
   }
 
@@ -990,7 +990,7 @@ copyRing(RG* destination, RG* source,
   
   return destination;
  error:
-  logMemory(LOG_ERR, "%s", "fails to copy a ring");
+  logMemory(LOG_ERR, "fails to copy a ring");
   destination = destroyRing(destination, destroyItem);
   return destination;
 }

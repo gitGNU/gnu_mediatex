@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.7 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: catalogHtml.c,v 1.8 2015/08/07 17:50:27 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *
@@ -186,7 +186,7 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "htmlIndexArchive fails");
+    logMain(LOG_ERR, "htmlIndexArchive fails");
   }
   return rc;
 }
@@ -264,7 +264,7 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlRoleList fails");
+    logMain(LOG_ERR, "serializeHtmlRoleList fails");
   }
   path = destroyString(path);
   return rc;
@@ -361,7 +361,7 @@ serializeHtmlRole(Collection* coll, Role* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlRole fails");
+    logMain(LOG_ERR, "serializeHtmlRole fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -484,7 +484,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlHuman fails");
+    logMain(LOG_ERR, "serializeHtmlHuman fails");
   }
   path = destroyString(path);
   return rc;
@@ -616,7 +616,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlDocument fails");
+    logMain(LOG_ERR, "serializeHtmlDocument fails");
   }
   path = destroyString(path);
   return rc;
@@ -694,7 +694,7 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlRoleList fails");
+    logMain(LOG_ERR, "serializeHtmlRoleList fails");
   }
   path = destroyString(path);
   return rc;
@@ -860,7 +860,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlCategory fails");
+    logMain(LOG_ERR, "serializeHtmlCategory fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -932,7 +932,7 @@ serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlDocList fails");
+    logMain(LOG_ERR, "serializeHtmlDocList fails");
   }
   path = destroyString(path);
   return rc;
@@ -960,7 +960,7 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
   int n = 0;
 
   if(self == 0) goto error;
-  logMain(LOG_DEBUG, "%s", "serializeHtmlDocLists");
+  logMain(LOG_DEBUG, "serializeHtmlDocLists");
 
   nbDoc = avl_count(self->documents);
   if (!getDocListUri(tmp, "/", 0)) goto error;
@@ -1017,7 +1017,7 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlDocLists fails");
+    logMain(LOG_ERR, "serializeHtmlDocLists fails");
   }
   path2 = destroyString(path2);
   path = destroyString(path);
@@ -1093,7 +1093,7 @@ serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlHumList fails");
+    logMain(LOG_ERR, "serializeHtmlHumList fails");
   }
   path = destroyString(path);
   return rc;
@@ -1122,7 +1122,7 @@ serializeHtmlHumLists(Collection* coll, CatalogTree* self)
   int n = 0;
 
   if(self == 0) goto error;
-  logMain(LOG_DEBUG, "%s", "serializeHtmlDocLists");
+  logMain(LOG_DEBUG, "serializeHtmlDocLists");
 
   nbHum = avl_count(self->humans);
   if (!getHumListUri(tmp, "/", 0)) goto error;
@@ -1176,7 +1176,7 @@ serializeHtmlHumLists(Collection* coll, CatalogTree* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlHumLists fails");
+    logMain(LOG_ERR, "serializeHtmlHumLists fails");
   }
   path2 = destroyString(path2);
   path = destroyString(path);
@@ -1234,7 +1234,7 @@ serializeHtmlMainIndex(Collection* coll)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlMainIndex fails");
+    logMain(LOG_ERR, "serializeHtmlMainIndex fails");
   }
   path = destroyString(path);
   return rc;
@@ -1279,7 +1279,7 @@ htmlCategoryMenu(FILE* fd, Category* self, int depth)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "htmlCategoryMenu fails");
+    logMain(LOG_ERR, "htmlCategoryMenu fails");
   }
   return rc;
 }
@@ -1369,7 +1369,7 @@ serializeHtmlIndexHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlIndexHeader fails");
+    logMain(LOG_ERR, "serializeHtmlIndexHeader fails");
   }
   path = destroyString(path);
   return rc;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utdevice.c,v 1.3 2015/07/28 11:45:40 nroche Exp $
+ * Version: $Id: utdevice.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -107,7 +107,7 @@ main(int argc, char** argv)
   /************************************************************************/
   if (inputPath == 0) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide an input device path");
+    logMain(LOG_ERR, "Please provide an input device path");
     goto error;
   }
 

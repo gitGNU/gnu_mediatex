@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsetuid.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: utsetuid.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -121,12 +121,12 @@ main (int argc, char** argv)
   /************************************************************************/
   if (env.confLabel == 0) {
     usage (programName);
-    logMain (LOG_ERR, "%s", "Please provide a user to become");
+    logMain (LOG_ERR, "Please provide a user to become");
     goto error;
   }
   if (inputFile == 0) {
     usage (programName);
-    logMain (LOG_ERR, "%s", "Please provide an input file");
+    logMain (LOG_ERR, "Please provide an input file");
     goto error;
   }
   argvExec[0] = inputFile;
@@ -135,7 +135,7 @@ main (int argc, char** argv)
   if (!undo_seteuid ()) goto error;
 
   // first layer
-  logMain (LOG_NOTICE, "%s", "** first layer");
+  logMain (LOG_NOTICE, "** first layer");
   for (i=0; i<2; ++i) {
 
     // get privileges
@@ -156,7 +156,7 @@ main (int argc, char** argv)
   }
 
   // API for wrapper
-  logMain (LOG_NOTICE, "%s", "** API for wrapper");
+  logMain (LOG_NOTICE, "** API for wrapper");
   uid = getuid();
   for (i=0; i<2; ++i) {
     if (!(rc = execScript (argvExec, 0, 0, FALSE))) goto error;
@@ -166,7 +166,7 @@ main (int argc, char** argv)
   }
 
   // API for thread
-  logMain (LOG_NOTICE, "%s", "** API for thread");
+  logMain (LOG_NOTICE, "** API for thread");
   for (i=0; i<2; ++i) {
     if (!execScript(argvExec, env.confLabel, 0, FALSE)) goto error;
     if (!execScript(argvExec, 0, 0, FALSE)) goto error;

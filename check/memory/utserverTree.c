@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverTree.c,v 1.1 2015/07/01 10:49:46 nroche Exp $
+ * Version: $Id: utserverTree.c,v 1.2 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -94,7 +94,7 @@ main(int argc, char** argv)
   
   // test serializing
   if (!serializeServerTree(coll)) {
-    logMemory(LOG_ERR, "%s", "sorry, cannot serialize the exemple");
+    logMemory(LOG_ERR, "sorry, cannot serialize the exemple");
     goto error;
   }
 

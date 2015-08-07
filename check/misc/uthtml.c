@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthtml.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: uthtml.c,v 1.3 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
@@ -37,7 +37,7 @@ htmlLeftPageMiddle(FILE* fd)
 {
   int rc = FALSE;
 
-  logMain(LOG_DEBUG, "%s", "htmlLeftPageMiddle");
+  logMain(LOG_DEBUG, "htmlLeftPageMiddle");
   
   htmlLink(fd, "tex2html2", "titles.html", "tous les documents");
   if (!fprintf(fd, "%s","\n")) goto error;
@@ -77,7 +77,7 @@ htmlLeftPageMiddle(FILE* fd)
   rc = TRUE;
  error:
   if(!rc) {
-    logMain(LOG_ERR, "%s", "htmlLeftPage fails");
+    logMain(LOG_ERR, "htmlLeftPage fails");
   }
   return rc;
 }
@@ -94,7 +94,7 @@ htmlRightTail(FILE* fd)
 {
   int rc = FALSE;
 
-  logMain(LOG_DEBUG, "%s", "htmlRightTail");
+  logMain(LOG_DEBUG, "htmlRightTail");
   
   if (!fprintf(fd, "%s", "<P><P>")) goto error;
   htmlBr(fd);
@@ -162,7 +162,7 @@ htmlRightTail(FILE* fd)
   rc = TRUE;
  error:
   if(!rc) {
-    logMain(LOG_ERR, "%s", "htmlRightTail fails");
+    logMain(LOG_ERR, "htmlRightTail fails");
   }
   return rc;
 }

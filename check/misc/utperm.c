@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: utperm.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -163,19 +163,19 @@ main(int argc, char** argv)
 
   if (inputPath == 0) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide a directory to check");
+    logMain(LOG_ERR, "Please provide a directory to check");
     goto error;
   }
 
   if (user == 0) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide a user");
+    logMain(LOG_ERR, "Please provide a user");
     goto error;
   }
 
   if (group == 0) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide a group");
+    logMain(LOG_ERR, "Please provide a group");
     goto error;
   }
 

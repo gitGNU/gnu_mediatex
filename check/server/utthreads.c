@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utthreads.c,v 1.2 2015/07/28 11:45:43 nroche Exp $
+ * Version: $Id: utthreads.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -41,7 +41,7 @@ GLOBAL_STRUCT_DEF;
 int
 termManager()
 {
-  logMain(LOG_NOTICE, "%s", "daemon exiting");
+  logMain(LOG_NOTICE, "daemon exiting");
   return TRUE;
 }
 
@@ -55,7 +55,7 @@ termManager()
 int
 hupManager()
 {
-  logMain(LOG_NOTICE, "%s", "daemon wake-up");
+  logMain(LOG_NOTICE, "daemon wake-up");
   return TRUE;
 }
 

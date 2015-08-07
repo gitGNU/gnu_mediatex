@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.8 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.9 2015/08/07 17:50:28 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -87,7 +87,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   int i = 0;
 
   if(self == 0) goto error;
-  logMain(LOG_DEBUG, "%s", "htmlFromAsso");
+  logMain(LOG_DEBUG, "htmlFromAsso");
 
   container = self->container;
   many = (container->parents->nbItems > 1);
@@ -126,7 +126,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "htmlFromAsso fails");
+    logMain(LOG_ERR, "htmlFromAsso fails");
   }
   return rc;
 }
@@ -151,7 +151,7 @@ htmlContainer(Container* self, FILE* fd)
   char score[8];
 
   if(self == 0) goto error;
-  logMain(LOG_DEBUG, "%s", "htmlContainer");
+  logMain(LOG_DEBUG, "htmlContainer");
 
   //many = (self->childs->nbItems > 1);
   many = (avl_count(self->childs) > 1);
@@ -182,7 +182,7 @@ htmlContainer(Container* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "htmlContainer fails");
+    logMain(LOG_ERR, "htmlContainer fails");
   }
   return rc;
 }
@@ -259,7 +259,7 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlContentList fails");
+    logMain(LOG_ERR, "serializeHtmlContentList fails");
   }
   path = destroyString(path);
   return rc;
@@ -491,7 +491,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlScoreArchive fails");
+    logMain(LOG_ERR, "serializeHtmlScoreArchive fails");
   }
   path = destroyString(path);
   return rc;
@@ -633,7 +633,7 @@ serializeHtmlServer(Collection* coll, Server* server)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlServer fails");
+    logMain(LOG_ERR, "serializeHtmlServer fails");
   }
   path = destroyString(path);
   return rc;
@@ -709,7 +709,7 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlArchiveList fails");
+    logMain(LOG_ERR, "serializeHtmlArchiveList fails");
   }
   path = destroyString(path);
   return rc;
@@ -736,7 +736,7 @@ serializeHtmlArchiveLists(Collection* coll)
   int i = 0;
   int n = 0;
 
-  logMain(LOG_DEBUG, "%s", "serializeHtmsScoreLists");
+  logMain(LOG_DEBUG, "serializeHtmsScoreLists");
 
   nb = avl_count(coll->archives);
   if (!getArchiveListUri(tmp, "/", 0)) goto error;
@@ -794,7 +794,7 @@ serializeHtmlArchiveLists(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlScoreScoreLists fails");
+    logMain(LOG_ERR, "serializeHtmlScoreScoreLists fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -873,7 +873,7 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlBadList fails");
+    logMain(LOG_ERR, "serializeHtmlBadList fails");
   }
   path = destroyString(path);
   return rc;
@@ -903,7 +903,7 @@ serializeHtmlBadLists(Collection* coll)
   int n = 0;
   char buf[30];
 
-  logMain(LOG_DEBUG, "%s", "serializeHtmsBadLists");
+  logMain(LOG_DEBUG, "serializeHtmsBadLists");
 
   // put bad archives into a new ring  
   if (!(badArchives = createRing())) goto error;
@@ -977,7 +977,7 @@ serializeHtmlBadLists(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlBadLists fails");
+    logMain(LOG_ERR, "serializeHtmlBadLists fails");
   }
   path = destroyString(path);
   path2 = destroyString(path2);
@@ -1081,7 +1081,7 @@ serializeHtmsScoreIndex(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmsScoreIndex fails");
+    logMain(LOG_ERR, "serializeHtmsScoreIndex fails");
   }
   path = destroyString(path);
   return rc;
@@ -1165,7 +1165,7 @@ serializeHtmlScoreHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlScoreHeader fails");
+    logMain(LOG_ERR, "serializeHtmlScoreHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -1248,7 +1248,7 @@ serializeHtmlScore(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlScore fails");
+    logMain(LOG_ERR, "serializeHtmlScore fails");
   }
   path1 = destroyString(path1);
   path2 = destroyString(path2);

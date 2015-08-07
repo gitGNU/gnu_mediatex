@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.5 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -52,7 +52,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   Configuration* conf = 0;
   ExtractData data;
 
-  logMain(LOG_DEBUG, "%s", "local extraction");
+  logMain(LOG_DEBUG, "local extraction");
   *found = FALSE;
   data.coll = coll;
   data.context = X_CGI;
@@ -69,7 +69,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   if (!releaseCollection(coll, SERV | EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "local extraction fails");
+    logMain(LOG_ERR, "local extraction fails");
   }
   destroyOnlyRing(data.toKeeps);
   return rc;
@@ -97,20 +97,20 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   char* extra = 0;
   int cgiErrno = 0;
 
-  logMain(LOG_DEBUG, "%s", "cgiServer: serving cgi query");
+  logMain(LOG_DEBUG, "cgiServer: serving cgi query");
 
-  /* logMain(LOG_INFO, "%s", "input archive tree:"); */
+  /* logMain(LOG_INFO, "input archive tree:"); */
   /* serializeRecordTree(recordTree, 0); */
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "%s", "unknown collection for archiveTree");
+    logMain(LOG_ERR, "unknown collection for archiveTree");
     cgiErrno = 5;
     goto error;
   }
 
   if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "%s", "please provide a Record tree for cgiServer");
+    logMain(LOG_ERR, "please provide a Record tree for cgiServer");
     cgiErrno = 4;
     goto error;
   }
@@ -119,7 +119,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   if (!(record = (Record*)recordTree->records->head->it)) goto error;
   if (!(archive = record->archive)) goto error;
 
-  /* logMain(LOG_INFO, "%s", "first archive:"); */
+  /* logMain(LOG_INFO, "first archive:"); */
   /* serializeRecord(recordTree, record); */
 
   if (!lockCacheRead(coll)) goto error;
@@ -181,7 +181,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
     logMain(LOG_ERR, "shutdown fails: %s", strerror(errno));
   }
   if (cgiErrno == 4) {
-    logMain(LOG_ERR, "%s", "fails to serve cgi query");
+    logMain(LOG_ERR, "fails to serve cgi query");
   }
   return rc;
 }

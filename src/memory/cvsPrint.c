@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -60,7 +60,7 @@ int cvsCloseFile(CvsFile* fd)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cvsCloseFile fails");
+    logMemory(LOG_ERR, "cvsCloseFile fails");
   }
   return rc;
 }
@@ -140,7 +140,7 @@ int cvsOpenFile(CvsFile* fd)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cvsOpenFile fails");
+    logMemory(LOG_ERR, "cvsOpenFile fails");
   }
   path = destroyString(path);
   return rc;
@@ -172,7 +172,7 @@ int cvsPrint(CvsFile* fd, const char* format, ...)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cvsPrint fails");
+    logMemory(LOG_ERR, "cvsPrint fails");
   }
   return rc;
 }

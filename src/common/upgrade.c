@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.6 2015/07/09 11:59:55 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.7 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -54,17 +54,17 @@ scoreSupport(Support* supp, ScoreParam *p)
 
   // check data consistancy
   if (supp->firstSeen > now) {
-    logCommon(LOG_ERR, "%s", "support firstSeen date is in the futur");
+    logCommon(LOG_ERR, "support firstSeen date is in the futur");
     goto error;
   }
 
   if (supp->firstSeen > supp->lastCheck) {
-    logCommon(LOG_ERR, "%s", "support lastCheck > firstSeen");
+    logCommon(LOG_ERR, "support lastCheck > firstSeen");
     goto error;
   }
 
   if (supp->lastCheck > supp->lastSeen) {
-    logCommon(LOG_ERR, "%s", "support lastCheck > lastSeen");
+    logCommon(LOG_ERR, "support lastCheck > lastSeen");
     goto error;
   }
 
@@ -110,7 +110,7 @@ scoreSupport(Support* supp, ScoreParam *p)
   rc = TRUE;
  error:
   if (!rc && supp) {
-    logCommon(LOG_ERR, "%s", "scoreSupport fails");
+    logCommon(LOG_ERR, "scoreSupport fails");
   }
   return rc;
 }
@@ -209,7 +209,7 @@ scoreLocalImages(Collection* coll)
  error:
   images = destroyRing(images, (void*(*)(void*)) destroyImage);
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "scoreLocalImages fails");
+    logCommon(LOG_ERR, "scoreLocalImages fails");
   }
   return rc;
 }
@@ -236,7 +236,7 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
   checkServer(self->master);
-  logCommon(LOG_DEBUG, "%s", "serialize CVS/Root files");
+  logCommon(LOG_DEBUG, "serialize CVS/Root files");
 
   if (!(path = createString(dirpath)) ||
       !(path = catString(path, "/")) ||
@@ -262,7 +262,7 @@ serializeCvsRootClientFile(Collection* coll, char* dirpath)
     rc = FALSE;
   }
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "serializeCvsRootClientFile fails");
+    logCommon(LOG_ERR, "serializeCvsRootClientFile fails");
   }
   umask(mask);
   path = destroyString(path);
@@ -330,7 +330,7 @@ scanCvsClientDirectory(Collection* coll, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "scanCvsClientDirectory fails");
+    logCommon(LOG_ERR, "scanCvsClientDirectory fails");
   }
   if (entries != 0) {
     for (n=0; n<nbEntries; ++n) {
@@ -473,7 +473,7 @@ upgradeCollection(Collection* coll)
   rc = TRUE;
 error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "upgradeCollection fails");
+    logCommon(LOG_ERR, "upgradeCollection fails");
     // note: not a good idea to destroy localhost server on error,
     // as it may be used later
   }

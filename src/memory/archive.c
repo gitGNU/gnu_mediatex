@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.6 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: archive.c,v 1.7 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -55,7 +55,7 @@ createArchive(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Archive");
+  logMemory(LOG_ERR, "malloc: cannot create Archive");
   return destroyArchive(rc);
 }
 
@@ -289,7 +289,7 @@ addArchive(Collection* coll, char* hash, off_t size)
   rc = archive;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addArchive fails");
+    logMemory(LOG_ERR, "addArchive fails");
     archive = destroyArchive(archive);
   }
   return rc;
@@ -406,7 +406,7 @@ diseaseArchive(Collection* coll, Archive* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "diseaseArchive fails");
+    logMemory(LOG_ERR, "diseaseArchive fails");
   }
   return rc;
 }
@@ -441,7 +441,7 @@ diseaseArchives(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "diseaseArchives fails");
+    logMemory(LOG_ERR, "diseaseArchives fails");
   }
   return rc;
 }

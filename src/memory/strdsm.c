@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: strdsm.c,v 1.4 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: strdsm.c,v 1.5 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : strdsm
  *
@@ -39,7 +39,7 @@ createString(const char* content)
   char* rc = 0;
 
   if (content == 0) {
-    logMemory(LOG_WARNING, "%s", "create null String");
+    logMemory(LOG_WARNING, "create null String");
   }
 
   if ((rc = copyString(rc, content)) == 0) {
@@ -121,7 +121,7 @@ copyString(char* destination, const char* source)
     if ((destination 
 	 = (char*)malloc(sizeof(char) * (strlen(source) + 1)))
 	== 0) {
-      logMemory(LOG_ERR, "%s", "malloc: cannot allocate String");
+      logMemory(LOG_ERR, "malloc: cannot allocate String");
     }
     
     if(destination != 0) {
@@ -201,7 +201,7 @@ catString(char* prefix, const char* suffix)
     if ((rc 
 	 = (char*)malloc(sizeof(char) * (size + 1))) 
 	== 0) {
-      logMemory(LOG_ERR, "%s", "malloc: cannot allocate String");
+      logMemory(LOG_ERR, "malloc: cannot allocate String");
     }
     
     if(rc != 0) {

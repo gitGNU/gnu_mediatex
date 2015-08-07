@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.9 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: address.c,v 1.10 2015/08/07 17:50:31 nroche Exp $
  * Project: Mediatex
  * Module : socket address
  *
@@ -69,7 +69,7 @@ getHostNameByAddr(struct in_addr* inAddr)
       
       // do not found an hostname: use IP instead
       if ((rc = (char*)malloc(16)) == 0) {
-	logMisc(LOG_ERR, "%s", "malloc cannot allocate string for IP");
+	logMisc(LOG_ERR, "malloc cannot allocate string for IP");
 	goto error;
       }
       memset(rc, 0, 16);
@@ -147,7 +147,7 @@ getIpFromHostname(struct in_addr *ipv4, const char* hostname)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "getIpFromHostname fails");
+    logMisc(LOG_ERR, "getIpFromHostname fails");
   }
   return rc;
 }
@@ -214,7 +214,7 @@ buildSocketAddress(struct sockaddr_in* address,
   int port = -1;
   struct in_addr ipv4;
 
-  logMisc(LOG_DEBUG, "%s", "buildSocketAddress");
+  logMisc(LOG_DEBUG, "buildSocketAddress");
 
   // Convert protocol parameter (we need it for service conversion)
   if ((sProtocol = getprotobyname(protocol)) == (struct protoent *)0) {
@@ -256,7 +256,7 @@ buildSocketAddress(struct sockaddr_in* address,
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "buildSocketAddress fails");
+    logMisc(LOG_ERR, "buildSocketAddress fails");
   }
   return rc;
 }

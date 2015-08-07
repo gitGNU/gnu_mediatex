@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.7 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: command.c,v 1.8 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -240,7 +240,7 @@ setEnv(char* programName, MdtxEnv *self)
     goto error;
   }
 
-  logMisc(LOG_DEBUG, "%s", "set the environment variables");
+  logMisc(LOG_DEBUG, "set the environment variables");
 
   // export the environment
   if (setenv("MDTX_LOG_FILE", self->logFile, 1) == -1
@@ -270,7 +270,7 @@ setEnv(char* programName, MdtxEnv *self)
   rc = TRUE;
  error2:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "fails to set the environment variables");
+    logMisc(LOG_ERR, "fails to set the environment variables");
   }
  error:
   return rc;
@@ -291,7 +291,7 @@ execChild(char** argv, int doHideStderr)
   int fd;
 
   if (argv[0][0] != '/') {
-    logMisc(LOG_ERR, "%s", "refuse to exec from a relative path");
+    logMisc(LOG_ERR, "refuse to exec from a relative path");
     goto error;
   }
 
@@ -309,7 +309,7 @@ execChild(char** argv, int doHideStderr)
   if (rc == -1) {
     logMisc(LOG_ERR, "execve failed: ", strerror(errno));
   } else {
-    logMisc(LOG_ERR, "%s", "execve returns: you should improve ram");
+    logMisc(LOG_ERR, "execve returns: you should improve ram");
   }
 }
 
@@ -334,7 +334,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   int i = 0;
   
   if (argv[0] == 0 || *argv[0] == (char)0) {
-    logMisc(LOG_ERR, "%s", "please provide a script to exec");
+    logMisc(LOG_ERR, "please provide a script to exec");
     goto error;
   }
 
@@ -388,12 +388,12 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
   if (WIFEXITED(status)) rcChild = WEXITSTATUS(status);
   logMisc(LOG_INFO, "%s execution returns %i", argv[0], rcChild);
   if (rcChild == -1) {
-    logMisc(LOG_INFO, "%s", "if -1 you may try to improve ram");
+    logMisc(LOG_INFO, "if -1 you may try to improve ram");
   }
   rc = (rcChild == EXIT_SUCCESS);
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "execScript fails");
+    logMisc(LOG_ERR, "execScript fails");
   }
   return rc;
 }

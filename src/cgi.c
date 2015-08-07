@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: cgi.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -47,7 +47,7 @@ int sendTemplate(Collection* coll, char* filename)
   logMain(LOG_DEBUG, "sendTemplate %s", filename);
 
   if (coll->htmlCgiDir == 0) {
-    logMain(LOG_ERR, "%s", "cannot match cgi to collection");
+    logMain(LOG_ERR, "cannot match cgi to collection");
     goto error;
   }
 
@@ -71,7 +71,7 @@ int sendTemplate(Collection* coll, char* filename)
  error:
   if (fd && fclose(fd)) rc = FALSE;
   if (!rc) {
-    logMain(LOG_ERR, "%s", "sendTemplate fails");
+    logMain(LOG_ERR, "sendTemplate fails");
   }
   destroyString(path);
   return rc;
@@ -96,7 +96,7 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   int socket = -1;
   int n = 0;
   
-  logMain(LOG_DEBUG, "%s", "queryServer");
+  logMain(LOG_DEBUG, "queryServer");
 
 
   // connect server
@@ -106,13 +106,13 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   if (!upgradeServer(socket, tree, 0)) goto error;
     
   // read reply
-  logMain(LOG_INFO, "%s", "read");
+  logMain(LOG_INFO, "read");
   n = tcpRead(socket, reply, 255);
   // erase the \n send by server
   if (n<=0) n = 1;
   reply[n-1] = (char)0; 
 
-  logMain(LOG_INFO, "%s", "close"); 
+  logMain(LOG_INFO, "close"); 
   close(socket);
 
   logMain(LOG_INFO, "receive: %s", reply);
@@ -120,7 +120,7 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "queryServer fails");
+    logMain(LOG_ERR, "queryServer fails");
   }
   return rc;
 }
@@ -145,7 +145,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   ServerTree *sTree = 0;
   Server *server = 0;
 
-  logMain(LOG_DEBUG, "%s", "mdtxSearch");
+  logMain(LOG_DEBUG, "mdtxSearch");
 
   if (!(coll = rTree->collection)) goto error;
   if (!getLocalHost(coll)) goto error;
@@ -183,7 +183,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxSearch fails");
+    logMain(LOG_ERR, "mdtxSearch fails");
   }
   return rc;
 }
@@ -206,7 +206,7 @@ int mdtxFind(RecordTree *tree)
   Collection* coll = 0;
   Record* record = 0;
   
-  logMain(LOG_DEBUG, "%s", "mdtxFind");
+  logMain(LOG_DEBUG, "mdtxFind");
 
   if (!(coll = tree->collection)) goto error;
   if (!(record = (Record*)tree->records->head->it)) goto error;
@@ -217,7 +217,7 @@ int mdtxFind(RecordTree *tree)
   if (!mdtxSearch(tree, reply)) goto error;
   
   if (sscanf(reply, "%i", &status) < 1) {
-    logMain(LOG_ERR, "%s", "error re-reading reply: ",
+    logMain(LOG_ERR, "error re-reading reply: ",
 	    reply);
     goto error;
   }
@@ -240,7 +240,7 @@ int mdtxFind(RecordTree *tree)
     break;
 
   default:
-    logMain(LOG_DEBUG, "%s", "not found");
+    logMain(LOG_DEBUG, "not found");
     
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "\r\n");
@@ -271,7 +271,7 @@ int mdtxFind(RecordTree *tree)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxFind fails");
+    logMain(LOG_ERR, "mdtxFind fails");
   }
   destroyString(reply);
   return rc;
@@ -294,7 +294,7 @@ int mdtxRegister(RecordTree *tree)
   Collection* coll = 0;
   Record* record = 0;
   
-  logMain(LOG_DEBUG, "%s", "mdtxRegister");
+  logMain(LOG_DEBUG, "mdtxRegister");
 
   /* querying the local server */
   if (!(coll = tree->collection)) goto error;
@@ -304,13 +304,13 @@ int mdtxRegister(RecordTree *tree)
   if (!queryServer(server, tree, reply)) goto error;
   
   if (sscanf(reply, "%i", &status) < 1) {
-    logMain(LOG_ERR, "%s", "error reading reply: ", reply);
+    logMain(LOG_ERR, "error reading reply: ", reply);
     status = 500;
   }
   
   switch (status) {
   case 200:
-    logMain(LOG_DEBUG, "%s", "registered at localhost");
+    logMain(LOG_DEBUG, "registered at localhost");
     
     fprintf(stdout, "%s", "Content-Type: text/html\r\n");
     fprintf(stdout, "%s", "Refresh: 3; url=../index/\r\n");
@@ -327,7 +327,7 @@ int mdtxRegister(RecordTree *tree)
     break;
 
   default:
-    logMain(LOG_DEBUG, "%s", "not found");
+    logMain(LOG_DEBUG, "not found");
     
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "\r\n");
@@ -348,7 +348,7 @@ int mdtxRegister(RecordTree *tree)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxRegister fails");
+    logMain(LOG_ERR, "mdtxRegister fails");
   }
   destroyString(reply);
   return rc;
@@ -374,14 +374,14 @@ RecordTree* scanCgiQuery(Collection* coll)
   char* extra = 0;
   char **cgivars = (char**)0;
 
-  logMain(LOG_DEBUG, "%s", "scanCgiQuery");
+  logMain(LOG_DEBUG, "scanCgiQuery");
 
   /** First, get the CGI variables into a list of strings **/
   if ((cgivars = getcgivars()) == (char**)0) {
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, 
 	    "bad usage: you must call this CGI script via apache");
-    logMain(LOG_ERR, "%s", "or providing following global variables:");
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, "or providing following global variables:");
+    logMain(LOG_ERR, 
 	    "REQUEST_METHOD, QUERY_STRING and SCRIPT_FILENAME");
     goto error;
   }
@@ -397,7 +397,7 @@ RecordTree* scanCgiQuery(Collection* coll)
       strcmp(cgivars[2], "size") ||
       cgivars[3] == 0     ||
       cgivars[3][0] == (char)0) {
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, 
 	    "bad usage: please use ?hash=<val>&size=<val> syntax\n");
     goto error;
   }
@@ -435,7 +435,7 @@ RecordTree* scanCgiQuery(Collection* coll)
   tree = 0;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "scanCgiQuery fails");
+    logMain(LOG_ERR, "scanCgiQuery fails");
   }
   tree = destroyRecordTree(tree);
   freecgivars(cgivars);
@@ -459,7 +459,7 @@ char* getIndexLabel()
   size_t size;
   regmatch_t matchingPart[3]; // = motif_compile.re_nsub+1
 
-  logMain(LOG_DEBUG, "%s", "getIndexLabel");
+  logMain(LOG_DEBUG, "getIndexLabel");
 
   // build regex
   if ((err = regcomp(&motif_compile, 
@@ -467,7 +467,7 @@ char* getIndexLabel()
 		     0))) {
     size = regerror(err, &motif_compile, 0, 0);
     if ((rc = (char*)malloc(size)) == 0) {
-      logMain(LOG_ERR, "%s", 
+      logMain(LOG_ERR, 
 	      "regcomp error (malloc failed for regerror meessage");
       goto error;
     }
@@ -479,8 +479,8 @@ char* getIndexLabel()
 
   // cgi script own url
   if ((path = getenv("SCRIPT_FILENAME")) == 0) {
-    logMain(LOG_ERR, "%s", "cannot retrieve SCRIPT_FILENAME in env");
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, "cannot retrieve SCRIPT_FILENAME in env");
+    logMain(LOG_ERR, 
 	    "cgi script is not compatible with your browser");
     goto error;
   }
@@ -488,18 +488,18 @@ char* getIndexLabel()
   err = regexec(&motif_compile, path, 3, matchingPart, 0);
   switch (err) {
   case REG_NOMATCH:
-    logMain(LOG_ERR, "%s", "regexec: no match");
+    logMain(LOG_ERR, "regexec: no match");
     goto error;
     break;
   case REG_ESPACE:
-    logMain(LOG_ERR, "%s", "regexec: no more memory");
+    logMain(LOG_ERR, "regexec: no more memory");
     goto error;
     break;
   }
 
   size = matchingPart[1].rm_eo - matchingPart[1].rm_so;
   if ((confLabel = (char*)malloc(size+1)) == 0) {
-    logMain(LOG_ERR, "%s", "malloc failed to allocate confLabel string");
+    logMain(LOG_ERR, "malloc failed to allocate confLabel string");
     goto error;
   }
 
@@ -509,7 +509,7 @@ char* getIndexLabel()
 
   size = matchingPart[2].rm_eo - matchingPart[2].rm_so;
   if ((rc = (char*)malloc(size+1)) == 0) {
-    logMain(LOG_ERR, "%s", "malloc failed to allocate collection string");
+    logMain(LOG_ERR, "malloc failed to allocate collection string");
     goto error;
   }
   strncpy(rc, path + matchingPart[2].rm_so, size);
@@ -535,7 +535,7 @@ char* getIndexLabel()
  =======================================================================*/
 static void usageHtml(Collection* coll, char* programName)
 {
-  logMain(LOG_INFO, "%s", "sending usage message");
+  logMain(LOG_INFO, "sending usage message");
 
   fprintf(stdout, "Content-Type: text/html\r\n");
   fprintf(stdout, "\r\n");
@@ -643,7 +643,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   // match collection
-  logMain(LOG_INFO, "%s", "debug message from cgi script are enabled");
+  logMain(LOG_INFO, "debug message from cgi script are enabled");
   if ((label = getIndexLabel()) == 0) {
     usage(programName);
     goto error;

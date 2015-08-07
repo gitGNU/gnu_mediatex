@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserv.c,v 1.2 2015/07/28 11:45:38 nroche Exp $
+ * Version: $Id: utserv.c,v 1.3 2015/08/07 17:50:23 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/serv
  *
@@ -42,7 +42,7 @@ sigManager(void* arg)
   sigaddset(&mask, SIGSEGV);
   sigaddset(&mask, SIGINT);
 
-  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_NOTICE, "please send me HUP, USR1 or TERM signals:");
   logMain(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
   logMain(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
   logMain(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
@@ -143,23 +143,23 @@ main(int argc, char** argv)
   // others tests
   if (!(coll = addCollection("coll1"))) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** upgrade:");
+  logMain(LOG_NOTICE, "*** upgrade:");
   env.noCollCvs = FALSE;
   if (!mdtxUpgrade("coll1")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** refuse to del localhost key: ");
+  logMain(LOG_NOTICE, "*** refuse to del localhost key: ");
   if (delKey("coll1", "746d6ceeb76e05cfa2dea92a1c5753cd")) goto error;
     
-  logMain(LOG_NOTICE, "%s", "*** del a key: ");
+  logMain(LOG_NOTICE, "*** del a key: ");
   if (!delKey("coll1", "bedac32422739d7eced624ba20f5912e")) goto error;
   
-  logMain(LOG_NOTICE, "%s", "*** refuse to add localhost key: ");
+  logMain(LOG_NOTICE, "*** refuse to add localhost key: ");
   if (addKey("coll1", "client/user1Key_rsa.pub")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** add a key: ");
+  logMain(LOG_NOTICE, "*** add a key: ");
   if (!addKey("coll1", "client/user3Key_dsa.pub")) goto error;
 
-  logMain(LOG_NOTICE, "%s", "*** save and disease test: ");
+  logMain(LOG_NOTICE, "*** save and disease test: ");
   if (!saveCollection(coll, SERV)) goto error;
   if (!diseaseCollection(coll, SERV)) goto error;
   /************************************************************************/

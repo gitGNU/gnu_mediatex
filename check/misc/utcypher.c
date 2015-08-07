@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.3 2015/07/28 11:45:40 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -89,7 +89,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /***********************************************************************/
-  logMain(LOG_NOTICE, "%s", "*** low level functions");
+  logMain(LOG_NOTICE, "*** low level functions");
 
   memcpy(data.mBlock, "top secret messg\0", 17);
   logMain(LOG_NOTICE, "message: %s", data.mBlock);
@@ -103,7 +103,7 @@ main(int argc, char** argv)
   logMain(LOG_NOTICE, "decrypt: %s", data.mBlock);
 
   // =================
-  logMain(LOG_NOTICE, "%s", "***  encrypt API");
+  logMain(LOG_NOTICE, "***  encrypt API");
 
   if (!aesInit(&data, key, ENCRYPT)) goto error;
   //data.fd = STDOUT_FILENO;
@@ -124,7 +124,7 @@ main(int argc, char** argv)
   aesFlush(&data);
 
   // =====================
-  logMain(LOG_NOTICE, "%s", "***  decrypt API");
+  logMain(LOG_NOTICE, "***  decrypt API");
 
   if (pipe(pipefd) != 0) {
     logMain(LOG_NOTICE, "pipe fails: %s", strerror(errno));

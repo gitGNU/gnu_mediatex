@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -49,7 +49,7 @@ manageSIGALRM(void (*manager)(int))
   sigemptyset(&(action.sa_mask));
   action.sa_flags = SA_RESTART;
   if (sigaction(SIGALRM, &action, 0) != 0) {
-    logMisc(LOG_ERR, "%s", "sigaction fails: %s", strerror(errno));
+    logMisc(LOG_ERR, "sigaction fails: %s", strerror(errno));
     goto error;
   }
 
@@ -58,7 +58,7 @@ manageSIGALRM(void (*manager)(int))
   rc = TRUE;
  error:
  if (!rc) {
-    logMisc(LOG_ERR, "%s", "manageSIGALRM fails");
+    logMisc(LOG_ERR, "manageSIGALRM fails");
   }
   return TRUE;
 }
@@ -166,21 +166,21 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   unsigned char md5sum[MD5_DIGEST_LENGTH];
   MD5_CTX copy;
 
-  logMisc(LOG_DEBUG, "%s", "computeQuickMd5");
+  logMisc(LOG_DEBUG, "computeQuickMd5");
   env.progBar.max = size;
 
   if (fd <= 0) {
-    logMisc(LOG_ERR, "%s", "quickMd5: please provide a file descriptor");
+    logMisc(LOG_ERR, "quickMd5: please provide a file descriptor");
     goto error;
   }
 
   if (sum == 0) {
-  logMisc(LOG_ERR, "%s", "quickMd5: allocate provide a ssize_t argument");
+  logMisc(LOG_ERR, "quickMd5: allocate provide a ssize_t argument");
     goto error;
   }
 
   if (quickMd5sum == 0) {
-    logMisc(LOG_ERR, "%s", "quickMd5 please allocate quickMd5sum argument");
+    logMisc(LOG_ERR, "quickMd5 please allocate quickMd5sum argument");
     goto error;
   } 
 
@@ -238,26 +238,26 @@ computeFullMd5(int fd, ssize_t *sum, MD5_CTX *c,
   ssize_t bytes;
   unsigned char md5sum[MD5_DIGEST_LENGTH];
 
-  logMisc(LOG_DEBUG, "%s", "computeFullMd5");
+  logMisc(LOG_DEBUG, "computeFullMd5");
   env.progBar.max = size;
 
   if (fd <= 0) {
-    logMisc(LOG_ERR, "%s", "fullMd5: please provide a file descriptor");
+    logMisc(LOG_ERR, "fullMd5: please provide a file descriptor");
     goto error;
   }
   
   if (sum == (ssize_t*)0) {
-    logMisc(LOG_ERR, "%s", "fullMd5: please allocate a ssize_t argument");
+    logMisc(LOG_ERR, "fullMd5: please allocate a ssize_t argument");
     goto error;
   }
 
   if (c == (MD5_CTX*)0) {
-    logMisc(LOG_ERR, "%s", "fullMd5 please allocate MD5_CTX argument");
+    logMisc(LOG_ERR, "fullMd5 please allocate MD5_CTX argument");
     goto error;
   } 
 
   if (fullMd5sum == 0) {
-    logMisc(LOG_ERR, "%s", "fullMd5 please allocate fullMd5sum argument");
+    logMisc(LOG_ERR, "fullMd5 please allocate fullMd5sum argument");
     goto error;
   } 
   
@@ -306,7 +306,7 @@ doMd5sum(Md5Data* data)
   unsigned short int bs = 0;
   unsigned long int count = 0;
 
-  logMisc(LOG_DEBUG, "%s", "doMd5sum");
+  logMisc(LOG_DEBUG, "doMd5sum");
 
   // backup the parameter values
   backupPath = data->path;
@@ -315,7 +315,7 @@ doMd5sum(Md5Data* data)
   strncpy(fullMd5sum, data->fullMd5sum, MAX_SIZE_HASH+1); 
 
   if (data->path == 0 || *(data->path) == (char)0) {
-    logMisc(LOG_ERR, "%s", "Please provide a path for md5sum computing");
+    logMisc(LOG_ERR, "Please provide a path for md5sum computing");
     goto error;
   }
 

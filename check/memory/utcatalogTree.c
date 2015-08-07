@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogTree.c,v 1.1 2015/07/01 10:49:45 nroche Exp $
+ * Version: $Id: utcatalogTree.c,v 1.2 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -91,7 +91,7 @@ main(int argc, char** argv)
   
   // test serializing
   if (!serializeCatalogTree(coll)) {
-    logMemory(LOG_ERR, "%s", "Error while serializing the catalog exemple");
+    logMemory(LOG_ERR, "Error while serializing the catalog exemple");
     goto error;
   }
 

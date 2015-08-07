@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.2 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -133,27 +133,27 @@ hupManager()
 
   
   if (!serverSaveAll()) {
-    logMain(LOG_ERR, "%s", "Fails to save md5sums before reloading");
+    logMain(LOG_ERR, "Fails to save md5sums before reloading");
     goto error;
   }
 
   freeConfiguration();
 
   if (!loadConfiguration(CFG)) {
-    logMain(LOG_ERR, "%s", "HUP: fails to reload configuration");
+    logMain(LOG_ERR, "HUP: fails to reload configuration");
     goto error;
   }
   
   if (!quickScanAll()) {
-    logMain(LOG_ERR, "%s", "HUP: fails to scan caches");
+    logMain(LOG_ERR, "HUP: fails to scan caches");
     goto error;
   }
 
   rc = TRUE;
-  logMain(LOG_NOTICE, "%s", "daemon is HUP");
+  logMain(LOG_NOTICE, "daemon is HUP");
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "daemon fails to update: exiting");
+    logMain(LOG_ERR, "daemon fails to update: exiting");
   }
   return rc;
 }
@@ -172,11 +172,11 @@ termManager()
   int rc = FALSE;
 
   if (!serverSaveAll()) {
-    logMain(LOG_ERR, "%s", "Fails to save md5sums while exiting");
+    logMain(LOG_ERR, "Fails to save md5sums while exiting");
     goto error;
   }
 
-  logMain(LOG_NOTICE, "%s", "mdtx-cache-daemon exiting");
+  logMain(LOG_NOTICE, "mdtx-cache-daemon exiting");
   rc = TRUE;
  error:
   return rc;
@@ -203,10 +203,10 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   coll = tree->collection;
   connexion->server = 0;
   checkCollection(coll);
-  logMain(LOG_DEBUG, "%s", "matchServer");
+  logMain(LOG_DEBUG, "matchServer");
 
   if (tree->messageType != NOTIFY && isEmptyRing(tree->records)) {
-    logMain(LOG_INFO, "%s", "receive empty ring");
+    logMain(LOG_INFO, "receive empty ring");
     goto error;
   }
 
@@ -228,7 +228,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
 	  server->host, server->fingerPrint);
 
   if (isEmptyRing(tree->records)) {
-    logMain(LOG_INFO, "%s", "receive empty content");
+    logMain(LOG_INFO, "receive empty content");
   }
   else {
     curr = 0;
@@ -250,13 +250,13 @@ int matchServer(RecordTree* tree, Connexion* connexion)
 
   /* // match a Nat server */
   /* if (rgHaveItem(coll->localhost->natServers, server)) { */
-  /*   logMain(LOG_NOTICE, "%s", "receive message from Nat server"); */
+  /*   logMain(LOG_NOTICE, "receive message from Nat server"); */
 
   /*   // note: get a private incoming IP so we cannot match it. */
   /*   // just check all records have the same server's fingerprint */
   /*   curr = 0; */
   /*   relayed = rgNext_r(tree->records, &curr); */
-  /*   logMain(LOG_NOTICE, "%s", "original message from %s (%s)", */
+  /*   logMain(LOG_NOTICE, "original message from %s (%s)", */
   /* 	    relayed->host, relayed->fingerPrint); */
   /*   while((record = rgNext_r(tree->records, &curr))) { */
   /*     if (relayed != record->server) { */
@@ -299,7 +299,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "matchServer fails");
+    logMain(LOG_ERR, "matchServer fails");
   }
   return rc;
 }
@@ -326,7 +326,7 @@ socketJob(void* arg)
   // read the socket
   if ((tree = parseRecords(connexion->sock))
       == 0) {
-    logMain(LOG_ERR, "%s", "fail to parse RecordTree");
+    logMain(LOG_ERR, "fail to parse RecordTree");
     goto error;
   }
 
@@ -444,7 +444,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (getuid() == 0) {
-    logMain(LOG_ERR, "%s",  "do not lunch me as root");
+    logMain(LOG_ERR,  "do not lunch me as root");
     goto error;
   }
   if (!hupManager()) goto error;

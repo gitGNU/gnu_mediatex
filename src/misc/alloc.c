@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.8 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: alloc.c,v 1.9 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -54,12 +54,12 @@ initMalloc(size_t niceLimit, int (*callback)(long))
   }
 
   if ((alloc = env.alloc)) {
-    logMisc(LOG_INFO, "%s", "malloc was already initialized");
+    logMisc(LOG_INFO, "malloc was already initialized");
     goto setNewValues;
   }
 
   if (!(alloc = malloc(sizeof(Alloc)))) {
-    logMisc(LOG_ERR, "%s", "malloc fails to allocate Alloc struct");
+    logMisc(LOG_ERR, "malloc fails to allocate Alloc struct");
     goto error;
   }
   memset(alloc, 0, sizeof(Alloc));
@@ -78,7 +78,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "initMalloc fails");
+    logMisc(LOG_ERR, "initMalloc fails");
     if (alloc) free(alloc);
   }
   return rc;
@@ -243,7 +243,7 @@ exitMalloc()
   }
 
   if (!alloc) {
-    logMisc(LOG_WARNING, "%s", "malloc is not initialized");
+    logMisc(LOG_WARNING, "malloc is not initialized");
     goto end;
   }
 
@@ -302,7 +302,7 @@ size_t getVmSize()
   // this value match cat /proc/$$/status | grep VmSize
   rc = vm * getpagesize();
  error:
-  if (rc == -1) logMisc(LOG_ERR, "%s", "getVmSize fails");
+  if (rc == -1) logMisc(LOG_ERR, "getVmSize fails");
   return rc;
 }
 
@@ -323,7 +323,7 @@ memoryStatus(int priority, char* file, int line)
   Alloc* alloc = env.alloc;
   
   if (!alloc) {
-    logMisc(LOG_WARNING, "%s", "malloc is not initialized");
+    logMisc(LOG_WARNING, "malloc is not initialized");
     goto error;
   }
 

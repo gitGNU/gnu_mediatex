@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: tcp.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: tcp.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -46,7 +46,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
   struct sockaddr_in address_accepted;
   int autorisation = 1;
 
-  logMisc(LOG_DEBUG, "%s", "acceptTcpSocket");
+  logMisc(LOG_DEBUG, "acceptTcpSocket");
 
   if ((sock_listening = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
     logMisc(LOG_ERR, "socket: %s", strerror(errno));
@@ -67,7 +67,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
       goto error;
     }
 
-    logMisc(LOG_WARNING, "%s", "address in use: exiting");
+    logMisc(LOG_WARNING, "address in use: exiting");
     goto error; // maybe to comment here in production mode
   }
 
@@ -97,7 +97,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
  error:
   //env.running = FALSE; // do not exit
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "acceptTcpSocket fails");
+    logMisc(LOG_ERR, "acceptTcpSocket fails");
   }
   return rc;
 }
@@ -134,7 +134,7 @@ connectTcpSocket(const struct sockaddr_in* address_server)
  error:
   close(rc);
   // not really an error as remote server may be offline
-  //logMisc(LOG_ERR, "%s", "connectTcpSocket fails");
+  //logMisc(LOG_ERR, "connectTcpSocket fails");
   return -1;
 }
 

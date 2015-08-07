@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: conf.c,v 1.6 2015/08/07 17:50:28 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -51,7 +51,7 @@ mdtxAddCollection(Collection* coll)
 
   checkCollection(coll);
   checkLabel(coll->label);
-  logMain(LOG_DEBUG, "%s", "add a new collection (or re-add it)");
+  logMain(LOG_DEBUG, "add a new collection (or re-add it)");
   if (!(conf = getConfiguration())) goto error;
   
   // default value to mdtx if not provided
@@ -114,7 +114,7 @@ mdtxAddCollection(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to add new collection");
+    logMain(LOG_ERR, "fails to add new collection");
     if (self) delCollection(self);
   }
   argv[0] = destroyString(argv[0]);
@@ -141,7 +141,7 @@ mdtxDelCollection(char* label)
   Collection* coll = 0;
   char* argv[3] = {0, 0, 0};
 
-  logMain(LOG_DEBUG, "%s", "del a collection");
+  logMain(LOG_DEBUG, "del a collection");
 
   //if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
@@ -170,7 +170,7 @@ mdtxDelCollection(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to del collection");
+    logMain(LOG_ERR, "fails to del collection");
   }
   if (argv[0]) free(argv[0]);
   return rc;
@@ -199,7 +199,7 @@ mdtxListCollection()
 
     if (conf->collections != 0) {
       if (!rgSort(conf->collections, cmpCollection)) {
-	logMain(LOG_ERR, "%s", "fails to sort collections ring");
+	logMain(LOG_ERR, "fails to sort collections ring");
 	goto error;
       }
     }

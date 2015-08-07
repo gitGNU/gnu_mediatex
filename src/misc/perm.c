@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.6 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: perm.c,v 1.7 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -47,7 +47,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   mode_t mask = 07777;
 
   if (path == 0 || *path == (char)0) {
-    logMisc(LOG_ERR, "%s", "cannot check empty directory path");
+    logMisc(LOG_ERR, "cannot check empty directory path");
     goto error;
   }
 
@@ -94,7 +94,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "checkDirectory fails");
+    logMisc(LOG_ERR, "checkDirectory fails");
   } 
 
   if (buf) free (buf);

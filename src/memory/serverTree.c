@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.5 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -45,7 +45,7 @@ createImage(void)
 
   return(rc);
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create an Image");
+  logMemory(LOG_ERR, "malloc: cannot create an Image");
   return(rc);
 }
 
@@ -85,7 +85,7 @@ serializeImage(Image* self, FILE* fd)
   int rc = FALSE;
 
   if(self == 0) {
-    logMemory(LOG_ERR, "%s", "empty image");
+    logMemory(LOG_ERR, "empty image");
     goto error;
   }
 
@@ -97,7 +97,7 @@ serializeImage(Image* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "serializeImage fails");
+    logMemory(LOG_ERR, "serializeImage fails");
   }
   return rc;
 }
@@ -185,7 +185,7 @@ createServer(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Server");
+  logMemory(LOG_ERR, "malloc: cannot create Server");
   return destroyServer(rc);
 }
 
@@ -241,7 +241,7 @@ serializeServer(Server* self, FILE* fd)
   RGIT* curr = 0;
 
   if(self == 0) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty Server");
+    logMemory(LOG_ERR, "cannot serialize empty Server");
     goto error;
   }
   
@@ -379,7 +379,7 @@ createServerTree(void)
   
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create a serverTree");
+  logMemory(LOG_ERR, "malloc: cannot create a serverTree");
   return destroyServerTree(rc);
 }
 
@@ -428,7 +428,7 @@ serializeServerTree(Collection* coll)
 
   // we neeed to use the home cvs collection directory
   if (!(coll->memoryState & EXPANDED)) {
-    logMemory(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "collection must be expanded first");
     goto error;
   }
 
@@ -579,7 +579,7 @@ addImage(Collection* coll, Server* server, Archive* archive)
   rc = image;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to add an image");
+    logMemory(LOG_ERR, "fails to add an image");
     if (image) delImage(coll, image);
   }
   return rc;
@@ -607,7 +607,7 @@ delImage(Collection* coll, Image* image)
   logMemory(LOG_DEBUG, "delImage %s, %s:%i, %s:%lli",
 	  coll, image->server->host, image->server->mdtxPort, 
 	  image->archive->hash, (long long int)image->archive->size);
-  logMemory(LOG_DEBUG, "%s", "delImage");
+  logMemory(LOG_DEBUG, "delImage");
 
   // delete image from server
   if ((curr = rgHaveItem(image->server->images, image))) {
@@ -631,7 +631,7 @@ delImage(Collection* coll, Image* image)
   rc = TRUE;
  error:
  if (!rc) {
-    logMemory(LOG_ERR, "%s", "delImage fails");
+    logMemory(LOG_ERR, "delImage fails");
   }
   return rc;
 }
@@ -726,7 +726,7 @@ isReachable(Collection* coll, Server* from, Server* to)
   reach = destroyOnlyRing(reach);
   return rc;
  error:
-  logMemory(LOG_DEBUG, "%s", "isReachable fails");
+  logMemory(LOG_DEBUG, "isReachable fails");
   reach = destroyOnlyRing(reach);
   return FALSE;
 }
@@ -795,7 +795,7 @@ addServer(Collection* coll, char* fingerPrint)
   rc = server;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addServer fails");
+    logMemory(LOG_ERR, "addServer fails");
     server = destroyServer(server);
   }
   return rc;
@@ -906,7 +906,7 @@ diseaseServer(Collection* coll, Server* server)
   
   rc = TRUE;
  error:
-  if (!rc) logMemory(LOG_ERR, "%s", "diseaseServer fails");
+  if (!rc) logMemory(LOG_ERR, "diseaseServer fails");
   return rc;
 }
 
@@ -937,7 +937,7 @@ diseaseServerTree(Collection* coll)
 
   rc = TRUE;
  error:
-  if (!rc) logMemory(LOG_ERR, "%s", "diseaseServerTree fails");
+  if (!rc) logMemory(LOG_ERR, "diseaseServerTree fails");
   return rc;
 }
 

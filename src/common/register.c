@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: register.c,v 1.4 2015/06/30 17:37:27 nroche Exp $
+ * Version: $Id: register.c,v 1.5 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : bus/register
  
@@ -197,7 +197,7 @@ mdtxAsyncSignal(int signal)
   rc = TRUE;
  error:
   if (!rc) {
-    logCommon(LOG_WARNING, "%s", "mdtxAsyncSignal fails");
+    logCommon(LOG_WARNING, "mdtxAsyncSignal fails");
   }
 return rc;
 }
@@ -259,11 +259,11 @@ int mdtxSyncSignal(int flag)
 
   rc = TRUE;
   if (param.buf[flag] != MDTX_DONE) {
-    logCommon(LOG_WARNING, "%s", "server fails to perform your query");
+    logCommon(LOG_WARNING, "server fails to perform your query");
   }
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "mdtxSyncSignal fails");
+    logCommon(LOG_ERR, "mdtxSyncSignal fails");
   }
   return rc;
 }

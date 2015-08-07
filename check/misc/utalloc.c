@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utalloc.c,v 1.2 2015/07/28 11:45:40 nroche Exp $
+ * Version: $Id: utalloc.c,v 1.3 2015/08/07 17:50:24 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -63,7 +63,7 @@ int disease(long size)
 
   // check if something was free
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fail to disease memory");
+    logMain(LOG_ERR, "fail to disease memory");
   }
   return rc;
 }

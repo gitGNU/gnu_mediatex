@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.5 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -41,7 +41,7 @@ int lockCacheRead(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logMemory(LOG_DEBUG, "%s", "lock cache for read");
+  logMemory(LOG_DEBUG, "lock cache for read");
  
   // lock R
   if ((err = pthread_rwlock_rdlock(coll->cacheTree->rwlock))) {
@@ -52,7 +52,7 @@ int lockCacheRead(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "lockCacheRead fails");
+    logMemory(LOG_ERR, "lockCacheRead fails");
   }
   return rc;
 }
@@ -70,7 +70,7 @@ int lockCacheWrite(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logMemory(LOG_DEBUG, "%s", "lock cache for write");
+  logMemory(LOG_DEBUG, "lock cache for write");
  
   // lock W
   if ((err = pthread_rwlock_wrlock(coll->cacheTree->rwlock))) {
@@ -81,7 +81,7 @@ int lockCacheWrite(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "lockCacheWrite fails");
+    logMemory(LOG_ERR, "lockCacheWrite fails");
   }
   return rc;
 }
@@ -100,7 +100,7 @@ int unLockCache(Collection* coll)
   int err = 0;
  
   checkCollection(coll);
-  logMemory(LOG_DEBUG, "%s", "unlock Cache");
+  logMemory(LOG_DEBUG, "unlock Cache");
  
   // lock W
   if ((err = pthread_rwlock_unlock(coll->cacheTree->rwlock))) {
@@ -111,7 +111,7 @@ int unLockCache(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "unLockCache fails");
+    logMemory(LOG_ERR, "unLockCache fails");
   }
   return rc;
 }
@@ -143,12 +143,12 @@ createCacheTree(void)
   // init the locks
 
   if ((rc->attr = malloc(sizeof(pthread_rwlockattr_t))) == 0) {
-    logMemory(LOG_ERR, "%s", "cannot allocate pthread_rwlockattr_t");
+    logMemory(LOG_ERR, "cannot allocate pthread_rwlockattr_t");
     goto error;
   }
 
   if ((rc->rwlock = malloc(sizeof(pthread_rwlock_t))) == 0) {
-    logMemory(LOG_ERR, "%s", "cannot allocate pthread_rwlock_t");
+    logMemory(LOG_ERR, "cannot allocate pthread_rwlock_t");
     goto error;
   }
   
@@ -173,7 +173,7 @@ createCacheTree(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Record");
+  logMemory(LOG_ERR, "malloc: cannot create Record");
   rc = destroyCacheTree(rc);
   return rc;
 }
@@ -344,7 +344,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   }
  error:
   if (!rc) {
-     logMemory(LOG_ERR, "%s", "computeArchiveStatus fails");
+     logMemory(LOG_ERR, "computeArchiveStatus fails");
   }
   return rc;
 }
@@ -389,7 +389,7 @@ int addCacheEntry(Collection* coll, Record* record)
   }
 
   if (record->type & REMOVE) {
-    logMemory(LOG_ERR, "%s", "cannot add a record marked 'removed'");
+    logMemory(LOG_ERR, "cannot add a record marked 'removed'");
     goto error;
   }
 
@@ -403,7 +403,7 @@ int addCacheEntry(Collection* coll, Record* record)
       archive->localSupply = record;
     }
     else {
-      logMemory(LOG_NOTICE, "%s", 
+      logMemory(LOG_NOTICE, 
 	      "we only record one local supply by archive");
     }
     break;
@@ -450,7 +450,7 @@ int addCacheEntry(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-     logMemory(LOG_DEBUG, "%s", "fails to add a cache entry");
+     logMemory(LOG_DEBUG, "fails to add a cache entry");
      delCacheEntry(coll, record);
   }
   return rc;
@@ -503,7 +503,7 @@ int delCacheEntry(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-     logMemory(LOG_ERR, "%s", "fails to del a cache entry");
+     logMemory(LOG_ERR, "fails to del a cache entry");
   }
   return rc;
 }
@@ -542,7 +542,7 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
 	  type?strRecordType2(type):"TMP", archive->hash, archive->size); 
 
   if (record->type & REMOVE) {
-      logMemory(LOG_ERR, "%s", 
+      logMemory(LOG_ERR, 
 	      "cannot keep as local supply is already removedkeep");
       goto error;
   }
@@ -599,7 +599,7 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
   }
  error:
     if (!rc) {
-    logMemory(LOG_ERR, "%s", "keepArchive fails");
+    logMemory(LOG_ERR, "keepArchive fails");
   }
   return rc;
 }
@@ -634,7 +634,7 @@ unKeepArchive(Collection* coll, Archive* archive)
 	  archive->hash, archive->size); 
   
   if (record->type & REMOVE) {
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "cannot unkeep as local supply is already removedkeep");
     goto error;
   }
@@ -658,7 +658,7 @@ unKeepArchive(Collection* coll, Archive* archive)
   rc = TRUE;
  error:
     if (!rc) {
-    logMemory(LOG_ERR, "%s", "unKeepArchive fails");
+    logMemory(LOG_ERR, "unKeepArchive fails");
   }
   return rc;
 }
@@ -723,7 +723,7 @@ int cleanCacheTree(Collection* coll)
 
     // del record if there
     if (!rgDelItem(records, record)) {
-      logMemory(LOG_WARNING, "%s", "record not found into cache");
+      logMemory(LOG_WARNING, "record not found into cache");
       goto error2;
     }
 
@@ -745,7 +745,7 @@ int cleanCacheTree(Collection* coll)
   if (!unLockCache(coll)) rc = FALSE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cleanCacheTree fails");
+    logMemory(LOG_ERR, "cleanCacheTree fails");
   }
   return rc;
 }
@@ -780,7 +780,7 @@ int diseaseCacheTree(Collection* coll)
 
   rc = TRUE;
  error:
-  if (!rc) logMemory(LOG_ERR, "%s", "diseaseCacheTree fails");
+  if (!rc) logMemory(LOG_ERR, "diseaseCacheTree fails");
   return rc;
 }
 

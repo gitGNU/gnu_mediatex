@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ssh.c,v 1.5 2015/07/03 13:20:45 nroche Exp $
+ * Version: $Id: ssh.c,v 1.6 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : ssh
 
@@ -45,7 +45,7 @@ serializeAuthKeys(Collection* coll)
   mask = umask(0177);
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
-  logCommon(LOG_DEBUG, "%s", "serialize authorized_keys file");
+  logCommon(LOG_DEBUG, "serialize authorized_keys file");
 
   path = coll->sshAuthKeys;
   logCommon(LOG_INFO, "Serializing the authorized_keys file: %s", 
@@ -75,7 +75,7 @@ serializeAuthKeys(Collection* coll)
     rc = FALSE;
   }
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fail to serialize authorized_keys file");
+    logCommon(LOG_ERR, "fail to serialize authorized_keys file");
   }
   umask(mask);
   return(rc);
@@ -102,7 +102,7 @@ serializeSshConfig(Collection* coll)
 
   checkCollection(coll);
   if (!(self = coll->serverTree)) goto error;
-  logCommon(LOG_DEBUG, "%s", "serialize ssh's config file");
+  logCommon(LOG_DEBUG, "serialize ssh's config file");
 
   path = coll->sshConfig;
   logCommon(LOG_INFO, "Serializing the ssh's config file: %s", 
@@ -143,7 +143,7 @@ serializeSshConfig(Collection* coll)
     rc = FALSE;
   }
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fail to serialize ssh's config file");
+    logCommon(LOG_ERR, "fail to serialize ssh's config file");
   }
   umask(mask);
   return(rc);
@@ -174,7 +174,7 @@ serializeKnownHosts(Collection* coll)
   if (!(conf = getConfiguration())) goto error;
   if (!(populateConfiguration())) goto error;
   if (!(self = coll->serverTree)) goto error;
-  logCommon(LOG_DEBUG, "%s", "serialize known_hosts file");
+  logCommon(LOG_DEBUG, "serialize known_hosts file");
 
   path = coll->sshKnownHosts;
   logCommon(LOG_INFO, "Serializing the known_host file: %s", 
@@ -196,7 +196,7 @@ serializeKnownHosts(Collection* coll)
   // here using "localhost" name for local connexions
   fprintf(fd, "localhost %s\n", conf->hostKey);
   if (!strcmp(conf->host, "localhost")) {
-    logCommon(LOG_WARNING, "%s", 
+    logCommon(LOG_WARNING, 
 	    "Please avoid using localhost in the configuration");
   }
 
@@ -216,7 +216,7 @@ serializeKnownHosts(Collection* coll)
 
 	// warning message as you cannot be reach from the outside
 	if (!strcmp(server->host, "localhost")) {
-	  logCommon(LOG_WARNING, "%s", 
+	  logCommon(LOG_WARNING, 
 		  "Please avoid having localhost in the servers list");
 	}
       }
@@ -235,7 +235,7 @@ serializeKnownHosts(Collection* coll)
   rc = TRUE;  
  error:  
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fail to serialize known_host file");
+    logCommon(LOG_ERR, "fail to serialize known_host file");
   }
   umask(mask);
   return(rc);
@@ -256,7 +256,7 @@ sshKeygen(Collection* coll)
   char* argv[] = {"/usr/bin/ssh-keygen", "-Hf", 0, 0};
   char *path = 0;
 
-  logCommon(LOG_DEBUG, "%s", "do ssh-keygen -H");
+  logCommon(LOG_DEBUG, "do ssh-keygen -H");
   argv[2] = coll->sshKnownHosts;
 
 
@@ -278,7 +278,7 @@ sshKeygen(Collection* coll)
   rc = TRUE;
  error:  
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fails to do ssh-keygen -H");
+    logCommon(LOG_ERR, "fails to do ssh-keygen -H");
   }
   path = destroyString(path);
   return(rc);
@@ -314,7 +314,7 @@ upgradeSshConfiguration(Collection* coll)
  error:  
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fail to upgrade ssh configuration");
+    logCommon(LOG_ERR, "fail to upgrade ssh configuration");
   }
   return(rc);
 }

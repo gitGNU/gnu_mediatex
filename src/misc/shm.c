@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shm.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: shm.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : shm
  *
@@ -61,10 +61,10 @@ shmWrite(char* pathFile, int shmSize,
   unsigned short table[1];
   void* buffer = 0;
 
-  logMisc(LOG_DEBUG, "%s", "shmWrite");
+  logMisc(LOG_DEBUG, "shmWrite");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "need a path file's path to create shm key"); 
     goto error;
   }
   
@@ -145,7 +145,7 @@ shmWrite(char* pathFile, int shmSize,
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "fails to write share memory"); 
+    logMisc(LOG_ERR, "fails to write share memory"); 
   }
   return rc;
 }
@@ -172,10 +172,10 @@ shmRead(char* pathFile, int shmSize,
   struct sembuf sembuf;
   void* buffer = 0;
 
-  logMisc(LOG_DEBUG, "%s", "shmRead");
+  logMisc(LOG_DEBUG, "shmRead");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "need a path file's path to create shm key"); 
     goto error;
   }
   
@@ -191,7 +191,7 @@ shmRead(char* pathFile, int shmSize,
   if ((sem = semget(key, 1, 0)) == -1) {
     logMisc(LOG_ERR, "semget fails matching 0x%x IPC key: %s", 
 	    key, strerror(errno)); 
-    logMisc(LOG_NOTICE, "%s", "(semaphore as gone)");
+    logMisc(LOG_NOTICE, "(semaphore as gone)");
     goto error;
   }
 
@@ -199,7 +199,7 @@ shmRead(char* pathFile, int shmSize,
   if ((shm = shmget(key, 0, 0)) == -1) {
     logMisc(LOG_ERR, "shmget fails matching  0x%x IPC key: %s", 
 	    key, strerror(errno)); 
-    logMisc(LOG_NOTICE, "%s", "(share memory as gone)");
+    logMisc(LOG_NOTICE, "(share memory as gone)");
     goto error;
   }
   
@@ -241,7 +241,7 @@ shmRead(char* pathFile, int shmSize,
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "fails to read share memory"); 
+    logMisc(LOG_ERR, "fails to read share memory"); 
   }
   return rc;
 }
@@ -263,10 +263,10 @@ shmFree(char* pathFile, int shmSize)
   int shm = 0;
   union semun arg;
 
-  logMisc(LOG_DEBUG, "%s", "shmFree");
+  logMisc(LOG_DEBUG, "shmFree");
 
   if (pathFile == 0 || *pathFile == (char)0) {
-    logMisc(LOG_ERR, "%s", "need a path file's path to create shm key"); 
+    logMisc(LOG_ERR, "need a path file's path to create shm key"); 
     goto error;
   }
   
@@ -306,7 +306,7 @@ shmFree(char* pathFile, int shmSize)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "fails to free share memory"); 
+    logMisc(LOG_ERR, "fails to free share memory"); 
   }
   return rc;
 }

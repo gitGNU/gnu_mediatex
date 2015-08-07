@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: html.c,v 1.6 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: html.c,v 1.7 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
@@ -41,11 +41,11 @@ htmlCaps(FILE* fd, char* text)
   int l = 0;
 
   if (text == 0) goto error;
-  logMisc(LOG_DEBUG, "%s", "htmlCaps");
+  logMisc(LOG_DEBUG, "htmlCaps");
 
   l = strlen(text);
   if (!(string = malloc(l+1))) {
-    logMisc(LOG_ERR, "%s", "malloc fails");
+    logMisc(LOG_ERR, "malloc fails");
     goto error;
   }
   strncpy(string, text, l);
@@ -61,7 +61,7 @@ htmlCaps(FILE* fd, char* text)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlCaps fails");
+    logMisc(LOG_ERR, "htmlCaps fails");
   }
   free(string);
   return rc;
@@ -80,7 +80,7 @@ htmlMainHeadBasic(FILE* fd, char* title, char* url)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "htmlMainHead");
+  logMisc(LOG_DEBUG, "htmlMainHead");
   
   if (!fprintf(fd, 
 	       "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.1//EN'>\n"
@@ -114,7 +114,7 @@ htmlMainHeadBasic(FILE* fd, char* title, char* url)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlMainHead fails");
+    logMisc(LOG_ERR, "htmlMainHead fails");
   }
   return rc;
 }
@@ -132,7 +132,7 @@ htmlLeftPageHeadBasic(FILE* fd, char* rep, char* url)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "htmlLeftPageHead");
+  logMisc(LOG_DEBUG, "htmlLeftPageHead");
   
   if (!fprintf(fd,
 	       "<TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192>"
@@ -149,7 +149,7 @@ htmlLeftPageHeadBasic(FILE* fd, char* rep, char* url)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlLeftPageHead fails");
+    logMisc(LOG_ERR, "htmlLeftPageHead fails");
   }
   return rc;
 }
@@ -166,7 +166,7 @@ htmlLeftPageTail(FILE* fd)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "htmlLeftPageTail");
+  logMisc(LOG_DEBUG, "htmlLeftPageTail");
   
   if (!fprintf(fd, "%s",
 	       "\n"
@@ -178,7 +178,7 @@ htmlLeftPageTail(FILE* fd)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlLeftPageTail fails");
+    logMisc(LOG_ERR, "htmlLeftPageTail fails");
   }
   return rc;
 }
@@ -196,7 +196,7 @@ htmlRightHeadBasic(FILE* fd, char* masterUrl, char* url)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "htmlRightHead");
+  logMisc(LOG_DEBUG, "htmlRightHead");
   
   //"<TD ALIGN='LEFT' VALIGN='TOP' WIDTH=504><TABLE  WIDTH='100%%'>\n"
 
@@ -223,7 +223,7 @@ htmlRightHeadBasic(FILE* fd, char* masterUrl, char* url)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlRightHeadBasic fails");
+    logMisc(LOG_ERR, "htmlRightHeadBasic fails");
   }
   return rc;
 }
@@ -240,7 +240,7 @@ htmlMainTail(FILE* fd, char* date)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "htmlMainTail");
+  logMisc(LOG_DEBUG, "htmlMainTail");
   
   if (!fprintf(fd,
 	       "</TD></TR>\n"
@@ -256,7 +256,7 @@ htmlMainTail(FILE* fd, char* date)
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "htmlMainTail fails");
+    logMisc(LOG_ERR, "htmlMainTail fails");
   }
   return rc;
 }
@@ -273,14 +273,14 @@ truc(FILE* fd)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "truc");
+  logMisc(LOG_DEBUG, "truc");
   
   goto error;
 
   rc = TRUE;
  error:
   if(!rc) {
-    logMisc(LOG_ERR, "%s", "truc fails");
+    logMisc(LOG_ERR, "truc fails");
   }
   return rc;
 }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cypher.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: cypher.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -44,7 +44,7 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
   logMisc(LOG_DEBUG, "loadAesKey: '%s' for %s", key,
 	  way==ENCRYPT?"writing":(way==DECRYPT?"reading":"??"));
   if (data == 0) {
-    logMisc(LOG_ERR, "%s", "please provide a AESData structure");
+    logMisc(LOG_ERR, "please provide a AESData structure");
     goto error;
   }
 
@@ -56,7 +56,7 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
      */
     if (AES_set_encrypt_key((const unsigned char *) key, 
 			    128, &data->aesKey) != 0) {
-      logMisc(LOG_ERR, "%s", "AES_set_encrypt_key fails");
+      logMisc(LOG_ERR, "AES_set_encrypt_key fails");
       goto error;
     }
     break;
@@ -69,13 +69,13 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
      */
     if (AES_set_decrypt_key((const unsigned char *) key, 
 			    128, &data->aesKey) != 0) {
-      logMisc(LOG_ERR, "%s", "AES_set_decrypt_key fails");
+      logMisc(LOG_ERR, "AES_set_decrypt_key fails");
       goto error;
     }
     break;
 
   default:
-    logMisc(LOG_ERR, "%s", "crypt way should be ENCRYPT or DECRYPT");
+    logMisc(LOG_ERR, "crypt way should be ENCRYPT or DECRYPT");
     goto error;
   }
   
@@ -92,7 +92,7 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "loadAesKey fails");
+    logMisc(LOG_ERR, "loadAesKey fails");
   }
   return rc;
 }
@@ -110,10 +110,10 @@ doCypher(AESData* data) {
   int rc = FALSE;
   //int i;
 
-  logMisc(LOG_DEBUG, "%s", "doCypher");
+  logMisc(LOG_DEBUG, "doCypher");
 
   if (data == 0) {
-    logMisc(LOG_ERR, "%s", "please provide a AESData structure");
+    logMisc(LOG_ERR, "please provide a AESData structure");
     goto error;
   }
 
@@ -148,14 +148,14 @@ doCypher(AESData* data) {
     break;
     
   default:
-    logMisc(LOG_ERR, "%s", "crypt order should be ENCRYPT or DECRYPT");
+    logMisc(LOG_ERR, "crypt order should be ENCRYPT or DECRYPT");
     goto error;
   }
 
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "doCypher fails");
+    logMisc(LOG_ERR, "doCypher fails");
   }
   return rc;
 }
@@ -254,15 +254,15 @@ aesFlush(AESData* data)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "%s", "aesFlush"); 
+  logMisc(LOG_DEBUG, "aesFlush"); 
 
   if (data == 0) {
-    logMisc(LOG_ERR, "%s", "please provide a AESData structure");
+    logMisc(LOG_ERR, "please provide a AESData structure");
     goto error;
   }
 
   if (data->way != ENCRYPT) {
-    logMisc(LOG_ERR, "%s", "AESData isn't initialized for writing");
+    logMisc(LOG_ERR, "AESData isn't initialized for writing");
     goto error;
   }
 
@@ -286,7 +286,7 @@ aesFlush(AESData* data)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "aesFlush fails");
+    logMisc(LOG_ERR, "aesFlush fails");
   }
 
   return rc;
@@ -315,15 +315,15 @@ aesPrint(AESData* data, const char* format, ...)
   int len = 0;
   int max = 0;
 
-  logMisc(LOG_DEBUG, "%s", "aesPrint"); 
+  logMisc(LOG_DEBUG, "aesPrint"); 
 
   if (data == 0) {
-    logMisc(LOG_ERR, "%s", "please provide a AESData structure");
+    logMisc(LOG_ERR, "please provide a AESData structure");
     goto error;
   }
 
   if (data->way != ENCRYPT) {
-    logMisc(LOG_ERR, "%s", "AESData isn't initialized for writing");
+    logMisc(LOG_ERR, "AESData isn't initialized for writing");
     goto error;
   }
 
@@ -331,7 +331,7 @@ aesPrint(AESData* data, const char* format, ...)
   va_start(args, format);
   len = vsnprintf(buffer, maxSize, format, args);
   if (len < 0 || len > maxSize) {
-    logMisc(LOG_ERR, "%s", "vnsprintf fails: size=%i/%i", len, maxSize);
+    logMisc(LOG_ERR, "vnsprintf fails: size=%i/%i", len, maxSize);
     goto error;
   }
   va_end(args);
@@ -365,7 +365,7 @@ aesPrint(AESData* data, const char* format, ...)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "aesPrint fails");
+    logMisc(LOG_ERR, "aesPrint fails");
   }
   return rc;
 }
@@ -390,15 +390,15 @@ aesInput(AESData* data, char* buf, int *result, int maxsize)
   (void) maxsize;
   *result = 0;
 
-  logMisc(LOG_DEBUG, "%s", "aesInput"); 
+  logMisc(LOG_DEBUG, "aesInput"); 
 
   if (data == 0) {
-    logMisc(LOG_ERR, "%s", "please provide a AESData structure");
+    logMisc(LOG_ERR, "please provide a AESData structure");
     goto error;
   }
 
   if (data->way != DECRYPT) {
-    logMisc(LOG_ERR, "%s", "AESData isn't initialized for reading");
+    logMisc(LOG_ERR, "AESData isn't initialized for reading");
     goto error;
   }
 
@@ -433,7 +433,7 @@ aesInput(AESData* data, char* buf, int *result, int maxsize)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "aesInput fails");
+    logMisc(LOG_ERR, "aesInput fails");
   }
   return rc;
 }

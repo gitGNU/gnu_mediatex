@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: keys.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
@@ -44,7 +44,7 @@ readPublicKey(char* path)
   int n = 0;
 
   if (path == 0 || *path == (char)0) {
-    logMisc(LOG_ERR, "%s", 
+    logMisc(LOG_ERR, 
 	    "please provide a path for the public key to read");
     goto error;
   }
@@ -63,7 +63,7 @@ readPublicKey(char* path)
   }
 
   if (ferror(fd)) {
-    logMisc(LOG_ERR, "%s", "fread fails.");
+    logMisc(LOG_ERR, "fread fails.");
     goto error;
   }
 
@@ -85,7 +85,7 @@ readPublicKey(char* path)
   strcpy(rc, buf);
  error:
   if (rc == 0) {
-    logMisc(LOG_ERR, "%s", "readPublicKey fails");
+    logMisc(LOG_ERR, "readPublicKey fails");
   }
   return rc;
 }
@@ -123,7 +123,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   char* ptr;
   int nbEquals = 0;
   
-  logMisc(LOG_DEBUG, "%s", "getFingerPrint");
+  logMisc(LOG_DEBUG, "getFingerPrint");
 
   // get only the key
   while (*key != ' ') ++key;
@@ -162,7 +162,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
 
   // initialize our context to use MD5 as the hashing algorithm
   if (EVP_DigestInit_ex(&mdctx, EVP_md5(), 0) != 1) {
-    logMisc(LOG_ERR, "%s", "EVP_DigestInit_ex fails");
+    logMisc(LOG_ERR, "EVP_DigestInit_ex fails");
     goto error;
   }
 
@@ -170,13 +170,13 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   // -nbEquals is neeeded to work by looks very strange
   if (EVP_DigestUpdate(&mdctx, key_unbase64,
   		       key_unbased64_length - nbEquals) != 1) {
-    logMisc(LOG_ERR, "%s", "EVP_DigestUpdate fails");
+    logMisc(LOG_ERR, "EVP_DigestUpdate fails");
     goto error;
   }
 
   // finish the hashing and get us the hash value in md_value
   if (EVP_DigestFinal_ex(&mdctx, md_value, &md_len) != 1) {
-    logMisc(LOG_ERR, "%s", "EVP_DigestFinal fails");
+    logMisc(LOG_ERR, "EVP_DigestFinal fails");
     goto error;
   }
 

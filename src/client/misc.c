@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.7 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: misc.c,v 1.8 2015/08/07 17:50:28 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -60,7 +60,7 @@ int mdtxMake(char* label)
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
   logMain(LOG_INFO, "estimate %i steps for all", env.progBar.max);
 
-  logMain(LOG_INFO, "%s", "html");
+  logMain(LOG_INFO, "html");
   if (!becomeUser(env.confLabel, TRUE)) goto error2;
   startProgBar("make");
   if (!serializeHtmlCache(coll)) goto error3;
@@ -68,7 +68,7 @@ int mdtxMake(char* label)
   if (!serializeHtmlScore(coll)) goto error3;
   stopProgBar();
   logMain(LOG_INFO, "steps: %lli / %lli", env.progBar.cur, env.progBar.max);
-  logMain(LOG_INFO, "%s", "ending");
+  logMain(LOG_INFO, "ending");
 
   rc = TRUE;
  error3:
@@ -77,7 +77,7 @@ int mdtxMake(char* label)
   if (!releaseCollection(coll, SERV|CTLG|EXTR)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxMake fails");
+    logMain(LOG_ERR, "mdtxMake fails");
   }
   return rc;
 }
@@ -102,7 +102,7 @@ int mdtxUpgradePlus(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUpgradePlus fails");
+    logMain(LOG_ERR, "mdtxUpgradePlus fails");
   }
   return rc;
 }
@@ -128,7 +128,7 @@ int mdtxUploadPlus(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUploadPlus fails");
+    logMain(LOG_ERR, "mdtxUploadPlus fails");
   }
   return rc;
 }
@@ -154,7 +154,7 @@ int mdtxUploadPlusPlus(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUploadPlusPlus fails");
+    logMain(LOG_ERR, "mdtxUploadPlusPlus fails");
   }
   return rc;
 }
@@ -175,7 +175,7 @@ mdtxClean(char* label)
   //Collection* coll = 0;
   char* argv[3] = {0, 0, 0};
 
-  logMain(LOG_DEBUG, "%s", "del a collection");
+  logMain(LOG_DEBUG, "del a collection");
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
@@ -191,7 +191,7 @@ mdtxClean(char* label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to clean collection");
+    logMain(LOG_ERR, "fails to clean collection");
   }
   if (argv[0]) free(argv[0]);
   return rc;
@@ -211,7 +211,7 @@ mdtxInit()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logMain(LOG_DEBUG, "%s", "initializing mdtx software");
+  logMain(LOG_DEBUG, "initializing mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -224,7 +224,7 @@ mdtxInit()
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mtdx software initialization fails");
+    logMain(LOG_ERR, "mtdx software initialization fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -244,7 +244,7 @@ mdtxRemove()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logMain(LOG_DEBUG, "%s", "removing mdtx software");
+  logMain(LOG_DEBUG, "removing mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -257,7 +257,7 @@ mdtxRemove()
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mtdx software removal fails");
+    logMain(LOG_ERR, "mtdx software removal fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -277,7 +277,7 @@ mdtxPurge()
   int rc = FALSE;
   char *argv[] = {0, 0, 0};
 
-  logMain(LOG_DEBUG, "%s", "purging mdtx software");
+  logMain(LOG_DEBUG, "purging mdtx software");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir)))
     goto error;
@@ -290,7 +290,7 @@ mdtxPurge()
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtx software purge fails");
+    logMain(LOG_ERR, "mdtx software purge fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -325,7 +325,7 @@ mdtxAddUser(char* user)
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxAddUser fails");
+    logMain(LOG_ERR, "mdtxAddUser fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -360,7 +360,7 @@ mdtxDelUser(char* user)
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxDelUser fails");
+    logMain(LOG_ERR, "mdtxDelUser fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -380,7 +380,7 @@ mdtxBind()
   int rc = FALSE;
   char *argv[] = {0, 0};
 
-  logMain(LOG_DEBUG, "%s", "bind mdtx directories");
+  logMain(LOG_DEBUG, "bind mdtx directories");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/bind.sh"))) 
@@ -393,7 +393,7 @@ mdtxBind()
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtx bind fails");
+    logMain(LOG_ERR, "mdtx bind fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -413,7 +413,7 @@ mdtxUnbind()
   int rc = FALSE;
   char *argv[] = {0, 0};
 
-  logMain(LOG_DEBUG, "%s", "unbind mdtx directories");
+  logMain(LOG_DEBUG, "unbind mdtx directories");
 
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/unbind.sh"))) 
@@ -426,7 +426,7 @@ mdtxUnbind()
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtx unbind fails");
+    logMain(LOG_ERR, "mdtx unbind fails");
   }
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -483,7 +483,7 @@ mdtxSu(char* label)
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtx su has failed");
+    logMain(LOG_ERR, "mdtx su has failed");
   }
   return(rc);
 }
@@ -535,7 +535,7 @@ mdtxScp(char* label, char* fingerPrint, char* target)
   if (!releaseCollection(coll, SERV)) goto error;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxScp fails");
+    logMain(LOG_ERR, "mdtxScp fails");
   } 
   argv[1] = destroyString(argv[1]);
   argv[2] = destroyString(argv[2]);
@@ -642,7 +642,7 @@ mdtxUploadFile(char* label, char* path)
   // add extraction rule
   if (!(time = currentTime())) goto error;
   if (localtime_r(&time, &date) == (struct tm*)0) {
-    logMemory(LOG_ERR, "%s", "localtime_r returns on error");
+    logMemory(LOG_ERR, "localtime_r returns on error");
     goto error2;
   }
   sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
@@ -662,7 +662,7 @@ mdtxUploadFile(char* label, char* path)
   if (!releaseCollection(coll, EXTR)) goto error;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "upload query failed");
+    logMain(LOG_ERR, "upload query failed");
     if (record) delRecord(coll, record);
   }
   return rc;

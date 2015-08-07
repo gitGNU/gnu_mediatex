@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: locks.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: locks.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -44,7 +44,7 @@ int lock(int fd, int mode)
 	  mode == F_WRLCK?"write":"??");
 
   if (fd == -1) {
-    logMisc(LOG_ERR, "%s", "please provide a file descriptor to lock");
+    logMisc(LOG_ERR, "please provide a file descriptor to lock");
     goto error;
   }
 
@@ -66,7 +66,7 @@ int lock(int fd, int mode)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "lock fails");
+    logMisc(LOG_ERR, "lock fails");
   }
   return rc;
 }
@@ -84,10 +84,10 @@ int unLock(int fd)
   int rc = FALSE;
   struct flock lock;
 
-  logMisc(LOG_DEBUG, "%s", "unlock file");
+  logMisc(LOG_DEBUG, "unlock file");
   
   if (fd == -1) {
-    logMisc(LOG_ERR, "%s", "please provide a file descriptor to lock");
+    logMisc(LOG_ERR, "please provide a file descriptor to lock");
     goto error;
   }
 
@@ -103,7 +103,7 @@ int unLock(int fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "lock fails");
+    logMisc(LOG_ERR, "lock fails");
   }
   return rc;
 }

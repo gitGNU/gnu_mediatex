@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractFile.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
+ * Version: $Id: utextractFile.c,v 1.3 2015/08/07 17:50:26 nroche Exp $
  * Project: Mediatex
  * Module : extraction meta-data scanner
 
@@ -102,7 +102,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (extr_lex_init(&scanner)) {
-    logMain(LOG_ERR, "%s", "error initializing scanner");
+    logMain(LOG_ERR, "error initializing scanner");
     goto error;
   }
 

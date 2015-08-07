@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.5 2015/07/28 11:45:47 nroche Exp $
+ * Version: $Id: setuid.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -44,7 +44,7 @@ getPasswdLine (char* label, uid_t uid, struct passwd* pw, char** buffer)
   size_t bufsize = 0;
   int err = 0;
 
-  logMisc (LOG_DEBUG, "%s", "find an /etc/passwd line");
+  logMisc (LOG_DEBUG, "find an /etc/passwd line");
 
   // allocate buffer
   *buffer = 0;
@@ -100,7 +100,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   size_t bufsize = 0;
   int s;
 
-  logMisc (LOG_DEBUG, "%s", "find an /etc/group line");
+  logMisc (LOG_DEBUG, "find an /etc/group line");
 
   // allocate buffer
   *buffer = 0;
@@ -152,11 +152,11 @@ undo_seteuid (void)
   int rc = FALSE;
   int uid = getuid();
 
-  logMisc (LOG_DEBUG, "%s", "hide euid");
+  logMisc (LOG_DEBUG, "hide euid");
 
   // we do not return on error for unit tests
   if (geteuid() != 0) {
-    logMisc (LOG_ERR, "%s", 
+    logMisc (LOG_ERR, 
 	     "binary not owned by root or setuid bit not set");
     goto error;
   } 
@@ -172,7 +172,7 @@ undo_seteuid (void)
  error:
   //logMisc (LOG_DEBUG, "> ruid=%i euid=%i", getuid (), geteuid ());
   if (!rc) {
-    logMisc (LOG_ERR, "%s", "fails to hide eid");
+    logMisc (LOG_ERR, "fails to hide eid");
   }
   return rc;
 }
@@ -240,7 +240,7 @@ allowedUser (char* label)
   if (buf1) free (buf1);
   if (buf2) free (buf2);
   if (!rc) {
-    logMisc (LOG_ERR, "%s", "allowedUser fails");
+    logMisc (LOG_ERR, "allowedUser fails");
   }
   return rc;
 }
@@ -321,7 +321,7 @@ becomeUser (char* label, int doCheck)
   if (buf1) free (buf1);
   if (buf2) free (buf2);
   if (!rc) {
-    logMisc (LOG_ERR, "%s", "becomeUser fails");
+    logMisc (LOG_ERR, "becomeUser fails");
   }
   return rc;
 }
@@ -356,7 +356,7 @@ logoutUser (int uid)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc (LOG_ERR, "%s", "logoutUser fails");
+    logMisc (LOG_ERR, "logoutUser fails");
   }
   if (buf) free (buf);
   return rc;

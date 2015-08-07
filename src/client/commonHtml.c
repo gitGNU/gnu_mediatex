@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.8 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.9 2015/08/07 17:50:28 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -381,7 +381,7 @@ serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlListBar fails");
+    logMain(LOG_ERR, "serializeHtmlListBar fails");
   }
   return rc;
 }
@@ -411,7 +411,7 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "htmlAssoCarac fails");
+    logMain(LOG_ERR, "htmlAssoCarac fails");
   }
   return rc;
 }
@@ -432,7 +432,7 @@ int getServerUrl(Server* server, char* txt, char* url)
 
   checkServer(server);
   if (!server->wwwPort) {
-    logMain(LOG_WARNING, "%s", "no www port define for this server");
+    logMain(LOG_WARNING, "no www port define for this server");
     server->wwwPort = WWW_PORT;
   }
   
@@ -449,7 +449,7 @@ int getServerUrl(Server* server, char* txt, char* url)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "getServerUrl fails");
+    logMain(LOG_ERR, "getServerUrl fails");
   }
   return rc;
 }
@@ -515,7 +515,7 @@ serializeHtmlCacheHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlCacheHeader fails");
+    logMain(LOG_ERR, "serializeHtmlCacheHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -584,7 +584,7 @@ serializeHtmlCgiHeader(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlCgiHeader fails");
+    logMain(LOG_ERR, "serializeHtmlCgiHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -619,7 +619,7 @@ serializeHtmlFooter(Collection* coll)
 
   if ((now = currentTime()) == -1) goto error;
   if (localtime_r(&now, &date) == (struct tm*)0) {
-    logMain(LOG_ERR, "%s", "localtime_r returns on error");
+    logMain(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
 
@@ -637,7 +637,7 @@ serializeHtmlFooter(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlAllBottom fails");
+    logMain(LOG_ERR, "serializeHtmlAllBottom fails");
   }
   path = destroyString(path);
   return rc;
@@ -666,7 +666,7 @@ serializeHtmlCache(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "serializeHtmlCache fails");
+    logMain(LOG_ERR, "serializeHtmlCache fails");
   }
   return rc;
 }

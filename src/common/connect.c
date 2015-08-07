@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.4 2015/06/30 17:37:26 nroche Exp $
+ * Version: $Id: connect.c,v 1.5 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -38,14 +38,14 @@ buildServerAddress(Server* server)
   char service[10];
 
   checkServer(server);
-  logCommon(LOG_DEBUG, "%s", "buildServerAddress");
+  logCommon(LOG_DEBUG, "buildServerAddress");
 
   // already done
   if (server->address.sin_family) goto end;
 
   // convert port into char
   if (sprintf(service, "%i", server->mdtxPort) < 0) {
-    logCommon(LOG_ERR, "%s", "sprintf cannot convert port into service");
+    logCommon(LOG_ERR, "sprintf cannot convert port into service");
     goto error;
   }
     
@@ -59,7 +59,7 @@ buildServerAddress(Server* server)
   rc = TRUE;
  error:
   if (!rc) {
-       logCommon(LOG_ERR, "%s", "buildServerAddress fails");
+       logCommon(LOG_ERR, "buildServerAddress fails");
   }
   return rc;
 }
@@ -131,7 +131,7 @@ connectServer(Server* server)
 	  server->host, server->fingerPrint);
  error:
   if (rc == -1) {
-    logCommon(LOG_ERR, "%s", "connectServer fails");
+    logCommon(LOG_ERR, "connectServer fails");
   }
  end:
 
@@ -200,7 +200,7 @@ upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
   rc = TRUE;
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "upgradeServer fails");
+    logCommon(LOG_ERR, "upgradeServer fails");
   }
   return rc;
 }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.5 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: device.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -130,7 +130,7 @@ char* symlinkTarget(char* path) {
   struct stat statBuffer;
 
   if (path == 0 || *path == (char)0) {
-    logMisc(LOG_ERR, "%s", "please provide a path for the path");
+    logMisc(LOG_ERR, "please provide a path for the path");
     goto error;
   }
  
@@ -240,11 +240,11 @@ int normalizePath(char* inPath, char** outPath)
 
   path = inPath;
   if (path == 0 || *path == (char)0) {
-    logMisc(LOG_ERR, "%s", "please provide a path for the device");
+    logMisc(LOG_ERR, "please provide a path for the device");
     goto error;
   }
 
-  logMisc(LOG_DEBUG, "%s", "normalizePath");
+  logMisc(LOG_DEBUG, "normalizePath");
   
   do {
     if (basename) free(basename);
@@ -298,7 +298,7 @@ int normalizePath(char* inPath, char** outPath)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "normalizePath fails");
+    logMisc(LOG_ERR, "normalizePath fails");
   }
   free(absPath);   
   free(basename);
@@ -320,7 +320,7 @@ int getDevice(char* inPath, char** outPath)
   char *oldPath = 0;
   char *newPath = 0;
 
-  logMisc(LOG_DEBUG, "%s", "getDevice");
+  logMisc(LOG_DEBUG, "getDevice");
   
   oldPath = inPath;
   if (!normalizePath(oldPath, &newPath)) goto error;
@@ -339,7 +339,7 @@ int getDevice(char* inPath, char** outPath)
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "getDevice fails");
+    logMisc(LOG_ERR, "getDevice fails");
   }
   return rc;
 }
@@ -355,11 +355,11 @@ int isBlockDevice(char* path, int* isB) {
   int rc = FALSE;
   struct stat statBuffer;
 
-  logMisc(LOG_DEBUG, "%s", "isBlockDevice");
+  logMisc(LOG_DEBUG, "isBlockDevice");
   *isB = FALSE;
 
   if (path == 0 || *path == (char)0) {
-    logMisc(LOG_ERR, "%s", "please provide a path for the device");
+    logMisc(LOG_ERR, "please provide a path for the device");
     goto error;
   }
 
@@ -385,7 +385,7 @@ int isBlockDevice(char* path, int* isB) {
   logMisc(LOG_INFO, "do not match a block device: %s", path);
  end:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "isBlockDevice fails");
+    logMisc(LOG_ERR, "isBlockDevice fails");
   }
  error:
   return rc;
@@ -412,7 +412,7 @@ int getIsoSize(int fd, off_t *size,
   char invariant[8] = ".CD001.";
   char buffer[8]    = "       "; 
 
-  logMisc(LOG_DEBUG, "%s", "getIsoSize");
+  logMisc(LOG_DEBUG, "getIsoSize");
   invariant[0] = 1;
   invariant[6] = 1;
   *size = 0;
@@ -430,7 +430,7 @@ int getIsoSize(int fd, off_t *size,
     goto error;
   }
   if (strncmp(buffer, invariant, 7)) {
-    logMisc(LOG_INFO, "%s", "is not an iso");
+    logMisc(LOG_INFO, "is not an iso");
     goto end;
   }
 
@@ -470,7 +470,7 @@ int getIsoSize(int fd, off_t *size,
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "%s", "getIsoSize fails");
+    logMisc(LOG_ERR, "getIsoSize fails");
   }
   return rc;
 }

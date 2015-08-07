@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: uttcp.c,v 1.2 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: uttcp.c,v 1.3 2015/08/07 17:50:25 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -65,7 +65,7 @@ tcpServerExemple(int sock, struct sockaddr_in* address_accepted)
 
   buffer[n] = (char)0;
   if (!tcpWrite(sock, buffer, n)) {
-    logMain(LOG_ERR, "%s", "server error writing");
+    logMain(LOG_ERR, "server error writing");
   }
   else {
     logMain(LOG_NOTICE, "server write> %s", buffer);
@@ -102,7 +102,7 @@ tcpClientExemple(int sock_connected)
 
   logMain(LOG_NOTICE, "client write> %s", query);
   if (!tcpWrite(sock_connected, query, strlen(query))) {
-    logMain(LOG_ERR, "%s", "client error writing");
+    logMain(LOG_ERR, "client error writing");
     goto error;
   }
   
@@ -191,17 +191,17 @@ main(int argc, char** argv)
   /************************************************************************/
   /* convert port into char* */
   if (sprintf(service, "%i", portToUse) < 0) {
-    logMain(LOG_ERR, "%s", "cannot convert DEFAULT_PORT into service");
+    logMain(LOG_ERR, "cannot convert DEFAULT_PORT into service");
     goto error;
   }
   
   // Client
   if (isClient) {
     usleep(500);
-    logMain(LOG_NOTICE, "%s",  "client mode");
+    logMain(LOG_NOTICE,  "client mode");
     
     if (!buildSocketAddress(&address, serverToConnect, "tcp", service)) {
-      logMain(LOG_ERR, "%s", "error while building socket address");
+      logMain(LOG_ERR, "error while building socket address");
       goto error;
     }
     
@@ -216,10 +216,10 @@ main(int argc, char** argv)
   
   // Server
   else {
-    logMain(LOG_NOTICE, "%s",  "server mode");
+    logMain(LOG_NOTICE,  "server mode");
     
     if (!buildSocketAddress(&address, (char*)0, "tcp", service)) {
-      logMain(LOG_ERR, "%s", "error while building socket address");
+      logMain(LOG_ERR, "error while building socket address");
       goto error;
     }
     

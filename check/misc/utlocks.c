@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlocks.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: utlocks.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -43,7 +43,7 @@ sigManager(void* arg)
   if (sigaddset(&mask, SIGSEGV)) goto error;
   if (sigaddset(&mask, SIGINT)) goto error;
 
-  logMain(LOG_NOTICE, "%s", "please send me HUP, USR1 or TERM signals:");
+  logMain(LOG_NOTICE, "please send me HUP, USR1 or TERM signals:");
   logMain(LOG_NOTICE, "- kill -SIGHUP %i", getpid());
   logMain(LOG_NOTICE, "- kill -SIGUSR1 %i", getpid());
   logMain(LOG_NOTICE, "- kill -SIGTERM %i", getpid());
@@ -169,7 +169,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   /*
-  logMain(LOG_DEBUG, "%s", "For information, constants are:");
+  logMain(LOG_DEBUG, "For information, constants are:");
   logMain(LOG_DEBUG, "F_UNLCK = %i", F_UNLCK);
   logMain(LOG_DEBUG, "F_RDLCK = %i", F_RDLCK);
   logMain(LOG_DEBUG, "F_WRLCK = %i", F_WRLCK);
@@ -177,13 +177,13 @@ main(int argc, char** argv)
 
   if (inputPath == 0) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide a file to lock");
+    logMain(LOG_ERR, "Please provide a file to lock");
     goto error;
   }
 
   if (mode != F_RDLCK && mode != F_WRLCK) {
     usage(programName);
-    logMain(LOG_ERR, "%s", "Please provide a lock mode");
+    logMain(LOG_ERR, "Please provide a lock mode");
     goto error;
   }
   

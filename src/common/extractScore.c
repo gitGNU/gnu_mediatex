@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.8 2015/08/07 17:40:17 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.9 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -53,7 +53,7 @@ populateExtractTree(Collection* coll)
 
   self = coll->extractTree;
   if(self == 0) {
-    logCommon(LOG_DEBUG, "%s", "cannot populate empty ExtractTree");
+    logCommon(LOG_DEBUG, "cannot populate empty ExtractTree");
     goto error;
   }
   
@@ -210,7 +210,7 @@ computeArchive(Archive* self, int depth)
   rc = TRUE;
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fails to computeArchive");
+    logCommon(LOG_ERR, "fails to computeArchive");
   }
   return rc;
 }
@@ -233,7 +233,7 @@ computeExtractScore(Collection* coll)
   checkCollection(coll);
   self = coll->extractTree;
   if(self == 0) {
-    logCommon(LOG_DEBUG, "%s", "cannot compute empty ExtractTree");
+    logCommon(LOG_DEBUG, "cannot compute empty ExtractTree");
     rc = -1;
     goto error;
   }
@@ -274,7 +274,7 @@ computeExtractScore(Collection* coll)
  quit:
  error:
  if (!rc || self->score == -1) {
-    logCommon(LOG_ERR, "%s", "fails to computeExtractScore");
+    logCommon(LOG_ERR, "fails to computeExtractScore");
   }
   return rc;
 }
@@ -306,7 +306,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
 
   // already computed (and not diseased since)
   if (self->score == -1) {
-    logCommon(LOG_ERR, "%s", "please call computeExtractScore first");
+    logCommon(LOG_ERR, "please call computeExtractScore first");
     goto error;
   }
 
@@ -367,7 +367,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
   
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "getExtractStatus fails");
+    logCommon(LOG_ERR, "getExtractStatus fails");
   }
   return rc;
 }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.6 2015/07/28 11:45:50 nroche Exp $
+ * Version: $Id: have.c,v 1.7 2015/08/07 17:50:33 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -60,7 +60,7 @@ int haveContainer(ExtractData* data, Container* container)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "haveContainer fails");
+    logMain(LOG_ERR, "haveContainer fails");
   }
   return rc;
 } 
@@ -116,7 +116,7 @@ int haveArchive(ExtractData* data, Archive* archive)
 	    archive->hash, archive->size);
     data->target = archive;
     if (!extractArchive(data, archive))  {
-      logMain(LOG_WARNING, "%s", "need more place ?");
+      logMain(LOG_WARNING, "need more place ?");
       goto end;
     }
 
@@ -140,7 +140,7 @@ int haveArchive(ExtractData* data, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "haveArchive fails");
+    logMain(LOG_ERR, "haveArchive fails");
   }
   return rc;
 } 
@@ -162,7 +162,7 @@ addFinalSupplies(RecordTree* tree, Record** iso)
 
   while((record = rgNext_r(tree->records, &curr))) {
     if (getRecordType(record) != FINALE_SUPPLY) {
-      logMain(LOG_ERR, "%s", "please provide final supplies");
+      logMain(LOG_ERR, "please provide final supplies");
       goto error;
     }
 
@@ -218,18 +218,18 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
   ExtractData data;
   (void) connexion;
 
-  logMain(LOG_DEBUG, "%s", "remote extraction");
+  logMain(LOG_DEBUG, "remote extraction");
   if (!(data.toKeeps = createRing())) goto error;
 
   // get the archiveTree's collection
   if ((data.coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "%s", "unknown collection for archiveTree");
+    logMain(LOG_ERR, "unknown collection for archiveTree");
     goto error;
   }
   
   // check we get final supplies
   if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "%s", "please provide records for have query");
+    logMain(LOG_ERR, "please provide records for have query");
     goto error;
   }
 
@@ -249,7 +249,7 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
 	<= data.coll->serverTree->scoreParam.maxScore /2) {
       data.target = iso->archive;
       if (!extractArchive(&data, iso->archive)) {
-	logMain(LOG_WARNING, "%s", "need more place ?");
+	logMain(LOG_WARNING, "need more place ?");
       }
     }
   }
@@ -263,7 +263,7 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
   if (!releaseCollection(data.coll, SERV | EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "remote extraction fails");
+    logMain(LOG_ERR, "remote extraction fails");
   }
   destroyOnlyRing(data.toKeeps);
   return rc;

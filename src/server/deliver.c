@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.5 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: deliver.c,v 1.6 2015/08/07 17:50:33 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -67,7 +67,7 @@ callMail(Collection* coll, Record* record, char* address)
   rc = TRUE;
  error:  
   if (!rc) {
-    logMain(LOG_ERR, "%s", "fails to send a mail");
+    logMain(LOG_ERR, "fails to send a mail");
   }
   if (argv[0]) destroyString(argv[0]);
   return(rc);
@@ -122,7 +122,7 @@ deliverMail(Collection* coll, Archive* archive)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_DEBUG, "%s", "deliverMail fails");
+    logMain(LOG_DEBUG, "deliverMail fails");
   }
   return rc;
 }
@@ -196,7 +196,7 @@ deliverMails(Collection* coll)
   if (!releaseCollection(coll, CACH)) goto error;
  error:
   if (!rc) {
-    logMain(LOG_DEBUG, "%s", "deliverMails fails");
+    logMain(LOG_DEBUG, "deliverMails fails");
   }
   path = destroyString(path);
   return rc;

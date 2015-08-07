@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.7 2015/08/05 12:12:02 nroche Exp $
+ * Version: $Id: confTree.c,v 1.8 2015/08/07 17:50:30 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -91,7 +91,7 @@ createCollection(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Collection");
+  logMemory(LOG_ERR, "malloc: cannot create Collection");
   return destroyCollection(rc);
 }
 
@@ -200,7 +200,7 @@ expandCollection(Collection* self)
   if (isEmptyString(self->masterLabel) ||
       isEmptyString(self->label) ||
       isEmptyString(self->masterHost)) {
-    logMemory(LOG_ERR, "%s", 
+    logMemory(LOG_ERR, 
 	    "masterLabel, label and masterHost must be initialized");
     goto error;
   }
@@ -358,7 +358,7 @@ expandCollection(Collection* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to expand collection");
+    logMemory(LOG_ERR, "fails to expand collection");
   }
   label = destroyString(label);
   return rc;
@@ -382,7 +382,7 @@ populateCollection(Collection* self)
   if (self == 0) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(self->memoryState & EXPANDED)) {
-    logMemory(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "collection must be expanded first");
     goto error;
   }
   if (self->memoryState & POPULATED) {
@@ -403,7 +403,7 @@ populateCollection(Collection* self)
       (self->userKey = readPublicKey(self->sshRsaPublicKey))) goto next;
   if (!access(self->sshDsaPublicKey, F_OK) &&
       (self->userKey = readPublicKey(self->sshDsaPublicKey))) goto next;
-  logMemory(LOG_ERR, "%s", "fails to load the user public key");
+  logMemory(LOG_ERR, "fails to load the user public key");
   goto error;
 
  next:
@@ -500,7 +500,7 @@ serializeCollection(Collection* self, FILE* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "error while serializing Collection");
+    logMemory(LOG_ERR, "error while serializing Collection");
   }
   return rc;
 }
@@ -526,7 +526,7 @@ createConfiguration(void)
 
   if((conf = (Configuration*)malloc(sizeof(Configuration))) 
      == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create Configuration");
+    logMemory(LOG_ERR, "malloc: cannot create Configuration");
     goto error;
   }
     
@@ -625,7 +625,7 @@ createConfiguration(void)
   rc = conf;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "createConfiguration fails");
+    logMemory(LOG_ERR, "createConfiguration fails");
     conf = destroyConfiguration(conf);
   }
   tmpDir = destroyString(tmpDir);
@@ -714,9 +714,9 @@ expandConfiguration()
 
   // defensive code
   if (!(conf = getConfiguration())) goto error;
-  logMemory(LOG_DEBUG, "%s", "expand configuration");
+  logMemory(LOG_DEBUG, "expand configuration");
   if (conf->memoryState & EXPANDED) {
-    logMemory(LOG_INFO, "%s", "configuration already expanded");
+    logMemory(LOG_INFO, "configuration already expanded");
     goto end;
   }
 
@@ -751,7 +751,7 @@ expandConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to expand configuration");
+    logMemory(LOG_ERR, "fails to expand configuration");
   }
   jail = destroyString(jail);
   meta = destroyString(meta);
@@ -774,21 +774,21 @@ populateConfiguration()
   // defensive code
   if (!(conf = getConfiguration())) goto error;
   /* if (!(conf->memoryState & EXPANDED)) { */
-  /*   logMemory(LOG_ERR, "%s", "configuration must be expanded first"); */
+  /*   logMemory(LOG_ERR, "configuration must be expanded first"); */
   /*   goto error; */
   /* } */
   if (conf->memoryState & POPULATED) {
-    logMemory(LOG_INFO, "%s", "configuration already populated");
+    logMemory(LOG_INFO, "configuration already populated");
     goto end;
   }
-  logMemory(LOG_DEBUG, "%s", "populate configuration");
+  logMemory(LOG_DEBUG, "populate configuration");
 
   // load the host public key
   if (!access(conf->sshRsaPublicKey, F_OK) && 
       (conf->hostKey = readPublicKey(conf->sshRsaPublicKey))) goto next;
   if (!access(conf->sshDsaPublicKey, F_OK) &&
       (conf->hostKey = readPublicKey(conf->sshDsaPublicKey))) goto next;
-  logMemory(LOG_ERR, "%s", "fails to load the host public key");
+  logMemory(LOG_ERR, "fails to load the host public key");
   goto error;
 
  next:
@@ -798,7 +798,7 @@ populateConfiguration()
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to populate Configuration");
+    logMemory(LOG_ERR, "fails to populate Configuration");
   }
   return(rc);
 }
@@ -825,12 +825,12 @@ serializeConfiguration(Configuration* self)
   int uid = getuid();
 
   if(self == 0) goto error;
-  logMemory(LOG_DEBUG, "%s", "serialize the configuration");
+  logMemory(LOG_DEBUG, "serialize the configuration");
 
   // we need the host key to be loaded so as to be able
   // to print the host fingerprint !
   if (!(self->memoryState & POPULATED)) {
-    logMemory(LOG_ERR, "%s", "configuration must be populated first");
+    logMemory(LOG_ERR, "configuration must be populated first");
     goto error;
   }
 
@@ -953,7 +953,7 @@ getConfiguration(void)
 
   if(env.confTree == 0) {
     if ((env.confTree = createConfiguration()) == 0) {
-      logMemory(LOG_ERR, "%s", "cannot malloc default collection");
+      logMemory(LOG_ERR, "cannot malloc default collection");
       goto error;
     }
   }
@@ -961,7 +961,7 @@ getConfiguration(void)
   rc = env.confTree;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to get configuration");
+    logMemory(LOG_ERR, "fails to get configuration");
   }
   return rc;
 }
@@ -976,7 +976,7 @@ getConfiguration(void)
 void
 freeConfiguration(void)
 {
-  logMemory(LOG_INFO, "%s", "free configuration");
+  logMemory(LOG_INFO, "free configuration");
   env.confTree = destroyConfiguration(env.confTree);
 }
 
@@ -1037,7 +1037,7 @@ addCollection(char *label)
   rc = coll;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to add a collection");
+    logMemory(LOG_ERR, "fails to add a collection");
     if (coll) destroyCollection(coll);
   }
   return rc;
@@ -1078,7 +1078,7 @@ delCollection(Collection* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delCollection fails");
+    logMemory(LOG_ERR, "delCollection fails");
   }
   return rc;
 }
@@ -1138,7 +1138,7 @@ addNetwork(char *label)
   rc = net;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to add a network");
+    logMemory(LOG_ERR, "fails to add a network");
     if (net) destroyString(net);
   }
   return rc;
@@ -1158,7 +1158,7 @@ addNetworkToRing(RG* ring, char *label)
   int rc = FALSE;
   char* string = 0;
 
-  logMemory(LOG_DEBUG, "%s", "addNetworkToRing");
+  logMemory(LOG_DEBUG, "addNetworkToRing");
 
   if (!(string = addNetwork(label))) goto error;
   if (!rgHaveItem(ring, string)) {
@@ -1168,7 +1168,7 @@ addNetworkToRing(RG* ring, char *label)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "fails to add a network to a ring");
+    logMemory(LOG_ERR, "fails to add a network to a ring");
   }
   return rc;
 }
@@ -1202,7 +1202,7 @@ int addSupportToCollection(Support* support, Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addSupportToCollection fails");
+    logMemory(LOG_ERR, "addSupportToCollection fails");
   }
   return rc;
 }
@@ -1239,7 +1239,7 @@ int delSupportFromCollection(Support* support, Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delSupportFromCollection fails");
+    logMemory(LOG_ERR, "delSupportFromCollection fails");
   }
   return rc;
 }
@@ -1262,7 +1262,7 @@ getLocalHost(Collection* coll)
 
   checkCollection(coll);
   if (!(conf = getConfiguration())) goto error;
-  logMemory(LOG_DEBUG, "%s", "getLocalHost");
+  logMemory(LOG_DEBUG, "getLocalHost");
 
   // assert we have the localhost server object
   if (!coll->localhost) {
@@ -1278,7 +1278,7 @@ getLocalHost(Collection* coll)
   rc = coll->localhost;
  error:
   if (rc == 0) {
-    logMemory(LOG_ERR, "%s", "fails to get localhost server object");
+    logMemory(LOG_ERR, "fails to get localhost server object");
   }
   return rc;
 }

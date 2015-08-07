@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.5 2015/07/03 16:02:15 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -60,7 +60,7 @@ createCarac()
   Carac* rc = 0;
 
   if ((rc = (Carac*)malloc(sizeof(Carac))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create a Carac");
+    logMemory(LOG_ERR, "malloc: cannot create a Carac");
     goto error;
   }
 
@@ -123,7 +123,7 @@ createAssoCarac()
   AssoCarac* rc = 0;
 
   if ((rc = (AssoCarac*)malloc(sizeof(AssoCarac))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create AssoCarac");
+    logMemory(LOG_ERR, "malloc: cannot create AssoCarac");
     goto error;
   }
 
@@ -198,7 +198,7 @@ serializeAssoCarac(AssoCarac* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty AssoCarac");
+    logMemory(LOG_ERR, "cannot serialize empty AssoCarac");
   }
   return(rc);
 }
@@ -239,7 +239,7 @@ createRole(void)
   Role* rc = 0;
 
   if ((rc = (Role*)malloc(sizeof(Role))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create a Role");
+    logMemory(LOG_ERR, "malloc: cannot create a Role");
     goto error;
   }
 
@@ -308,7 +308,7 @@ createAssoRole()
   AssoRole* rc = 0;
 
   if ((rc = (AssoRole*)malloc(sizeof(AssoRole))) == 0) {
-    logMemory(LOG_ERR, "%s", "malloc: cannot create AssoRole");
+    logMemory(LOG_ERR, "malloc: cannot create AssoRole");
     goto error;
   }
 
@@ -362,7 +362,7 @@ serializeAssoRole(AssoRole* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty AssoRole");
+    logMemory(LOG_ERR, "cannot serialize empty AssoRole");
   }
   return(rc);
 }
@@ -402,7 +402,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty CRecord");
+    logMemory(LOG_ERR, "cannot serialize empty CRecord");
   }
   return(rc);
 }
@@ -430,7 +430,7 @@ createHuman(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Human");
+  logMemory(LOG_ERR, "malloc: cannot create Human");
   return destroyHuman(rc);
 }
 
@@ -548,7 +548,7 @@ serializeHuman(Human* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cannot serialize empty Human");
+    logMemory(LOG_ERR, "cannot serialize empty Human");
   }
   return(rc);
 }
@@ -577,7 +577,7 @@ createDocument(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Document");
+  logMemory(LOG_ERR, "malloc: cannot create Document");
   return destroyDocument(rc);
 }
 
@@ -713,7 +713,7 @@ serializeDocument(Document* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "serializeDocument fails");
+    logMemory(LOG_ERR, "serializeDocument fails");
   }
   return(rc);
 }
@@ -743,7 +743,7 @@ createCategory(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create Category");
+  logMemory(LOG_ERR, "malloc: cannot create Category");
   return destroyCategory(rc);
 }
 
@@ -845,7 +845,7 @@ serializeCategory(Category* self, CvsFile* fd)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "serializeCategory fails");
+    logMemory(LOG_ERR, "serializeCategory fails");
   }
   return(rc);
 }
@@ -883,7 +883,7 @@ createCatalogTree(void)
 
   return rc;
  error:
-  logMemory(LOG_ERR, "%s", "malloc: cannot create CatalogTree");
+  logMemory(LOG_ERR, "malloc: cannot create CatalogTree");
   return destroyCatalogTree(rc);
 }
 
@@ -954,7 +954,7 @@ serializeCatalogTree(Collection* coll)
 
   // we neeed to use the cvs collection directory
   if (!coll->memoryState & EXPANDED) {
-    logMemory(LOG_ERR, "%s", "collection must be expanded first");
+    logMemory(LOG_ERR, "collection must be expanded first");
     goto error;
   }
   
@@ -1008,7 +1008,7 @@ serializeCatalogTree(Collection* coll)
   if (!cvsCloseFile(&fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "serializeCatalogTree fails");
+    logMemory(LOG_ERR, "serializeCatalogTree fails");
   }
   return rc;
 }
@@ -1070,7 +1070,7 @@ addCarac(Collection* coll, char* label)
   rc = carac;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addCarac fails");
+    logMemory(LOG_ERR, "addCarac fails");
     carac = destroyCarac(carac);
   }
   return rc;
@@ -1104,7 +1104,7 @@ delCarac(Collection* coll, Carac* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delCarac fails");
+    logMemory(LOG_ERR, "delCarac fails");
   }
   return rc;
 }
@@ -1216,7 +1216,7 @@ addAssoCarac(Collection* coll, Carac* carac, CType type,
   rc = asso;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addAssoCarac fails");
+    logMemory(LOG_ERR, "addAssoCarac fails");
     asso = destroyAssoCarac(asso);
   }
   return rc;
@@ -1281,7 +1281,7 @@ addRole(Collection* coll, char* label)
   rc = role;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addRole fails");
+    logMemory(LOG_ERR, "addRole fails");
     role = destroyRole(role);
   }
   return rc;
@@ -1321,7 +1321,7 @@ delRole(Collection* coll, Role* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delRole fails");
+    logMemory(LOG_ERR, "delRole fails");
   }
   return rc;
 }
@@ -1403,7 +1403,7 @@ addAssoRole(Collection* coll,
   rc = asso;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "cannot add an assoRole");
+    logMemory(LOG_ERR, "cannot add an assoRole");
     if (asso) delAssoRole(coll, asso);
   }
   return rc;
@@ -1449,7 +1449,7 @@ delAssoRole(Collection* coll, AssoRole* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delAssoRole fails");
+    logMemory(LOG_ERR, "delAssoRole fails");
   }
   return rc;
 }
@@ -1484,7 +1484,7 @@ int addHumanToCategory(Collection* coll, Human* human, Category* category)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addHumanToCategory fails");
+    logMemory(LOG_ERR, "addHumanToCategory fails");
   }
   return rc;
 }
@@ -1522,7 +1522,7 @@ int delHumanToCategory(Collection* coll, Human* human, Category* category)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delHumanToCategory fails");
+    logMemory(LOG_ERR, "delHumanToCategory fails");
   }
   return rc;
 }
@@ -1594,7 +1594,7 @@ addHuman(Collection* coll, char* firstName, char* secondName)
   rc = human;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addHuman fails");
+    logMemory(LOG_ERR, "addHuman fails");
     human = destroyHuman(human);
   }	    
   return rc;
@@ -1639,7 +1639,7 @@ delHuman(Collection* coll, Human* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delHuman fails");
+    logMemory(LOG_ERR, "delHuman fails");
   }
   return rc;
 }
@@ -1676,7 +1676,7 @@ int addArchiveToDocument(Collection* coll,
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addArchiveToDocument fails");
+    logMemory(LOG_ERR, "addArchiveToDocument fails");
   }
   return rc;
 }
@@ -1716,7 +1716,7 @@ int delArchiveFromDocument(Collection* coll,
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delArchiveFromDocument fails");
+    logMemory(LOG_ERR, "delArchiveFromDocument fails");
   }
   return rc;
 }
@@ -1752,7 +1752,7 @@ int addDocumentToCategory(Collection* coll, Document* document,
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addDocumentToCategory fails");
+    logMemory(LOG_ERR, "addDocumentToCategory fails");
   }
   return rc;
 }
@@ -1791,7 +1791,7 @@ int delDocumentToCategory(Collection* coll, Document* document,
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delDocumentToCategory fails");
+    logMemory(LOG_ERR, "delDocumentToCategory fails");
   }
   return rc;
 }
@@ -1857,7 +1857,7 @@ addDocument(Collection* coll, char* label)
   rc = document;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addDocument fails");
+    logMemory(LOG_ERR, "addDocument fails");
     document = destroyDocument(document);
   }
   return rc;
@@ -1913,7 +1913,7 @@ delDocument(Collection* coll, Document* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delDocument fails");
+    logMemory(LOG_ERR, "delDocument fails");
   }
   return rc;
 }
@@ -1953,7 +1953,7 @@ delArchiveCatalog(Collection* coll, Archive* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delArchiveCatalog fails");
+    logMemory(LOG_ERR, "delArchiveCatalog fails");
   }
   return rc;
 }
@@ -1989,7 +1989,7 @@ addCategoryLink(Collection* coll, Category* father, Category* child)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "addCategoryLink fails");
+    logMemory(LOG_ERR, "addCategoryLink fails");
   }
   return rc;
 }
@@ -2028,7 +2028,7 @@ delCategoryLink(Collection* coll, Category* father, Category* child)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delCategoryLink fails");
+    logMemory(LOG_ERR, "delCategoryLink fails");
   }
   return rc;
 }
@@ -2157,7 +2157,7 @@ delCategory(Collection* coll, Category* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delCategory fails");
+    logMemory(LOG_ERR, "delCategory fails");
   }
   return rc;
 }
@@ -2218,7 +2218,7 @@ diseaseCatalogTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "diseaseCatalogTree fails");
+    logMemory(LOG_ERR, "diseaseCatalogTree fails");
   }
   return rc;
 }

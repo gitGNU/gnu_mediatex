@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.5 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: supp.c,v 1.6 2015/08/07 17:50:29 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -62,7 +62,7 @@ mdtxMount(char* iso, char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxMount fails");
+    logMain(LOG_ERR, "mdtxMount fails");
   } 
   if (argv[0]) destroyString(argv[0]);
   if (argv[1]) destroyString(argv[1]);
@@ -99,7 +99,7 @@ mdtxUmount(char* target)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUmount fails");
+    logMain(LOG_ERR, "mdtxUmount fails");
   } 
   if (argv[0]) destroyString(argv[0]);
   return rc;
@@ -120,7 +120,7 @@ mdtxUpdateSupport(char* label, char* status)
   Configuration* conf = 0;
   Support *supp = 0;
 
-  logMain(LOG_DEBUG, "%s", "mdtxUpdateSupport");
+  logMain(LOG_DEBUG, "mdtxUpdateSupport");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(label))) goto error;
@@ -132,7 +132,7 @@ mdtxUpdateSupport(char* label, char* status)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "mdtxUpdateSupport fails");
+    logMain(LOG_ERR, "mdtxUpdateSupport fails");
   } 
   return rc;
 }
@@ -156,11 +156,11 @@ doCheckSupport(Support *supp, char* path)
   time_t laps = 0;
   Md5Data data;
 
-  logMain(LOG_DEBUG, "%s", "doCheckSupport");
+  logMain(LOG_DEBUG, "doCheckSupport");
   memset(&data, 0, sizeof(Md5Data));
   
   if ((data.path = createString(path)) == 0) {
-    logMain(LOG_ERR, "%s", "cannot dupplicate path string");
+    logMain(LOG_ERR, "cannot dupplicate path string");
     goto error;
   }
   
@@ -268,7 +268,7 @@ mdtxLsSupport()
   RG* supports = 0;
   Support *supp = 0;
 
-  logMain(LOG_DEBUG, "%s", "mdtxLsSupport");
+  logMain(LOG_DEBUG, "mdtxLsSupport");
   if (!(conf = getConfiguration())) goto error;
   if (!loadConfiguration(CFG | SUPP)) goto error;
   supports = conf->supports;
@@ -289,7 +289,7 @@ mdtxLsSupport()
   rc = TRUE;
  error:
  if (!rc) {
-   logMain(LOG_ERR, "%s", "mdtxLsSupport fails");
+   logMain(LOG_ERR, "mdtxLsSupport fails");
   } 
   return rc;
 }
@@ -310,7 +310,7 @@ mdtxAddSupport(char* label, char* path)
   Support *supp = 0;
   time_t now = 0;
 
-  logMain(LOG_DEBUG, "%s", "mdtxAddSupport");
+  logMain(LOG_DEBUG, "mdtxAddSupport");
   if (isEmptyString(path)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if ((now = currentTime()) == -1) goto error;
@@ -365,7 +365,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
   if (!loadCollection(coll, EXTR)) goto error;
   if (!getLocalHost(coll)) goto error2;
   if (!(archive = getArchive(coll, supp->fullHash, supp->size))) {
-    logMain(LOG_ERR, "%s", "archive is not defined into the extract tree");
+    logMain(LOG_ERR, "archive is not defined into the extract tree");
     goto error;
   }
 
@@ -398,7 +398,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
   if (!releaseCollection(coll, EXTR)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", "addFinalSupplies fails");
+    logMain(LOG_ERR, "addFinalSupplies fails");
   }
   return rc;
 }
@@ -426,10 +426,10 @@ notifyHave(Support* supp, char* path, char* mnt)
   int isShared = FALSE;
   char reply[1];
 
-  logMain(LOG_DEBUG, "%s", "notifyHave");
+  logMain(LOG_DEBUG, "notifyHave");
   if (supp == 0) goto error;
   if (isEmptyString(path) || *path != '/') {
-    logMain(LOG_ERR, "%s", 
+    logMain(LOG_ERR, 
 	    "daemon need an absolute path for support extraction");
     goto error;
   }
@@ -511,7 +511,7 @@ int isIsoFile(char* path)
   unsigned short int bs = 0;
   off_t size = 0;
 
-  logMain(LOG_DEBUG, "%s", "isIsoFile");
+  logMain(LOG_DEBUG, "isIsoFile");
 
   if ((fd = open(path, O_RDONLY)) == -1) {
     logMain(LOG_ERR, "open: %s", strerror(errno));
@@ -526,7 +526,7 @@ int isIsoFile(char* path)
     rc = FALSE;
   }
  if (!rc) {
-    logMain(LOG_INFO, "%s", "not an iso");
+    logMain(LOG_INFO, "not an iso");
   }
   return rc;
 }
@@ -550,7 +550,7 @@ mdtxHaveSupport(char* label, char* path)
   char* mnt = 0;
   char pid[12];
 
-  logMain(LOG_DEBUG, "%s", "mdtxHaveSupport");
+  logMain(LOG_DEBUG, "mdtxHaveSupport");
   if (!(conf = getConfiguration())) goto error;
   if (!(supp = mdtxGetSupport(label))) goto error;
   if (supp == 0) goto error;
@@ -613,7 +613,7 @@ mdtxDelSupport(char* label)
   Configuration* conf = 0;
   Support *supp = 0;
 
-  logMain(LOG_DEBUG, "%s", "mdtxDelSupport");
+  logMain(LOG_DEBUG, "mdtxDelSupport");
 
   // withdraw support
   if (!mdtxWithdrawSupport(label, 0)) goto error;
