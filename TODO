@@ -2,10 +2,7 @@
 *** TO CORRECT: cache policy    
 
 - incomings TTL into servers.txt
-- to sed: find . -name "*.c" -exec grep -n 'LOG.*, "%s", ' {} /dev/null \;
-- confTree::getLocalHost not call by parser
 - add supp to coll remove INC entry from extract.txt -> parser staf ?
-
 
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - score computation also use md5sums.txt file
@@ -53,8 +50,9 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- i10n for french
+- confTree::getLocalHost maybe optimize this call (not sure)
 - replace gethostby*_r by getaddrinfo and co
+- i10n for french
 
 *** TODO MAYBE
 

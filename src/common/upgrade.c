@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.7 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.8 2015/08/07 17:56:54 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -342,7 +342,6 @@ scanCvsClientDirectory(Collection* coll, char* path)
   }
   return rc;
 }
-
 
 /*=======================================================================
  * Function   : upgradeCollection
