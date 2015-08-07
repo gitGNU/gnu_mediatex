@@ -41,6 +41,7 @@
 [info openClose.c] parse coll1 collection ( SX )
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[warning extractTree.c] too old incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info openClose.c] steps: 93 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED

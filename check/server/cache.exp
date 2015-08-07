@@ -64,6 +64,7 @@
 [info openClose.c] parse coll3 collection ( SX )
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[warning extractTree.c] too old incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info openClose.c] steps: 93 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> AVAILABLE
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes

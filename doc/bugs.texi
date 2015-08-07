@@ -44,13 +44,32 @@ $SystemLogRateLimitBurst 0
 $ libtool --mode=execute valgrind ./@var{BINARY} @var{ARGS}
 $ libtool --mode=execute gdb @var{BINARY}
 @end example
-@item @code{gdb}
+
+@item @code{gdb} using emacs:
 @example
-// Attach daemon:
+# xhost local:mdtx
+# su mdtx
+$ export DISPLAY=:0.0
+$ emacs23
+> M-x gdb 
+> Run gdb (like this): gdb --annotate=3 mediatexd
+(gdb) set args -sinfo -ffile
+(gdb) b extractRecord
+(gdb) r
+
+# ps -ef | grep /usr/bin/mediatexd
+# echo 2804 > /var/run/mediatex/mdtxd.pid
+# mediatex -c serv2 srv extract
+@end example
+
+@item @code{gdb} attachin daemon:
+@example
 $ gdb
 > attach @var{PID}
+@end example
 
-// Get a core dump:
+@item @code{gdb} using core dump:
+@example
 # echo 1 > /proc/sys/fs/suid_dumpable
 # echo '/var/tmp/core.%p' > /proc/sys/kernel/core_pattern
 # ulimit -c unlimited               // (into /etc/init.d/mediatexd)
@@ -64,6 +83,7 @@ $ gdb mediatexd
 > frame @var{#Number}
 > set args ...
 @end example
+
 @item @code{valgrind} to detect memory leaks
 @example
 # su mdtx

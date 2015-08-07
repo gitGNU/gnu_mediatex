@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.7 2015/08/05 12:12:02 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.8 2015/08/07 17:40:17 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -120,7 +120,7 @@ populateExtractTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "%s", "fails to populateExtractTree");
+    logCommon(LOG_ERR, "fails to populateExtractTree");
   }  
   return rc;
 }
@@ -140,8 +140,12 @@ computeContainer(Container* self, int depth)
   Archive* archive = 0;
 
   checkContainer(self);
-  if (self->type == INC) goto error; // no score for incoming container
   if (self->score != -1) goto quit; // already computed
+  if (self->type == INC) {
+    logCommon(LOG_ERR, "internal error: INC container not expected");
+    goto error;
+  }
+
   logCommon(LOG_DEBUG, "%*s computeContainer %s/%s:%lli", 
 	  depth, "", strEType(self->type),
 	  self->parent->hash, (long long int)self->parent->size);
@@ -162,67 +166,7 @@ computeContainer(Container* self, int depth)
   rc = TRUE;
  error:
  if (!rc) {
-    logCommon(LOG_ERR, "%s", "fails to computeContainer");
-  }
-  return rc;
-}
-
-
-/*=======================================================================
- * Function   : checkIncoming
- * Description: Check incoming status (no penalty for new incomings)
- * Synopsis   : int checkIncoming(Container* self, FromAsso* asso)
- * Input      : Archive* self
- *              FromAsso* asso
- * Output     : TRUE on success
- *              set archive->isIncoming and archive->isNewIncoming
- * 
- * TODO       : should be move into the parser
- =======================================================================*/
-int 
-checkIncoming(Archive* self, FromAsso* asso, int depth)
-{
-  int rc = FALSE;
-  struct tm date;
-  time_t time = 0;
-
-  checkArchive(self);
-  logCommon(LOG_DEBUG, "%*s checkIncoming %s:%lli", 
-	    depth, "", self->hash, (long long int)self->size);
-
-  self->isIncoming = TRUE;
-
-  memset(&date, 0, sizeof(struct tm));
-  if (sscanf(asso->path, "%d-%d-%d,%d:%d:%d",
-	       &date.tm_year, &date.tm_mon, &date.tm_mday,
-	       &date.tm_hour, &date.tm_min, &date.tm_sec)
-	!= 6) {
-      logCommon(LOG_ERR, "sscanf: error parsing date %s", asso->path);
-      goto error;
-    }
-  date.tm_year -= 1900; // from GNU/Linux burning date
-  date.tm_mon -= 1;     // month are managed from 0 to 11 
-  date.tm_isdst = -1; // no information available about spring horodatage
-  if ((time = mktime(&date)) == -1) {
-    logCommon(LOG_ERR, "%s", "mktime: error parsing date");
-    goto error;
-  }
-
-  // affect display score only if too old
-  if (currentTime() < time + 1*MONTH) {
-    self->isNewIncoming = TRUE;
-    logCommon(LOG_DEBUG, "%*s incoming archive: %s:%lli", 
-	      depth, "", self->hash, (long long int)self->size); 
-  }
-  else {
-    logCommon(LOG_DEBUG, "%*s too old incoming archive: %s:%lli", 
-	      depth, "", self->hash, (long long int)self->size); 
-  }
-  
-  rc = TRUE;
- error:
- if (!rc) {
-    logCommon(LOG_ERR, "%s", "checkIncoming fails");
+    logCommon(LOG_ERR, "fails to computeContainer");
   }
   return rc;
 }
@@ -253,15 +197,9 @@ computeArchive(Archive* self, int depth)
   if (self->fromContainers != 0) {
     rgRewind(self->fromContainers);
     while((asso = rgNext(self->fromContainers)) != 0) {
-
-      if (asso->container->type != INC) {
-	if (!computeContainer(asso->container, depth+1)) goto error;
-	if (self->extractScore < asso->container->score) {
-	  self->extractScore = asso->container->score;
-	}
-      }
-      else {
-	if (!checkIncoming(self, asso, depth+1)) goto error;
+      if (!computeContainer(asso->container, depth+1)) goto error;
+      if (self->extractScore < asso->container->score) {
+	self->extractScore = asso->container->score;
       }
     }
   }
@@ -320,11 +258,11 @@ computeExtractScore(Collection* coll)
       if (!computeArchive(archive, 0)) goto error2;
 
       // new incomings are ignored into score computation
-      if (archive->isIncoming) continue;
+      if (archive->isIncoming && archive->isNewIncoming) continue;
 
       // global score = min ( archive's score )
       if (archive->extractScore > -1) {
-	if (self->score > archive->extractScore) 
+	if (self->score > archive->extractScore)
 	  self->score = archive->extractScore;
       }
     }

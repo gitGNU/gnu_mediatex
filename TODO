@@ -1,67 +1,22 @@
 
+*** TO CORRECT: cache policy    
 
-*** DEBUG (to add into documentation)
+- incomings TTL into servers.txt
+- to sed: find . -name "*.c" -exec grep -n 'LOG.*, "%s", ' {} /dev/null \;
+- confTree::getLocalHost not call by parser
+- add supp to coll remove INC entry from extract.txt -> parser staf ?
 
-# xhost local:serv2
-# su serv2
-$ export DISPLAY=:0.0
-$ emacs23
-> M-x gdb 
-> Run gdb (like this): gdb --annotate=3 mediatexd
-(gdb) set args -sinfo -ffile -cserv2
-(gdb) b extractRecord
-(gdb) r
-
-# ps -ef | grep /usr/bin/mediatexd | grep serv2
-# echo 2804 > /var/run/mediatex/serv2d.pid
-# mediatex -c serv2 srv extract
-
-
-*** CLEAN-UP
-
-- src/misc/host.c (to remove)
-- src/misc/udp.c (to remove)
-
-*** TO TEST
-
-- pgrof: test with more than 100k entries
-- find historical event into cvs's collections
-======
-
-- explain tests (and configuration from utFunc) 
--> no unit test for extract.c::getWantedArchives
--> confTree::getLocalHost not call by parser
-
-- extractNNN.txt: agregate uploaded files into one uniq INC container
-
-- Problème avec le cache et les scores ?!
---> computeArchiveStatus => ComputeExtractScore
-
-- attention, à ne pas utiliser delRecord !
-utrecordTree segfault
-
---> utFunc.c ... extractScore.c
-- score: look INC date to decide if score inpact or not on collection
-cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10) 
-
-- remove REC code
-
-*** TO CORRECT: cache policy
 
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
-- add supp to coll remove REC entry from extract.txt
+- score computation also use md5sums.txt file
 - motd: add to burn and orphanes
 - catalogHtml: add warning for orphanes
 
 - cache/toKeep directory: 
--- rename to cache/external
+-- rename to cache/extern
 -- replace path on extraction
 -- follow simlinks
--- replace toKeep facility (date++) or not ? 
----> md5sum not computed all times
-
-- score computation also use md5sums.txt file
--- extract.c::extractRecord modify tmpBasename
+-- md5sum not computed all times
 
 - move dirname into extract rule header to reduce extract.txt file size
 -- extract.c::extractTar modify asso->path -> getAssoPath()
@@ -72,6 +27,28 @@ cf (should be ok) addBadTopLocalSupplies: if (archive->extractScore > 10)
 
 - do not notify archive when nbGeo remote copies exists or not ?
 --> ease user copy as all servers get the archive
+
+*** CHANGES (to document)
+
+- explain tests (and configuration from utFunc) 
+- extractNNN.txt: agregate uploaded files into one uniq INC container
+--> computeArchiveStatus => ComputeExtractScore
+- REC code removed
+--> utFunc.c ... extractScore.c
+- score: look INC date to decide if score inpact or not on collection
+- no unit test for extract.c::getWantedArchives
+- extract.c::extractRecord modify tmpBasename for INC
+
+*** CLEAN-UP
+
+- src/misc/host.c (to remove)
+- src/misc/udp.c (to remove)
+- compilation warnings
+
+*** TO TEST
+
+- pgrof: test with more than 100k entries
+- find historical event into cvs's collections
 
 *** TODO
 

@@ -78,6 +78,7 @@ score      state label
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (  X )
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[warning extractTree.c] too old incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info openClose.c] steps: 93 / 93
 
 [info supp.c] notify support to coll1 collection

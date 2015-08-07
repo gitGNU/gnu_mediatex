@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.6 2015/07/28 11:45:45 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.7 2015/08/07 17:40:18 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -237,6 +237,7 @@ serializeContainer(Container* self, CvsFile* fd)
 
     for(node = self->childs->head; node; node = node->next) {
       asso = node->item;
+      if (self->type == INC && asso->archive->isIncoming <= 0) continue;
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
       cvsPrint(fd, "\t%s\n", asso->path);
     }
@@ -568,7 +569,9 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   FromAsso* rc = 0;
   FromAsso* asso = 0;
   char* string = 0;
-  
+  struct tm date;
+  time_t time = 0;
+
   checkCollection(coll);
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "addFromAsso %s:%lli -> %s/%s:%lli",
@@ -585,19 +588,46 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
       logMemory(LOG_ERR, "%s", 
 	      "compression only container must only provides one archive");
       goto error;
+    }    break;
+  case INC:
+    if (sscanf(path, "%d-%d-%d,%d:%d:%d",
+	       &date.tm_year, &date.tm_mon, &date.tm_mday,
+	       &date.tm_hour, &date.tm_min, &date.tm_sec)
+	!= 6) {
+      logCommon(LOG_ERR, "sscanf: error parsing date %s", path);
+      goto error;
     }
+
+    date.tm_year -= 1900; // from GNU/Linux burning date
+    date.tm_mon -= 1;     // month are managed from 0 to 11 
+    date.tm_isdst = -1; // no information available about spring
+			// horodatage
+    if ((time = mktime(&date)) == -1) goto error;
+    ++archive->isIncoming;
+#warning incomingTTL this server parameters
+    if (currentTime() < time + 1*MONTH) {
+      archive->isNewIncoming = TRUE;
+    }
+    else {
+      logMemory(LOG_WARNING, "too old incoming archive: %s:%lli", 
+		archive->hash, (long long int)archive->size); 
+    }
+    break;
   default:
     break;
   }
 
-  // add new one
+  // add new content
   if (!(string = createString(path))) goto error;
   if (!(asso = createFromAsso())) goto error;
   asso->archive = archive;
   asso->container = container;
   asso->path = string;
 
-  if (!rgInsert(archive->fromContainers, asso)) goto error;
+  // incomings do not provides extraction path
+  if (container->type != INC) {
+    if (!rgInsert(archive->fromContainers, asso)) goto error;
+  }
   if (!avl_insert(container->childs, asso)) goto error;
 
   rc = asso;
@@ -632,9 +662,18 @@ delFromAsso(Collection* coll, FromAsso* self)
 	    self->container->type == INC?0:
 	    (long long int)self->container->parent->size);
 
-  // delete asso from archive
-  if ((curr = rgHaveItem(self->archive->fromContainers, self))) {
-    rgRemove_r(self->archive->fromContainers, &curr);
+  // incomings do not provides extraction path
+  if (self->container->type == INC) {
+    if (--self->archive->isIncoming < 0) {
+      logMemory(LOG_ERR, "intenal error: isIncoming<0");
+      goto error;
+    }
+  }
+  else {
+    // delete asso from archive
+    if ((curr = rgHaveItem(self->archive->fromContainers, self))) {
+      rgRemove_r(self->archive->fromContainers, &curr);
+    }
   }
 
   // delete asso from container and free the fromAsso
@@ -643,7 +682,7 @@ delFromAsso(Collection* coll, FromAsso* self)
   rc = TRUE;
  error:
   if (!rc) {
-    logMemory(LOG_ERR, "%s", "delFromAsso fails");
+    logMemory(LOG_ERR, "delFromAsso fails");
   }
   return rc;
 }
@@ -701,7 +740,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
   logMemory(LOG_DEBUG, "addContainer %s", strEType(type));
 
   if (type == INC) {
-    logMemory(LOG_ERR, "INC container already exists and cannot be add");
+    logMemory(LOG_ERR, "INC container always exists and cannot be add");
     goto error;
   }
 

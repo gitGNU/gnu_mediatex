@@ -27,6 +27,7 @@
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[warning extractTree.c] too old incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info openClose.c] steps: 93 / 93
 [info extract.c] not found archive de5008799752552b7963a2670dc5eb18:391168
 [info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
