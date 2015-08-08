@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.7 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: archive.c,v 1.8 2015/08/08 06:33:54 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -445,6 +445,19 @@ diseaseArchives(Collection* coll)
   }
   return rc;
 }
+
+/*=======================================================================
+ * Function   : isIncoming
+ * Description: state if an archive belongs to INC container
+ * Synopsis   : int isIncoming(Archive* self)
+ * Input      : Archive* self
+ * Output     : TRUE on success
+ =======================================================================*/
+int isIncoming(Archive* self)
+{
+  return self->uploadTime != 0;
+}
+
 
 /* Local Variables: */
 /* mode: c */

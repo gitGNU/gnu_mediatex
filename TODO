@@ -1,19 +1,21 @@
 
 *** TO CORRECT: cache policy    
 
-- incomings TTL into servers.txt
-- add supp to coll remove INC entry from extract.txt -> parser staf ?
+- confTree::getLocalHost maybe optimize this call (not sure)
+- serverTree.h: isLocalhost -> isLocalHost()
 
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
-- score computation also use md5sums.txt file
-- motd: add to burn and orphanes
-- catalogHtml: add warning for orphanes
+- rename cache/incoming to cache/default
 
 - cache/toKeep directory: 
 -- rename to cache/extern
 -- replace path on extraction
 -- follow simlinks
 -- md5sum not computed all times
+- score computation also use md5sums.txt file
+
+- motd: add to burn and orphanes
+- catalogHtml: add warning for orphanes
 
 - move dirname into extract rule header to reduce extract.txt file size
 -- extract.c::extractTar modify asso->path -> getAssoPath()
@@ -21,9 +23,6 @@
 -- extractTree.h: struct Container { ++char* pathPrefix;
 -- memory/utFunc.c
 -- misc/extract000.txt
-
-- do not notify archive when nbGeo remote copies exists or not ?
---> ease user copy as all servers get the archive
 
 *** CHANGES (to document)
 
@@ -35,6 +34,11 @@
 - score: look INC date to decide if score inpact or not on collection
 - no unit test for extract.c::getWantedArchives
 - extract.c::extractRecord modify tmpBasename for INC
+
+- uploadTTL parmeter into servers.txt
+- only parse date on extract parser
+- having 2 incoming asso we take the oldest date
+- having 1 inc asso and 1 normal asso => remove the inc asso
 
 *** CLEAN-UP
 
@@ -50,7 +54,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- confTree::getLocalHost maybe optimize this call (not sure)
 - replace gethostby*_r by getaddrinfo and co
 - i10n for french
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.7 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.8 2015/08/08 06:33:55 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -227,6 +227,11 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
   suppttl {
     BEGIN(USERVALUE);
     return(servSUPPTTL);
+  }
+
+  uploadttl {
+    BEGIN(USERVALUE);
+    return(servUPLOADTTL);
   }
 
   maxscore {

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.9 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.10 2015/08/08 06:33:53 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -25,6 +25,33 @@
 #include "mediatex-config.h"
 
 int computeArchive(Archive* self, int depth);
+
+
+/*=======================================================================
+ * Function   : isNewIncoming
+ * Description: state if an archive was newly upload
+ * Synopsis   : static int isNewIncoming(Collection* coll, 
+ *                                                    Archive* archive)
+ * Input      : Collection* coll: to get uploadTTL parameter
+ *              Archive* archive
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+isNewIncoming(Collection* coll, Archive* archive)
+{
+  int rc = FALSE;
+
+  if (!archive->uploadTime) goto end;
+  if (currentTime() > archive->uploadTime + coll->serverTree->uploadTTL) {
+    logCommon(LOG_WARNING, "forgotten incoming archive: %s:%lli", 
+	      archive->hash, (long long int)archive->size); 
+    goto end;
+  }
+  
+  rc = TRUE;
+ end:
+  return rc;
+}
 
 
 /*=======================================================================
@@ -258,7 +285,7 @@ computeExtractScore(Collection* coll)
       if (!computeArchive(archive, 0)) goto error2;
 
       // new incomings are ignored into score computation
-      if (archive->isIncoming && archive->isNewIncoming) continue;
+      if (isNewIncoming(coll, archive)) continue;
 
       // global score = min ( archive's score )
       if (archive->extractScore > -1) {
@@ -316,7 +343,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
     archive = (Archive*) node->item;
     
     // do not display a global bad score due to incomings
-    if (archive->isNewIncoming) continue;
+    if (isNewIncoming(coll, archive)) continue;
 
     if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2) {
       if (badArchives && !rgInsert(*badArchives, archive)) goto error;

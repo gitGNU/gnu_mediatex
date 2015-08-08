@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.6 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.7 2015/08/08 06:33:56 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -112,6 +112,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servCACHETTL
 %token            servQUERYTTL
 %token            servSUPPTTL
+%token            servUPLOADTTL
 %token            servMAXSCORE
 %token            servBADSCORE
 %token            servPOWSUPP
@@ -166,6 +167,10 @@ header: servMASTER servHASH
       | servSUPPTTL servNUMBER servTIME
 {
   coll->serverTree->scoreParam.suppTTL = $2*$3;
+}
+      | servUPLOADTTL servNUMBER servTIME
+{
+  coll->serverTree->uploadTTL = $2*$3;
 }
       | servMAXSCORE servSCORE
 {

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.7 2015/08/08 06:33:55 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -371,6 +371,7 @@ createServerTree(void)
   memset(rc, 0, sizeof(ServerTree));
   strncpy(rc->aesKey, "01234567890abcdef", MAX_SIZE_AES);
 
+  rc->uploadTTL = MONTH;
   rc->scoreParam = defaultScoreParam;
   rc->minGeoDup = DEFAULT_MIN_GEO;
 
@@ -468,6 +469,7 @@ serializeServerTree(Collection* coll)
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
 
   fprintf(fd, "\n# score parameters\n");
+  printLapsTime(fd, "%-10s", "uploadTTL", self->uploadTTL);
   printLapsTime(fd, "%-10s", "suppTTL",  self->scoreParam.suppTTL);
   fprintf(fd, "%-10s %.2f\n", "maxScore", self->scoreParam.maxScore);
   fprintf(fd, "%-10s %.2f\n", "badScore", self->scoreParam.badScore);

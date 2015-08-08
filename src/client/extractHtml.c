@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.9 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.10 2015/08/08 06:33:53 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -1022,6 +1022,9 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlPOpen(fd);
   if (!fprintf(fd, _("\nScore parameters:\n"))) goto error;
   htmlUlOpen(fd);
+  htmlLiOpen(fd);
+  printLapsTime(fd, "%-10s:", "uploadTTL",  serverTree->uploadTTL);
+  htmlLiClose(fd);
   htmlLiOpen(fd);
   printLapsTime(fd, "%-10s:", "suppTTL",  serverTree->scoreParam.suppTTL);
   htmlLiClose(fd);

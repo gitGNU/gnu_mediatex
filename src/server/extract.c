@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.10 2015/08/07 17:50:33 nroche Exp $
+ * Version: $Id: extract.c,v 1.11 2015/08/08 06:33:56 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -794,7 +794,6 @@ extractRecord(ExtractData* data, Record* record)
   // retrieve the canonical target name to use (from extract.txt)
   if (record->archive && 
       !isEmptyRing(record->archive->fromContainers) &&
-      !record->archive->isIncoming &&
       (asso = (FromAsso*)record->archive->fromContainers->head->it)) {
 
     // use the first asso path (may be severals)
@@ -970,11 +969,10 @@ int extractContainer(ExtractData* data, Container* container)
   int found = FALSE;
 
   checkCollection(data->coll);
-
-#warning modif 15/7
-  // INC container are not designed for extraction (no parent)
-  if (container->type == INC) goto end;
-  //if (isEmptyRing(container->parents)) goto end;
+  if (container->type == INC) {
+    logMain(LOG_ERR, "internal error: INC container not expected");
+    goto error;
+  }
 
   logMain(LOG_DEBUG, "extract container %s/%s:%lli", 
 	  strEType(container->type), container->parent->hash,
@@ -1010,12 +1008,11 @@ int extractContainer(ExtractData* data, Container* container)
   	}
       }
     }
-#warning modif 15/7
+
     // here we have only copy parts for next try
-    //data->found = FALSE;
+    //data->found = FALSE; (already set)
   }
 
- end:
   data->found = found;
   rc = TRUE;
  error:
@@ -1164,8 +1161,7 @@ getWantedArchives(Collection* coll)
     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
       continue;
     if (archive->remoteSupplies->nbItems == 0) continue;
-    if (archive->fromContainers->nbItems > 0 && !archive->isIncoming) 
-      continue;
+    if (archive->fromContainers->nbItems > 0) continue;
 
     logMain(LOG_INFO, "looking for %s%lli",
 	    archive->hash, (long long int)archive->size);

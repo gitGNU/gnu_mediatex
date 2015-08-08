@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.8 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.9 2015/08/08 06:33:54 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -237,7 +237,7 @@ serializeContainer(Container* self, CvsFile* fd)
 
     for(node = self->childs->head; node; node = node->next) {
       asso = node->item;
-      if (self->type == INC && asso->archive->isIncoming <= 0) continue;
+      if (self->type == INC && !isIncoming(asso->archive)) continue;
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
       cvsPrint(fd, "\t%s\n", asso->path);
     }
@@ -588,8 +588,18 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
       logMemory(LOG_ERR, 
 	      "compression only container must only provides one archive");
       goto error;
-    }    break;
+    }    
+    break;
+
   case INC:
+    // having 1 inc asso and 1 normal asso => remove the inc asso
+    if (archive->fromContainers->nbItems > 0) {
+      logMemory(LOG_NOTICE, "remove %s:%lli archive from incomings", 
+		archive->hash, (long long int)archive->size);
+      asso = archive->fromContainers->head->it;
+      goto end;
+    }
+
     if (sscanf(path, "%d-%d-%d,%d:%d:%d",
 	       &date.tm_year, &date.tm_mon, &date.tm_mday,
 	       &date.tm_hour, &date.tm_min, &date.tm_sec)
@@ -600,20 +610,22 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
 
     date.tm_year -= 1900; // from GNU/Linux burning date
     date.tm_mon -= 1;     // month are managed from 0 to 11 
-    date.tm_isdst = -1; // no information available about spring
-			// horodatage
+    date.tm_isdst = -1;   // no information available about spring date
     if ((time = mktime(&date)) == -1) goto error;
-    ++archive->isIncoming;
-#warning incomingTTL this server parameters
-    if (currentTime() < time + 1*MONTH) {
-      archive->isNewIncoming = TRUE;
+
+    // having 2 incoming asso we take the oldest date
+    if (!archive->uploadTime || archive->uploadTime > time) {
+      archive->uploadTime = time;
     }
-    else {
-      logMemory(LOG_WARNING, "too old incoming archive: %s:%lli", 
-		archive->hash, (long long int)archive->size); 
-    }
+
     break;
   default:
+    // having 1 inc asso and 1 normal asso => remove the inc asso
+    if (archive->uploadTime) {
+      logMemory(LOG_NOTICE, "remove %s:%lli archive from incomings", 
+		archive->hash, (long long int)archive->size);
+      archive->uploadTime = 0;
+    }
     break;
   }
 
@@ -630,6 +642,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   }
   if (!avl_insert(container->childs, asso)) goto error;
 
+ end:
   rc = asso;
  error:
   if (!rc) {
@@ -664,10 +677,7 @@ delFromAsso(Collection* coll, FromAsso* self)
 
   // incomings do not provides extraction path
   if (self->container->type == INC) {
-    if (--self->archive->isIncoming < 0) {
-      logMemory(LOG_ERR, "intenal error: isIncoming<0");
-      goto error;
-    }
+    self->archive->uploadTime = 0;
   }
   else {
     // delete asso from archive

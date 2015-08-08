@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.5 2015/07/07 09:33:35 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.6 2015/08/08 06:33:55 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -62,14 +62,13 @@ struct Server {
   struct sockaddr_in address; // manage by connect.c
   float score;                // manage by extractHtml.c
 
+  ScoreParam scoreParam; // parameters use to compute image's score
+  int minGeoDup; // minimum number of support remote copies
+
   // manage by cache.c
   off_t  cacheSize; // maximum size for cache
   time_t cacheTTL;  // time to live for target files in cache
   time_t queryTTL;  // time to live for queries in memory
-
-  // parameters use to compute image's score
-  ScoreParam scoreParam; 
-  int minGeoDup; // minimum number of support remote copies
 
   int isLocalhost; // = (fingerPrint == coll->userFingerPrint)
 };
@@ -85,6 +84,7 @@ struct ServerTree {
 
   ScoreParam scoreParam; // parameter use to compute score
   int    minGeoDup;     // number of distantes copies expected
+  time_t uploadTTL; // incoming content do not implies a bad score
 };
 
 Image* createImage(void);

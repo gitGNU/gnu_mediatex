@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.6 2015/08/05 12:12:02 nroche Exp $
+ * Version: $Id: archive.h,v 1.7 2015/08/08 06:33:54 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -50,8 +50,7 @@ struct Archive
   RG*        fromContainers; // (FromAsso*)
   Container* toContainer;    // only one: (choose a rule TGZ or TAR+GZ)
   float      extractScore;   // computed value used by cache
-  int        isIncoming;     // uploaded archive (from INC container)
-  int        isNewIncoming;  // new uploaded archive
+  time_t     uploadTime;     // uploaded archive (from INC container)
 
   // documentTree related data
   RG* documents;
@@ -86,6 +85,8 @@ int delArchive(Collection* coll, Archive* archive);
 
 int diseaseArchive(Collection* coll, Archive* arch);
 int diseaseArchives(Collection* coll);
+
+int isIncoming(Archive* self);
 
 #endif /* MDTX_MEMORY_ARCHIVE_H */
 

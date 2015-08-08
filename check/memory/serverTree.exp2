@@ -13,6 +13,7 @@ master     6b18ed0194b0fbadd08e0a13cccda00e
 collKey    1234567890abcdef
 
 # score parameters
+uploadTTL  1 Month
 suppTTL    5 Year
 maxScore   10.00
 badScore   1.00
