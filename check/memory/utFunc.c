@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.8 2015/08/07 17:50:24 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.9 2015/08/08 06:41:56 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -335,6 +335,9 @@ int createExempleExtractTree(Collection* coll)
   if (!(asso = addFromAsso(coll, iso1, container, dateString))) goto error;
   if (!(asso = addFromAsso(coll, iso2, container, "1994-01-01,00:00:00"))) 
     goto error;
+
+  // this one should be automatically removed
+  if (!(asso = addFromAsso(coll, logo, container, dateString))) goto error;
 
   return TRUE;
  error:

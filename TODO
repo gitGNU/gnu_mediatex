@@ -36,9 +36,7 @@
 - extract.c::extractRecord modify tmpBasename for INC
 
 - uploadTTL parmeter into servers.txt
-- only parse date on extract parser
-- having 2 incoming asso we take the oldest date
-- having 1 inc asso and 1 normal asso => remove the inc asso
+- extract rule automatically remove related INC content
 
 *** CLEAN-UP
 

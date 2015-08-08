@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-08-07 19:42+0200\n"
+"POT-Creation-Date: 2015-08-08 08:46+0200\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
 "Last-Translator: nroche <nroche@narval.tk>\n"
 "Language-Team: French\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/common/extractScore.c:335
+#: src/common/extractScore.c:362
 msgid "Perenniality lost"
 msgstr ""
 
-#: src/common/extractScore.c:339
+#: src/common/extractScore.c:366
 msgid "Serious risk to loose perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:343
+#: src/common/extractScore.c:370
 msgid "Bad perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:347
+#: src/common/extractScore.c:374
 msgid "Good perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:350
+#: src/common/extractScore.c:377
 msgid "Very good perenniality"
 msgstr ""
 
@@ -253,11 +253,11 @@ msgstr ""
 msgid "Provide images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:764 src/client/extractHtml.c:1128
+#: src/client/extractHtml.c:764 src/client/extractHtml.c:1131
 msgid "All archives"
 msgstr ""
 
-#: src/client/extractHtml.c:935 src/client/extractHtml.c:1133
+#: src/client/extractHtml.c:935 src/client/extractHtml.c:1136
 msgid "Bad archives"
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "should be burned into supports:"
 msgstr ""
 
-#: src/client/extractHtml.c:1019 src/client/extractHtml.c:1120
+#: src/client/extractHtml.c:1019 src/client/extractHtml.c:1123
 msgid "score"
 msgstr ""
 
@@ -276,19 +276,19 @@ msgid ""
 "Score parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1048
+#: src/client/extractHtml.c:1051
 #, c-format
 msgid ""
 "\n"
 "All images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1068
+#: src/client/extractHtml.c:1071
 #, c-format
 msgid "No image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1119
+#: src/client/extractHtml.c:1122
 msgid "Score"
 msgstr ""
 
