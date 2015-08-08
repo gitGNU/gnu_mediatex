@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.6 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: supp.c,v 1.7 2015/08/08 23:31:42 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -27,7 +27,7 @@
 
 /*=======================================================================
  * Function   : mdtxMount
- * Description: call scp so as to not need setuid bit on daemon
+ * Description: 
  * Synopsis   : 
  * Input      : 
  *              
@@ -339,12 +339,15 @@ mdtxAddSupport(char* label, char* path)
 }
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
+ * Function   : addFinalSupplies
+ * Description: fill recordTree with content to tell to the server
+ * Synopsis   : static int addFinalSupplies(Collection* coll, 
+ *                                Support* supp, char* path, char* mnt,
+ *                                RecordTree* tree) 
  * Input      : Collection* coll
- *              Archive* iso
- *              char* path
+ *              Support* supp
+ *              char* path: path to the support
+ *              char* mnt: path where the eventual iso is mounted
  * Output     : RecordTree* tree
  *              TRUE on success
  =======================================================================*/
@@ -482,7 +485,7 @@ notifyHave(Support* supp, char* path, char* mnt)
   }
 
   if (!isShared) {
-    logMain(LOG_DEBUG, "the %s support is not share by any collection",
+    logMain(LOG_NOTICE, "the %s support is not share by any collection",
   	    supp->name);
   }
   rc = TRUE;

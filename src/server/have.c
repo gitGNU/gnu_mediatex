@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.7 2015/08/07 17:50:33 nroche Exp $
+ * Version: $Id: have.c,v 1.8 2015/08/08 23:31:45 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -168,7 +168,7 @@ addFinalSupplies(RecordTree* tree, Record** iso)
 
     if (!addCacheEntry(tree->collection, record)) goto error;
 
-    // math the bigest record as the iso
+    // match the bigest record as the iso
     if (record->archive->size > maxSize) {
       maxSize = record->archive->size;
       *iso = record;

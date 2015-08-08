@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.8 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: misc.c,v 1.9 2015/08/08 23:31:40 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -625,12 +625,8 @@ mdtxUploadFile(char* label, char* path)
     // read reply
     n = tcpRead(socket, reply, 255);
     tcpRead(socket, reply, 1);
-    
-    // erase the \n send by server
-    if (n<=0) n = 1;
-    reply[n-1] = (char)0;
-    
     if (sscanf(reply, "%i %s", &status, message) < 1) {
+      reply[(n<=0)?0:n-1] = (char)0; // remove ending \n
       logMain(LOG_ERR, "error reading reply: %s", reply);
       goto error2;
     }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.11 2015/08/08 06:33:56 nroche Exp $
+ * Version: $Id: extract.c,v 1.12 2015/08/08 23:31:44 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -791,12 +791,10 @@ extractRecord(ExtractData* data, Record* record)
   // allocate place on cache
   if (!cacheAlloc(&record2, coll, record->archive)) goto error;
 
-  // retrieve the canonical target name to use (from extract.txt)
+  // retrieve first canonical target name (may be severals)
   if (record->archive && 
       !isEmptyRing(record->archive->fromContainers) &&
       (asso = (FromAsso*)record->archive->fromContainers->head->it)) {
-
-    // use the first asso path (may be severals)
     tmpBasename = asso->path;
   }
   else {

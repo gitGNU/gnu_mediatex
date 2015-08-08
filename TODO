@@ -1,11 +1,11 @@
 
 *** TO CORRECT: cache policy    
 
-- confTree::getLocalHost maybe optimize this call (not sure)
-- serverTree.h: isLocalhost -> isLocalHost()
+- have: mount done by server ?
 
+- find a way to pass a string for have/uplaod recordTree messages
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
-- rename cache/incoming to cache/default
+- rename cache/incoming to cache/default ?
 
 - cache/toKeep directory: 
 -- rename to cache/extern
