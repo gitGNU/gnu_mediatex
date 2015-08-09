@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.7 2015/08/08 06:33:56 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.8 2015/08/09 16:04:49 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -131,7 +131,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 
 file: //empty file 
 {
-  logParser(LOG_WARNING, "the server file was empty");
+  logParser(LOG_INFO, "the server file was empty");
 }
     | headers
 {

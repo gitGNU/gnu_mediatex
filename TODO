@@ -1,12 +1,13 @@
 
 *** TO CORRECT: cache policy    
 
-- [warning serverFile.y:134] the server file was empty
-
+** UPLOAD
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - do not load into cache unknown archive in extract.txt
 - rename cache/incoming to cache/default ?
+- provide %AAMMJJ% macro ?
 
+** EXTERN
 - cache/toKeep directory: 
 -- rename to cache/extern
 -- replace path on extraction
@@ -14,16 +15,10 @@
 -- md5sum not computed all times
 - score computation also use md5sums.txt file
 
+** MOTD
 - motd: add coll selection facility
 - motd: add to burn and orphanes
 - catalogHtml: add warning for orphanes
-
-- move dirname into extract rule header to reduce extract.txt file size
--- extract.c::extractTar modify asso->path -> getAssoPath()
--- extractFile.y: container: extrTYPE archive ++extrSTRING
--- extractTree.h: struct Container { ++char* pathPrefix;
--- memory/utFunc.c
--- misc/extract000.txt
 
 *** CHANGES (to document)
 
@@ -39,9 +34,9 @@
 
 ** HAVE
 - have: mount done by server
-- [info cache.c] access fails: No such file or directory
 - mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
 - find a way to pass a string for have/upload recordTree messages
+- remove [info cache.c] access fails: No such file or directory
 - remove thereIs function
 
 *** CLEAN-UP
@@ -66,6 +61,7 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
+- move dirname into extract rule header to reduce extract.txt file size
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init
   vhost for apache logs and one mdtx.log for each daemon
