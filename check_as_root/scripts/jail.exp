@@ -100,9 +100,9 @@ N ut5-mdtx-hello/apache2/home.htaccess
 N ut5-mdtx-hello/apache2/htgroup
 N ut5-mdtx-hello/apache2/index.htaccess
 N ut5-mdtx-hello/apache2/score.htaccess
-N ut5-mdtx-hello/catalog00.txt
+N ut5-mdtx-hello/catalog000.txt
 N ut5-mdtx-hello/.cvsignore
-N ut5-mdtx-hello/extract00.txt
+N ut5-mdtx-hello/extract000.txt
 N ut5-mdtx-hello/icons/floppy-icon.png
 N ut5-mdtx-hello/logo.png
 N ut5-mdtx-hello/mediatex.css
@@ -127,8 +127,8 @@ var
 [info cvs.sh] su USER -c "cvs -d :ext:ut5-mdtx-hello@localhost:/var/lib/cvsroot co ut5-mdtx-hello"
 cvs checkout: Updating ut5-mdtx-hello
 U ut5-mdtx-hello/.cvsignore
-U ut5-mdtx-hello/catalog00.txt
-U ut5-mdtx-hello/extract00.txt
+U ut5-mdtx-hello/catalog000.txt
+U ut5-mdtx-hello/extract000.txt
 U ut5-mdtx-hello/logo.png
 U ut5-mdtx-hello/mediatex.css
 U ut5-mdtx-hello/servers.txt

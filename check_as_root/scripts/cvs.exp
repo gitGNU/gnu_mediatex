@@ -114,9 +114,9 @@ N ut4-mdtx-hello/apache2/home.htaccess
 N ut4-mdtx-hello/apache2/htgroup
 N ut4-mdtx-hello/apache2/index.htaccess
 N ut4-mdtx-hello/apache2/score.htaccess
-N ut4-mdtx-hello/catalog00.txt
+N ut4-mdtx-hello/catalog000.txt
 N ut4-mdtx-hello/.cvsignore
-N ut4-mdtx-hello/extract00.txt
+N ut4-mdtx-hello/extract000.txt
 N ut4-mdtx-hello/icons/floppy-icon.png
 N ut4-mdtx-hello/logo.png
 N ut4-mdtx-hello/mediatex.css
@@ -139,9 +139,9 @@ U ut4-mdtx-hello/apache2/home.htaccess
 U ut4-mdtx-hello/apache2/htgroup
 U ut4-mdtx-hello/apache2/index.htaccess
 U ut4-mdtx-hello/apache2/score.htaccess
-U ut4-mdtx-hello/catalog00.txt
+U ut4-mdtx-hello/catalog000.txt
 U ut4-mdtx-hello/.cvsignore
-U ut4-mdtx-hello/extract00.txt
+U ut4-mdtx-hello/extract000.txt
 U ut4-mdtx-hello/icons/floppy-icon.png
 U ut4-mdtx-hello/logo.png
 U ut4-mdtx-hello/mediatex.css
@@ -150,13 +150,13 @@ cvs commit: Examining .
 cvs commit: Examining apache2
 cvs commit: Examining icons
 new revision: 1.2; previous revision: 1.1
-LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/catalog00.txt,v  <--  catalog00.txt
+LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/catalog000.txt,v  <--  catalog000.txt
 cvs update: Updating .
 cvs update: Updating apache2
 cvs update: Updating icons
 
-RCS file: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/catalog00.txt,v
-Working file: catalog00.txt
+RCS file: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/catalog000.txt,v
+Working file: catalog000.txt
 head: 1.2
 branch:
 locks: strict

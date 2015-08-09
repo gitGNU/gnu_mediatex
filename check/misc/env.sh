@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: env.sh,v 1.1 2015/07/01 10:49:49 nroche Exp $
+# * Version: $Id: env.sh,v 1.2 2015/08/09 13:20:33 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -26,10 +26,16 @@
 echo "** This script show the MediaTex environment variables:"
 
 echo "* Parameters:"
-echo "MDTX_MDTXUSER      = $MDTX_MDTXUSER"
-echo "MDTX_LOG_FILE      = $MDTX_LOG_FILE"
-echo "MDTX_LOG_FACILITY  = $MDTX_LOG_FACILITY"
-echo "MDTX_LOG_SEVERITY  = $MDTX_LOG_SEVERITY"
-echo "MDTX_DRY_RUN       = $MDTX_DRY_RUN"
-echo "PARAMETER_1        = $1"
+echo "MDTX_MDTXUSER            = $MDTX_MDTXUSER"
+echo "MDTX_LOG_FACILITY        = $MDTX_LOG_FACILITY"
+echo "MDTX_LOG_FILE            = $MDTX_LOG_FILE"
+echo "MDTX_LOG_SEVERITY_ALLOC  = $MDTX_LOG_SEVERITY_ALLOC"
+echo "MDTX_LOG_SEVERITY_SCRIPT = $MDTX_LOG_SEVERITY_SCRIPT"
+echo "MDTX_LOG_SEVERITY_MISC   = $MDTX_LOG_SEVERITY_MISC"
+echo "MDTX_LOG_SEVERITY_MEMORY = $MDTX_LOG_SEVERITY_MEMORY"
+echo "MDTX_LOG_SEVERITY_PARSER = $MDTX_LOG_SEVERITY_PARSER"
+echo "MDTX_LOG_SEVERITY_COMMON = $MDTX_LOG_SEVERITY_COMMON"
+echo "MDTX_LOG_SEVERITY_MAIN   = $MDTX_LOG_SEVERITY_MAIN"
+echo "MDTX_DRY_RUN             = $MDTX_DRY_RUN"
+echo "PARAMETER_1              = $1"
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: log.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
+# * Version: $Id: log.sh,v 1.5 2015/08/09 13:20:34 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -118,4 +118,4 @@ Debug()
 # main
 LOG_FILE=${MDTX_LOG_FILE-""}
 LOG_FACILITY=${MDTX_LOG_FACILITY-file}
-LOG_SEVERITY=${MDTX_LOG_SEVERITY-info}
+LOG_SEVERITY=${MDTX_LOG_SEVERITY_SCRIPT-info}

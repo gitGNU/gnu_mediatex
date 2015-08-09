@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.8 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: command.c,v 1.9 2015/08/09 13:20:34 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -196,16 +196,31 @@ void
 getEnv(MdtxEnv* self)
 {
   char* tmpValue = 0;
+  int i =0;
+
+  static char logModuleVar[7][32] = {
+    "MDTX_LOG_SEVERITY_ALLOC",
+    "MDTX_LOG_SEVERITY_SCRIPT",
+    "MDTX_LOG_SEVERITY_MISC",
+    "MDTX_LOG_SEVERITY_MEMORY",
+    "MDTX_LOG_SEVERITY_PARSER",
+    "MDTX_LOG_SEVERITY_COMMON",
+    "MDTX_LOG_SEVERITY_MAIN"
+  };
 
   // no logging available here
  
   // check the environment variables
-  if ((tmpValue = getenv("MDTX_LOG_FILE")) != 0)
-    self->logFile = tmpValue;
   if ((tmpValue = getenv("MDTX_LOG_FACILITY")) != 0)
     self->logFacility = getLogFacility(tmpValue);
-  if ((tmpValue = getenv("MDTX_LOG_SEVERITY")) != 0)
-    self->logSeverity[LOG_SCRIPT] = getLogSeverity(tmpValue);
+  if ((tmpValue = getenv("MDTX_LOG_FILE")) != 0)
+    self->logFile = tmpValue;
+
+  for (i=0; i<LOG_MAX_MODULE; ++i) {
+    if ((tmpValue = getenv(logModuleVar[i])) != 0)
+      self->logSeverity[i] = getLogSeverity(tmpValue);
+  }
+
   if ((tmpValue = getenv("MDTX_MDTXUSER")) != 0)
     self->confLabel = tmpValue;
   if ((tmpValue = getenv("MDTX_DRY_RUN")) != 0)
@@ -227,6 +242,19 @@ int
 setEnv(char* programName, MdtxEnv *self)
 {
   int rc = FALSE;
+  int ko = FALSE;
+  int i = 0;
+
+  static char logModuleVar[7][32] = {
+    "MDTX_LOG_SEVERITY_ALLOC",
+    "MDTX_LOG_SEVERITY_SCRIPT",
+    "MDTX_LOG_SEVERITY_MISC",
+    "MDTX_LOG_SEVERITY_MEMORY",
+    "MDTX_LOG_SEVERITY_PARSER",
+    "MDTX_LOG_SEVERITY_COMMON",
+    "MDTX_LOG_SEVERITY_MAIN"
+  };
+
   // no logging available yet here
 
   // unset previous log handler if it exists (on bad malloc init)
@@ -242,17 +270,20 @@ setEnv(char* programName, MdtxEnv *self)
 
   logMisc(LOG_DEBUG, "set the environment variables");
 
-  // export the environment
-  if (setenv("MDTX_LOG_FILE", self->logFile, 1) == -1
-      || setenv("MDTX_LOG_FACILITY", 
-		self->logHandler->facility->name, 1) == -1
-      || setenv("MDTX_LOG_SEVERITY", 
-		self->logHandler->severity[LOG_SCRIPT]->name, 1) == -1
-      || setenv("MDTX_MDTXUSER", self->confLabel, 1) == -1
-      || setenv("MDTX_DRY_RUN", self->dryRun?"1":"0", 1) == -1
-      || setenv("LD_LIBRARY_PATH", "", 1) == -1
-      || setenv("IFS", "", 1) == -1
-      ) {
+  // export the environment (used by executed binaries or scripts)
+  ko=ko| setenv("MDTX_LOG_FACILITY", self->logHandler->facility->name, 1);
+  ko=ko| setenv("MDTX_LOG_FILE", self->logFile?self->logFile:"", 1);
+
+  for (i=0; !ko && i<LOG_MAX_MODULE; ++i) {
+    ko=ko| setenv(logModuleVar[i], self->logHandler->severity[i]->name, 1);
+  }
+
+  ko=ko| setenv("MDTX_MDTXUSER", self->confLabel, 1);
+  ko=ko| setenv("MDTX_DRY_RUN", self->dryRun?"1":"0", 1);
+  ko=ko| setenv("LD_LIBRARY_PATH", "", 1);
+  ko=ko| setenv("IFS", "", 1);
+
+  if (ko) {
     logMisc(LOG_ERR, "setenv variables failed: ", strerror(errno));
     goto error2;
   }

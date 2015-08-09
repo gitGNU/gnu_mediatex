@@ -1,11 +1,8 @@
 
 *** TO CORRECT: cache policy    
 
-- remove MDTX_DELIVER code: mediatexd.c ...
-- [info cache.c] access fails: No such file or directory
 - find a way to pass a string for have/uplaod recordTree messages
 - remove first cond: unknown in extract.txt or having a bad score
-- mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
 
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - rename cache/incoming to cache/default ?
@@ -30,18 +27,20 @@
 
 *** CHANGES (to document)
 
-- explain tests (and configuration from utFunc) 
+** INC
 - extractNNN.txt: agregate uploaded files into one uniq INC container
 --> computeArchiveStatus => ComputeExtractScore
 - REC code removed
---> utFunc.c ... extractScore.c
 - score: look INC date to decide if score inpact or not on collection
 - no unit test for extract.c::getWantedArchives
 - extract.c::extractRecord modify tmpBasename for INC
-- have: mount done by server
-
 - uploadTTL parmeter into servers.txt
 - extract rule automatically remove related INC content
+
+** HAVE
+- have: mount done by server
+- [info cache.c] access fails: No such file or directory
+- mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
 
 *** CLEAN-UP
 
@@ -64,6 +63,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
 - manage ECDSA keys
+- remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init
   vhost for apache logs and one mdtx.log for each daemon
