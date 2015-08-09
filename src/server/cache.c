@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.10 2015/08/09 11:45:01 nroche Exp $
+ * Version: $Id: cache.c,v 1.11 2015/08/09 15:56:41 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -55,6 +55,64 @@ getAbsCachePath(Collection* coll, char* path)
 }
 
 /*=======================================================================
+ * Function   : getFinalSupplyInPath
+ * Description: Get final supply's source path
+ * Synopsis   : char* getFinalSupplyInPath(char* path) 
+ * Input      : Collection* coll = the related collection
+ *              char* path = the relative path
+ * Output     : NULL on failure
+ =======================================================================*/
+char*
+getFinalSupplyInPath(char* path) 
+{
+  char* rc = 0;
+  char* ptr = 0;
+
+  checkLabel(path);
+  logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
+
+  if (!(rc = catString(rc, path))) goto error;
+
+  // remove ending ':supportName' if there
+  for (ptr=rc; *ptr != 0 && *ptr != ':'; ++ptr);
+  if (*ptr) *ptr = 0;
+
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "getFinalSupplyInputPath fails");
+  }
+  return rc;
+}
+/*=======================================================================
+ * Function   : getFinalSupplyOutPath
+ * Description: remove ending ':supportName' if there
+ * Synopsis   : char* getFinalSupplyOutPath(char* path) 
+ * Input      : char* path = the relative path
+ * Output     : NULL on failure
+ =======================================================================*/
+char*
+getFinalSupplyOutPath(char* path) 
+{
+  char* rc = 0;
+  char* ptr = 0;
+
+  checkLabel(path);
+  logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
+
+  // look for ending ':supportName' if there
+  for (ptr=path; *ptr != 0 && *ptr != ':'; ++ptr);
+  if (*ptr) {
+    if (!(rc = createString(ptr+1))) goto error;
+  }
+
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "getFinalSupplyInputPath fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
  * Function   : absoluteRecordPath
  * Description: return record path from /
  * Synopsis   : char* absoluteRecordPath(Collection* coll, Record* record) 
@@ -73,7 +131,7 @@ getAbsRecordPath(Collection* coll, Record* record)
 
   switch (getRecordType(record)) {
   case FINALE_SUPPLY:
-    if (!(rc = createString(record->extra))) goto error;
+    if (!(rc = getFinalSupplyInPath(record->extra))) goto error;
     break;
   case LOCALE_SUPPLY:
     if (!(rc = getAbsCachePath(coll, record->extra))) goto error;

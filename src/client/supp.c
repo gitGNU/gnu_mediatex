@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.8 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: supp.c,v 1.9 2015/08/09 15:56:40 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -295,9 +295,9 @@ mdtxLsSupport()
 }
 
 /*=======================================================================
- * Function   : addSupport 
+ * Function   : mdtxAddSupport 
  * Description: add a new available support
- * Synopsis   : int addSupport(char* label, char* path)
+ * Synopsis   : int mdtxAddSupport(char* label, char* path)
  * Input      : char* label = support's label
  *              char* path = path to the device that host the support
  * Output     : N/A
@@ -357,13 +357,23 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   int rc = FALSE;
   Archive* archive = 0;
   Record* record = 0;
+  char* device = 0;
+  char buf[MAX_SIZE_STRING] = "";
   char* extra = 0;
 
   logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
 
+  // tels "/PATH:supports/SUPPORTNAME" 
+  if (snprintf(buf, MAX_SIZE_STRING, "%s:supports/%s", path, supp->name) 
+      >= MAX_SIZE_STRING) {
+    logMain(LOG_ERR, "buffer too few to copy path and support name");
+    goto error;
+  }
+
   if (!getLocalHost(coll)) goto error;
-  if (!(extra = createString(path))) goto error;
+  if (!(extra = createString(buf))) goto error;
+
   if (!(archive = addArchive(coll, supp->fullHash, supp->size))) 
     goto error;
 
@@ -378,6 +388,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
     logMain(LOG_ERR, "addFinalSupplies fails");
   }
   destroyString(extra);
+  destroyString(device);
   return rc;
 }
 
@@ -546,9 +557,9 @@ mdtxHaveSupport(char* label, char* path)
 }
 
 /*=======================================================================
- * Function   : removeSupport 
+ * Function   : mdtxDelSupport 
  * Description: remove a support
- * Synopsis   : int removeSupport(char* label)
+ * Synopsis   : int mdtxDelSupport(char* label)
  * Input      : char* label = the support to remove
  * Output     : TRUE on success
  =======================================================================*/

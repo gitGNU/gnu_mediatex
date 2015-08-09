@@ -1,10 +1,10 @@
 
 *** TO CORRECT: cache policy    
 
-- find a way to pass a string for have/uplaod recordTree messages
-- remove first cond: unknown in extract.txt or having a bad score
+- [warning serverFile.y:134] the server file was empty
 
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+- do not load into cache unknown archive in extract.txt
 - rename cache/incoming to cache/default ?
 
 - cache/toKeep directory: 
@@ -41,6 +41,8 @@
 - have: mount done by server
 - [info cache.c] access fails: No such file or directory
 - mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
+- find a way to pass a string for have/upload recordTree messages
+- remove thereIs function
 
 *** CLEAN-UP
 

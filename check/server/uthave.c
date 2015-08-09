@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthave.c,v 1.1 2015/07/01 10:50:09 nroche Exp $
+ * Version: $Id: uthave.c,v 1.2 2015/08/09 15:56:40 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -115,7 +115,7 @@ main(int argc, char** argv)
   utLog("%s", "Now we have :", coll);
 
   utLog("%s", "provide part 1", 0);
-  sprintf(path, "/tmp/logoP1.cat");
+  sprintf(path, "/tmp/logoP1.cat:supports/logoP1.cat");
   if (!(tree = providePart1(coll, path))) goto error;
   if (!extractFinaleArchives(tree, 0)) goto error;
   utLog("%s", "Now we have :", coll);

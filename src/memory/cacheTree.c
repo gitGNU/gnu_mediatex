@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.7 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.8 2015/08/09 15:56:41 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -306,9 +306,8 @@ computeArchiveStatus(Collection* coll, Archive* archive)
     goto error2;
   }
 
-  // state 5: to keep
-  // unknown in extract.txt or having a bad score
-  // or archive still in use for extraction
+  // state 5: to keep archive having a bad score or 
+  // still in use for extraction
   if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2
       || archive->localSupply->date > date) {
     archive->state = TOKEEP;

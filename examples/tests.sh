@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.3 2015/08/05 12:12:01 nroche Exp $
+# * Version: $Id: tests.sh,v 1.4 2015/08/09 15:56:40 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -34,12 +34,12 @@
 # $1 topo to display
 function topo()
 {
-    echo "**********************************"
+    echo "*************************************************************"
     echo " test $TEST_NB: $1"
-    echo "**********************************"
-    logger -p local2.NOTICE "**********************************"
+    echo "*************************************************************"
+    logger -p local2.NOTICE "******************************************"
     logger -p local2.NOTICE " test $TEST_NB: $1"
-    logger -p local2.NOTICE "**********************************"
+    logger -p local2.NOTICE "******************************************"
 }
 
 # $1 query to display
@@ -48,12 +48,12 @@ function query()
 {
     QUERY=$1
     SERVER=${2-serv1}
-    echo "++++++++++++++++++++++++++++++++++"
+    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo " $SERVER: $QUERY"
-    echo "++++++++++++++++++++++++++++++++++"
-    logger -p local2.NOTICE "++++++++++++++++++++++++++++++++++"
+    echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    logger -p local2.NOTICE "++++++++++++++++++++++++++++++++++++++++++"
     logger -p local2.NOTICE " $SERVER: $QUERY"
-    logger -p local2.NOTICE "++++++++++++++++++++++++++++++++++"
+    logger -p local2.NOTICE "++++++++++++++++++++++++++++++++++++++++++"
 }
 
 # $1 admin query
@@ -63,7 +63,7 @@ function mdtxA()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -swarning -c $SERVER $QUERY
+    mediatex -snotice -c $SERVER $QUERY
 }
 
 # $1 publisher query
@@ -73,7 +73,7 @@ function mdtxP()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -swarning -c $SERVER su <<EOF
+    mediatex -snotice -c $SERVER su <<EOF
 mediatex $QUERY
 EOF
 }
@@ -298,6 +298,7 @@ function test5()
 	mdtxP "del supp iso1 from coll hello"
 	mdtxP "del supp iso2 from coll hello"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
+	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
 	/etc/init.d/mediatexd-serv1 reload serv1
     fi
 }
@@ -314,6 +315,7 @@ function test6()
 	
 	# clean extracted files (from test5) on cache in prevision of next tests
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
+	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
 	/etc/init.d/mediatexd-serv1 reload
     else
 	topo "Cleanup"

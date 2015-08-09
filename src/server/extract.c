@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.14 2015/08/09 11:45:01 nroche Exp $
+ * Version: $Id: extract.c,v 1.15 2015/08/09 15:56:41 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -93,34 +93,6 @@ getAbsExtractPath(Collection* coll, char* path)
 }
 
 /*=======================================================================
- * Function   : thereIs
- * Description: check path
- * Synopsis   : int thereIs(char* path) 
- * Input      : char* path = directory path to check
- * Output     : TRUE on success
- =======================================================================*/
-int
-thereIs(Collection* coll, char* path) 
-{
-  int rc = FALSE;
-
-  checkLabel(path);
-  logMain(LOG_DEBUG, "thereIs: check %s path", path);
-
-  if (access(path, R_OK) != 0) {
-    logMain(LOG_ERR, "access fails: %s", strerror(errno));
-    goto error;
-  }
-  
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "thereIs fails");    
-  }
-  return rc;
-}
-
-/*=======================================================================
  * Function   : uniqueCachePath
  * Description: return a path not alrady used in cache
  * Synopsis   : char* uniqueCachePath(Collection* coll, FromAsso* asso) 
@@ -193,6 +165,7 @@ getArchivePath(Collection* coll, Archive* archive)
     if (isEmptyString(record->extra)) goto error;
   }
   else {
+    // final supply
     if (archive->finaleSupplies->nbItems > 0) {
       if (!(record = (Record*)archive->finaleSupplies->head->it)) 
 	goto error;
@@ -777,12 +750,13 @@ extractRecord(ExtractData* data, Record* record)
 {
   int rc = FALSE;
   Collection* coll = 0;
-  char* tmpBasename = 0;
-  char* tmpPath = 0;
+  char* finalSupplySource = 0;
+  char* finalSupplyTarget = 0;
+  char* basename = 0;
+  char* path = 0;
   FromAsso* asso = 0;
   Record* record2 = 0;
   char* device = 0;
-  char* source = 0;
   int isBlockDev = FALSE;
   int i = 0;
 
@@ -792,43 +766,56 @@ extractRecord(ExtractData* data, Record* record)
   logMain(LOG_DEBUG, "extractRecord %s:%lli", 
 	  record->archive->hash, record->archive->size);
 
+  // split extra path if we get a final supply
+  if (getRecordType(record) == FINALE_SUPPLY) {
+    finalSupplySource = getFinalSupplyInPath(record->extra);
+    finalSupplyTarget = getFinalSupplyOutPath(record->extra);
+  }
+
   // allocate place on cache
   if (!cacheAlloc(&record2, coll, record->archive)) goto error;
 
-  // retrieve first canonical target name (may be severals)
+  // we need a target path for the content to extract:
+
+  // - final supply may provide the supportname
+  if (finalSupplyTarget) {
+    basename = finalSupplyTarget;
+    goto next;
+  }
+
+  // - retrieve first canonical target name (may be severals)
   if (record->archive && 
       !isEmptyRing(record->archive->fromContainers) &&
       (asso = (FromAsso*)record->archive->fromContainers->head->it)) {
-    tmpBasename = asso->path;
+    basename = asso->path;
+    goto next;
   }
-  else {
-    // else continue to use the source path
-    if (record->extra[0] != '/') {
-      tmpBasename = record->extra;
-    }
-    else {
-      // or the basename for final supply
-      for (i = strlen(record->extra); i>=0 && record->extra[i] != '/'; --i);
-      tmpBasename = record->extra + i + 1;
-    }
 
+  // - else (who know) use the source path
+  if (record->extra[0] != '/') {
+    basename = record->extra;
+    goto next;
   }
+
+  // - but only the basename for final supply
+  for (i = strlen(record->extra); i>=0 && record->extra[i] != '/'; --i);
+  basename = record->extra + i + 1;
   
-  if (!(tmpPath = getAbsExtractPath(coll, tmpBasename))) goto error;
-  if (!makeDir(coll->extractDir, tmpPath, 0770)) goto error;
+ next:
+  if (!(path = getAbsExtractPath(coll, basename))) goto error;
+  if (!makeDir(coll->extractDir, path, 0770)) goto error;
 
   switch (getRecordType(record)) {
   case FINALE_SUPPLY:
     // may be a block device to dump
-    if (!getDevice(record->extra, &device)) goto error;
+    if (!getDevice(finalSupplySource, &device)) goto error;
     if (!isBlockDevice(device, &isBlockDev)) goto error;
     if (isBlockDev) {
-      if (!extractDd(coll, device, tmpPath, record->archive->size)) 
+      if (!extractDd(coll, device, path, record->archive->size)) 
 	goto error;
     }
     else {
-      if (!(source = getAbsRecordPath(coll, record))) goto error;
-      if (!extractCp(source, tmpPath)) goto error;
+      if (!extractCp(finalSupplySource, path)) goto error;
     }
     break;
   case REMOTE_SUPPLY:
@@ -840,10 +827,10 @@ extractRecord(ExtractData* data, Record* record)
   }
   
   // toggle !malloc record to local supply
-  if (!cacheSet(data, record2, tmpBasename)) goto error;
-  if (!removeDir(coll->extractDir, tmpPath)) goto error;
+  if (!cacheSet(data, record2, basename)) goto error;
+  if (!removeDir(coll->extractDir, path)) goto error;
 
-  tmpBasename = 0;
+  basename = 0;
   record2 = 0;
   rc = TRUE;
  error:
@@ -851,9 +838,10 @@ extractRecord(ExtractData* data, Record* record)
     logMain(LOG_ERR, "extractRecord fails");
   }
   if (record2) delCacheEntry(coll, record2);
-  tmpPath  = destroyString(tmpPath);
-  device = destroyString(device);
-  source = destroyString(source);
+  destroyString(path);
+  destroyString(device);
+  destroyString(finalSupplySource);
+  destroyString(finalSupplyTarget);
   return rc;
 }
 
@@ -871,7 +859,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   int rc = FALSE;
   Collection* coll = 0;
   Record* record = 0;
-  char* tmpPath = 0;
+  char* path = 0;
 
   coll = data->coll;
   checkCollection(coll);
@@ -881,16 +869,16 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   // allocate place on cache
   if (!cacheAlloc(&record, coll, asso->archive)) goto error;
 
-  if (!(tmpPath = getAbsExtractPath(coll, asso->path))) goto error;
-  if (!makeDir(coll->extractDir, tmpPath, 0770)) goto error;
+  if (!(path = getAbsExtractPath(coll, asso->path))) goto error;
+  if (!makeDir(coll->extractDir, path, 0770)) goto error;
 
   switch (asso->container->type) {
   case ISO:
-    if (!extractIso(coll, asso, tmpPath)) goto error;
+    if (!extractIso(coll, asso, path)) goto error;
     break;
     
   case CAT:
-    if (!extractCat(coll, asso, tmpPath)) goto error;
+    if (!extractCat(coll, asso, path)) goto error;
     break;
     
   case TGZ:
@@ -914,11 +902,11 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
     break;
 
   case GZIP:
-    if (!extractXzip(coll, asso, tmpPath, "/bin/zcat ")) goto error;
+    if (!extractXzip(coll, asso, path, "/bin/zcat ")) goto error;
     break;
 
   case BZIP:
-    if (!extractXzip(coll, asso, tmpPath, "/bin/bzcat ")) goto error;
+    if (!extractXzip(coll, asso, path, "/bin/bzcat ")) goto error;
     break;
 
   case ZIP:
@@ -937,7 +925,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   
   // toggle !malloc record to local supply
   if (!cacheSet(data, record, asso->path)) goto error;
-  if (!removeDir(coll->extractDir, tmpPath)) goto error;
+  if (!removeDir(coll->extractDir, path)) goto error;
 
   record = 0;
   rc = TRUE;
@@ -946,8 +934,7 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
     logMain(LOG_ERR, "extractFromAsso fails");
   }
   if (record) delCacheEntry(coll, record);
-  // destroyRecord(record); !! do not destroy it (done by cacheTree)
-  tmpPath = destroyString(tmpPath);
+  path = destroyString(path);
   return rc;
 }
 
@@ -1038,6 +1025,7 @@ int extractContainer(ExtractData* data, Container* container)
 int extractArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
+  int isThere = FALSE;
   FromAsso* asso = 0;
   Record* record = 0;
   char* path = 0;
@@ -1054,7 +1042,11 @@ int extractArchive(ExtractData* data, Archive* archive)
     // test if the file is really there 
     if (!(path = getAbsRecordPath(data->coll, archive->localSupply))) 
       goto error;
-    if (!thereIs(data->coll, path)) goto error;
+    if (!callAccess(path, &isThere)) goto error;
+    if (!isThere) {
+      logMain(LOG_DEBUG, "no input file: %s", path);
+      goto error;
+    }
     if (!extractAddToKeep(data, archive)) goto error;
     data->found = TRUE;
     goto end;
@@ -1064,7 +1056,13 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (archive->finaleSupplies->nbItems > 0) {
     // test if the file is really there 
     if (!(record = (Record*)archive->finaleSupplies->head->it)) goto error;
-    if (!thereIs(data->coll, record->extra)) goto error;
+    if (!(path = getAbsRecordPath(data->coll, record))) 
+      goto error;
+    if (!callAccess(path, &isThere)) goto error;
+    if (!isThere) {
+      logMain(LOG_DEBUG, "no input file: %s", path);
+      goto error;
+    }
 
     // copy archive if wanted as final demand
     if (data->target == archive) {
