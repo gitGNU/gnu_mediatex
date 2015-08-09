@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.7 2015/08/08 23:31:42 nroche Exp $
+ * Version: $Id: supp.c,v 1.8 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -342,67 +342,66 @@ mdtxAddSupport(char* label, char* path)
  * Function   : addFinalSupplies
  * Description: fill recordTree with content to tell to the server
  * Synopsis   : static int addFinalSupplies(Collection* coll, 
- *                                Support* supp, char* path, char* mnt,
+ *                                Support* supp, char* path,
  *                                RecordTree* tree) 
  * Input      : Collection* coll
  *              Support* supp
  *              char* path: path to the support
- *              char* mnt: path where the eventual iso is mounted
  * Output     : RecordTree* tree
  *              TRUE on success
  =======================================================================*/
 static int 
-addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
+addFinalSupplies(Collection* coll, Support* supp, char* path,
 		 RecordTree* tree) 
 {
   int rc = FALSE;
   Archive* archive = 0;
   Record* record = 0;
-  FromAsso* asso = 0;
-  AVLNode *node = 0;
   char* extra = 0;
 
   logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
 
-  if (!loadCollection(coll, EXTR)) goto error;
-  if (!getLocalHost(coll)) goto error2;
-  if (!(archive = getArchive(coll, supp->fullHash, supp->size))) {
-    logMain(LOG_ERR, "archive is not defined into the extract tree");
+  if (!getLocalHost(coll)) goto error;
+  if (!(extra = createString(path))) goto error;
+  if (!(archive = addArchive(coll, supp->fullHash, supp->size))) 
     goto error;
-  }
 
-  // add the iso archive
-  if (!(extra = createString(path))) goto error2;
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
-    goto error2;
-  if (!rgInsert(tree->records, record)) goto error2;
+    goto error;
+  extra = 0;
+  if (!rgInsert(tree->records, record)) goto error;
 
-  // add available content once the iso is mounted
-  // (server do not mount it so do not use the extraction rules)
-  if (!mnt) goto end;
-  for(node = archive->toContainer->childs->head; 
-      node; node = node->next) {
-    asso = node->item;
-
-    if (!(extra = createString(mnt))
-	|| !(extra = catString(extra, asso->path)))
-      goto error2;
-    if (!(record = 
-	  addRecord(coll, coll->localhost, 
-		    asso->archive, SUPPLY, extra)))
-      goto error2;
-    if (!rgInsert(tree->records, record)) goto error2;
-  }
-
- end:
   rc = TRUE;
- error2:
-  if (!releaseCollection(coll, EXTR)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "addFinalSupplies fails");
   }
+  destroyString(extra);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : delFinalSupplies
+ * Description: empty the record tree used to talk to server
+ * Synopsis   : static int delFinalSupplies(Collection* coll, 
+ *                                                     RecordTree* tree)
+ * Input      : Collection* coll
+ *              RecordTree* tree: the record tree to empty
+ * Output     : TRUE on success
+ =======================================================================*/
+static int delFinalSupplies(Collection* coll, RecordTree* tree)
+{
+  int rc = FALSE;
+  Record* record = 0;
+
+  while((record = rgHead(tree->records))) {
+    if (!delRecord(coll, record)) goto error;
+    rgRemove(tree->records);
+  }
+
+  rc = TRUE;
+ error:
   return rc;
 }
 
@@ -415,14 +414,13 @@ addFinalSupplies(Collection* coll, Support* supp, char* path, char* mnt,
  * Output     : N/A
  =======================================================================*/
 static int 
-notifyHave(Support* supp, char* path, char* mnt) 
+notifyHave(Support* supp, char* path) 
 {
   int rc = FALSE;
   int socket = 0;
   Configuration* conf = 0;
   Collection* coll = 0;
   RecordTree* tree = 0;
-  Record* record = 0;
   RGIT* curr1 = 0;
   RGIT* curr2 = 0;
   char* name = 0;
@@ -455,7 +453,7 @@ notifyHave(Support* supp, char* path, char* mnt)
     isShared = TRUE;
 
     // add final supplies    
-    if (!addFinalSupplies(coll, supp, path, mnt, tree)) goto error;
+    if (!addFinalSupplies(coll, supp, path, tree)) goto error;
 
     if (!env.noRegression) {
       // trick to use 127.0.0.1 instead of www IP address
@@ -477,11 +475,7 @@ notifyHave(Support* supp, char* path, char* mnt)
 	      tree->collection->label);
     }
     
-    // del final supplies
-    while((record = rgHead(tree->records)) != 0) {
-      if (!delRecord(coll, record)) goto error;
-      rgRemove(tree->records);
-    }
+    if (!delFinalSupplies(coll, tree)) goto error;
   }
 
   if (!isShared) {
@@ -500,42 +494,6 @@ notifyHave(Support* supp, char* path, char* mnt)
 }
 
 /*=======================================================================
- * Function   : isIso 
- * Description: check if a file is an iso
- * Synopsis   : int isIsoFile(char* path)
- * Input      : char* path
- * Output     : TRUE on success
- =======================================================================*/
-int isIsoFile(char* path)
-{
-  int rc = FALSE;
-  int fd = -1;
-  unsigned long int count = 0;
-  unsigned short int bs = 0;
-  off_t size = 0;
-
-  logMain(LOG_DEBUG, "isIsoFile");
-
-  if ((fd = open(path, O_RDONLY)) == -1) {
-    logMain(LOG_ERR, "open: %s", strerror(errno));
-    goto error;
-  }
-  
-  if (!getIsoSize(fd, &size, &count, &bs)) goto error;
-  rc = (size > 0);
- error:
-  if (fd != -1 && close(fd) == -1) {
-    logMain(LOG_ERR, "close: %s", strerror(errno));
-    rc = FALSE;
-  }
- if (!rc) {
-    logMain(LOG_INFO, "not an iso");
-  }
-  return rc;
-}
-
-
-/*=======================================================================
  * Function   : mdtxHaveSupport 
  * Description: check an already registered support
  * Synopsis   : int mdtxHaveSupport(char* label, char* path)
@@ -550,8 +508,6 @@ mdtxHaveSupport(char* label, char* path)
   Configuration* conf = 0;
   Support *supp = 0;
   char* absPath = 0;
-  char* mnt = 0;
-  char pid[12];
 
   logMain(LOG_DEBUG, "mdtxHaveSupport");
   if (!(conf = getConfiguration())) goto error;
@@ -571,34 +527,21 @@ mdtxHaveSupport(char* label, char* path)
       goto end;
     }
   }
- 
-  // mount the iso if we have one
-  if (isIsoFile(path)) {
-    sprintf(pid, "/%i/", getpid());
-    if (!(mnt = createString(conf->extractDir))
-	|| !(mnt = catString(mnt, pid)))
-      goto error;
-    if (!mdtxMount(path, mnt)) goto error;
-  }
   
   // ask the daemon to start extraction on the support
-  if (!(absPath = absolutePath(path))) goto error2;
-  if (!notifyHave(supp, absPath, mnt)) goto error2;
+  if (!(absPath = absolutePath(path))) goto error;
+  if (!notifyHave(supp, absPath)) goto error;
 
  end:
   // update support's dates
   conf->fileState[iSUPP] = MODIFIED;
   rc = TRUE;
- error2:
-  // unmount the iso
-  if (!isEmptyString(mnt) && !mdtxUmount(mnt)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "have query on %s support failed", 
 	    supp?supp->name:"unknown");
   }
   absPath = destroyString(absPath);
-  mnt = destroyString(mnt);
   return rc;
 }
 

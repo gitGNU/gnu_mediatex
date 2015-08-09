@@ -28,33 +28,33 @@
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info extract.c] not found archive de5008799752552b7963a2670dc5eb18:391168
+[notice extract.c] de5008799752552b7963a2670dc5eb18:391168 not found
 [info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
-[info extract.c] not found archive 1a167d608e76a6a4a8b16d168580873c:20480
-[info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 not found
+[notice extract.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 not found
 [info extract.c] not found container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extract.c] not found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[notice extract.c] c0c055a0829982bd646e2fafff01aaa6:4066 not found
 [info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
-[info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 not found
 [info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
+[notice extract.c] b5810aba99ed0d15f1f0a073e646d5bd:25045 not found
 [info extract.c] not found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
-[info extract.c] not found archive 65f1464142f405dbbeeea4830c95ddd3:25600
+[notice extract.c] 65f1464142f405dbbeeea4830c95ddd3:25600 not found
 [info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
-[info extract.c] not found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[notice extract.c] f54fba7d2e070d48051ac3f8f1c2eb98:30720 not found
 [info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
-[info extract.c] not found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[notice extract.c] 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 not found
 [info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
-[info extract.c] not found archive fa2b0b536bf61f61617528c474e0bf61:24973
+[notice extract.c] fa2b0b536bf61f61617528c474e0bf61:24973 not found
 [info extract.c] not found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
-[info extract.c] not found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[notice extract.c] b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 not found
 [info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info extract.c] not found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
+[notice extract.c] d79581b67ec1932fd276dcf3b6d6db9a:24733 not found
 [info extract.c] not found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
-[info extract.c] not found archive 7808473c7db9a9e3493a6b61f44f8805:20480
-[info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
+[notice extract.c] 7808473c7db9a9e3493a6b61f44f8805:20480 not found
+[notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
-[info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
 [notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
 [info cgiSrv.c] write to socket: 300 not here
 
@@ -93,7 +93,7 @@ Body
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
-[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [notice cgiSrv.c] query for logo.png
 [info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
 
@@ -145,7 +145,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
-[info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 found
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -156,6 +156,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] = avail     104833054
 [info cache.c] need            24075
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> ALLOCATED
+[notice extract.c] do tar -zxf
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -167,11 +168,11 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
-[notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
 [info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
-[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [notice cgiSrv.c] query for logo/logo.png
 [info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 
@@ -226,33 +227,33 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> TOKEEP
-[info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
-[info extract.c] not found archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
+[notice extract.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 not found
 [info extract.c] not found container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extract.c] not found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[notice extract.c] c0c055a0829982bd646e2fafff01aaa6:4066 not found
 [info extract.c] not found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> AVAILABLE
-[info extract.c] not found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 not found
 [info extract.c] not found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
-[info extract.c] not found archive b5810aba99ed0d15f1f0a073e646d5bd:25045
+[notice extract.c] b5810aba99ed0d15f1f0a073e646d5bd:25045 not found
 [info extract.c] not found container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045
-[info extract.c] not found archive 65f1464142f405dbbeeea4830c95ddd3:25600
+[notice extract.c] 65f1464142f405dbbeeea4830c95ddd3:25600 not found
 [info extract.c] not found container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600
-[info extract.c] not found archive f54fba7d2e070d48051ac3f8f1c2eb98:30720
+[notice extract.c] f54fba7d2e070d48051ac3f8f1c2eb98:30720 not found
 [info extract.c] not found container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720
-[info extract.c] not found archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+[notice extract.c] 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 not found
 [info extract.c] not found container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457
-[info extract.c] not found archive fa2b0b536bf61f61617528c474e0bf61:24973
+[notice extract.c] fa2b0b536bf61f61617528c474e0bf61:24973 not found
 [info extract.c] not found container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973
-[info extract.c] not found archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+[notice extract.c] b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 not found
 [info extract.c] not found container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
-[info extract.c] not found archive d79581b67ec1932fd276dcf3b6d6db9a:24733
+[notice extract.c] d79581b67ec1932fd276dcf3b6d6db9a:24733 not found
 [info extract.c] not found container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733
-[info extract.c] not found archive 7808473c7db9a9e3493a6b61f44f8805:20480
-[info extract.c] not found archive db8b80896f7202b656913f99d438075c:4090
+[notice extract.c] 7808473c7db9a9e3493a6b61f44f8805:20480 not found
+[notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
-[info extract.c] not found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
 [notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
 [info cgiSrv.c] write to socket: 300 not here
 
@@ -289,9 +290,9 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> TOKEEP
-[info extract.c] found archive 1a167d608e76a6a4a8b16d168580873c:20480
+[notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
 [info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: TOKEEP -> TOKEEP
-[info extract.c] found archive c0c055a0829982bd646e2fafff01aaa6:4066
+[notice extract.c] c0c055a0829982bd646e2fafff01aaa6:4066 found
 [info extract.c] found container CAT/1a167d608e76a6a4a8b16d168580873c:20480
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -302,6 +303,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] = avail     104833054
 [info cache.c] need            24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: UNUSED -> ALLOCATED
+[notice extract.c] do cat
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
@@ -310,12 +312,12 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: ALLOCATED -> TOKEEP
-[notice extract.c] extract 0387eee9820fa224525ff8b2e0dfa9be:24546
+[notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 extracted
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> AVAILABLE
 [info extract.c] del to-keep on c0c055a0829982bd646e2fafff01aaa6:4066
 [info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: TOKEEP -> TOKEEP
-[info extract.c] found archive 0387eee9820fa224525ff8b2e0dfa9be:24546
+[notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 found
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -326,6 +328,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] = avail     104828988
 [info cache.c] need            24075
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> ALLOCATED
+[notice extract.c] do tar -zxf
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
 [info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
@@ -337,11 +340,11 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
-[notice extract.c] extract 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
 [info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
-[info extract.c] found archive 022a34b2f9b893fba5774237e1aa80ea:24075
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [notice cgiSrv.c] query for logo/logo.png
 [info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 

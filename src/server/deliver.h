@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: deliver.h,v 1.5 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -29,8 +29,7 @@
 
 /* API */
 
-int deliverMail(Collection* coll, Archive* record);
-int deliverMails(Collection* coll);
+int deliverArchive(Collection* coll, Archive* archive);
 
 #endif /* MDTX_SERVER_DELIVER_H */
 

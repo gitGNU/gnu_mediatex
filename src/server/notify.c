@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.9 2015/08/08 06:33:56 nroche Exp $
+ * Version: $Id: notify.c,v 1.10 2015/08/09 11:12:36 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -36,7 +36,8 @@ int notifyArchive(NotifyData* data, Archive* archive);
  * Output     : int *found = TRUE if notifyed
  *              FALSE on error
  =======================================================================*/
-int notifyContainer(NotifyData* data, Container* container)
+int 
+notifyContainer(NotifyData* data, Container* container)
 {
   int rc = FALSE;
   Archive* archive = 0;
@@ -75,7 +76,8 @@ int notifyContainer(NotifyData* data, Container* container)
  * Output     : int *found = TRUE if notifyed
  *              FALSE on error
  =======================================================================*/
-int notifyArchive(NotifyData* data, Archive* archive)
+int 
+notifyArchive(NotifyData* data, Archive* archive)
 {
   int rc = FALSE;
   FromAsso* asso = 0;
@@ -97,7 +99,6 @@ int notifyArchive(NotifyData* data, Archive* archive)
   // look for a matching local supply
   if (archive->state >= AVAILABLE) {
     data->found = TRUE;
-    if (!keepArchive(data->coll, archive, REMOTE_DEMAND)) goto error;
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
     goto end;
   }
@@ -165,7 +166,8 @@ getWantedRemoteArchives(Collection* coll)
  * Input      : 
  * Output     : TRUE on success
  =======================================================================*/
-int addFinalDemands(NotifyData* data)
+int 
+addFinalDemands(NotifyData* data)
 {
   int rc = FALSE;
   Collection* coll = 0;
@@ -216,7 +218,8 @@ int addFinalDemands(NotifyData* data)
 
  * TODO       : check minGeoDup and nb REMOTE_SUPPLY
  =======================================================================*/
-int addBadTopLocalSupplies(NotifyData* data)
+int 
+addBadTopLocalSupplies(NotifyData* data)
 {
   int rc = FALSE;
   Collection* coll = 0;
@@ -227,7 +230,7 @@ int addBadTopLocalSupplies(NotifyData* data)
   checkCollection(coll);
   logMain(LOG_DEBUG, "addBadTopLocalSupplies");
 
-  // add local iso (or other top containers) having a bad score
+  // add local top containers having a bad score
   while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state < AVAILABLE) continue;
     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2) 
@@ -239,7 +242,6 @@ int addBadTopLocalSupplies(NotifyData* data)
        coll->serverTree->scoreParam.badScore && ...) continue
     */
 
-    if (!keepArchive(data->coll, archive, REMOTE_DEMAND)) goto error;
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
   }
 
@@ -258,7 +260,8 @@ int addBadTopLocalSupplies(NotifyData* data)
  * Input      : Collection* coll
  * Output     : TRUE on success
  =======================================================================*/
-RG* buildNotifyRings(Collection* coll, RG* records)
+RG* 
+buildNotifyRings(Collection* coll, RG* records)
 {
   RG* rc = 0;
   RG* archives = 0;
@@ -305,8 +308,9 @@ RG* buildNotifyRings(Collection* coll, RG* records)
  *              Server* origin = overriding caller (when Nat)
  * Output     : TRUE on success
  =======================================================================*/
-int sendRemoteNotifyServer(Server* server, RecordTree* recordTree, 
-			   Server* origin)
+int 
+sendRemoteNotifyServer(Server* server, RecordTree* recordTree, 
+		       Server* origin)
 {
   int rc = FALSE;
   Collection* coll = 0;
@@ -355,7 +359,8 @@ int sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
  * Input      : Collection* coll: collection to notify
  * Output     : TRUE on success
  =======================================================================*/
-int sendRemoteNotify(Collection* coll)
+int 
+sendRemoteNotify(Collection* coll)
 {
   int rc = FALSE;
   Server* localhost = 0;

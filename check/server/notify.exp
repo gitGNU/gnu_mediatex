@@ -85,8 +85,6 @@ S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> TOKEEP
 [info recordTree.c] Serializing NOTIFY record tree in file: stdout
 # Collection's records:
 Headers
@@ -98,9 +96,9 @@ Body
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 # ^ LOCALE_DEMAND
-S 2010-01-02,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 # ^ LOCALE_SUPPLY
-S 2010-01-02,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 # ^ LOCALE_SUPPLY
         
 [notice notify.c] localhost:6560 notified

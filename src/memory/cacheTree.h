@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.5 2015/07/22 10:45:17 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.6 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -91,7 +91,7 @@ int addCacheEntry(Collection* coll, Record* record);
 int delCacheEntry(Collection* coll, Record* record);
 int cleanCacheTree(Collection* coll);
 
-int keepArchive(Collection* coll, Archive* archive, RecordType type);
+int keepArchive(Collection* coll, Archive* archive);
 int unKeepArchive(Collection* coll, Archive* archive);
 
 int getCacheSizes(Collection* coll, 

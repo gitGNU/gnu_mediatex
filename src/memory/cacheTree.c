@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.7 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -265,8 +265,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   logMemory(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
 	  archive->hash, archive->size);
 
-  // compute scores (keep archive with bad score)
-#warning need to be protected (or not) ?
+  // compute scores (only once) so as to keep archive with bad score
   if (!computeExtractScore(coll)) goto error;
 
   if ((date = currentTime()) == -1) goto error; 
@@ -524,10 +523,9 @@ int delCacheEntry(Collection* coll, Record* record)
  *              but it is not related with scores 
  =======================================================================*/
 int
-keepArchive(Collection* coll, Archive* archive, RecordType type)
+keepArchive(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
-  Configuration* conf = 0;
   CacheTree* cache = 0;
   Record* record = 0;
   time_t date = -1;
@@ -538,12 +536,11 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
   record = archive->localSupply;
   checkRecord(record);
   cache = coll->cacheTree;
-  logMemory(LOG_DEBUG, "keep %s %s:%lli",
-	  type?strRecordType2(type):"TMP", archive->hash, archive->size); 
+  logMemory(LOG_DEBUG, "keep %s:%lli", archive->hash, archive->size); 
 
   if (record->type & REMOVE) {
       logMemory(LOG_ERR, 
-	      "cannot keep as local supply is already removedkeep");
+	      "cannot keep as local supply is already removed");
       goto error;
   }
   
@@ -551,45 +548,28 @@ keepArchive(Collection* coll, Archive* archive, RecordType type)
     logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
-
-  if ((date = currentTime()) == -1) goto error2; 
-  if (!(conf = getConfiguration())) goto error2;
   
-  // note: only the temporary record use during extraction 
-  // should be unkeep
-  switch (type) {
-  case FINALE_DEMAND:
-    // mail + download http
-    date += coll->cacheTTL;
-    break;
-  case LOCALE_DEMAND:
-    // cgi
-    date += archive->size / (conf->uploadRate >> 5);
-    break;
-  case REMOTE_DEMAND:
-    // scp (time between 2 extractions on local server)
-    date += 1*DAY;
-    break;
-  default:
-    if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_KEEP]))) {
-      logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
-      goto error2;
-    }
-
-    if (archive->nbKeep == 0) archive->backupDate = record->date;
-    ++archive->nbKeep;
-
-    if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_KEEP]))) {
-      logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
-      goto error2;
-    }
-
-    // temporary record during extraction
-    date += 5*MINUTE;
+  if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_KEEP]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    goto error2;
   }
 
-  if (record->date < date) record->date = date;
-  if (!computeArchiveStatus(coll, archive)) goto error2;
+  if (archive->nbKeep == 0) archive->backupDate = record->date;
+  ++archive->nbKeep;
+  
+  if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_KEEP]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    goto error2;
+  }
+  
+  // temporary record during extraction
+  if ((date = currentTime()) == -1) goto error; 
+  date += 5*MINUTE;
+
+  if (record->date < date) {
+    record->date = date;
+    if (!computeArchiveStatus(coll, archive)) goto error2;
+  }
 
   rc = TRUE;
  error2:

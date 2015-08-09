@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.4 2015/07/22 10:45:16 nroche Exp $
+ * Version: $Id: utcache.c,v 1.5 2015/08/09 11:12:34 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -128,11 +128,11 @@ main(int argc, char** argv)
   if (!(archive =
   	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
     goto error;
-  if (!keepArchive(coll, archive, 0)) goto error;
+  if (!keepArchive(coll, archive)) goto error;
   if (!(archive =
   	getArchive(coll, "0a7ecd447ef2acb3b5c6e4c550e6636f", 374784)))
     goto error;
-  if (!keepArchive(coll, archive, 0)) goto error;
+  if (!keepArchive(coll, archive)) goto error;
   utLog("%s", "Now we have :", coll);
 
   /*--------------------------------------------------------*/

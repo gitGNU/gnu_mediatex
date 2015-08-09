@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.4 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -82,13 +82,13 @@ signalJob(void* arg)
       goto quit;
     }
 
-    if (param.buf[MDTX_DELIVER] == MDTX_QUERY) {
-      logMain(LOG_NOTICE, "signalJob %i: DELIVER", me);
-      if (!serverLoop(deliverMails)) rc2 = MDTX_ERROR;
-      param.flag = MDTX_DELIVER;
-      loop = TRUE;
-      goto quit;
-    }
+    /* if (param.buf[MDTX_DELIVER] == MDTX_QUERY) { */
+    /*   logMain(LOG_NOTICE, "signalJob %i: DELIVER", me); */
+    /*   if (!serverLoop(deliverMails)) rc2 = MDTX_ERROR; */
+    /*   param.flag = MDTX_DELIVER; */
+    /*   loop = TRUE; */
+    /*   goto quit; */
+    /* } */
 
   quit:
     if (loop) {

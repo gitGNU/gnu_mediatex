@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.6 2015/08/07 17:50:33 nroche Exp $
+ * Version: $Id: deliver.c,v 1.7 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -74,131 +74,66 @@ callMail(Collection* coll, Record* record, char* address)
 }
 
 /*=======================================================================
- * Function   : deliverMail
- * Description: Deliver notifications to users that have subscribe for
- *              a file to download
- * Synopsis   : int deliverMail(Collection* coll, Record* record)
+ * Function   : deliverArchive
+ * Description: adjuste toKeep time and eventually send mails
+ * Synopsis   : int deliverArchive()
  * Input      : Collection* coll
- *              RecordTree* records
  * Output     : TRUE on success
-
- * TODO:      : use a lock to prevent mail to be sent twice (if bad luck)
  =======================================================================*/
-int 
-deliverMail(Collection* coll, Archive* archive)
+int deliverArchive(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
   Configuration* conf = 0;
   Record* record = 0;
-  Record* record2 = 0;
-  Record* next = 0;
+  time_t date = -1;
   RGIT* curr = 0;
 
-  checkCollection(coll);
-  checkArchive(archive);
-  record = archive->localSupply;
-  checkRecord(record);
-  logMain(LOG_DEBUG, "deliverMail %s:%lli", archive->hash, archive->size);
+  logMain(LOG_DEBUG, "deliverArchive");
   if (!(conf = getConfiguration())) goto error;
+  if ((date = currentTime()) == -1) goto error; 
 
-  // send same message for all record
-  next = rgNext_r(archive->demands, &curr);
-  while (next) {
-    record2 = next;
-    next = rgNext_r(archive->demands, &curr);
+  // find longer to-Keep time to honnor all demands
+  while((record = rgNext_r(archive->demands, &curr))) {
+    if (record->type & REMOVE) continue;
 
-    if (getRecordType(record2) == FINALE_DEMAND &&
-	!(record2->type & REMOVE)) {
-      record2->type |= REMOVE;
-      // we should use a lock to prevent mail to be sent twice
-      if (!callMail(coll, record, record2->extra)) goto error;
-      if (!delCacheEntry(coll, record2)) goto error;
+    switch (getRecordType(record)) {
+    case FINALE_DEMAND: // mail + download http
+      date += coll->cacheTTL;
+      date -= 1*DAY;
+    case REMOTE_DEMAND: // scp (time between 2 cron)
+      date += 1*DAY;
+    case LOCALE_DEMAND: // cgi
+      date += archive->size / conf->uploadRate;
+      break;
+    default:
+      goto end;
     }
   }
 
-  // update toKeep date
-  if (!keepArchive(coll, archive, FINALE_DEMAND)) goto error;
+  // adjust to-keep date
+  if (archive->localSupply->date < date) {
+    archive->localSupply->date = date;
+    if (!computeArchiveStatus(coll, archive)) goto error;
+  }
 
+  // deliver mail
+  curr = 0;
+  while((record = rgNext_r(archive->demands, &curr))) {
+    if (record->type & REMOVE) continue;
+    if (getRecordType(record) != FINALE_DEMAND) continue;
+
+    // we should use a lock to prevent mail to be sent twice
+    record->type |= REMOVE;
+    if (!callMail(coll, archive->localSupply, record->extra)) goto error;
+    if (!delCacheEntry(coll, record)) goto error;
+  }
+
+ end:
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_DEBUG, "deliverMail fails");
+    logMain(LOG_ERR, "deliverArchive fails");
   }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : deliverMails
- * Description: Deliver notifications to users that have subscribe for
- *              a file to download
- * Synopsis   : int deliverMails(Collection* coll)
- * Input      : Collection* coll
- *              RecordTree* records
- * Output     : TRUE on success
- =======================================================================*/
-int
-deliverMails(Collection* coll)
-{
-  int rc = FALSE;
-  Configuration* conf = 0;
-  Archive* archive = 0;
-  Record* record = 0;
-  char* path = 0;
-  RGIT* curr = 0;
-  RGIT* curr2 = 0;
-  int deliver = FALSE;
-
-  logMain(LOG_DEBUG, "delivering %s collection files to users",
-	  coll->label);
-
-  if (!(conf = getConfiguration())) goto error;
-  if (!loadCollection(coll, CACH)) goto error;
-  if (!lockCacheRead(coll)) goto error2;
-
-  // for each cache entry
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr))
-	!= 0) {
-
-    // look if archive is supplyed
-    if (archive->localSupply == 0) continue;
-
-    // test if the file is really there
-    path = destroyString(path);
-    if (!(path = createString(coll->cacheDir))) goto error3;
-    if (!(path = catString(path, "/"))) goto error3;
-    if (!(path = catString(path, archive->localSupply->extra))) 
-      goto error3;
-
-    if (access(path, R_OK) == -1) {
-      logMain(LOG_WARNING,
-	      "file not find in cache as expected: %s", path);
-      continue;
-    }
-
-    // look if we have final demands on it
-    deliver = FALSE;
-    curr2 = 0;
-    while((record = rgNext_r(archive->demands, &curr2))) {
-      if (getRecordType(record) == FINALE_DEMAND) {
-	deliver = TRUE;
-	break;
-      }
-    }
-
-    // send messages
-    if (deliver && !deliverMail(coll, archive)) goto error3;
-  }
-
-  rc = TRUE;
- error3:
-  if (!unLockCache(coll)) goto error;
- error2:
-  if (!releaseCollection(coll, CACH)) goto error;
- error:
-  if (!rc) {
-    logMain(LOG_DEBUG, "deliverMails fails");
-  }
-  path = destroyString(path);
   return rc;
 }
 

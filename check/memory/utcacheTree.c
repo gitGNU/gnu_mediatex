@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.4 2015/08/07 17:50:24 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.5 2015/08/09 11:12:34 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -138,7 +138,7 @@ main(int argc, char** argv)
 		record->archive->state == TOKEEP?"yes":"no");
 
       logMain(LOG_NOTICE, "keep record"); 
-      if (!keepArchive(coll, record->archive, 0)) goto error;
+      if (!keepArchive(coll, record->archive)) goto error;
 
       logMain(LOG_NOTICE, "unkeep record"); 
       if (!unKeepArchive(coll, record->archive)) goto error;

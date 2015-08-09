@@ -1,9 +1,12 @@
 
 *** TO CORRECT: cache policy    
 
-- have: mount done by server ?
-
+- remove MDTX_DELIVER code: mediatexd.c ...
+- [info cache.c] access fails: No such file or directory
 - find a way to pass a string for have/uplaod recordTree messages
+- remove first cond: unknown in extract.txt or having a bad score
+- mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
+
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 - rename cache/incoming to cache/default ?
 
@@ -14,6 +17,7 @@
 -- md5sum not computed all times
 - score computation also use md5sums.txt file
 
+- motd: add coll selection facility
 - motd: add to burn and orphanes
 - catalogHtml: add warning for orphanes
 
@@ -34,6 +38,7 @@
 - score: look INC date to decide if score inpact or not on collection
 - no unit test for extract.c::getWantedArchives
 - extract.c::extractRecord modify tmpBasename for INC
+- have: mount done by server
 
 - uploadTTL parmeter into servers.txt
 - extract rule automatically remove related INC content

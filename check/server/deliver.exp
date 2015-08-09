@@ -59,8 +59,8 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [notice utdeliver.c] ----------------------------------------------------------
 [notice utdeliver.c] deliver the mail:
 [notice utdeliver.c] ..........................................................
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> AVAILABLE
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
 [notice utdeliver.c] ..........................................................
 [notice utdeliver.c] Finaly we have :
 [notice utdeliver.c] ..........................................................

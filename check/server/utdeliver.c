@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utdeliver.c,v 1.1 2015/07/01 10:50:09 nroche Exp $
+ * Version: $Id: utdeliver.c,v 1.2 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -26,6 +26,68 @@
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
 GLOBAL_STRUCT_DEF;
+
+/*=======================================================================
+ * Function   : deliverMails
+ * Description: Deliver notifications to users that have subscribe for
+ *              a file to download
+ * Synopsis   : int deliverMails(Collection* coll)
+ * Input      : Collection* coll
+ *              RecordTree* records
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+deliverMails(Collection* coll)
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Archive* archive = 0;
+  char* path = 0;
+  RGIT* curr = 0;
+
+  logMain(LOG_DEBUG, "delivering %s collection files to users",
+	  coll->label);
+
+  if (!(conf = getConfiguration())) goto error;
+  if (!loadCollection(coll, CACH)) goto error;
+  if (!lockCacheRead(coll)) goto error2;
+
+  // for each cache entry
+  while((archive = rgNext_r(coll->cacheTree->archives, &curr))
+	!= 0) {
+
+    // look if archive is supplyed
+    if (archive->localSupply == 0) continue;
+
+    // test if the file is really there
+    path = destroyString(path);
+    if (!(path = createString(coll->cacheDir))) goto error3;
+    if (!(path = catString(path, "/"))) goto error3;
+    if (!(path = catString(path, archive->localSupply->extra)))
+      goto error3;
+
+    if (access(path, R_OK) == -1) {
+      logMain(LOG_WARNING,
+	      "file not find in cache as expected: %s", path);
+      continue;
+    }
+
+    // send messages
+    if (!deliverArchive(coll, archive)) goto error3;
+  }
+
+  rc = TRUE;
+ error3:
+  if (!unLockCache(coll)) goto error;
+ error2:
+  if (!releaseCollection(coll, CACH)) goto error;
+ error:
+  if (!rc) {
+    logMain(LOG_DEBUG, "deliverMails fails");
+  }
+  path = destroyString(path);
+  return rc;
+}
 
 /*=======================================================================
  * Function   : usage

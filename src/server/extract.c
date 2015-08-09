@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.12 2015/08/08 23:31:44 nroche Exp $
+ * Version: $Id: extract.c,v 1.13 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -194,11 +194,11 @@ getArchivePath(Collection* coll, Archive* archive)
     if (isEmptyString(record->extra)) goto error;
   }
   else {
-     if (archive->finaleSupplies->nbItems > 0) {
-       if (!(record = (Record*)archive->finaleSupplies->head->it)) 
-	 goto error;
-       if (isEmptyString(record->extra)) goto error;
-     }
+    if (archive->finaleSupplies->nbItems > 0) {
+      if (!(record = (Record*)archive->finaleSupplies->head->it)) 
+	goto error;
+      if (isEmptyString(record->extra)) goto error;
+    }
   }
 
   rc = getAbsRecordPath(coll, record);
@@ -227,7 +227,7 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
   checkCollection(coll);
   checkLabel(device);
   checkLabel(target);
-  logMain(LOG_DEBUG, "extractDd %s", target);
+  logMain(LOG_NOTICE, "extractDd %s", target);
   
   if (!(argv[1] = createString("if="))
       || !(argv[1] = catString(argv[1], device)))
@@ -268,7 +268,7 @@ extractScp(Collection* coll, Record* record)
 
   checkCollection(coll);
   checkRecord(record);
-  logMain(LOG_DEBUG, "extractScp %s", record->extra);
+  logMain(LOG_NOTICE, "extractScp %s", record->extra);
   
   if (!env.dryRun && 
       !mdtxCall(7, "adm", "get", record->extra, 
@@ -302,7 +302,7 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
   char* path = 0;
   int i,j,l;
 
-  logMain(LOG_DEBUG, "isoExtract");
+  logMain(LOG_NOTICE, "isoExtract");
 
   // should have one and only one parent
   if (!(archive = (Archive*)asso->container->parents->head->it)) 
@@ -372,7 +372,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
   char* argv[] = {"/bin/bash", "-c", 0, 0};
   char* path2 = 0;
 
-  logMain(LOG_DEBUG, "do cat");
+  logMain(LOG_NOTICE, "do cat");
   if (!(cmd = createString("/bin/cat "))) goto error;
  
   // all parts
@@ -417,7 +417,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
   char *argv[] = {"/bin/tar", "-C", 0, 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do tar %s", options);
+  logMain(LOG_NOTICE, "do tar %s", options);
 
   if (!env.dryRun) {
     argv[2] = coll->extractDir; 
@@ -461,7 +461,7 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
   char* path = 0;
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do Xunzip %s", bin);
+  logMain(LOG_NOTICE, "do Xunzip %s", bin);
 
   if (!(cmd = createString(bin))) goto error;
 
@@ -502,7 +502,7 @@ extractAfio(Collection* coll, FromAsso* asso)
   char *argv[] = {"/bin/afio", "-i", "-y", 0, 0, 0};
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do afio -i");
+  logMain(LOG_NOTICE, "do afio -i");
 
   if (!env.dryRun) {
     argv[3] = asso->path;
@@ -539,7 +539,7 @@ extractCpio(Collection* coll, FromAsso* asso)
 		  "--make-directories", 0, 0};
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do cpio -i");
+  logMain(LOG_NOTICE, "do cpio -i");
 
   if (!env.dryRun) {
     if (asso->container->parents->nbItems <= 0) goto error;
@@ -575,7 +575,7 @@ extractZip(Collection* coll, FromAsso* asso)
   char *argv[] = {"/usr/bin/unzip", "-d", 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do unzip");
+  logMain(LOG_NOTICE, "do unzip");
 
   if (!env.dryRun) {
     argv[2] = coll->extractDir; 
@@ -612,7 +612,7 @@ extractRar(Collection* coll, FromAsso* asso)
   char *argv[] = {"/usr/bin/rar", "x", 0, 0, 0, 0};
   Archive* archive = 0;
 
-  logMain(LOG_DEBUG, "do rar x");
+  logMain(LOG_NOTICE, "do rar x");
 
   if (!env.dryRun) {
     if (asso->container->parents->nbItems <= 0) goto error;
@@ -653,7 +653,7 @@ extractAddToKeep(ExtractData* data, Archive* archive)
   logMain(LOG_DEBUG, "add to-keep on %s:%lli",   
 	  archive->hash, archive->size); 
 
-  if (!keepArchive(coll, archive, UNDEF_RECORD)) goto error;
+  if (!keepArchive(coll, archive)) goto error;
   if (!rgInsert(data->toKeeps, archive)) goto error;
 
   rc = TRUE;
@@ -690,7 +690,7 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
   
   rc = TRUE;
  error:
-    if (!rc) {
+  if (!rc) {
     logMain(LOG_ERR, "extractDelToKeeps fails");
   }
   destroyOnlyRing(toKeeps);
@@ -748,7 +748,7 @@ cacheSet(ExtractData* data, Record* record, char* path)
   // and add a toKepp on the new extracted archive
   if (!extractAddToKeep(data, record->archive)) goto error;
 
-  logMain(LOG_NOTICE, "extract %s:%lli", 
+  logMain(LOG_NOTICE, "%s:%lli extracted", 
 	  record->archive->hash, record->archive->size);
   rc = TRUE;
  error:
@@ -1113,12 +1113,12 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (!extractDelToKeeps(data->coll, toKeepsTmp)) goto error;
 
  end:
-  logMain(LOG_INFO, "%sfound archive %s:%lli", 
-	  data->found?"":"not ", archive->hash, archive->size);
+  logMain(LOG_NOTICE, "%s:%lli %sfound", 
+	  archive->hash, archive->size, data->found?"":"not ");
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "archive extraction error");
+    logMain(LOG_ERR, "extractArchive fails");
   }
   path = destroyString(path);
   return rc;
@@ -1145,25 +1145,22 @@ getWantedArchives(Collection* coll)
   logMain(LOG_DEBUG, "getWantedArchives");
 
   if (!(ring = createRing())) goto error;
-
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= 0) {
-    if (archive->state != WANTED) continue;
-    if (!rgInsert(ring, archive)) goto error;
-  }
-
-  // add top archives having a bad score
   if (!computeExtractScore(coll)) goto error;
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
-    if (archive->state > WANTED) continue;
-    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
-      continue;
-    if (archive->remoteSupplies->nbItems == 0) continue;
-    if (archive->fromContainers->nbItems > 0) continue;
 
-    logMain(LOG_INFO, "looking for %s%lli",
-	    archive->hash, (long long int)archive->size);
-    if (!rgInsert(ring, archive)) goto error;
+  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+    // extract wanted content
+    if (archive->state == WANTED ||
+	// or remote top container having bad score
+	(archive->state < WANTED &&
+	 archive->remoteSupplies->nbItems > 0 &&
+	 archive->fromContainers->nbItems == 0 &&
+	 archive->extractScore <= coll->serverTree->scoreParam.maxScore /2)
+	) {
+
+      logMain(LOG_INFO, "looking for %s%lli",
+	      archive->hash, (long long int)archive->size);
+      if (!rgInsert(ring, archive)) goto error;
+    }
   }
   
   rc = ring;
@@ -1191,7 +1188,6 @@ int extractArchives(Collection* coll)
   RGIT* curr = 0;
   RGIT* curr2 = 0;
   ExtractData data;
-  int deliver = FALSE;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "extractArchives %s collection", coll->label);
@@ -1201,16 +1197,17 @@ int extractArchives(Collection* coll)
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
   if (!(archives = getWantedArchives(coll))) goto error3;
-
+  
   // for each cache entry
   while((archive = rgNext_r(archives, &curr)) != 0) {
-
+    
     // define extraction context : X_MAIN or X_STEP (ie: scp or not)
     data.context = X_STEP;
-
+    
     // we scp only if bad score...
-    if (archive->extractScore <= 10) data.context = X_MAIN;
-
+    if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2)
+      data.context = X_MAIN;
+    
     // ... or locally wanted
     curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
@@ -1219,29 +1216,19 @@ int extractArchives(Collection* coll)
 	break;
       }
     }
-
+    
     if (!(data.toKeeps = createRing())) goto error3;
     data.target = archive;
     if (!extractArchive(&data, archive)) {
-      logMain(LOG_WARNING, "need more place ?");
+      logMain(LOG_WARNING, "however continue...");
       continue;
     }
-
+    
     if (data.found) {
-      // adjuste to-keep date
-      curr2 = 0;
-      while((record = rgNext_r(archive->demands, &curr2)) != 0) {
-	if (!keepArchive(coll, archive, getRecordType(record)))
-	  goto error3;
-	if (getRecordType(record) == FINALE_DEMAND &&
-	    !(record->type & REMOVE)) deliver = TRUE;
-      }
-
-      if (deliver && !deliverMail(coll, archive)) goto error3;
-      deliver = FALSE;
+      if (!deliverArchive(coll, archive)) goto error3;
     }
   }
-
+  
   rc = TRUE;
  error3:
   if (!unLockCache(coll)) rc = FALSE;
@@ -1249,7 +1236,7 @@ int extractArchives(Collection* coll)
   if (!releaseCollection(coll, SERV|EXTR|CACH)) goto error;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "remote extraction fails");
+    logMain(LOG_ERR, "extraction fails (internal error)");
   }
   curr = 0;
   destroyOnlyRing(archives);
