@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.13 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: extract.c,v 1.14 2015/08/09 11:45:01 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -133,7 +133,7 @@ getUniqCachePath(Collection* coll, char* path)
 {
   char* rc = 0;
   char* res = 0;
-  int err = 0;
+  int isThere = TRUE;
   char i=(char)0, j=(char)0;
   int l;
 
@@ -143,10 +143,8 @@ getUniqCachePath(Collection* coll, char* path)
 
   // try with the native path
   if (!(res = getAbsCachePath(coll, path))) goto error;
-  if ((err = callAccess(res))) {
-    if (err == ENOENT) goto end;
-    logMain(LOG_ERR, "access %s: %s", res, strerror(err));
-  }
+  if (!callAccess(res, &isThere)) goto error;
+  if (!isThere) goto end;
 
   // add "_00" to the path and loop on number
   if (!(res = catString(res, "_-01-"))) goto error;
@@ -155,7 +153,8 @@ getUniqCachePath(Collection* coll, char* path)
     for (j='0'; j<='9'; ++j) {
       res[l] = i;
       res[l+1] = j;
-      if (callAccess(res) == ENOENT) goto end;
+      if (!callAccess(res, &isThere)) goto error;
+      if (!isThere) goto end;
     }
   }
   goto error;
@@ -300,6 +299,7 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
   char* iso = 0;
   char* mnt = 0;
   char* path = 0;
+  int isThere = TRUE;
   int i,j,l;
 
   logMain(LOG_NOTICE, "isoExtract");
@@ -316,7 +316,9 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
       || !(mnt = catString(mnt, "/mnt"))) 
     goto error;
 
-  if (callAccess(mnt) == ENOENT) goto next;
+  if (!callAccess(mnt, &isThere)) goto error;
+  if (!isThere) goto next;
+
   // add "_00" to the path and loop on number
   if (!(mnt = catString(mnt, "_01"))) goto error;
   l = strlen(mnt) - 2;
@@ -324,7 +326,9 @@ extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
     for (j='0'; j<='9'; ++j) {
       mnt[l] = i;
       mnt[l+1] = j;
-      if (callAccess(mnt) == ENOENT) goto next;
+
+      if (!callAccess(mnt, &isThere)) goto error;
+      if (!isThere) goto next;
     }
   }
   goto error;

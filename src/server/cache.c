@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.9 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: cache.c,v 1.10 2015/08/09 11:45:01 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -617,27 +617,35 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
 /*=======================================================================
  * Function   : call access
  * Description: check a path access
- * Synopsis   : int callAcess(char* path)
+ * Synopsis   : int callAcess(char* path, int* isThere)
  * Input      : char* path = the path to check
- * Output     : O on success, errno on failure
- * Note       : may be used to check if path IS NOT there
+ * Output     : int* isThere: state if file is found or not
+ *              TRUE on success
  =======================================================================*/
 int
-callAccess(char* path) 
+callAccess(char* path, int* isThere) 
 {
-  int rc = 0;
+  int rc = FALSE;
 
+  *isThere = FALSE;
   checkLabel(path);
-  logMain(LOG_INFO, "call access on %s", path);
+  logMain(LOG_DEBUG, "call access on %s", path);
 
-  if (access(path, R_OK) != 0) {
-    rc = errno;
-    goto error;
+  if (!access(path, R_OK)) {
+    *isThere = TRUE;
+  }
+  else {
+    if (!errno == ENOENT) {
+      logMain(LOG_ERR, "unexpected error code (%i): %s", 
+	      errno, strerror(errno));
+      goto error;
+    }
   }
 
+  rc = TRUE;
  error:
-  if (rc) {
-    logMain(LOG_INFO, "access fails: %s", strerror(errno));
+  if (!rc) {
+    logMain(LOG_ERR, "access fails");
   }
   return rc;
 }
@@ -659,6 +667,7 @@ makeDir(char* base, char* path, mode_t mode)
   int i = 0;
   int l = 0;
   mode_t mask;
+  int isThere = FALSE;
 
   mask = umask(0000);
   checkLabel(path);
@@ -678,8 +687,9 @@ makeDir(char* base, char* path, mode_t mode)
 	  goto error;
 	}
 	else {
-	  // already there. We should check mode.
-	  if (callAccess(path)) goto error;
+	  // already there (we should check mode).
+	  if (!callAccess(path, &isThere)) goto error;
+	  if (!isThere) goto error;
 	}
       }
       

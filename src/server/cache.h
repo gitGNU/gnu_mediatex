@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: cache.h,v 1.5 2015/08/09 11:45:01 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -32,7 +32,7 @@
 
 char* getAbsCachePath(Collection* coll, char* path);
 char* getAbsRecordPath(Collection* coll, Record* record);
-int callAccess(char* path);
+int callAccess(char* path, int* isThere);
 int makeDir(char* base, char* path, mode_t mode);
 int removeDir(char* base, char* path);
 int extractCp(char* source, char* target);

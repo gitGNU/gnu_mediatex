@@ -162,8 +162,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
 [info command.c] /bin/bash execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: ALLOCATED -> TOKEEP
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 extracted
@@ -190,8 +188,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/tar execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
@@ -308,8 +304,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e b5810aba99ed0d15f1f0a073e
 [info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tar.bz2
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/tar execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
@@ -431,8 +425,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e d79581b67ec1932fd276dcf3b
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.zip
 [info command.c]  arg4: logo/logo.png
 [info command.c] /usr/bin/unzip execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
@@ -547,8 +539,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e f54fba7d2e070d48051ac3f8f
 [info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tar
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/tar execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
@@ -662,8 +652,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/zcat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio.gz >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio
 [info command.c] /bin/bash execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio
 [info cacheTree.c] archive status b34bb9bf9ae4ec5b4a5bc2ab3e2a18c525088: ALLOCATED -> TOKEEP
 [notice extract.c] b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 extracted
@@ -688,8 +676,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3a04277dd1f43740a5fe17fd0
 [info command.c]  arg4: --make-directories
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/cpio execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
@@ -808,8 +794,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info command.c]  arg1: -c
 [info command.c]  arg2: /bin/bzcat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio.bz2 >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio
 [info command.c] /bin/bash execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.cpio to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.cpio
 [info cacheTree.c] archive status b34bb9bf9ae4ec5b4a5bc2ab3e2a18c525088: ALLOCATED -> TOKEEP
 [notice extract.c] b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 extracted
@@ -834,8 +818,6 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e fa2b0b536bf61f61617528c47
 [info command.c]  arg4: --make-directories
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/cpio execution returns 0
-[info cache.c] call access on LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
-[info cache.c] access fails: No such file or directory
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
