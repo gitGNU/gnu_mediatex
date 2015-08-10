@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.7 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.8 2015/08/10 12:24:27 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -101,12 +101,8 @@ typedef struct MdtxEnv {
   int cvsprintMax;   // maximum size for files handle by CVS
 
   // debug options
-  int debugAlloc;
   int debugScript;
-  int debugMemory;
   int debugLexer;
-  int debugParser;
-  int debugCommon;
 
   // global data structures:
   Configuration* confTree;
@@ -132,7 +128,7 @@ extern MdtxEnv env;
 	/* configuration */						\
 	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,		\
 	/* debug */							\
-	FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,			\
+	FALSE, FALSE,							\
 	/* global data structure */					\
 	0, TRUE								\
 	}
@@ -151,7 +147,7 @@ extern MdtxEnv env;
 	/* configration */						\
 	DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
 	/* debug and tests */						\
-	FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,			\
+	FALSE, FALSE,							\
 	/* global data structure */					\
 	0, TRUE								\
 	}

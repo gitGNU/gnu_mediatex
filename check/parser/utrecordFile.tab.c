@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordFile.tab.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
+ * Version: $Id: utrecordFile.tab.c,v 1.3 2015/08/10 12:24:27 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -73,9 +73,6 @@ main(int argc, char** argv)
     PARSER_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
-
-  // add comments on output file
-  env.debugMemory = TRUE;
 
   // disable stdout by default because we need no ending cariage
   // return for the diff

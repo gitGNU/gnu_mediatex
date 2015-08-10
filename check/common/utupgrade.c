@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupgrade.c,v 1.3 2015/08/07 17:50:24 nroche Exp $
+ * Version: $Id: utupgrade.c,v 1.4 2015/08/10 12:24:25 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper/upgrade
  *
@@ -68,7 +68,6 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
-  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line

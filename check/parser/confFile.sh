@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: confFile.sh,v 1.1 2015/07/01 10:49:58 nroche Exp $
+# * Version: $Id: confFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-set -x
+#set -x
 set -e
 
 # retrieve environment
@@ -37,7 +37,7 @@ for SRV in $(seq 1 3); do
     loadPaths "mdtx$SRV"
 
     IN=${MDTXCVS}/${MDTXUSER}.conf
-    parser/utconfFile.tab -P -i $IN \
+    parser/utconfFile.tab -i $IN \
 	>parser/$TEST$SRV.out 2>parser/$TEST$SRV.txt
 
     # compare with the expected output

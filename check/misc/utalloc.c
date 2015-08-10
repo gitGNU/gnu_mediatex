@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utalloc.c,v 1.3 2015/08/07 17:50:24 nroche Exp $
+ * Version: $Id: utalloc.c,v 1.4 2015/08/10 12:24:26 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -109,7 +109,6 @@ main(int argc, char** argv)
   // import mdtx environment
   env.allocLimit = .002; // 2 Ko
   env.allocDiseaseCallBack = disease;
-  env.debugAlloc = TRUE;
   getEnv(&env);
 
   // parse the command line

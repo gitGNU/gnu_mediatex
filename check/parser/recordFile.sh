@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: recordFile.sh,v 1.1 2015/07/01 10:49:58 nroche Exp $
+# * Version: $Id: recordFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -34,14 +34,14 @@ TEST=${TEST%.sh}
 
 # run the unit test without encryption
 IN=${MD5SUMS}/${MDTXUSER}-coll1.md5
-parser/ut$TEST.tab -P -i $IN -o parser/$TEST.out 2>parser/$TEST.txt
+parser/ut$TEST.tab -i $IN -o parser/$TEST.out 2>parser/$TEST.txt
 
 # compare with the expected output
 diff $IN parser/$TEST.out
 
 # run the unit test with encryption
 IN=${MD5SUMS}/${MDTXUSER}-coll1.aes
-parser/ut$TEST.tab -P -i $IN -o parser/$TEST.aes 2>parser/${TEST}-aes.txt
+parser/ut$TEST.tab -i $IN -o parser/$TEST.aes 2>parser/${TEST}-aes.txt
 
 # compare with the expected output
 cmp $IN parser/$TEST.aes

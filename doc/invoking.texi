@@ -52,7 +52,7 @@ $ ./configure \
   --sysconfdir=/etc \
   --localstatedir=/var \
   --libexecdir=/usr/lib/mediatex
-$ make CFLAGS="-Wall -O0 -g"
+$ make CFLAGS="-Wall -O0 -g" V=0
 # make install
 @end example
 

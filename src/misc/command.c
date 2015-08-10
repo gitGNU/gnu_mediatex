@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.9 2015/08/09 13:20:34 nroche Exp $
+ * Version: $Id: command.c,v 1.10 2015/08/10 12:24:28 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -148,8 +148,6 @@ void
 memoryOptions()
 {
   miscOptions();
-  fprintf(stderr,
-	  "  -M, --debug-memory\tenable logs from the memory objects\n");
 }
 
 /*=======================================================================
@@ -164,8 +162,7 @@ parserOptions()
 {
   memoryOptions();
   fprintf(stderr, 
-	  "  -L, --debug-lexer\tdebug information from lexers\n"
-	  "  -P, --debug-parser\tenable logs from the parsers\n");
+	  "  -L, --debug-lexer\tdebug information from lexers\n");
 }
 
 /*=======================================================================
@@ -180,9 +177,7 @@ mdtxOptions()
 {
   parserOptions();
   fprintf(stderr, 
-	  "  -C, --debug-common\tenable logs from the common code\n"
-	  "  -c, --conf-label\tto overhide default configuration file"
-	  " mdtx.conf\n");
+	  "  -c, --conf-label\toverhide 'mdtx.conf' configuration file\n");
 }
 
 /*=======================================================================

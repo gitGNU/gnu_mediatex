@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfTree.c,v 1.1 2015/07/01 10:49:45 nroche Exp $
+ * Version: $Id: utconfTree.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -71,7 +71,6 @@ main(int argc, char** argv)
        
   // import mdtx environment
   env.dryRun = FALSE;
-  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line

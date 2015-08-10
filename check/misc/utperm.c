@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
+ * Version: $Id: utperm.c,v 1.5 2015/08/10 12:24:26 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -187,6 +187,7 @@ main(int argc, char** argv)
   if (inputPath) free(inputPath);
   if (user) free(user);
   if (group) free(group);
+  env.noRegression = TRUE;
   ENDINGS;
   rc=!rc;
  optError:

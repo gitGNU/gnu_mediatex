@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.5 2015/08/09 11:12:34 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.6 2015/08/10 12:24:25 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -87,7 +87,6 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
-  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line

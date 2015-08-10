@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utardsm.c,v 1.1 2015/07/01 10:49:44 nroche Exp $
+ * Version: $Id: utardsm.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -84,7 +84,6 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
-  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line

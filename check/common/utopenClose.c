@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utopenClose.c,v 1.1 2015/07/01 10:49:33 nroche Exp $
+ * Version: $Id: utopenClose.c,v 1.2 2015/08/10 12:24:24 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -68,7 +68,6 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
-  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line

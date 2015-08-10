@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upload.h,v 1.1 2015/08/10 11:07:46 nroche Exp $
+ * Version: $Id: upload.h,v 1.2 2015/08/10 12:24:27 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -28,7 +28,7 @@
 #include "mediatex-types.h"
 
 /* API */
-int mdtxUpload(Collection* coll);
+int mdtxUpload(char* label, char* catalog);
 
 #endif /* MDTX_CLIENT_UPLOAD_H */
 

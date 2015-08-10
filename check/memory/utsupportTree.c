@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupportTree.c,v 1.1 2015/07/01 10:49:46 nroche Exp $
+ * Version: $Id: utsupportTree.c,v 1.2 2015/08/10 12:24:26 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -68,7 +68,6 @@ main(int argc, char** argv)
 
   // import mdtx environment
   env.dryRun = FALSE;
-  env.debugMemory = TRUE;
   getEnv(&env);
 
   // parse the command line

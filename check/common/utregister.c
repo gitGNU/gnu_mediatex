@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utregister.c,v 1.2 2015/07/28 11:45:39 nroche Exp $
+ * Version: $Id: utregister.c,v 1.3 2015/08/10 12:24:24 nroche Exp $
  * Project: MediaTeX
  * Module : register
  
@@ -92,7 +92,6 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
-  env.debugCommon = TRUE;
   getEnv(&env);
 
   // parse the command line

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.7 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: command.h,v 1.8 2015/08/10 12:24:28 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -41,20 +41,17 @@
 
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS "M"
 #define MEMORY_LONG_OPTIONS				\
-  MISC_LONG_OPTIONS,					\
-  {"debug-memory", no_argument, 0, 'M'}			
+  MISC_LONG_OPTIONS
 
 #define PARSER_SHORT_OPTIONS MEMORY_SHORT_OPTIONS "LP"
 #define PARSER_LONG_OPTIONS			        \
   MEMORY_LONG_OPTIONS,					\
-  {"debug-lexer", no_argument, 0, 'L'},			\
-  {"debug-parser", no_argument, 0, 'P'}
+  {"debug-lexer", no_argument, 0, 'L'}
 
 #define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:C"
 #define MDTX_LONG_OPTIONS				\
   PARSER_LONG_OPTIONS,					\
-  {"conf-label", required_argument, 0, 'c'},		\
-  {"debug-Common", no_argument, 0, 'C'}
+  {"conf-label", required_argument, 0, 'c'}
 
 void version();
 
@@ -167,9 +164,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Output     : N/A
  =======================================================================*/
 #define GET_MEMORY_OPTIONS 						\
-  case 'M':								\
-    env.debugMemory = 1;						\
-    break;								\
 									\
   GET_MISC_OPTIONS;
 
@@ -186,10 +180,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
   case 'L':								\
     env.debugLexer = 1;							\
     break;								\
-  									\
- case 'P':								\
-   env.debugParser = 1;							\
-   break;								\
     									\
  GET_MEMORY_OPTIONS;
 
@@ -211,10 +201,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     }									\
     env.confLabel = optarg;						\
     break;								\
-									\
-  case 'C':								\
-    env.debugCommon = 1;						\
-    break;								\
    									\
   GET_PARSER_OPTIONS;
 
@@ -227,7 +213,9 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  =======================================================================*/
 #define ENDINGS								\
   logMain(LOG_INFO, "exit on %s", rc?"success":"error");		\
-  if (env.debugAlloc) memoryStatus(LOG_NOTICE, __FILE__, __LINE__);	\
+  if (!env.noRegression) {						\
+    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);			\
+  }									\
   exitMalloc();								\
   env.logHandler = logClose(env.logHandler)
 

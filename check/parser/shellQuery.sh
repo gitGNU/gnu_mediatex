@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.1 2015/07/01 10:49:59 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.2 2015/08/10 12:24:27 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -36,59 +36,59 @@ TEST=${TEST%.sh}
 rm -f parser/$TEST.out
 
 # admConfQuery
-parser/ut$TEST.tab -P adm init >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm remove >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm purge >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm init >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm remove >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm purge >>parser/$TEST.out 2>&1
 
-parser/ut$TEST.tab -P adm add user USER >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm del user USER >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm add coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm add coll COLL@HOST >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm add coll COLL@HOST:33 >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm add coll COLL:33 >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm del coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm add user USER >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm del user USER >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm add coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm add coll COLL@HOST >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm add coll COLL@HOST:33 >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm add coll COLL:33 >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm del coll COLL >>parser/$TEST.out 2>&1
 
-parser/ut$TEST.tab -P adm update >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm update coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm commit >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm commit coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm bind >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm unbind >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm mount ISO on PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm umount PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P adm get PATH1 as COLL on PATH2 >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm update >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm update coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm commit >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm commit coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm bind >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm unbind >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm mount ISO on PATH >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm umount PATH >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm get PATH1 as COLL on PATH2 >>parser/$TEST.out 2>&1
 
 # srvQuery
-parser/ut$TEST.tab -P srv save >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P srv extract >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P srv notify >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P srv deliver >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv save >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv extract >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv notify >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv deliver >>parser/$TEST.out 2>&1
 
 # apiSuppQuery
-parser/ut$TEST.tab -P add supp SUPP on PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P del supp SUPP >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P list supp >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P add supp SUPP to ALL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P add supp SUPP to coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P del supp SUPP from ALL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P del supp SUPP from coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P note supp SUPP as TEXT >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P check supp SUPP on PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P upload PATH to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab add supp SUPP on PATH >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab del supp SUPP >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab list supp >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab add supp SUPP to ALL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab add supp SUPP to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab del supp SUPP from ALL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab del supp SUPP from coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab note supp SUPP as TEXT >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab check supp SUPP on PATH >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload PATH to coll COLL >>parser/$TEST.out 2>&1
 
 # apiCollQuery
-parser/ut$TEST.tab -P add key keyFile.txt to coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P del key 0123456789abcdef0123456789abcdef from coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P list coll >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P motd >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P upgrade >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P upgrade coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P make >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P make coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P clean >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P clean coll COLL >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P su >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab -P su coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab add key keyFile.txt to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab del key 0123456789abcdef0123456789abcdef from coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab list coll >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab motd >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upgrade >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upgrade coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab make >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab make coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab clean >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab clean coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab su >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab su coll COLL >>parser/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs parser/$TEST.out

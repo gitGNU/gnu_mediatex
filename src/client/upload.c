@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.1 2015/08/10 11:07:45 nroche Exp $
+ * Version: $Id: upload.c,v 1.2 2015/08/10 12:24:27 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -28,23 +28,74 @@
 
 
 /*=======================================================================
- * Function   : mdtxUpload
+ * Function   : mdtxUploadCatalog
  * Description: 
  * Synopsis   : 
- * Input      : 
- * Output     : 
+ * Input      : Collection* coll: collection used to parse input file
+ *              char* path: input catalog file to parse
+ * Output     : TRUE on success
  =======================================================================*/
-int 
-mdtxUpload(Collection* coll)
+static int 
+mdtxUploadCatalog(Collection* coll, char* path)
 { 
   int rc = FALSE;
   Configuration* conf = 0;
 
   checkCollection(coll);
   checkLabel(coll->label);
+  logMain(LOG_DEBUG, "mdtxUploadCatalog");
+  if (!(conf = getConfiguration())) goto error;
+  
+  if (!(coll->catalogTree = createCatalogTree())) goto error;
+  if (!(coll->catalogDB = createString(path))) goto error;
+  if (!loadCollection(coll, CTLG)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "mdtxUploadCatalog fails");
+  }
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : mdtxUpload
+ * Description: 
+ * Synopsis   : 
+ * Input      : char* label: related collection
+ *              char* catalog: catalog metadata file to upload
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+mdtxUpload(char* label, char* catalog)
+{ 
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Collection *upload = 0;
+
+  checkLabel(label);
+  checkLabel(catalog);
   logMain(LOG_DEBUG, "mdtxUpload");
   if (!(conf = getConfiguration())) goto error;
   
+  //data.dryRun = env.dryRun;
+  //env.dryRun = FALSE;
+  if (!(upload = addCollection("__upload"))) goto error;
+  if (!mdtxUploadCatalog(upload, catalog)) goto error;
+  
+  // serialize the resulting mediatex metadata using basename prefix
+  /* if (sprintf(tmp, "stage3/%s_ext", data.basename) <= 0) goto error; */
+  /* if (!(data.coll->extractDB = createString(tmp))) goto error; */
+  /* if (sprintf(tmp, "stage3/%s_cat", data.basename) <= 0) goto error; */
+  /* if (!(data.coll->catalogDB = createString(tmp))) goto error; */
+  /* data.coll->memoryState |= EXPANDED; */
+  /* if (!(data.coll->user = createString("mdtx"))) goto error; */
+  /* env.noRegression = TRUE; */
+  /* if (!(serializeExtractTree(data.coll))) goto error; */
+  /* if (!(serializeCatalogTree(data.coll))) goto error; */
+
+
   rc = TRUE;
  error:
   if (!rc) {

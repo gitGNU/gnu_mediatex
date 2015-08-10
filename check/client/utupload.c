@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.1 2015/08/10 11:07:45 nroche Exp $
+ * Version: $Id: utupload.c,v 1.2 2015/08/10 12:24:24 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -57,14 +57,21 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  Collection* coll = 0;
+  char* catalog = 0;
+  char* extract = 0;
+  char* file = 0;
+  char* targetPath = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MDTX_SHORT_OPTIONS "C:E:F:P:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
+    {"catalog", required_argument, 0, 'C'},
+    {"extract", required_argument, 0, 'E'},
+    {"file", required_argument, 0, 'F'},
+    {"target-path", required_argument, 0, 'P'},
     {0, 0, 0, 0}
   };
 
@@ -76,6 +83,70 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
+    case 'C':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for the catalog\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if ((catalog = malloc(strlen(optarg) + 1)) == 0) {
+	fprintf(stderr, "cannot malloc the catalog path: %s", 
+		strerror(errno));
+	rc = ENOMEM;
+	break;
+      }
+      strncpy(catalog, optarg, strlen(optarg)+1);
+      break;
+
+    case 'E':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for the extract\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if ((extract = malloc(strlen(optarg) + 1)) == 0) {
+	fprintf(stderr, "cannot malloc the extract path: %s", 
+		strerror(errno));
+	rc = ENOMEM;
+	break;
+      }
+      strncpy(extract, optarg, strlen(optarg)+1);
+      break;
+
+    case 'F':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for the file\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if ((file = malloc(strlen(optarg) + 1)) == 0) {
+	fprintf(stderr, "cannot malloc the file path: %s", 
+		strerror(errno));
+	rc = ENOMEM;
+	break;
+      }
+      strncpy(file, optarg, strlen(optarg)+1);
+      break;
+
+    case 'T':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for the targetPath\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if ((targetPath = malloc(strlen(optarg) + 1)) == 0) {
+	fprintf(stderr, "cannot malloc the targetPath path: %s", 
+		strerror(errno));
+	rc = ENOMEM;
+	break;
+      }
+      strncpy(targetPath, optarg, strlen(optarg)+1);
+      break;
+
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -85,10 +156,8 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (!(coll = addCollection("coll2"))) goto error;
-
   logMain(LOG_NOTICE, "*** Upload: ");
-  if (!mdtxUpload(coll)) goto error;
+  if (!mdtxUpload("coll2", catalog)) goto error;
   /************************************************************************/
   
   rc = TRUE;

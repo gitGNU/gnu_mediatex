@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: catalogFile.sh,v 1.1 2015/07/01 10:49:58 nroche Exp $
+# * Version: $Id: catalogFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-set -x
+#set -x
 set -e
 
 # retrieve environment
@@ -34,7 +34,7 @@ TEST=${TEST%.sh}
 
 # run the unit test
 IN=${CVSCLT}/${MDTXUSER}-coll1${CATHFILE}
-parser/ut$TEST.tab -P -i $IN >parser/$TEST.out 2>parser/$TEST.txt
+parser/ut$TEST.tab -i $IN >parser/$TEST.out 2>parser/$TEST.txt
 
 # compare with the expected output
 diff $IN parser/$TEST.out
