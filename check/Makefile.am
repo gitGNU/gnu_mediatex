@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 11:53:59 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/08/10 11:07:44 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -22,7 +22,7 @@
 
 include $(top_srcdir)/Make-rules
 
-AM_CFLAGS = "-Wall"
+AM_CFLAGS = -Wall -I $(top_srcdir)/src
 
 check_PROGRAMS = \
 	misc/utgetcgivars \
@@ -80,6 +80,7 @@ check_PROGRAMS = \
 	client/utcatalogHtml \
 	client/utextractHtml \
 	client/utmisc \
+	client/utupload \
 	server/utcache \
 	server/utdeliver \
 	server/utextract \
@@ -138,6 +139,7 @@ TESTS = \
 	client/catalogHtml.sh \
 	client/extractHtml.sh \
 	client/misc.sh \
+	client/upload.sh \
 	server/cache.sh \
 	server/deliver.sh \
 	server/extract.sh \
@@ -213,6 +215,7 @@ dist_check_DATA = \
 	client/catalogHtml.exp \
 	client/extractHtml.exp \
 	client/misc.exp \
+	client/upload.exp \
 	server/cache.exp \
 	server/deliver.exp \
 	server/extract.exp \
@@ -240,7 +243,6 @@ utmediatex.sh: utmediatex.src Makefile
 # Note: 2 choices for LDADD
 # - ../src/libmediatex.la : should be better
 # - ../src/.libs/libmediatex.a : easier to debug and no ps's hangup
-AM_CFLAGS = -I $(top_srcdir)/src
 AM_LDFLAGS = -pthread -lcrypto -lavl -lm
 LDADD = ../src/.libs/libmediatex.a
 memory_ldadd = \
@@ -327,6 +329,8 @@ client_utextractHtml_SOURCES = client/utextractHtml.c
 client_utextractHtml_LDADD = $(client_ldadd)
 client_utmisc_SOURCES = client/utmisc.c
 client_utmisc_LDADD = $(client_ldadd)
+client_utupload_SOURCES = client/utupload.c
+client_utupload_LDADD = $(client_ldadd)
 parser_utshellQuery_SOURCES = parser/utshellQuery.c
 parser_utshellQuery_LDADD = $(client_ldadd)
 parser_utshellQuery_tab_SOURCES = parser/utshellQuery.tab.c

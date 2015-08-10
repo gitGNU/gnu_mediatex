@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.7 2015/07/03 11:53:59 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.8 2015/08/10 11:07:45 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -86,7 +86,8 @@ client_headers = \
 	client/commonHtml.h \
 	client/catalogHtml.h \
 	client/extractHtml.h \
-	client/misc.h
+	client/misc.h \
+	client/upload.h
 
 server_headers = \
 	server/mediatex-server.h \
@@ -156,7 +157,8 @@ client_sources = \
 	client/conf.c \
 	client/supp.c \
 	client/motd.c \
-	client/misc.c
+	client/misc.c \
+	client/upload.c
 
 server_sources = \
 	server/cache.c \
