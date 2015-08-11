@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: ardsm.h,v 1.5 2015/08/11 18:14:23 nroche Exp $
  * Project: SCOREDIT
  * Module : ardsm
  *
@@ -77,8 +77,8 @@ RG* createRing(void);
 RG* destroyOnlyRing(RG* self);
 RG* destroyRing(RG* self, void*(*destroyItem)(void*));
 RG* copyRing(RG* destination, RG* source, 
-			 void* (*destroyItem)(void*),
-			 void* (*copyItem)(void*, const void*));
+	     void* (*destroyItem)(void*),
+	     void* (*copyItem)(void*, const void*));
 inline int isEmptyRing(RG* self);
 
 #endif /* MDTX_MEMORY_ARDSM_H */

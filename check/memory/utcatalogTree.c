@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogTree.c,v 1.3 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utcatalogTree.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -56,6 +56,7 @@ int
 main(int argc, char** argv)
 {
   Collection* coll = 0;
+  CvsFile fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -89,7 +90,7 @@ main(int argc, char** argv)
   if (!createExempleCatalogTree(coll)) goto error;
   
   // test serializing
-  if (!serializeCatalogTree(coll)) {
+  if (!serializeCatalogTree(coll, &fd)) {
     logMemory(LOG_ERR, "Error while serializing the catalog exemple");
     goto error;
   }
@@ -97,7 +98,7 @@ main(int argc, char** argv)
   // test disease
   if (!diseaseCatalogTree(coll)) goto error;
   env.dryRun = TRUE;
-  if (!serializeCatalogTree(coll)) goto error;
+  if (!serializeCatalogTree(coll, &fd)) goto error;
   if (coll->catalogTree->roles->nbItems != 0) goto error;
   if (avl_count(coll->catalogTree->humans) != 0) goto error;
   if (avl_count(coll->catalogTree->documents) != 0) goto error;

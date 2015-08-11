@@ -1,6 +1,94 @@
 [notice utupload.c] *** Upload: 
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[info catalogFile.y] parse __upload catalog from client/upload.cat
+[info catalogFile.y] parse _upload_ catalog from client/upload.cat
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
+# MediaTeX collection catalog: _upload_
+
+# Categories:
+
+Category "css": "drawing"
+
+Category "drawing"
+
+# Humans:
+
+Human	 "Me" ""
+
+# Archives:
+
+# Documents:
+
+Document "css": "css"
+  With "designer" = "Me" ""
+  b281449c229bcc4a3556cdcc0d3ebcec:815
+
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[warning alloc.c] Memory leaks: n-1, sum= -20
+[notice utupload.c] *** Upload: 
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info extractFile.y] parse _upload_ extraction data from client/upload.ext
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *** Upload: 
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info catalogFile.y] parse _upload_ catalog from client/upload.cat
+[info extractFile.y] parse _upload_ extraction data from client/upload.ext
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
+# MediaTeX collection catalog: _upload_
+
+# Categories:
+
+Category "css": "drawing"
+
+Category "drawing"
+
+# Humans:
+
+Human	 "Me" ""
+
+# Archives:
+
+# Documents:
+
+Document "css": "css"
+  With "designer" = "Me" ""
+  b281449c229bcc4a3556cdcc0d3ebcec:815
+
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success

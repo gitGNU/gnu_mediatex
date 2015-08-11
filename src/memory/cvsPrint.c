@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.7 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -25,18 +25,18 @@
 #include "mediatex-config.h"
 
 /*=======================================================================
- * Function   : cvsCloseFile
+ * Function   : cvsClose
  * Description: Cut a big file into several ones
- * Synopsis   : int cvsCloseFile(CvsFile* fd)
+ * Synopsis   : int cvsClose(CvsFile* fd)
  * Input      : CvsFile* fd
  * Output     : TRUE on success
  =======================================================================*/
-int cvsCloseFile(CvsFile* fd)
+int cvsClose(CvsFile* fd)
 {
   int rc = FALSE;
 
   if (!fd) goto error;
-  logMemory(LOG_DEBUG, "cvsCloseFile %s", fd->path);
+  logMemory(LOG_DEBUG, "cvsClose %s", fd->path);
   if (!(fd->fd)) goto end;
 
   fprintf(fd->fd, "\n# Local Variables:\n"
@@ -60,19 +60,19 @@ int cvsCloseFile(CvsFile* fd)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "cvsCloseFile fails");
+    logMemory(LOG_ERR, "cvsClose fails");
   }
   return rc;
 }
 
 /*=======================================================================
- * Function   : cvsOpenFile
+ * Function   : cvsCutOpen
  * Description: Cut a big file into several ones
- * Synopsis   : int cvsOpenFile(CvsFile* fd)
+ * Synopsis   : int cvsCutOpen(CvsFile* fd)
  * Input      : CvsFile* fd
  * Output     : TRUE on success
  =======================================================================*/
-int cvsOpenFile(CvsFile* fd)
+int cvsCutOpen(CvsFile* fd)
 {
   int rc = FALSE;
   char* path = 0;
@@ -81,7 +81,7 @@ int cvsOpenFile(CvsFile* fd)
 
   if (!fd) goto error;
   if (isEmptyString(fd->path)) goto error; 
-  logMemory(LOG_DEBUG, "cvsOpenFile %s %i", fd->path, fd->nb);
+  logMemory(LOG_DEBUG, "cvsCutOpen %s %i", fd->path, fd->nb);
 
   l = strlen(fd->path);
   if (!(path = createString(fd->path))
@@ -121,7 +121,7 @@ int cvsOpenFile(CvsFile* fd)
 
   // not first call
   if (fd->nb > 0) {
-    if (!cvsCloseFile(fd)) goto error;
+    if (!cvsClose(fd)) goto error;
   }
 
   // open file
@@ -140,22 +140,64 @@ int cvsOpenFile(CvsFile* fd)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "cvsOpenFile fails");
+    logMemory(LOG_ERR, "cvsCutOpen fails");
   }
   path = destroyString(path);
   return rc;
 }
 
 /*=======================================================================
- * Function   : cvsPrint
+ * Function   : cvsCatOpen
+ * Description: Open metadata file for concatenation
+ * Synopsis   : int cvsCatOpen(CvsFile* fd)
+ * Input      : CvsFile* fd
+ * Output     : TRUE on success
+ =======================================================================*/
+int cvsCatOpen(CvsFile* fd)
+{
+  int rc = FALSE;
+  char* path = 0;
+  int l = 0;
+  int i = 0;
+
+  if (!fd) goto error;
+  if (isEmptyString(fd->path)) goto error; 
+  logMemory(LOG_DEBUG, "cvsCatOpen %s %i", fd->path, fd->nb);
+
+  l = strlen(fd->path);
+  if (!(path = createString(fd->path))
+      || !(path = catString(path, "NNN.txt"))) goto error;
+
+  // open file
+  logMemory(LOG_INFO, "serialize into %s", path);
+  if (fd->fd == stdout) goto end;
+  if ((fd->fd = fopen(path, "a")) == 0) {
+    logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
+    goto error;
+  }
+
+  if (!lock(fileno(fd->fd), F_WRLCK)) goto error;
+ end:
+  ++fd->nb;
+  rc = TRUE;
+error:
+  if (!rc) {
+    logMemory(LOG_ERR, "cvsCatOpen fails");
+  }
+  path = destroyString(path);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cvsCutPrint
  * Description: Cut a big file into several ones
- * Synopsis   : int cvsPrint(CvsFile* fd, const char* format, ...)
+ * Synopsis   : int cvsCutPrint(CvsFile* fd, const char* format, ...)
  * Input      : CvsFile* fd
  *              const char* format : as printf
  *              ... : as printf
  * Output     : TRUE on success
  =======================================================================*/
-int cvsPrint(CvsFile* fd, const char* format, ...)
+int cvsCutPrint(CvsFile* fd, const char* format, ...)
 {
   int rc = FALSE;
   va_list args;
@@ -163,7 +205,7 @@ int cvsPrint(CvsFile* fd, const char* format, ...)
   if (!fd) goto error;
 
   if (fd->doCut && fd->offset > env.cvsprintMax) {
-    if (!cvsOpenFile(fd)) goto error;
+    if (!cvsCutOpen(fd)) goto error;
   }
 
   va_start(args, format);
@@ -172,7 +214,34 @@ int cvsPrint(CvsFile* fd, const char* format, ...)
   rc = TRUE;
 error:
   if (!rc) {
-    logMemory(LOG_ERR, "cvsPrint fails");
+    logMemory(LOG_ERR, "cvsCutPrint fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cvsCatPrint
+ * Description: fprintf like
+ * Synopsis   : int cvsCatPrint(CvsFile* fd, const char* format, ...)
+ * Input      : CvsFile* fd
+ *              const char* format : as printf
+ *              ... : as printf
+ * Output     : TRUE on success
+ =======================================================================*/
+int cvsCatPrint(CvsFile* fd, const char* format, ...)
+{
+  int rc = FALSE;
+  va_list args;
+
+  if (!fd) goto error;
+
+  va_start(args, format);
+  vfprintf(fd->fd, format, args);
+  va_end(args);
+  rc = TRUE;
+error:
+  if (!rc) {
+    logMemory(LOG_ERR, "cvsCatPrint fails");
   }
   return rc;
 }

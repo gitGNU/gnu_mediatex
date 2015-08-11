@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.6 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.7 2015/08/11 18:14:23 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -193,7 +193,7 @@ serializeAssoCarac(AssoCarac* self, CvsFile* fd)
   logMemory(LOG_DEBUG, "serialize AssoCarac: %s/%s", 
 	  self->carac->label, self->value);
 
-  cvsPrint(fd, "  \"%s\" = \"%s\"\n", self->carac->label, self->value);
+  fd->print(fd, "  \"%s\" = \"%s\"\n", self->carac->label, self->value);
 
   rc = TRUE;
  error:
@@ -355,7 +355,7 @@ serializeAssoRole(AssoRole* self, CvsFile* fd)
   logMemory(LOG_DEBUG, "serialize AssoRole: %s", self->role->label);
   if(self == 0) goto error;
 
-  cvsPrint(fd, "  With \"%s\" = \"%s\" \"%s\"\n", 
+  fd->print(fd, "  With \"%s\" = \"%s\" \"%s\"\n", 
 	  self->role->label, 
 	  self->human->firstName, self->human->secondName);
 
@@ -384,7 +384,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   checkArchive(self);
   logMemory(LOG_DEBUG, "serialize archive: %s:%lli", self->hash, self->size);
 
-  cvsPrint(fd, "Archive\t %s:%lli\n", self->hash, self->size);
+  fd->print(fd, "Archive\t %s:%lli\n", self->hash, self->size);
   fd->doCut = FALSE;
 
   // serialize assoCaracs
@@ -396,7 +396,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
     }
   }
 
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
   
   fd->doCut = TRUE;
   rc = TRUE;
@@ -520,7 +520,7 @@ serializeHuman(Human* self, CvsFile* fd)
   logMemory(LOG_DEBUG, "serialize Human %i: %s %s",
 	  self->id, self->firstName, self->secondName);
 
-  cvsPrint(fd, "Human\t \"%s\" \"%s\"", self->firstName, self->secondName);
+  fd->print(fd, "Human\t \"%s\" \"%s\"", self->firstName, self->secondName);
   fd->doCut = FALSE;
   
   // serialize categories
@@ -528,10 +528,10 @@ serializeHuman(Human* self, CvsFile* fd)
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
     while ((cathegory = rgNext(self->categories)) != 0) {
-      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+      fd->print(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
 
   // serialize assoCaracs
   if (!isEmptyRing(self->assoCaracs)) {
@@ -541,7 +541,7 @@ serializeHuman(Human* self, CvsFile* fd)
       serializeAssoCarac(assoCarac, fd);
     }
   }
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
 
   ++env.progBar.cur;
   fd->doCut = TRUE;
@@ -666,7 +666,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if(self == 0) goto error;
   logMemory(LOG_DEBUG, "serialize Document %s", self->label);
 
-  cvsPrint(fd, "Document \"%s\"", self->label);
+  fd->print(fd, "Document \"%s\"", self->label);
   fd->doCut = FALSE;
 
   // serialize categories
@@ -674,10 +674,10 @@ serializeDocument(Document* self, CvsFile* fd)
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
     while ((cathegory = rgNext(self->categories)) != 0) {
-      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
+      fd->print(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
   
   // serialize assoRoles
   if (!isEmptyRing(self->assoRoles)) {
@@ -702,11 +702,11 @@ serializeDocument(Document* self, CvsFile* fd)
     rgSort(self->archives, cmpArchive);
     rgRewind(self->archives);
     while ((archive = rgNext(self->archives)) != 0) {
-      cvsPrint(fd, "  %s:%lli\n", archive->hash, archive->size);
+      fd->print(fd, "  %s:%lli\n", archive->hash, archive->size);
     }
   }
 
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
 
   ++env.progBar.cur;
   fd->doCut = TRUE;
@@ -818,7 +818,7 @@ serializeCategory(Category* self, CvsFile* fd)
   if(self == 0) goto error;
   logMemory(LOG_DEBUG, "serialize Category %s", self->label);
 
-  cvsPrint(fd, "%sCategory \"%s\"", self->show?"Top ":"", self->label);
+  fd->print(fd, "%sCategory \"%s\"", self->show?"Top ":"", self->label);
   fd->doCut = FALSE;
 
   // serialize father's
@@ -826,10 +826,10 @@ serializeCategory(Category* self, CvsFile* fd)
     //rgSort(self->fathers, cmpCategory);
     rgRewind(self->fathers);
     while ((category = rgNext(self->fathers)) != 0) {
-      cvsPrint(fd, "%s\"%s\"", (++i)?", ":": ", category->label);
+      fd->print(fd, "%s\"%s\"", (++i)?", ":": ", category->label);
     }
   }
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
 
   // serialize assoCaracs
   if (!isEmptyRing(self->assoCaracs)) {
@@ -839,7 +839,7 @@ serializeCategory(Category* self, CvsFile* fd)
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
-  cvsPrint(fd, "\n");
+  fd->print(fd, "\n");
 
   fd->doCut = TRUE;
   rc = TRUE;
@@ -931,15 +931,17 @@ destroyCatalogTree(CatalogTree* self)
 /*=======================================================================
  * Function   : serializeCatalogTree
  * Description: Serialize the catalog metadata
- * Synopsis   : int serializeCatalogTree(Collection* coll)
+ * Synopsis   : int serializeCatalogTree(Collection* coll, CvsFile* fd)
  * Input      : Collection* coll = what to serialize
+ *              CvsFile* fd = serializer object:
+ *              - fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
+ *              - fd = {0, 0, 0, FALSE, 0, cvsCatOpen, cvsCatPrint};
  * Output     : TRUE on success
  =======================================================================*/
 int
-serializeCatalogTree(Collection* coll)
+serializeCatalogTree(Collection* coll, CvsFile* fd)
 {
   int rc = FALSE;
-  CvsFile fd = {0, 0, 0, FALSE, 0};
   Human* human = 0;
   Archive* archive = 0;
   Document* document = 0;
@@ -952,6 +954,12 @@ serializeCatalogTree(Collection* coll)
   if (!(self = coll->catalogTree)) goto error;
   logMemory(LOG_DEBUG, "serialize %s document tree", coll->label);
 
+  if (!fd) goto error;
+  fd->nb = 0;
+  fd->fd = 0;
+  fd->doCut = FALSE;
+  fd->offset = 0;
+
   // we neeed to use the cvs collection directory
   if (!coll->memoryState & EXPANDED) {
     logMemory(LOG_ERR, "collection must be expanded first");
@@ -961,51 +969,51 @@ serializeCatalogTree(Collection* coll)
   if (!becomeUser(coll->user, TRUE)) goto error;
 
   // output file
-  if (env.dryRun) fd.fd = stdout;
-  fd.path = coll->catalogDB;
-  if (!cvsOpenFile(&fd)) goto error;
+  if (env.dryRun) fd->fd = stdout;
+  fd->path = coll->catalogDB;  
+  if (!fd->open(fd)) goto error;
 
-  cvsPrint(&fd, "# MediaTeX collection catalog: %s\n", coll->label);
-  //cvsPrint(&fd, "# Version: $" "Id" "$\n");
+  fd->print(fd, "# MediaTeX collection catalog: %s\n", coll->label);
+  //fd->print(fd, "# Version: $" "Id" "$\n");
 
-  cvsPrint(&fd, "\n# Categories:\n\n");
+  fd->print(fd, "\n# Categories:\n\n");
   if (!isEmptyRing(self->categories)) {
     //rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
     while((category = rgNext(self->categories)) != 0) {
-      if (!serializeCategory(category, &fd)) goto error;
+      if (!serializeCategory(category, fd)) goto error;
     }
   }
 
-  cvsPrint(&fd, "# Humans:\n\n");
+  fd->print(fd, "# Humans:\n\n");
   if (avl_count(self->humans)) {
     for(node = self->humans->head; node; node = node->next) {
       human = (Human*)node->item;
-      if (!serializeHuman(human, &fd)) goto error;
+      if (!serializeHuman(human, fd)) goto error;
     }
   }
 
-  cvsPrint(&fd, "# Archives:\n\n");
+  fd->print(fd, "# Archives:\n\n");
   if (avl_count(coll->archives)) {
     for(node = coll->archives->head; node; node = node->next) {
       archive = (Archive*)node->item;
       if (!isEmptyRing(archive->assoCaracs)) {
-	if (!serializeCatalogArchive(archive, &fd)) goto error;
+	if (!serializeCatalogArchive(archive, fd)) goto error;
       }
     }
   }
 
-  cvsPrint(&fd, "# Documents:\n\n");
+  fd->print(fd, "# Documents:\n\n");
   if (avl_count(self->documents)) {
     for(node = self->documents->head; node; node = node->next) {
       document = (Document*)node->item;
-      if (!serializeDocument(document, &fd)) goto error;
+      if (!serializeDocument(document, fd)) goto error;
     }
   }
 
   rc = TRUE;
  error:
-  if (!cvsCloseFile(&fd)) rc = FALSE;
+  if (!cvsClose(fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
     logMemory(LOG_ERR, "serializeCatalogTree fails");

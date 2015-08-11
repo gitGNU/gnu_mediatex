@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcvsPrint.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utcvsPrint.c,v 1.3 2015/08/11 18:14:22 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -84,14 +84,14 @@ main(int argc, char** argv)
 
   /************************************************************************/
   env.cvsprintMax = 10;
-  if (!cvsOpenFile(&fd)) goto error;
+  if (!cvsCutOpen(&fd)) goto error;
   fd.doCut = FALSE;
-  if (!cvsPrint(&fd, "%s", "the lines should not be cut\n")) goto error;
-  if (!cvsPrint(&fd, "%s", "put 2nd line in same file\n")) goto error;
+  if (!cvsCutPrint(&fd, "%s", "the lines should not be cut\n")) goto error;
+  if (!cvsCutPrint(&fd, "%s", "put 2nd line in same file\n")) goto error;
   fd.doCut = TRUE;
-  if (!cvsPrint(&fd, "%s", "3rd line ...\n")) goto error;
-  if (!cvsPrint(&fd, "%s", "4rth line ...\n")) goto error;
-  if (!cvsCloseFile(&fd)) goto error;
+  if (!cvsCutPrint(&fd, "%s", "3rd line ...\n")) goto error;
+  if (!cvsCutPrint(&fd, "%s", "4rth line ...\n")) goto error;
+  if (!cvsClose(&fd)) goto error;
   /************************************************************************/
 
   rc = TRUE;

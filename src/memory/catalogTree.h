@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.h,v 1.4 2015/06/30 17:37:28 nroche Exp $
+ * Version: $Id: catalogTree.h,v 1.5 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -147,7 +147,7 @@ int serializeCategory(Category* self, CvsFile* fd);
 
 CatalogTree* createCatalogTree(void);
 CatalogTree* destroyCatalogTree(CatalogTree* self);
-int serializeCatalogTree(Collection* coll);
+int serializeCatalogTree(Collection* coll, CvsFile* fd);
 
 /* API */
 

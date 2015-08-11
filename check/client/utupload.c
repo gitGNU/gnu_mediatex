@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.3 2015/08/11 11:59:33 nroche Exp $
+ * Version: $Id: utupload.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -165,16 +165,16 @@ main(int argc, char** argv)
 
   /************************************************************************/
   logMain(LOG_NOTICE, "*** Upload: ");
-  if (!mdtxUpload("coll2", catalog)) goto error;
+  if (!mdtxUpload("coll2", catalog, extract)) goto error;
   /************************************************************************/
   
   rc = TRUE;
  error:
   freeConfiguration();
-  destroyString(catalog);
-  destroyString(extract);
-  destroyString(file);
-  destroyString(targetPath);
+  free(catalog);
+  free(extract);
+  free(file);
+  free(targetPath);
   ENDINGS;
   rc=!rc;
  optError:

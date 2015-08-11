@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractTree.c,v 1.3 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utextractTree.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -57,6 +57,7 @@ int
 main(int argc, char** argv)
 {
   Collection* coll = 0;
+  CvsFile fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -90,7 +91,7 @@ main(int argc, char** argv)
   if (!createExempleExtractTree(coll)) goto error;
   
   // test serializing
-  if (!serializeExtractTree(coll)) {
+  if (!serializeExtractTree(coll, &fd)) {
     logMemory(LOG_ERR, "Error while serializing the extract exemple");
     goto error;
   }
@@ -98,7 +99,7 @@ main(int argc, char** argv)
   // test disease
   if (!diseaseExtractTree(coll)) goto error;
   env.dryRun = TRUE;
-  if (!serializeExtractTree(coll)) goto error;
+  if (!serializeExtractTree(coll, &fd)) goto error;
   if (avl_count(coll->extractTree->containers) != 0) goto error;
   /************************************************************************/
 

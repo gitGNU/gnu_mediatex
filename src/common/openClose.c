@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.10 2015/08/11 11:59:34 nroche Exp $
+ * Version: $Id: openClose.c,v 1.11 2015/08/11 18:14:23 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -704,6 +704,7 @@ saveColl(Collection* coll, int i)
 {
   int rc = FALSE;
   int err = 0;
+  CvsFile fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "do save %s collection (%s)", 
@@ -718,11 +719,11 @@ saveColl(Collection* coll, int i)
   if (coll->fileState[i] == MODIFIED && coll->cptInUse[i] == 0) {
     switch (i) {
     case iCTLG:
-      if (!serializeCatalogTree(coll)) goto error2;
+      if (!serializeCatalogTree(coll, &fd)) goto error2;
       coll->toCommit = TRUE;
       break;
     case iEXTR:
-      if (!serializeExtractTree(coll)) goto error2;
+      if (!serializeExtractTree(coll, &fd)) goto error2;
       coll->toCommit = TRUE;
       break;
     case iSERV:

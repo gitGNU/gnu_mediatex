@@ -39,6 +39,9 @@
 - remove [info cache.c] access fails: No such file or directory
 - remove thereIs function
 
+** UPLOAD
+- cvsPrint manage upload concatenation
+
 *** CLEAN-UP
 
 - src/misc/host.c (to remove)

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.5 2015/07/22 10:45:18 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.6 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -84,7 +84,7 @@ int serializeExtractRecord(Archive* self, CvsFile* fd);
 
 ExtractTree* createExtractTree(void);
 ExtractTree* destroyExtractTree(ExtractTree* self);
-int serializeExtractTree(Collection* coll);
+int serializeExtractTree(Collection* coll, CvsFile* fd);
 
 /* API */
 

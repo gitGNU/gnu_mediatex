@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.3 2015/08/11 11:59:33 nroche Exp $
+ * Version: $Id: upload.c,v 1.4 2015/08/11 18:14:23 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -29,73 +29,125 @@
 
 /*=======================================================================
  * Function   : mdtxUploadCatalog
- * Description: 
- * Synopsis   : 
- * Input      : Collection* coll: collection used to parse input file
+ * Description: parse uploaded catalog file
+ * Synopsis   : static int mdtxUploadCatalog(
+ *                                        Collection* upload, char* path)
+ * Input      : Collection* upload: collection used to parse upload
  *              char* path: input catalog file to parse
  * Output     : TRUE on success
  =======================================================================*/
 static int 
-mdtxUploadCatalog(Collection* coll, char* path)
+mdtxUploadCatalog(Collection* upload, char* path)
 { 
   int rc = FALSE;
 
-  checkCollection(coll);
-  checkLabel(coll->label);
+  checkCollection(upload);
+  checkLabel(path);
   logMain(LOG_DEBUG, "mdtxUploadCatalog");
   
-  if (!(coll->catalogTree = createCatalogTree())) goto error;
-  if (!(coll->catalogDB = createString(path))) goto error;
+  if (!(upload->catalogTree = createCatalogTree())) goto error;
+  if (!(upload->catalogDB = createString(path))) goto error;
 
-  if (!parseCatalogFile(coll, path)) goto error;
+  if (!parseCatalogFile(upload, path)) goto error;
 
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "mdtxUploadCatalog fails");
   }
+  upload->catalogDB = destroyString(upload->catalogDB);
   return rc;
 }
 
-
 /*=======================================================================
  * Function   : mdtxUploadCatalog
- * Description: 
- * Synopsis   : 
- * Input      : Collection* coll: collection used to parse input file
- *              char* path: input catalog file to parse
+ * Description: concatenate uploaded catalog metadata
+ * Synopsis   : static int mdtxConcatCatalog(
+                                    Collection* coll, Collection *upload)
+ * Input      : Collection* coll: target
+ *              Collection* upload: source
  * Output     : TRUE on success
  =======================================================================*/
 static int 
-mdtxConcatCatalog(Collection* coll)
+mdtxConcatCatalog(Collection* coll, Collection *upload)
 { 
   int rc = FALSE;
-  //Configuration* conf = 0;
+  CvsFile fd = {0, 0, 0, FALSE, 0, cvsCatOpen, cvsCatPrint};
 
-  checkCollection(coll);
   logMain(LOG_DEBUG, "mdtxConcatCatalog");
-  //if (!(conf = getConfiguration())) goto error;
 
-  //data.dryRun = env.dryRun;
-  //env.dryRun = FALSE;
-
-  
-  // serialize the resulting mediatex metadata using basename prefix
-  /* if (sprintf(tmp, "stage3/%s_ext", data.basename) <= 0) goto error; */
-  /* if (!(data.coll->extractDB = createString(tmp))) goto error; */
-  /* if (sprintf(tmp, "stage3/%s_cat", data.basename) <= 0) goto error; */
-  /* if (!(data.coll->catalogDB = createString(tmp))) goto error; */
-  /* data.coll->memoryState |= EXPANDED; */
-  /* if (!(data.coll->user = createString("mdtx"))) goto error; */
-  /* env.noRegression = TRUE; */
-  /* if (!(serializeExtractTree(data.coll))) goto error; */
-  /* if (!(serializeCatalogTree(data.coll))) goto error; */
+  upload->catalogDB = coll->catalogDB;
+  if (!(serializeCatalogTree(upload, &fd))) goto error;
 
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "mdtxConcatCatalog fails");
   }
+  upload->catalogDB = 0;
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : mdtxUploadExtract
+ * Description: parse uploaded extract file
+ * Synopsis   : static int mdtxUploadExtract(
+ *                                        Collection* upload, char* path)
+ * Input      : Collection* upload: collection used to parse upload
+ *              char* path: input extract file to parse
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+mdtxUploadExtract(Collection* upload, char* path)
+{ 
+  int rc = FALSE;
+
+  checkCollection(upload);
+  checkLabel(path);
+  logMain(LOG_DEBUG, "mdtxUploadExtract");
+  
+  if (!(upload->extractTree = createExtractTree())) goto error;
+  if (!(upload->extractDB = createString(path))) goto error;
+
+  if (!parseExtractFile(upload, path)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "mdtxUploadExtract fails");
+  }
+  upload->extractDB = destroyString(upload->extractDB);
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : mdtxUploadExtract
+ * Description: concatenate uploaded extract metadata
+ * Synopsis   : static int mdtxConcatExtract(
+                                    Collection* coll, Collection *upload)
+ * Input      : Collection* coll: target
+ *              Collection* upload: source
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+mdtxConcatExtract(Collection* coll, Collection *upload)
+{ 
+  int rc = FALSE;
+  CvsFile fd = {0, 0, 0, FALSE, 0, cvsCatOpen, cvsCatPrint};
+
+  logMain(LOG_DEBUG, "mdtxConcatExtract");
+
+  upload->extractDB = coll->extractDB;
+  if (!(serializeExtractTree(upload, &fd))) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "mdtxConcatExtract fails");
+  }
+  upload->extractDB = 0;
   return rc;
 }
 
@@ -106,38 +158,43 @@ mdtxConcatCatalog(Collection* coll)
  * Synopsis   : 
  * Input      : char* label: related collection
  *              char* catalog: catalog metadata file to upload
+ *              char* extract: extract metadata file to upload
  * Output     : TRUE on success
  =======================================================================*/
 int 
-mdtxUpload(char* label, char* catalog)
+mdtxUpload(char* label, char* catalog, char* extract)
 { 
   int rc = FALSE;
-  //Configuration* conf = 0;
   Collection *coll = 0;
   Collection *upload = 0;
 
   logMain(LOG_DEBUG, "mdtxUpload");
 
   if (!allowedUser(env.confLabel)) goto error;
-  //if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
 
-  // build a temporary collection to parse uploaded metadata
-  if (!(upload = addCollection("__upload"))) goto error;
-  strcpy(upload->label, "__upload");
-  if (!(upload->masterLabel = createString(env.confLabel))) goto error;
+  // parser uploaded metadata files into a new collection
+  if (!(upload = addCollection("_upload_"))) goto error;
+  if (!(upload->masterLabel = createString(coll->masterUser))) goto error;
+  if (!(upload->user = createString(coll->user))) goto error;
   strcpy(upload->masterHost, "localhost");
-  //upload->fileState[iEXTR] = DISEASED;
-  //upload->fileState[iCTLG] = DISEASED;
-  upload->memoryState |= EXPANDED;
 
-  // parse uploaded catalog  metadata
   if (catalog) {
     if (!mdtxUploadCatalog(upload, catalog)) goto error;
   }
+  if (extract) {
+    if (!mdtxUploadExtract(upload, extract)) goto error;
+  }
+
+  // TODO some checks
   
+  // concatenate metadata to the true collection
+  upload->memoryState |= EXPANDED;
   if (catalog) {
-    if (!mdtxConcatCatalog(coll)) goto error;
+    if (!mdtxConcatCatalog(coll, upload)) goto error;
+  }
+  if (extract) {
+    if (!mdtxConcatExtract(coll, upload)) goto error;
   }
 
   rc = TRUE;
@@ -145,6 +202,7 @@ mdtxUpload(char* label, char* catalog)
   if (!rc) {
     logMain(LOG_ERR, "mdtxUpload fails");
   }
+  delCollection(upload);
   return rc;
 }
 

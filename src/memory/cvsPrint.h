@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.h,v 1.4 2015/06/30 17:37:29 nroche Exp $
+ * Version: $Id: cvsPrint.h,v 1.5 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -27,18 +27,26 @@
 
 /* API */
 
-typedef struct CvsFile
+typedef struct CvsFile CvsFile;
+
+struct CvsFile
 {
   char     *path;
   int      nb;
   FILE     *fd;
   int      doCut;
   long int offset;
-} CvsFile;
+  int (*open)(CvsFile*);
+  int (*print)(CvsFile*, const char*, ...);
+};
 
-int cvsOpenFile(CvsFile* fd);
-int cvsPrint(CvsFile* fd, const char* format, ...);
-int cvsCloseFile(CvsFile* fd);
+int cvsCutOpen(CvsFile* fd);
+int cvsCutPrint(CvsFile* fd, const char* format, ...);
+
+int cvsCatOpen(CvsFile* fd);
+int cvsCatPrint(CvsFile* fd, const char* format, ...);
+
+int cvsClose(CvsFile* fd);
 
 #endif /* MISC_MEMORY_CVSPRINT_H */
 

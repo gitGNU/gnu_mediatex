@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.3 2015/08/11 11:59:33 nroche Exp $
+# * Version: $Id: upload.sh,v 1.4 2015/08/11 18:14:22 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -41,7 +41,26 @@ Document "css": "css"
   b281449c229bcc4a3556cdcc0d3ebcec:815
 EOF
 
-client/ut$TEST -C client/$TEST.cat >client/$TEST.out 2>&1
+cat >client/$TEST.ext <<EOF
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+)
+EOF
+
+client/ut$TEST \
+    -C client/$TEST.cat \
+    >client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -E client/$TEST.ext \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -C client/$TEST.cat \
+    -E client/$TEST.ext \
+    >>client/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs client/$TEST.out

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.9 2015/08/08 06:33:54 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.10 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -218,7 +218,7 @@ serializeContainer(Container* self, CvsFile* fd)
     goto error;
   }
 
-  cvsPrint(fd, "\n(%s\n", strEType(self->type));
+  fd->print(fd, "\n(%s\n", strEType(self->type));
   fd->doCut = FALSE;
  
   // serialise parents (only INC container doesn't have parent)
@@ -227,23 +227,23 @@ serializeContainer(Container* self, CvsFile* fd)
     if ((archive = rgNext(self->parents)) == 0) goto error;
     do {
       if (!serializeExtractRecord(archive, fd)) goto error;
-      cvsPrint(fd, "\n");
+      fd->print(fd, "\n");
     }  while ((archive = rgNext(self->parents)) != 0);
   }
 
   // serialize childs
   if (avl_count(self->childs) > 0) {
-    cvsPrint(fd, "=>\n");
+    fd->print(fd, "=>\n");
 
     for(node = self->childs->head; node; node = node->next) {
       asso = node->item;
       if (self->type == INC && !isIncoming(asso->archive)) continue;
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
-      cvsPrint(fd, "\t%s\n", asso->path);
+      fd->print(fd, "\t%s\n", asso->path);
     }
   }
 
-  cvsPrint(fd, ")\n");
+  fd->print(fd, ")\n");
   fd->doCut = TRUE;
   ++env.progBar.cur;
   rc = TRUE;
@@ -298,7 +298,7 @@ serializeExtractRecord(Archive* self, CvsFile* fd)
     goto error;
   }
 
-  cvsPrint(fd, "%s:%lli", self->hash, (long long int)self->size);
+  fd->print(fd, "%s:%lli", self->hash, (long long int)self->size);
   rc = TRUE;
  error:
   return rc;
@@ -363,15 +363,17 @@ destroyExtractTree(ExtractTree* self)
 /*=======================================================================
  * Function   : serializeExtractTree 
  * Description: Serialize the extraction metadata
- * Synopsis   : int serializeExtractTree(Collection* coll)
+ * Synopsis   : int serializeExtractTree(Collection* coll, CvsFile* fd)
  * Input      : Collection* coll = what to serialize
+ *              CvsFile* fd = serializer object:
+ *              - fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
+ *              - fd = {0, 0, 0, FALSE, 0, cvsCatOpen, cvsCatPrint};
  * Output     : TRUE on success
  =======================================================================*/
 int 
-serializeExtractTree(Collection* coll)
+serializeExtractTree(Collection* coll, CvsFile* fd)
 { 
   int rc = FALSE;
-  CvsFile fd = {0, 0, 0, FALSE, 0};
   ExtractTree* self = 0;
   Container* container = 0;
   AVLNode *node = 0;
@@ -380,6 +382,12 @@ serializeExtractTree(Collection* coll)
   checkCollection(coll);
   if (!(self = coll->extractTree)) goto error;
   logMemory(LOG_DEBUG, "serialize %s extract tree", coll->label);
+
+  if (!fd) goto error;
+  fd->nb = 0;
+  fd->fd = 0;
+  fd->doCut = FALSE;
+  fd->offset = 0;
 
   // we neeed to use the cvs collection directory
   if ((!coll->memoryState & EXPANDED)) {
@@ -390,29 +398,29 @@ serializeExtractTree(Collection* coll)
   if (!becomeUser(coll->user, TRUE)) goto error;
 
   // output file
-  if (env.dryRun) fd.fd = stdout;
-  fd.path = coll->extractDB;
-  if (!cvsOpenFile(&fd)) goto error;
+  if (env.dryRun) fd->fd = stdout;
+  fd->path = coll->extractDB;
+  if (!fd->open(fd)) goto error;
 
-  cvsPrint(&fd, "# MediaTeX extraction metadata: %s\n", coll->label);
-  //cvsPrint(&fd, "# Version: $" "Id" "$\n");
+  fd->print(fd, "# MediaTeX extraction metadata: %s\n", coll->label);
+  //fd->print(fd, "# Version: $" "Id" "$\n");
 
   // serialize INC container if not empty
   if (avl_count(self->incoming->childs) > 0) {
-    if (!serializeContainer(self->incoming, &fd)) goto error;
+    if (!serializeContainer(self->incoming, fd)) goto error;
   }
 
   // serialize all other containers
   if (avl_count(self->containers)) {
     for(node = self->containers->head; node; node = node->next) {
       container = node->item;
-      if (!serializeContainer(container, &fd)) goto error;
+      if (!serializeContainer(container, fd)) goto error;
     }
   }
  
   rc = TRUE;
  error:
-  if (!cvsCloseFile(&fd)) rc = FALSE;
+  if (!cvsClose(fd)) rc = FALSE;
   if (!logoutUser(uid)) rc = FALSE;
   if (!rc) {
     logMemory(LOG_ERR, "serializeExtractTree fails");
