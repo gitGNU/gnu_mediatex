@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.2 2015/08/10 12:24:24 nroche Exp $
+ * Version: $Id: utupload.c,v 1.3 2015/08/11 11:59:33 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -38,9 +38,17 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
+  fprintf(stderr, 
+	  "\n\t\t[ -C catalog ] [ -E extract ]\n"
+	  "\t\t[ -F file ] [ -T targetPath ]");
 
   mdtxOptions();
-  //fprintf(stderr, "  ---\n");
+  fprintf(stderr, 
+	  "  ---\n"
+	  "  -C, --catalog\tcatalog metadata path\n"
+	  "  -E, --extract\textract metadata path\n"
+	  "  -F, --file\tfile to upload\n"
+	  "  -P, --target-path\tpath where to upload in cache\n");
   return;
 }
 
@@ -65,13 +73,13 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS "C:E:F:P:";
+  char* options = MDTX_SHORT_OPTIONS "C:E:F:T:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
     {"catalog", required_argument, 0, 'C'},
     {"extract", required_argument, 0, 'E'},
     {"file", required_argument, 0, 'F'},
-    {"target-path", required_argument, 0, 'P'},
+    {"target-path", required_argument, 0, 'T'},
     {0, 0, 0, 0}
   };
 
@@ -163,6 +171,10 @@ main(int argc, char** argv)
   rc = TRUE;
  error:
   freeConfiguration();
+  destroyString(catalog);
+  destroyString(extract);
+  destroyString(file);
+  destroyString(targetPath);
   ENDINGS;
   rc=!rc;
  optError:

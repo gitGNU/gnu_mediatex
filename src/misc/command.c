@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.10 2015/08/10 12:24:28 nroche Exp $
+ * Version: $Id: command.c,v 1.11 2015/08/11 11:59:34 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -77,8 +77,8 @@ miscUsage(char* programName)
 void 
 memoryUsage(char* programName)
 {
-  fprintf(stderr, "\n\t\t[ -M ]");
   miscUsage(programName);
+  fprintf(stderr, "\n\t\t[ -M ]");
 }
 
 /*=======================================================================

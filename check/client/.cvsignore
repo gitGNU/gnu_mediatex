@@ -9,3 +9,5 @@ ut*[^.]?
 *.pub
 *.log
 *.trs
+upload.cat
+upload.ext

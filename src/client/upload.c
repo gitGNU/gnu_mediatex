@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.2 2015/08/10 12:24:27 nroche Exp $
+ * Version: $Id: upload.c,v 1.3 2015/08/11 11:59:33 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -39,21 +39,62 @@ static int
 mdtxUploadCatalog(Collection* coll, char* path)
 { 
   int rc = FALSE;
-  Configuration* conf = 0;
 
   checkCollection(coll);
   checkLabel(coll->label);
   logMain(LOG_DEBUG, "mdtxUploadCatalog");
-  if (!(conf = getConfiguration())) goto error;
   
   if (!(coll->catalogTree = createCatalogTree())) goto error;
   if (!(coll->catalogDB = createString(path))) goto error;
-  if (!loadCollection(coll, CTLG)) goto error;
+
+  if (!parseCatalogFile(coll, path)) goto error;
 
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "mdtxUploadCatalog fails");
+  }
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : mdtxUploadCatalog
+ * Description: 
+ * Synopsis   : 
+ * Input      : Collection* coll: collection used to parse input file
+ *              char* path: input catalog file to parse
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+mdtxConcatCatalog(Collection* coll)
+{ 
+  int rc = FALSE;
+  //Configuration* conf = 0;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "mdtxConcatCatalog");
+  //if (!(conf = getConfiguration())) goto error;
+
+  //data.dryRun = env.dryRun;
+  //env.dryRun = FALSE;
+
+  
+  // serialize the resulting mediatex metadata using basename prefix
+  /* if (sprintf(tmp, "stage3/%s_ext", data.basename) <= 0) goto error; */
+  /* if (!(data.coll->extractDB = createString(tmp))) goto error; */
+  /* if (sprintf(tmp, "stage3/%s_cat", data.basename) <= 0) goto error; */
+  /* if (!(data.coll->catalogDB = createString(tmp))) goto error; */
+  /* data.coll->memoryState |= EXPANDED; */
+  /* if (!(data.coll->user = createString("mdtx"))) goto error; */
+  /* env.noRegression = TRUE; */
+  /* if (!(serializeExtractTree(data.coll))) goto error; */
+  /* if (!(serializeCatalogTree(data.coll))) goto error; */
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "mdtxConcatCatalog fails");
   }
   return rc;
 }
@@ -71,30 +112,33 @@ int
 mdtxUpload(char* label, char* catalog)
 { 
   int rc = FALSE;
-  Configuration* conf = 0;
+  //Configuration* conf = 0;
+  Collection *coll = 0;
   Collection *upload = 0;
 
-  checkLabel(label);
-  checkLabel(catalog);
   logMain(LOG_DEBUG, "mdtxUpload");
-  if (!(conf = getConfiguration())) goto error;
-  
-  //data.dryRun = env.dryRun;
-  //env.dryRun = FALSE;
-  if (!(upload = addCollection("__upload"))) goto error;
-  if (!mdtxUploadCatalog(upload, catalog)) goto error;
-  
-  // serialize the resulting mediatex metadata using basename prefix
-  /* if (sprintf(tmp, "stage3/%s_ext", data.basename) <= 0) goto error; */
-  /* if (!(data.coll->extractDB = createString(tmp))) goto error; */
-  /* if (sprintf(tmp, "stage3/%s_cat", data.basename) <= 0) goto error; */
-  /* if (!(data.coll->catalogDB = createString(tmp))) goto error; */
-  /* data.coll->memoryState |= EXPANDED; */
-  /* if (!(data.coll->user = createString("mdtx"))) goto error; */
-  /* env.noRegression = TRUE; */
-  /* if (!(serializeExtractTree(data.coll))) goto error; */
-  /* if (!(serializeCatalogTree(data.coll))) goto error; */
 
+  if (!allowedUser(env.confLabel)) goto error;
+  //if (!(conf = getConfiguration())) goto error;
+  if (!(coll = mdtxGetCollection(label))) goto error;
+
+  // build a temporary collection to parse uploaded metadata
+  if (!(upload = addCollection("__upload"))) goto error;
+  strcpy(upload->label, "__upload");
+  if (!(upload->masterLabel = createString(env.confLabel))) goto error;
+  strcpy(upload->masterHost, "localhost");
+  //upload->fileState[iEXTR] = DISEASED;
+  //upload->fileState[iCTLG] = DISEASED;
+  upload->memoryState |= EXPANDED;
+
+  // parse uploaded catalog  metadata
+  if (catalog) {
+    if (!mdtxUploadCatalog(upload, catalog)) goto error;
+  }
+  
+  if (catalog) {
+    if (!mdtxConcatCatalog(coll)) goto error;
+  }
 
   rc = TRUE;
  error:

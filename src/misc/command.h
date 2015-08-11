@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.8 2015/08/10 12:24:28 nroche Exp $
+ * Version: $Id: command.h,v 1.9 2015/08/11 11:59:34 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -28,7 +28,7 @@
 #include "mediatex-types.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hvf:s:l:na:AS"
+#define MISC_SHORT_OPTIONS "hvf:s:l:na:S"
 #define MISC_LONG_OPTIONS				\
   {"help", no_argument, 0, 'h'},			\
   {"version", no_argument, 0, 'v'},			\
@@ -39,16 +39,16 @@
   {"alloc-limit", required_argument, 0, 'a'},		\
   {"script-out", required_argument, 0, 'S'}
 
-#define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS "M"
+#define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
 #define MEMORY_LONG_OPTIONS				\
   MISC_LONG_OPTIONS
 
-#define PARSER_SHORT_OPTIONS MEMORY_SHORT_OPTIONS "LP"
+#define PARSER_SHORT_OPTIONS MEMORY_SHORT_OPTIONS "L"
 #define PARSER_LONG_OPTIONS			        \
   MEMORY_LONG_OPTIONS,					\
   {"debug-lexer", no_argument, 0, 'L'}
 
-#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:C"
+#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:"
 #define MDTX_LONG_OPTIONS				\
   PARSER_LONG_OPTIONS,					\
   {"conf-label", required_argument, 0, 'c'}

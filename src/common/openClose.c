@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.9 2015/08/08 06:33:53 nroche Exp $
+ * Version: $Id: openClose.c,v 1.10 2015/08/11 11:59:34 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -1078,7 +1078,7 @@ int serverDiseaseAll()
 
 /*=======================================================================
  * Function   : mdtxGetCollection
- * Description: Call serializer on all modified files
+ * Description: load a collection
  * Synopsis   : Collection* mdtxGetCollection(char* label)
  * Input      : char* label: collection label to search for
  * Output     : Collection*: the matching collection ; 0 if not found
@@ -1105,7 +1105,7 @@ Collection* mdtxGetCollection(char* label)
 
 /*=======================================================================
  * Function   : mdtxGetSupport
- * Description: Call serializer on all modified files
+ * Description: load a support
  * Synopsis   : Support* mdtxGetSupport(char* label)
  * Input      : char* label: support label to search for
  * Output     : Support*: the matching support ; 0 if not found

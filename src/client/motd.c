@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.7 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: motd.c,v 1.8 2015/08/11 11:59:33 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -280,6 +280,8 @@ updateMotd()
   char* text = 0;
   off_t badSize = 0;
   char buf[30];
+
+  logMain(LOG_DEBUG, "updateMotd");
 
   if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;

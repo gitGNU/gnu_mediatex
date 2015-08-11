@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/08/10 11:07:44 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/08/11 11:59:32 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -368,6 +368,8 @@ clean-local:
 		common/*.out \
 		client/*.out* \
 		client/*.pub \
+		client/upload.cat \
+		client/upload.ext \
 		server/*.out \
 		*.out
 	@rm -fr tmp

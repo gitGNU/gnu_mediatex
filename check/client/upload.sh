@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.2 2015/08/10 12:24:24 nroche Exp $
+# * Version: $Id: upload.sh,v 1.3 2015/08/11 11:59:33 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -33,8 +33,15 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-exit 0
-client/ut$TEST >client/$TEST.out 2>&1
+cat >client/$TEST.cat <<EOF
+Category "css": "drawing"
+
+Document "css": "css"
+  With "designer" = "Me" ""
+  b281449c229bcc4a3556cdcc0d3ebcec:815
+EOF
+
+client/ut$TEST -C client/$TEST.cat >client/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs client/$TEST.out

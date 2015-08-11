@@ -1,3 +1,6 @@
 [notice utupload.c] *** Upload: 
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info catalogFile.y] parse __upload catalog from client/upload.cat
 [info confTree.c] free configuration
 [info utupload.c] exit on success
+[warning alloc.c] Memory leaks: n-1, sum= -20
