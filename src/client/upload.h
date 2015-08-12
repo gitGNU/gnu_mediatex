@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upload.h,v 1.3 2015/08/11 18:14:23 nroche Exp $
+ * Version: $Id: upload.h,v 1.4 2015/08/12 12:07:27 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -27,8 +27,13 @@
 
 #include "mediatex-types.h"
 
+int isCatalogRefbyExtract(Collection *upload);
+int checkFileRefbyExtract(Collection *upload, Archive* archive);
+int checkFileRefbyCatalog(Collection *upload, Archive* archive);
+
 /* API */
-int mdtxUpload(char* label, char* catalog, char* extract);
+int mdtxUpload(char* label, char* catalog, char* extract, char* file, 
+	       char* targetPath);
 
 #endif /* MDTX_CLIENT_UPLOAD_H */
 

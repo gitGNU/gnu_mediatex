@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.7 2015/08/11 18:14:23 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.8 2015/08/12 12:07:27 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -382,7 +382,8 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   AssoCarac *assoCarac = 0;
 
   checkArchive(self);
-  logMemory(LOG_DEBUG, "serialize archive: %s:%lli", self->hash, self->size);
+  logMemory(LOG_DEBUG, "serialize archive: %s:%lli", 
+	    self->hash, self->size);
 
   fd->print(fd, "Archive\t %s:%lli\n", self->hash, self->size);
   fd->doCut = FALSE;

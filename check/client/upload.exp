@@ -1,4 +1,15 @@
-[notice utupload.c] *** Upload: 
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: internal tests
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info openClose.c] estimate 137 steps for load
+[info openClose.c] parse coll1 collection (  XC)
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/catalog000.txt
+[info openClose.c] steps: 137 / 137
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: catalog
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
@@ -20,7 +31,7 @@ Human	 "Me" ""
 
 Document "css": "css"
   With "designer" = "Me" ""
-  b281449c229bcc4a3556cdcc0d3ebcec:815
+  99b882d1ba57c2c83a53a719e2433518:1004
 
 
 # Local Variables:
@@ -29,7 +40,8 @@ Document "css": "css"
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] *** Upload: 
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: extract
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
@@ -38,7 +50,7 @@ Document "css": "css"
 (ISO
 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 =>
-c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+99b882d1ba57c2c83a53a719e2433518:1004	mediatex.css
 )
 
 # Local Variables:
@@ -47,7 +59,28 @@ c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] *** Upload: 
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: file
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[err archive.c] please provide an archive
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(INC
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: catalog extract
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
@@ -70,7 +103,7 @@ Human	 "Me" ""
 
 Document "css": "css"
   With "designer" = "Me" ""
-  b281449c229bcc4a3556cdcc0d3ebcec:815
+  99b882d1ba57c2c83a53a719e2433518:1004
 
 
 # Local Variables:
@@ -83,7 +116,127 @@ Document "css": "css"
 (ISO
 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 =>
-c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+99b882d1ba57c2c83a53a719e2433518:1004	mediatex.css
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: catalog file
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info catalogFile.y] parse _upload_ catalog from client/upload.cat
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[err archive.c] please provide an archive
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
+# MediaTeX collection catalog: _upload_
+
+# Categories:
+
+Category "css": "drawing"
+
+Category "drawing"
+
+# Humans:
+
+Human	 "Me" ""
+
+# Archives:
+
+# Documents:
+
+Document "css": "css"
+  With "designer" = "Me" ""
+  99b882d1ba57c2c83a53a719e2433518:1004
+
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(INC
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: extract file
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info extractFile.y] parse _upload_ extraction data from client/upload.ext
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[notice extractTree.c] remove 99b882d1ba57c2c83a53a719e2433518:1004 archive from incomings
+[err archive.c] please provide an archive
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	mediatex.css
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] *************************************************
+[notice utupload.c] * Upload: catalog extract file
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info catalogFile.y] parse _upload_ catalog from client/upload.cat
+[info extractFile.y] parse _upload_ extraction data from client/upload.ext
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[notice extractTree.c] remove 99b882d1ba57c2c83a53a719e2433518:1004 archive from incomings
+[err archive.c] please provide an archive
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
+# MediaTeX collection catalog: _upload_
+
+# Categories:
+
+Category "css": "drawing"
+
+Category "drawing"
+
+# Humans:
+
+Human	 "Me" ""
+
+# Archives:
+
+# Documents:
+
+Document "css": "css"
+  With "designer" = "Me" ""
+  99b882d1ba57c2c83a53a719e2433518:1004
+
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(ISO
+0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	mediatex.css
 )
 
 # Local Variables:

@@ -20,6 +20,11 @@
 - motd: add to burn and orphanes
 - catalogHtml: add warning for orphanes
 
+** LOGS
+- make cron upload the cvsroot collection module
+- make cron upload the collection's apache logs
+- ease looking for archive life cycle into cvsroot
+
 *** CHANGES (to document)
 
 ** INC

@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
+ * Version: $Id: utupload.c,v 1.5 2015/08/12 12:07:27 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -65,6 +65,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  Collection* coll = 0;
   char* catalog = 0;
   char* extract = 0;
   char* file = 0;
@@ -164,8 +165,27 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  logMain(LOG_NOTICE, "*** Upload: ");
-  if (!mdtxUpload("coll2", catalog, extract)) goto error;
+  logMain(LOG_NOTICE, "*************************************************"); 
+
+  if (!catalog && !extract &&!file) {
+    logMain(LOG_NOTICE, "* Upload: internal tests");
+
+    // check all archive from catalog are provided by extract
+    if(!(coll = mdtxGetCollection("coll1"))) goto error;
+    if (!loadCollection(coll, CTLG|EXTR)) goto error;
+    if (!(isCatalogRefbyExtract(coll))) goto error;
+
+  }
+  else {
+  logMain(LOG_NOTICE, "* Upload:%s%s%s%s", 
+	  catalog?" catalog":"", 
+	  extract?" extract":"", 
+	  file?" file":"", 
+	  targetPath?" target":"");
+
+    if (!mdtxUpload("coll2", catalog, extract, file, targetPath)) 
+      goto error;
+  }
   /************************************************************************/
   
   rc = TRUE;

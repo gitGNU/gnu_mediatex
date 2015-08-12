@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.4 2015/08/11 18:14:22 nroche Exp $
+# * Version: $Id: upload.sh,v 1.5 2015/08/12 12:07:27 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-#set -x
+set -x
 set -e
 
 # retrieve environment
@@ -33,33 +33,59 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
+CONTENT1="$(md5sum $srcdir/../misc/mediatex.css | cut -d' ' -f 1):\
+$(ls $srcdir/../misc/mediatex.css -l | cut -d' ' -f 5)"
+
 cat >client/$TEST.cat <<EOF
 Category "css": "drawing"
 
 Document "css": "css"
   With "designer" = "Me" ""
-  b281449c229bcc4a3556cdcc0d3ebcec:815
+  $CONTENT1
 EOF
 
 cat >client/$TEST.ext <<EOF
 (ISO
 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 =>
-c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+$CONTENT1 mediatex.css
 )
 EOF
 
 client/ut$TEST \
-    -C client/$TEST.cat \
     >client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -C client/$TEST.cat \
+    >>client/$TEST.out 2>&1
 
 client/ut$TEST \
     -E client/$TEST.ext \
     >>client/$TEST.out 2>&1
 
 client/ut$TEST \
+    -F  $srcdir/../misc/mediatex.css \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
     -C client/$TEST.cat \
     -E client/$TEST.ext \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -C client/$TEST.cat \
+    -F $srcdir/../misc/mediatex.css \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -E client/$TEST.ext \
+    -F $srcdir/../misc/mediatex.css \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -C client/$TEST.cat \
+    -E client/$TEST.ext \
+    -F $srcdir/../misc/mediatex.css \
     >>client/$TEST.out 2>&1
 
 # compare with the expected output

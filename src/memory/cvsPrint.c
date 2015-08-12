@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.7 2015/08/11 18:14:24 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.8 2015/08/12 12:07:27 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -157,14 +157,11 @@ int cvsCatOpen(CvsFile* fd)
 {
   int rc = FALSE;
   char* path = 0;
-  int l = 0;
-  int i = 0;
 
   if (!fd) goto error;
   if (isEmptyString(fd->path)) goto error; 
   logMemory(LOG_DEBUG, "cvsCatOpen %s %i", fd->path, fd->nb);
 
-  l = strlen(fd->path);
   if (!(path = createString(fd->path))
       || !(path = catString(path, "NNN.txt"))) goto error;
 
