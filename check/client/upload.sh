@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.5 2015/08/12 12:07:27 nroche Exp $
+# * Version: $Id: upload.sh,v 1.6 2015/08/13 21:14:29 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-set -x
+#set -x
 set -e
 
 # retrieve environment
@@ -33,8 +33,10 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-CONTENT1="$(md5sum $srcdir/../misc/mediatex.css | cut -d' ' -f 1):\
-$(ls $srcdir/../misc/mediatex.css -l | cut -d' ' -f 5)"
+CONTENT1=$(md5sum $srcdir/../misc/mediatex.css | cut -d' ' -f 1)
+CONTENT1=$CONTENT1:$(ls $srcdir/../misc/mediatex.css -l | cut -d' ' -f 5)
+CONTENT2=$(md5sum $srcdir/../misc/logo.png | cut -d' ' -f 1)
+CONTENT2=$CONTENT2:$(ls $srcdir/../misc/logo.png -l | cut -d' ' -f 5)
 
 cat >client/$TEST.cat <<EOF
 Category "css": "drawing"
@@ -46,9 +48,9 @@ EOF
 
 cat >client/$TEST.ext <<EOF
 (ISO
-0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+$CONTENT1
 =>
-$CONTENT1 mediatex.css
+$CONTENT2 there/and/there
 )
 EOF
 
@@ -58,6 +60,7 @@ client/ut$TEST \
 client/ut$TEST \
     -C client/$TEST.cat \
     >>client/$TEST.out 2>&1
+
 
 client/ut$TEST \
     -E client/$TEST.ext \

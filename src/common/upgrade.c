@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.8 2015/08/07 17:56:54 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -150,7 +150,7 @@ scoreLocalImages(Collection* coll)
 
   // for each support names:
   rgRewind(coll->supports);
-  while((supp = rgNext(coll->supports)) != 0) {
+  while((supp = rgNext(coll->supports))) {
  
     // compute score on support (using collection's parameters)
     if (!scoreSupport(supp, &serverTree->scoreParam)) goto error;
@@ -170,13 +170,13 @@ scoreLocalImages(Collection* coll)
    // for each group of support names:
   rgRewind(images);
   image1 = image2 = rgNext(images);
-  while (image1 != 0) {
+  while (image1) {
     logCommon(LOG_INFO, "compute image score for %s:%lli", 
 	    image1->archive->hash, image1->archive->size);
     nbSupp = 0;
 
     // while supports match the same image
-    while (image2 != 0 && 
+    while (image2 && 
 	   image1->archive == image2->archive) {
       
       // if not the first image, incremment the final score
@@ -332,7 +332,7 @@ scanCvsClientDirectory(Collection* coll, char* path)
   if (!rc) {
     logCommon(LOG_ERR, "scanCvsClientDirectory fails");
   }
-  if (entries != 0) {
+  if (entries) {
     for (n=0; n<nbEntries; ++n) {
       remind(entries[n]);
       free(entries[n]);

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.10 2015/08/08 06:33:53 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.11 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -93,13 +93,13 @@ populateExtractTree(Collection* coll)
 
   // for each server
   rgRewind(serverTree->servers);
-  while ((server = rgNext(serverTree->servers)) != 0) {
+  while ((server = rgNext(serverTree->servers))) {
     
     // server->score = min (image's scores)
     server->score = -1;
-    if (server->images != 0) {
+    if (server->images) {
       rgRewind(server->images);
-      while((image = rgNext(server->images)) != 0) {
+      while((image = rgNext(server->images))) {
 	if (server->score == -1 || image->score < server->score) {
 	  server->score = image->score;
 	}
@@ -109,11 +109,11 @@ populateExtractTree(Collection* coll)
 
   // for each archive related to images
   rgRewind(serverTree->archives);
-  while ((archive = rgNext(serverTree->archives)) != 0) {
+  while ((archive = rgNext(serverTree->archives))) {
 
     // archive->imageScore = sum (image's scores)
     archive->imageScore = -1;
-    if (archive->images != 0) {
+    if (archive->images) {
       archive->imageScore = 0;
       rgRewind(archive->images);
 
@@ -121,7 +121,7 @@ populateExtractTree(Collection* coll)
 	      archive->hash, archive->size);
 
       i=0;
-      while((image = rgNext(archive->images)) != 0) {
+      while((image = rgNext(archive->images))) {
 	archive->imageScore += image->score;
 	logCommon(LOG_DEBUG, "%c %5.2f", (i > 1)?'+':' ', image->score);
 	++i;
@@ -179,7 +179,7 @@ computeContainer(Container* self, int depth)
 
   // score = min ( content's scores )
   rgRewind(self->parents);
-  while ((archive = rgNext(self->parents)) != 0) {
+  while ((archive = rgNext(self->parents))) {
     if (!computeArchive(archive, depth+1)) goto error;
     if (self->score == -1 || self->score > archive->extractScore) {
       self->score = archive->extractScore;
@@ -221,9 +221,9 @@ computeArchive(Archive* self, int depth)
   self->extractScore = (self->imageScore > 0)?self->imageScore:0;
 
   // score = max (from container's scores)
-  if (self->fromContainers != 0) {
+  if (self->fromContainers) {
     rgRewind(self->fromContainers);
-    while((asso = rgNext(self->fromContainers)) != 0) {
+    while((asso = rgNext(self->fromContainers))) {
       if (!computeContainer(asso->container, depth+1)) goto error;
       if (self->extractScore < asso->container->score) {
 	self->extractScore = asso->container->score;

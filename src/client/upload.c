@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.5 2015/08/12 12:07:27 nroche Exp $
+ * Version: $Id: upload.c,v 1.6 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -40,9 +40,9 @@ uploadCatalog(Collection* upload, char* path)
 { 
   int rc = FALSE;
 
+  logMain(LOG_DEBUG, "uploadCatalog");
   checkCollection(upload);
   checkLabel(path);
-  logMain(LOG_DEBUG, "uploadCatalog");
   
   if (!(upload->catalogTree = createCatalogTree())) goto error;
   if (!(upload->catalogDB = createString(path))) goto error;
@@ -71,9 +71,9 @@ uploadExtract(Collection* upload, char* path)
 { 
   int rc = FALSE;
 
+  logMain(LOG_DEBUG, "uploadExtract");
   checkCollection(upload);
   checkLabel(path);
-  logMain(LOG_DEBUG, "uploadExtract");
   
   if (!(upload->extractTree = createExtractTree())) goto error;
   if (!(upload->extractDB = createString(path))) goto error;
@@ -110,9 +110,9 @@ uploadContent(Collection* upload, char* path)
   char dateString[32];
   Container* container = 0;
 
+  logMain(LOG_DEBUG, "uploadContent");
   checkCollection(upload);
   checkLabel(path);
-  logMain(LOG_DEBUG, "uploadContent");
 
   if (!upload->extractTree) {
     if (!(upload->extractTree = createExtractTree())) goto error;
@@ -164,45 +164,39 @@ uploadContent(Collection* upload, char* path)
 /*=======================================================================
  * Function   : isCatalogRefbyExtract
  * Description: check all archive from catalog are provided by extract
- * Synopsis   : int 
-                
- * Input      : Collection* upload
- *              
+ * Synopsis   : int isCatalogRefbyExtract(Collection *coll)
+ * Input      : Collection* coll              
  * Output     : TRUE on success
  =======================================================================*/
 int 
-isCatalogRefbyExtract(Collection *upload)
+isCatalogRefbyExtract(Collection *coll)
 { 
   int rc = FALSE;
-  CatalogTree* self = 0;
-  Document* doc = 0;
   Archive* archive = 0;
   AVLNode *node = 0;
-  RGIT* curr = 0;
 
-  checkCollection(upload);
   logMain(LOG_DEBUG, "isCatalogRefbyExtract");
-  if (!(self = upload->catalogTree)) goto error;
-  
-  if (avl_count(self->documents)) {
-    for(node = self->documents->head; node; node = node->next) {
-      doc = (Document*)node->item;
-      
-      if (!isEmptyRing(doc->archives)) {
-	while ((archive = rgNext_r(doc->archives, &curr)) != 0) {
-	  
-	  if (!archive->fromContainers->nbItems) {
-	    logMain(LOG_ERR, 
-		    "Archive %s%lli from catalog has no extraction rule",
-		    archive->hash, archive->size);
-	    goto error;
-	  }
-	}
+  checkCollection(coll);
+
+  // loop on archive from upload catalog
+  rc = TRUE;
+  if (!avl_count(coll->archives)) goto end;
+  for(node = coll->archives->head; node; node = node->next) {
+    archive = (Archive*)node->item;
+    if (!isEmptyRing(archive->documents)) {
+
+      // check there is an extraction rule into upload extract
+      if (!hasExtractRule(archive)) {
+	logMain(LOG_ERR, 
+		"Extract file should provide rule for %s:%lli "
+		"provided by catalog",
+		archive->hash, archive->size);
+	rc = FALSE;
       }
     }
   }
-    
-  rc = TRUE;
+  
+ end:
  error:
   if (!rc) {
     logMain(LOG_ERR, "isCatalogRefbyExtract fails");
@@ -210,55 +204,218 @@ isCatalogRefbyExtract(Collection *upload)
   return rc;
 }
 
-
 /*=======================================================================
- * Function   : checkFileRefbyExtract
- * Description: check extract provide a container describing the data
- * Synopsis   : int 
-                
- * Input      : Collection* upload
- *              
+ * Function   : isFileRefbyExtract
+ * Description: check extract provides a container describing the data
+ * Synopsis   : int isFileRefbyExtract(Collection *coll, 
+ *                                     Archive* archive)
+ * Input      : Collection* coll
+ *              Archive* archive
  * Output     : TRUE on success
  =======================================================================*/
 int 
-checkFileRefbyExtract(Collection *upload, Archive* archive)
+isFileRefbyExtract(Collection *coll, Archive* archive)
 { 
   int rc = FALSE;
 
-  checkCollection(upload);
-  logMain(LOG_DEBUG, "checkFileRefbyExtract");
+  logMain(LOG_DEBUG, "isFileRefbyExtract");
+  checkCollection(coll);
   
+  if (!archive->toContainer) {
+    logMain(LOG_ERR, 
+	    "Extract file should provide a container for %s%lli",
+	    archive->hash, archive->size);
+    goto error;
+  }
+
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "checkFileRefbyExtract fails");
+    logMain(LOG_ERR, "isFileRefbyExtract fails");
   }
   return rc;
 }
 
-
 /*=======================================================================
- * Function   : checkFileRefbyCatalog
- * Description: check catalog describe the data
- * Synopsis   : int 
-                
- * Input      : Collection* upload
- *              
+ * Function   : isFileRefbyCatalog
+ * Description: check catalog describes the data
+ * Synopsis   : int isFileRefbyCatalog(Collection *coll, 
+ *                                     Archive* archive)
+ * Input      : Collection* coll
+ *              Archive* archive
  * Output     : TRUE on success
  =======================================================================*/
 int 
-checkFileRefbyCatalog(Collection *upload, Archive* archive)
+isFileRefbyCatalog(Collection *coll, Archive* archive)
 { 
   int rc = FALSE;
 
-  checkCollection(upload);
-  logMain(LOG_DEBUG, "checkFileRefbyCatalog");
+  logMain(LOG_DEBUG, "isFileRefbyCatalog");
+  checkCollection(coll);
   
+  if (isEmptyRing(archive->documents)) {
+    logMain(LOG_ERR, 
+	    "Archive %s%lli has no description on catalog",
+	    archive->hash, archive->size);
+    goto error;
+  }
+
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "checkFileRefbyCatalog fails");
+    logMain(LOG_ERR, "isFileRefbyCatalog fails");
   }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : areNotAlreadyThere
+ * Description: check extraction rules are new (else parsing will fails)
+ * Synopsis   : int areNotAlreadyThere(Collection *coll, 
+ *                                     Collection *upload)
+ * Input      : Collection* coll:   actuals extract rules
+ *              Collection* upload: new extract rules
+ *              Archive* archive
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+areNotAlreadyThere(Collection *coll, Collection* upload)
+{ 
+  int rc = FALSE;
+  ExtractTree* self = 0;
+  Archive* archUp = 0;
+  Archive* archCol = 0;
+  Container* container = 0;
+  AVLNode *node = 0;
+  RGIT* curr = 0; 
+
+  logMain(LOG_DEBUG, "areNotAlreadyThere");
+  checkCollection(coll);
+  checkCollection(upload);
+  if (!(self = upload->extractTree)) goto error;
+  if (!loadCollection(coll, EXTR)) goto error;
+  rc = TRUE;
+
+  // loop on uploaded INC container
+  container = self->incoming;
+  for(node = container->childs->head; node; node = node->next) {
+    archUp = ((FromAsso*)node->item)->archive;
+
+    // check it is not already into actual extractTree:
+    if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {
+
+      // - as an incoming
+      if (isIncoming(archCol)) {
+	logMain(LOG_ERR, "Archive %s%lli is already an incoming", 
+		archUp->hash, archUp->size);
+	rc = FALSE;
+      }
+
+      // - as a content
+      if (isIncoming(archCol)) {
+	logMain(LOG_ERR, "Archive %s%lli is already a content", 
+		archUp->hash, archUp->size);
+	rc = FALSE;
+      }
+    }
+  }
+
+  // loop on uploaded INC container
+  if (avl_count(self->containers)) {
+    for(node = self->containers->head; node; node = node->next) {
+      container = node->item;
+      curr = 0;
+      while ((archUp = rgNext_r(container->parents, &curr))) {
+	if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {
+
+	  // check it is not already into actual extractTree
+	  if (archCol->toContainer) {
+	    logMain(LOG_ERR, "Archive %s%lli is already a container", 
+		    archUp->hash, archUp->size);
+	    rc = FALSE;
+	  }
+	}
+      }
+    }
+  }
+
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "areNotAlreadyThere fails");
+  }
+  if (!releaseCollection(coll, EXTR)) goto error;
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : uploadFile 
+ * Description: Ask daemon to upload the file
+ * Synopsis   : static int
+ *               uploadFile(Collection* coll, Archive* archive, 
+ *                          char* source, char* target)
+ * Input      : Collection* coll
+ *              Archive* archive
+ *            : char* source: path to the file to upload
+ *              char* target: path to use into the cache
+ * Output     : TRUE on success
+ =======================================================================*/
+static int
+uploadFile(Collection* coll, Archive* archive, char* source, char* target)
+{
+  int rc = FALSE;
+  int socket = -1;
+  RecordTree* tree = 0;
+  Record* record = 0;
+  char* extra = 0;
+  char* message = 0;
+  char reply[256];
+  int status = 0;
+  int n = 0;
+
+  logMain(LOG_DEBUG, "uploadFile");
+  checkCollection(coll);
+  checkLabel(source);
+
+  // build the UPLOAD message
+  if (!getLocalHost(coll)) goto error;
+  if (!(tree = createRecordTree())) goto error; 
+  tree->collection = coll;
+  tree->messageType = UPLOAD; 
+  if (!(extra = absolutePath(source))) goto error;
+  if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
+    goto error;
+  extra = 0;
+  if (!rgInsert(tree->records, record)) goto error;
+  record = 0;
+  
+  // ask daemon to upload the file into the cache
+  logMain(LOG_INFO, "ask daemon to upload %s", source);
+  if (env.noRegression) goto end;
+  if ((socket = connectServer(coll->localhost)) == -1) goto error;
+  if (!upgradeServer(socket, tree, 0)) goto error;
+    
+  // read reply
+  n = tcpRead(socket, reply, 255);
+  tcpRead(socket, reply, 1);
+  if (sscanf(reply, "%i %s", &status, message) < 1) {
+    reply[(n<=0)?0:n-1] = (char)0; // remove ending \n
+    logMain(LOG_ERR, "error parsing daemon reply: %s", reply);
+    goto error;
+  }
+    
+  logMain(LOG_INFO, "daemon says (%i) %s", status, message);
+  if (status != 200) goto error;
+
+ end:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "uploadFile fails");
+  }
+  extra = destroyString(extra);
+  if (record) delRecord(coll, record);
+  tree = destroyRecordTree(tree);
+  if (socket) close(socket);
   return rc;
 }
 
@@ -266,8 +423,8 @@ checkFileRefbyCatalog(Collection *upload, Archive* archive)
 /*=======================================================================
  * Function   : concatCatalog
  * Description: concatenate uploaded catalog metadata
- * Synopsis   : static int 
- *                  concatCatalog(Collection* coll, Collection *upload)
+ * Synopsis   : static int concatCatalog(Collection* coll, 
+ *                                       Collection *upload)
  * Input      : Collection* coll: target
  *              Collection* upload: source
  * Output     : TRUE on success
@@ -295,8 +452,8 @@ concatCatalog(Collection* coll, Collection *upload)
 /*=======================================================================
  * Function   : concatExtract
  * Description: concatenate uploaded extract metadata
- * Synopsis   : static int 
- *                  concatExtract(Collection* coll, Collection *upload)
+ * Synopsis   : static int concatExtract(Collection* coll, 
+ *                                       Collection *upload)
  * Input      : Collection* coll: target
  *              Collection* upload: source
  * Output     : TRUE on success
@@ -363,17 +520,25 @@ mdtxUpload(char* label, char* catalog, char* extract, char* file,
   if (catalog && extract && 
       !isCatalogRefbyExtract(upload)) goto error;
   if (extract && file && 
-      !checkFileRefbyExtract(upload, archive)) goto error;
+      !isFileRefbyExtract(upload, archive)) goto error;
   if (catalog && !extract && file && 
-      !checkFileRefbyCatalog(upload, archive)) goto error;
+      !isFileRefbyCatalog(upload, archive)) goto error;
+
+  // Check we erase nothing in actual extraction metadata
+  if ((extract || file) &&
+      !areNotAlreadyThere(coll, upload)) goto error;
+
+  // ask daemon to upload the file
+  if (file && !uploadFile(coll, archive, file, targetPath)) goto error;
 
   // concatenate metadata to the true collection
   upload->memoryState |= EXPANDED;
-  if (catalog) {
-    if (!concatCatalog(coll, upload)) goto error;
-  }
-  if (extract || file) {
-    if (!concatExtract(coll, upload)) goto error;
+  if (catalog && !concatCatalog(coll, upload)) goto error;
+  if ((extract || file) && !concatExtract(coll, upload)) goto error;
+
+  // tell the server we have upgrade files
+  if ((extract || file) && !env.noRegression && !env.dryRun) {
+     mdtxAsyncSignal(0); // send HUP signal to daemon
   }
 
   rc = TRUE;

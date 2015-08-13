@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.8 2015/08/12 12:07:27 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -92,7 +92,7 @@ int cvsCutOpen(CvsFile* fd)
     // empty part files
     do {
       if (!sprintf(path+l, "%03i.txt", i)) goto error;
-      if (access(path, R_OK) != 0) break;
+      if (access(path, R_OK)) break;
       if (!env.dryRun) {
 	logMemory(LOG_INFO, "empty %s", path);
 	if ((fd->fd = fopen(path, "w")) == 0) {

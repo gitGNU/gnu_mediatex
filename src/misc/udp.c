@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: udp.c,v 1.4 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: udp.c,v 1.5 2015/08/13 21:14:36 nroche Exp $
  * Project: 
  * Module : udp socket
 
@@ -117,7 +117,7 @@ connectUdpSocket(const struct sockaddr_in* address_server)
 	  ntohs(address_server->sin_port));
 
   if (connect(rc, (struct sockaddr*) address_server, 
-	      sizeof(struct sockaddr_in)) != 0) {
+	      sizeof(struct sockaddr_in))) {
     logEmit(LOG_INFO, "connect fails: %s", strerror(errno));
     goto error;
   }
@@ -294,7 +294,7 @@ udpClientExemple(int sock_client, struct sockaddr_in* address_server)
     }
 
   /* Udp client may connect (who know) */
-  if (shutdown(sock_client, SHUT_WR) != 0) {
+  if (shutdown(sock_client, SHUT_WR)) {
     errorNb = errno;
     logEmit(LOG_ERR, "shutdown: %s", strerror(errorNb));
   }

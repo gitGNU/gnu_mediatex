@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.5 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: connect.c,v 1.6 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -180,8 +180,8 @@ upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
   }
   
   // add some trace for debugging
-  if(tree != 0 && tree->records != 0) {
-    while((record = rgNext_r(tree->records, &curr)) != 0) {
+  if(tree && tree->records) {
+    while((record = rgNext_r(tree->records, &curr))) {
       localtime_r(&record->date, &date);
       logCommon(LOG_INFO, "%c "
 	      "%04i-%02i-%02i,%02i:%02i:%02i "

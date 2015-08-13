@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.6 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: conf.c,v 1.7 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -195,16 +195,16 @@ mdtxListCollection()
   // search into the configuration
   if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
-  if (conf->collections != 0) {
+  if (conf->collections) {
 
-    if (conf->collections != 0) {
+    if (conf->collections) {
       if (!rgSort(conf->collections, cmpCollection)) {
 	logMain(LOG_ERR, "fails to sort collections ring");
 	goto error;
       }
     }
     
-    while((collection = rgNext(conf->collections)) != 0) {
+    while((collection = rgNext(conf->collections))) {
       printf("%s%s", nb++?" ":"", collection->label);
     }
   }
@@ -239,9 +239,9 @@ mdtxShareSupport(char* sLabel, char* cLabel)
 
   // for all collections
   if (cLabel == 0) {
-    if (conf->collections != 0) {
+    if (conf->collections) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections)) != 0) {
+      while((coll = rgNext(conf->collections))) {
 	if (!addSupportToCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }
@@ -288,9 +288,9 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
 
   // for all collections
   if (cLabel == 0) {
-    if (conf->collections != 0) {
+    if (conf->collections) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections)) != 0) {
+      while((coll = rgNext(conf->collections))) {
 	if (!delSupportFromCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }

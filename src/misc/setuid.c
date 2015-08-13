@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: setuid.c,v 1.7 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -155,7 +155,7 @@ undo_seteuid (void)
   logMisc (LOG_DEBUG, "hide euid");
 
   // we do not return on error for unit tests
-  if (geteuid() != 0) {
+  if (geteuid()) {
     logMisc (LOG_ERR, 
 	     "binary not owned by root or setuid bit not set");
     goto error;
@@ -223,7 +223,7 @@ allowedUser (char* label)
 
   // check if current user belongs to the mdtx group
   if (!getGroupLine (env.confLabel, -1, &gr, &buf2)) goto error;
-  while (*(gr.gr_mem) != 0) {
+  while (*(gr.gr_mem)) {
     if (!strcmp(*(gr.gr_mem), pw.pw_name)) {
       belongs=1;
       break;

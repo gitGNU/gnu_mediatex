@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.11 2015/08/11 18:14:23 nroche Exp $
+ * Version: $Id: openClose.c,v 1.12 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -291,7 +291,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
   // load from part files
   do {
     if (!sprintf(path+l, "%03i.txt", i)) goto error;
-    if (access(path, R_OK) != 0) break;
+    if (access(path, R_OK)) break;
     if (!parser(coll, path)) goto error;
   }
   while (++i < 100);
@@ -338,7 +338,7 @@ loadColl(Collection* coll, int fileIdx)
   logCommon(LOG_DEBUG, "do load %s collection (%s)", 
 	  coll->label, strCF(1<<fileIdx));
 
-  if ((err = pthread_mutex_lock(&coll->mutex[fileIdx])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[fileIdx]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
@@ -377,7 +377,7 @@ loadColl(Collection* coll, int fileIdx)
 
   rc = TRUE;
  error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[fileIdx])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[fileIdx]))) {
     logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
@@ -429,7 +429,7 @@ loadCollectionNbSteps(Collection* coll, int collFiles)
       // part files
       do {
 	if (!sprintf(path+l, "%03i.txt", i)) goto error;
-	if (access(path, R_OK) != 0) break;
+	if (access(path, R_OK)) break;
 	
 	// roughtly estimate the number of steps (number of lines)
 	fd = fopen(path, "r");
@@ -528,14 +528,14 @@ wasModifiedColl(Collection* coll, int i)
   logCommon(LOG_DEBUG, "do set %s collection as modified (%s)", 
 	  coll->label, strCF(1<<i));
 
-  if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
   
   coll->fileState[i] = MODIFIED;
   
-  if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
@@ -594,7 +594,7 @@ releaseColl(Collection* coll, int i)
   logCommon(LOG_DEBUG, "do release %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
-  if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
@@ -608,7 +608,7 @@ releaseColl(Collection* coll, int i)
 	    strCF(1<<i), coll->cptInUse[i]);
   }
 
-  if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
@@ -710,7 +710,7 @@ saveColl(Collection* coll, int i)
   logCommon(LOG_DEBUG, "do save %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
-  if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
@@ -757,7 +757,7 @@ saveColl(Collection* coll, int i)
 
   rc = TRUE;
  error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
@@ -880,7 +880,7 @@ clientSaveAll()
   logCommon(LOG_DEBUG, "clientSaveAll");
   if (!(conf = env.confTree)) goto end; // nothing was loaded
 
-  while ((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  while ((coll = rgNext_r(conf->collections, &curr))) {
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
   }
 
@@ -918,7 +918,7 @@ int serverSaveAll()
   logCommon(LOG_DEBUG, "server save all");
   if (!(conf = env.confTree)) goto end; // nothing was loaded
 
-  while ((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  while ((coll = rgNext_r(conf->collections, &curr))) {
     if (!saveCollection(coll, CACH)) goto error;
   }
 
@@ -948,7 +948,7 @@ diseaseColl(Collection* coll, int i)
   logCommon(LOG_DEBUG, "disease %s collection (%s)", 
 	  coll->label, strCF(1<<i));
 
-  if ((err = pthread_mutex_lock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   } 
@@ -976,7 +976,7 @@ diseaseColl(Collection* coll, int i)
 
   rc = TRUE; 
  error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[i])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     rc = FALSE;
   }
@@ -1034,7 +1034,7 @@ clientDiseaseAll()
   logCommon(LOG_DEBUG, "clientDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  if ((coll = rgNext_r(conf->collections, &curr))) {
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }
@@ -1064,7 +1064,7 @@ int serverDiseaseAll()
   logCommon(LOG_DEBUG, "serverDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  if ((coll = rgNext_r(conf->collections, &curr))) {
     if (!saveCollection(coll, CACH)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }
@@ -1153,8 +1153,8 @@ clientLoop(int (*callback)(char*))
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
-  if (conf->collections != 0) {
-    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  if (conf->collections) {
+    while((coll = rgNext_r(conf->collections, &curr))) {
       if (!callback(coll->label)) goto error;
       
       // free memory as soon as possible
@@ -1193,8 +1193,8 @@ serverLoop(int (*callback)(Collection*))
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
-  if (conf->collections != 0) {
-    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  if (conf->collections) {
+    while((coll = rgNext_r(conf->collections, &curr))) {
       if (!callback(coll)) goto error;
     }
   }

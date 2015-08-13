@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.9 2015/08/09 15:56:40 nroche Exp $
+ * Version: $Id: supp.c,v 1.10 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -274,13 +274,13 @@ mdtxLsSupport()
   supports = conf->supports;
 
   rgRewind(supports);
-  while((supp = rgNext(supports)) != 0) {
+  while((supp = rgNext(supports))) {
     if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
   
   printf("%5s %*s %s\n", 
 	 "score", MAX_SIZE_STAT, "state", "label");
-  while((supp = rgNext(supports)) != 0) {
+  while((supp = rgNext(supports))) {
     printf("%5.2f %*s %s\n", 
 	   supp->score, MAX_SIZE_STAT, supp->status, supp->name);
   }
@@ -453,11 +453,11 @@ notifyHave(Support* supp, char* path)
   tree->messageType = HAVE;
 
   // for each collections
-  while((coll = rgNext_r(conf->collections, &curr1)) != 0) {
+  while((coll = rgNext_r(conf->collections, &curr1))) {
     tree->collection = coll;
 
     // find the support if used by this collection
-    while((name = rgNext_r(coll->supports, &curr2)) != 0) {
+    while((name = rgNext_r(coll->supports, &curr2))) {
       if (!strncmp(name, supp->name, MAX_SIZE_NAME)) break;
     }
     if (name == 0) continue;

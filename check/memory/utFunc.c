@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.9 2015/08/08 06:41:56 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.10 2015/08/13 21:14:29 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -534,7 +534,7 @@ createExempleConfiguration()
   if (!populateConfiguration()) goto error;
 
   // get the localhost fingerprints for the collections
-  while((coll = rgNext_r(self->collections, &curr)) != 0) {
+  while((coll = rgNext_r(self->collections, &curr))) {
     if (!populateCollection(coll)) goto error;
   }
 

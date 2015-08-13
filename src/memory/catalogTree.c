@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.8 2015/08/12 12:07:27 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -84,7 +84,7 @@ destroyCarac(Carac* self)
 {
   Carac* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->label = destroyString(self->label);
     free(self);
   }
@@ -147,7 +147,7 @@ destroyAssoCarac(AssoCarac* self)
 {
   AssoCarac* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->value = destroyString(self->value);
     free(self);
   }
@@ -264,7 +264,7 @@ destroyRole(Role* self)
 {
   Role* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->label = destroyString(self->label);
     
     // we destroy the assoRole too
@@ -332,7 +332,7 @@ destroyAssoRole(AssoRole* self)
 {
   AssoRole* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     free(self);
   }
 
@@ -392,7 +392,7 @@ serializeCatalogArchive(Archive* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -448,7 +448,7 @@ destroyHuman(Human* self)
 {
   Human* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->firstName  = destroyString(self->firstName);
     self->secondName = destroyString(self->secondName);
 
@@ -528,7 +528,7 @@ serializeHuman(Human* self, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while ((cathegory = rgNext(self->categories)) != 0) {
+    while ((cathegory = rgNext(self->categories))) {
       fd->print(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
@@ -538,7 +538,7 @@ serializeHuman(Human* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       serializeAssoCarac(assoCarac, fd);
     }
   }
@@ -595,7 +595,7 @@ destroyDocument(Document* self)
 {
   Document* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->label = destroyString(self->label);
  
     // delete assoCarac associations
@@ -674,7 +674,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while ((cathegory = rgNext(self->categories)) != 0) {
+    while ((cathegory = rgNext(self->categories))) {
       fd->print(fd, "%s\"%s\"", (++i)?", ":": ", cathegory->label);
     }
   }
@@ -684,7 +684,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->assoRoles)) {
     rgSort(self->assoRoles, cmpAssoRole);
     rgRewind(self->assoRoles);
-    while ((assoRole = rgNext(self->assoRoles)) != 0) {
+    while ((assoRole = rgNext(self->assoRoles))) {
       if (!serializeAssoRole(assoRole, fd)) goto error;
     }
   }
@@ -693,7 +693,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -702,7 +702,7 @@ serializeDocument(Document* self, CvsFile* fd)
   if (!isEmptyRing(self->archives)) {
     rgSort(self->archives, cmpArchive);
     rgRewind(self->archives);
-    while ((archive = rgNext(self->archives)) != 0) {
+    while ((archive = rgNext(self->archives))) {
       fd->print(fd, "  %s:%lli\n", archive->hash, archive->size);
     }
   }
@@ -761,7 +761,7 @@ destroyCategory(Category* self)
 {
   Category* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     self->label = destroyString(self->label);
     
     // delete assoCarac associations
@@ -826,7 +826,7 @@ serializeCategory(Category* self, CvsFile* fd)
   if (!isEmptyRing(self->fathers)) {
     //rgSort(self->fathers, cmpCategory);
     rgRewind(self->fathers);
-    while ((category = rgNext(self->fathers)) != 0) {
+    while ((category = rgNext(self->fathers))) {
       fd->print(fd, "%s\"%s\"", (++i)?", ":": ", category->label);
     }
   }
@@ -836,7 +836,7 @@ serializeCategory(Category* self, CvsFile* fd)
   if (!isEmptyRing(self->assoCaracs)) {
     rgSort(self->assoCaracs, cmpAssoCarac);
     rgRewind(self->assoCaracs);
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!serializeAssoCarac(assoCarac, fd)) goto error;
     }
   }
@@ -903,7 +903,7 @@ destroyCatalogTree(CatalogTree* self)
   CatalogTree* rc = 0;
   //int i = 0;
 
-  if(self != 0) {
+  if(self) {
 
     /* entities */
     /* do not destroy archives (owned by the collection) */
@@ -981,7 +981,7 @@ serializeCatalogTree(Collection* coll, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     //rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories)) != 0) {
+    while((category = rgNext(self->categories))) {
       if (!serializeCategory(category, fd)) goto error;
     }
   }
@@ -1161,7 +1161,7 @@ getAssoCarac(Collection* coll, Carac* carac, CType type,
   }
 
   // look for assoCarac
-  while((rc = rgNext_r(ring, &curr)) != 0) {
+  while((rc = rgNext_r(ring, &curr))) {
     if (carac == rc->carac && !strcmp(rc->value, value)) break;
   }
   
@@ -1315,7 +1315,7 @@ delRole(Collection* coll, Role* self)
   logMemory(LOG_DEBUG, "delRole %s", self->label);
 
   // delete related assossiations
-  while((aR = rgHead(self->assos)) != 0) {
+  while((aR = rgHead(self->assos))) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
@@ -1359,7 +1359,7 @@ getAssoRole(Collection* coll,
 	  human->firstName, human->secondName, document->label);
 
   // look for assoRole
-  while((rc = rgNext_r(document->assoRoles, &curr)) != 0) {
+  while((rc = rgNext_r(document->assoRoles, &curr))) {
     if (rc->human == human && rc->role == role) break;
   }
   
@@ -1631,12 +1631,12 @@ delHuman(Collection* coll, Human* self)
   logMemory(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
 
   // delete assoRole associations
-  while((aR = rgHead(self->assoRoles)) != 0)
+  while((aR = rgHead(self->assoRoles)))
     if (!delAssoRole(coll, aR)) goto error;
 
   // delete human from categories rings
   curr = 0;
-  while((cat = rgNext_r(self->categories, &curr)) != 0) {
+  while((cat = rgNext_r(self->categories, &curr))) {
     if ((curr2 = rgHaveItem(cat->humans, self))) {
       rgRemove_r(cat->humans, &curr2);
     }
@@ -1896,13 +1896,13 @@ delDocument(Collection* coll, Document* self)
 
   // delete assoRole associations
   curr = 0;
-  while((aR = rgNext_r(self->assoRoles, &curr)) != 0) {
+  while((aR = rgNext_r(self->assoRoles, &curr))) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
   // delete document from categories rings
   curr = curr2 = 0;
-  while((cat = rgNext_r(self->categories, &curr)) != 0) {
+  while((cat = rgNext_r(self->categories, &curr))) {
     if ((curr2 = rgHaveItem(cat->documents, self))) {
       rgRemove_r(cat->documents, &curr2);
     }
@@ -1910,7 +1910,7 @@ delDocument(Collection* coll, Document* self)
 
   // delete document from archive rings
   curr = curr2 = 0;
-  while((arch = rgNext_r(self->archives, &curr)) != 0) {
+  while((arch = rgNext_r(self->archives, &curr))) {
     if ((curr2 = rgHaveItem(arch->documents, self))) {
       rgRemove_r(arch->documents, &curr2);
     }
@@ -1949,13 +1949,13 @@ delArchiveCatalog(Collection* coll, Archive* self)
 	  self->hash, (long long int)self->size);
 
   // delete assoCarac associations
-  while((aC = rgHead(self->assoCaracs)) != 0) {
+  while((aC = rgHead(self->assoCaracs))) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(aC);
   }
 
   // delete from document rings
-  while((doc = rgHead(self->documents)) != 0) {
+  while((doc = rgHead(self->documents))) {
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   }
 
@@ -2130,17 +2130,17 @@ delCategory(Collection* coll, Category* self)
   logMemory(LOG_DEBUG, "delCategory %s", self->label);
 
   // delete category from fathers ring
-  while((cat = rgHead(self->fathers)) != 0)
+  while((cat = rgHead(self->fathers)))
     if (!delCategoryLink(coll, cat, self)) goto error;
 
   // delete category from childs ring  curr = 0;
-  while((cat = rgHead(self->childs)) != 0)
+  while((cat = rgHead(self->childs)))
     if (!delCategoryLink(coll, self, cat)) goto error;
 
   // delete category from humans rings
   curr = 0;
   curr2 = 0;
-  while((hum = rgNext_r(self->humans, &curr)) != 0) {
+  while((hum = rgNext_r(self->humans, &curr))) {
     if ((curr2 = rgHaveItem(hum->categories, self))) {
       rgRemove_r(hum->categories, &curr2);
     }
@@ -2149,7 +2149,7 @@ delCategory(Collection* coll, Category* self)
   // delete category from documents rings
   curr = 0;
   curr2 = 0;
-  while((doc = rgNext_r(self->documents, &curr)) != 0) {
+  while((doc = rgNext_r(self->documents, &curr))) {
     if ((curr2 = rgHaveItem(doc->categories, self))) {
       rgRemove_r(doc->categories, &curr2);
     }

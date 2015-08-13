@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractTree.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
+ * Version: $Id: utextractTree.c,v 1.5 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -100,7 +100,7 @@ main(int argc, char** argv)
   if (!diseaseExtractTree(coll)) goto error;
   env.dryRun = TRUE;
   if (!serializeExtractTree(coll, &fd)) goto error;
-  if (avl_count(coll->extractTree->containers) != 0) goto error;
+  if (avl_count(coll->extractTree->containers)) goto error;
   /************************************************************************/
 
   freeConfiguration();

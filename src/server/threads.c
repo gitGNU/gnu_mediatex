@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.8 2015/08/07 17:50:33 nroche Exp $
+ * Version: $Id: threads.c,v 1.9 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -71,7 +71,7 @@ initThreadParamaters(pthread_attr_t *attr)
 {
   int rc = 0;
     
-  if((rc = pthread_attr_init(attr)) != 0) {
+  if((rc = pthread_attr_init(attr))) {
     logMain(LOG_ERR, "Create thread attributes: %d (%s)",
 	    rc, strerror(rc));
     goto error;

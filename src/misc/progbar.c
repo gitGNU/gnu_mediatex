@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.c,v 1.4 2015/06/30 17:37:34 nroche Exp $
+ * Version: $Id: progbar.c,v 1.5 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -120,7 +120,7 @@ e2fsck_simple_progress(struct ProgBar* progbar, const char *label,
   gettimeofday(&tv, 0);
   tick = (tv.tv_sec << 3) + (tv.tv_usec / (1000000 / 8));
   if ((tick == progbar->progress_last_time) &&
-      (fixed_percent != 0) && (fixed_percent != 1000))
+      (fixed_percent) && (fixed_percent != 1000))
     return;
   progbar->progress_last_time = tick;
   

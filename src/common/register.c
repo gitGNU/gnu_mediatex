@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: register.c,v 1.5 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: register.c,v 1.6 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : bus/register
  
@@ -181,7 +181,7 @@ mdtxAsyncSignal(int signal)
     logCommon(LOG_INFO, "cannot retrieve pid from %s", conf->pidFile);
     goto error;
   }
-  if (fclose(fd) != 0) {
+  if (fclose(fd)) {
     logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }

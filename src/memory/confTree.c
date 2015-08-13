@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.8 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: confTree.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -158,7 +158,7 @@ destroyCollection(Collection* self)
   
   // free the locks
   for (i=iCTLG; i<iCACH; ++i) {
-    if ((err = pthread_mutex_destroy(&self->mutex[i]) != 0)) {
+    if ((err = pthread_mutex_destroy(&self->mutex[i]))) {
       logMemory(LOG_INFO, "pthread_mutex_destroy[%i]: %s", i, strerror(err));
       goto error;
     }
@@ -648,7 +648,7 @@ destroyConfiguration(Configuration* self)
 {
   Configuration* rc = 0;
 
-  if(self != 0) {
+  if(self) {
 
     // directories
     self->cvsRootDir = destroyString(self->cvsRootDir);
@@ -740,8 +740,8 @@ expandConfiguration()
     goto error;
 
   // expand collections
-  if (conf->collections != 0) {
-    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
+  if (conf->collections) {
+    while((coll = rgNext_r(conf->collections, &curr))) {
       if (!expandCollection(coll)) goto error;
     }
   }
@@ -840,7 +840,7 @@ serializeConfiguration(Configuration* self)
   if (env.dryRun == FALSE) path = self->confFile;
   logMemory(LOG_INFO, "Serializing configuration into: %s", 
 	  path?path:"stdout");
-  if (path != 0 && *path != (char)0) {
+  if (path && *path != (char)0) {
     if ((fd = fopen(path, "w")) == 0) {
       logMemory(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
       fd = stdout;
@@ -999,7 +999,7 @@ getCollection(char *label)
   logMemory(LOG_DEBUG, "getCollection %s", label);
 
   // look for collection
-  while((rc = rgNext_r(conf->collections, &curr)) != 0)
+  while((rc = rgNext_r(conf->collections, &curr)))
     if (!strncmp(rc->label, label, MAX_SIZE_COLL)) break;
 
  error:
@@ -1102,7 +1102,7 @@ getNetwork(char *label)
   logMemory(LOG_DEBUG, "getNetwork %s", label);
 
   // look for network
-  while((rc = rgNext_r(conf->allNetworks, &curr)) != 0)
+  while((rc = rgNext_r(conf->allNetworks, &curr)))
     if (!strcmp(rc, label)) break;
 
  error:

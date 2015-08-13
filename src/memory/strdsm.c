@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: strdsm.c,v 1.5 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: strdsm.c,v 1.6 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : strdsm
  *
@@ -89,7 +89,7 @@ destroyString(char* self)
 {
   char* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     free(self);
   }
 	
@@ -112,19 +112,19 @@ copyString(char* destination, const char* source)
 {
   char* rc = 0;
 
-  if(destination != 0) {
+  if(destination) {
     free(destination);
     destination = 0;
   }
 
-  if(source != 0) {
+  if(source) {
     if ((destination 
 	 = (char*)malloc(sizeof(char) * (strlen(source) + 1)))
 	== 0) {
       logMemory(LOG_ERR, "malloc: cannot allocate String");
     }
     
-    if(destination != 0) {
+    if(destination) {
       strcpy(destination, source);
     }
   }
@@ -152,19 +152,19 @@ copySizedString(size_t size, char* destination, const char* source)
 {
   char* rc = 0;
 
-  if(destination != 0) {
+  if(destination) {
     free(destination);
     destination = 0;
   }
 
-  if(source != 0) {
+  if(source) {
     if ((destination 
 	 = (char*)malloc(sizeof(char) * (size + 1))) 
 	== 0) {
       logMemory(LOG_ERR, "%", "malloc: cannot allocate String");
     }
     
-    if(destination != 0) {
+    if(destination) {
       size_t eos = strlen(source);
       
       eos = ((eos <= size) ? eos : size);
@@ -191,10 +191,10 @@ catString(char* prefix, const char* suffix)
 {
   char* rc = prefix;
 
-  if(suffix != 0) {
+  if(suffix) {
     int size = strlen(suffix);
     
-    if(prefix != 0) {
+    if(prefix) {
       size += strlen(prefix);
     }
     
@@ -204,12 +204,12 @@ catString(char* prefix, const char* suffix)
       logMemory(LOG_ERR, "malloc: cannot allocate String");
     }
     
-    if(rc != 0) {
+    if(rc) {
       /* on Solaris 10 u2 sparc, malloc doesn't sets memory to
 	 nil */
       memset(rc, 0, (size + 1));
       
-      if(prefix != 0) {
+      if(prefix) {
 	strcat(rc, prefix);
 	prefix = destroyString(prefix);
       }

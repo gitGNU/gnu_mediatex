@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: tcp.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: tcp.c,v 1.7 2015/08/13 21:14:36 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -71,7 +71,7 @@ acceptTcpSocket(const struct sockaddr_in* address_listening,
     goto error; // maybe to comment here in production mode
   }
 
-  if (listen(sock_listening, 5) != 0) {
+  if (listen(sock_listening, 5)) {
     logMisc(LOG_ERR, "listen: %s", strerror(errno));
     goto error;
   }
@@ -125,7 +125,7 @@ connectTcpSocket(const struct sockaddr_in* address_server)
 	  ntohs(address_server->sin_port));
 
   if (connect(rc, (struct sockaddr*) address_server, 
-	      sizeof(struct sockaddr_in)) != 0) {
+	      sizeof(struct sockaddr_in))) {
     logMisc(LOG_INFO, "connect fails: %s", strerror(errno));
     goto error;
   }
@@ -202,7 +202,7 @@ tcpRead(int sd, char* buffer, size_t bufferSize)
    ssize_t read = -1;
    int errorNb = -1;
 
-   while ((read = recv(sd, next, remaining, 0)) != 0)
+   while ((read = recv(sd, next, remaining, 0)))
      { 
        if (read == -1) {
 	 errorNb = errno;

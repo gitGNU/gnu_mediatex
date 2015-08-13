@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cypher.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: cypher.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -55,7 +55,7 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
      * holding a transformed version of the key, for efficiency. 
      */
     if (AES_set_encrypt_key((const unsigned char *) key, 
-			    128, &data->aesKey) != 0) {
+			    128, &data->aesKey)) {
       logMisc(LOG_ERR, "AES_set_encrypt_key fails");
       goto error;
     }
@@ -68,7 +68,7 @@ aesInit(AESData* data, char key[MAX_SIZE_AES+1], MDTX_AES_WAY way)
      * AESkey is changing (for reasons of efficiency).
      */
     if (AES_set_decrypt_key((const unsigned char *) key, 
-			    128, &data->aesKey) != 0) {
+			    128, &data->aesKey)) {
       logMisc(LOG_ERR, "AES_set_decrypt_key fails");
       goto error;
     }
@@ -219,7 +219,7 @@ fdRead(int fd, void* buffer, size_t bufferSize)
   size_t remaining = bufferSize;
   ssize_t nread = -1;
 
-  while (remaining > 0 && (nread = read(fd, next, remaining)) != 0) {
+  while (remaining > 0 && (nread = read(fd, next, remaining))) {
     if (nread == -1) {
       if (errno != EINTR) {
 	logMisc(LOG_ERR, "reading file error: %s", strerror(errno));

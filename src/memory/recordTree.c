@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.9 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.10 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -436,7 +436,7 @@ destroyRecordTree(RecordTree* self)
 {
   RecordTree* rc = 0;
 
-  if(self != 0)
+  if(self)
     {
       self->records 
 	= destroyRing(self->records,
@@ -465,12 +465,12 @@ destroyRecordTree(RecordTree* self)
 
 /*   destination = destroyRecordTree(destination); */
 
-/*   if(source != 0) */
+/*   if(source) */
 /*     { */
 /*       destination = createRecordTree(); */
 /*     } */
 
-/*   if (destination != 0) */
+/*   if (destination) */
 /*     { */
 /*       //strncpy(destination->collectionLabel, source->collectionLabel, */
 /*       //      MAX_SIZE_COLL); */
@@ -557,7 +557,7 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
     fingerPrint = self->collection->userFingerPrint;
   }
 
-  if(self != 0 && self->records != 0) {
+  if(self && self->records) {
     rgSort(self->records, cmpRecord);
   }
 
@@ -586,9 +586,9 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 	   "extra");
   rc = TRUE;
 
-  if(self != 0) {
-    if (self->records != 0) {
-      while((record = rgNext_r(self->records, &curr)) != 0)
+  if(self) {
+    if (self->records) {
+      while((record = rgNext_r(self->records, &curr)))
 	if (!serializeRecord(self, record)) rc=FALSE;
     }
   }
@@ -760,7 +760,7 @@ diseaseRecordTree(RecordTree* self)
   logMemory(LOG_DEBUG, "Disease %s related record tree", 
 	  self->collection->label);
   
-  while((record = rgHead(self->records)) != 0) {
+  while((record = rgHead(self->records))) {
     if (!delRecord(self->collection, record)) goto error;
     rgRemove(self->records);
   }

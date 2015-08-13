@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.6 2015/07/28 11:45:46 nroche Exp $
+ * Version: $Id: log.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -111,10 +111,10 @@ getLogFacility(char* name)
 {
   int rc = (int)-1;
 
-  if(name != 0) {
+  if(name) {
     LogFacility* facility = LogFacilities;
     
-    for(; facility->name != 0; facility++) {
+    for(; facility->name; facility++) {
       if(strcmp(facility->name, name) == 0) {
 	rc = facility->code;
       }
@@ -137,10 +137,10 @@ getLogFacilityByName(char* name)
 {
   LogFacility* rc = 0;
 
-  if(name != 0) {
+  if(name) {
     LogFacility* facility = LogFacilities;
     
-    for(; facility->name != 0; facility++) {
+    for(; facility->name; facility++) {
       if(strcmp(facility->name, name) == 0) {
 	rc = facility;
       }
@@ -165,7 +165,7 @@ getLogFacilityByCode(int code)
 
   LogFacility* facility = LogFacilities;
 
-  for(; facility->name != 0; facility++) {
+  for(; facility->name; facility++) {
     if(code == facility->code) {
       rc = facility;
     }
@@ -200,10 +200,10 @@ getLogSeverity(char* name)
 {
   int rc = (int)-1;
 
-  if(name != 0) {
+  if(name) {
     LogSeverity* severity = LogSeverities;
     
-    for(; severity->name != 0; severity++) {
+    for(; severity->name; severity++) {
       if(strcmp(severity->name, name) == 0) {
 	rc = severity->code;
       }
@@ -226,10 +226,10 @@ getLogSeverityByName(char* name)
 {
   LogSeverity* rc = 0;
 
-  if(name != 0) {
+  if(name) {
     LogSeverity* severity = LogSeverities;
     
-    for(; severity->name != 0; severity++) {
+    for(; severity->name; severity++) {
       if(strcmp(severity->name, name) == 0) {
 	rc = severity;
       }
@@ -254,7 +254,7 @@ getLogSeverityByCode(int code)
 
   LogSeverity* severity = LogSeverities;
 
-  for(; severity->name != 0; severity++) {
+  for(; severity->name; severity++) {
     if(code == severity->code) {
       rc = severity;
     }
@@ -308,7 +308,7 @@ logOpen(char* name, int facility, int* logSeverity,
   name = (baseName == 0) ? name : (baseName + 1);
     
   rc->name = (char*)malloc(sizeof(char) * (strlen(name) + 1));
-  if(rc->name != 0) {
+  if(rc->name) {
     strcpy(rc->name, name);
       
     rc->facility = getLogFacilityByCode(facility);
@@ -330,7 +330,7 @@ logOpen(char* name, int facility, int* logSeverity,
 	      rc->facility->code);
     }
     else {
-      if(logFile != 0 && *logFile != (char)0) {
+      if(logFile && *logFile != (char)0) {
 	rc->hlog = fopen(logFile, "a");
 	if(rc->hlog == 0) {
 	  fopenError = TRUE;
@@ -425,7 +425,7 @@ logEmitFunc(LogHandler* logHandler, int priority, const char* format, ...)
 LogHandler* 
 logClose(LogHandler* logHandler)
 {
-  if(logHandler != 0) {
+  if(logHandler) {
     // "stopped"
 		
     if(logHandler->hlog == 0) {
@@ -438,7 +438,7 @@ logClose(LogHandler* logHandler)
       logHandler->hlog = 0;
     }
 
-    if(logHandler->name != 0) {
+    if(logHandler->name) {
       free(logHandler->name);
     }
       
@@ -477,7 +477,7 @@ int parseLogSeverityOption(char* parameter, int* logSeverity)
   };
 
   // severity
-  for(i=0; severity->name != 0; ++severity,++i) {
+  for(i=0; severity->name; ++severity,++i) {
     if (!strncmp(ptr, severity->name, strlen(severity->name))) {
       iSev = i;
       break;

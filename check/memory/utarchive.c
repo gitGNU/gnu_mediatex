@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utarchive.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utarchive.c,v 1.3 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -122,7 +122,7 @@ main(int argc, char** argv)
 
   if (avl_count(coll->archives) != 2) goto error;
   if (!(diseaseArchives(coll))) goto error;
-  if (avl_count(coll->archives) != 0) goto error;
+  if (avl_count(coll->archives)) goto error;
   /************************************************************************/
 
   freeConfiguration();

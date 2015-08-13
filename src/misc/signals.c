@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: signals.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: signals.c,v 1.7 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -119,7 +119,7 @@ enableAlarm(void (*sigalarmManager)(int))
   sigemptyset(&action.sa_mask);
   action.sa_flags = 0;
   action.sa_handler = sigalarmManager;
-  if (sigaction(SIGALRM, &action, 0) != 0) {
+  if (sigaction(SIGALRM, &action, 0)) {
     logMisc(LOG_ERR, "sigaction fails: %s", strerror(errno));
     goto error;
   }

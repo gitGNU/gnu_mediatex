@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.8 2015/08/09 15:56:41 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -204,7 +204,7 @@ destroyCacheTree(CacheTree* self)
   free(self->attr);
   
   for (i=0; i<MUTEX_MAX; ++i) {
-    if ((err = pthread_mutex_destroy(&self->mutex[i]) != 0)) {
+    if ((err = pthread_mutex_destroy(&self->mutex[i]))) {
       logMemory(LOG_INFO, "pthread_mutex_init: %s", strerror(err));
       goto error;
     }
@@ -288,7 +288,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   if (archive->localSupply == 0 ||
       (archive->localSupply->type & REMOVE)) goto end;
 
-  // state 3: allocated (archive->localSupply != 0)
+  // state 3: allocated (archive->localSupply)
   switch (getRecordType(archive->localSupply)) {
   case MALLOC_SUPPLY:
     archive->state = ALLOCATED;
@@ -430,7 +430,7 @@ int addCacheEntry(Collection* coll, Record* record)
 
   /*
   // openClose mutex
-  if ((err = pthread_mutex_lock(&coll->mutex[iCACH])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
@@ -439,7 +439,7 @@ int addCacheEntry(Collection* coll, Record* record)
   coll->fileState[iCACH] = MODIFIED;
 
   /*
-  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }
@@ -483,7 +483,7 @@ int delCacheEntry(Collection* coll, Record* record)
   if (!computeArchiveStatus(coll, record->archive)) goto error;
 
   /*
-  if ((err = pthread_mutex_lock(&coll->mutex[iCACH])) != 0) {
+  if ((err = pthread_mutex_lock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
@@ -492,7 +492,7 @@ int delCacheEntry(Collection* coll, Record* record)
   coll->fileState[iCACH] = MODIFIED;
 
   /*
-  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH])) != 0) {
+  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
   }

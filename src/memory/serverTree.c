@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.7 2015/08/08 06:33:55 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.8 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -290,13 +290,13 @@ serializeServer(Server* self, FILE* fd)
   }
 
   /* cache parameters (take care, this use macro) */
-  if (self->cacheSize != 0) {
+  if (self->cacheSize) {
     printCacheSize(fd, "\t%-9s", "cacheSize", self->cacheSize);
   }
-  if (self->cacheTTL != 0) {
+  if (self->cacheTTL) {
     printLapsTime(fd, "\t%-9s", "cacheTTL", self->cacheTTL);
   }
-  if (self->queryTTL != 0) {
+  if (self->queryTTL) {
     printLapsTime(fd, "\t%-9s", "queryTTL", self->queryTTL);
   }
 
@@ -309,9 +309,9 @@ serializeServer(Server* self, FILE* fd)
     do {
       if (!serializeImage(image, fd)) goto error;
       image = rgNext_r(self->images, &curr);
-      if (image != 0) fprintf(fd, ",\n\t\t  ");
+      if (image) fprintf(fd, ",\n\t\t  ");
     }
-    while(image != 0);
+    while(image);
     fprintf(fd, "\n");
   } 
 
@@ -439,7 +439,7 @@ serializeServerTree(Collection* coll)
   if (env.dryRun == FALSE) path = coll->serversDB;
   logMemory(LOG_INFO, "Serializing the server tree file: %s", 
 	  path?path:"stdout");
-  if (path != 0 && *path != (char)0) {
+  if (path && *path != (char)0) {
     if ((fd = fopen(path, "w")) == 0) {
       logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
@@ -480,7 +480,7 @@ serializeServerTree(Collection* coll)
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext_r(self->servers, &curr)) != 0) {
+    while((server = rgNext_r(self->servers, &curr))) {
       if (!serializeServer(server, fd)) goto error;
     }
   }
@@ -529,7 +529,7 @@ getImage(Collection* coll, Server* server, Archive* archive)
 	  (long long int)archive->size);
   
   // look for image
-  while((rc = rgNext_r(server->images, &curr)) != 0)
+  while((rc = rgNext_r(server->images, &curr)))
     if (!cmpArchive(&rc->archive, &archive)) break;
 
  error:
@@ -754,7 +754,7 @@ getServer(Collection* coll, char* fingerPrint)
   logMemory(LOG_DEBUG, "getServer %s", fingerPrint);
   
   // look for server
-  while((rc = rgNext_r(coll->serverTree->servers, &curr)) != 0)
+  while((rc = rgNext_r(coll->serverTree->servers, &curr)))
     if (!strncmp(rc->fingerPrint, fingerPrint, MAX_SIZE_HASH)) break;
 
  error:
@@ -827,11 +827,11 @@ delServer(Collection* coll, Server* server)
   if (coll->localhost == server) coll->localhost = 0;
 
   // delete images own by the this server
-  while ((img = rgHead(server->images)) != 0)
+  while ((img = rgHead(server->images)))
     if (!delImage(coll, img)) goto error;
 
   // delete records
-  while((rec = rgHead(server->records)) != 0)
+  while((rec = rgHead(server->records)))
     if (!delRecord(coll, rec)) goto error;
 
   // delete server from collection ring
@@ -866,7 +866,7 @@ diseaseServer(Collection* coll, Server* server)
   logMemory(LOG_DEBUG, "disease %s server", server->fingerPrint);
 
   // delete images own by the this server
-  while ((image = rgHead(server->images)) != 0) {
+  while ((image = rgHead(server->images))) {
 
     // delete archive from serverTree
     if ((curr = rgHaveItem(coll->serverTree->archives, image->archive))) {
@@ -933,7 +933,7 @@ diseaseServerTree(Collection* coll)
 
   // disease servers
   curr = 0;
-  while((server = rgNext_r(self->servers, &curr)) != 0) {
+  while((server = rgNext_r(self->servers, &curr))) {
     if (!diseaseServer(coll, server)) goto error;
   }
 

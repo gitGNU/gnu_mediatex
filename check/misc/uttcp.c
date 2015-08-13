@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: uttcp.c,v 1.3 2015/08/07 17:50:25 nroche Exp $
+ * Version: $Id: uttcp.c,v 1.4 2015/08/13 21:14:30 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -106,7 +106,7 @@ tcpClientExemple(int sock_connected)
     goto error;
   }
   
-  if (shutdown(sock_connected, SHUT_WR) != 0) {
+  if (shutdown(sock_connected, SHUT_WR)) {
     logMain(LOG_ERR, "shutdown: %s", strerror(errno));
   }
 

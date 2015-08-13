@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.9 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: commonHtml.c,v 1.10 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -491,7 +491,7 @@ serializeHtmlCacheHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext_r(self->servers, &curr)) != 0) {
+    while ((server = rgNext_r(self->servers, &curr))) {
       if (!getServerUrl(server, "/cache", url)) goto error;
       
       htmlLiOpen(fd);
@@ -562,7 +562,7 @@ serializeHtmlCgiHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext_r(self->servers, &curr)) != 0) {
+    while ((server = rgNext_r(self->servers, &curr))) {
       if (!getServerUrl(server, "/cache", url2)) goto error;
       
       htmlLiOpen(fd);

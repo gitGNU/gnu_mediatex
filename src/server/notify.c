@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.10 2015/08/09 11:12:36 nroche Exp $
+ * Version: $Id: notify.c,v 1.11 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -185,7 +185,7 @@ addFinalDemands(NotifyData* data)
   while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= 0) {
     if (archive->state != WANTED) continue;
-    while((record = rgNext_r(archive->demands, &curr2)) != 0) {
+    while((record = rgNext_r(archive->demands, &curr2))) {
       
       // final demand: add it
       if (getRecordType(record) == FINALE_DEMAND) {
@@ -276,7 +276,7 @@ buildNotifyRings(Collection* coll, RG* records)
   if (!(archives = getWantedRemoteArchives(coll))) goto error;
 
   // for each cache entry, add local-supplies
-  while((archive = rgNext_r(archives, &curr)) != 0) {
+  while((archive = rgNext_r(archives, &curr))) {
     if (!notifyArchive(&data, archive)) goto error;
   }
 
@@ -333,7 +333,7 @@ sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   }
     
   // send the archive tree
-  if (origin != 0) serverFP = origin->fingerPrint; // masquerade
+  if (origin) serverFP = origin->fingerPrint; // masquerade
   if (env.dryRun) {
     serializeRecordTree(recordTree, 0, serverFP);
   }
@@ -403,7 +403,7 @@ sendRemoteNotify(Collection* coll)
 
   // free local demands
   curr = 0;
-  while((record = rgNext_r(recordTree->records, &curr)) != 0) {
+  while((record = rgNext_r(recordTree->records, &curr))) {
     if (getRecordType(record) == LOCALE_DEMAND) {
       destroyRecord(record);
       curr->it = 0;
@@ -478,14 +478,14 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   // del all records we have from the calling server
   curr = 0;
   records = coll->cacheTree->recordTree->records;
-  while((record = rgNext_r(records, &curr)) != 0) {  
+  while((record = rgNext_r(records, &curr))) {  
     if (record->server != source) continue;
     if (!delCacheEntry(coll, record)) goto error3;
   }
 		
   // add calling server's records
   rgRewind(tree->records);
-  while ((record = rgNext(tree->records)) != 0) {
+  while ((record = rgNext(tree->records))) {
     if (!addCacheEntry(coll, record)) goto error3;
     tree->records->curr->it = 0; // consume the record from the tree
   }

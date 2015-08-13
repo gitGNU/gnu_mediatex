@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ssh.c,v 1.6 2015/08/07 17:50:29 nroche Exp $
+ * Version: $Id: ssh.c,v 1.7 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : ssh
 
@@ -61,8 +61,8 @@ serializeAuthKeys(Collection* coll)
       
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
 
-  if (self->servers != 0) {
-    while((server = rgNext_r(self->servers, &curr)) != 0) {
+  if (self->servers) {
+    while((server = rgNext_r(self->servers, &curr))) {
       fprintf(fd, "%s\n", server->userKey);
     }
   }
@@ -126,7 +126,7 @@ serializeSshConfig(Collection* coll)
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext_r(self->servers, &curr)) != 0) {
+    while((server = rgNext_r(self->servers, &curr))) {
       if (isEmptyString(server->host) ||
 	  (previous && !strcmp(server->host, previous->host))) 
 	continue;
@@ -201,9 +201,9 @@ serializeKnownHosts(Collection* coll)
   }
 
   // add all keys using the host name provided by servers.txt
-  if (self->servers != 0) {
-    while((server = rgNext_r(self->servers, &curr)) != 0) {
-      if (server->hostKey != 0) {
+  if (self->servers) {
+    while((server = rgNext_r(self->servers, &curr))) {
+      if (server->hostKey) {
 
 	// must add port != 22 given by .ssh/config file
 	if (server->sshPort == 22) {

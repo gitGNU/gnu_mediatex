@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -48,7 +48,7 @@ manageSIGALRM(void (*manager)(int))
   action.sa_handler = manager;
   sigemptyset(&(action.sa_mask));
   action.sa_flags = SA_RESTART;
-  if (sigaction(SIGALRM, &action, 0) != 0) {
+  if (sigaction(SIGALRM, &action, 0)) {
     logMisc(LOG_ERR, "sigaction fails: %s", strerror(errno));
     goto error;
   }
@@ -184,7 +184,7 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
     goto error;
   } 
 
-  if (lseek(fd, 0, SEEK_SET) != 0) {
+  if (lseek(fd, 0, SEEK_SET)) {
     logMisc(LOG_ERR, "lseek: %s", strerror(errno));
     goto error;
   }
@@ -360,7 +360,7 @@ doMd5sum(Md5Data* data)
     break;
   case MD5_SUPP_ID:
   case MD5_SUPP_CHECK:
-    if (size != 0 && data->size != size) {
+    if (size && data->size != size) {
       logMisc(LOG_WARNING, "size doesn't match: %llu vs %llu expected", 
 	      (long long unsigned int) data->size, 
 	      (long long unsigned int) size);

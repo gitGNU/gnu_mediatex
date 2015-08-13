@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.10 2015/08/11 18:14:24 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.11 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -228,7 +228,7 @@ serializeContainer(Container* self, CvsFile* fd)
     do {
       if (!serializeExtractRecord(archive, fd)) goto error;
       fd->print(fd, "\n");
-    }  while ((archive = rgNext(self->parents)) != 0);
+    }  while ((archive = rgNext(self->parents)));
   }
 
   // serialize childs

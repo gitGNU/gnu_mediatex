@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.6 2015/08/07 17:50:28 nroche Exp $
+ * Version: $Id: serv.c,v 1.7 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : serv
  *
@@ -52,7 +52,7 @@ static int setConcurentAccessLock()
   logMain(LOG_DEBUG, "initialise the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
-  if (conf->sem != 0) goto end;
+  if (conf->sem) goto end;
   
   // force becoming mdtx user 
   if (!becomeUser(env.confLabel, FALSE)) goto error;
@@ -348,11 +348,11 @@ addKey(char* label, char* path)
   // look if key is already shared by the collection
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
-  while ((server = rgNext(servers->servers)) != 0) {
+  while ((server = rgNext(servers->servers))) {
     if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
   }
 
-  if (server != 0) {
+  if (server) {
     logMain(LOG_WARNING, "key \"%s\" is already added to %s collection", 
 	    hash, coll->label);
     goto error2;
@@ -420,7 +420,7 @@ delKey(char* label, char* key)
   // look if key is shared by the collection
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
-  while ((server = rgNext(servers->servers)) != 0) {
+  while ((server = rgNext(servers->servers))) {
     if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
   }
 

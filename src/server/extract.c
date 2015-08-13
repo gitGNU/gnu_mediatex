@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.15 2015/08/09 15:56:41 nroche Exp $
+ * Version: $Id: extract.c,v 1.16 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -1201,7 +1201,7 @@ int extractArchives(Collection* coll)
   if (!(archives = getWantedArchives(coll))) goto error3;
   
   // for each cache entry
-  while((archive = rgNext_r(archives, &curr)) != 0) {
+  while((archive = rgNext_r(archives, &curr))) {
     
     // define extraction context : X_MAIN or X_STEP (ie: scp or not)
     data.context = X_STEP;

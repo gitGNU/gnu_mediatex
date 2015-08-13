@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.10 2015/08/08 06:33:53 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.11 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -100,7 +100,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   // do not sort !
   if (many) htmlUlOpen(fd);
   
-  while((archive = rgNext(container->parents)) != 0) {
+  while((archive = rgNext(container->parents))) {
     if (isHeader) {
       getArchiveUri(url, "../../../..", archive);
     } else {
@@ -365,7 +365,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
     rgRewind(self->assoCaracs);
     htmlUlOpen(fd);
 
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
 
@@ -381,7 +381,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->documents)) {
     if (!rgSort(self->documents, cmpDocument)) goto error;
-    while((document = rgNext(self->documents)) != 0) {
+    while((document = rgNext(self->documents))) {
       if (!sprintf(text, "%s/../index", home)) goto error;
       getDocumentUri(url, text, document->id);
 
@@ -404,7 +404,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->images)) {
     if (!rgSort(self->images, cmpImage)) goto error;
-    while((image = rgNext(self->images)) != 0) {
+    while((image = rgNext(self->images))) {
       if (!sprintf(text, "%s/servers/srv_%s.shtml", home,
   		   image->server->fingerPrint)) goto error;
 
@@ -429,7 +429,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   if (!isEmptyRing(self->fromContainers)) {
     // already sorted
     rgRewind(self->fromContainers);
-    while((asso = rgNext(self->fromContainers)) != 0) {
+    while((asso = rgNext(self->fromContainers))) {
       htmlFromAsso(asso, fd, isHeader);
     }
   }
@@ -1053,7 +1053,7 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlUlOpen(fd);
   if (!isEmptyRing(serverTree->archives)) {
     if (!rgSort(serverTree->archives, cmpArchive)) goto error;
-    while((archive = rgNext(serverTree->archives)) != 0) {
+    while((archive = rgNext(serverTree->archives))) {
       getArchiveUri(url, "", archive);
       if (!sprintf(text, "%s:%lli ", archive->hash, 
 		   (long long int)archive->size)) goto error;
@@ -1142,7 +1142,7 @@ serializeHtmlScoreHeader(Collection* coll)
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
-    while ((server = rgNext(self->servers)) != 0) {
+    while ((server = rgNext(self->servers))) {
       if (!sprintf(url, 
 		   "<!--#echo var='HOME' -->/score/servers/srv_%s.shtml", 
 		   server->fingerPrint)) goto error;
@@ -1212,7 +1212,7 @@ serializeHtmlScore(Collection* coll)
   // servers
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext(self->servers)) != 0) {
+    while((server = rgNext(self->servers))) {
       if (!serializeHtmlServer(coll, server)) goto error;
     }
   }

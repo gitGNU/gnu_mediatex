@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.7 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: perm.c,v 1.8 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -76,7 +76,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
 
   // check user
   if (!getPasswdLine (0, sb.st_uid, &pw, &buf)) goto error;
-  if (strcmp(user, pw.pw_name) != 0) {
+  if (strcmp(user, pw.pw_name)) {
     logMisc(LOG_ERR, "%s should be owne by %s user, not %s",
 	    path, user, pw.pw_name);
     goto error;
@@ -85,7 +85,7 @@ checkDirectory(char* path, char* user, char* group, mode_t mode)
   // check group  
   if (buf) free (buf);
   if (!getGroupLine (0, sb.st_gid, &gr, &buf)) goto error;
-  if (strcmp(group, gr.gr_name) != 0) {
+  if (strcmp(group, gr.gr_name)) {
     logMisc(LOG_ERR, "%s should be owne by %s group, not %s",
 	    path, group, gr.gr_name);
     goto error;

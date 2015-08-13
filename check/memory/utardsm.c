@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utardsm.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utardsm.c,v 1.3 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -177,7 +177,7 @@ main(int argc, char** argv)
   fprintf(hout, 
 	  "Enter items, one per line.\nEnd the list by EOF (ctl-d)\n");
 		
-  while(fgets(buffer, BUFSIZ, hin) != 0) {
+  while(fgets(buffer, BUFSIZ, hin)) {
     if (!strcmp(buffer, "quit\n")) break;
 
     /*	content acquisition :	*/

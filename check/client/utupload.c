@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.5 2015/08/12 12:07:27 nroche Exp $
+ * Version: $Id: utupload.c,v 1.6 2015/08/13 21:14:29 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -26,6 +26,11 @@
 #include "mediatex.h"
 #include "client/mediatex-client.h"
 GLOBAL_STRUCT_DEF;
+
+extern int isCatalogRefbyExtract(Collection *upload);
+extern int isFileRefbyExtract(Collection *upload, Archive* archive);
+extern int isFileRefbyCatalog(Collection *upload, Archive* archive);
+extern int areNotAlreadyThere(Collection *coll, Collection* upload);
 
 /*=======================================================================
  * Function   : usage
@@ -66,6 +71,10 @@ int
 main(int argc, char** argv)
 {
   Collection* coll = 0;
+  Archive* logo = 0;
+  Archive* iso1 = 0;
+  Archive* zip = 0;
+  Archive* new = 0;
   char* catalog = 0;
   char* extract = 0;
   char* file = 0;
@@ -165,24 +174,54 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  logMain(LOG_NOTICE, "*************************************************"); 
+  logMain(LOG_NOTICE, "***********************************************"); 
 
+  // Unit tests
   if (!catalog && !extract &&!file) {
     logMain(LOG_NOTICE, "* Upload: internal tests");
+    logMain(LOG_NOTICE, "***********************************************"); 
 
-    // check all archive from catalog are provided by extract
-    if(!(coll = mdtxGetCollection("coll1"))) goto error;
+    // first run functions without error
+    if (!(coll = mdtxGetCollection("coll1"))) goto error;
     if (!loadCollection(coll, CTLG|EXTR)) goto error;
+    
+    if ((logo = 
+	 getArchive(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075))
+	== 0) goto error;
+    if ((iso1 = 
+	 getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168))
+	== 0) goto error;
+    if ((zip = 
+	 getArchive(coll, "d79581b67ec1932fd276dcf3b6d6db9a", 24733))
+	== 0) goto error;
+    if ((new = 
+	 addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 123))
+	== 0) goto error;
+    
     if (!(isCatalogRefbyExtract(coll))) goto error;
-
+    if (!isFileRefbyExtract(coll, iso1)) goto error;
+    if (!isFileRefbyExtract(coll, zip)) goto error;
+    if (!isFileRefbyCatalog(coll, logo)) goto error;
+    
+    // now, run them on error
+    if (!addArchiveToDocument(coll, new, getDocument(coll, "panthere"))) 
+      goto error;
+    if (isCatalogRefbyExtract(coll)) goto error;
+    if (isFileRefbyExtract(coll, new)) goto error;
+    if (isFileRefbyExtract(coll, logo)) goto error;
+    if (!isFileRefbyCatalog(coll, new)) goto error;
+    if (areNotAlreadyThere(coll, coll)) goto error;
   }
-  else {
-  logMain(LOG_NOTICE, "* Upload:%s%s%s%s", 
-	  catalog?" catalog":"", 
-	  extract?" extract":"", 
-	  file?" file":"", 
-	  targetPath?" target":"");
 
+  // Tests using arguments
+  else {
+    logMain(LOG_NOTICE, "* Upload:%s%s%s%s", 
+	    catalog?" catalog":"", 
+	    extract?" extract":"", 
+	    file?" file":"", 
+	    targetPath?" target":"");
+    logMain(LOG_NOTICE, "***********************************************"); 
+    
     if (!mdtxUpload("coll2", catalog, extract, file, targetPath)) 
       goto error;
   }

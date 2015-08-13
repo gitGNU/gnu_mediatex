@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.3 2015/08/07 17:50:26 nroche Exp $
+ * Version: $Id: utconfFile.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -108,7 +108,7 @@ main(int argc, char** argv)
   conf_set_debug(env.debugLexer, scanner);
   logMain(LOG_DEBUG, "conf_set_debug = %i", conf_get_debug(scanner));
   
-  if (inputPath != 0) {
+  if (inputPath) {
     if ((inputStream = fopen(inputPath, "r")) == 0) {
       logMain(LOG_ERR, "cannot open input stream: %s", inputPath); 
       goto error;

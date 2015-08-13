@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.11 2015/08/11 11:59:34 nroche Exp $
+ * Version: $Id: command.c,v 1.12 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -206,21 +206,21 @@ getEnv(MdtxEnv* self)
   // no logging available here
  
   // check the environment variables
-  if ((tmpValue = getenv("MDTX_LOG_FACILITY")) != 0)
+  if ((tmpValue = getenv("MDTX_LOG_FACILITY")))
     self->logFacility = getLogFacility(tmpValue);
-  if ((tmpValue = getenv("MDTX_LOG_FILE")) != 0)
+  if ((tmpValue = getenv("MDTX_LOG_FILE")))
     self->logFile = tmpValue;
 
   for (i=0; i<LOG_MAX_MODULE; ++i) {
-    if ((tmpValue = getenv(logModuleVar[i])) != 0)
+    if ((tmpValue = getenv(logModuleVar[i])))
       self->logSeverity[i] = getLogSeverity(tmpValue);
   }
 
-  if ((tmpValue = getenv("MDTX_MDTXUSER")) != 0)
+  if ((tmpValue = getenv("MDTX_MDTXUSER")))
     self->confLabel = tmpValue;
-  if ((tmpValue = getenv("MDTX_DRY_RUN")) != 0)
+  if ((tmpValue = getenv("MDTX_DRY_RUN")))
     self->dryRun = !strncmp(tmpValue, "1", 2);
-  if ((tmpValue = getenv("MDTX_NO_REGRESSION")) != 0)
+  if ((tmpValue = getenv("MDTX_NO_REGRESSION")))
     self->noRegression = !strncmp(tmpValue, "1", 2);
 }
 
@@ -369,7 +369,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
 	  pwd?" PWD=":"", pwd?pwd:"",
 	  argv[0]);
 
-  while (argv[++i] != 0 && *argv[i] != (char)0) {
+  while (argv[++i] && *argv[i] != (char)0) {
     logMisc(LOG_INFO, " arg%i: %s", i, argv[i]);
   }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
+ * Version: $Id: cgi.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -154,7 +154,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 
   /* loop on every server */
   rgRewind(sTree->servers);
-  while((server = rgNext(sTree->servers)) != 0) {
+  while((server = rgNext(sTree->servers))) {
     /* querying the server */
     if (server != coll->localhost && 
 	!isReachable(coll, coll->localhost, server)) {
@@ -402,9 +402,9 @@ RecordTree* scanCgiQuery(Collection* coll)
     goto error;
   }
 
-  if (cgivars[3] != 0     &&
+  if (cgivars[3]     &&
       strcmp(cgivars[3], "mail") &&
-      cgivars[4] != 0     &&
+      cgivars[4]     &&
       cgivars[4][0] != (char)0) {  
     extra = createString(cgivars[5]);
   }

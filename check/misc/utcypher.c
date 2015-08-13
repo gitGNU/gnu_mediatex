@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.4 2015/08/07 17:50:25 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.5 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -126,7 +126,7 @@ main(int argc, char** argv)
   // =====================
   logMain(LOG_NOTICE, "***  decrypt API");
 
-  if (pipe(pipefd) != 0) {
+  if (pipe(pipefd)) {
     logMain(LOG_NOTICE, "pipe fails: %s", strerror(errno));
     goto error;
   }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -186,7 +186,7 @@ RecordTree* ask4logo(Collection* coll, char* mail)
 
   logMain(LOG_NOTICE, "ask for logo.png");
 
-  if (mail != 0) {
+  if (mail) {
     if (!(extra = createString(mail))) goto error;
   }
   else {

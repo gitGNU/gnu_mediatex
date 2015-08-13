@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.8 2015/08/07 17:50:27 nroche Exp $
+ * Version: $Id: catalogHtml.c,v 1.9 2015/08/13 21:14:31 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *
@@ -174,7 +174,7 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
     rgRewind(self->assoCaracs);
     htmlUlOpen(fd);
 
-    while ((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!strcmp(assoCarac->carac->label, "icon")) continue;
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
@@ -245,7 +245,7 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
     htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
-    while ((asso = rgNext(assoRoles)) != 0 && humId == asso->human->id);
+    while ((asso = rgNext(assoRoles)) && humId == asso->human->id);
     if (asso) humId = asso->human->id;
   }
   htmlUlClose(fd);
@@ -312,7 +312,7 @@ serializeHtmlRole(Collection* coll, Role* self)
     if (!rgSort(self->assos, cmpAssoRole)) goto error; 
 
     rgRewind(self->assos);
-    while ((assoRole = rgNext(self->assos)) != 0) {
+    while ((assoRole = rgNext(self->assos))) {
       if (humId == assoRole->human->id) continue;
       humId = assoRole->human->id;
       ++nbHum;
@@ -420,7 +420,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
     htmlPOpen(fd);
     if (!fprintf(fd, "%s", "(")) goto error;
     rgRewind(self->categories);
-    while ((category = rgNext(self->categories)) != 0) {
+    while ((category = rgNext(self->categories))) {
       getCateListUri(url, "../..", category->id, 1);
       fprintf(fd, "%s", (++nbCategory)?", ":""); // may return 0
       htmlLink(fd, 0, url, category->label);
@@ -437,7 +437,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -451,7 +451,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
     htmlUlOpen(fd);
     rgRewind(self->assoRoles);
     if (!rgSort(self->assoRoles, cmpAssoRole)) goto error;
-    while ((assoRole = rgNext(self->assoRoles)) != 0) {
+    while ((assoRole = rgNext(self->assoRoles))) {
 
       if (!role || assoRole->role != role) {
 	if (role) htmlUlClose(fd);
@@ -539,7 +539,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
     htmlPOpen(fd);
     if (!fprintf(fd, "%s", "(")) goto error;
     rgRewind(self->categories);
-    while ((category = rgNext(self->categories)) != 0) {
+    while ((category = rgNext(self->categories))) {
       getCateListUri(url, "../..", category->id, 1);
       fprintf(fd, "%s", (++nbCategory)?", ":""); // may return 0
       htmlLink(fd, 0, url, category->label);
@@ -556,7 +556,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -569,7 +569,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
     if (!fprintf(fd, "%s", _("\nParteners:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoRoles);
-    while ((assoRole = rgNext(self->assoRoles)) != 0) {
+    while ((assoRole = rgNext(self->assoRoles))) {
       htmlLiOpen(fd);
 
       getRoleListUri(url, "../..", assoRole->role->id, 1);
@@ -593,7 +593,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->archives)) {
     rgRewind(self->archives); 
-    while ((archive = rgNext(self->archives)) != 0) {
+    while ((archive = rgNext(self->archives))) {
       htmlIndexArchive(fd, coll, archive);
     }
   }
@@ -763,7 +763,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nParent classes: "))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->fathers);
-    while ((cat = rgNext(self->fathers)) != 0) {
+    while ((cat = rgNext(self->fathers))) {
       getCateListUri(url, "../../..", cat->id, 1);
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, cat->label);
@@ -779,7 +779,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nSub-classes:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->childs);
-    while ((cat = rgNext(self->childs)) != 0) {
+    while ((cat = rgNext(self->childs))) {
         getCateListUri(url, "../../..", cat->id, 1);
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, cat->label);
@@ -795,7 +795,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nCharacteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs)) != 0) {
+    while((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -808,7 +808,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, _("\nParteners:\n"))) goto error;
     htmlUlOpen(fd);
     if (!rgSort(self->humans, cmpHuman)) goto error;
-    while ((human = rgNext(self->humans)) != 0) {
+    while ((human = rgNext(self->humans))) {
       getHumanUri(url, "../../..", human->id);
       if (!sprintf(tmp, "%s %s", human->firstName, human->secondName))
   	goto error;
@@ -1269,7 +1269,7 @@ htmlCategoryMenu(FILE* fd, Category* self, int depth)
   rgRewind(self->childs);
   if (!isEmptyRing(self->childs)) {
     htmlUlOpen(fd);
-    while((category = rgNext(self->childs)) != 0) {
+    while((category = rgNext(self->childs))) {
       if (category->show && !htmlCategoryMenu(fd, category, depth+1)) 
 	goto error;
     }
@@ -1326,7 +1326,7 @@ serializeHtmlIndexHeader(Collection* coll)
     if (!fprintf(fd, _("\nClasses:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories)) != 0) {
+    while((category = rgNext(self->categories))) {
       if (category->show && isEmptyRing(category->fathers)) {
 	htmlLiOpen(fd);
 	if (!htmlCategoryMenu(fd, category, 0)) goto error;
@@ -1346,7 +1346,7 @@ serializeHtmlIndexHeader(Collection* coll)
 
     htmlUlOpen(fd);
     rgRewind(self->roles);
-    while ((role = rgNext(self->roles)) != 0) {
+    while ((role = rgNext(self->roles))) {
       getRoleListUri(url, "<!--#echo var='HOME' -->/index", role->id, 1);
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, role->label);
@@ -1478,7 +1478,7 @@ serializeHtmlIndex(Collection* coll)
   // roles
   if (!isEmptyRing(self->roles)) {
     if (!rgSort(self->roles, cmpRole)) goto error;
-    while((role = rgNext(self->roles)) != 0) {
+    while((role = rgNext(self->roles))) {
       if (!serializeHtmlRole(coll, role)) goto error;
     }
   }
@@ -1486,7 +1486,7 @@ serializeHtmlIndex(Collection* coll)
   // categories
   if (!isEmptyRing(self->categories)) {
     if (!rgSort(self->categories, cmpCategory)) goto error;
-    while((category = rgNext(self->categories)) != 0) {
+    while((category = rgNext(self->categories))) {
       if (!serializeHtmlCategory(coll, category)) goto error;
     }
   }

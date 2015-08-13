@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.11 2015/08/09 15:56:41 nroche Exp $
+ * Version: $Id: cache.c,v 1.12 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -74,7 +74,7 @@ getFinalSupplyInPath(char* path)
   if (!(rc = catString(rc, path))) goto error;
 
   // remove ending ':supportName' if there
-  for (ptr=rc; *ptr != 0 && *ptr != ':'; ++ptr);
+  for (ptr=rc; *ptr && *ptr != ':'; ++ptr);
   if (*ptr) *ptr = 0;
 
  error:
@@ -100,7 +100,7 @@ getFinalSupplyOutPath(char* path)
   logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
 
   // look for ending ':supportName' if there
-  for (ptr=path; *ptr != 0 && *ptr != ':'; ++ptr);
+  for (ptr=path; *ptr && *ptr != ':'; ++ptr);
   if (*ptr) {
     if (!(rc = createString(ptr+1))) goto error;
   }
@@ -189,7 +189,7 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
 
   // first try to look for file in cache
   archives = coll->cacheTree->archives;
-  while((archive = rgNext_r(archives, &curr)) != 0) {
+  while((archive = rgNext_r(archives, &curr))) {
     
     if (archive->size != statBuffer.st_size) continue;
     if ((record = archive->localSupply) == 0) continue;
@@ -332,7 +332,7 @@ scanRepository(Collection* coll, const char* path, int toKeep)
   if (!rc) {
     logMain(LOG_ERR, "fails scaning directory: %s", absolutePath);
   }
-  if (entries != 0) {
+  if (entries) {
     for (n=0; n<nbEntries; ++n) {
       remind(entries[n]);
       free(entries[n]);
@@ -420,9 +420,9 @@ quickScanAll(void)
 
   // for all collection
   conf = getConfiguration();
-  if (conf->collections != 0) {
+  if (conf->collections) {
     if (!expandConfiguration()) goto error;
-    while((coll = rgNext_r(conf->collections, &curr)) != 0) {
+    while((coll = rgNext_r(conf->collections, &curr))) {
       if (!quickScan(coll)) goto error;
       if (!cleanCacheTree(coll)) goto error;
     }
@@ -903,7 +903,7 @@ cacheUpload(Collection* coll, Record* record)
   }
 
   // assert archive is new
-  if ((record->archive->localSupply) != 0) {
+  if ((record->archive->localSupply)) {
     logMain(LOG_WARNING, "archive already exists");
     goto end;
   }
@@ -919,6 +919,8 @@ cacheUpload(Collection* coll, Record* record)
   record2->extra = destroyString(record2->extra);
   record2->extra = targetRelPath;
   targetRelPath = 0;
+
+  // TODO: add to-keep
 
  end:
   rc = TRUE;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.8 2015/08/11 11:59:33 nroche Exp $
+ * Version: $Id: motd.c,v 1.9 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -47,7 +47,7 @@ updateMotdFromSupportDB()
   if (!(rc = createRing())) goto error;
 
   rgRewind(conf->supports);
-  while((support = rgNext(conf->supports)) != 0) {
+  while((support = rgNext(conf->supports))) {
     if (!scoreSupport(support, &conf->scoreParam)) goto error;
     if (support->score <= conf->scoreParam.badScore) {
       if (!rgInsert(rc, support)) goto error;
@@ -183,16 +183,16 @@ updateMotdFromMd5sumsDB(RG* ring, Collection* coll)
 
   // for each record (that all are images), match supports
   rgRewind(data.outArchives);
-  while ((archive = rgNext(data.outArchives)) != 0) {
+  while ((archive = rgNext(data.outArchives))) {
 
     // match support shared with that collection
     rgRewind(coll->supports);
-    while((support = rgNext(coll->supports)) != 0) {
+    while((support = rgNext(coll->supports))) {
       if (!strncmp(support->fullHash, archive->hash, MAX_SIZE_HASH) &&
 	  support->size == archive->size) {
 	
 	// add support
-	if (support != 0) {
+	if (support) {
 	  if (!rgInsert(ring, support)) goto error2;
 	}
       }
@@ -240,7 +240,7 @@ updateMotdFromAllMd5sumsDB()
 
   if (conf->collections == 0) goto error;
   rgRewind(conf->collections);
-  while((coll = rgNext(conf->collections)) != 0) {
+  while((coll = rgNext(conf->collections))) {
 
     // assert we have the localhost server object
     if (!getLocalHost(coll)) goto error;
@@ -305,7 +305,7 @@ updateMotd()
   if (tree1) {
     if (!rgSort(tree1, cmpSupport)) goto error2;
     printf("Need to check your local supports:\n");
-    while((support = rgNext(tree1)) != 0) {
+    while((support = rgNext(tree1))) {
       printf("- %s\n", support->name);
     }
   }
@@ -313,7 +313,7 @@ updateMotd()
   if (tree2) {   
     if (!rgSort(tree2, cmpSupport)) goto error2;  
     printf("Looking for content from your shared supports:\n"); 
-    while((support = rgNext(tree2)) != 0) {
+    while((support = rgNext(tree2))) {
       // do not display support twice
       if (!prev || cmpSupport(&support, &prev)) 
 	printf("- %s\n", support->name);
@@ -325,7 +325,7 @@ updateMotd()
   printf("Looking for content to burn:\n"); 
   if (conf->collections == 0) goto error2;
   rgRewind(conf->collections);
-  while((coll = rgNext(conf->collections)) != 0) {
+  while((coll = rgNext(conf->collections))) {
     if (!computeExtractScore(coll)) goto error2;
     if (!(text = getExtractStatus(coll, &badSize, 0))) 
       goto error2;

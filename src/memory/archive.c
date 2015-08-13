@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.8 2015/08/08 06:33:54 nroche Exp $
+ * Version: $Id: archive.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -321,12 +321,12 @@ delArchive(Collection* coll, Archive* self)
 
   // delete archive from record ring
   curr = 0;
-  while((rec = rgNext_r(self->records, &curr)) != 0)
+  while((rec = rgNext_r(self->records, &curr)))
     if (!delRecord(coll, rec)) goto error;
 
   // delete archive from image ring
   curr = 0;
-  while((img = rgNext_r(self->images, &curr)) != 0)
+  while((img = rgNext_r(self->images, &curr)))
     if (!delImage(coll, img)) goto error;
 
   // delete archive from container ring
@@ -334,17 +334,17 @@ delArchive(Collection* coll, Archive* self)
 
   // delete archive from content association
   curr = 0;
-  while((af = rgNext_r(self->fromContainers, &curr)) != 0)
+  while((af = rgNext_r(self->fromContainers, &curr)))
     if (!delFromAsso(coll, af)) goto error;
   
   // delete archive from document ring
   curr = 0;
-  while((doc = rgNext_r(self->documents, &curr)) != 0)
+  while((doc = rgNext_r(self->documents, &curr)))
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   
   // delete archive from assoCarac ring
   curr = 0;
-  while((ac = rgNext_r(self->assoCaracs, &curr)) != 0) {
+  while((ac = rgNext_r(self->assoCaracs, &curr))) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(ac);
   }
@@ -397,7 +397,7 @@ diseaseArchive(Collection* coll, Archive* self)
   if (self->demands->nbItems >0) goto next;
   if (self->remoteSupplies->nbItems >0) goto next;
   if (self->finaleSupplies->nbItems >0) goto next;
-  if (self->localSupply != 0) goto next;
+  if (self->localSupply) goto next;
   
   // delete archive from collection ring and free it
   avl_delete(coll->archives, self);
@@ -452,12 +452,31 @@ diseaseArchives(Collection* coll)
  * Synopsis   : int isIncoming(Archive* self)
  * Input      : Archive* self
  * Output     : TRUE on success
+ * Requirement: loadCollection(coll, EXTR)
  =======================================================================*/
 int isIncoming(Archive* self)
 {
-  return self->uploadTime != 0;
+  return self->uploadTime;
 }
 
+/*=======================================================================
+ * Function   : hasExtractRule
+ * Description: state if an archive belongs extract metadata
+ * Synopsis   : int hasExtractRule(Archive* self)
+ * Input      : Archive* self
+ * Output     : TRUE on success
+*  Requirement: loadCollection(coll, EXTR)
+ =======================================================================*/
+int hasExtractRule(Archive* self)
+{
+  // archive may appears in 3 location into extract metadata:
+  // - only as a container for images
+  // - only as a content for final contents
+  // - only as an incoming content for incoming content having no rules
+  return (self->toContainer ||
+	  !isEmptyRing(self->fromContainers) ||
+	  isIncoming(self));
+}
 
 /* Local Variables: */
 /* mode: c */

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.7 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -86,7 +86,7 @@ destroySupport(Support* self)
 {
   Support* rc = 0;
 
-  if(self != 0) {
+  if(self) {
     // we do not free the objects (owned by conf), just the rings
     self->collections = destroyOnlyRing(self->collections);
     free(self);
@@ -177,7 +177,7 @@ serializeSupports()
   if (env.dryRun == FALSE) path = conf->supportDB;
   logMemory(LOG_INFO, "Serializing the supports list file: %s", 
 	  path?path:"stdout");
-  if (path != 0 && *path != (char)0) {
+  if (path && *path != (char)0) {
     if ((fd = fopen(path, "w")) == 0) {
       logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
@@ -237,7 +237,7 @@ getSupport(char* name)
   logMemory(LOG_DEBUG, "getSupport %s", name);
   
   // look for support
-  while((rc = rgNext_r(conf->supports, &curr)) != 0)
+  while((rc = rgNext_r(conf->supports, &curr)))
     if (!strncmp(rc->name, name, MAX_SIZE_NAME)) break;
 
  error:
@@ -302,7 +302,7 @@ delSupport(Support* self)
 
   // delete support from collections rings
   curr = 0;
-  while((coll = rgNext_r(conf->collections, &curr)) != 0)
+  while((coll = rgNext_r(conf->collections, &curr)))
     if (!delSupportFromCollection(self, coll)) goto error;
   
   // delete support from configuration ring

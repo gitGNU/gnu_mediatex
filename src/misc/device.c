@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: device.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -70,7 +70,7 @@ absolutePath(char* path)
     path[i+1] = (char)0; // now path is the dirname
 
     // change directory to dirname
-    if (chdir(path) != 0) {
+    if (chdir(path)) {
       logMisc(LOG_ERR, "chdir %s: %s", path, strerror(errno));
       goto error;
     }
@@ -83,7 +83,7 @@ absolutePath(char* path)
     remind(pwd2);
 
     // cd back to the previous current directory 
-    if (chdir(pwd1) != 0) {
+    if (chdir(pwd1)) {
       logMisc(LOG_ERR, "chdir %s: %s", path, strerror(errno));
       goto error;
     }
@@ -209,7 +209,7 @@ char* mount2device(char* absPath)
     }
   }
   
-  if (fclose(mtab) != 0) {
+  if (fclose(mtab)) {
     logMisc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
@@ -259,7 +259,7 @@ int normalizePath(char* inPath, char** outPath)
     for (i=strlen(absPath); i>0 && absPath[i] != '/'; --i);
 
     // look for symlink
-    if ((basename = symlinkTarget(absPath)) != 0) {
+    if ((basename = symlinkTarget(absPath))) {
       ++nbLink;
 
       // if an absolute symlink delete the previous path
@@ -286,7 +286,7 @@ int normalizePath(char* inPath, char** outPath)
       absPath = 0;
     }
 
-  } while (nbLink < MISC_CHECKSUMS_MAX_NBLINK && basename != 0);
+  } while (nbLink < MISC_CHECKSUMS_MAX_NBLINK && basename);
   if (nbLink >= MISC_CHECKSUMS_MAX_NBLINK) {
     logMisc(LOG_ERR, "reach %i symlinks (is there a loop ?)",
   	    MISC_CHECKSUMS_MAX_NBLINK);
@@ -327,7 +327,7 @@ int getDevice(char* inPath, char** outPath)
   /*
   // find if one device matchs in mtab
   oldPath = newPath;
-  if ((newPath = mount2device(oldPath)) != 0) {
+  if ((newPath = mount2device(oldPath))) {
     oldPath = newPath;
     if (!normalizePath(oldPath, &newPath)) goto error;
   } else {

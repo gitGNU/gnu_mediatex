@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlog.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: utlog.c,v 1.4 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -166,7 +166,7 @@ main(int argc, char** argv)
 
   rc = TRUE;
  error:	
-  if(env.logFile != 0) {
+  if(env.logFile) {
     free(env.logFile);
   }
   env.logHandler = logClose(env.logHandler);

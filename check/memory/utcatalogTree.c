@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogTree.c,v 1.4 2015/08/11 18:14:22 nroche Exp $
+ * Version: $Id: utcatalogTree.c,v 1.5 2015/08/13 21:14:30 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -99,11 +99,11 @@ main(int argc, char** argv)
   if (!diseaseCatalogTree(coll)) goto error;
   env.dryRun = TRUE;
   if (!serializeCatalogTree(coll, &fd)) goto error;
-  if (coll->catalogTree->roles->nbItems != 0) goto error;
-  if (avl_count(coll->catalogTree->humans) != 0) goto error;
-  if (avl_count(coll->catalogTree->documents) != 0) goto error;
-  if (coll->catalogTree->categories->nbItems != 0) goto error;
-  if (coll->catalogTree->caracs->nbItems != 0) goto error;
+  if (coll->catalogTree->roles->nbItems) goto error;
+  if (avl_count(coll->catalogTree->humans)) goto error;
+  if (avl_count(coll->catalogTree->documents)) goto error;
+  if (coll->catalogTree->categories->nbItems) goto error;
+  if (coll->catalogTree->caracs->nbItems) goto error;
   /************************************************************************/
 
   freeConfiguration();

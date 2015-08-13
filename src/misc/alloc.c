@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.9 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: alloc.c,v 1.10 2015/08/13 21:14:34 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -247,7 +247,7 @@ exitMalloc()
     goto end;
   }
 
-  if (alloc->nbAlloc != 0 || alloc->sumAllocated != 0) {
+  if (alloc->nbAlloc || alloc->sumAllocated) {
     logMisc(LOG_WARNING, "Memory leaks: n%i, sum= %i", 
 	    alloc->nbAlloc, alloc->sumAllocated);
   }
@@ -294,7 +294,7 @@ size_t getVmSize()
     goto error;
   }
 
-  if (fclose(file) != 0) {
+  if (fclose(file)) {
     logMisc(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }

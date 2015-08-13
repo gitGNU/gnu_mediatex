@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.7 2015/08/08 06:33:54 nroche Exp $
+ * Version: $Id: archive.h,v 1.8 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -69,10 +69,6 @@ struct Archive
   time_t  backupDate;     // date to set after last unkeep
 };
 
-/* private */
-Archive* createArchive(void);
-Archive* destroyArchive(Archive* self);
-
 /* API */
 char* strAState(AState state);
 int cmpArchive(const void *p1, const void *p2);
@@ -83,10 +79,13 @@ Archive* getArchive(Collection* coll, char* hash, off_t size);
 Archive* addArchive(Collection* coll, char* hash, off_t size);
 int delArchive(Collection* coll, Archive* archive);
 
+/* Private */
+Archive* createArchive(void);
+Archive* destroyArchive(Archive* self);
 int diseaseArchive(Collection* coll, Archive* arch);
 int diseaseArchives(Collection* coll);
-
 int isIncoming(Archive* self);
+int hasExtractRule(Archive* self);
 
 #endif /* MDTX_MEMORY_ARCHIVE_H */
 

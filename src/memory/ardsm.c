@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.c,v 1.5 2015/08/07 17:50:30 nroche Exp $
+ * Version: $Id: ardsm.c,v 1.6 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -63,7 +63,7 @@ rgCreate(void)
 void 
 rgDestroy(RGIT* item)
 {
-  if(item != 0) {
+  if(item) {
     free(item);
     item = 0;
   }
@@ -568,7 +568,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
 
     nbItem = 0;
     curr = 0;
-    while((pItem = (void*)rgNext_r(ring, &curr)) != 0) {	
+    while((pItem = (void*)rgNext_r(ring, &curr))) {	
       pItemArray[nbItem++] = pItem;
     }
 	  
@@ -576,7 +576,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
 	  
     nbItem = 0;
     curr = 0;
-    while((pItem = (void*)rgNext_r(ring, &curr)) != 0) {	
+    while((pItem = (void*)rgNext_r(ring, &curr))) {	
       curr->it = pItemArray[nbItem++];
     }
 	    
@@ -610,7 +610,7 @@ rgMatchItem(RG* ring, void* pItem,
   void* pIt = 0;
   RGIT* rc = 0;
 
-  while((pIt = rgNext_r(ring, &rc)) != 0) {
+  while((pIt = rgNext_r(ring, &rc))) {
     if (!compar(&pIt, &pItem)) break;
   }
 
@@ -631,7 +631,7 @@ rgHaveItem(RG* ring, void* pItem)
   RGIT* rc = 0;
   void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &rc)) != 0) {
+  while((pIt = rgNext_r(ring, &rc))) {
     if (pIt == pItem) break;
   }
 
@@ -653,11 +653,11 @@ rgDelItem(RG* ring, void* pItem)
   RGIT* curr = 0;
   void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &curr)) != 0) {
+  while((pIt = rgNext_r(ring, &curr))) {
     if (pIt == pItem) break;
   }
 
-  if (pIt != 0) {
+  if (pIt) {
     rgRemove_r(ring, &curr);
     rc = 1;
   }
@@ -686,9 +686,9 @@ rgShareItems(RG* ring1, RG* ring2)
   if (isEmptyRing(ring2)) goto end;
   
   // O(n2) but rings should usaly only have 1 or 2 items
-  while((pIt1 = rgNext_r(ring1, &curr1)) != 0) {
+  while((pIt1 = rgNext_r(ring1, &curr1))) {
     pIt2 = 0;
-    while((pIt2 = rgNext_r(ring2, &curr2)) != 0) {
+    while((pIt2 = rgNext_r(ring2, &curr2))) {
       if (pIt1 == pIt2) {
 	rc = TRUE;
 	goto end;
@@ -902,7 +902,7 @@ createRing()
 RG* 
 destroyOnlyRing(RG* self)
 {
-  if (self != 0) {
+  if (self) {
     rgDelete(self);
     free(self);
   } 
@@ -924,10 +924,10 @@ destroyRing(RG* self, void* (*destroyItem)(void *))
   void* item = 0;
   RGIT* curr = 0;
 	
-  if(self != 0) {
+  if(self) {
     //rgRewind(self);
-    while((item = (RG*)rgNext_r(self, &curr)) != 0) {
-      if (destroyItem != 0) {
+    while((item = (RG*)rgNext_r(self, &curr))) {
+      if (destroyItem) {
 	item = destroyItem(item);
       }
     }
@@ -970,9 +970,9 @@ copyRing(RG* destination, RG* source,
     goto error;
   }
   
-  if(source != 0) {
+  if(source) {
     //rgRewind(source);
-    while((sourceItem = (void*)rgNext_r(source, &curr)) != 0) {
+    while((sourceItem = (void*)rgNext_r(source, &curr))) {
       if ((destinationItem = copyItem(destinationItem, sourceItem)) == 0) {
 	goto error;
       }
