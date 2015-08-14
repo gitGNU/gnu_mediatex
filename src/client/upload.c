@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.6 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: upload.c,v 1.7 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -156,7 +156,7 @@ uploadContent(Collection* upload, char* path)
   if (!rc) {
     logMain(LOG_ERR, "uploadExtract fails");
   }
-  delArchive(upload, archive);
+  if (archive) delArchive(upload, archive);
   return rc;
 }
 
@@ -492,8 +492,8 @@ concatExtract(Collection* coll, Collection *upload)
  * Output     : TRUE on success
  =======================================================================*/
 int 
-mdtxUpload(char* label, char* catalog, char* extract, char* file, 
-	   char* targetPath)
+mdtxUpload(char* label, char* catalog, char* extract, 
+	   char* file, char* targetPath)
 { 
   int rc = FALSE;
   Collection *coll = 0;
@@ -501,7 +501,11 @@ mdtxUpload(char* label, char* catalog, char* extract, char* file,
   Archive* archive = 0;
 
   logMain(LOG_DEBUG, "mdtxUpload");
-
+  checkLabel(label);
+  if (!catalog && !extract && !file) {
+    logMain(LOG_ERR, "please provide some content to upload");
+    goto error;
+  }
   if (!allowedUser(env.confLabel)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
 

@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.2 2015/07/22 10:45:14 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.3 2015/08/14 01:53:41 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -105,13 +105,6 @@ main(int argc, char** argv)
   env.dryRun = FALSE;
   if (!mdtxMake("coll1")) goto error;
   env.dryRun = TRUE;
-
-  // upload a file
-  if (!(path = createString(inputRep))) goto error;
-  if (!(path = catString(path, "/../misc/logo.png"))) goto error;
-  if (!mdtxUploadFile("coll1", path)) goto error;
-  if (!(coll = addCollection("coll1"))) goto error;
-  if (!saveCollection(coll, EXTR)) goto error;
   /************************************************************************/
 
   rc = TRUE;

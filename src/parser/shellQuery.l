@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.5 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.6 2015/08/14 01:53:43 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -161,19 +161,19 @@
 	  return(shellUMOUNT);
 	}
 
-	upload {
+	file {
 	  BEGIN(USERVALUE);
-	  return(shellUPLOAD);
+	  return(shellFILE);
 	}
 
-	upload\+ {
+	cat|cata|catalog {
 	  BEGIN(USERVALUE);
-	  return(shellUPLOADP);
+	  return(shellCATALOG);
 	}
 
-	upload\+\+ {
+	extr|rules|extractrules {
 	  BEGIN(USERVALUE);
-	  return(shellUPLOADPP);
+	  return(shellRULES);
 	}
 
 	get {
@@ -253,6 +253,14 @@
 	  return(shellUPDATE);
 	}
 
+	commit {
+	  return(shellCOMMIT);
+	}
+
+	make {
+	  return(shellMAKE);
+	}
+
 	up(grade)? {
 	  return(shellUPGRADE);
 	}
@@ -261,12 +269,16 @@
 	  return(shellUPGRADEP);
 	}
 
-	commit {
-	  return(shellCOMMIT);
+	upload {
+	  return(shellUPLOAD);
 	}
 
-	make {
-	  return(shellMAKE);
+	upload\+ {
+	  return(shellUPLOADP);
+	}
+
+	upload\+\+ {
+	  return(shellUPLOADPP);
 	}
 
 	check {
@@ -314,8 +326,6 @@
  }
 
 <USERVALUE>{
-
-	/* string */
 
   (\n|\r\n) {
     BEGIN(INITIAL);

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.h,v 1.5 2015/07/08 17:58:03 nroche Exp $
+ * Version: $Id: misc.h,v 1.6 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -32,8 +32,10 @@ int mdtxRemove();
 int mdtxPurge();
 int mdtxMake(char* label);
 int mdtxUpgradePlus(char* label);
-int mdtxUploadPlus(char* label, char* path);
-int mdtxUploadPlusPlus(char* label, char* path);
+int mdtxUploadPlus(char* label, char* catalog, char* extract, 
+		   char* file, char* targetPath);
+int mdtxUploadPlusPlus(char* label, char* catalog, char* extract, 
+	       char* file, char* targetPath);
 int mdtxClean(char* label);
 int mdtxAddUser(char* user);
 int mdtxDelUser(char* user);
@@ -41,7 +43,6 @@ int mdtxBind();
 int mdtxUnbind();
 int mdtxSu(char* label);
 int mdtxScp(char* label, char* fingerPrint, char* target);
-int mdtxUploadFile(char* label, char* path);
 
 #endif /* MDTX_CLIENT_MISC_H */
 

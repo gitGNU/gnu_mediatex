@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.9 2015/08/08 23:31:40 nroche Exp $
+ * Version: $Id: misc.c,v 1.10 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -114,17 +114,22 @@ int mdtxUpgradePlus(char* label)
  * Description: Upload + upgrade
  * Synopsis   : int mdtxUploadPlus(char* label, char* path)
  * Input      : char* label = collection to pre-process
- *              char* path = path to the file to upload
+ *              char* catalog: catalog metadata file to upload
+ *              char* extract: extract metadata file to upload
+ *              char* file: data to upload
+ *              char* targetPath: where to copy data into the cache
  * Output     : TRUE on success
  =======================================================================*/
-int mdtxUploadPlus(char* label, char* path)
+int mdtxUploadPlus(char* label, char* catalog, char* extract, 
+		   char* file, char* targetPath)
 {
   int rc = FALSE;
 
   checkLabel(label);
-  if (!mdtxUploadFile(label, path)) goto error;
-  if (!mdtxUpgrade(label)) goto error;
+  if (!mdtxUpload(label, catalog, extract, file, targetPath)) 
+    goto error;
 
+  if (!mdtxUpgrade(label)) goto error;
   rc = TRUE;
  error:
   if (!rc) {
@@ -140,17 +145,22 @@ int mdtxUploadPlus(char* label, char* path)
  * Description: Upload + upgrade + make
  * Synopsis   : int mdtxUploadPlusPlus(char* label, char* path)
  * Input      : char* label = collection to pre-process
- *              char* path = path to the file to upload
+ *              char* catalog: catalog metadata file to upload
+ *              char* extract: extract metadata file to upload
+ *              char* file: data to upload
+ *              char* targetPath: where to copy data into the cache
  * Output     : TRUE on success
  =======================================================================*/
-int mdtxUploadPlusPlus(char* label, char* path)
+int mdtxUploadPlusPlus(char* label, char* catalog, char* extract, 
+		   char* file, char* targetPath)
 {
   int rc = FALSE;
 
   checkLabel(label);
-  if (!mdtxUploadPlus(label, path)) goto error;
-  if (!mdtxMake(label)) goto error;
+  if (!mdtxUploadPlus(label, catalog, extract, file, targetPath))
+    goto error;
 
+  if (!mdtxMake(label)) goto error;
   rc = TRUE;
  error:
   if (!rc) {
@@ -539,128 +549,6 @@ mdtxScp(char* label, char* fingerPrint, char* target)
   } 
   argv[1] = destroyString(argv[1]);
   argv[2] = destroyString(argv[2]);
-  return rc;
-}
-
-/*=======================================================================
- * Function   : mdtxUploadFile 
- * Description: upload a file and add its extraction metadata
- * Synopsis   : int mdtxUploadFile(char* label, char* path)
- * Input      : char* label = related collection
- *            : char* path = path to the file to upload
- * Output     : TRUE on success
- =======================================================================*/
-int
-mdtxUploadFile(char* label, char* path)
-{
-  int rc = FALSE;
-  int socket = -1;
-  Collection* coll = 0;
-  Container* container = 0;
-  Archive* archive = 0;
-  RecordTree* tree = 0;
-  Record* record = 0;
-  struct stat statBuffer;
-  Md5Data md5; 
-  char* extra = 0;
-  char* message = 0;
-  char reply[256];
-  int status = 0;
-  int n = 0;
-  FromAsso* asso = 0;
-  time_t time = 0;
-  struct tm date;
-  char dateString[32];
-
-  if (isEmptyString(path)) goto error;
-  if (!(coll = mdtxGetCollection(label))) goto error;
-  if (!loadCollection(coll, EXTR)) goto error;
-
-  /* if (!env.noRegression) { */
-  /*   // check if daemon is awake */
-  /*   if (access(conf->pidFile, R_OK) == -1) { */
-  /*     logMain(LOG_INFO, "cannot read daemon's pid file: %s",  */
-  /* 	    strerror(errno)); */
-  /*     goto end; */
-  /*   } */
-  /* } */
-
-  if (!(tree = createRecordTree())) goto error2; 
-  tree->collection = coll;
-  tree->messageType = UPLOAD; 
-  if (!getLocalHost(coll)) goto error2;
-
-  // get file attributes (size)
-  if (stat(path, &statBuffer)) {
-    logMain(LOG_ERR, "status error on %s: %s", path, strerror(errno));
-    goto error2;
-  }
-
-  // compute hash
-  memset(&md5, 0, sizeof(Md5Data));
-  md5.path = path;
-  md5.size = statBuffer.st_size;
-  md5.opp = MD5_CACHE_ID;
-  if (!doMd5sum(&md5)) goto error2;
-
-  // archive to upload
-  if (!(archive = addArchive(coll, md5.fullMd5sum, statBuffer.st_size)))
-    goto error2;
-
-  /* // add the file to the UPLOAD message */
-  if (!(extra = absolutePath(path))) goto error2;
-  if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
-    goto error2;
-  extra = 0;
-  if (!rgInsert(tree->records, record)) goto error2;
-  record = 0;
-  
-  if (env.noRegression) {
-    logMain(LOG_INFO, "upload file to %s collection", label);
-  }
-  else {
-    if ((socket = connectServer(coll->localhost)) == -1) goto error2;
-    if (!upgradeServer(socket, tree, 0)) goto error2;
-    
-    // read reply
-    n = tcpRead(socket, reply, 255);
-    tcpRead(socket, reply, 1);
-    if (sscanf(reply, "%i %s", &status, message) < 1) {
-      reply[(n<=0)?0:n-1] = (char)0; // remove ending \n
-      logMain(LOG_ERR, "error reading reply: %s", reply);
-      goto error2;
-    }
-    
-    logMain(LOG_INFO, "local server tels (%i) %s", status, message);
-    if (status != 200) goto error2;
-  }
-
-  // add extraction rule
-  if (!(time = currentTime())) goto error;
-  if (localtime_r(&time, &date) == (struct tm*)0) {
-    logMemory(LOG_ERR, "localtime_r returns on error");
-    goto error2;
-  }
-  sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
-	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
-	  date.tm_hour, date.tm_min, date.tm_sec);
-  if (!(container = coll->extractTree->incoming)) goto error2;
-  if (!(asso = addFromAsso(coll, archive, container, dateString))) 
-    goto error2;
-  if (!wasModifiedCollection(coll, EXTR)) goto error2;
-
-  rc = TRUE;
- error2:
-  extra = destroyString(extra);
-  if (record) delRecord(coll, record);
-  tree = destroyRecordTree(tree);
-  if (socket) close(socket);
-  if (!releaseCollection(coll, EXTR)) goto error;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "upload query failed");
-    if (record) delRecord(coll, record);
-  }
   return rc;
 }
 

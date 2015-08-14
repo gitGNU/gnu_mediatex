@@ -1,4 +1,4 @@
-#  * Version: $Id: mediatex_comp,v 1.5 2015/07/07 14:26:52 nroche Exp $
+#  * Version: $Id: mediatex_comp,v 1.6 2015/08/14 01:53:41 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -21,18 +21,20 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 LONG_OPTION="\
---help \	
---version \	
---facility \	
---severity \	
---log-file \	
+--help \
+--version \
+--facility \
+--severity \
+--log-file \
 --dry-run \	
+--memory-limit \
+--script-out \
 --debug-lexer \
---debug-parser \
+--conf-label \
 --debug-script \
 --conf-label \
---no-www-cvs"
-SHORT_OPTION="-h -v -f -s -l -n -L -P -X -c -w"
+--alone"
+SHORT_OPTION="-h -v -f -s -l -n -m -S -L -c -a"
 FACILITY="file local2"
 SEVERITY="err warning notice info debug"
 
@@ -84,7 +86,6 @@ _mediatex()
 	    return 0
 	    ;;
 	-c)
-	    COMPREPLY=( $( compgen -W "file" -- $cur ) )
 	    return 0
 	    ;;
 	adm)
@@ -124,11 +125,15 @@ commit bind unbind mount umount get"
 	    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
 	    return 0
 	    ;;
+	upload|upload+|upload++)
+	    COMPREPLY=( $( compgen -W "catalog rules file" -- $cur ) )
+	    return 0
+	    ;;
 	mount)
 	    _cd_devices
 	    return 0
 	    ;;
-	umount|get|on|upload|upload+|upload++|key)
+	umount|get|on|file|catalog|rules|key)
 	    _filedir
 	    return 0
 	    ;;
@@ -168,8 +173,68 @@ upload++ motd upgrade upgrade+ make clean su"
 	    COMPREPLY=( $( compgen -W "as" -- $cur ) )
 	    return 0
 	    ;;
-	upload|upload+|upload++)
-	    COMPREPLY=( $( compgen -W "to" -- $cur ) )
+	file)
+	    if [ $COMP_CWORD -gt 3 ]; then
+		case "${COMP_WORDS[COMP_CWORD-4]}" in
+		    catalog) # catalog FILE file FILE
+			COMPREPLY=( $( compgen -W "rules as" -- $cur ) )
+			return 0
+			;;
+		    rules) # rules FILE file FILE
+			COMPREPLY=( $( compgen -W "catalog as" -- $cur ) )
+			return 0
+			;;
+		esac
+	    fi
+	    COMPREPLY=( $( compgen -W "catalog rules as" -- $cur ) )
+	    return 0
+	    ;;
+	as)
+	    if [ $COMP_CWORD -gt 5 ]; then
+		case "${COMP_WORDS[COMP_CWORD-6]}" in
+		    catalog) # catalog FILE file FILE as
+			COMPREPLY=( $( compgen -W "rules" -- $cur ) )
+			return 0
+			;;
+		    rules) # rules FILE file FILE as
+			COMPREPLY=( $( compgen -W "catalog" -- $cur ) )
+			return 0
+			;;
+		esac
+	    fi
+	    COMPREPLY=( $( compgen -W "catalog rules" -- $cur ) )
+	    return 0
+	    ;;
+	catalog)
+	    if [ $COMP_CWORD -gt 3 ]; then
+		case "${COMP_WORDS[COMP_CWORD-4]}" in
+		    rules) # rules FILE catalog FILE
+			COMPREPLY=( $( compgen -W "file" -- $cur ) )
+			return 0
+			;;
+		    file|as) # XXX FILE catalog
+			COMPREPLY=( $( compgen -W "rules" -- $cur ) )
+			return 0
+			;;
+		esac
+	    fi
+	    COMPREPLY=( $( compgen -W "rules file" -- $cur ) )
+	    return 0
+	    ;;
+	rules)
+	    if [ $COMP_CWORD -gt 3 ]; then
+		case "${COMP_WORDS[COMP_CWORD-4]}" in
+		    catalog) # catalog FILE file
+			COMPREPLY=( $( compgen -W "file" -- $cur ) )
+			return 0
+			;;
+		    file|as) # XXX FILE rules
+			COMPREPLY=( $( compgen -W "catalog" -- $cur ) )
+			return 0
+			;;
+		esac
+	    fi
+	    COMPREPLY=( $( compgen -W "catalog file" -- $cur ) )
 	    return 0
 	    ;;
 	supp)
@@ -206,16 +271,17 @@ upload++ motd upgrade upgrade+ make clean su"
 		    return 0
 		    ;;
 	    esac
-    esac
-    
-    
-    [ $COMP_CWORD -gt 3 ] || return 0;
-    case "${COMP_WORDS[COMP_CWORD-4]}" in
-	get) # get PATH1 as COLL 
-	    COMPREPLY=( $( compgen -W "on" -- $cur ) )
 	    return 0
 	    ;;
     esac
+        
+    [ $COMP_CWORD -gt 3 ] || return 0;
+    case "${COMP_WORDS[COMP_CWORD-4]}" in
+	get) # get PATH as COLL 
+	    COMPREPLY=( $( compgen -W "on" -- $cur ) )
+	    return 0
+	    ;;
+    esac	   	  
 }
 
 complete -F _mediatexd mediatexd

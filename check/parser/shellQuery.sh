@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.2 2015/08/10 12:24:27 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.3 2015/08/14 01:53:41 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -74,7 +74,11 @@ parser/ut$TEST.tab del supp SUPP from ALL >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab del supp SUPP from coll COLL >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab note supp SUPP as TEXT >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab check supp SUPP on PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab upload PATH to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload catalog FILE to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload rules FILE to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload file FILE to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload file FILE as TARGET to coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab upload cat FILE extr FILE file FILE to coll COLL >>parser/$TEST.out 2>&1
 
 # apiCollQuery
 parser/ut$TEST.tab add key keyFile.txt to coll COLL >>parser/$TEST.out 2>&1

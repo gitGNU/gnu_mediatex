@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.9 2015/08/11 11:59:34 nroche Exp $
+ * Version: $Id: command.h,v 1.10 2015/08/14 01:53:43 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -28,7 +28,7 @@
 #include "mediatex-types.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hvf:s:l:na:S"
+#define MISC_SHORT_OPTIONS "hvf:s:l:nm:S"
 #define MISC_LONG_OPTIONS				\
   {"help", no_argument, 0, 'h'},			\
   {"version", no_argument, 0, 'v'},			\
@@ -36,7 +36,7 @@
   {"severity", required_argument, 0, 's'},		\
   {"log-file", required_argument, 0, 'l'},		\
   {"dry-run", no_argument, 0, 'n'},			\
-  {"alloc-limit", required_argument, 0, 'a'},		\
+  {"memory-limit", required_argument, 0, 'm'},		\
   {"script-out", required_argument, 0, 'S'}
 
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
@@ -48,10 +48,11 @@
   MEMORY_LONG_OPTIONS,					\
   {"debug-lexer", no_argument, 0, 'L'}
 
-#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:"
+#define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:a"
 #define MDTX_LONG_OPTIONS				\
   PARSER_LONG_OPTIONS,					\
-  {"conf-label", required_argument, 0, 'c'}
+  {"conf-label", required_argument, 0, 'c'},		\
+  {"alone", no_argument, 0, 'a'}
 
 void version();
 
@@ -137,10 +138,10 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.dryRun = 1;							\
     break;								\
 									\
-   case 'a':								\
+  case 'm':								\
     if(optarg == (char*)0 || *optarg == (char)0) {			\
       fprintf(stderr,							\
-	      "%s: nil or empty argument for the nice limit\n",		\
+	      "%s: nil or empty argument for the nice memory limit\n",	\
 	      programName);						\
       rc = EINVAL;							\
       rc = 1;								\
@@ -181,7 +182,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.debugLexer = 1;							\
     break;								\
     									\
- GET_MEMORY_OPTIONS;
+   GET_MEMORY_OPTIONS;
 
 /*=======================================================================
  * Macro      : GET_MDTX_OPTIONS
@@ -201,7 +202,11 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     }									\
     env.confLabel = optarg;						\
     break;								\
-   									\
+									\
+  case 'a':								\
+    env.noCollCvs = 1;							\
+    break;								\
+ 									\
   GET_PARSER_OPTIONS;
 
 /*=======================================================================

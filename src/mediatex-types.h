@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.4 2015/07/28 11:45:44 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.5 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -90,6 +90,12 @@ typedef struct Record Record;
 
 // needed by parsers so as to include scanners headers
 typedef void* yyscan_t;
+typedef struct UploadParams {
+  char* file;
+  char* catalog;
+  char* extract;
+  char* target;
+} UploadParams;
 
 // define the fundamental boolean constants
 #define TRUE 1

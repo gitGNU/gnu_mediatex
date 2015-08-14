@@ -97,7 +97,6 @@ Document "css": "css"
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[err archive.c] please provide an archive
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
@@ -176,7 +175,6 @@ Document "css": "css"
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[err archive.c] please provide an archive
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
@@ -230,7 +228,6 @@ Document "css": "css"
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[err archive.c] please provide an archive
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
@@ -265,7 +262,6 @@ Document "css": "css"
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[err archive.c] please provide an archive
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt

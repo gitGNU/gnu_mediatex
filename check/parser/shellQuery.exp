@@ -1,90 +1,49 @@
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] initializing mediatex software
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] removing mediatex software
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] purging mediatex software
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] add USER user to groups
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] del USER user from groups
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] create/join new COLL collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] create/join new COLL collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] create/join new COLL collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] create/join new COLL collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] free the COLL collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] update all
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] update collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] commit all
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] commit collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] bind mediatex directories
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] unbind mediatex directories
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] mount ISO on PATH
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] umount PATH
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] get PATH1 as COLL on PATH2
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] send SAVEMD5 signal to daemon
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] send EXTRACT signal to daemon
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] send NOTIFY signal to daemon
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] send DELIVER signal to daemon
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] add SUPP support on PATH
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] remove a support
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] list local supports
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] add a support to all collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] add a support to a collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] del a support from all collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] del a support from a collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] note a support as "TEXT"
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] check content located at PATH
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] upload a file to a collection
-[info shellQuery.y] parsing the shell query
+[info shellQuery.y] upload a file to a collection
+[info shellQuery.y] upload a file to a collection
+[info shellQuery.y] upload a file to a collection
+[info shellQuery.y] upload a file to a collection
 [info shellQuery.y] add a key to a collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] del a key to a collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] listing enabled collections
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] message of the day
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] upgrade all
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] upgrade a collection
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] make all
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] build a HTML catalog
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] clean all
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] clean an HTML catalog
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] change to mediatex user
-[info shellQuery.y] parsing the shell query
 [info shellQuery.y] change to collection user

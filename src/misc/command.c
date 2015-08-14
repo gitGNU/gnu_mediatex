@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.12 2015/08/13 21:14:35 nroche Exp $
+ * Version: $Id: command.c,v 1.13 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -132,7 +132,7 @@ miscOptions()
 	  "\t\t\tseverity amongs 'err' 'warning' 'notice' 'info' 'debug'\n"
 	  "\t\t\tmodule amongs 'alloc' 'script' 'misc' 'memory' 'parser'\n"
 	  "\t\t\t              'common' and 'main'\n"
-	  "  -a, --memory-limit\tlimit for malloc in Mo\n"
+	  "  -m, --memory-limit\tnice limit for malloc in Mo\n"
 	  "  -S, --script-out\tenable stdout for scripts\n"
 	  "  -n, --dry-run\t\tdo a dry run\n");
 }
@@ -177,7 +177,8 @@ mdtxOptions()
 {
   parserOptions();
   fprintf(stderr, 
-	  "  -c, --conf-label\toverhide 'mdtx.conf' configuration file\n");
+	  "  -c, --conf-label\toverhide 'mdtx.conf' configuration file\n"
+	  "  -a, --alone\tdo not make cvs remote queries\n");
 }
 
 /*=======================================================================

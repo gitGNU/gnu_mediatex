@@ -2,10 +2,9 @@
 *** TO CORRECT: cache policy    
 
 ** UPLOAD
-- upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+- rename cache/incoming to cache/date ?
+- provide upload target path
 - do not load into cache unknown archive in extract.txt
-- rename cache/incoming to cache/default ?
-- provide %AAMMJJ% macro ?
 
 ** EXTERN
 - cache/toKeep directory: 
@@ -46,6 +45,7 @@
 
 ** UPLOAD
 - cvsPrint manage upload concatenation
+- upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
 
 *** CLEAN-UP
 

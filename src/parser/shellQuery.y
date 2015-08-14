@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.5 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.6 2015/08/14 01:53:43 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -70,8 +70,9 @@
 #include "parser/shellQuery.h"
 
 #define LINENO shell_get_lineno(yyscanner)
-  
-void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
+
+void shell_error(yyscan_t yyscanner, Collection* coll, 
+		 UploadParams* upParam, const char* message);
 %}
 
 /* declarations: ===================================================*/
@@ -80,7 +81,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
 %define api.prefix {shell_}
 %define api.pure full
 %param {yyscan_t yyscanner}
-%parse-param {Collection* coll}
+%parse-param {Collection* coll} {UploadParams* upParam}
 %define parse.error verbose
 %verbose
 %debug
@@ -126,6 +127,9 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
 %token            shellMOUNT
 %token            shellUMOUNT
 %token            shellUPLOAD
+%token            shellFILE
+%token            shellCATALOG
+%token            shellRULES
 %token            shellUPLOADP
 %token            shellUPLOADPP
 %token            shellGET
@@ -153,118 +157,149 @@ void shell_error(yyscan_t yyscanner, Collection* coll, const char* message);
 collection: shellCOLL shellSTRING
 {
   strcpy($$, $2);
-};
+}
 
 support: shellSUPP shellSTRING
 {
   strcpy($$, $2);
-};
+}
 
 key: shellKEY shellSTRING
 {
   strcpy($$, $2);
-};
+}
 
 newCollection: newCollection2 newCollUser newCollHost newCollPort
 {
   $$ = coll;
   coll = 0;
-};
+}
 
 newCollection2: shellCOLL
 {
   // addCollection will be call later
   if (!(coll = createCollection())) YYABORT;
-};
+}
 
 newCollUser: newCollConf shellMINUS newCollLabel
            | newCollLabel
-;
+
 
 newCollConf: shellSTRING
 {
   if (!(coll->masterLabel = createString($1))) YYABORT;
-};
+}
 
 newCollLabel: shellSTRING
 {
   strncpy(coll->label, $1, MAX_SIZE_COLL);
-};
+}
 
 newCollHost: shellAROBASE shellSTRING 
 {
   strncpy(coll->masterHost, $2, MAX_SIZE_HOST);
 }
-             | // empty
-;
+           | // empty
 
 newCollPort: shellCOLON shellNUMBER
 {
   coll->masterPort = $2;
 }
-             | // empty
-;
+           | // empty
+
+uploadParams: uploadParams uploadParam
+            | uploadParam
+
+target: shellAS shellSTRING
+{
+  if (!(upParam->target = createString($2))) YYABORT;
+}
+      | // empty
+
+uploadParam: shellFILE shellSTRING target
+{
+  if (upParam->file) {
+    logParser(LOG_ERR, "please only provide one data file to upload");
+    YYABORT;
+  }
+  if (!(upParam->file = createString($2))) YYABORT;
+}
+           | shellCATALOG shellSTRING
+{
+  if (upParam->catalog) {
+    logParser(LOG_ERR, "please only provide catalog file to upload");
+    YYABORT;
+  }
+  if (!(upParam->catalog = createString($2))) YYABORT;
+}
+           | shellRULES shellSTRING
+{
+  if (upParam->extract) {
+    logParser(LOG_ERR, "please only provide one extract file to upload");
+    YYABORT;
+  }
+  if (!(upParam->extract = createString($2))) YYABORT;
+}
 
  /* main rules */
 
 queries: query
        | shellEOL /* empty query */
 {
-  fprintf(stderr, "please use the -h flag to get help\n");
+  logParser(LOG_ERR, "please use the -h flag to get help\n");
 }
-;
 
 query: shellADMIN admConfQuery
-	  /* mediatex adm init
-	     mediatex adm remove
-	     mediatex adm purge 
-	     mediatex adm add user
-	     mediatex adm del user
-	     mediatex adm add coll COLL@HOST:PORT
-	     mediatex adm del coll COLL
-	     mediatex adm update coll COLL
-	     mediatex adm update
-	     mediatex adm commit coll COLL
-	     mediatex adm commit
-	     mediatex adm make coll COLL
-	     mediatex adm make
-	     mediatex adm bind 
-	     mediatex adm unbind
-	     mediatex adm mount ISO on PATH
-	     mediatex adm umount PATH
-	     mediatex get PATH as COLL on FINGERPRINT */
+       /* mediatex adm init
+	  mediatex adm remove
+	  mediatex adm purge 
+	  mediatex adm add user
+	  mediatex adm del user
+	  mediatex adm add coll COLL@HOST:PORT
+	  mediatex adm del coll COLL
+	  mediatex adm update coll COLL
+	  mediatex adm update
+	  mediatex adm commit coll COLL
+	  mediatex adm commit
+	  mediatex adm make coll COLL
+	  mediatex adm make
+	  mediatex adm bind 
+	  mediatex adm unbind
+	  mediatex adm mount ISO on PATH
+	  mediatex adm umount PATH
+	  mediatex get PATH as COLL on FINGERPRINT */
      | shellSERVER srvQuery
-          /* mediatex srv save
-	     mediatex srv extract
-	     mediatex srv notify 
-	     mediatex src deliver */
+       /* mediatex srv save
+	  mediatex srv extract
+	  mediatex srv notify 
+	  mediatex src deliver */
      | apiQuery
-;
         
 apiQuery: apiSuppQuery
-	  /* mediatex add supp SUPP to all
-	     mediatex del supp SUPP from all
-	     mediatex add supp SUPP to coll COLL
-	     mediatex del supp SUPP from coll COLL
-	     mediatex add supp SUPP on PATH
-	     mediatex del supp SUPP
-	     mediatex list supp
-	     mediatex note supp as TEXT
-	     mediatex check supp on PATH 
-             mediatex upload PATH to coll COLL */
-        | apiCollQuery
-	  /* mediatex add key PATH to coll COLL
-	     mediatex del key FINGERPRINT from coll COLL
-	     mediatex list coll
-	     mediatex motd
-	     mediatex upgrade
-	     mediatex upgrade coll COLL 
-	     mediatex make coll COLL
-	     mediatex make
-	     mediatex clean coll COLL
-	     mediatex clean
-	     mediatex su
-	     mediatex su coll COLL */
+        /* mediatex add supp SUPP to all
+	   mediatex del supp SUPP from all
+	   mediatex add supp SUPP to coll COLL
+	   mediatex del supp SUPP from coll COLL
+	   mediatex add supp SUPP on PATH
+	   mediatex del supp SUPP
+	   mediatex list supp
+	   mediatex note supp as TEXT
+	   mediatex check supp on PATH 
+	   mediatex upload file PATH catalog PATH extract PATH to coll COLL 
+	*/
+          | apiCollQuery
+	/* mediatex add key PATH to coll COLL
+	   mediatex del key FINGERPRINT from coll COLL
+	   mediatex list coll
+	   mediatex motd
+	   mediatex upgrade
+	   mediatex upgrade coll COLL 
+	   mediatex make coll COLL
+	   mediatex make
+	   mediatex clean coll COLL
+	   mediatex clean
+	   mediatex su
+	   mediatex su coll COLL */
 
 
  /* to call scripts directely (for daemon, admin or expert user) */
@@ -419,7 +454,6 @@ admConfQuery: shellINIT shellEOL
     if (!mdtxScp($4, $6, $2)) YYABORT;
   }
 }
-;
 
  /* server queries (sending signals to server) */
 
@@ -455,7 +489,6 @@ srvQuery: shellSAVE shellEOL
     if (!mdtxSyncSignal(MDTX_DELIVER)) YYABORT;
   }
 }
-;
 
  /* support queries API */
 
@@ -538,34 +571,36 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
     if (!clientWriteUnlock()) YYABORT;
   }
 }
-            | shellUPLOAD shellSTRING shellTO collection shellEOL
+            | shellUPLOAD uploadParams shellTO collection shellEOL
 {
   logParser(LOG_INFO, "%s", "upload a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUploadFile($4, $2)) YYABORT;
+    if (!mdtxUpload($4, upParam->catalog, upParam->extract, 
+		    upParam->file, upParam->target)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
-            | shellUPLOADP shellSTRING shellTO collection shellEOL
+            | shellUPLOADP uploadParams shellTO collection shellEOL
 {
   logParser(LOG_INFO, "%s", "upload+ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUploadPlus($4, $2)) YYABORT;
+    if (!mdtxUploadPlus($4, upParam->catalog, upParam->extract, 
+		    upParam->file, upParam->target)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
-            | shellUPLOADPP shellSTRING shellTO collection shellEOL
+            | shellUPLOADPP uploadParams shellTO collection shellEOL
 {
   logParser(LOG_INFO, "%s", "upload++ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
-    if (!mdtxUploadPlusPlus($4, $2)) YYABORT;
+    if (!mdtxUploadPlusPlus($4, upParam->catalog, upParam->extract, 
+		    upParam->file, upParam->target)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
-;
 
  /* collection queries API */
 
@@ -693,7 +728,6 @@ apiCollQuery: shellADD key shellTO collection shellEOL
     if (!clientWriteUnlock()) YYABORT;
   }
 }
-;
 
 %%
 
@@ -706,7 +740,8 @@ apiCollQuery: shellADD key shellTO collection shellEOL
  * Input      : char* message = the error message.
  * Output     : N/A
  =======================================================================*/
-void shell_error(yyscan_t yyscanner, Collection* coll, const char* message)
+void shell_error(yyscan_t yyscanner, Collection* coll, 
+		 UploadParams* upParam, const char* message)
 {
   logParser(LOG_ERR, "%s on token '%s' line %i\n",
 	  message, shell_get_text(yyscanner), LINENO);
@@ -729,8 +764,9 @@ parseShellQuery(int argc, char** argv, int optind)
   void* buffer = 0;
   yyscan_t scanner;
   Collection* coll = 0;
+  UploadParams upParam = {0, 0, 0};
 
-  logParser(LOG_INFO, "%s", "parsing the shell query");
+  logParser(LOG_DEBUG, "parseShellQuery");
   if (!getCommandLine(argc, argv, optind)) goto error;
 
   // initialise parser
@@ -745,7 +781,7 @@ parseShellQuery(int argc, char** argv, int optind)
   buffer = shell__scan_string(env.commandLine, scanner);
   
   // call parser 
-  if (shell_parse(scanner, coll)) {
+  if (shell_parse(scanner, coll, &upParam)) {
     goto error2;
   }
 
@@ -757,6 +793,10 @@ parseShellQuery(int argc, char** argv, int optind)
   if (!rc) {
     logParser(LOG_ERR, "%s", "query fails");
   }
+  destroyString(upParam.catalog);
+  destroyString(upParam.extract);
+  destroyString(upParam.file);
+  destroyString(upParam.target);
   return rc;
 }
 
