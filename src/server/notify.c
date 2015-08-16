@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.11 2015/08/13 21:14:36 nroche Exp $
+ * Version: $Id: notify.c,v 1.12 2015/08/16 20:35:11 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -188,7 +188,7 @@ addFinalDemands(NotifyData* data)
     while((record = rgNext_r(archive->demands, &curr2))) {
       
       // final demand: add it
-      if (getRecordType(record) == FINALE_DEMAND) {
+      if (getRecordType(record) == FINAL_DEMAND) {
 
 	if (!(extra = createString("!wanted"))) goto error;
 	if (!(demand = newRecord(coll->localhost, archive, 
@@ -404,7 +404,7 @@ sendRemoteNotify(Collection* coll)
   // free local demands
   curr = 0;
   while((record = rgNext_r(recordTree->records, &curr))) {
-    if (getRecordType(record) == LOCALE_DEMAND) {
+    if (getRecordType(record) == LOCAL_DEMAND) {
       destroyRecord(record);
       curr->it = 0;
     }

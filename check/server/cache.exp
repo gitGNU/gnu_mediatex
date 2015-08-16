@@ -95,18 +95,18 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-            
+# ^ LOCAL_SUPPLY
+  
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Keep logoP1.iso and logoP2.iso:
@@ -126,18 +126,18 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-            
+# ^ LOCAL_SUPPLY
+  
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Ask for too much place :
@@ -165,18 +165,18 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-            
+# ^ LOCAL_SUPPLY
+  
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Ask for little place so do not suppress anything :
@@ -203,20 +203,20 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           104018481 *malloc
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-      
+# ^ LOCAL_SUPPLY
+             
 [notice utcache.c] ----------------------------------------------------------
 [info cacheTree.c] archive status aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa104018481: ALLOCATED -> UNUSED
 [notice utcache.c] ----------------------------------------------------------
@@ -259,14 +259,14 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-            
+# ^ LOCAL_SUPPLY
+
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] API to upload files :
@@ -298,16 +298,16 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 3f18841537668dcf4fafd1471c64d52d                1937 incoming/2010-01/README
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-# ^ LOCALE_SUPPLY
-      
+# ^ LOCAL_SUPPLY
+           
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] ----------------------------------------------------------
 [notice utcache.c] Clean the cache:

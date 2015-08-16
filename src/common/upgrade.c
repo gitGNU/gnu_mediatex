@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.10 2015/08/16 20:35:09 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -352,7 +352,7 @@ scanCvsClientDirectory(Collection* coll, char* path)
 
  * Note       : Should not be called by the server (to save memory).
  *              This function do almost all the consistency job:
- *              - re-compute the locale image's score
+ *              - re-compute the local image's score
  *              - update own configuration values into servers.txt
  *              - update ssh configuration files (config, key and auth)
  *              - update master collection host values into:

@@ -51,10 +51,10 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 nroche@narval.tk
-# ^ FINALE_DEMAND
-        
+# ^ FINAL_DEMAND
+          
 [notice utdeliver.c] ----------------------------------------------------------
 [notice utdeliver.c] ----------------------------------------------------------
 [notice utdeliver.c] deliver the mail:
@@ -74,8 +74,8 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-16,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
-       
+# ^ LOCAL_SUPPLY
+        
 [notice utdeliver.c] ----------------------------------------------------------
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections

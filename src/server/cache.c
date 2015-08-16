@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.13 2015/08/16 20:11:06 nroche Exp $
+ * Version: $Id: cache.c,v 1.14 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -130,10 +130,10 @@ getAbsRecordPath(Collection* coll, Record* record)
   logMain(LOG_DEBUG, "getAbsRecordPath: %s", strRecordType(record));
 
   switch (getRecordType(record)) {
-  case FINALE_SUPPLY:
+  case FINAL_SUPPLY:
     if (!(rc = getFinalSupplyInPath(record->extra))) goto error;
     break;
-  case LOCALE_SUPPLY:
+  case LOCAL_SUPPLY:
     if (!(rc = getAbsCachePath(coll, record->extra))) goto error;
     break;
   default:

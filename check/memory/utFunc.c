@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.10 2015/08/13 21:14:29 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.11 2015/08/16 20:35:08 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -703,13 +703,13 @@ createExempleRecordTree(Collection* coll)
   int i=0;
   
   // build all record type :
-  // FINALE_SUPPLY
+  // FINAL_SUPPLY
   // MALLOC_SUPPLY
-  // LOCALE_SUPPLY with good score
-  // LOCALE_SUPPLY with bad score
+  // LOCAL_SUPPLY with good score
+  // LOCAL_SUPPLY with bad score
   // REMOTE_SUPPLY
-  // FINALE_DEMAND
-  // LOCALE_DEMAND
+  // FINAL_DEMAND
+  // LOCAL_DEMAND
   // REMOTE_DEMAND
 
   char fingerPrints[][MAX_SIZE_HASH+1] = {

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.7 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: deliver.c,v 1.8 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -97,12 +97,12 @@ int deliverArchive(Collection* coll, Archive* archive)
     if (record->type & REMOVE) continue;
 
     switch (getRecordType(record)) {
-    case FINALE_DEMAND: // mail + download http
+    case FINAL_DEMAND: // mail + download http
       date += coll->cacheTTL;
       date -= 1*DAY;
     case REMOTE_DEMAND: // scp (time between 2 cron)
       date += 1*DAY;
-    case LOCALE_DEMAND: // cgi
+    case LOCAL_DEMAND: // cgi
       date += archive->size / conf->uploadRate;
       break;
     default:
@@ -120,7 +120,7 @@ int deliverArchive(Collection* coll, Archive* archive)
   curr = 0;
   while((record = rgNext_r(archive->demands, &curr))) {
     if (record->type & REMOVE) continue;
-    if (getRecordType(record) != FINALE_DEMAND) continue;
+    if (getRecordType(record) != FINAL_DEMAND) continue;
 
     // we should use a lock to prevent mail to be sent twice
     record->type |= REMOVE;

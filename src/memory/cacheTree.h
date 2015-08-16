@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.6 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.7 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -39,12 +39,12 @@ typedef enum {
 // hight level type computed from type, host and path
 typedef enum {
   UNDEF_RECORD = 0,
-  FINALE_SUPPLY = 1, 
-  LOCALE_SUPPLY = 2,
+  FINAL_SUPPLY = 1, 
+  LOCAL_SUPPLY = 2,
   REMOTE_SUPPLY = 4,
   MALLOC_SUPPLY = 8,   // use by merger to reserve space
-  FINALE_DEMAND = 16, 
-  LOCALE_DEMAND = 32,
+  FINAL_DEMAND = 16, 
+  LOCAL_DEMAND = 32,
   REMOTE_DEMAND = 64,
   TOKEEP_DEMAND = 128, // NO MORE USED !
   ALL_SUPPLY    = 1|2|4,

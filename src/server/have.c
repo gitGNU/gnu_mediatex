@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.9 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: have.c,v 1.10 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -138,7 +138,7 @@ addFinalSupplies(RecordTree* tree, Record** iso)
   off_t maxSize = 0;
 
   while((record = rgNext_r(tree->records, &curr))) {
-    if (getRecordType(record) != FINALE_SUPPLY) {
+    if (getRecordType(record) != FINAL_SUPPLY) {
       logMain(LOG_ERR, "please provide final supplies");
       goto error;
     }

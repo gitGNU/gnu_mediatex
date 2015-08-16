@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.10 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.11 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -309,10 +309,10 @@ getRecordType(Record* self)
       rc = REMOTE_DEMAND;
     else {
 	if (self->extra[0] != '!')
-	  rc = FINALE_DEMAND;
+	  rc = FINAL_DEMAND;
 	else {
 	  if (self->extra[1] == 'w')
-	    rc = LOCALE_DEMAND;
+	    rc = LOCAL_DEMAND;
 	  if (self->extra[1] == 't')
 	    rc = TOKEEP_DEMAND;
 	}
@@ -323,10 +323,10 @@ getRecordType(Record* self)
       rc = REMOTE_SUPPLY;
     else {
       if (self->extra[0] == '/')
-	rc = FINALE_SUPPLY;
+	rc = FINAL_SUPPLY;
       else {
 	if (self->extra[0] != '!')
-	  rc = LOCALE_SUPPLY;
+	  rc = LOCAL_SUPPLY;
 	else {
 	  if (self->extra[1] == 'm')
 	    rc = MALLOC_SUPPLY;
@@ -354,18 +354,18 @@ char*
 strRecordType2(RecordType type)
 {
   switch (type) {
-  case FINALE_SUPPLY:
-    return "FINALE_SUPPLY";
-  case LOCALE_SUPPLY:
-    return "LOCALE_SUPPLY";
+  case FINAL_SUPPLY:
+    return "FINAL_SUPPLY";
+  case LOCAL_SUPPLY:
+    return "LOCAL_SUPPLY";
   case REMOTE_SUPPLY:
     return "REMOTE_SUPPLY";
   case MALLOC_SUPPLY:
     return "MALLOC_SUPPLY";
-  case FINALE_DEMAND:
-    return "FINALE_DEMAND";
-  case LOCALE_DEMAND:
-    return "LOCALE_DEMAND";
+  case FINAL_DEMAND:
+    return "FINAL_DEMAND";
+  case LOCAL_DEMAND:
+    return "LOCAL_DEMAND";
   case REMOTE_DEMAND:
     return "REMOTE_DEMAND";
   case TOKEEP_DEMAND:

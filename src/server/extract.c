@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.16 2015/08/13 21:14:36 nroche Exp $
+ * Version: $Id: extract.c,v 1.17 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -166,8 +166,8 @@ getArchivePath(Collection* coll, Archive* archive)
   }
   else {
     // final supply
-    if (archive->finaleSupplies->nbItems > 0) {
-      if (!(record = (Record*)archive->finaleSupplies->head->it)) 
+    if (archive->finalSupplies->nbItems > 0) {
+      if (!(record = (Record*)archive->finalSupplies->head->it)) 
 	goto error;
       if (isEmptyString(record->extra)) goto error;
     }
@@ -767,7 +767,7 @@ extractRecord(ExtractData* data, Record* record)
 	  record->archive->hash, record->archive->size);
 
   // split extra path if we get a final supply
-  if (getRecordType(record) == FINALE_SUPPLY) {
+  if (getRecordType(record) == FINAL_SUPPLY) {
     finalSupplySource = getFinalSupplyInPath(record->extra);
     finalSupplyTarget = getFinalSupplyOutPath(record->extra);
   }
@@ -806,7 +806,7 @@ extractRecord(ExtractData* data, Record* record)
   if (!makeDir(coll->extractDir, path, 0770)) goto error;
 
   switch (getRecordType(record)) {
-  case FINALE_SUPPLY:
+  case FINAL_SUPPLY:
     // may be a block device to dump
     if (!getDevice(finalSupplySource, &device)) goto error;
     if (!isBlockDevice(device, &isBlockDev)) goto error;
@@ -986,13 +986,13 @@ int extractContainer(ExtractData* data, Container* container)
     curr = 0;
     while((archive = rgNext_r(container->parents, &curr))) {
       if (archive->state < AVAILABLE &&
-  	  archive->finaleSupplies->nbItems > 0) {
+  	  archive->finalSupplies->nbItems > 0) {
   	logMain(LOG_INFO, "extract part from support");
 
   	// stop on the first final-supply extraction that success
 	data->found = FALSE;
   	while (!data->found &&
-  	       (record = rgNext_r(archive->finaleSupplies, &curr2))) {
+  	       (record = rgNext_r(archive->finalSupplies, &curr2))) {
   	  if (!extractRecord(data, record)) goto error;
   	}
       }
@@ -1053,9 +1053,9 @@ int extractArchive(ExtractData* data, Archive* archive)
   }
 
   // final supply
-  if (archive->finaleSupplies->nbItems > 0) {
+  if (archive->finalSupplies->nbItems > 0) {
     // test if the file is really there 
-    if (!(record = (Record*)archive->finaleSupplies->head->it)) goto error;
+    if (!(record = (Record*)archive->finalSupplies->head->it)) goto error;
     if (!(path = getAbsRecordPath(data->coll, record))) 
       goto error;
     if (!callAccess(path, &isThere)) goto error;
@@ -1213,7 +1213,7 @@ int extractArchives(Collection* coll)
     // ... or locally wanted
     curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
-      if (getRecordType(record) == FINALE_DEMAND) {
+      if (getRecordType(record) == FINAL_DEMAND) {
 	data.context = X_MAIN;
 	break;
       }

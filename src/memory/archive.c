@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: archive.c,v 1.10 2015/08/16 20:35:09 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -48,7 +48,7 @@ createArchive(void)
   if ((rc->records = createRing()) == 0) goto error;
   if ((rc->demands = createRing()) == 0) goto error;
   if ((rc->remoteSupplies = createRing()) == 0) goto error;
-  if ((rc->finaleSupplies = createRing()) == 0) goto error;
+  if ((rc->finalSupplies = createRing()) == 0) goto error;
   rc->imageScore = -1;   // still not computed
   rc->extractScore = -1; // still not computed
   rc->state = UNUSED;
@@ -95,7 +95,7 @@ destroyArchive(Archive* self)
   self->records = destroyOnlyRing(self->records);
   self->demands = destroyOnlyRing(self->demands);
   self->remoteSupplies = destroyOnlyRing(self->remoteSupplies);
-  self->finaleSupplies = destroyOnlyRing(self->finaleSupplies);
+  self->finalSupplies = destroyOnlyRing(self->finalSupplies);
   free(self);
   
 error:
@@ -396,7 +396,7 @@ diseaseArchive(Collection* coll, Archive* self)
   // check cache's rings
   if (self->demands->nbItems >0) goto next;
   if (self->remoteSupplies->nbItems >0) goto next;
-  if (self->finaleSupplies->nbItems >0) goto next;
+  if (self->finalSupplies->nbItems >0) goto next;
   if (self->localSupply) goto next;
   
   // delete archive from collection ring and free it

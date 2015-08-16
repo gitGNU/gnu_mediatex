@@ -1,8 +1,8 @@
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 /logo.png
-# ^ FINALE_SUPPLY
-        
+# ^ FINAL_SUPPLY
+         
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection ( SX )
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
@@ -24,8 +24,8 @@ S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
-         
+# ^ LOCAL_SUPPLY
+          
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> AVAILABLE
 [notice utcacheTree.c] available: score=8.25 toKeep: no
 
@@ -38,8 +38,8 @@ S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCALE_SUPPLY
-       
+# ^ LOCAL_SUPPLY
+        
 [info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
 [notice utcacheTree.c] available: score=3.75 toKeep: yes
 
@@ -60,16 +60,16 @@ S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINALE_DEMAND
-    
+# ^ FINAL_DEMAND
+     
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
 [notice utcacheTree.c] del record from cache
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-# ^ LOCALE_DEMAND
-          
+# ^ LOCAL_DEMAND
+           
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
 [notice utcacheTree.c] del record from cache
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED

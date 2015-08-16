@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.9 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.10 2015/08/16 20:35:10 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -279,7 +279,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   archive->state = UNUSED;
 
   // state1: used
-  if (haveRecords(archive->finaleSupplies) ||
+  if (haveRecords(archive->finalSupplies) ||
       haveRecords(archive->remoteSupplies))
     archive->state = USED;
 
@@ -295,7 +295,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
     goto end;
     break;
 
-  case LOCALE_SUPPLY:
+  case LOCAL_SUPPLY:
     // state 4: available
     archive->state = AVAILABLE;
     break;
@@ -395,7 +395,7 @@ int addCacheEntry(Collection* coll, Record* record)
   switch (getRecordType(record)) {
 
   case MALLOC_SUPPLY:
-  case LOCALE_SUPPLY:
+  case LOCAL_SUPPLY:
     if (archive->localSupply == 0 ||
 	(archive->localSupply->type & REMOVE)) {
       archive->localSupply = record;
@@ -406,16 +406,16 @@ int addCacheEntry(Collection* coll, Record* record)
     }
     break;
       
-  case FINALE_SUPPLY:
-     if (!rgInsert(archive->finaleSupplies, record)) goto error;
+  case FINAL_SUPPLY:
+     if (!rgInsert(archive->finalSupplies, record)) goto error;
      break;
 
   case REMOTE_SUPPLY:
      if (!rgInsert(archive->remoteSupplies, record)) goto error;
      break;
 
-  case FINALE_DEMAND:
-  case LOCALE_DEMAND:
+  case FINAL_DEMAND:
+  case LOCAL_DEMAND:
   case REMOTE_DEMAND:
      if (!rgInsert(archive->demands, record)) goto error;
      break;
@@ -675,22 +675,22 @@ int cleanCacheTree(Collection* coll)
     switch (getRecordType(record)) {
 
     case MALLOC_SUPPLY:
-    case LOCALE_SUPPLY:
+    case LOCAL_SUPPLY:
       if (archive->localSupply == record) {
 	archive->localSupply = 0; 
       }
       break;
       
-    case FINALE_SUPPLY:
-      rgDelItem(archive->finaleSupplies, record);
+    case FINAL_SUPPLY:
+      rgDelItem(archive->finalSupplies, record);
       break;
       
     case REMOTE_SUPPLY:
       rgDelItem(archive->remoteSupplies, record);
       break;
       
-    case FINALE_DEMAND:
-    case LOCALE_DEMAND:
+    case FINAL_DEMAND:
+    case LOCAL_DEMAND:
     case REMOTE_DEMAND:
       rgDelItem(archive->demands, record);
       break;

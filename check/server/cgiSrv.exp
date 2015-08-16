@@ -106,8 +106,8 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCALE_SUPPLY
-       
+# ^ LOCAL_SUPPLY
+        
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] 3) retry with tgz on cache
@@ -181,10 +181,10 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
-           
+# ^ LOCAL_SUPPLY
+             
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] 4) try with only part1 on cache
@@ -260,8 +260,8 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
-     
+# ^ LOCAL_SUPPLY
+      
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] 5) try with part2 added on cache too
@@ -345,14 +345,14 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCALE_SUPPLY
-         
+# ^ LOCAL_SUPPLY
+             
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] 6) register a mail
@@ -393,8 +393,8 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINALE_DEMAND
-  
+# ^ FINAL_DEMAND
+   
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] ----------------------------------------------------------
 [notice utcgiSrv.c] Clean the cache:

@@ -44,8 +44,8 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINALE_DEMAND
-  
+# ^ FINAL_DEMAND
+   
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] provide part 1
@@ -120,10 +120,10 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINALE_DEMAND
+# ^ FINAL_DEMAND
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
-# ^ LOCALE_SUPPLY
-
+# ^ LOCAL_SUPPLY
+  
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] provide part2
@@ -200,12 +200,12 @@ Headers
 Body          
 #                date                             host                             hash                size extra
 S 2010-01-16,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCALE_SUPPLY
+# ^ LOCAL_SUPPLY
 S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
-# ^ LOCALE_SUPPLY
-         
+# ^ LOCAL_SUPPLY
+            
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] ----------------------------------------------------------
 [notice uthave.c] Clean the cache:

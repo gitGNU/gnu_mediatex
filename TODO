@@ -13,10 +13,6 @@
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - buildRule.sh script
 
-** SYNTAX
-- finale -> final
-- locale -> local
-
 ** SERVER
 - serversTree->server[]->lastCommit = DATE used by computeScore
 
@@ -69,6 +65,10 @@
 ** UPLOAD
 - cvsPrint manage upload concatenation
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+
+** SYNTAX
+- finale -> final
+- locale -> local / setlocale / LOCALEDIR / locale.h
 
 ** SERVER API
 - simplify cgiSrv code
