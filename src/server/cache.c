@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.12 2015/08/13 21:14:36 nroche Exp $
+ * Version: $Id: cache.c,v 1.13 2015/08/16 20:11:06 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -902,12 +902,6 @@ cacheUpload(Collection* coll, Record* record)
     goto end;
   }
 
-  // assert archive is new
-  if ((record->archive->localSupply)) {
-    logMain(LOG_WARNING, "archive already exists");
-    goto end;
-  }
-
   // ask for place in cache and build record
   if (!cacheAlloc(&record2, coll, record->archive)) goto error;
 
@@ -947,42 +941,62 @@ int
 uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
 {
   int rc = FALSE;
+  int uplErrno = 4;
   Collection* coll = 0;
   Record* record = 0;
-  Archive* archive = 0;
-  (void) connexion;
+  char buffer[256] = "";
 
-  logMain(LOG_DEBUG, "work on upload message");
+  // text + MAX_SIZE_HASH + MAX_SIZE_SIZE
+  static char message[][64] = {
+    "200 ok",
+    "301 no collection",
+    "302 empty message",
+    "303 already exists %s:%lli",
+    "400 internal error",   
+  };
+
+  logMain(LOG_DEBUG, "uploadFinaleArchive");
+  sprintf(buffer, "%s", message[uplErrno=4]);
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "unknown collection for archiveTree");
+    sprintf(buffer, "%s", message[uplErrno=1]);
     goto error;
   }
   
   // check we get final supplies
   if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "please provide records for have query");
+    sprintf(buffer, "%s", message[uplErrno=2]);
     goto error;
   }
 
   if (!loadCollection(coll, EXTR | CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
-
   if (!(record = (Record*)recordTree->records->head->it)) goto error3;
-  if (!(archive = record->archive)) goto error3;
-  if (!(cacheUpload(coll, record))) goto error3;
 
+  // check archive is not already there
+  if ((record->archive->localSupply)) {
+    sprintf(buffer, message[uplErrno=3], 
+	    record->archive->hash, record->archive->size);
+    goto error3;
+  }
+
+  if (!(cacheUpload(coll, record))) goto error3;
+  sprintf(buffer, "%s", message[uplErrno=0]);
+
+  logMain(LOG_NOTICE, "%s", buffer);
   rc = TRUE;
-  tcpWrite(connexion->sock, "200 ok\n", 7);
  error3:
   if (!unLockCache(coll)) rc = FALSE;
  error2:
   if (!releaseCollection(coll, EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "remote extraction fails");
-    tcpWrite(connexion->sock, "500 fails\n", 10);
+    logMain(LOG_ERR, "%s", buffer);
+  }
+  if (!env.noRegression) {
+    strcpy(buffer + strlen(buffer), "\n");
+    tcpWrite(connexion->sock, buffer, strlen(buffer));
   }
   return rc;
 } 

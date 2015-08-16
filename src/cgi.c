@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
+ * Version: $Id: cgi.c,v 1.5 2015/08/16 20:11:06 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -213,21 +213,18 @@ int mdtxFind(RecordTree *tree)
   if (!(reply = createSizedString(255, "100 nobody"))) goto error;
 
   // send query
-
   if (!mdtxSearch(tree, reply)) goto error;
   
+  // read reply
   if (sscanf(reply, "%i", &status) < 1) {
     logMain(LOG_ERR, "error re-reading reply: ",
 	    reply);
     goto error;
   }
-  
-  /* I prefer not to use sscanf to retrieve the url 
-     (blanc char will be ommited for instance) */
-  url = reply + 4;
-  
+    
   switch (status) {
   case 200:
+    url = reply + 7; // "200 ok URL"
     logMain(LOG_DEBUG, "found at %s", url);
     
     fprintf(stdout, "Content-Type: text/html\r\n");

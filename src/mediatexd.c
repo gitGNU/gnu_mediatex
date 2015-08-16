@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.4 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.5 2015/08/16 20:11:06 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -287,7 +287,7 @@ int matchServer(RecordTree* tree, Connexion* connexion)
     while((record = rgNext_r(tree->records, &curr))) {
       if (server != record->server) {
 	logMain(LOG_WARNING, 
-		"message contains a record related to an other host: %s",
+		"message contains a record related to another host: %s",
 		record->server->fingerPrint);
 	goto error;
       }

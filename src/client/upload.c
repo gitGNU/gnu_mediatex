@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.7 2015/08/14 01:53:42 nroche Exp $
+ * Version: $Id: upload.c,v 1.8 2015/08/16 20:11:06 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -296,41 +296,34 @@ areNotAlreadyThere(Collection *coll, Collection* upload)
   if (!loadCollection(coll, EXTR)) goto error;
   rc = TRUE;
 
-  // loop on uploaded INC container
+  // loop on uploaded INC contents (should have only one in fact)
   container = self->incoming;
   for(node = container->childs->head; node; node = node->next) {
     archUp = ((FromAsso*)node->item)->archive;
 
     // check it is not already into actual extractTree:
-    if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {
-
-      // - as an incoming
-      if (isIncoming(archCol)) {
-	logMain(LOG_ERR, "Archive %s%lli is already an incoming", 
-		archUp->hash, archUp->size);
-	rc = FALSE;
-      }
-
-      // - as a content
-      if (isIncoming(archCol)) {
-	logMain(LOG_ERR, "Archive %s%lli is already a content", 
+    if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {      
+      if (hasExtractRule(archCol)) {
+	logMain(LOG_ERR, 
+		"Incoming archive %s%lli already has an extraction rule", 
 		archUp->hash, archUp->size);
 	rc = FALSE;
       }
     }
   }
-
-  // loop on uploaded INC container
+  
+  // loop on uploaded containers
   if (avl_count(self->containers)) {
     for(node = self->containers->head; node; node = node->next) {
       container = node->item;
       curr = 0;
       while ((archUp = rgNext_r(container->parents, &curr))) {
-	if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {
 
-	  // check it is not already into actual extractTree
+	// check container not already into actual extractTree
+	if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {
 	  if (archCol->toContainer) {
-	    logMain(LOG_ERR, "Archive %s%lli is already a container", 
+	    logMain(LOG_ERR, 
+		    "Incoming container %s%lli already set as container", 
 		    archUp->hash, archUp->size);
 	    rc = FALSE;
 	  }

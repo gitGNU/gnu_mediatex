@@ -55,9 +55,7 @@
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
-[notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cgiSrv.c] write to socket: 300 not here
-
+[notice cgiSrv.c] 303 not found 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -94,9 +92,7 @@ Body
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] query for logo.png
-[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
-
+[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -171,9 +167,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] query for logo/logo.png
-[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
-
+[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -252,9 +246,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
-[notice cgiSrv.c] not found 022a34b2f9b893fba5774237e1aa80ea:24075
-[info cgiSrv.c] write to socket: 300 not here
-
+[notice cgiSrv.c] 303 not found 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -339,9 +331,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] query for logo/logo.png
-[info cgiSrv.c] write to socket: 200 https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
-
+[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -388,10 +378,8 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice utFunc.c] ask for logo.png
 [notice utFunc.c] add a generic demand for
-[notice cgiSrv.c] final demand for 022a34b2f9b893fba5774237e1aa80ea:24075 test@test.com
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
-[info cgiSrv.c] write to socket: 200 
-
+[notice cgiSrv.c] 200 ok
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................

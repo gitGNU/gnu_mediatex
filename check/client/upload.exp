@@ -13,24 +13,22 @@
 [err upload.c] isFileRefbyExtract fails
 [err upload.c] Extract file should provide a container for 022a34b2f9b893fba5774237e1aa80ea24075
 [err upload.c] isFileRefbyExtract fails
-[err upload.c] Archive 0a7ecd447ef2acb3b5c6e4c550e6636f374784 is already an incoming
-[err upload.c] Archive 0a7ecd447ef2acb3b5c6e4c550e6636f374784 is already a content
-[err upload.c] Archive de5008799752552b7963a2670dc5eb18391168 is already an incoming
-[err upload.c] Archive de5008799752552b7963a2670dc5eb18391168 is already a content
-[err upload.c] Archive 0a7ecd447ef2acb3b5c6e4c550e6636f374784 is already a container
-[err upload.c] Archive de5008799752552b7963a2670dc5eb18391168 is already a container
-[err upload.c] Archive 1a167d608e76a6a4a8b16d168580873c20480 is already a container
-[err upload.c] Archive c0c055a0829982bd646e2fafff01aaa64066 is already a container
-[err upload.c] Archive 0387eee9820fa224525ff8b2e0dfa9be24546 is already a container
-[err upload.c] Archive b5810aba99ed0d15f1f0a073e646d5bd25045 is already a container
-[err upload.c] Archive 65f1464142f405dbbeeea4830c95ddd325600 is already a container
-[err upload.c] Archive f54fba7d2e070d48051ac3f8f1c2eb9830720 is already a container
-[err upload.c] Archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c525088 is already a container
-[err upload.c] Archive 3a04277dd1f43740a5fe17fd0ae9a5aa24457 is already a container
-[err upload.c] Archive fa2b0b536bf61f61617528c474e0bf6124973 is already a container
-[err upload.c] Archive d79581b67ec1932fd276dcf3b6d6db9a24733 is already a container
-[err upload.c] Archive 7808473c7db9a9e3493a6b61f44f880520480 is already a container
-[err upload.c] Archive db8b80896f7202b656913f99d438075c4090 is already a container
+[err upload.c] Incoming archive 0a7ecd447ef2acb3b5c6e4c550e6636f374784 already has an extraction rule
+[err upload.c] Incoming archive de5008799752552b7963a2670dc5eb18391168 already has an extraction rule
+[err upload.c] Incoming container 0a7ecd447ef2acb3b5c6e4c550e6636f374784 already set as container
+[err upload.c] Incoming container de5008799752552b7963a2670dc5eb18391168 already set as container
+[err upload.c] Incoming container 1a167d608e76a6a4a8b16d168580873c20480 already set as container
+[err upload.c] Incoming container c0c055a0829982bd646e2fafff01aaa64066 already set as container
+[err upload.c] Incoming container 0387eee9820fa224525ff8b2e0dfa9be24546 already set as container
+[err upload.c] Incoming container b5810aba99ed0d15f1f0a073e646d5bd25045 already set as container
+[err upload.c] Incoming container 65f1464142f405dbbeeea4830c95ddd325600 already set as container
+[err upload.c] Incoming container f54fba7d2e070d48051ac3f8f1c2eb9830720 already set as container
+[err upload.c] Incoming container b34bb9bf9ae4ec5b4a5bc2ab3e2a18c525088 already set as container
+[err upload.c] Incoming container 3a04277dd1f43740a5fe17fd0ae9a5aa24457 already set as container
+[err upload.c] Incoming container fa2b0b536bf61f61617528c474e0bf6124973 already set as container
+[err upload.c] Incoming container d79581b67ec1932fd276dcf3b6d6db9a24733 already set as container
+[err upload.c] Incoming container 7808473c7db9a9e3493a6b61f44f880520480 already set as container
+[err upload.c] Incoming container db8b80896f7202b656913f99d438075c4090 already set as container
 [err upload.c] areNotAlreadyThere fails
 [info confTree.c] free configuration
 [info utupload.c] exit on success

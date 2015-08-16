@@ -1,23 +1,46 @@
 
 *** TO CORRECT: cache policy    
 
+** SERVER API:
+- unify sockets messages for all (cache, have, notify)
+- unit test for mediatexd (sockets messages)
+- utcache should call uploadFinaleArchive instaed of cacheUpload
+
 ** UPLOAD
 - rename cache/incoming to cache/date ?
 - provide upload target path
 - do not load into cache unknown archive in extract.txt
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+- buildRule.sh script
 
-** EXTERN
-- cache/toKeep directory: 
--- rename to cache/extern
--- replace path on extraction
--- follow simlinks
--- md5sum not computed all times
-- score computation also use md5sums.txt file
+** SYNTAX
+- finale -> final
+- locale -> local
+
+** SERVER
+- serversTree->server[]->lastCommit = DATE used by computeScore
+
+** FINALE-SUPLLY
+- add a sha1 field for supports
+- supports also include files on disk:
+-- name = absolute path 
+- cache.c also read supports.txt to get final-supply records
+- remove cache/toKeep directory
+- cache never follow simlinks
 
 ** MOTD
-- motd: add coll selection facility
-- motd: add to burn and orphanes
-- catalogHtml: add warning for orphanes
+- localScore/mainScore ?
+- add coll selection facility
+- add to burn
+-- only show when mainScore<5 && localScore<5
+-- list embedded content too if not all having same score
+- notify orphanes
+- display cache size (all/used/allocated/free)
+
+*** HTML
+- notify server lastComit
+- (final supplies automaticaly included into image score computation)
+- notify orphanes
 
 ** LOGS
 - make cron upload the cvsroot collection module
@@ -46,6 +69,9 @@
 ** UPLOAD
 - cvsPrint manage upload concatenation
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+
+** SERVER API
+- simplify cgiSrv code
 
 *** CLEAN-UP
 

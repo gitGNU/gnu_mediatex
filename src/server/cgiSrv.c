@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.6 2015/08/07 17:50:32 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.7 2015/08/16 20:11:06 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -25,25 +25,13 @@
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
 
-//#include <sys/socket.h> // shutdown
-
-static char message[][64] = {
-  "000 no error\n",               // not used
-  "100 nobody\n",                 // not used (non sens)
-  "200 ok\n",                     // not used (need to add the path)
-  "300 not here\n",
-  "400 internal error\n",
-
-  "301 collection not managed\n" // cgiErrno = 5
-  "302 no extraction plan\n"     // cgiErrno = 6 (not use in fact)
-};
-
 /*=======================================================================
  * Function   : extractLocalArchive
  * Description: Get or extract one archive into the local cache
  * Synopsis   : Archive* extractLocalArchive(Archive* archive)
  * Input      : Archive* archive = what we are looking for
- * Output     : Archive* = copy of the archive researched
+ * Output     : int* found = TRUE if a local supply is available
+ *              TRUE on success
  =======================================================================*/
 int 
 extractCgiArchive(Collection* coll, Archive* archive, int* found)
@@ -52,7 +40,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   Configuration* conf = 0;
   ExtractData data;
 
-  logMain(LOG_DEBUG, "local extraction");
+  logMain(LOG_DEBUG, "extractCgiArchive");
   *found = FALSE;
   data.coll = coll;
   data.context = X_CGI;
@@ -69,7 +57,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   if (!releaseCollection(coll, SERV | EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "local extraction fails");
+    logMain(LOG_ERR, "extractCgiArchive fails");
   }
   destroyOnlyRing(data.toKeeps);
   return rc;
@@ -88,30 +76,35 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
 int cgiServer(RecordTree* recordTree, Connexion* connexion)
 {
   int rc = FALSE;
+  int cgiErrno = 4;
   Collection* coll = 0;
   Record* record = 0;
   Record* record2 = 0;
   Archive* archive = 0;
   int found = FALSE;
-  char buffer[256];
+  char buffer[256] = "";
   char* extra = 0;
-  int cgiErrno = 0;
 
-  logMain(LOG_DEBUG, "cgiServer: serving cgi query");
+  // text + cache url + MAX_SIZE_STRING
+  static char message[][576] = {
+    "200 ok %s/%s",
+    "301 no collection",
+    "302 empty message",
+    "303 not found %s:%lli",
+    "400 internal error",   
+  };
 
-  /* logMain(LOG_INFO, "input archive tree:"); */
-  /* serializeRecordTree(recordTree, 0); */
+  logMain(LOG_DEBUG, "cgiServer");
+  sprintf(buffer, "%s", message[cgiErrno=4]);
 
   // get the archiveTree's collection
   if ((coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "unknown collection for archiveTree");
-    cgiErrno = 5;
+    sprintf(buffer, "%s", message[cgiErrno=1]);
     goto error;
   }
 
   if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "please provide a Record tree for cgiServer");
-    cgiErrno = 4;
+    sprintf(buffer, "%s", message[cgiErrno=2]);
     goto error;
   }
 
@@ -119,69 +112,47 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   if (!(record = (Record*)recordTree->records->head->it)) goto error;
   if (!(archive = record->archive)) goto error;
 
-  /* logMain(LOG_INFO, "first archive:"); */
-  /* serializeRecord(recordTree, record); */
-
   if (!lockCacheRead(coll)) goto error;
 
+  // first query without mail
   if (isEmptyString(record->extra) || !strncmp(record->extra, "!w", 2)) {
 
     // synchronous query: search/extraction
-    cgiErrno = 3;
     if (!extractCgiArchive(coll, archive, &found)) goto error2;
     if (!found) {
-      logMain(LOG_NOTICE, "not found %s:%i", archive->hash, archive->size);
+      sprintf(buffer, message[cgiErrno=3], archive->hash, archive->size);
     }
     else {
-      logMain(LOG_NOTICE, "query for %s", archive->localSupply->extra);
-      sprintf(buffer, "200 %s/%s\n", 
+      sprintf(buffer, message[cgiErrno=0],
 	      coll->cacheUrl, archive->localSupply->extra);
-
-      // tcpWrite only deal with sockets (on unit test we use stdout)
-      logMain(LOG_INFO, "write to socket: %s", buffer);
-      if (!env.noRegression) {
-	tcpWrite(connexion->sock, buffer, strlen(buffer));
-      }
-      cgiErrno = 2;
     }
   }
   else {
-    // register query: merge archive trees
-    logMain(LOG_NOTICE, "final demand for %s:%lli %s", 
-	    archive->hash, archive->size, record->extra);
-    cgiErrno = 4;
+    // second query providing a mail
     if (!(extra = createString(record->extra))) goto error2;
     if (!(record2 = addRecord(coll, coll->localhost, archive, 
 			      DEMAND, extra))) goto error2;
     if (!addCacheEntry(coll, record2)) goto error2;
-
-    logMain(LOG_INFO, "write to socket: 200 \n");
-    if (!env.noRegression) {
-      tcpWrite(connexion->sock, "200 \n", 5);
-    }
-
-    cgiErrno = 2;
+    sprintf(buffer, message[cgiErrno=0], "", 0);
+    buffer[6] = 0; // no archive need to be specified
   }
       
+  logMain(LOG_NOTICE, "%s", buffer);
   rc = TRUE;
  error2:
   if (!unLockCache(coll)) rc = FALSE;
  error:
-  if (cgiErrno != 2) {
-    sprintf(buffer, "%s", message[cgiErrno]);
-
-    logMain(LOG_INFO, "write to socket: %s", buffer);
-    if (!env.noRegression) {
-      tcpWrite(connexion->sock, buffer, strlen(buffer));
-    }
+  if (!rc) {
+    logMain(LOG_ERR, "%s", buffer);
   }
-
+  if (!env.noRegression) {
+    strcpy(buffer + strlen(buffer), "\n");
+    tcpWrite(connexion->sock, buffer, strlen(buffer));
+  }
+#warning needed? (not in cache.c)
   if (connexion->sock != STDOUT_FILENO && 
       shutdown(connexion->sock, SHUT_WR) == -1) {
     logMain(LOG_ERR, "shutdown fails: %s", strerror(errno));
-  }
-  if (cgiErrno == 4) {
-    logMain(LOG_ERR, "fails to serve cgi query");
   }
   return rc;
 }
