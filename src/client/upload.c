@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.8 2015/08/16 20:11:06 nroche Exp $
+ * Version: $Id: upload.c,v 1.9 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -383,11 +383,15 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   
   // ask daemon to upload the file into the cache
   logMain(LOG_INFO, "ask daemon to upload %s", source);
-  if (env.noRegression) goto end;
+  if (env.noRegression) {
+    logRecordTree(LOG_MAIN, LOG_INFO, tree, 0);
+    goto end;
+  }
   if ((socket = connectServer(coll->localhost)) == -1) goto error;
   if (!upgradeServer(socket, tree, 0)) goto error;
     
   // read reply
+  if (env.dryRun) goto end;
   n = tcpRead(socket, reply, 255);
   tcpRead(socket, reply, 1);
   if (sscanf(reply, "%i %s", &status, message) < 1) {
@@ -408,7 +412,7 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   extra = destroyString(extra);
   if (record) delRecord(coll, record);
   tree = destroyRecordTree(tree);
-  if (socket) close(socket);
+  if (!env.dryRun && socket != -1) close(socket);
   return rc;
 }
 

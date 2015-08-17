@@ -46,19 +46,20 @@ BatchMode yes
 Compression yes
 #LogLevel DEBUG3
 
-Host localhost
+Host 127.0.0.1
 	Port 22
 
-Host host1.mediatex.org
+Host localhost
 	Port 22
 
 [info confTree.c] configuration already populated
 [info ssh.c] Serializing the known_host file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/known_hosts
+[warning ssh.c] Please avoid using localhost in the configuration
 [warning ssh.c] Please avoid having localhost in the servers list
 # This file is managed by MediaTeX software.
 localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
-localhost ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze
-host1.mediatex.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
+127.0.0.1 ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze
+localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
 [notice utserv.c] *** refuse to add localhost key: 
 [info serv.c] add client/user1Key_rsa.pub key to coll1 collection
 [warning serv.c] key "746d6ceeb76e05cfa2dea92a1c5753cd" is our coll1 collection key
@@ -78,25 +79,26 @@ BatchMode yes
 Compression yes
 #LogLevel DEBUG3
 
-Host localhost
+Host 127.0.0.1
 	Port 22
 
-Host host1.mediatex.org
+Host localhost
 	Port 22
 
 [info confTree.c] configuration already populated
 [info ssh.c] Serializing the known_host file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/known_hosts
+[warning ssh.c] Please avoid using localhost in the configuration
 [warning ssh.c] Please avoid having localhost in the servers list
 # This file is managed by MediaTeX software.
 localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
-localhost ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze
-host1.mediatex.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
+127.0.0.1 ssh-dss AAAAB3NzaC1kc3MAAACBANS+fcEeUJYXUH+58diSH8FsHQlj/3xjSVmEf5Od2ip87ro6ZSn3nJI1RR+ALqcLGn/K9fccl4Bj4Oq+M/6iMIL7ZQ6cAwzox9E0w0AjwQg+17WjWIfQNhycnuCCLcg6ThVobZ30RrNFcmwcXKKXP2CRS+eT6Ex8wC42uOEfMvQfAAAAFQDJYtWp9ZaxF1Ej/H0uu8Sqx+9dkQAAAIEAtrLXsPDqCvRwnGtusl1rlzjJCHYMJFZ5eAFDRCdNNUpGqHaHZpw9v8OIt6Qtvx6eVn97opVJ71FG9Xxpl17sIegh8/gprZZlK8ct9Lfs2YFOxcXv+i2r1dVHZwUkwSiYUE59Af71d+Os9VNStTj/U/GXtVNMS7NyqKoaWfFlItgAAACAevPvahBRDZbsjcfhf736q5vyEZbHau5s3VfSQci1u0rIekDhymTyul3KwM7aOFq3f9Y0SfMFKTfQJq45yYCMFZcwnvJSqDdUZVHffKcGcyj3N3mnIGMiU/3mbKH+xbCPn8f+HURembC9S4X+wtPHTHqhCWj2LAUDOgzdSvJ/C9o= root@squeeze
+localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+B/EVs1pNYBd8NrHvTvFeuvDxOBwIYkI4T7ak0wXLtbW9o0KV2EPtrlGwMelVbM+X4nxXrXtDk5B6Zl0tcPu1NLwHRwhzh8reNXuEqLHE5EfPM1Z8B1eYNoiMEXdCXKzb8dlDXgIe/cjkrS5vJSKicMxb62W2cK9e5I62x+paAQDaDAznvqNFMBXZy/S8t9sqh0CL5ww4+pDXhA9PCdob7EOSA9e4EzgXTMiyyU8Z7gqSqq9DwH4fxiENJLzGbD2e+VM9iPQqp0gI9/4Xn1ZX1x12ddFenAYkLjIZCf8BBAJZRq5WeTwr1B
 [notice utserv.c] *** save and disease test: 
 [info serverTree.c] Serializing the server tree file: stdout
 # This file is managed by MediaTeX software.
-# MediaTeX mdtx1-coll1@host1.mediatex.org:22 servers list:
+# MediaTeX mdtx2-coll1@127.0.0.1:22 servers list:
 
-master     746d6ceeb76e05cfa2dea92a1c5753cd
+master     6b18ed0194b0fbadd08e0a13cccda00e
 collKey    1234567890abcdef
 
 # score parameters
@@ -111,7 +113,7 @@ minGeoDup  2
 Server 6b18ed0194b0fbadd08e0a13cccda00e
 	comment   "this is server2"
 	label     mdtx2
-	host      localhost
+	host      127.0.0.1
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443
@@ -130,7 +132,7 @@ end
 Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	comment   "host1.mediatex.org configuration file"
 	label     mdtx1
-	host      host1.mediatex.org
+	host      localhost
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443

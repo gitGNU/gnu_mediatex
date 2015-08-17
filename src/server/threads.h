@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.h,v 1.4 2015/06/30 17:37:38 nroche Exp $
+ * Version: $Id: threads.h,v 1.5 2015/08/17 01:31:53 nroche Exp $
  * Project: MediaTeX
  * Module : threads
  *
@@ -32,6 +32,7 @@ typedef struct Connexion {
   // no use to record port here as incoming port is random
   char* host;
   Server* server;
+  char status[576];
 } Connexion;
 
 // callback functions requiered

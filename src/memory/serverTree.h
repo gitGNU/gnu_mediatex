@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.6 2015/08/08 06:33:55 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.7 2015/08/17 01:31:53 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -114,9 +114,6 @@ int delServer(Collection* coll, Server* Server);
 
 int diseaseServer(Collection* coll, Server* server);
 int diseaseServerTree(Collection* coll);
-
-// only used by cgi client
-int isReachable(Collection* coll, Server* from, Server* to);
 
 #endif /* MISC_MEMORY_SERVER_H */
 

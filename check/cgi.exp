@@ -1,31 +1,39 @@
-[info cgi.c] debug message from cgi script are enabled
+[info cgi.c] * mediatex cgi script *
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[info recordTree.c] Serializing CGI record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll1               
-	Type		CGI
-	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-	DoCypher	FALSE           
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
-# ^ LOCAL_DEMAND
-         
+[info cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
-[err address.c] gethostbyname_r host1.mediatex.org: Unknown host
-[err address.c] getIpFromHostname fails
-[err address.c] buildSocketAddress fails
-[err connect.c] buildServerAddress fails
-[err connect.c] connectServer fails
-[info cgi.c] host1.mediatex.org:6560 tel (100) nobody
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
+[warning cgi.c] localhost: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
+[warning cgi.c] server: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
 [info address.c] build socket address 127.0.0.1:6560
-[info tcp.c] connecting to 127.0.0.1:6560
-[info tcp.c] connect fails: Connection refused
-[notice connect.c] cannot reach localhost:6560
-[info cgi.c] localhost:6560 tel (100) nobody
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll1               
+[info recordTree.c] 	Type		CGI
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+
+[info cgi.c] localhost:6560 tel (100) not found
+[warning cgi.c] server: 127.0.0.1/6b18ed0194b0fbadd08e0a13cccda00e
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to 127.0.0.1 (6b18ed0194b0fbadd08e0a13cccda00e)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll1               
+[info recordTree.c] 	Type		CGI
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+
+[info cgi.c] 127.0.0.1:6560 tel (100) not found
+[warning cgi.c] server: 127.0.0.2/bedac32422739d7eced624ba20f5912e
 [info cgi.c] do not connect unreachable server 127.0.0.2:33333
 [info confTree.c] free configuration
 [info cgi.c] exit on success
@@ -36,6 +44,6 @@ Content-Type: text/html
 <br><h5><i>hash=40485334450b64014fd7a4810b5698b3
 </i><br><i>size=12
 </i><br></h5><br>Please provide a mail to process exctraction.
-<br><FORM method=post action="https://host1.mediatex.org/~mdtx1-coll1/cgi/get.cgi">
+<br><FORM method=post action="https://localhost/~mdtx1-coll1/cgi/get.cgi">
 <INPUT TYPE=HIDDEN NAME=hash VALUE=40485334450b64014fd7a4810b5698b3><INPUT TYPE=HIDDEN NAME=size VALUE=12>Mail <INPUT type=text name=mail><INPUT type=submit value=submit></FORM>
 {bottom template}

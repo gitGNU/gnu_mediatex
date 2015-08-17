@@ -85,23 +85,26 @@ S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
-[info recordTree.c] Serializing NOTIFY record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll1               
-	Type		NOTIFY
-	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-	DoCypher	FALSE        
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-# ^ LOCAL_DEMAND
-S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-# ^ LOCAL_SUPPLY
-           
-[notice notify.c] localhost:6560 notified
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to 127.0.0.1 (6b18ed0194b0fbadd08e0a13cccda00e)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll1               
+[info recordTree.c] 	Type		NOTIFY
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+
+[info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[info recordTree.c] # ^ LOCAL_SUPPLY
+
+[info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[info recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice notify.c] 127.0.0.1:6560 notified
 [notice utnotify.c] ----------------------------------------------------------
 [notice utnotify.c] Clean the cache:
 [notice utnotify.c] ..........................................................

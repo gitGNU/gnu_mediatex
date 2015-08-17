@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.10 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: supp.c,v 1.11 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -466,29 +466,22 @@ notifyHave(Support* supp, char* path)
     // add final supplies    
     if (!addFinalSupplies(coll, supp, path, tree)) goto error;
 
-    if (!env.noRegression) {
-      // trick to use 127.0.0.1 instead of www IP address
-      buildSocketAddressEasy(&coll->localhost->address, 
-			     0x7f000001, coll->localhost->mdtxPort);
-      
-      if ((socket = connectServer(coll->localhost)) == -1) goto error;
-      if (!upgradeServer(socket, tree, 0)) goto error;
-
-      // do not use 127.0.0.1 anymore
-      coll->localhost->address.sin_family = 0;
-
-      // wait until server shut down the sockect
-      tcpRead(socket, reply, 1);
-    }
-    else {
-      fprintf(stderr, "%s", "\n");
-      logMain(LOG_INFO, "notify support to %s collection", 
-	      tree->collection->label);
-    }
+    // trick to use 127.0.0.1 instead of www IP address
+    buildSocketAddressEasy(&coll->localhost->address, 
+			   0x7f000001, coll->localhost->mdtxPort);
+    
+    if ((socket = connectServer(coll->localhost)) == -1) goto error;
+    if (!upgradeServer(socket, tree, 0)) goto error;
+    
+    // do not use 127.0.0.1 anymore
+    coll->localhost->address.sin_family = 0;
+    
+    // wait until server shut down the sockect
+    if (!env.dryRun) tcpRead(socket, reply, 1);
     
     if (!delFinalSupplies(coll, tree)) goto error;
   }
-
+  
   if (!isShared) {
     logMain(LOG_NOTICE, "the %s support is not share by any collection",
   	    supp->name);
@@ -499,7 +492,7 @@ notifyHave(Support* supp, char* path)
   logMain(LOG_ERR, "fails to launch extraction on the %s support", 
 	  supp?supp->name:"unknown");
   }
-  if (socket) close(socket);
+  if (!env.dryRun && socket != -1) close(socket);
   tree = destroyRecordTree(tree);
   return rc;
 }

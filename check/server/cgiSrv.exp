@@ -92,7 +92,7 @@ Body
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo.png
+[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -167,7 +167,7 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
+[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................
@@ -331,7 +331,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://host1.mediatex.org/~mdtx1-coll3/cache/logo/logo.png
+[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo/logo.png
 [notice utcgiSrv.c] ..........................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] ..........................................................

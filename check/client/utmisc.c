@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.3 2015/08/14 01:53:41 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.4 2015/08/17 01:31:50 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -60,7 +60,6 @@ main(int argc, char** argv)
 {
   char inputRep[256] = ".";
   char* path = 0;
-  Collection* coll = 0;
   // ---
   int rc = 0;
   int cOption = EOF;

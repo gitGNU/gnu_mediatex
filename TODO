@@ -2,7 +2,13 @@
 *** TO CORRECT: cache policy    
 
 ** SERVER API:
-- unify sockets messages for all (cache, have, notify)
+- call logRecordTree into unit-tests (instead of utLog)
+
+- send all sockets messages into mediatexd (cache, have, cgiSrv, notify)
+--  only in cgiSrv.c (why) 
+  if (connexion->sock != STDOUT_FILENO && 
+      shutdown(connexion->sock, SHUT_WR) == -1) {
+- meditexd add -X- module into return code
 - unit test for mediatexd (sockets messages)
 - utcache should call uploadFinaleArchive instaed of cacheUpload
 
@@ -72,6 +78,9 @@
 
 ** SERVER API
 - simplify cgiSrv code
+- add a function to log recordTree (into recordTree.c)
+- move env.dryRun test into connect.c (notify, cgi, supp, upload)
+- move isRechable into utserverTree (never used elsewhere)
 
 *** CLEAN-UP
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.5 2015/08/16 20:11:06 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.6 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -199,6 +199,22 @@ int matchServer(RecordTree* tree, Connexion* connexion)
   Record* record = 0;
   RGIT* curr = 0;
   struct tm date;
+
+  /*
+  socket return codes:
+
+  1--: negative reply
+  2--: ok
+  3--: bad request
+  4--: internal error
+  */
+  /*static char status[][32] = {
+   "301 message parser error",
+   "302 message without collection",
+   "303 message without content ring",
+   "304 message without content"
+   "400 internal error",
+   };*/
 
   coll = tree->collection;
   connexion->server = 0;

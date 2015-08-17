@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.5 2015/08/16 20:11:06 nroche Exp $
+ * Version: $Id: cgi.c,v 1.6 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -97,23 +97,22 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   int n = 0;
   
   logMain(LOG_DEBUG, "queryServer");
+  reply[0] = 0;
 
-
-  // connect server
-  if ((socket = connectServer(server)) == -1) goto end;
-
-  // write query
+  // connect server and write query
+  if ((socket = connectServer(server)) == -1) goto error;
   if (!upgradeServer(socket, tree, 0)) goto error;
     
   // read reply
+  if (env.dryRun) {
+    strcpy(reply, "200 ok"); // reply for mail register
+    goto end;
+  }
   logMain(LOG_INFO, "read");
   n = tcpRead(socket, reply, 255);
   // erase the \n send by server
   if (n<=0) n = 1;
   reply[n-1] = (char)0; 
-
-  logMain(LOG_INFO, "close"); 
-  close(socket);
 
   logMain(LOG_INFO, "receive: %s", reply);
  end:
@@ -122,6 +121,7 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   if (!rc) {
     logMain(LOG_ERR, "queryServer fails");
   }
+  if (!env.dryRun && socket != -1) close(socket);
   return rc;
 }
 
@@ -140,41 +140,51 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 { 
   int rc = FALSE;
   int status = 0;
-  static char url[256];
   Collection* coll = 0;
   ServerTree *sTree = 0;
+  Server* localhost = 0;
   Server *server = 0;
 
   logMain(LOG_DEBUG, "mdtxSearch");
 
   if (!(coll = rTree->collection)) goto error;
-  if (!getLocalHost(coll)) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
+
+  logMain(LOG_WARNING, "localhost: %s/%s", 
+	  localhost->host, localhost->fingerPrint);
+
   if ((sTree = coll->serverTree) == 0) goto error;
   if (isEmptyRing(sTree->servers)) goto error;
 
   /* loop on every server */
   rgRewind(sTree->servers);
   while((server = rgNext(sTree->servers))) {
-    /* querying the server */
-    if (server != coll->localhost && 
-	!isReachable(coll, coll->localhost, server)) {
+
+    logMain(LOG_WARNING, "server: %s/%s", 
+	    server->host, server->fingerPrint);
+
+    // skip server not directly connected to us
+    if (!rgShareItems(localhost->networks, server->networks)) {
       logMain(LOG_INFO, "do not connect unreachable server %s:%i",
 	      server->host, server->mdtxPort);
       continue;
     }
 
-    // query server (if there is one)
+    // query server
     if (!server) break;
     if (!queryServer(server, rTree, reply)) goto error;
-      
-    /* looking for the response */
-    if (sscanf(reply, "%i %s", &status, url) < 2) {
-      logMain(LOG_ERR, "error reading reply: %s",
-	      reply);
+     
+    if (env.dryRun) {
+      strcpy(reply, "100 not found");
+    }
+
+    // looking for the reply
+    if (sscanf(reply, "%i", &status) < 1) {
+      logMain(LOG_ERR, "error reading reply: %s", reply);
     }
     else {
       logMain(LOG_INFO, "%s:%i tel (%i) %s",
-	      server->host, server->mdtxPort, status, url);
+	      server->host, server->mdtxPort, status, reply+4);
 	
       /* stop research when founded */
       if (status == 200) break;
@@ -422,12 +432,9 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (!(record = newRecord(coll->localhost, archive, DEMAND, extra))) 
     goto error;
   if (!rgInsert(tree->records, record)) goto error;
-  logMain(LOG_DEBUG, "querying for %s %i", 
+  logMain(LOG_INFO, "querying for %s %i", 
 	  record->archive->hash, record->archive->size);
 
-  if (env.noRegression) {
-  serializeRecordTree(tree, 0, 0);
-  }
   rc = tree;
   tree = 0;
  error:
@@ -639,12 +646,14 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
+  logMain(LOG_INFO, "* mediatex cgi script *");
+
   // match collection
-  logMain(LOG_INFO, "debug message from cgi script are enabled");
   if ((label = getIndexLabel()) == 0) {
     usage(programName);
     goto error;
   }
+
   logMain(LOG_DEBUG, "%s-cgi lunched from %s collection", 
 	  env.confLabel, label);
 

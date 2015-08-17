@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.12 2015/08/16 20:35:11 nroche Exp $
+ * Version: $Id: notify.c,v 1.13 2015/08/17 01:31:53 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -324,23 +324,16 @@ sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   logMain(LOG_DEBUG, "sendRemoteNotifyServer for %s/%s:%i",
  	  coll->label, server->host, server->mdtxPort);
   
-  if (!env.dryRun) {
-    // get a socket to the server
-    if ((socket = connectServer(server)) == -1) {
-      logMain(LOG_NOTICE, "cannot connect %s", server->host);
-      goto end;
-    }
+  // get a socket to the server
+  if ((socket = connectServer(server)) == -1) {
+    logMain(LOG_NOTICE, "cannot connect %s", server->host);
+    goto end;
   }
     
   // send the archive tree
   if (origin) serverFP = origin->fingerPrint; // masquerade
-  if (env.dryRun) {
-    serializeRecordTree(recordTree, 0, serverFP);
-  }
-  else {
-    if (!upgradeServer(socket, recordTree, serverFP)) goto error;
-  }
-
+  if (!upgradeServer(socket, recordTree, serverFP)) goto error;
+  
   logMain(LOG_NOTICE, "%s:%i notified", server->host, server->mdtxPort);
  end:
   rc = TRUE;
@@ -348,7 +341,7 @@ sendRemoteNotifyServer(Server* server, RecordTree* recordTree,
   if (!rc) {
     logMain(LOG_ERR, "sendRemoteNotifyServer fails");
   }
-  if (socket != -1) close(socket);
+  if (!env.dryRun && socket != -1) close(socket);
   return rc;
 }
 

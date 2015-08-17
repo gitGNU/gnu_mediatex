@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.h,v 1.5 2015/08/03 12:02:48 nroche Exp $
+ * Version: $Id: recordTree.h,v 1.6 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : record tree
  *
@@ -69,11 +69,13 @@ Record* createRecord(void);
 Record* destroyRecord(Record* self);
 Record* copyRecord(Record* destination, Record* source);
 int serializeRecordTree(RecordTree* self, char* path, char* fingerPrint);
+void logRecordTree(int logModule, int logPriority,
+		   RecordTree* self, char* fingerPrint);
 
 RecordTree* createRecordTree(void);
 RecordTree* destroyRecordTree(RecordTree* self);
 int serializeRecord(RecordTree* tree, Record* self);
-
+int logRecord(int logModule, int logPriority, RecordTree* tree, Record* self);
 
 /* API */
 char* strMessageType(MessageType self);

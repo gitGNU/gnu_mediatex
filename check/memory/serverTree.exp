@@ -1,5 +1,5 @@
 # This file is managed by MediaTeX software.
-# MediaTeX mdtx2-coll1@localhost:22 servers list:
+# MediaTeX mdtx2-coll1@127.0.0.1:22 servers list:
 
 master     6b18ed0194b0fbadd08e0a13cccda00e
 collKey    1234567890abcdef
@@ -16,7 +16,7 @@ minGeoDup  2
 Server 6b18ed0194b0fbadd08e0a13cccda00e
 	comment   "this is server2"
 	label     mdtx2
-	host      localhost
+	host      127.0.0.1
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443
@@ -35,7 +35,7 @@ end
 Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	comment   "this is server1"
 	label     mdtx1
-	host      host1
+	host      localhost
 	mdtxPort  11111
 	sshPort   22
 	wwwPort   443

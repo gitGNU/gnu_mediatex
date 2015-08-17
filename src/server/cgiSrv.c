@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.7 2015/08/16 20:11:06 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.8 2015/08/17 01:31:53 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -82,7 +82,7 @@ int cgiServer(RecordTree* recordTree, Connexion* connexion)
   Record* record2 = 0;
   Archive* archive = 0;
   int found = FALSE;
-  char buffer[256] = "";
+  char buffer[576] = ""; // text + cache url + MAX_SIZE_STRING
   char* extra = 0;
 
   // text + cache url + MAX_SIZE_STRING

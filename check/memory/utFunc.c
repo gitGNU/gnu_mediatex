@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.11 2015/08/16 20:35:08 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.12 2015/08/17 01:31:51 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -485,11 +485,14 @@ createExempleConfiguration()
   logMemory(LOG_DEBUG, "build the configuration exemple.");
 
   if (!(self = getConfiguration())) goto error;
-  host[4] = env.confLabel[4]; // same host numder as conf label number
+  host[4] = env.confLabel[4]; // same host number as conf label number
   strncpy(self->host, host, MAX_SIZE_HOST);
   if (!(self->comment = createString(host))) goto error;
   if (!(self->comment = catString(self->comment, " configuration file")))
     goto error;
+  
+  // needed for cgi unit test (wich call himself)
+  if (env.confLabel[4] == '1') strcpy(self->host, "localhost");
 
   /* test1 collection */
   if (!(coll = addCollection("coll1"))) goto error;
@@ -571,7 +574,7 @@ createExempleServerTree(Collection* coll)
   char* comments[] = {
     "this is server1", "this is server2", "this is server3"};
   char hosts[][MAX_SIZE_HOST+1] = {
-    "host1", "localhost", "127.0.0.2"};
+    "localhost", "127.0.0.1", "127.0.0.2"};
   int mdtxPorts[] = {11111, 6560, 33333};
   int sshPorts[] = {22, 22, 2222};
   int wwwPorts[] = {443, 443, 4443};

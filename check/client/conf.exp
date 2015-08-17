@@ -13,7 +13,7 @@ coll1 coll2 coll3 coll4
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -79,7 +79,7 @@ end
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -147,7 +147,7 @@ end
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -213,7 +213,7 @@ end
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560
@@ -279,7 +279,7 @@ end
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560

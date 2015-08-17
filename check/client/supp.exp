@@ -71,8 +71,19 @@ score      state label
 [info device.c] do not match a block device: /HERE/misc/logoP1.iso
 [info md5sum.c] de5008799752552b7963a2670dc5eb18 quick md5sum computed on 391168 bytes
 [info device.c] absolute path is /HERE/misc/logoP1.iso
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll1               
+[info recordTree.c] 	Type		HAVE
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 /HERE/misc/logoP1.iso:supports/SUPP21_logo.part1
+[info recordTree.c] # ^ FINAL_SUPPLY
 
-[info supp.c] notify support to coll1 collection
 [notice utsupp.c] *** Update a support:
 [info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.
@@ -101,7 +112,7 @@ score      state label
 comment    "host1.mediatex.org configuration file"
 
 # host: hostname used in urls
-host       host1.mediatex.org
+host       localhost
 
 # port: listening port for incoming requests
 mdtxPort   6560

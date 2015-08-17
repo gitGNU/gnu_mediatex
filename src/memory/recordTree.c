@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.11 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.12 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -223,10 +223,50 @@ destroyRecord(Record* self)
 /* } */
 
 /*=======================================================================
+ * Function   : logRecord
+ * Description: Log a configuration.
+ * Synopsis   : void logRecord(int logModule, int logPriority, 
+ *                             Record* self)
+ * Input      : int logModule = caller module
+ *              int logPriority = log priority to use
+ *              Record* self = what to log
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+logRecord(int logModule, int logPriority, RecordTree* tree, Record* self)
+{
+  struct tm date;
+
+  checkRecord(self);
+
+  if (self->type & REMOVE) goto end;
+  if (localtime_r(&self->date, &date) == (struct tm*)0) goto error;
+
+  logEmit(logModule, logPriority, "%c "
+	   "%04i-%02i-%02i,%02i:%02i:%02i "
+	   "%*s %*s %*llu %s",
+	  (self->type & 0x3) == DEMAND?'D':
+	  (self->type & 0x3) == SUPPLY?'S':'?',
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec,
+	  MAX_SIZE_HASH, self->server->fingerPrint, 
+	  MAX_SIZE_HASH, self->archive->hash, 
+	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
+	  self->extra?self->extra:"");
+
+  logEmit(logModule, logPriority, "# ^ %s\n", strRecordType(self));
+ end:
+  return TRUE;
+ error:
+  logEmit(logModule, LOG_ERR, "fails to log a record");
+  return FALSE;
+}
+
+/*=======================================================================
  * Function   : serializeRecord
  * Description: Serialize a configuration.
- * Synopsis   : int serializeRecord(AESData* aes, Record* self)
- * Input      : AESData* aes: encryption context
+ * Synopsis   : int serializeRecord(RecordTree* tree, Record* self)
+ * Input      : RecordTree* tree = context (to retrieve AESData)
  *              Record* self = what to serialize
  * Output     : TRUE on success
  =======================================================================*/
@@ -518,9 +558,73 @@ strMessageType(MessageType self)
 }
 
 /*=======================================================================
+ * Function   : logRecordTree
+ * Description: Log a recordTree
+ * Synopsis   : int logRecordTree(int logModule, int logPriority,
+ *                                RecordTree* self, char* fingerPrint)
+ * Input      : int logModule = caller module
+ *              int logPriority = log priority to use
+ *              RecordTree* self = what to log
+ *              char* fingerPrint = original fingerprint when Natted
+ * Output     : N/A
+ =======================================================================*/
+void 
+logRecordTree(int logModule, int logPriority,
+	      RecordTree* self, char* fingerPrint)
+{ 
+  int rc = FALSE;
+  Record *record = 0;
+  RGIT* curr = 0;
+
+  checkRecordTree(self);
+ 
+  // use local server fingerPrint if not provided
+  if (fingerPrint == 0) {
+    fingerPrint = self->collection->userFingerPrint;
+  }
+
+  if (self->records) {
+    rgSort(self->records, cmpRecord);
+  }
+
+  // headers
+  logEmit(logModule, logPriority, "%s", "# Collection's records:");
+  logEmit(logModule, logPriority, "%s", "Headers"); 
+  logEmit(logModule, logPriority, "\tCollection\t%-*s",
+	   MAX_SIZE_COLL, self->collection->label);
+  logEmit(logModule, logPriority, "\tType\t\t%s", 
+	  strMessageType(self->messageType));
+  logEmit(logModule, logPriority, "\tServer\t\t%s", fingerPrint);
+  logEmit(logModule, logPriority, "\tDoCypher\t%s", 
+	  (self->doCypher==TRUE)?"TRUE":"FALSE");
+
+  logEmit(logModule, logPriority, "%s", "Body");
+
+  // body
+  logEmit(logModule, logPriority, "# %19s %*s %*s %*s %s",
+	   "date", 
+	   MAX_SIZE_HASH, "host",
+	   MAX_SIZE_HASH, "hash", 
+	   MAX_SIZE_SIZE, "size", 
+	   "extra");
+
+  rc = TRUE;
+  if (self->records) {
+    while((record = rgNext_r(self->records, &curr)))
+      if (!logRecord(logModule, logPriority, self, record)) rc = FALSE;
+  }
+  
+ error:
+  if (!rc) {
+    logEmit(logModule, LOG_ERR, "logRecordTree fails");
+  }
+}
+
+/*=======================================================================
  * Function   : serializeRecordTree
  * Description: Serialize a configuration.
- * Synopsis   : int serializeRecordTree(RecordTree* self, char* path)
+ * Synopsis   : int serializeRecordTree(RecordTree* self, char* path,
+ *                                      char* fingerPrint)
  * Input      : RecordTree* self = what to serialize
  *              char* path       = file where to write
  *              fingerPrint      = original fingerprint when Natted
@@ -552,7 +656,7 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
     }
   }
 
-  // print local server fingerPrint if not overrided
+  // use local server fingerPrint if not provided
   if (fingerPrint == 0) {
     fingerPrint = self->collection->userFingerPrint;
   }

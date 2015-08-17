@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.10 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: have.c,v 1.11 2015/08/17 01:31:53 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -225,7 +225,7 @@ extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
   if (!releaseCollection(data.coll, SERV | EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "remote extraction fails");
+    logMain(LOG_ERR, "extractFinaleArchives fails");
   }
   destroyOnlyRing(data.toKeeps);
   return rc;

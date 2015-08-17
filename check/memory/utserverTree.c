@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverTree.c,v 1.3 2015/08/10 12:24:26 nroche Exp $
+ * Version: $Id: utserverTree.c,v 1.4 2015/08/17 01:31:51 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -25,6 +25,101 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mediatex.h"
 #include "memory/utFunc.h"
 GLOBAL_STRUCT_DEF;
+
+/*=======================================================================
+ * Function   : isReachable
+ * Description: test if "from" server may use gateways to reach "to" 
+ *              server
+ * Synopsis   : int isReachable(Collection* coll, 
+ *                                         Server* from, Server* to)
+ * Input      : Collection* coll : where to add
+ *              Server* server = the proxy server 
+ *              Server* proxy  = the proxy client
+ * Output     : TRUE on success
+ * Note       : this function is not symmetric
+ =======================================================================*/
+int 
+isReachable(Collection* coll, Server* from, Server* to)
+{
+  int rc = FALSE;
+  int loop = TRUE;
+  RG* reach = 0;
+  void* it = 0;
+  RG* tmp = 0;
+  //RG* tmp2 = 0;
+  RGIT* curr = 0;
+  Server* server = 0;
+  int nbReachable = 0;
+
+  logMemory(LOG_DEBUG, "isReachable from %s to %s",
+	  from->fingerPrint, to->fingerPrint);
+
+  // networks we can reach
+  if (!(reach = createRing())) goto error;
+  while((it = rgNext_r(from->networks, &curr))) {
+    if (!rgInsert(reach, it)) goto error;
+  }
+  nbReachable = reach->nbItems;
+
+  // loop until "to" is located under a reachable network
+  /* printf("\n"); */
+  while (loop) {
+
+    /* printf("looping...\n"); */
+    /* printf("we now we can reach:"); */
+    /* while((it = rgNext(reach))) printf(" %s", (char*)it); */
+    /* printf ("\n"); */
+
+    /* printf("we want to reach on of them:"); */
+    /* while((it = rgNext(to->networks))) printf(" %s", (char*)it); */
+    /* printf ("\n"); */
+
+    // exit when reachable
+    if (!(tmp = rgInter(reach, to->networks))) goto error;
+    if (!isEmptyRing(tmp)) {
+      rc = TRUE;
+      tmp = destroyOnlyRing(tmp);
+      /* printf("... ok reachable\n"); */
+      goto end;
+    }
+    tmp = destroyOnlyRing(tmp);
+
+    // look for a new gateway (juste one)
+    loop = FALSE;
+    curr = 0; 
+    while(!loop && (server = rgNext_r(coll->serverTree->servers, &curr))) {
+      if (!(tmp = rgInter(reach, server->gateways))) goto error;
+      if (!isEmptyRing(tmp)) {
+
+	/* printf("new reachable networks:"); */
+	/* while((it = rgNext(server->networks))) printf(" %s", (char*)it); */
+	/* printf ("\n");      */
+
+	// we find one so we now we can reach its networks
+	tmp = destroyOnlyRing(tmp);
+	if (!(tmp = rgUnion(reach, server->networks))) goto error;
+	reach = destroyOnlyRing(reach);
+	reach = tmp;
+	tmp = 0;
+
+	// but is there new networks ?
+	loop = (reach->nbItems > nbReachable);
+      }
+      tmp = destroyOnlyRing(tmp);
+    }
+  }
+
+  /* printf("... not reachable\n"); */
+ end:
+  logMemory(LOG_INFO, "%s may %sreach %s",
+	  from->fingerPrint, rc?"":"not ", to->fingerPrint);
+  reach = destroyOnlyRing(reach);
+  return rc;
+ error:
+  logMemory(LOG_DEBUG, "isReachable fails");
+  reach = destroyOnlyRing(reach);
+  return FALSE;
+}
 
 /*=======================================================================
  * Function   : usage

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconnect.c,v 1.2 2015/08/10 12:24:24 nroche Exp $
+ * Version: $Id: utconnect.c,v 1.3 2015/08/17 01:31:51 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -75,6 +75,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env.dryRun = FALSE;
   getEnv(&env);
 
   // parse the command line

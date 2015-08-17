@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.6 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: connect.c,v 1.7 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -105,7 +105,7 @@ connectServer(Server* server)
   /* open connection to server */
   if (!enableAlarm(sigalarmManager)) goto error;
   alarm(1);
-  socket = connectTcpSocket(&server->address);
+  socket = env.dryRun?-2:connectTcpSocket(&server->address);
   err = errno;
   alarm(0);
   if (!disableAlarm()) goto error;
@@ -152,19 +152,15 @@ int
 upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
 {
   int rc = FALSE;
-  Record* record = 0;
-  RGIT* curr = 0;
-  struct tm date;
-#ifndef utMAIN
   char* key = 0;
-#endif
 
+  logCommon(LOG_DEBUG, "upgradeServer");
   checkRecordTree(tree);
   checkCollection(tree->collection);
   
-  logCommon(LOG_INFO, "upgradeServer %s %s",
-	  tree->collection->label, strMessageType(tree->messageType));
-  
+  // log content to send
+  logRecordTree(LOG_COMMON, LOG_INFO, tree, fingerPrint);
+
   // cypher the socket
   key = tree->collection->serverTree->aesKey;
   if (!aesInit(&tree->aes, key, ENCRYPT)) goto error;
@@ -172,28 +168,12 @@ upgradeServer(int socket, RecordTree* tree, char* fingerPrint)
 
   // send content
   tree->aes.fd = socket;
-  if (!serializeRecordTree(tree, 0, fingerPrint)) goto error;
+  if (!env.dryRun) {
+    if (!serializeRecordTree(tree, 0, fingerPrint)) goto error;
 
-  if (shutdown(socket, SHUT_WR) == -1) {
-    logCommon(LOG_ERR, "shutdown fails: %s", strerror(errno));
-    goto error;
-  }
-  
-  // add some trace for debugging
-  if(tree && tree->records) {
-    while((record = rgNext_r(tree->records, &curr))) {
-      localtime_r(&record->date, &date);
-      logCommon(LOG_INFO, "%c "
-	      "%04i-%02i-%02i,%02i:%02i:%02i "
-	      "%*s %*s %*llu %s",
-	      (record->type & 0x3) == DEMAND?'D':
-	      (record->type & 0x3) == SUPPLY?'S':'?',
-	      date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
-	      date.tm_hour, date.tm_min, date.tm_sec,
-	      MAX_SIZE_HASH, record->server->fingerPrint, 
-	      MAX_SIZE_HASH, record->archive->hash, 
-	      MAX_SIZE_SIZE, (long long unsigned int)record->archive->size,
-	      record->extra?record->extra:"");
+    if (shutdown(socket, SHUT_WR) == -1) {
+      logCommon(LOG_ERR, "shutdown fails: %s", strerror(errno));
+      goto error;
     }
   }
 
