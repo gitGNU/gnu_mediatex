@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.14 2015/08/19 01:09:10 nroche Exp $
+ * Version: $Id: notify.c,v 1.15 2015/08/19 01:44:12 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -469,8 +469,7 @@ int acceptRemoteNotify(Connexion* connexion)
   }
 		
   // add new fresh records provided by the calling server
-  rgRewind(connexion->message->records);
-  while ((record = rgNext(connexion->message->records))) {
+  while ((record = rgHead(connexion->message->records))) {
     // record remains into the cache
     if (!addCacheEntry(coll, record)) goto error3;
     rgRemove(connexion->message->records);

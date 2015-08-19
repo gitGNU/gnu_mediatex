@@ -1,12 +1,7 @@
 
 *** TO CORRECT: cache policy    
 
-** SERVER API:
 .........................................................
-
-** SERVER
-- serversTree->server[]->lastCommit = DATE used by computeScore
-
 ** UPLOAD
 - rename cache/incoming/date to cache/date
 - provide upload target path
@@ -42,6 +37,7 @@
 - ease looking for archive life cycle into cvsroot
 
 ** TRUST
+- serversTree->server[]->lastCommit = DATE used by computeScore
 - new client query: mdtc check content [coll COLL]
 -- generate a content file (from extraction rules)
 -- register a special order+mail
@@ -81,7 +77,6 @@
 - add a function to log recordTree (into recordTree.c)
 - move env.dryRun test into connect.c (notify, cgi, supp, upload)
 - move isRechable into utserverTree (never used elsewhere)
-
 - call logRecordTree into unit-tests (instead of utLog)
 - send all sockets messages into mediatexd (cache, have, cgiSrv, notify)
 --  only in cgiSrv.c (why) 
