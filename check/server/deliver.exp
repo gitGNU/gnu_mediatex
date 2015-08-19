@@ -1,7 +1,7 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[notice utdeliver.c] ----------------------------------------------------------
+[notice utdeliver.c] -------------------------------------------------------
 [notice utdeliver.c] Clean the cache:
-[notice utdeliver.c] ..........................................................
+[notice utdeliver.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -16,11 +16,9 @@
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
-[notice utdeliver.c] ----------------------------------------------------------
+[notice utdeliver.c] -------------------------------------------------------
 [notice utdeliver.c] add a demand for logo.png:
-[notice utdeliver.c] ..........................................................
-[notice utFunc.c] ask for 022a34b2f9b893fba5774237e1aa80ea file
-[notice utFunc.c] add a generic demand for
+[notice utdeliver.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
@@ -38,45 +36,44 @@
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> AVAILABLE
-[notice utdeliver.c] ..........................................................
+[notice utdeliver.c] .......................................................
 [notice utdeliver.c] Now we have :
-[notice utdeliver.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCAL_SUPPLY
-D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 nroche@narval.tk
-# ^ FINAL_DEMAND
-          
-[notice utdeliver.c] ----------------------------------------------------------
-[notice utdeliver.c] ----------------------------------------------------------
+[notice utdeliver.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 nroche@narval.tk
+[notice recordTree.c] # ^ FINAL_DEMAND
+
+[notice utdeliver.c] -------------------------------------------------------
+[notice utdeliver.c] -------------------------------------------------------
 [notice utdeliver.c] deliver the mail:
-[notice utdeliver.c] ..........................................................
+[notice utdeliver.c] .......................................................
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
-[notice utdeliver.c] ..........................................................
+[notice utdeliver.c] .......................................................
 [notice utdeliver.c] Finaly we have :
-[notice utdeliver.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-16,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCAL_SUPPLY
-        
-[notice utdeliver.c] ----------------------------------------------------------
+[notice utdeliver.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utdeliver.c] -------------------------------------------------------
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash

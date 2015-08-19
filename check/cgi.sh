@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cgi.sh,v 1.2 2015/08/17 01:31:49 nroche Exp $
+# * Version: $Id: cgi.sh,v 1.3 2015/08/19 01:09:04 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *
@@ -32,20 +32,28 @@ set -e
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 
+# run the unit test
 echo "{top template}" > \
     ${HOME}/${MDTXUSER}-coll1/public_html/cgiHeader.shtml
 echo "{bottom template}" > \
     ${HOME}/${MDTXUSER}-coll1/public_html/footer.html
 
-# run the unit test
+echo "** first query: asking for content" >$TEST.out
 REQUEST_METHOD=GET \
 QUERY_STRING="hash=40485334450b64014fd7a4810b5698b3&size=12" \
 SCRIPT_FILENAME=/${MDTXUSER}-coll1/public_html/cgi/get.cgi \
 MDTX_NO_REGRESSION=1 \
-../src/$TEST -n -s info -f file >$TEST.out 2>&1
+    ../src/$TEST -n -s info -f file >>$TEST.out 2>&1
 
-
-# TODO: test POST query here
+echo "** second query: register a mail address" >>$TEST.out
+REQUEST_METHOD=POST \
+SCRIPT_FILENAME=/${MDTXUSER}-coll1/public_html/cgi/get.cgi \
+MDTX_NO_REGRESSION=1 \
+CONTENT_TYPE=application/x-www-form-urlencoded \
+CONTENT_LENGTH=64 \
+    ../src/$TEST -n -s info -f file >>$TEST.out 2>&1 <<EOF
+hash=40485334450b64014fd7a4810b5698b3&size=12&mail=test@test.org
+EOF
 
 # compare with the expected output
 mrProperOutputs $TEST.out

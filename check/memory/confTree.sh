@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: confTree.sh,v 1.1 2015/07/01 10:49:37 nroche Exp $
+# * Version: $Id: confTree.sh,v 1.2 2015/08/19 01:09:05 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -32,7 +32,8 @@ set -e
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 
-# $1 : server user ($MDTXUSER)
+# $1: server user ($MDTXUSER)
+# $2: server's collection key (same for every collection to simplify)
 function populateConfiguration()
 {
     # simulate directory build during installation
@@ -69,29 +70,22 @@ function populateConfiguration()
 
     TMP2=${srcdir}/memory
 
-    # host key (may not differ for each server when hosted togethers):
+    # host key (may not differ when all servers are on same host):
     install -m 644 $TMP2/hostKey_rsa.pub $HOSTSSH/ssh_host_rsa_key.pub
     install -m 600 $TMP2/hostKey_rsa $HOSTSSH/ssh_host_rsa_key
 
     # collection keys (randomized but should ever be same on each hosts):
-
-    TARGET=$HOME/$1-coll1
-    install -m 644 $TMP2/user1Key_rsa.pub $TARGET/.ssh/id_rsa.pub
-    install -m 600 $TMP2/user1Key_rsa $TARGET/.ssh/id_rsa
-
-    TARGET=$HOME/$1-coll2
-    install -m 644 $TMP2/user2Key_rsa.pub $TARGET/.ssh/id_rsa.pub
-    install -m 600 $TMP2/user2Key_rsa $TARGET/.ssh/id_rsa
-
-    TARGET=$HOME/$1-coll3
-    install -m 644 $TMP2/user3Key_dsa.pub $TARGET/.ssh/id_dsa.pub
-    install -m 600 $TMP2/user3Key_dsa $TARGET/.ssh/id_dsa
+    for COLL in $(seq 1 3); do
+	TARGET=$HOME/$1-coll${COLL}
+	install -m 644 $TMP2/$2.pub $TARGET/.ssh/id_rsa.pub
+	install -m 600 $TMP2/$2 $TARGET/.ssh/id_rsa
+    done
 }
 
 # build directories
-for SERVER in $(seq 1 3); do
-    populateConfiguration "mdtx${SERVER}"
-done
+populateConfiguration "mdtx1" user1Key_rsa
+populateConfiguration "mdtx2" user2Key_rsa
+populateConfiguration "mdtx3" user3Key_dsa
 
 # run the unit test
 memory/ut$TEST > memory/$TEST.out 2>&1

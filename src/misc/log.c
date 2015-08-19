@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: log.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
+ * Version: $Id: log.c,v 1.8 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : log
  *
@@ -491,6 +491,10 @@ int parseLogSeverityOption(char* parameter, int* logSeverity)
   // no module specified so all modules are inpacted
   if (strlen(ptr) == strlen(severity->name)) {
     for (i=0; i<LOG_MAX_MODULE; ++i) {
+
+      // except alloc for debug that must be set explicitelly
+      if (severity->code == LOG_DEBUG && i == LOG_ALLOC) continue;
+
       logSeverity[i] = severity->code;
     }
     goto end;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthave.c,v 1.3 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: utmessage.c,v 1.1 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -27,6 +27,12 @@
 #include "server/utFunc.h"
 GLOBAL_STRUCT_DEF;
 
+// callback functions requiered (not used here)
+int hupManager(){return 0;};
+int termManager(){return 0;};
+void* signalJob(void* arg){return 0;};
+void* socketJob(void* arg){return 0;};
+
 /*=======================================================================
  * Function   : usage
  * Description: Print the usage.
@@ -51,26 +57,26 @@ usage(char* programName)
  * Function   : main 
  * Author     : Nicolas ROCHE
  * modif      : 2012/05/01
- * Description: Unit test for cache module.
- * Synopsis   : ./utcache
+ * Description: Unit test for incoming messages
+ * Synopsis   : ./utmessage
  * Input      : N/A
  * Output     : N/A
  =======================================================================*/
 int 
 main(int argc, char** argv)
 {
-  char inputRep[256] = ".";
   Collection* coll = 0;
   Connexion* connexion = 0;
-  char* extra = 0;
+  Server* server = 0;
+  Server* localhost = 0;
+  Record* record = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"d:";
+  char* options = MDTX_SHORT_OPTIONS    ;
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -83,17 +89,6 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-    case 'd':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, 
-		"%s: nil or empty argument for the input repository\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      strncpy(inputRep, optarg, strlen(optarg)+1);
-      break; 
-      
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -103,50 +98,31 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (!(coll = mdtxGetCollection("coll3"))) goto error;
+  if (!(coll = mdtxGetCollection("coll1"))) goto error;
+  if (!(server = createServer())) goto error;
+  strcpy(server->fingerPrint, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  if (!(connexion = utConnexion(0, 0, server))) goto error;
 
-  utLog("%s", "Clean the cache and add part1:", 0);
-  if (!utCleanCaches()) goto error;
+  utLog("%s", "no collection", 0);
+  if (checkMessage(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  connexion->message->collection = coll;
 
-  if (!quickScan(coll)) goto error;
-  utLog("%s", "add a demand for logo.png", 0);
-  if (!utAddFinalDemand(coll)) goto error;
-  utLog("%s", "Now we have :", coll);
+  utLog("%s", "cannot match server", 0);
+  if (checkMessage(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  if (!(localhost = getLocalHost(coll))) goto error;
+  strcpy(connexion->message->fingerPrint, localhost->fingerPrint);
 
-  utLog("%s", "provide part 1", 0);
-  if (!(extra = createString(inputRep))) goto error;
-  if (!(extra = catString(extra, "/../misc/"))) goto error;
-  if (!(extra = catString(extra, "logoP1.cat:supports/logoP1.cat")))
-    goto error;
-  if (!(connexion = utHaveMessage1(coll, extra))) goto error;
-  if (!extractFinaleArchives(connexion)) {
-    utLog("reply : %s", connexion->status, 0);
-    goto error;
-  }
-  utLog("%s", "Now we have :", coll);
-
-  extra = destroyString(extra);
-  destroyRecordTree(connexion->message);
-  free (connexion);
-
-  utLog("%s", "provide part2", 0);
-  if (!(extra = createString(inputRep))) goto error;
-  if (!(extra = catString(extra, "/../misc/"))) goto error;
-  if (!(extra = catString(extra, "logoP2.cat"))) goto error;
-  if (!(connexion = utHaveMessage2(coll, extra))) goto error;
-  if (!extractFinaleArchives(connexion)) {
-    utLog("reply : %s", connexion->status, 0);
-    goto error;
-  }
-  utLog("%s", "Now we have :", coll);
- 
-  utLog("%s", "Clean the cache:", 0);
-  if (!utCleanCaches()) goto error;
+  utLog("%s", "record related to other server", 0);
+  if (!(record = utRemoteDemand(coll, server))) goto error;
+  if (!rgInsert(connexion->message->records, record)) goto error;
+  if (checkMessage(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
   /************************************************************************/
 
   rc = TRUE;
  error:
-  extra = destroyString(extra);
   if (connexion) destroyRecordTree(connexion->message);
   free (connexion);
   freeConfiguration();

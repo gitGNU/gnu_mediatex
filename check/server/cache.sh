@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cache.sh,v 1.1 2015/07/01 10:50:05 nroche Exp $
+# * Version: $Id: cache.sh,v 1.2 2015/08/19 01:09:05 nroche Exp $
 # * Project: MediaTex
 # * Module:  cache
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-server/ut$TEST -d $srcdir >server/$TEST.out 2>&1
+server/ut$TEST -d $PWD/$srcdir >server/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs server/$TEST.out

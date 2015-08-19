@@ -1,7 +1,7 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[notice uthave.c] ----------------------------------------------------------
+[notice uthave.c] -------------------------------------------------------
 [notice uthave.c] Clean the cache and add part1:
-[notice uthave.c] ..........................................................
+[notice uthave.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -19,11 +19,9 @@
 [info openClose.c] load coll3 records
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
-[notice uthave.c] ----------------------------------------------------------
+[notice uthave.c] -------------------------------------------------------
 [notice uthave.c] add a demand for logo.png
-[notice uthave.c] ..........................................................
-[notice utFunc.c] ask for 022a34b2f9b893fba5774237e1aa80ea file
-[notice utFunc.c] add a generic demand for
+[notice uthave.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
@@ -31,27 +29,24 @@
 [info openClose.c] steps: 93 / 93
 [warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
-[notice uthave.c] ..........................................................
+[notice uthave.c] .......................................................
 [notice uthave.c] Now we have :
-[notice uthave.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINAL_DEMAND
-   
-[notice uthave.c] ----------------------------------------------------------
-[notice uthave.c] ----------------------------------------------------------
+[notice uthave.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+
+[notice uthave.c] -------------------------------------------------------
+[notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part 1
-[notice uthave.c] ..........................................................
-[notice utFunc.c] provide logoP1.cat
-[notice utFunc.c] add a generic demand for
+[notice uthave.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
@@ -72,12 +67,12 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info cache.c] = avail     104857600
 [info cache.c] need            20480
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: USED -> ALLOCATED
-[info device.c] absolute path is /tmp/logoP1.cat
-[info device.c] not a symlink: /tmp/logoP1.cat
-[info device.c] do not match a block device: /tmp/logoP1.cat
+[info device.c] absolute path is /HERE/misc/logoP1.cat
+[info device.c] not a symlink: /HERE/misc/logoP1.cat
+[info device.c] do not match a block device: /HERE/misc/logoP1.cat
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /tmp/logoP1.cat
+[info command.c]  arg2: /HERE/check/./../misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat
 [info command.c] /bin/cp execution returns 0
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat
@@ -107,29 +102,27 @@ D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> AVAILABLE
-[notice uthave.c] ..........................................................
+[notice uthave.c] .......................................................
 [notice uthave.c] Now we have :
-[notice uthave.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINAL_DEMAND
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
-# ^ LOCAL_SUPPLY
-  
-[notice uthave.c] ----------------------------------------------------------
-[notice uthave.c] ----------------------------------------------------------
+[notice uthave.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice uthave.c] -------------------------------------------------------
+[notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part2
-[notice uthave.c] ..........................................................
-[notice utFunc.c] provide logoP2.cat
-[notice utFunc.c] add a generic demand for
+[notice uthave.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
@@ -151,7 +144,7 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [notice extract.c] do cat
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
-[info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat /tmp/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
+[info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat /HERE/check/./../misc/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
 [info command.c] /bin/bash execution returns 0
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: ALLOCATED -> TOKEEP
@@ -187,29 +180,30 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
 [info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: USED -> UNUSED
-[notice uthave.c] ..........................................................
+[notice uthave.c] .......................................................
 [notice uthave.c] Now we have :
-[notice uthave.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-16,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
-# ^ LOCAL_SUPPLY
-            
-[notice uthave.c] ----------------------------------------------------------
-[notice uthave.c] ----------------------------------------------------------
+[notice uthave.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice uthave.c] -------------------------------------------------------
+[notice uthave.c] -------------------------------------------------------
 [notice uthave.c] Clean the cache:
-[notice uthave.c] ..........................................................
+[notice uthave.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash

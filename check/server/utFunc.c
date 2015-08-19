@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.5 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -27,10 +27,7 @@
 
 /*=======================================================================
  * Function   : utCleanCache
- * Description: clean the physical caches
- * Synopsis   : int utCleanCache(void)
- * Input      : N/A
- * Output     : TRUE on success
+ * Description: Clean the physical caches
  =======================================================================*/
 int 
 utCleanCaches(void)
@@ -70,11 +67,10 @@ utCleanCaches(void)
 
 /*=======================================================================
  * Function   : utCopyFileOnCache
- * Description: copy a file to the physical cache
- * Synopsis   : int utCopyFileOnCache(Collection* coll, char* file)
+ * Description: Copy a file to the physical cache
  * Input      : Collection* coll : to know the collection's cache to use
  *              char* srcdir : the current dir in use by autotools
- *              char* file : the file basename
+ *              char* srcfile : the file basename into misc dir
  * Output     : TRUE on success
  * Note       : stars do not works as we do not use bash context
  =======================================================================*/
@@ -105,197 +101,302 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
 }
 
 /*=======================================================================
- * Function   : utNewRecord
- * Description: add a demand
- * Synopsis   : int utNewRecord(Collection* coll, char* hash, off_t size)
- * Input      : Collection* coll : to know the collection's cache to use
- *              char* hash: md5sum file's hash
- *              off_t size: file's size
- * Output     : TRUE on success
+ * Function   : utRemoteDemand
+ * Description: build a record on logo using a given server
  =======================================================================*/
 Record*
-utNewRecord(Collection* coll, char* hash, off_t size, 
-	    Type type, char* extra)
+utRemoteDemand(Collection* coll, Server* server)
+{
+  Record* rc = 0;
+  Record *record = 0;
+  Archive* archive = 0;
+  char* string = 0;
+ 
+  checkCollection(coll);
+  checkServer(server);
+
+  if (!(string = createString("!wanted"))) goto error;
+  if (!(archive = addArchive(coll,
+			     "022a34b2f9b893fba5774237e1aa80ea", 24075)))
+    goto error;
+  if (!(record = addRecord(coll, server, archive, DEMAND, string)))
+    goto error;
+
+  archive = 0;
+  rc = record;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utRemoteDemand fails");
+  }
+  destroyArchive(archive);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utLocalRecord
+ * Description: Build a record using localhost
+ =======================================================================*/
+Record*
+utLocalRecord(Collection* coll, char* hash, off_t size, 
+	      Type type, char* extra)
 {
   Record* rc = 0;
   Archive* archive = 0;
-  Record *record = 0;
+  Record* record = 0;
  
-  logMain(LOG_NOTICE, "add a generic demand for", hash);
   checkCollection(coll);
-
-  // assert we have the localhost server object
   if (!getLocalHost(coll)) goto error;
 
   if (!(archive = addArchive(coll, hash, size))) goto error;
   if (!(record = addRecord(coll, coll->localhost, archive, type, extra)))
     goto error;
 
+  archive = 0;
   rc = record;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "fails to add a generic demand for", hash);
+    logMain(LOG_ERR, "utLocalRecord fails");
   }
+  destroyArchive(archive);
   return rc;
 }
 
 /*=======================================================================
- * Function   : utDemand
- * Description: add a demand
- * Synopsis   : int utToKeep(Collection* coll, char* hash, off_t size)
- * Input      : Collection* coll : to know the collection's cache to use
- *              char* hash: md5sum file's hash
- *              off_t size: file's size
- * Output     : TRUE on success
+ * Function   : utAddFinalDemand
+ * Description: Add a final demand on logo
  =======================================================================*/
 int
-utDemand(Collection* coll, char* hash, off_t size, char* mail)
+utAddFinalDemand(Collection* coll)
 {
   int rc = FALSE;
   Record *record = 0;
   char* extra = 0;
  
-  logMain(LOG_NOTICE, "ask for %s file", hash);
   checkCollection(coll);
 
-  if (!(extra = createString(mail))) goto error;
-  if (!(record = utNewRecord(coll, hash, size, DEMAND, extra))) goto error;
+  if (!(extra = createString("test@test.com"))) goto error;
+  if (!(record = utLocalRecord(coll, 
+			       "022a34b2f9b893fba5774237e1aa80ea", 24075,
+			       DEMAND, extra))) goto error;
+  if (!addCacheEntry(coll, record)) goto error;
+  
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utAddFinalDemand fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utAddLocalDemand
+ * Description: add a local demand
+ =======================================================================*/
+int
+utAddLocalDemand(Collection* coll, char* hash, off_t size, char* extra)
+{
+  int rc = FALSE;
+  Record *record = 0;
+  char* string = 0;
+ 
+  checkCollection(coll);
+
+  if (!(string = createString(extra))) goto error;
+  if (!(record = utLocalRecord(coll, hash, size, DEMAND, string))) 
+    goto error;
   if (!addCacheEntry(coll, record)) goto error;
 
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "fails to ask for %s file", hash);
+    logMain(LOG_ERR, "utAddLocalDemand fails");
   }
   return rc;
 }
 
 /*=======================================================================
- * Function   : ask4logo
- * Description: Build a simple CGI client query
- * Synopsis   : RecordTree* ask4logo()
- * Input      : N/A
- * Output     : RecordTree* = what the CGI may ask to our server
+ * Function   : UtConnexion
+ * Description: Simulate an empty message get by the server
  =======================================================================*/
-RecordTree* ask4logo(Collection* coll, char* mail)
+Connexion* 
+utConnexion(Collection* coll, MessageType messageType, Server* from)
 {
-  RecordTree *rc = 0;
-  Record *record = 0;
-  RecordTree *tree = 0;
-  char* extra = 0;
-
-  logMain(LOG_NOTICE, "ask for logo.png");
-
-  if (mail) {
-    if (!(extra = createString(mail))) goto error;
-  }
-  else {
-    if (!(extra = createString("!wanted"))) goto error;
-  }
-
-  if (!(record = 
-       utNewRecord(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		   DEMAND, extra)))
-    goto error;
-
-  if ((tree = createRecordTree()) == 0) goto error;
-  tree->collection = coll;
-  tree->messageType = CGI;
-  strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
-
-  if (!rgInsert(tree->records, record)) goto error;
-  record = 0;
-
-  rc = tree;
-  tree = 0;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "fails to ask for logo.png");
-  }
-  tree = destroyRecordTree(tree);
-  record = destroyRecord(record);
-  return rc;
-}
-
-/*=======================================================================
- * Function   : providePart1
- * Description: Build a simple HAVE query
- * Synopsis   : RecordTree* 
- * Input      : N/A
- * Output     : RecordTree* = what the mdtx client may ask to our server
- =======================================================================*/
-RecordTree* providePart1(Collection* coll, char* path)
-{
-  RecordTree *rc = 0;
-  Record *record = 0;
-  RecordTree *tree = 0;
-  char* extra = 0;
-
-  logMain(LOG_NOTICE, "provide logoP1.cat");
-
-  if (!(extra = createString(path))) goto error;
-  if (!(record = 
-	utNewRecord(coll, "1a167d608e76a6a4a8b16d168580873c", 20480, 
-		   SUPPLY, extra))) goto error;
-
-  if ((tree = createRecordTree()) == 0) goto error;
-  tree->collection = coll;
-  tree->messageType = HAVE;
-  strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
-
-  if (!rgInsert(tree->records, record)) goto error;
-  record = 0;
-
-
-  rc = tree;
-  tree = 0;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "fails to provide logoP1.cat");
-  }
-  tree = destroyRecordTree(tree);
-  record = destroyRecord(record);
-  return rc;
-}
-
-/*=======================================================================
- * Function   : providePart2
- * Description: Build a simple HAVE query
- * Synopsis   : RecordTree* 
- * Input      : N/A
- * Output     : RecordTree* = what the mdtx client may ask to our server
- =======================================================================*/
-RecordTree* providePart2(Collection* coll, char* path)
-{
-  RecordTree *rc = 0;
-  Record *record = 0;
-  RecordTree *tree = 0;
-  char* extra = 0;
+  Connexion* rc = 0;
+  RecordTree* tree = 0;
   
-  logMain(LOG_NOTICE, "provide logoP2.cat");
+  if (!(tree = createRecordTree())) goto error;
 
-  if (!(extra = createString(path))) goto error;
-  if (!(record = 
-       utNewRecord(coll, "c0c055a0829982bd646e2fafff01aaa6", 4066, 
-		   SUPPLY, extra)))
+  if (!(rc = (Connexion*)malloc(sizeof(Connexion)))) {
+    logMain(LOG_ERR, "malloc cannot create connexion objet: %s", 
+	    strerror(errno));
     goto error;
+  }
 
-  if ((tree = createRecordTree()) == 0) goto error;
-  tree->collection = coll;
-  tree->messageType = HAVE;
-  strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
+  memset(rc, 0, sizeof (struct Connexion));  
+  rc->server = from;
+  rc->message = tree;
+  rc->message->collection = coll;
+  rc->message->messageType = messageType;
+  strncpy(rc->message->fingerPrint, from->fingerPrint, MAX_SIZE_HASH);
 
-  if (!rgInsert(tree->records, record)) goto error;
-  record = 0;
-
-  rc = tree;
-  tree = 0;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "fails to provide logoP2.cat");
+    logMain(LOG_ERR, "utConnexion fails");
   }
-  tree = destroyRecordTree(tree);
-  record = destroyRecord(record);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utUpoadMessage
+ * Description: Build a UPLOAD query for misc/README file 
+ *              (extra as parameter)
+ =======================================================================*/
+Connexion*
+utUploadMessage(Collection* coll, char* extra)
+{
+  Connexion* rc = 0;
+  Connexion* con = 0;
+  Server* localhost = 0;
+  Record *record = 0;
+  char* string = 0;
+
+  if (!(string = createString(extra))) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
+  if (!(con = utConnexion(coll, UPLOAD, localhost))) goto error;
+  if (!(record = utLocalRecord(coll, 
+			       "3f18841537668dcf4fafd1471c64d52d", 1937,
+			       SUPPLY, string)))
+    goto error;
+  string = 0;
+  
+  if (!rgInsert(con->message->records, record)) goto error;
+  record = 0;
+
+  rc = con;
+  con = 0;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utUploadMessage fails");
+  }
+  destroyString(string);
+  destroyRecord(record);
+  if (con) destroyRecordTree(con->message);
+  free (con);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utCgiMessage
+ * Description: Build a CGI query for logo (providing mail or not)
+ =======================================================================*/
+Connexion*
+utCgiMessage(Collection* coll, char* mail)
+{
+  Connexion* rc = 0;
+  Connexion* con = 0;
+  Server* localhost = 0;
+  Record *record = 0;
+  char wanted[] = "!wanted";
+  char* string = 0;
+
+  if (!(string = createString(mail?mail:wanted))) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
+  if (!(con = utConnexion(coll, CGI, localhost))) goto error;
+  if (!(record = utLocalRecord(coll, 
+			       "022a34b2f9b893fba5774237e1aa80ea", 24075,
+			       DEMAND, string)))
+    goto error;
+  string = 0;
+
+  if (!rgInsert(con->message->records, record)) goto error;
+  record = 0;
+
+  rc = con;
+  con = 0;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utCgiMessage fails");
+  }
+  destroyString(string);
+  destroyRecord(record);
+  if (con) destroyRecordTree(con->message);
+  free (con);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utHaveMessage1
+ * Description: Build a HAVE query providing part1 (extra as parameter)
+ =======================================================================*/
+Connexion*
+utHaveMessage1(Collection* coll, char* extra)
+{
+  Connexion* rc = 0;
+  Connexion* con = 0;
+  Server* localhost = 0;
+  Record *record = 0;
+  char* string = 0;
+
+  if (!(string = createString(extra))) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
+  if (!(con = utConnexion(coll, HAVE, localhost))) goto error;
+  if (!(record = utLocalRecord(coll, 
+			       "1a167d608e76a6a4a8b16d168580873c", 20480,
+			       SUPPLY, string)))
+    goto error;
+  string = 0;
+  
+  if (!rgInsert(con->message->records, record)) goto error;
+  record = 0;
+
+  rc = con;
+  con = 0;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utHaveMessage1 fails");
+  }
+  destroyString(string);
+  destroyRecord(record);
+  if (con) destroyRecordTree(con->message);
+  free (con);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : utHaveMessage2
+ * Description: Build a HAVE query providing part2 (extra as parameter)
+ =======================================================================*/
+Connexion*
+utHaveMessage2(Collection* coll, char* extra)
+{
+  Connexion* rc = 0;
+  Connexion* con = 0;
+  Server* localhost = 0;
+  Record *record = 0;
+  char* string = 0;
+
+  if (!(string = createString(extra))) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
+  if (!(con = utConnexion(coll, HAVE, localhost))) goto error;
+  if (!(record = utLocalRecord(coll, 
+			       "c0c055a0829982bd646e2fafff01aaa6", 4066, 
+			       SUPPLY, string)))
+    goto error;
+  string = 0;
+  
+  if (!rgInsert(con->message->records, record)) goto error;
+  record = 0;
+
+  rc = con;
+  con = 0;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "utHaveMessage2 fails");
+  }
+  destroyString(string);
+  destroyRecord(record);
+  if (con) destroyRecordTree(con->message);
+  free (con);
   return rc;
 }
 

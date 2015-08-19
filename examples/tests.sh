@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.5 2015/08/14 01:53:41 nroche Exp $
+# * Version: $Id: tests.sh,v 1.6 2015/08/19 01:09:08 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -63,7 +63,7 @@ function mdtxA()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -snotice -swarning:alloc -c $SERVER $QUERY
+    mediatex -snotice -c $SERVER $QUERY
 }
 
 # $1 publisher query
@@ -73,7 +73,7 @@ function mdtxP()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -snotice -swarning:alloc -c $SERVER su <<EOF
+    mediatex -snotice -c $SERVER su <<EOF
 mediatex $QUERY
 EOF
 }
@@ -112,7 +112,7 @@ function notice()
 
 function yourMail()
 {
-    echo "> browse https://localhost/~serv1-hello"
+    echo "> Please, browse https://localhost/~serv1-hello"
     notice "ask for the logo file and give an email address."
     read -p "> push a key to continue"
 }
@@ -263,7 +263,10 @@ function test4()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Ask for an archive record not yet available and register your mail"
-	statusInitdScript 
+	echo "123456789012345" | netcat 127.0.0.1 6001
+	statusInitdScript
+	question "does server survive after a strange message ?"
+
 	yourMail
 	mdtxP "srv save"
 	finalQuestion "does the server get it ?" \

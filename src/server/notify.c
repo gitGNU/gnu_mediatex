@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.13 2015/08/17 01:31:53 nroche Exp $
+ * Version: $Id: notify.c,v 1.14 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -88,13 +88,6 @@ notifyArchive(NotifyData* data, Archive* archive)
 
   data->found = FALSE;
   checkCollection(data->coll);
-
-  // No good, as it may be a nat client...
-  /* // stop if available from network */
-  /* if (archive->remoteSupplies->nbItems > 0) { */
-  /*   data->found = TRUE; */
-  /*   goto end; */
-  /* } */
   
   // look for a matching local supply
   if (archive->state >= AVAILABLE) {
@@ -160,10 +153,10 @@ getWantedRemoteArchives(Collection* coll)
 } 
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Function   : addFinalDemands
+ * Description: Add final demands to the message to send
+ * Synopsis   : int addFinalDemands(NotifyData* data)
+ * Input      : NotifyData* data
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -237,10 +230,7 @@ addBadTopLocalSupplies(NotifyData* data)
       continue;
     if (archive->fromContainers->nbItems > 0) continue;
 
-    /* check minGeoDup and nb REMOTE_SUPPLY
-       if (archive->extractScore <
-       coll->serverTree->scoreParam.badScore && ...) continue
-    */
+    /* maybe check minGeoDup and nb REMOTE_SUPPLY too in future */
 
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
   }
@@ -420,12 +410,10 @@ sendRemoteNotify(Collection* coll)
  * Description: Receive a remote server notification
  * Synopsis   : int acceptRemoteNotify(RecordTree* tree,
  *                                                 Connexion* connexion)
- * Input      : RecordTree* tree = the remote cache index
- *              Connexion* connexion = gives the remote IP address
- * Output     : N/A
- * Note       : STILL A LOT TO DO HERE
+ * Input      : Connexion* connexion = gives the remote IP address
+ * Output     : TRUE on success
  =======================================================================*/
-int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
+int acceptRemoteNotify(Connexion* connexion)
 {
   int rc = FALSE;
   RG* records = 0;
@@ -436,21 +424,24 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
   Server* localhost = 0;
   RGIT* curr = 0;
 
-  coll = tree->collection;
+  static char status[][8] = {
+    "240 ok"
+  };
+
+  logMain(LOG_DEBUG, "acceptRemoteNotify");
+  coll = connexion->message->collection;
   source = connexion->server;
   checkCollection(coll);
   checkServer(source);
-  logMain(LOG_DEBUG, "acceptRemoteNotify");
 
-  if (!loadCollection(tree->collection, CACH)) goto error;
-
-  if (!(localhost = getLocalHost(coll))) goto error2; 
+  if (!loadCollection(coll, CACH)) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error2;
   
   // first: if localhost is a gateway...
   if (!isEmptyRing(coll->localhost->gateways)) {
     curr = 0;
 
-    // ...forward "same" message to our Nat clients
+    // ...forward the message to the Nat clients
     while((target=rgNext_r(coll->serverTree->servers, &curr))) {
 
       // skip server already connected to the source
@@ -461,14 +452,15 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
 
       logMain(LOG_NOTICE, "forward message to %s:%i nat client",
 	      target->host, target->mdtxPort);
-      if (!sendRemoteNotifyServer(target, tree, source)) goto error2;
+      if (!sendRemoteNotifyServer(target, connexion->message, source)) 
+	goto error2;
     }
   }
 
   // secondly: update our cache
   if (!lockCacheRead(coll)) goto error2;
 
-  // del all records we have from the calling server
+  // del all records we previously get from the calling server
   curr = 0;
   records = coll->cacheTree->recordTree->records;
   while((record = rgNext_r(records, &curr))) {  
@@ -476,18 +468,20 @@ int acceptRemoteNotify(RecordTree* tree, Connexion* connexion)
     if (!delCacheEntry(coll, record)) goto error3;
   }
 		
-  // add calling server's records
-  rgRewind(tree->records);
-  while ((record = rgNext(tree->records))) {
+  // add new fresh records provided by the calling server
+  rgRewind(connexion->message->records);
+  while ((record = rgNext(connexion->message->records))) {
+    // record remains into the cache
     if (!addCacheEntry(coll, record)) goto error3;
-    tree->records->curr->it = 0; // consume the record from the tree
+    rgRemove(connexion->message->records);
   }
   
+  sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;
  error3:
     if (!unLockCache(coll)) rc = FALSE;
  error2:
-  if (!releaseCollection(tree->collection, CACH)) rc = FALSE;
+  if (!releaseCollection(coll, CACH)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_DEBUG, "acceptRemoteNotify fails");

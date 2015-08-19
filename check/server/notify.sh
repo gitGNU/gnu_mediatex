@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: notify.sh,v 1.1 2015/07/01 10:50:07 nroche Exp $
+# * Version: $Id: notify.sh,v 1.2 2015/08/19 01:09:06 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -33,7 +33,11 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-server/ut$TEST -d $srcdir >server/$TEST.out 2>&1
+SRC=$CVSCLT/$MDTXUSER-coll1
+loadPaths "mdtx2"
+DST=$CVSCLT/$MDTXUSER-coll1
+cp $SRC$SERVFILE $DST$SERVFILE
+server/ut$TEST -cmdtx2 -d $srcdir >server/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs server/$TEST.out

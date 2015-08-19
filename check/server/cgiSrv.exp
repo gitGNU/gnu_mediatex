@@ -1,9 +1,7 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[notice utFunc.c] ask for logo.png
-[notice utFunc.c] add a generic demand for
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] Clean the cache:
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -18,9 +16,9 @@
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 1) try to extract the demand
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] load coll3 records
@@ -55,24 +53,21 @@
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
-[notice cgiSrv.c] 303 not found 022a34b2f9b893fba5774237e1aa80ea:24075
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-              
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 2) retry with it on cache
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] copy logo.png to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
@@ -92,26 +87,24 @@ Body
 [info openClose.c] steps: 0 / 93
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo.png
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-# ^ LOCAL_SUPPLY
-        
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 3) retry with tgz on cache
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -167,28 +160,27 @@ S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo/logo.png
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCAL_SUPPLY
-             
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 4) try with only part1 on cache
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -246,26 +238,24 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
-[notice cgiSrv.c] 303 not found 022a34b2f9b893fba5774237e1aa80ea:24075
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCAL_SUPPLY
-      
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 5) try with part2 added on cache too
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] copy logoP2.cat to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
@@ -331,32 +321,33 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
-[notice cgiSrv.c] 200 ok https://localhost/~mdtx1-coll3/cache/logo/logo.png
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-S 2010-01-01,01:05:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-# ^ LOCAL_SUPPLY
-S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-# ^ LOCAL_SUPPLY
-             
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 6) register a mail
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash
@@ -376,29 +367,25 @@ S 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e c0c055a0829982bd646e2faff
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
-[notice utFunc.c] ask for logo.png
-[notice utFunc.c] add a generic demand for
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
-[notice cgiSrv.c] 200 ok
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
-[notice utcgiSrv.c] ..........................................................
-[info recordTree.c] Serializing UNKNOWN record tree in file: stdout
-# Collection's records:
-Headers
-	Collection	coll3               
-	Type		UNKNOWN
-	Server		bedac32422739d7eced624ba20f5912e
-	DoCypher	FALSE       
-Body          
-#                date                             host                             hash                size extra
-D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-# ^ FINAL_DEMAND
-   
-[notice utcgiSrv.c] ----------------------------------------------------------
-[notice utcgiSrv.c] ----------------------------------------------------------
+[notice utcgiSrv.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+
+[notice utcgiSrv.c] -------------------------------------------------------
+[notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] Clean the cache:
-[notice utcgiSrv.c] ..........................................................
+[notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
 [info command.c] execScript: /bin/bash

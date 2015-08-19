@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.10 2015/08/14 01:53:43 nroche Exp $
+ * Version: $Id: command.h,v 1.11 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -219,7 +219,7 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
 #define ENDINGS								\
   logMain(LOG_INFO, "exit on %s", rc?"success":"error");		\
   if (!env.noRegression) {						\
-    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);			\
+    memoryStatus(LOG_INFO, __FILE__, __LINE__);				\
   }									\
   exitMalloc();								\
   env.logHandler = logClose(env.logHandler)

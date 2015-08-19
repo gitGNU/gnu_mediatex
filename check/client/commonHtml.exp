@@ -33,7 +33,7 @@ ALT='top'></A>
 <UL>
 <LI><A HREF="https://127.0.0.1/~mdtx2-coll1/cache">127.0.0.1</A></LI>
 <LI><A HREF="https://localhost/~mdtx1-coll1/cache">localhost</A></LI>
-<LI><A HREF="https://127.0.0.2:4443/~mdtx3-coll1/cache">127.0.0.2</A></LI>
+<LI><A HREF="https://mediatex.org:4443/~mdtx3-coll1/cache">mediatex.org</A></LI>
 </UL>
 
 <P>
@@ -89,7 +89,7 @@ ALT='top'></A>
 <UL>
 <LI><A HREF="https://127.0.0.1/~mdtx2-coll1/cache">127.0.0.1</A></LI>
 <LI><A HREF="https://localhost/~mdtx1-coll1/cache">localhost</A></LI>
-<LI><A HREF="https://127.0.0.2:4443/~mdtx3-coll1/cache">127.0.0.2</A></LI>
+<LI><A HREF="https://mediatex.org:4443/~mdtx3-coll1/cache">mediatex.org</A></LI>
 </UL>
 
 <P>

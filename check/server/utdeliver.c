@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utdeliver.c,v 1.2 2015/08/09 11:12:35 nroche Exp $
+ * Version: $Id: utdeliver.c,v 1.3 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -166,8 +166,8 @@ main(int argc, char** argv)
   if (!utCleanCaches()) goto error;
 
   utLog("%s", "add a demand for logo.png:", 0);
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"nroche@narval.tk")) goto error;
+  if (!utAddLocalDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
+			"nroche@narval.tk")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Now we have :", coll);

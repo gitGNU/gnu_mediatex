@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.9 2015/08/17 01:31:52 nroche Exp $
+ * Version: $Id: upload.c,v 1.10 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -401,7 +401,7 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   }
     
   logMain(LOG_INFO, "daemon says (%i) %s", status, message);
-  if (status != 200) goto error;
+  if (status != 210) goto error;
 
  end:
   rc = TRUE;

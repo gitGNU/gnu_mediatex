@@ -157,13 +157,13 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 [info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.

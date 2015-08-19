@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.h,v 1.6 2015/08/09 15:56:41 nroche Exp $
+ * Version: $Id: cache.h,v 1.7 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -43,7 +43,8 @@ int extractCp(char* source, char* target);
 int quickScan(Collection* collection);
 int quickScanAll(void);
 int cacheAlloc(Record** record, Collection* coll, Archive* archive);
-int uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion);
+
+int uploadFinaleArchive(Connexion* connexion);
 
 #endif /* MDTX_SERVER_CACHE_H */
 

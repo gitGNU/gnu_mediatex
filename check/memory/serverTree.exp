@@ -52,7 +52,7 @@ end
 Server bedac32422739d7eced624ba20f5912e
 	comment   "this is server3"
 	label     mdtx3
-	host      127.0.0.2
+	host      mediatex.org
 	mdtxPort  33333
 	sshPort   2222
 	wwwPort   4443

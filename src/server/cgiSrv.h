@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: cgiSrv.h,v 1.5 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -29,8 +29,7 @@
 
 /* API */
 
-int cgiServer(RecordTree* demands, Connexion* connexion);
-
+int cgiServer(Connexion* connexion);
 
 #endif /* MDTX_SERVER_CGI_H */
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.6 2015/08/17 01:31:52 nroche Exp $
+ * Version: $Id: cgi.c,v 1.7 2015/08/19 01:09:08 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -102,13 +102,9 @@ int queryServer(Server* server, RecordTree* tree, char* reply)
   // connect server and write query
   if ((socket = connectServer(server)) == -1) goto error;
   if (!upgradeServer(socket, tree, 0)) goto error;
-    
+
   // read reply
-  if (env.dryRun) {
-    strcpy(reply, "200 ok"); // reply for mail register
-    goto end;
-  }
-  logMain(LOG_INFO, "read");
+  if (env.dryRun) goto end;
   n = tcpRead(socket, reply, 255);
   // erase the \n send by server
   if (n<=0) n = 1;
@@ -175,7 +171,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
     if (!queryServer(server, rTree, reply)) goto error;
      
     if (env.dryRun) {
-      strcpy(reply, "100 not found");
+      strcpy(reply, "120 not found");
     }
 
     // looking for the reply
@@ -187,7 +183,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 	      server->host, server->mdtxPort, status, reply+4);
 	
       /* stop research when founded */
-      if (status == 200) break;
+      if (status == 220) break;
     } 
   }
   rc = TRUE;
@@ -233,8 +229,8 @@ int mdtxFind(RecordTree *tree)
   }
     
   switch (status) {
-  case 200:
-    url = reply + 7; // "200 ok URL"
+  case 220:
+    url = reply + 7; // "220 ok URL"
     logMain(LOG_DEBUG, "found at %s", url);
     
     fprintf(stdout, "Content-Type: text/html\r\n");
@@ -310,13 +306,20 @@ int mdtxRegister(RecordTree *tree)
   if (!(reply = createSizedString(255, "100 nobody"))) goto error;
   if (!queryServer(server, tree, reply)) goto error;
   
+  if (env.dryRun) {
+    strcpy(reply, "221 ok");
+  }
+
   if (sscanf(reply, "%i", &status) < 1) {
     logMain(LOG_ERR, "error reading reply: ", reply);
     status = 500;
   }
   
+  logMain(LOG_INFO, "%s:%i tel (%i) %s",
+	  server->host, server->mdtxPort, status, reply+4);
+
   switch (status) {
-  case 200:
+  case 221:
     logMain(LOG_DEBUG, "registered at localhost");
     
     fprintf(stdout, "%s", "Content-Type: text/html\r\n");
@@ -326,7 +329,8 @@ int mdtxRegister(RecordTree *tree)
     sendTemplate(coll, "cgiHeader.shtml");
 
     fprintf(stdout, "%s",
-	    "We will be notified by mail when file will be available\n"
+	    "You will be notified by mail as soon as the file become "
+	    "available\n"
 	    "Please follow this <a href=\"../index\"> link</a>!");
 
     sendTemplate(coll, "footer.html");
@@ -342,7 +346,7 @@ int mdtxRegister(RecordTree *tree)
     sendTemplate(coll, "cgiHeader.shtml");
 
     fprintf(stdout, 
-	    "<br>Sorry, localhost cannot register it (%i).\r\n<br>",
+	    "<br>Sorry, localhost cannot register it (errno %i).\r\n<br>",
 	    status);
     fprintf(stdout, "<h5><i>hash=%s\r\n</i><br>", record->archive->hash);
     fprintf(stdout, "<i>size=%llu\r\n</i><br>",

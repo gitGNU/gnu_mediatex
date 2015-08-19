@@ -104,7 +104,7 @@ Provide images: 1
 
 <P>
 
-<SPAN  CLASS="textbf">Server </SPAN><SMALL>127.0.0.2</SMALL> (7.50)
+<SPAN  CLASS="textbf">Server </SPAN><SMALL>MEDIATEX.ORG</SMALL> (7.50)
 
 <BR>
 <SPAN  CLASS="textit">this is server3</SPAN>
@@ -168,7 +168,7 @@ Catalog reference as documents:
 Provided by servers:
 <UL>
 <LI><A HREF="../../servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">127.0.0.1</A> (7.50)</LI>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (9.00)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">mediatex.org</A> (9.00)</LI>
 </UL>
 
 </P>
@@ -311,7 +311,7 @@ Catalog reference as documents:
 
 Provided by servers:
 <UL>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (7.50)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">mediatex.org</A> (7.50)</LI>
 </UL>
 
 </P>
@@ -952,7 +952,7 @@ Provided by servers:
 <UL>
 <LI><A HREF="../../servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">127.0.0.1</A> (10.00)</LI>
 <LI><A HREF="../../servers/srv_746d6ceeb76e05cfa2dea92a1c5753cd.shtml">localhost</A> (2.00)</LI>
-<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A> (9.00)</LI>
+<LI><A HREF="../../servers/srv_bedac32422739d7eced624ba20f5912e.shtml">mediatex.org</A> (9.00)</LI>
 </UL>
 
 </P>
@@ -1226,7 +1226,7 @@ ALT='top'></A>
 <BR><UL>
 <LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">127.0.0.1</A></LI>
 <LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_746d6ceeb76e05cfa2dea92a1c5753cd.shtml">localhost</A></LI>
-<LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_bedac32422739d7eced624ba20f5912e.shtml">127.0.0.2</A></LI>
+<LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_bedac32422739d7eced624ba20f5912e.shtml">mediatex.org</A></LI>
 </UL>
 
 <P>

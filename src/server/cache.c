@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.14 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: cache.c,v 1.15 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -858,7 +858,7 @@ extractCp(char* source, char* target)
  *              char* sourcePath: file to upload
  * Output     : TRUE on success
  =======================================================================*/
-int
+static int
 cacheUpload(Collection* coll, Record* record)
 {
   int rc = FALSE;
@@ -932,59 +932,53 @@ cacheUpload(Collection* coll, Record* record)
 
 /*=======================================================================
  * Function   : uploadFinaleArchive
- * Description: upload archive provided
+ * Description: Upload a new final supply into the cache
  * Synopsis   : int uploadFinaleArchive(ArchiveTree* finalSupplies)
- * Input      : ArchiveTree* finalSupplies = support/colls we provide
+ * Input      : Connexion* connexion
  * Output     : TRUE on success
  =======================================================================*/
 int 
-uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
+uploadFinaleArchive(Connexion* connexion)
 {
   int rc = FALSE;
-  int uplErrno = 4;
   Collection* coll = 0;
   Record* record = 0;
-  char buffer[256] = "";
 
-  // text + MAX_SIZE_HASH + MAX_SIZE_SIZE
-  static char message[][64] = {
-    "200 ok",
-    "301 no collection",
-    "302 empty message",
-    "303 already exists %s:%lli",
-    "400 internal error",   
+  static char status[][64] = {
+    "210 ok",
+    "310 empty message",
+    "332 message do not provide a final supply %s",
+    "313 already exists %s:%lli" 
   };
 
   logMain(LOG_DEBUG, "uploadFinaleArchive");
-  sprintf(buffer, "%s", message[uplErrno=4]);
-
-  // get the archiveTree's collection
-  if ((coll = recordTree->collection) == 0) {
-    sprintf(buffer, "%s", message[uplErrno=1]);
+  coll = connexion->message->collection;
+  checkCollection(coll);
+  
+  // check we get a final supplies
+  if (isEmptyRing(connexion->message->records)) {
+    sprintf(connexion->status, "%s", status[1]);
     goto error;
   }
-  
-  // check we get final supplies
-  if (isEmptyRing(recordTree->records)) {
-    sprintf(buffer, "%s", message[uplErrno=2]);
+  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (getRecordType(record) != FINAL_SUPPLY) {
+    sprintf(connexion->status, status[2], record->extra);
     goto error;
   }
 
   if (!loadCollection(coll, EXTR | CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
-  if (!(record = (Record*)recordTree->records->head->it)) goto error3;
-
+ 
   // check archive is not already there
   if ((record->archive->localSupply)) {
-    sprintf(buffer, message[uplErrno=3], 
+    sprintf(connexion->status, status[3],
 	    record->archive->hash, record->archive->size);
     goto error3;
   }
 
   if (!(cacheUpload(coll, record))) goto error3;
-  sprintf(buffer, "%s", message[uplErrno=0]);
 
-  logMain(LOG_NOTICE, "%s", buffer);
+  sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;
  error3:
   if (!unLockCache(coll)) rc = FALSE;
@@ -992,11 +986,7 @@ uploadFinaleArchive(RecordTree* recordTree, Connexion* connexion)
   if (!releaseCollection(coll, EXTR | CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "%s", buffer);
-  }
-  if (!env.noRegression) {
-    strcpy(buffer + strlen(buffer), "\n");
-    tcpWrite(connexion->sock, buffer, strlen(buffer));
+    logMain(LOG_ERR, "uploadFinaleArchive fails");
   }
   return rc;
 } 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.9 2015/08/13 21:14:36 nroche Exp $
+ * Version: $Id: threads.c,v 1.10 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -417,6 +417,91 @@ mainLoop()
     goto error;
   }
   pthread_attr_destroy(&taskAttr);
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : checkMessage
+ * Description: Common operation on message
+ * Synopsis   : int checkMessage(Connexion* con)
+ * Input      : Connexion* con
+ * Output     : set con->tree
+ *              set con->server
+ *              TRUE on succes
+ =======================================================================*/
+int checkMessage(Connexion* con)
+{
+  int rc = FALSE;
+  Collection* coll = 0;
+  Server* server = 0;
+  Record* record = 0;
+  RGIT* curr = 0;
+
+  static char status[][64] = {
+   "302 message without collection",
+   "303 message from server %s not registered into %s collection",
+   "304 message contains a record not related to author %s but %s",
+   "401 fails to read message",
+   "402 fails to load %s collection's serverTree",
+   "403 fails to get localhost"
+  };
+
+  logMain(LOG_DEBUG, "checkMessage");
+  sprintf(con->status, "%s", status[3]);
+  con->server = 0;
+
+  logRecordTree(LOG_MAIN, LOG_NOTICE, con->message, 
+		con->message->fingerPrint);
+
+  if (!(coll = con->message->collection)) {
+    sprintf(con->status, "%s", status[0]);
+    goto error;
+  }
+
+  if (!loadCollection(coll, SERV)) {
+    sprintf(con->status, status[4], coll->label);
+    goto error;
+  }
+
+  // minimal upgrade
+  if (!getLocalHost(coll)) {
+    sprintf(con->status, "%s", status[5]);
+    goto error2;
+  }
+  
+  // match server from fingerprint in message header
+  // (may be masqueraded by a Nat server)
+  while((server = rgNext_r(coll->serverTree->servers, &curr))) {
+    if (!(strncmp(con->message->fingerPrint, server->fingerPrint, 
+		  MAX_SIZE_HASH))) break;
+  }
+  if (server == 0) {
+    sprintf(con->status, status[1], 
+	    con->message->fingerPrint, coll->label);
+    goto error2;
+  }
+
+  // check all records are related to the message's author
+  if (!isEmptyRing(con->message->records)) {
+    curr = 0;
+    while((record = rgNext_r(con->message->records, &curr))) {
+      if (server != record->server) {
+	sprintf(con->status, status[2], 
+		con->message->fingerPrint, record->server->fingerPrint);
+	goto error2;
+      }
+    }
+  }
+    
+  con->server = server;
+  rc = TRUE;
+ error2:
+  if (!releaseCollection(coll, SERV)) rc = FALSE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "checkMessage fails");
+  }
   return rc;
 }
 

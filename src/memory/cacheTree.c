@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.10 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.11 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -179,11 +179,11 @@ createCacheTree(void)
 }
 
 /*=======================================================================
- * Function   : destroyRecord
- * Description: Destroy a merger by freeing all the allocate memory.
+ * Function   : destroyCacheTree
+ * Description: Destroy a cacheTree
  * Synopsis   : CacheTree* destroyCacheTree(CacheTree* self)
- * Input      : CacheTree* self = the address of the merger to destroy.
- * Output     : Nil address of a merger.
+ * Input      : CacheTree* self = what to destry
+ * Output     : NULL
  =======================================================================*/
 CacheTree* 
 destroyCacheTree(CacheTree* self)
@@ -461,7 +461,9 @@ int addCacheEntry(Collection* coll, Record* record)
  * Input      : Collection* coll: the collection we use
  *              Record* record: record to del
  * Output     : TRUE on success
- * Note       : Server's records are not managed here
+ * Note       : Record may be referenced elsewhere so we just mark
+ *              it as removed (but do not destroy it)
+ *              ex: servers add a back reference to records
  =======================================================================*/
 int delCacheEntry(Collection* coll, Record* record)
 {
@@ -716,7 +718,7 @@ int cleanCacheTree(Collection* coll)
     if (!diseaseArchive(coll, record->archive)) goto error2;  
 
     // remove the record as owned by cache->recordTree->records
-    if (!delRecord(coll, record)) goto error;;
+    if (!delRecord(coll, record)) goto error;
   }
 
   rc = TRUE;
@@ -736,6 +738,7 @@ int cleanCacheTree(Collection* coll)
  * Input      : Collection* coll: the collection to use
  * Output     : TRUE on success
  * Note       : Do not disease the recordTree !?
+#warning seems no more needed (try to replace directely by cleanCacheTree)
  =======================================================================*/
 int diseaseCacheTree(Collection* coll)
 {

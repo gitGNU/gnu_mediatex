@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.h,v 1.4 2015/06/30 17:37:38 nroche Exp $
+ * Version: $Id: have.h,v 1.5 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -29,7 +29,7 @@
 
 /* API */
 
-int extractFinaleArchives(RecordTree* recordTree, Connexion* connexion);
+int extractFinaleArchives(Connexion* connexion);
 
 #endif /* MDTX_SERVER_HAVE_H */
 

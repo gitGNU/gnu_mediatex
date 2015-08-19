@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/08/11 11:59:32 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.6 2015/08/19 01:09:03 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -87,6 +87,7 @@ check_PROGRAMS = \
 	server/utcgiSrv \
 	server/uthave \
 	server/utnotify \
+	server/utmessage \
 	server/utthreads
 
 TESTS = \
@@ -146,6 +147,7 @@ TESTS = \
 	server/cgiSrv.sh \
 	server/have.sh \
 	server/notify.sh \
+	server/message.sh \
 	server/threads.sh
 
 dist_check_SCRIPTS = \
@@ -222,6 +224,7 @@ dist_check_DATA = \
 	server/cgiSrv.exp \
 	server/have.exp \
 	server/notify.exp \
+	server/message.exp \
 	server/threads.exp
 
 # build script (so as to sed values into) and object for tests
@@ -348,6 +351,8 @@ server_uthave_SOURCES = server/uthave.c
 server_uthave_LDADD = $(server_ldadd)
 server_utnotify_SOURCES = server/utnotify.c
 server_utnotify_LDADD = $(server_ldadd)
+server_utmessage_SOURCES = server/utmessage.c
+server_utmessage_LDADD = $(server_ldadd)
 server_utthreads_SOURCES = server/utthreads.c
 server_utthreads_LDADD = $(server_ldadd)
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.5 2015/08/09 11:12:34 nroche Exp $
+ * Version: $Id: utcache.c,v 1.6 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -25,8 +25,6 @@
 #include "mediatex.h"
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
-
-extern int cacheUpload(Collection* coll, Record* record);
 
 GLOBAL_STRUCT_DEF;
 
@@ -68,6 +66,7 @@ main(int argc, char** argv)
   Record* record = 0;
   off_t size = 0;
   char* extra = 0;
+  Connexion* connexion = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -163,18 +162,18 @@ main(int argc, char** argv)
   record->extra[0]='*'; // ALLOCATED -> AVAILABLE
   if (!delCacheEntry(coll, record)) goto error;
   utLog("reply : %i", record?1:0, coll); // 1: del some entries
+  record = 0;
 
   /*--------------------------------------------------------*/
   utLog("%s", "API to upload files :", 0);
   if (!(extra = createString(inputRep))) goto error;
   if (!(extra = catString(extra, "/../misc/"))) goto error;
   if (!(extra = catString(extra, "README"))) goto error;
-  if (!(archive = addArchive(coll, "3f18841537668dcf4fafd1471c64d52d",
-  			    1937))) goto error;
-  if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (!uploadFinaleArchive(connexion)) {
+    utLog("reply : %s", connexion->status, 0);
     goto error;
-  extra = 0;
-  if (!cacheUpload(coll, record)) goto error;
+  }
   utLog("reply : %s", "upload ok", coll);
 
   /*--------------------------------------------------------*/
@@ -186,6 +185,8 @@ main(int argc, char** argv)
  error:
   extra = destroyString(extra);
   record = destroyRecord(record);
+  if (connexion) destroyRecordTree(connexion->message);
+  free (connexion);
   freeConfiguration();
   ENDINGS;
   rc=!rc;

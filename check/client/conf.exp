@@ -59,13 +59,13 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 [notice utconf.c] *** Share a support:
 [info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
@@ -125,13 +125,13 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
 [notice utconf.c] *** Share a support second time:
@@ -193,14 +193,14 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
 [notice utconf.c] *** Withdraw a support:
@@ -259,14 +259,14 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 [notice utconf.c] *** Withdraw second time:
 [notice utconf.c] *** Withdraw support from all collections:
@@ -324,13 +324,13 @@ Collection mdtx2-coll2@host2.mediatex.org:22
 	cacheTTL  1 Month
 	queryTTL  15 Day
 	# --
-	localhost 6b18ed0194b0fbadd08e0a13cccda00e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 
 Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 [info confTree.c] free configuration
 [info utconf.c] exit on success

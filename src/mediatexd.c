@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.6 2015/08/17 01:31:52 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.7 2015/08/19 01:09:08 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -21,6 +21,15 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 =======================================================================*/
+
+/*
+  socket return codes:
+  
+  1--: negative reply
+  2--: ok
+  3--: bad request
+  4--: internal error
+*/
 
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
@@ -184,144 +193,6 @@ termManager()
 
 
 /*=======================================================================
- * Function   : matchServer
- * Description: match a server from IP
- * Synopsis   : void* socketJob(void* arg)
- * Input      : void* arg = (Connexion*) connection structure
- * Output     : N/A
- =======================================================================*/
-int matchServer(RecordTree* tree, Connexion* connexion)
-{
-  int rc = FALSE;
-  Collection* coll = 0;
-  Server* server = 0;
-  //Server* relayed = 0;
-  Record* record = 0;
-  RGIT* curr = 0;
-  struct tm date;
-
-  /*
-  socket return codes:
-
-  1--: negative reply
-  2--: ok
-  3--: bad request
-  4--: internal error
-  */
-  /*static char status[][32] = {
-   "301 message parser error",
-   "302 message without collection",
-   "303 message without content ring",
-   "304 message without content"
-   "400 internal error",
-   };*/
-
-  coll = tree->collection;
-  connexion->server = 0;
-  checkCollection(coll);
-  logMain(LOG_DEBUG, "matchServer");
-
-  if (tree->messageType != NOTIFY && isEmptyRing(tree->records)) {
-    logMain(LOG_INFO, "receive empty ring");
-    goto error;
-  }
-
-  // match server from fingerprint in message header
-  // (may be masqueraded by a Nat server)
-  while((server = rgNext_r(coll->serverTree->servers, &curr))) {
-    if (!(strncmp(tree->fingerPrint, server->fingerPrint, MAX_SIZE_HASH)))
-      break;
-  }
-  if (server == 0) {
-    logMain(LOG_WARNING, 
-	    "server %s is not register into collection %s",
-	    connexion->host, coll->label);
-    goto error;
-  }
-
-  // display message for debugging
-  logMain(LOG_INFO, "receive message about server %s (%s)", 
-	  server->host, server->fingerPrint);
-
-  if (isEmptyRing(tree->records)) {
-    logMain(LOG_INFO, "receive empty content");
-  }
-  else {
-    curr = 0;
-    while((record = rgNext_r(tree->records, &curr))) {
-      localtime_r(&record->date, &date);
-      logMain(LOG_INFO, "%c "
-	      "%04i-%02i-%02i,%02i:%02i:%02i "
-	      "%*s %*s %*llu %s\n",
-	      (record->type & 0x3) == DEMAND?'D':
-	      (record->type & 0x3) == SUPPLY?'S':'?',
-	      date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
-	      date.tm_hour, date.tm_min, date.tm_sec,
-	      MAX_SIZE_HASH, record->server->fingerPrint, 
-	      MAX_SIZE_HASH, record->archive->hash, 
-	      MAX_SIZE_SIZE, (long long unsigned int)record->archive->size,
-	      record->extra?record->extra:"");
-    }
-  }    
-
-  /* // match a Nat server */
-  /* if (rgHaveItem(coll->localhost->natServers, server)) { */
-  /*   logMain(LOG_NOTICE, "receive message from Nat server"); */
-
-  /*   // note: get a private incoming IP so we cannot match it. */
-  /*   // just check all records have the same server's fingerprint */
-  /*   curr = 0; */
-  /*   relayed = rgNext_r(tree->records, &curr); */
-  /*   logMain(LOG_NOTICE, "original message from %s (%s)", */
-  /* 	    relayed->host, relayed->fingerPrint); */
-  /*   while((record = rgNext_r(tree->records, &curr))) { */
-  /*     if (relayed != record->server) { */
-  /* 	logMain(LOG_WARNING,  */
-  /* 		"message contains records related to other host: %s", */
-  /* 		record->server->fingerPrint); */
-  /* 	goto error; */
-  /*     } */
-  /*   } */
-  /*   goto end; */
-  /* } */
-
-  /* // match server from incomming IP (only if not 127.0.0.1) */
-  /* if (connexion->ipv4 != ntohl(0x0100007f)) { */
-  /*   if (server->address.sin_family == 0 &&  */
-  /* 	!buildServerAddress(server)) goto error; */
-  /*   if (ntohl(server->address.sin_addr.s_addr) != connexion->ipv4) { */
-  /*     logMain(LOG_WARNING,  */
-  /* 	      "ip from %s do not match server fingerprint on message: %s", */
-  /* 	      connexion->host, record->server->fingerPrint); */
-  /*     goto error; */
-  /*   } */
-  /* } */
-  
-  // check all records are related to the calling server 
-  curr = 0;
-  if (isEmptyRing(tree->records)) {
-    while((record = rgNext_r(tree->records, &curr))) {
-      if (server != record->server) {
-	logMain(LOG_WARNING, 
-		"message contains a record related to another host: %s",
-		record->server->fingerPrint);
-	goto error;
-      }
-    }
-  }
-  
-  //end:
-  connexion->server = server;
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "matchServer fails");
-  }
-  return rc;
-}
-
-
-/*=======================================================================
  * Function   : socketJob
  * Description: thread callback function
  * Synopsis   : void* socketJob(void* arg)
@@ -333,71 +204,78 @@ socketJob(void* arg)
 {
   int me = taskSocketNumber;
   long int rc = FALSE;
-  Connexion* connexion = 0;
-  RecordTree* tree = 0;
+  Connexion* con = (Connexion*)arg;
 
-  connexion = (Connexion*)arg; // to be free as we own it as a thread
+  static char status[][32] = {
+    "301 message parser error",
+    "305 unknown message type: %s",
+    "400 internal error",
+  };
+
   logMain(LOG_DEBUG, "socketJob %i", me);
-  
+  sprintf(con->status, "%s", status[1]);
+
   // read the socket
-  if ((tree = parseRecords(connexion->sock))
-      == 0) {
-    logMain(LOG_ERR, "fail to parse RecordTree");
+  if ((con->message = parseRecords(con->sock)) == 0) {
+    sprintf(con->status, "%s", status[0]);
     goto error;
   }
 
-  // match server
-  checkCollection(tree->collection);
-  if (!loadCollection(tree->collection, SERV)) goto error;
-  if (!getLocalHost(tree->collection)) goto error2; // minimal upgrade
-  if (!(matchServer(tree, connexion))) goto error2;
+  // common checks on message
+  if (!checkMessage(con)) goto error;
 
   logMain(LOG_INFO, "%s: %s message from %s server (%s)",
-	  tree->collection->label, strMessageType(tree->messageType),
-	  connexion->server->fingerPrint, connexion->host);
+	  con->message->collection->label, 
+	  strMessageType(con->message->messageType),
+	  con->server->fingerPrint, con->host);
 
-  switch (tree->messageType) {
+  switch (con->message->messageType) {
 
   case UPLOAD:
     logMain(LOG_NOTICE, "socketJob %i: UPLOAD", me);
-    if (!uploadFinaleArchive(tree, connexion)) goto error2;
+    con->status[1] = '1';
+    if (!uploadFinaleArchive(con)) goto error;
     break;
 
   case CGI:
     logMain(LOG_NOTICE, "socketJob %i: CGI", me);
-    if (!cgiServer(tree, connexion)) goto error2;
+    con->status[1] = '2';
+    if (!cgiServer(con)) goto error;
     break;
     
   case HAVE:
     logMain(LOG_NOTICE, "socketJob %i: HAVE", me);
-    if (!extractFinaleArchives(tree, connexion)) goto error2;
+    con->status[1] = '3';
+    if (!extractFinaleArchives(con)) goto error;
     break;
     
   case NOTIFY:
-    logMain(LOG_NOTICE, "socketJob %i: NOTIFY (from %s)",
-	    me, connexion->host);
-    if (!acceptRemoteNotify(tree, connexion)) goto error2;
+    logMain(LOG_NOTICE, "socketJob %i: NOTIFY (from %s)", me, con->host);
+    con->status[1] = '4';
+    if (!acceptRemoteNotify(con)) goto error ;
     break;
     
   default:
-    logMain(LOG_INFO, "server do not accept %s messages",
-	    strMessageType(tree->messageType));
-    goto error2;
+    sprintf(con->status, status[1], 
+	    strMessageType(con->message->messageType));
+    goto error;
   }
   
-  if (!cleanCacheTree(tree->collection)) goto error;
+  logMain(LOG_NOTICE, "%s", con->status);
   rc = TRUE;
- error2:
-  if (!releaseCollection(tree->collection, SERV)) rc = FALSE;
  error:
-  if (rc) {
-    logMain(LOG_NOTICE, "socketJob %i: success", me);
-  } else {
-    logMain(LOG_ERR, "socketJob %i: fails", me);
+#warning seems not needed
+  //if (!cleanCacheTree(con->message->collection)) rc = FALSE;
+  if (!rc) {
+    logMain(LOG_ERR, "%s", con->status);
   }
-  tree = destroyRecordTree(tree);
-  
-  socketJobEnds(connexion);
+
+  // send-back status code into the socket
+  strcpy(con->status + strlen(con->status), "\n");
+  tcpWrite(con->sock, con->status, strlen(con->status));
+  con->message = destroyRecordTree(con->message);
+
+  socketJobEnds(con);
   return (void*)rc;
 }
 

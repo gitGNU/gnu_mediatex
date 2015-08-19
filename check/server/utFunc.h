@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.h,v 1.3 2015/07/28 11:45:43 nroche Exp $
+ * Version: $Id: utFunc.h,v 1.4 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -26,17 +26,24 @@
 #define MDTX_SERVER_UTFUNC_H 1
 
 #include "mediatex-types.h"
+#include "server/mediatex-server.h"
 
 /* API */
 
 int utCleanCaches();
 int utCopyFileOnCache(Collection* coll, char* srcdir, char* file);
 
-int utToKeep(Collection* coll, char* hash, off_t size);
-int utDemand(Collection* coll, char* hash, off_t size, char* mail);
-RecordTree* ask4logo(Collection* collection, char* mail);
-RecordTree* providePart1(Collection* coll, char* path);
-RecordTree* providePart2(Collection* coll, char* path);
+Record* utRemoteDemand(Collection* coll, Server* server);
+int utAddFinalDemand(Collection* coll);
+int utAddLocalDemand(Collection* coll, char* hash, off_t size, 
+		     char* extra);
+
+Connexion* utConnexion(Collection* coll, MessageType messageType, 
+		       Server* from);
+Connexion* utUploadMessage(Collection* coll, char* extra);
+Connexion* utCgiMessage(Collection* coll, char* mail);
+Connexion* utHaveMessage1(Collection* coll, char* extra);
+Connexion* utHaveMessage2(Collection* coll, char* extra);
 
 /*=======================================================================
  * Function   : Print test purpose or result
@@ -44,27 +51,28 @@ RecordTree* providePart2(Collection* coll, char* path);
  * Synopsis   : void printResult(char* topo)
  * Input      : char* format: like for printf  
  *              char* topo : what to say about we print
- *              Collection* coll : cache to display
+ *              Collection* coll : cache to display if provided
  * Output     : N/A
  * Note       : if no collection is provided, we introduce.
  =======================================================================*/
 #define utLog(format, topo, coll)					\
   if (coll == 0) {							\
     logMain(LOG_NOTICE, "%s",						\
-	    "----------------------------------------------------------"); \
+	    "-------------------------------------------------------"); \
     logMain(LOG_NOTICE, format, (char*)topo);				\
     logMain(LOG_NOTICE, "%s",						\
-	    ".........................................................."); \
+	    "......................................................."); \
   }									\
   else {								\
     logMain(LOG_NOTICE, "%s",						\
-	    ".........................................................."); \
+	    "......................................................."); \
     logMain(LOG_NOTICE, format, (char*)topo);				\
     logMain(LOG_NOTICE, "%s",						\
-	    ".........................................................."); \
-    serializeRecordTree(((Collection*)coll)->cacheTree->recordTree, 0, 0); \
+	    "......................................................."); \
+    logRecordTree(LOG_MAIN, LOG_NOTICE,					\
+		  ((Collection*)coll)->cacheTree->recordTree, 0);	\
     logMain(LOG_NOTICE, "%s",						\
-	    "----------------------------------------------------------"); \
+	    "-------------------------------------------------------"); \
   }
 
 #endif /* MDTX_SERVER_UTFUNC_H */

@@ -1,0 +1,41 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[notice utmessage.c] -------------------------------------------------------
+[notice utmessage.c] no collection
+[notice utmessage.c] .......................................................
+[err recordTree.c] recordTree without collection
+[err recordTree.c] logRecordTree fails
+[err threads.c] checkMessage fails
+[notice utmessage.c] reply : 302 message without collection
+[notice utmessage.c] -------------------------------------------------------
+[notice utmessage.c] cannot match server
+[notice utmessage.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll1               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[err threads.c] checkMessage fails
+[notice utmessage.c] reply : 303 message from server aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa not registered into coll1 collection
+[notice utmessage.c] -------------------------------------------------------
+[notice utmessage.c] record related to other server
+[notice utmessage.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll1               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ REMOTE_DEMAND
+
+[err threads.c] checkMessage fails
+[notice utmessage.c] reply : 304 message contains a record not related to author 746d6ceeb76e05cfa2dea92a1c5753cd but aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+[info confTree.c] free configuration
+[info utmessage.c] exit on success
+[warning alloc.c] Memory leaks: n6, sum= 496

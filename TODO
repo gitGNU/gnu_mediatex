@@ -2,28 +2,20 @@
 *** TO CORRECT: cache policy    
 
 ** SERVER API:
-- call logRecordTree into unit-tests (instead of utLog)
-
-- send all sockets messages into mediatexd (cache, have, cgiSrv, notify)
---  only in cgiSrv.c (why) 
-  if (connexion->sock != STDOUT_FILENO && 
-      shutdown(connexion->sock, SHUT_WR) == -1) {
-- meditexd add -X- module into return code
-- unit test for mediatexd (sockets messages)
-- utcache should call uploadFinaleArchive instaed of cacheUpload
-
-** UPLOAD
-- rename cache/incoming to cache/date ?
-- provide upload target path
-- do not load into cache unknown archive in extract.txt
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- buildRule.sh script
+.........................................................
 
 ** SERVER
 - serversTree->server[]->lastCommit = DATE used by computeScore
 
+** UPLOAD
+- rename cache/incoming/date to cache/date
+- provide upload target path
+- do not load into cache unknown archive from extract.txt
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+- simulate extraction and check md5sum from content ?
+
 ** FINALE-SUPLLY
-- add a sha1 field for supports
+- add a sha1 field for supports ?
 - supports also include files on disk:
 -- name = absolute path 
 - cache.c also read supports.txt to get final-supply records
@@ -39,7 +31,7 @@
 - notify orphanes
 - display cache size (all/used/allocated/free)
 
-*** HTML
+** HTML
 - notify server lastComit
 - (final supplies automaticaly included into image score computation)
 - notify orphanes
@@ -48,6 +40,14 @@
 - make cron upload the cvsroot collection module
 - make cron upload the collection's apache logs
 - ease looking for archive life cycle into cvsroot
+
+** TRUST
+- new client query: mdtc check content [coll COLL]
+-- generate a content file (from extraction rules)
+-- register a special order+mail
+-- deliver maintain the content file (delete lines on succes)
+-- ... and finaly end it to the mail address
+- buildRule.sh script
 
 *** CHANGES (to document)
 
@@ -81,6 +81,21 @@
 - add a function to log recordTree (into recordTree.c)
 - move env.dryRun test into connect.c (notify, cgi, supp, upload)
 - move isRechable into utserverTree (never used elsewhere)
+
+- call logRecordTree into unit-tests (instead of utLog)
+- send all sockets messages into mediatexd (cache, have, cgiSrv, notify)
+--  only in cgiSrv.c (why) 
+  if (connexion->sock != STDOUT_FILENO && 
+      shutdown(connexion->sock, SHUT_WR) == -1) {
+- meditexd add -X- module into return code
+- check messages servers unit tests (cache, cgiSrv, have, notify)
+- have.sh: use $PWD instead of a copy on /tmp (cf cache.sh)
+- test for cgi POST query
+- unit test for notify (receiving message)
+- skip alloc when putting default severity to debug
+- unit test for mediatexd (sockets messages)
+-- move readMessageinto thread.c
+-- add utmediatexd.c calling this function
 
 *** CLEAN-UP
 

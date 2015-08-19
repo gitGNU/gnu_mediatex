@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.h,v 1.5 2015/08/17 01:31:53 nroche Exp $
+ * Version: $Id: threads.h,v 1.6 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : threads
  *
@@ -33,6 +33,7 @@ typedef struct Connexion {
   char* host;
   Server* server;
   char status[576];
+  RecordTree* message;
 } Connexion;
 
 // callback functions requiered
@@ -47,6 +48,9 @@ void socketJobEnds(Connexion* connexion);
 
 // main thread
 int mainLoop();
+
+// common fonction call to parse messages
+int checkMessage(Connexion* con);
 
 #endif /* _MDTX_SERVER_THREADS_H */
 

@@ -40,7 +40,7 @@ factSupp   2.00
 
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
-	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
+	localhost 6b18ed0194b0fbadd08e0a13cccda00e
 	share	  SUPP12_logo.png,
 		  SUPP22_logo.part1,
 		  SUPP32_logo.part2
@@ -58,5 +58,5 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	networks  private2
 	gateways  none
 	# --
-	localhost bedac32422739d7eced624ba20f5912e
+	localhost 6b18ed0194b0fbadd08e0a13cccda00e
 end

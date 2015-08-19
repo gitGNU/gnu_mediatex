@@ -11,6 +11,6 @@ Host 127.0.0.1
 Host localhost
 	Port 22
 
-Host 127.0.0.2
+Host mediatex.org
 	Port 2222
 

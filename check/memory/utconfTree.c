@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfTree.c,v 1.2 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utconfTree.c,v 1.3 2015/08/19 01:09:05 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -100,15 +100,28 @@ main(int argc, char** argv)
   freeConfiguration();
 
   // Create 2 other configurations for later unit-tests based on
-  // network topologie (utNotify: not used, utExtract: todo). 
+  // network topologie (utNotify, utExtract: todo). 
   // So we have:
   // - mdtx1 on "www" network (default)
   // - mdtx2 is the gateway for private1 network
   // - mdtx3 on "private1" network
+  //
+  // mdtx1.conf is the configuration file for server1,
+  // mdtx2.conf for server2 and mdtx3.conf for server3.
 
   // Each server share together 3 collections.
   // Here, the collection's server keys are the sames for each server
-  // on every collection. This should never append, but remains possible.
+  // on every collection. This should never append, but remains
+  // possible. So, we can use the same servers.txt file everywhere.
+  // So we alway have :
+  // mdtx1's collection key: 746d6ceeb76e05cfa2dea92a1c5753cd
+  // mdtx2's collection key: 6b18ed0194b0fbadd08e0a13cccda00e
+  // mdtx3's collection key: bedac32422739d7eced624ba20f5912e
+
+  // Note that the host key is the same for each server:
+  // f3e8a2cfcf01e5779608583de63cdc42.
+  // This is the case for instance during post-install test (tests.sh)
+  // that runs 3 servers on the same host (using -c option).  
 
   env.confLabel="mdtx2";
   if (!createExempleConfiguration()) goto error;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.11 2015/08/17 01:31:52 nroche Exp $
+ * Version: $Id: supp.c,v 1.12 2015/08/19 01:09:09 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -406,6 +406,8 @@ static int delFinalSupplies(Collection* coll, RecordTree* tree)
   int rc = FALSE;
   Record* record = 0;
 
+ logMain(LOG_DEBUG, "delFinalSupplies");
+
   while((record = rgHead(tree->records))) {
     if (!delRecord(coll, record)) goto error;
     rgRemove(tree->records);
@@ -413,6 +415,9 @@ static int delFinalSupplies(Collection* coll, RecordTree* tree)
 
   rc = TRUE;
  error:
+  if (!rc) {
+    logMain(LOG_ERR, "delFinalSupplies fails");
+  }
   return rc;
 }
 
@@ -436,7 +441,9 @@ notifyHave(Support* supp, char* path)
   RGIT* curr2 = 0;
   char* name = 0;
   int isShared = FALSE;
-  char reply[1];
+
+  // warning tcpRead seems to read more than 1 and erase the stack
+  char reply[64];
 
   logMain(LOG_DEBUG, "notifyHave");
   if (supp == 0) goto error;
@@ -453,11 +460,11 @@ notifyHave(Support* supp, char* path)
   tree->messageType = HAVE;
 
   // for each collections
-  while((coll = rgNext_r(conf->collections, &curr1))) {
+  while ((coll = rgNext_r(conf->collections, &curr1))) {
     tree->collection = coll;
 
     // find the support if used by this collection
-    while((name = rgNext_r(coll->supports, &curr2))) {
+    while ((name = rgNext_r(coll->supports, &curr2))) {
       if (!strncmp(name, supp->name, MAX_SIZE_NAME)) break;
     }
     if (name == 0) continue;

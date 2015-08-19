@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.5 2015/08/14 01:53:42 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.6 2015/08/19 01:09:08 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -263,67 +263,67 @@ struct ScoreParam {
 // Defensive programming macros
 
 #define checkLabel(label) {					\
-    if (label == (char*)0 || *label == (char)0)	{		\
+    if (!label || !(*label))	{				\
       logMisc(LOG_ERR, "%s", "please provide a label");		\
       goto error;						\
     }								\
   }
 
 #define checkCollection(coll) {					\
-    if (coll == (Collection*)0) {				\
+    if (!coll) {				\
       logMisc(LOG_ERR, "%s", "please provide a collection");	\
       goto error;						\
     }								\
   }
 
-#define checkSupport(coll) {					\
-    if (coll == (Support*)0) {					\
+#define checkSupport(supp) {					\
+    if (!supp) {						\
       logMisc(LOG_ERR, "%s", "please provide a support");	\
       goto error;						\
     }								\
   }
 
 #define checkServer(server) {					\
-    if (server == (Server*)0) {					\
+    if (!server) {						\
       logMisc(LOG_ERR, "%s", "please provide a server");	\
       goto error;						\
     }								\
   }
 
 #define checkImage(image) {					\
-    if (image == (Image*)0) {					\
+    if (!image) {						\
       logMisc(LOG_ERR, "%s", "please provide an image");	\
       goto error;						\
     }								\
   }
 
 #define checkArchive(archive) {					\
-    if (archive == (Archive*)0) {				\
+    if (!archive) {						\
       logMisc(LOG_ERR, "%s", "please provide an archive");	\
       goto error;						\
     }								\
   }
 
 #define checkContainer(container) {				\
-    if(container == (Container*)0) {				\
+    if(!container) {						\
       logMisc(LOG_ERR, "%s", "please provide a container");	\
       goto error;						\
     }								\
   }
 
 #define checkRecord(record) {					\
-    if (record == (Record*)0) {					\
+    if (!record) {						\
       logMisc(LOG_ERR, "%s", "please provide a record");	\
       goto error;						\
     }								\
   }
 
 #define checkRecordTree(recordTree) {				\
-    if (recordTree == (RecordTree*)0) {				\
+    if (!recordTree) {						\
       logMisc(LOG_ERR, "%s", "please provide a record tree");	\
       goto error;						\
     }								\
-    if (recordTree->collection == (Collection*)0) {		\
+    if (!recordTree->collection) {				\
       logMisc(LOG_ERR, "%s", "recordTree without collection");	\
       goto error;						\
     }								\

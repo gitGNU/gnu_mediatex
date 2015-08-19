@@ -1,9 +1,10 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.12 2015/08/17 01:31:51 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.13 2015/08/19 01:09:05 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
  * Functions building memory modules's configuration used by unit tests
+ * (please look at utconfTree.c for some explanation on the topology)
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 Nicolas Roche
@@ -465,10 +466,10 @@ createExempleCatalogTree(Collection* coll)
  * Synopsis   : int buildTestConfiguration()
  * Input      : N/A
  * Output     : TRUE on success
- * Note       : Networks and Gateways are not used here (see utconfTree.c)
+ * Note       : Networks and Gateways are defined into utconfTree.c,
  *              except for coll3, using the collection settings
  .........................................................................
- * See        : utconfTree, utconfFile, ...
+ * See        : utconfTree, utconfFile, utserverTree, utnotify
  =======================================================================*/
 int 
 createExempleConfiguration()
@@ -491,7 +492,7 @@ createExempleConfiguration()
   if (!(self->comment = catString(self->comment, " configuration file")))
     goto error;
   
-  // needed for cgi unit test (wich call himself)
+  // needed for cgi unit test (wich connect serv1 and serv2)
   if (env.confLabel[4] == '1') strcpy(self->host, "localhost");
 
   /* test1 collection */
@@ -574,11 +575,13 @@ createExempleServerTree(Collection* coll)
   char* comments[] = {
     "this is server1", "this is server2", "this is server3"};
   char hosts[][MAX_SIZE_HOST+1] = {
-    "localhost", "127.0.0.1", "127.0.0.2"};
+    "localhost", "127.0.0.1", "mediatex.org"};
   int mdtxPorts[] = {11111, 6560, 33333};
   int sshPorts[] = {22, 22, 2222};
   int wwwPorts[] = {443, 443, 4443};
-  char serverId[][MAX_SIZE_HASH+1] = { // fingerprints
+
+  // fingerprints related to confTree
+  char serverId[][MAX_SIZE_HASH+1] = {
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "6b18ed0194b0fbadd08e0a13cccda00e",
     "bedac32422739d7eced624ba20f5912e"};

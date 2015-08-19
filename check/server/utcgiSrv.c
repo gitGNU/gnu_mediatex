@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcgiSrv.c,v 1.1 2015/07/01 10:50:09 nroche Exp $
+ * Version: $Id: utcgiSrv.c,v 1.2 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -61,8 +61,7 @@ main(int argc, char** argv)
 {
   char inputRep[256] = ".";
   Collection* coll = 0;
-  Connexion connexion;
-  RecordTree* tree = 0;
+  Connexion* connexion = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -104,57 +103,59 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
-  connexion.sock = STDOUT_FILENO;
-  if (!(tree = ask4logo(coll, 0))) goto error;
+  if (!(connexion = utCgiMessage(coll, 0))) goto error;
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   
   utLog("%s", "1) try to extract the demand", 0);
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "2) retry with it on cache", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!quickScan(coll)) goto error;
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "3) retry with tgz on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
   if (!quickScan(coll)) goto error;
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "4) try with only part1 on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!quickScan(coll)) goto error;
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "5) try with part2 added on cache too", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
   if (!quickScan(coll)) goto error;
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
+
+  destroyRecordTree(connexion->message);
+  free (connexion);
   
   utLog("%s", "6) register a mail", 0);
   if (!utCleanCaches()) goto error;
   if (!quickScan(coll)) goto error;
-  tree = destroyRecordTree(tree);
-  if (!(tree = ask4logo(coll, "test@test.com"))) goto error;
-  if (!cgiServer(tree, &connexion)) goto error;
+  if (!(connexion = utCgiMessage(coll, "test@test.com"))) goto error;
+  if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-  tree = destroyRecordTree(tree);
   /************************************************************************/
 
   rc = TRUE;
  error:
+  if (connexion) destroyRecordTree(connexion->message);
+  free (connexion);
   freeConfiguration();
   ENDINGS;
   rc=!rc;

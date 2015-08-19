@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utnotify.c,v 1.2 2015/08/05 12:12:01 nroche Exp $
+ * Version: $Id: utnotify.c,v 1.3 2015/08/19 01:09:08 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -64,9 +64,11 @@ main(int argc, char** argv)
   char inputRep[256] = ".";
   Collection* coll = 0;
   Archive* archive = 0;
-  Server* server = 0;
+  Server* server1 = 0;
+  Server* server2 = 0;
   Record* record = 0;
   char* extra = 0;
+  Connexion* connexion = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -107,53 +109,80 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
-  if (!getLocalHost(coll)) goto error;
+  if (!(server2 = getLocalHost(coll))) goto error;
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
-
-  // available incoming
-  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
-
-  utLog("%s", "add a demands and local supplies:", 0);
   
+  /*
+    we try to be in the same situation as describe by utserverTree
+    server1: 746d6ceeb76e05cfa2dea92a1c5753cd
+    server2: 6b18ed0194b0fbadd08e0a13cccda00e
+    server3: bedac32422739d7eced624ba20f5912e
+   */
+
+  logMain(LOG_NOTICE, "localhost is %s", server2->fingerPrint);
+
+  // remote server (we should be server2 as using -c mdtx2)
+  if (!(server1 = addServer(coll, "746d6ceeb76e05cfa2dea92a1c5753cd")))
+    goto error;
+
   if (!(archive = 
 	addArchive(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075))) 
     goto error;
-  if (!(server = addServer(coll, "7af51aceb06864e690fa6a9e00000001")))
-    goto error;
 
-  // remote demand
+  // 1) test sending message
+  utLog("%s", "*** test sending message:", 0);
+  utLog("%s", "Populate the cache:", 0);
+
+  // add a remote demand
   if (!(extra = createString("!wanted"))) goto error;
-  if (!(record = addRecord(coll, server, archive, DEMAND, extra)))
+  if (!(record = addRecord(coll, server1, archive, DEMAND, extra)))
     goto error;
   if (!addCacheEntry(coll, record)) goto error;
   
-  // local demand
-  if (!(extra = createString("test@test"))) goto error;
-  if (!(record = addRecord(coll, coll->localhost, archive, DEMAND, extra)))
-    goto error;
-  if (!addCacheEntry(coll, record)) goto error;
+  // add a local demand
+  if (!utAddFinalDemand(coll)) goto error;
 
+  // add local supplies (logoP1.cat have a good score,others no)
+  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
   if (!quickScan(coll)) goto error;
+
   utLog("%s", "we have :", coll);
-  
-  utLog("%s", "here we send", 0);
   if (!sendRemoteNotify(coll)) goto error;
 
-#warning Needs more tests  
-  //utLog("%s", "here we receive", 0);
-  // ... need to copy the ring and clean the cache
-  //if (!acceptRemoteNotify(diff, LOCALHOST)) goto error;
+  utLog("%s", "Clean the cache:", 0);
+  if (!utCleanCaches()) goto error;
 
+  // 2) test receiving message
+  utLog("%s", "*** test receiving message:", 0);
+  utLog("%s", "Build message:", 0);
+  if (!(connexion = utConnexion(coll, NOTIFY, server1))) goto error;
+
+  // add a remote demand
+  if (!(extra = createString("!wanted"))) goto error;
+  if (!(record = addRecord(coll, server1, archive, DEMAND, extra)))
+    goto error;
+  if (!rgInsert(connexion->message->records, record)) goto error;
+
+  utLog("%s", "message we receive :", 0);
+  logRecordTree(LOG_MAIN, LOG_NOTICE, connexion->message, 0);
+  utLog("%s", "actually we have :", coll);
+  if (!acceptRemoteNotify(connexion))  {
+    utLog("reply : %s", connexion->status, 0);
+    goto error;
+  }
+  utLog("%s", "Now we have :", coll);
+  
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
   /************************************************************************/
 
   rc = TRUE;
  error:
+  if (connexion) destroyRecordTree(connexion->message);
+  free (connexion);
   freeConfiguration();
   ENDINGS;
   rc=!rc;

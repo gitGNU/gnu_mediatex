@@ -4,23 +4,23 @@
 [notice tcp.c] Listenning on 0.0.0.0:6560
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
 [notice utthreads.c] doing job 1 for localhost
+[notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
 [info utthreads.c] in  shm: (1000)
-[notice utthreads.c] finish job 1 for localhost
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
 [info utthreads.c] out shm: (0000)
 [notice threads.c] accepting signal HUP
 [notice utthreads.c] daemon wake-up
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
-[info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
+[notice utthreads.c] doing job 1 for localhost
+[notice utthreads.c] finish job 1 for localhost
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
 [notice utthreads.c] doing job 1 for localhost
-[notice utthreads.c] doing job 2 for localhost
-[notice utthreads.c] doing job 3 for localhost
 [notice utthreads.c] finish job 1 for localhost
-[notice utthreads.c] finish job 2 for localhost
-[notice utthreads.c] finish job 3 for localhost
+[info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
+[notice utthreads.c] doing job 1 for localhost
+[notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
 [info utthreads.c] in  shm: (1000)
 [notice utthreads.c] doing job 1 for signal
@@ -38,9 +38,9 @@
 [info utthreads.c] out shm: (0000)
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
 [notice utthreads.c] doing job 1 for localhost
+[notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
 [info utthreads.c] in  shm: (1000)
-[notice utthreads.c] finish job 1 for localhost
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
 [info utthreads.c] out shm: (0000)

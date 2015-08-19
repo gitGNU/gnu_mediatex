@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.11 2015/08/17 01:31:53 nroche Exp $
+ * Version: $Id: have.c,v 1.12 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -123,102 +123,57 @@ int haveArchive(ExtractData* data, Archive* archive)
 } 
 
 /*=======================================================================
- * Function   : addFinalSupplies
- * Description: 
- * Synopsis   : 
- * Input      :
- * Output     : TRUE on success
- =======================================================================*/
-static int 
-addFinalSupplies(RecordTree* tree, Record** iso)
-{
-  int rc = FALSE;
-  Record* record = 0;
-  RGIT* curr = 0;
-  off_t maxSize = 0;
-
-  while((record = rgNext_r(tree->records, &curr))) {
-    if (getRecordType(record) != FINAL_SUPPLY) {
-      logMain(LOG_ERR, "please provide final supplies");
-      goto error;
-    }
-
-    if (!addCacheEntry(tree->collection, record)) goto error;
-
-    // match the bigest record as the iso
-    if (record->archive->size > maxSize) {
-      maxSize = record->archive->size;
-      *iso = record;
-    }
-  }
-  rc = TRUE;
- error:
-  return rc;
-}
-
-/*=======================================================================
- * Function   : delFinalSupplies
- * Description: 
- * Synopsis   : 
- * Input      :
- * Output     : TRUE on success
- =======================================================================*/
-static int delFinalSupplies(RecordTree* tree)
-{
-  int rc = FALSE;
-  Record* record = 0;
-  RGIT* curr = 0;
-
-  while((record = rgNext_r(tree->records, &curr))) {
-    if (!delCacheEntry(tree->collection, record)) goto error;
-    curr->it = 0; // record remains in cache
-  }
-  rc = TRUE;
- error:
-  return rc;
-}
-
-/*=======================================================================
  * Function   : extractFinaleArchives
  * Description: Try to extract archives using the image provided
- * Synopsis   : int extractFinaleArchives(ArchiveTree* finalSupplies)
- * Input      : ArchiveTree* finalSupplies = support/colls we provide
+ * Synopsis   : int extractFinaleArchives(Connexion* connexion)
+ * Input      : Connexion* connexion
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractFinaleArchives(RecordTree* recordTree, Connexion* connexion)
+extractFinaleArchives(Connexion* connexion)
 {
   int rc = FALSE;
-  Record* iso = 0;
   ExtractData data;
-  (void) connexion;
+  Record* record = 0;
+
+  static char status[][64] = {
+    "230 ok",
+    "330 empty message",
+    "331 message do not provide a final supply %s"
+  };
 
   logMain(LOG_DEBUG, "remote extraction");
+  memset(&data, 0, sizeof(ExtractData));
+  data.coll = connexion->message->collection;
+  checkCollection(data.coll);
   if (!(data.toKeeps = createRing())) goto error;
   data.context = X_STEP;
-
-  // get the archiveTree's collection
-  if ((data.coll = recordTree->collection) == 0) {
-    logMain(LOG_ERR, "unknown collection for archiveTree");
+  
+  // check we get a final supplies
+  if (isEmptyRing(connexion->message->records)) {
+    sprintf(connexion->status, "%s", status[1]);
     goto error;
   }
-  
-  // check we get final supplies
-  if (isEmptyRing(recordTree->records)) {
-    logMain(LOG_ERR, "please provide records for have query");
+  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (getRecordType(record) != FINAL_SUPPLY) {
+    sprintf(connexion->status, status[2], record->extra);
     goto error;
   }
 
   if (!loadCollection(data.coll, SERV | EXTR | CACH)) goto error;
   if (!lockCacheRead(data.coll)) goto error2;
-  if (!addFinalSupplies(recordTree, &iso)) goto error3;
 
-  // up to down recursive match for wanted records on iso archive
-  if (!haveArchive(&data, iso->archive)) goto error4;
+  // Push provided final supplies into the cache
+  if (!addCacheEntry(data.coll, record)) goto error3;
+  rgRemove(connexion->message->records);
 
+  // up-down recursive match for wanted content from the final supply
+  if (!haveArchive(&data, record->archive)) goto error4;
+
+  sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;
  error4:
-  if (!delFinalSupplies(recordTree)) rc = FALSE;
+  if (!delCacheEntry(data.coll, record)) rc = FALSE;
  error3:
   if (!unLockCache(data.coll)) rc = FALSE;
  error2:

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextract.c,v 1.1 2015/07/01 10:50:09 nroche Exp $
+ * Version: $Id: utextract.c,v 1.2 2015/08/19 01:09:07 nroche Exp $
  * Project: MediaTeX
  * Module : extract
  *
@@ -108,8 +108,7 @@ main(int argc, char** argv)
   if (!utCleanCaches()) goto error;
   
   utLog("%s", "add a demand for logo.png:", 0);
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"test@test.com")) goto error;
+  if (!utAddFinalDemand(coll)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "try to extract the demand (1)", 0);
@@ -127,12 +126,11 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
 
-  /////////////////////////////////////////////////////////////
+  /********************* other containers ********************/
 
   utLog("%s", "Try tar-bzip2 container:", 0);
   if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"test@test.com")) goto error;
+  if (!utAddFinalDemand(coll)) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tar.bz2")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan before tar-bzip:", coll);
@@ -141,8 +139,7 @@ main(int argc, char** argv)
 
   /* utLog("%s", "Try afio container:", 0); */
   /* if (!utCleanCaches()) goto error; */
-  /* if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,  */
-  /* 		"test@test.com")) goto error; */
+  /* if (!utAddFinalDemand(coll)) goto error; */
   /* if (!utCopyFileOnCache(coll, inputRep, "logo.afio")) goto error; */
   /* if (!quickScan(coll)) goto error; */
   /* utLog("%s", "Scan before afio:", coll); */
@@ -151,8 +148,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Try zip container:", 0);
   if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"test@test.com")) goto error;
+  if (!utAddFinalDemand(coll)) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.zip")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan before unzip:", coll);
@@ -161,10 +157,9 @@ main(int argc, char** argv)
 
   /* utLog("%s", "Try rar container:", 0); */
   /* if (!utCleanCaches()) goto error; */
-  /* if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,  */
-  /* 		"test@test.com")) goto error; */
-  /* if (!utCopyFileOnCache(coll, inputRep, "logo.part1.rar")) goto error; */
-  /* if (!utCopyFileOnCache(coll, inputRep, "logo.part2.rar")) goto error; */
+  /* if (!utAddFinalDemand(coll)) goto error; */
+  /* if (!utCopyFileOnCache(coll,inputRep,"logo.part1.rar")) goto error; */
+  /* if (!utCopyFileOnCache(coll,inputRep,"logo.part2.rar")) goto error; */
   /* if (!quickScan(coll)) goto error; */
   /* utLog("%s", "Scan before unrar:", coll); */
   /* if (!extractArchives(coll)) goto error; */
@@ -172,8 +167,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Try tar container:", 0);
   if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
-		"test@test.com")) goto error;
+    if (!utAddFinalDemand(coll)) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tar")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan before tar:", coll);
@@ -182,8 +176,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Try cpio+gz container:", 0);
   if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,
-  		"test@test.com")) goto error;
+  if (!utAddFinalDemand(coll)) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.cpio.gz")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan before tar:", coll);
@@ -192,8 +185,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Try cpio+bz2 container:", 0);
   if (!utCleanCaches()) goto error;
-  if (!utDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075,
-  		"test@test.com")) goto error;
+  if (!utAddFinalDemand(coll)) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.cpio.bz2")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan before tar:", coll);
