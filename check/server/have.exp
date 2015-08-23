@@ -10,11 +10,23 @@
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] load coll3 records
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
@@ -27,7 +39,7 @@
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
 [notice uthave.c] .......................................................
 [notice uthave.c] Now we have :
@@ -67,18 +79,21 @@
 [info cache.c] = avail     104857600
 [info cache.c] need            20480
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: USED -> ALLOCATED
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
 [info device.c] absolute path is /HERE/misc/logoP1.cat
 [info device.c] not a symlink: /HERE/misc/logoP1.cat
 [info device.c] do not match a block device: /HERE/misc/logoP1.cat
+[notice extract.c] do cp
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: /HERE/check/./../misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat
 [info command.c] /bin/cp execution returns 0
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: ALLOCATED -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 extracted
-[info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
 [info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> AVAILABLE
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 not found
@@ -162,18 +177,23 @@
 [info cache.c] = avail     104833054
 [info cache.c] need            24075
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> ALLOCATED
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [notice extract.c] do tar -zxf
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar
 [info command.c] execScript: /bin/tar
 [info command.c]  arg1: -C
-[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar/
 [info command.c]  arg3: -zxf
 [info command.c]  arg4: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info command.c]  arg5: logo/logo.png
 [info command.c] /bin/tar execution returns 0
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar/logo
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
-[info cache.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
@@ -212,7 +232,15 @@
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> UNUSED
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
@@ -220,6 +248,10 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
 [info confTree.c] free configuration
 [info uthave.c] exit on success

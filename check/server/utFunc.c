@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.5 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.6 2015/08/23 23:39:13 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -49,8 +49,17 @@ utCleanCaches(void)
   if (!conf->collections) goto error;
   while((coll = rgNext_r(conf->collections, &curr))) {
     if (!diseaseCacheTree(coll)) goto error;
+
+    // clean cache dir
     if (!(argv[2] = createString(cmd))) goto error;
     if (!(argv[2] = catString(argv[2], coll->cacheDir))) goto error;
+    if (!(argv[2] = catString(argv[2], "/*"))) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+    argv[2] = destroyString(argv[2]);
+
+    // clean extraction dir
+    if (!(argv[2] = createString(cmd))) goto error;
+    if (!(argv[2] = catString(argv[2], coll->extractDir))) goto error;
     if (!(argv[2] = catString(argv[2], "/*"))) goto error;
     if (!execScript(argv, 0, 0, FALSE)) goto error;
     argv[2] = destroyString(argv[2]);

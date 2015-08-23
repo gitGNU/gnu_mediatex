@@ -5,12 +5,12 @@
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/catalog000.txt
 [info openClose.c] steps: 137 / 137
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info misc.c] Make HTML for coll1
 [info misc.c] estimate 17 steps for archives
 [info misc.c] estimate 19 steps for all
 [info misc.c] html
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 [info misc.c] steps: 29 / 19
 [info misc.c] ending

@@ -27,7 +27,7 @@
 [info openClose.c] parse coll1 collection ( SX )
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> ALLOCATED
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> ALLOCATED
 [notice cacheTree.c] we only record one local supply by archive
@@ -51,19 +51,19 @@
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection ( SX )
 [info openClose.c] steps: 0 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [emerg extractScore.c] coll2 collection: Perenniality lost (0.00)
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
 [info openClose.c] steps: 0 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [emerg extractScore.c] coll3 collection: Perenniality lost (0.00)
 [info confTree.c] free configuration
 [info utmotd.c] exit on success

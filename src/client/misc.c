@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.10 2015/08/14 01:53:42 nroche Exp $
+ * Version: $Id: misc.c,v 1.11 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -502,13 +502,14 @@ mdtxSu(char* label)
  * Function   : mdtxScp
  * Description: call scp so as to not need setuid bit on daemon
  * Synopsis   : int mdtxScp(char* label, char* fingerPrint, char* target)
- * Input      : char* label : collection label
- *              char* fingerPrint : source server's fingerprint
- *              char* target : relative path to target in cache
+ * Input      : char* label: collection label
+ *              char* fingerPrint: source server's fingerprint
+ *              char* source: relative path to remote source
+ *              char* target: relative path to local destination
  * Output     : TRUE on success
  =======================================================================*/
 int 
-mdtxScp(char* label, char* fingerPrint, char* target)
+mdtxScp(char* label, char* fingerPrint, char* source, char* target)
 {
   int rc = FALSE;
   Collection* coll = 0;
@@ -517,8 +518,9 @@ mdtxScp(char* label, char* fingerPrint, char* target)
 
   checkLabel(label);
   checkLabel(fingerPrint);
+  checkLabel(source);
   checkLabel(target);
-  logMain(LOG_DEBUG, "mdtxScp %s", target);
+  logMain(LOG_DEBUG, "mdtxScp %s@%s on %s", source, fingerPrint, target);
 
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV)) goto error;
@@ -530,13 +532,10 @@ mdtxScp(char* label, char* fingerPrint, char* target)
       || !(argv[1] = catString(argv[1], ":/var/cache/"))
       || !(argv[1] = catString(argv[1], server->user))
       || !(argv[1] = catString(argv[1], "/"))
-      || !(argv[1] = catString(argv[1], target)))
+      || !(argv[1] = catString(argv[1], source)))
     goto error2;
 
-  if (!(argv[2] = createString(coll->extractDir))
-      || !(argv[2] = catString(argv[2], "/")) 
-      || !(argv[2] = catString(argv[2], target)))
-    goto error2;
+  argv[2] = target;
 
   if (!env.dryRun && !execScript(argv, coll->user, 0, FALSE)) 
     goto error2;
@@ -548,7 +547,6 @@ mdtxScp(char* label, char* fingerPrint, char* target)
     logMain(LOG_ERR, "mdtxScp fails");
   } 
   argv[1] = destroyString(argv[1]);
-  argv[2] = destroyString(argv[2]);
   return rc;
 }
 

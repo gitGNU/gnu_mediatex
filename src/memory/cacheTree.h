@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.7 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.8 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -33,7 +33,8 @@ typedef enum {
   MUTEX_ALLOC=0, 
   MUTEX_KEEP=1, 
   MUTEX_COMPUTE=2,
-  MUTEX_MAX=3
+  MUTEX_TARGET=3,
+  MUTEX_MAX=4
 } CacheMutex;
 
 // hight level type computed from type, host and path
@@ -98,6 +99,12 @@ int getCacheSizes(Collection* coll,
 		 off_t* totalSize, off_t* useSize, off_t* frozenSize);
 
 int diseaseCacheTree(Collection* coll);
+
+// call by extract.c
+int buildTargetFile(Collection* coll, char** newAbsolutePath, 
+		    char* prefix, char* postfix);
+int buildTargetDir(Collection* coll, char** newAbsolutePath, 
+		   char* prefix, char* postfix);
 
 #endif /* MDTX_MEMORY_CACHE_H */
 

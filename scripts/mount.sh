@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: mount.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
+# * Version: $Id: mount.sh,v 1.5 2015/08/23 23:39:15 nroche Exp $
 # * Project: MediaTex
 # * Module : mount script
 # *
@@ -37,6 +37,5 @@ ISO=$1
 MNT=$2
 OPTIONS="-o ro"$3
 
-mkdir $MNT
 /bin/mount -t iso9660 $OPTIONS $ISO $MNT
 Info "done"

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.h,v 1.6 2015/08/14 01:53:42 nroche Exp $
+ * Version: $Id: misc.h,v 1.7 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -42,7 +42,7 @@ int mdtxDelUser(char* user);
 int mdtxBind();
 int mdtxUnbind();
 int mdtxSu(char* label);
-int mdtxScp(char* label, char* fingerPrint, char* target);
+int mdtxScp(char* label, char* fingerPrint, char* source, char* target);
 
 #endif /* MDTX_CLIENT_MISC_H */
 

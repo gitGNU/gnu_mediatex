@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tcp.sh,v 1.1 2015/07/01 10:49:53 nroche Exp $
+# * Version: $Id: tcp.sh,v 1.2 2015/08/23 23:39:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -27,7 +27,7 @@ set -e
 
 # retrieve environment
 [ -z $srcdir ] && srcdir=.
-. ${srcdir}/utmediatex.sh
+. utmediatex.sh
 
 TEST=$(basename $0)
 TEST=${TEST%.sh}

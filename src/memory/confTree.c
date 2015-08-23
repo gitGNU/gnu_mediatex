@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: confTree.c,v 1.10 2015/08/23 23:39:16 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -340,16 +340,16 @@ expandCollection(Collection* self)
   mdtx = env.confLabel;
   user = self->user;
 
-  if (!checkDirectory(   self->homeDir,    user, mdtx, 0750)
-      || !checkDirectory(self->cacheDir,   mdtx, user, 02750)
-      || !checkDirectory(self->extractDir, mdtx, user, 02770)
-      || !checkDirectory(self->cvsDir,     mdtx, user, 02770)
+  if (!checkDirectoryPerm(   self->homeDir,    user, mdtx, 0750)
+      || !checkDirectoryPerm(self->cacheDir,   mdtx, user, 02750)
+      || !checkDirectoryPerm(self->extractDir, mdtx, user, 02770)
+      || !checkDirectoryPerm(self->cvsDir,     mdtx, user, 02770)
 
       /* mdtx was just been added to user group,
   	 so it need to reload its groups to check the above
   	 diretories */
-      || !checkDirectory(self->sshDir,     user, user, 0700)
-      || !checkDirectory(self->htmlDir,    mdtx, user, 02750)
+      || !checkDirectoryPerm(self->sshDir,     user, user, 0700)
+      || !checkDirectoryPerm(self->htmlDir,    mdtx, user, 02750)
       )
     goto error;
 
@@ -727,15 +727,15 @@ expandConfiguration()
     goto error;
 
   // check directories
-  if (!checkDirectory(jail,                "root", "root", 0755)
-      || !checkDirectory(conf->cvsRootDir,  mdtx,   meta,  0750)
-      || !checkDirectory(conf->homeDir,    "root", "root", 0755)
-      || !checkDirectory(conf->md5sumDir,   mdtx,   mdtx,  0750)
-      || !checkDirectory(conf->cacheDir,    mdtx,   meta,  0750)
-      || !checkDirectory(conf->extractDir,  mdtx,   meta,  0750)
-      || !checkDirectory(conf->cvsDir,      mdtx,   meta,  0750)
-      || !checkDirectory(conf->mdtxCvsDir,  mdtx,   mdtx,  02770)
-      || !checkDirectory(conf->hostSshDir, "root", "root", 0755)
+  if (!checkDirectoryPerm(jail,                "root", "root", 0755)
+      || !checkDirectoryPerm(conf->cvsRootDir,  mdtx,   meta,  0750)
+      || !checkDirectoryPerm(conf->homeDir,    "root", "root", 0755)
+      || !checkDirectoryPerm(conf->md5sumDir,   mdtx,   mdtx,  0750)
+      || !checkDirectoryPerm(conf->cacheDir,    mdtx,   meta,  0750)
+      || !checkDirectoryPerm(conf->extractDir,  mdtx,   meta,  0750)
+      || !checkDirectoryPerm(conf->cvsDir,      mdtx,   meta,  0750)
+      || !checkDirectoryPerm(conf->mdtxCvsDir,  mdtx,   mdtx,  02770)
+      || !checkDirectoryPerm(conf->hostSshDir, "root", "root", 0755)
       )
     goto error;
 

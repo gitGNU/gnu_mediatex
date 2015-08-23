@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: perm.sh,v 1.1 2015/07/01 10:49:52 nroche Exp $
+# * Version: $Id: perm.sh,v 1.2 2015/08/23 23:39:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *
@@ -27,21 +27,45 @@ set -e
 
 # retrieve environment
 [ -z $srcdir ] && srcdir=.
-. ${srcdir}/utmediatex.sh
+. utmediatex.sh
+
+# unit test's sand box
+mkdir -p $TMP
+touch $TMP/sand-box.txt
 
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run units tests
-MDTX_NO_REGRESSION=0 \
-    misc/ut$TEST -d /usr/bin -u root -g root -p 755 \
+
+# internal tests
+misc/ut$TEST -d $PWD/$srcdir -w $PWD \
     >misc/$TEST.out 2>&1
+
+# tests using parameters
+misc/ut$TEST -d /usr/bin -u foo -g root -p 755 \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d /usr/bin -u root -g bar -p 755 \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d /usr/bin -u root -g root -p 777 \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d /usr/bin -u root -g root -p 755 \
+    >>misc/$TEST.out 2>&1
+
+# test other test will not fails using no regression mode
 MDTX_NO_REGRESSION=1 \
-    misc/ut$TEST -d /usr/bin -u toto -g tata -p 755 \
+    misc/ut$TEST -d /usr/bin -u root -g root -p 777 \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+MDTX_NO_REGRESSION=1 \
+    misc/ut$TEST -d /usr/bin -u foo -g bar -p 755 \
     >>misc/$TEST.out 2>&1
 
 # suppress the current date
-sed -i -e "1 d" misc/$TEST.out
+sed -i -e "s/\(current date: \).*/\1 XXX/" misc/$TEST.out
 
 # compare with the expected output
 mrProperOutputs misc/$TEST.out

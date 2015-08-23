@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.17 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: extract.c,v 1.18 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -41,10 +41,14 @@ mdtxCall(int nbArgs, ...)
   va_list args;
   char *argv[] = {
     CONF_BINDIR CONF_MEDIATEXDIR,
-    0, 0, 0, 0, 0, 0, 0, 0};
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   int i = 0;
 
-  logMain(LOG_DEBUG, "call mdtx client");
+  logMain(LOG_DEBUG, "mdtxCall");
+  if (nbArgs > 9) {
+    logMain(LOG_ERR, "mdtxCall can only pass 9 parameters to client");
+    goto error;
+  }
 
   va_start(args, nbArgs);
   while (--nbArgs >= 0) {
@@ -65,21 +69,21 @@ mdtxCall(int nbArgs, ...)
 }
 
 /*=======================================================================
- * Function   : getAbsExtractPath
+ * Function   : getAbsoluteExtractPath
  * Description: get an absolute path to the temp extraction directory
- * Synopsis   : char* getAbsExtractPath(Collection* coll, char* path) 
+ * Synopsis   : char* getAbsoluteExtractPath(Collection* coll, char* path) 
  * Input      : Collection* coll = the related collection
  *              char* path = the relative path
  * Output     : absolute path, 0 on failure
  =======================================================================*/
 char*
-getAbsExtractPath(Collection* coll, char* path) 
+getAbsoluteExtractPath(Collection* coll, char* path) 
 {
   char* rc = 0;
 
   checkCollection(coll);
   checkLabel(path);
-  logMain(LOG_DEBUG, "absCachePath");
+  logMain(LOG_DEBUG, "getAbsoluteExtractPath");
 
   if (!(rc = createString(coll->extractDir))) goto error;
   if (!(rc = catString(rc, "/"))) goto error;
@@ -93,90 +97,38 @@ getAbsExtractPath(Collection* coll, char* path)
 }
 
 /*=======================================================================
- * Function   : uniqueCachePath
- * Description: return a path not alrady used in cache
- * Synopsis   : char* uniqueCachePath(Collection* coll, FromAsso* asso) 
- * Input      : Collection* coll = the related collection
- *              char* path = the relative path
- * Output     : path not use into the cache, 0 on failure
- =======================================================================*/
-char*
-getUniqCachePath(Collection* coll, char* path) 
-{
-  char* rc = 0;
-  char* res = 0;
-  int isThere = TRUE;
-  char i=(char)0, j=(char)0;
-  int l;
-
-  checkCollection(coll);
-  checkLabel(path);
-  logMain(LOG_DEBUG, "uniqueCachePath");
-
-  // try with the native path
-  if (!(res = getAbsCachePath(coll, path))) goto error;
-  if (!callAccess(res, &isThere)) goto error;
-  if (!isThere) goto end;
-
-  // add "_00" to the path and loop on number
-  if (!(res = catString(res, "_-01-"))) goto error;
-  l = strlen(res) - 3;
-  for (i='0'; i<='9'; ++i) {
-    for (j='0'; j<='9'; ++j) {
-      res[l] = i;
-      res[l+1] = j;
-      if (!callAccess(res, &isThere)) goto error;
-      if (!isThere) goto end;
-    }
-  }
-  goto error;
-
- end:
-  rc = res;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "uniqueCachePath fails");
-    res = destroyString(res);
-  }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : getArchivePath
- * Description: check we erase nothing
- * Synopsis   : char* getArchivePath(Collection* coll, Archive* archive) 
+ * Function   : getAbsoluteArchivePath
+ * Description: Local asolute path where we can access the archive
+ * Synopsis   : char* getAbsoluteArchivePath(Collection* coll, Archive* archive) 
  * Input      : Collection* coll = the related collection
  *              Archive* archive = the releted archive
- * Output     : absolute path, 0 on failure
+ * Output     : absolute path, NULL on failure
  =======================================================================*/
 char*
-getArchivePath(Collection* coll, Archive* archive) 
+getAbsoluteArchivePath(Collection* coll, Archive* archive) 
 {
   char* rc = 0;
   Record* record = 0;
 
   checkCollection(coll);
   checkArchive(archive);
-  logMain(LOG_DEBUG, "getArchivePath");
+  logMain(LOG_DEBUG, "getAbsoluteArchivePath");
 
-  // local supply
   if (archive->state >= AVAILABLE) {
+    // local supply
     if (!(record = archive->localSupply)) goto error;
     if (isEmptyString(record->extra)) goto error;
   }
   else {
     // final supply
-    if (archive->finalSupplies->nbItems > 0) {
-      if (!(record = (Record*)archive->finalSupplies->head->it)) 
-	goto error;
-      if (isEmptyString(record->extra)) goto error;
-    }
+    if (!(record = rgHead(archive->finalSupplies)) ||
+	isEmptyString(record->extra)) goto error;      
   }
 
-  rc = getAbsRecordPath(coll, record);
+  rc = getAbsoluteRecordPath(coll, record);
  error:
   if (!rc) {
-    logMain(LOG_ERR, "getArchivePath fails");
+    logMain(LOG_ERR, "getAbsoluteArchivePath fails");
   }
   return rc;
 }
@@ -184,9 +136,12 @@ getArchivePath(Collection* coll, Archive* archive)
 /*=======================================================================
  * Function   : extractDd
  * Description: call dd
- * Synopsis   : int extractDd(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractDd(Collection* coll, char* device, 
+ *                            char* target, off_t size)
  * Input      : Collection* coll
- *              FromAsso* asso
+ *              char* device: source device
+ *              char* target: destination path
+ *              off_t size
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -199,7 +154,7 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
   checkCollection(coll);
   checkLabel(device);
   checkLabel(target);
-  logMain(LOG_NOTICE, "extractDd %s", target);
+  logMain(LOG_NOTICE, "do dd");
   
   if (!(argv[1] = createString("if="))
       || !(argv[1] = catString(argv[1], device)))
@@ -226,26 +181,60 @@ extractDd(Collection* coll, char* device, char* target, off_t size)
 }
 
 /*=======================================================================
- * Function   : extractScp
- * Description: call scp
- * Synopsis   : int extractScp(Collection* coll, FromAsso* asso)
- * Input      : Collection* coll
- *              FromAsso* asso
+ * Function   : extractCp
+ * Description: call cp
+ * Synopsis   : int extractCp(char* source, char* target)
+ * Input      : char* source: source path
+ *              char* target: destination path
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractScp(Collection* coll, Record* record)
+extractCp(char* source, char* target)
+{
+  int rc = FALSE;
+  char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
+
+  checkLabel(source);
+  checkLabel(target);
+  logMain(LOG_NOTICE, "do cp");
+
+  argv[2] = source;
+  argv[3] = target;
+
+  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "extractCp fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : extractScp
+ * Description: call scp
+ * Synopsis   : int extractScp(Collection* coll, Record* record, 
+ *                             char* target)
+ * Input      : Collection* coll
+ *              Record* record: remote source
+ *              char* target: local destination path
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+extractScp(Collection* coll, Record* record, char* target)
 {
   int rc = FALSE;
 
   checkCollection(coll);
   checkRecord(record);
-  logMain(LOG_NOTICE, "extractScp %s", record->extra);
+  logMain(LOG_NOTICE, "do scp", record->extra);
   
   if (!env.dryRun && 
-      !mdtxCall(7, "adm", "get", record->extra, 
+      !mdtxCall(9, "adm", "get", record->extra, 
 		"as", coll->label, 
-		"on", record->server->fingerPrint))
+		"on", record->server->fingerPrint, 
+		"as", target))
     goto error;
 
   rc = TRUE;
@@ -259,88 +248,71 @@ extractScp(Collection* coll, Record* record)
 /*=======================================================================
  * Function   : extractIso
  * Description: call mdtx (that call mount)
- * Synopsis   : iso extractIso(Collection* coll, FromAsso* asso)
+ * Synopsis   : iso extractIso(Collection* coll, FromAsso* asso, 
+ *                             char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath = target path
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractIso(Collection* coll, FromAsso* asso, char* tmpPath)
+extractIso(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   Archive* archive = (Archive*)0;
   char* iso = 0;
-  char* mnt = 0;
-  char* path = 0;
-  int isThere = TRUE;
-  int i,j,l;
+  char tmp[] = "mnt";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
-  logMain(LOG_NOTICE, "isoExtract");
+  logMain(LOG_NOTICE, "do iso extract");
 
   // should have one and only one parent
   if (!(archive = (Archive*)asso->container->parents->head->it)) 
     goto error;
 
+  // build a mount point into temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
+
   // mount the iso
-  if (!(iso = getArchivePath(coll, archive))) goto error;
-
-  // try with the native path
-  if (!(mnt = createString(coll->extractDir))
-      || !(mnt = catString(mnt, "/mnt"))) 
-    goto error;
-
-  if (!callAccess(mnt, &isThere)) goto error;
-  if (!isThere) goto next;
-
-  // add "_00" to the path and loop on number
-  if (!(mnt = catString(mnt, "_01"))) goto error;
-  l = strlen(mnt) - 2;
-  for (i='0'; i<='9'; ++i) {
-    for (j='0'; j<='9'; ++j) {
-      mnt[l] = i;
-      mnt[l+1] = j;
-
-      if (!callAccess(mnt, &isThere)) goto error;
-      if (!isThere) goto next;
-    }
-  }
-  goto error;
-
- next:
-  if (!mdtxCall(6, "adm", "mount", iso, "on", mnt, "-S")) goto error;
+  if (!(iso = getAbsoluteArchivePath(coll, archive))) goto error2;
+  if (!mdtxCall(6, "adm", "mount", iso, "on", tmpDir, "-S")) 
+    goto error2;
 
   // copy the asso file
-  if (!(path = createString(mnt))
-      || !(path = catString(path, "/"))
-      || !(path = catString(path, asso->path)))
-    goto error2;
-  if (!extractCp(path, tmpPath)) goto error2;
+  if (!extractCp(tmpFile, targetPath)) goto error3;
   
   rc = TRUE;
- error2:
+ error3:
   // umount the iso
-  if (!mdtxCall(3, "adm", "umount", mnt)) rc = FALSE;
+  if (!mdtxCall(3, "adm", "umount", tmpDir)) rc = FALSE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:  
   if (!rc) {
     logMain(LOG_ERR, "isoExtract fails");
   }
-  iso = destroyString(iso);
-  mnt = destroyString(mnt);
-  path = destroyString(path);
+  destroyString(tmpDir);
+  destroyString(tmpFile);
+  destroyString(iso);
   return(rc);
 }
 
 /*=======================================================================
  * Function   : extractCat
  * Description: call cat
- * Synopsis   : int extractCat(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractCat(Collection* coll, FromAsso* asso, 
+ *                             char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath: destination path
  * Output     : TRUE on success
  * Note       : we need to load bash in order to do the '>' redirection
  =======================================================================*/
 int 
-extractCat(Collection* coll, FromAsso* asso, char* path)
+extractCat(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   char *cmd = 0;
@@ -354,7 +326,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
  
   // all parts
   while((archive = rgNext_r(asso->container->parents, &curr))) {
-    if (!(path2 = getArchivePath(coll, archive))) goto error;
+    if (!(path2 = getAbsoluteArchivePath(coll, archive))) goto error;
     if (!(cmd = catString(cmd, path2))) goto error;
     if (!(cmd = catString(cmd, " "))) goto error;
     path2 = destroyString(path2);
@@ -362,7 +334,7 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
   
   // concatenation resulting file
   if (!(cmd = catString(cmd, ">"))) goto error;
-  if (!(cmd = catString(cmd, path))) goto error;
+  if (!(cmd = catString(cmd, targetPath))) goto error;
   argv[2] = cmd;
 
   if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
@@ -381,38 +353,55 @@ extractCat(Collection* coll, FromAsso* asso, char* path)
  * Function   : extractTar
  * Description: call tar -x
  * Synopsis   : int extractTar(Collection* coll, FromAsso* asso,
- *                                                   char* options)
+ *                             char* options, char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
  *              char* options: -zxf, -jxf or -xf
+ *              char* targetPath
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractTar(Collection* coll, FromAsso* asso, char* options)
+extractTar(Collection* coll, FromAsso* asso, char* options, 
+	   char* targetPath)
 {
   int rc = FALSE;
   char *argv[] = {"/bin/tar", "-C", 0, 0, 0, 0, 0};
   Archive* archive = 0;
+  char tmp[] = "tar";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
   logMain(LOG_NOTICE, "do tar %s", options);
 
+  // build a temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
+
   if (!env.dryRun) {
-    argv[2] = coll->extractDir; 
+    argv[2] = tmpDir; 
     argv[3] = options;
-    if (asso->container->parents->nbItems <= 0) goto error;
-    if (!(archive = (Archive*)asso->container->parents->head->it)) 
-      goto error;
-    if (!(argv[4] = getArchivePath(coll, archive))) goto error;
+    if (!(archive = rgHead(asso->container->parents))) goto error2;
+    if (!(argv[4] = getAbsoluteArchivePath(coll, archive))) goto error2;
     argv[5] = asso->path;
 
-    if (!execScript(argv, 0, 0, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error2;
+
+    if (rename(tmpFile, targetPath)) {
+      logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+      goto error2;
+    }
   }
 
   rc = TRUE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "fails to do tar");
   }
+  destroyString(tmpDir);
+  destroyString(tmpFile);
   destroyString(argv[4]);
   return(rc);
 }
@@ -421,7 +410,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
  * Function   : extractXzip
  * Description: call Xunzip
  * Synopsis   : int extractXzip(Collection* coll, FromAsso* asso,
- *                                         char* tmpPath, char* bin)
+ *                              char* bin, char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
  * Output     : TRUE on success
@@ -430,7 +419,7 @@ extractTar(Collection* coll, FromAsso* asso, char* options)
  *              to decompress into another directory
  =======================================================================*/
 int 
-extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
+extractXzip(Collection* coll, FromAsso* asso, char* bin, char* targetPath)
 {
   int rc = FALSE;
   char* argv[] = {"/bin/bash", "-c", 0, 0};
@@ -438,18 +427,17 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
   char* path = 0;
   Archive* archive = 0;
 
-  logMain(LOG_NOTICE, "do Xunzip %s", bin);
-
-  if (!(cmd = createString(bin))) goto error;
+  logMain(LOG_NOTICE, "do %s", bin);
 
   if (asso->container->parents->nbItems <= 0) goto error;
   if (!(archive = (Archive*)asso->container->parents->head->it)) 
     goto error;
-  if (!(path = getArchivePath(coll, archive))) goto error;
+  if (!(path = getAbsoluteArchivePath(coll, archive))) goto error;
 
+  if (!(cmd = createString(bin))) goto error;
   if (!(cmd = catString(cmd, path))) goto error;
   if (!(cmd = catString(cmd, " >"))) goto error;
-  if (!(cmd = catString(cmd, tmpPath))) goto error;
+  if (!(cmd = catString(cmd, targetPath))) goto error;
   argv[2] = cmd;
 
   if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
@@ -467,35 +455,52 @@ extractXzip(Collection* coll, FromAsso* asso, char* tmpPath, char* bin)
 /*=======================================================================
  * Function   : extractAfio
  * Description: call afio -i
- * Synopsis   : int extractAfio(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractAfio(Collection* coll, FromAsso* asso
+ *                              char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractAfio(Collection* coll, FromAsso* asso)
+extractAfio(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   char *argv[] = {"/bin/afio", "-i", "-y", 0, 0, 0};
   Archive* archive = 0;
+  char tmp[] = "afio";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
   logMain(LOG_NOTICE, "do afio -i");
 
+  // build a temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
+
   if (!env.dryRun) {
     argv[3] = asso->path;
-    if (asso->container->parents->nbItems <= 0) goto error;
-    if (!(archive = (Archive*)asso->container->parents->head->it)) 
-      goto error;
-    if (!(argv[4] = getArchivePath(coll, archive))) goto error;
+    if (!(archive = rgHead(asso->container->parents))) goto error2;
+    if (!(argv[4] = getAbsoluteArchivePath(coll, archive))) goto error2;
 
-    if (!execScript(argv, 0, coll->extractDir, FALSE)) goto error;
+    if (!execScript(argv, 0, tmpDir, FALSE)) goto error2;
+
+    if (rename(tmpFile, targetPath)) {
+      logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+      goto error2;
+    }
   }
 
   rc = TRUE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "fails to do afio");
   }
+  destroyString(tmpDir);
+  destroyString(tmpFile);
   argv[4] = destroyString(argv[4]);
   return(rc);
 }
@@ -503,36 +508,53 @@ extractAfio(Collection* coll, FromAsso* asso)
 /*=======================================================================
  * Function   : extractCpio
  * Description: call cpio -i
- * Synopsis   : int extractCpio(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractCpio(Collection* coll, FromAsso* asso
+ *                              char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractCpio(Collection* coll, FromAsso* asso)
+extractCpio(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   char *argv[] = {"/bin/cpio", "-i", "--file", 0, 
 		  "--make-directories", 0, 0};
   Archive* archive = 0;
+  char tmp[] = "cpio";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
   logMain(LOG_NOTICE, "do cpio -i");
 
+  // build a temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
+
   if (!env.dryRun) {
-    if (asso->container->parents->nbItems <= 0) goto error;
-    if (!(archive = (Archive*)asso->container->parents->head->it)) 
-      goto error;
-    if (!(argv[3] = getArchivePath(coll, archive))) goto error;
+    if (!(archive = rgHead(asso->container->parents))) goto error2;
+    if (!(argv[3] = getAbsoluteArchivePath(coll, archive))) goto error2;
     argv[5] = asso->path;
 
-    if (!execScript(argv, 0, coll->extractDir, TRUE)) goto error;
+    if (!execScript(argv, 0, tmpDir, TRUE)) goto error2;
+
+    if (rename(tmpFile, targetPath)) {
+      logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+      goto error2;
+    }
   }
 
   rc = TRUE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "fails to do cpio");
   }
+  destroyString(tmpDir);
+  destroyString(tmpFile);
   argv[3] = destroyString(argv[3]);
   return(rc);
 }
@@ -540,36 +562,53 @@ extractCpio(Collection* coll, FromAsso* asso)
 /*=======================================================================
  * Function   : extractZip
  * Description: call unzip
- * Synopsis   : int extractZip(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractZip(Collection* coll, FromAsso* asso
+ *                             char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractZip(Collection* coll, FromAsso* asso)
+extractZip(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   char *argv[] = {"/usr/bin/unzip", "-d", 0, 0, 0, 0};
   Archive* archive = 0;
+  char tmp[] = "zip";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
   logMain(LOG_NOTICE, "do unzip");
 
+  // build a temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
+
   if (!env.dryRun) {
-    argv[2] = coll->extractDir; 
-    if (asso->container->parents->nbItems <= 0) goto error;
-    if (!(archive = (Archive*)asso->container->parents->head->it)) 
-      goto error;
-    if (!(argv[3] = getArchivePath(coll, archive))) goto error;
+    argv[2] = tmpDir; 
+    if (!(archive = rgHead(asso->container->parents))) goto error2;
+    if (!(argv[3] = getAbsoluteArchivePath(coll, archive))) goto error2;
     argv[4] = asso->path; 
 
-    if (!execScript(argv, 0, 0, FALSE)) goto error;
+    if (!execScript(argv, 0, 0, FALSE)) goto error2;
+
+    if (rename(tmpFile, targetPath)) {
+      logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+      goto error2;
+    }
   }
 
   rc = TRUE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "fails to do unzip");
   }
+  destroyString(tmpDir);
+  destroyString(tmpFile);
   destroyString(argv[3]);
   return(rc);
 }
@@ -577,45 +616,63 @@ extractZip(Collection* coll, FromAsso* asso)
 /*=======================================================================
  * Function   : extractRar
  * Description: call rar x
- * Synopsis   : int extractRar(Collection* coll, FromAsso* asso)
+ * Synopsis   : int extractRar(Collection* coll, FromAsso* asso
+ *                             char* targetPath, char* targetPath)
  * Input      : Collection* coll
  *              FromAsso* asso
+ *              char* targetPath
  * Output     : TRUE on success
  =======================================================================*/
 int 
-extractRar(Collection* coll, FromAsso* asso)
+extractRar(Collection* coll, FromAsso* asso, char* targetPath)
 {
   int rc = FALSE;
   char *argv[] = {"/usr/bin/rar", "x", 0, 0, 0, 0};
   Archive* archive = 0;
+  char tmp[] = "rar";
+  char* tmpDir = 0;
+  char* tmpFile = 0;
 
   logMain(LOG_NOTICE, "do rar x");
 
-  if (!env.dryRun) {
-    if (asso->container->parents->nbItems <= 0) goto error;
-    if (!(archive = (Archive*)asso->container->parents->head->it)) 
-      goto error;
-    if (!(argv[2] = getArchivePath(coll, archive))) goto error;
-    argv[3] = asso->path; 
-    argv[4] = coll->extractDir; 
+  // build a temporary extraction directory
+  if (!buildTargetDir(coll, &tmpDir, coll->extractDir, tmp)) goto error;
+  if (!(tmpFile = createString(tmpDir))) goto error2;
+  if (!(tmpFile = catString(tmpFile, asso->path))) goto error2;
 
-    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  if (!env.dryRun) {
+    if (!(archive = rgHead(asso->container->parents))) goto error2;
+    if (!(argv[2] = getAbsoluteArchivePath(coll, archive))) goto error2;
+    argv[3] = asso->path; 
+    argv[4] = tmpDir; 
+
+    if (!execScript(argv, 0, 0, FALSE)) goto error2;
+
+    if (rename(tmpFile, targetPath)) {
+      logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+      goto error2;
+    }
   }
 
   rc = TRUE;
+ error2:
+  if (!removeDir(coll->extractDir, tmpFile?tmpFile:tmpDir)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "fails to do rar e");
   }
   destroyString(argv[2]);
+  destroyString(tmpDir);
+  destroyString(tmpFile);
   return(rc);
 }
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Function   : extractAddToKeep
+ * Description: lock archive as it may be used for extraction too
+ * Synopsis   : int extractAddToKeep(ExtractData* data, Archive* archive)
+ * Input      : ExtractData* data
+ *              Archive* archive
  * Output     : TRUE on success
  =======================================================================*/
 int
@@ -642,12 +699,14 @@ extractAddToKeep(ExtractData* data, Archive* archive)
 }
 
 /*=======================================================================
- * Function   : 
- * Description: 
- * Synopsis   : 
- * Input      : 
+ * Function   : extractDelToKeeps
+ * Description: unlock archive
+ * Synopsis   : int extractDelToKeeps(Collection* coll, RG* toKeeps)
+ * Input      : Collection* coll
+ *              RG* toKeeps
  * Output     : TRUE on success
  =======================================================================*/
+#warning why not same parameter as extractAddToKeep ?
 int
 extractDelToKeeps(Collection* coll, RG* toKeeps)
 {
@@ -675,11 +734,15 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
 }
 
 /*=======================================================================
- * Function   : moveIntoCache
- * Description: move file into the cache
+ * Function   : cacheSet
+ * Description: move file extracted in temporary directory into 
+ *               the cache cache directory
  * Synopsis   : char* moveIntoCache(Collection* coll, char* path) 
  * Input      : Collection* coll = the related collection
- *              char* path = the relative path
+ *              absoluteExtractPath = source path
+ *              relativeCanonicalPath = use to compute destination
+ *              char* path = the relative path from temporary 
+ *               extraction directory
  * Output     : TRUE on success
  * Note       : as tar cannot rename a file, and in order not to have
  *              collisions, we extract files in a temporary place 
@@ -688,41 +751,43 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
  * TODO       : remove extract dirs ~/tmp/... (if empty)
  =======================================================================*/
 int
-cacheSet(ExtractData* data, Record* record, char* path) 
+cacheSet(ExtractData* data, Record* record,
+	char* absoluteExtractPath, char* relativeCanonicalPath)
 {
   int rc = FALSE;
-  char* source = 0;
-  char* target = 0;
   Collection* coll = 0;
+  char* absoluteCachePath = 0;
+  char* relativeCachePath = 0;
 
   coll = data->coll;
   checkCollection(coll);
   checkRecord(record);
-  checkLabel(path);
+  checkLabel(absoluteExtractPath);
+  checkLabel(relativeCanonicalPath);
   logMain(LOG_DEBUG, "cacheSet");  
 
+  if (!buildTargetFile(data->coll, &absoluteCachePath,
+		       coll->cacheDir, relativeCanonicalPath)) 
+    goto error;
+
   // move from extract dir into the cache dir
-  if (!(source = getAbsExtractPath(coll, path))) goto error;
-  if (!(target = getUniqCachePath(coll, path))) goto error;
-  logMain(LOG_INFO, "move %s to %s", source, target);  
-  
-  if (!makeDir(coll->cacheDir, target, 0750)) goto error;  
-  if (rename(source, target)) {
+  logMain(LOG_INFO, "move %s to %s", 
+	  absoluteExtractPath, absoluteCachePath);  
+  if (rename(absoluteExtractPath, absoluteCachePath)) {
     logMain(LOG_ERR, "rename fails: %s", strerror(errno));
     goto error;
   }
 
-  // * TODO: here we should remove extract dirs ~/tmp/... (if empty)
-
   // toggle !malloc record to local-supply...
-  record->extra = destroyString(record->extra);
-  if (!(record->extra = createString(path))) goto error;
-  if (path[0] == '/') {
-    logMain(LOG_WARNING, "please remove absolute in the extract file");
-    logMain(LOG_WARNING, "current extract will fails due to that");
+  relativeCachePath = absoluteCachePath + strlen(coll->cacheDir) + 1;
+  if (relativeCachePath[0] == '/') {
+    logMain(LOG_ERR, "internal error: local supply cannot begin on '/'");
+    goto error;
   }
+  record->extra = destroyString(record->extra);
+  if (!(record->extra = createString(relativeCachePath))) goto error;
 
-  // and add a toKepp on the new extracted archive
+  // ...and add a toKepp on the new extracted archive
   if (!extractAddToKeep(data, record->archive)) goto error;
 
   logMain(LOG_NOTICE, "%s:%lli extracted", 
@@ -732,114 +797,107 @@ cacheSet(ExtractData* data, Record* record, char* path)
   if (!rc) {
     logMain(LOG_ERR, "cacheSet fails");
   }
-  source = destroyString(source);
-  target = destroyString(target);
+  destroyString(absoluteCachePath);
   return rc;
 }
 
 /*=======================================================================
  * Function   : extractRecord
  * Description: extract a record (cp and scp)
- * Synopsis   : int extractRecord(Collection* coll, Record* record)
+ * Synopsis   : int extractRecord(Collection* coll, Record* sourceRecord)
  * Input      : Collection* coll
- *              Record* record
+ *              Record* sourceRecord
  * Output     : TRUE on success
+ * Note       : extract REMOTE and FINAL supplies
  =======================================================================*/
 int 
-extractRecord(ExtractData* data, Record* record)
+extractRecord(ExtractData* data, Record* sourceRecord)
 {
   int rc = FALSE;
   Collection* coll = 0;
   char* finalSupplySource = 0;
   char* finalSupplyTarget = 0;
-  char* basename = 0;
-  char* path = 0;
+  char* relativeCanonicalPath = 0;
+  char* absoluteExtractPath = 0;
   FromAsso* asso = 0;
-  Record* record2 = 0;
+  Record* targetRecord = 0;
   char* device = 0;
   int isBlockDev = FALSE;
-  int i = 0;
 
   coll = data->coll;
   checkCollection(coll);
-  checkRecord(record);
+  checkRecord(sourceRecord);
   logMain(LOG_DEBUG, "extractRecord %s:%lli", 
-	  record->archive->hash, record->archive->size);
+	  sourceRecord->archive->hash, sourceRecord->archive->size);
 
-  // split extra path if we get a final supply
-  if (getRecordType(record) == FINAL_SUPPLY) {
-    finalSupplySource = getFinalSupplyInPath(record->extra);
-    finalSupplyTarget = getFinalSupplyOutPath(record->extra);
+  // split extra if we get a final supply
+  if (getRecordType(sourceRecord) == FINAL_SUPPLY) {
+    finalSupplySource = getFinalSupplyInPath(sourceRecord->extra);
+    finalSupplyTarget = getFinalSupplyOutPath(sourceRecord->extra);
   }
 
   // allocate place on cache
-  if (!cacheAlloc(&record2, coll, record->archive)) goto error;
+  if (!cacheAlloc(&targetRecord, coll, sourceRecord->archive)) goto error;
 
-  // we need a target path for the content to extract:
-
-  // - final supply may provide the supportname
+  // Retieve canonical path we will try to use for extraction:
+  // - final supply
   if (finalSupplyTarget) {
-    basename = finalSupplyTarget;
+    relativeCanonicalPath = finalSupplyTarget;
     goto next;
   }
-
-  // - retrieve first canonical target name (may be severals)
-  if (record->archive && 
-      !isEmptyRing(record->archive->fromContainers) &&
-      (asso = (FromAsso*)record->archive->fromContainers->head->it)) {
-    basename = asso->path;
+  // - first canonical target name (may be severals)
+  if (sourceRecord->archive &&
+      (asso = rgHead(sourceRecord->archive->fromContainers))) {
+    relativeCanonicalPath = asso->path;
     goto next;
   }
-
-  // - else (who know) use the source path
-  if (record->extra[0] != '/') {
-    basename = record->extra;
-    goto next;
-  }
-
-  // - but only the basename for final supply
-  for (i = strlen(record->extra); i>=0 && record->extra[i] != '/'; --i);
-  basename = record->extra + i + 1;
+  // - source path for top containers
+  relativeCanonicalPath = sourceRecord->extra;
   
  next:
-  if (!(path = getAbsExtractPath(coll, basename))) goto error;
-  if (!makeDir(coll->extractDir, path, 0770)) goto error;
+  // build destination path into temporary extraction directory
+  if (!buildTargetFile(data->coll, &absoluteExtractPath,
+		       coll->extractDir, relativeCanonicalPath)) 
+    goto error;
 
-  switch (getRecordType(record)) {
+  // extract record into temporary extraction directory
+  switch (getRecordType(sourceRecord)) {
   case FINAL_SUPPLY:
     // may be a block device to dump
     if (!getDevice(finalSupplySource, &device)) goto error;
     if (!isBlockDevice(device, &isBlockDev)) goto error;
     if (isBlockDev) {
-      if (!extractDd(coll, device, path, record->archive->size)) 
-	goto error;
+      if (!extractDd(coll, device, absoluteExtractPath, 
+		     sourceRecord->archive->size)) goto error;
     }
     else {
-      if (!extractCp(finalSupplySource, path)) goto error;
+      if (!extractCp(finalSupplySource, absoluteExtractPath)) goto error;
     }
     break;
   case REMOTE_SUPPLY:
-    if (!extractScp(coll, record)) goto error;
+    if (!extractScp(coll, sourceRecord, 
+		    absoluteExtractPath)) goto error;
     break;
   default:
-    logMain(LOG_ERR, "cannot extract %s record", strRecordType(record));
+    logMain(LOG_ERR, "cannot extract %s record", 
+	    strRecordType(sourceRecord));
     goto error;
   }
   
   // toggle !malloc record to local supply
-  if (!cacheSet(data, record2, basename)) goto error;
-  if (!removeDir(coll->extractDir, path)) goto error;
+  if (!cacheSet(data, targetRecord, 
+		absoluteExtractPath, relativeCanonicalPath)) goto error;
+  if (!removeDir(coll->extractDir, absoluteExtractPath)) goto error;
 
-  basename = 0;
-  record2 = 0;
+  targetRecord = 0;
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "extractRecord fails");
   }
-  if (record2) delCacheEntry(coll, record2);
-  destroyString(path);
+  if (targetRecord) delCacheEntry(coll, targetRecord);
   destroyString(device);
+  destroyString(absoluteExtractPath);
   destroyString(finalSupplySource);
   destroyString(finalSupplyTarget);
   return rc;
@@ -852,69 +910,75 @@ extractRecord(ExtractData* data, Record* record)
  * Input      : Collection* coll
  *              Record* record
  * Output     : TRUE on success
+ * Note       : extract LOCAL supply
  =======================================================================*/
 int 
 extractFromAsso(ExtractData* data, FromAsso* asso)
 {
   int rc = FALSE;
   Collection* coll = 0;
-  Record* record = 0;
-  char* path = 0;
-
+  Record* targetRecord = 0;
+  char* absoluteExtractPath = 0;
+ 
   coll = data->coll;
   checkCollection(coll);
   logMain(LOG_DEBUG, "extractFromAsso %s:%lli", 
 	  asso->archive->hash, asso->archive->size);
 
   // allocate place on cache
-  if (!cacheAlloc(&record, coll, asso->archive)) goto error;
+  if (!cacheAlloc(&targetRecord, coll, asso->archive)) goto error;
 
-  if (!(path = getAbsExtractPath(coll, asso->path))) goto error;
-  if (!makeDir(coll->extractDir, path, 0770)) goto error;
+  // build destination directory into temporary extraction directory
+  if (!buildTargetFile(data->coll, &absoluteExtractPath,
+		       coll->extractDir, asso->path)) 
+    goto error;
 
+  // extract record into temporary extraction directory
   switch (asso->container->type) {
   case ISO:
-    if (!extractIso(coll, asso, path)) goto error;
+    if (!extractIso(coll, asso, absoluteExtractPath)) goto error;
     break;
     
   case CAT:
-    if (!extractCat(coll, asso, path)) goto error;
+    if (!extractCat(coll, asso, absoluteExtractPath)) goto error;
     break;
     
   case TGZ:
-    if (!extractTar(coll, asso, "-zxf")) goto error;
+    if (!extractTar(coll, asso, "-zxf", absoluteExtractPath)) goto error;
     break;
 
   case TBZ:
-    if (!extractTar(coll, asso, "-jxf")) goto error;
+    if (!extractTar(coll, asso, "-jxf", absoluteExtractPath)) goto error;
     break;
 
   case AFIO:
-    if (!extractAfio(coll, asso)) goto error;
+    if (!extractAfio(coll, asso, absoluteExtractPath)) goto error;
     break;
 
   case TAR:
-    if (!extractTar(coll, asso, "-xf")) goto error;
+    if (!extractTar(coll, asso, "-xf", absoluteExtractPath)) goto error;
     break;
 
   case CPIO:
-    if (!extractCpio(coll, asso)) goto error;
+    if (!extractCpio(coll, asso, absoluteExtractPath)) goto error;
     break;
 
   case GZIP:
-    if (!extractXzip(coll, asso, path, "/bin/zcat ")) goto error;
+    if (!extractXzip(coll, asso, "/bin/zcat ", absoluteExtractPath)) 
+      goto error;
     break;
 
   case BZIP:
-    if (!extractXzip(coll, asso, path, "/bin/bzcat ")) goto error;
+    if (!extractXzip(coll, asso, "/bin/bzcat ", absoluteExtractPath)) 
+      goto error;
     break;
 
   case ZIP:
-    if (!extractZip(coll, asso)) goto error;
+    if (!extractZip(coll, asso, absoluteExtractPath)) goto error;
     break;
 
   case RAR:
-    if (!extractRar(coll, asso)) goto error;
+    if (!extractRar(coll, asso, absoluteExtractPath)) goto error;
     break;
     
   default:
@@ -924,17 +988,18 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
   }
   
   // toggle !malloc record to local supply
-  if (!cacheSet(data, record, asso->path)) goto error;
-  if (!removeDir(coll->extractDir, path)) goto error;
+  if (!cacheSet(data, targetRecord, absoluteExtractPath, asso->path)) 
+    goto error;
+  if (!removeDir(coll->extractDir, absoluteExtractPath)) goto error;
 
-  record = 0;
+  targetRecord = 0;
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "extractFromAsso fails");
   }
-  if (record) delCacheEntry(coll, record);
-  path = destroyString(path);
+  if (targetRecord) delCacheEntry(coll, targetRecord);
+  destroyString(absoluteExtractPath);
   return rc;
 }
 
@@ -1040,7 +1105,7 @@ int extractArchive(ExtractData* data, Archive* archive)
 
   if (archive->state >= AVAILABLE) {
     // test if the file is really there 
-    if (!(path = getAbsRecordPath(data->coll, archive->localSupply))) 
+    if (!(path = getAbsoluteRecordPath(data->coll, archive->localSupply))) 
       goto error;
     if (!callAccess(path, &isThere)) goto error;
     if (!isThere) {
@@ -1055,8 +1120,8 @@ int extractArchive(ExtractData* data, Archive* archive)
   // final supply
   if (archive->finalSupplies->nbItems > 0) {
     // test if the file is really there 
-    if (!(record = (Record*)archive->finalSupplies->head->it)) goto error;
-    if (!(path = getAbsRecordPath(data->coll, record))) 
+    if (!(record = rgHead(archive->finalSupplies))) goto error;
+    if (!(path = getAbsoluteRecordPath(data->coll, record))) 
       goto error;
     if (!callAccess(path, &isThere)) goto error;
     if (!isThere) {
@@ -1064,7 +1129,7 @@ int extractArchive(ExtractData* data, Archive* archive)
       goto error;
     }
 
-    // copy archive if wanted as final demand
+    // copy archive if wanted into the cache
     if (data->target == archive) {
       if (!extractRecord(data, record)) goto error;
     }
@@ -1240,7 +1305,6 @@ int extractArchives(Collection* coll)
   if (!rc) {
     logMain(LOG_ERR, "extraction fails (internal error)");
   }
-  curr = 0;
   destroyOnlyRing(archives);
   destroyOnlyRing(data.toKeeps);
   return rc;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.h,v 1.7 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: cache.h,v 1.8 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -30,21 +30,14 @@
 
 /* API */
 
-char* getAbsCachePath(Collection* coll, char* path);
+char* getAbsoluteCachePath(Collection* coll, char* path);
 char* getFinalSupplyInPath(char* path);
 char* getFinalSupplyOutPath(char* path);
-char* getAbsRecordPath(Collection* coll, Record* record);
-
-int callAccess(char* path, int* isThere);
-int makeDir(char* base, char* path, mode_t mode);
-int removeDir(char* base, char* path);
-int extractCp(char* source, char* target);
+char* getAbsoluteRecordPath(Collection* coll, Record* record);
 
 int quickScan(Collection* collection);
 int quickScanAll(void);
 int cacheAlloc(Record** record, Collection* coll, Archive* archive);
-
-int uploadFinaleArchive(Connexion* connexion);
 
 #endif /* MDTX_SERVER_CACHE_H */
 

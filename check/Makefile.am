@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.6 2015/08/19 01:09:03 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.7 2015/08/23 23:39:09 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -84,6 +84,7 @@ check_PROGRAMS = \
 	server/utcache \
 	server/utdeliver \
 	server/utextract \
+	server/utupload \
 	server/utcgiSrv \
 	server/uthave \
 	server/utnotify \
@@ -144,6 +145,7 @@ TESTS = \
 	server/cache.sh \
 	server/deliver.sh \
 	server/extract.sh \
+	server/upload.sh \
 	server/cgiSrv.sh \
 	server/have.sh \
 	server/notify.sh \
@@ -221,6 +223,7 @@ dist_check_DATA = \
 	server/cache.exp \
 	server/deliver.exp \
 	server/extract.exp \
+	server/upload.exp \
 	server/cgiSrv.exp \
 	server/have.exp \
 	server/notify.exp \
@@ -345,6 +348,8 @@ server_utdeliver_SOURCES = server/utdeliver.c
 server_utdeliver_LDADD = $(server_ldadd)
 server_utextract_SOURCES = server/utextract.c
 server_utextract_LDADD = $(server_ldadd)
+server_utupload_SOURCES = server/utupload.c
+server_utupload_LDADD = $(server_ldadd)
 server_utcgiSrv_SOURCES = server/utcgiSrv.c
 server_utcgiSrv_LDADD = $(server_ldadd)
 server_uthave_SOURCES = server/uthave.c

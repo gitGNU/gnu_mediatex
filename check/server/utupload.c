@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.7 2015/08/23 23:39:14 nroche Exp $
+ * Version: $Id: utupload.c,v 1.1 2015/08/23 23:39:14 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -62,10 +62,10 @@ main(int argc, char** argv)
 {
   char inputRep[256] = ".";
   Collection* coll = 0;
-  Archive* archive = 0;
   Record* record = 0;
-  off_t size = 0;
   char* extra = 0;
+  char* extra2 = 0;
+  Connexion* connexion = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -107,62 +107,96 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
+  if (!(extra2 = createString(inputRep))) goto error;
+  if (!(extra2 = catString(extra2, "/../misc/"))) goto error;
+  if (!(extra = createString(extra2))) goto error;
+  if (!(extra = catString(extra, "README"))) goto error;
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-
-  utLog("%s", "Scan the cache directory :", 0);
-  if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.iso")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
   if (!quickScan(coll)) goto error;
   utLog("%s", "Scan gives :", coll);
 
+ /*--------------------------------------------------------*/
+  utLog("%s", " * No message ring:", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  connexion->message->records = 
+    destroyRing(connexion->message->records, 
+		(void *(*)(void*)) destroyRecord);
+  if (uploadFinaleArchive(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  destroyRecordTree(connexion->message);
+  free (connexion);
+
   /*--------------------------------------------------------*/
-  utLog("%s", "Keep logoP1.iso and logoP2.iso:", 0);
-  if (!(archive =
-  	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
+  utLog("%s", " * Empty message ring:", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (!(record = rgHead(connexion->message->records))) goto error;
+  record = destroyRecord(record);
+  rgRemove(connexion->message->records);
+  if (uploadFinaleArchive(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  destroyRecordTree(connexion->message);
+  free (connexion);
+
+  /*--------------------------------------------------------*/
+  utLog("%s", " * Not a final suply:", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (!(record = rgHead(connexion->message->records))) goto error;
+  record->extra[0] = '_';
+  if (uploadFinaleArchive(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  destroyRecordTree(connexion->message);
+  free (connexion);
+
+  /*--------------------------------------------------------*/
+  utLog("%s", " * Upload using default target:", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (!uploadFinaleArchive(connexion)) {
+    utLog("reply : %s", connexion->status, 0);
     goto error;
-  if (!keepArchive(coll, archive)) goto error;
-  if (!(archive =
-  	getArchive(coll, "0a7ecd447ef2acb3b5c6e4c550e6636f", 374784)))
+  }
+  utLog("We get %s", connexion->status, coll);
+  destroyRecordTree(connexion->message);
+  free (connexion);
+
+ /*--------------------------------------------------------*/
+  utLog("%s", " * Already there:", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (uploadFinaleArchive(connexion)) goto error;
+  logMain(LOG_NOTICE, "reply : %s", connexion->status);
+  destroyRecordTree(connexion->message);
+  free (connexion);
+
+  utLog("%s", "Clean the cache:", 0);
+  if (!utCleanCaches()) goto error;
+  if (!quickScan(coll)) goto error;
+
+  /*--------------------------------------------------------*/
+  utLog(" * Upload providing a target: %s", "store", 0);
+  if (!(connexion = utUploadMessage(coll, extra))) goto error;
+  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(record->extra = catString(record->extra, ":store"))) 
     goto error;
-  if (!keepArchive(coll, archive)) goto error;
-  utLog("%s", "Now we have :", coll);
+  if (!uploadFinaleArchive(connexion))  {
+    utLog("reply : %s", connexion->status, 0);
+    goto error;
+  }
+  utLog("We get %s", connexion->status, coll);
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for too much place :", 0);
-  size = coll->cacheTree->totalSize;
-  if (!(archive = addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  			     size))) goto error;
-  if (cacheAlloc(&record, coll, archive)) goto error;
-  utLog("reply : %i", record?1:0, coll); // 0: too much
-  
-  /*--------------------------------------------------------*/
-  utLog("%s", "Ask for little place so do not suppress anything :", 0);
-  size = coll->cacheTree->totalSize - coll->cacheTree->useSize;
-  archive->size = size;
-  record = 0;
-  if (!cacheAlloc(&record, coll, archive)) goto error;
-  record->extra[0]='*';
-  utLog("reply : %i", record?1:0, coll); // 1: already avail
-  if (!delCacheEntry(coll, record)) goto error;
-
-  /*--------------------------------------------------------*/
-  utLog("%s", "Ask for place so as we need to suppress files :", 0);
-  size = coll->cacheTree->totalSize - coll->cacheTree->frozenSize;
-  if (!(archive = addArchive(coll, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  			    size))) goto error;
-  record = 0;
-  if (!cacheAlloc(&record, coll, archive)) goto error;
-  record->extra[0]='*'; // ALLOCATED -> AVAILABLE
-  if (!delCacheEntry(coll, record)) goto error;
-  utLog("reply : %i", record?1:0, coll); // 1: del some entries
-  record = 0;
-
+  utLog(" * Upload providing a target: %s", "store/it/here", 0);
+  if (!(extra2 = catString(extra2, "logo.png:store/it/here"))) goto error;
+  if (!(record = utLocalRecord(coll,
+			       "022a34b2f9b893fba5774237e1aa80ea", 24075,
+			       SUPPLY, extra2))) goto error;
+  extra2 = 0;
+  if (!rgInsert(connexion->message->records, record)) goto error;
+  if (!uploadFinaleArchive(connexion))  {
+    utLog("reply : %s", connexion->status, 0);
+    goto error;
+  }
+  utLog("We get %s", connexion->status, coll);
   /*--------------------------------------------------------*/
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
@@ -170,8 +204,10 @@ main(int argc, char** argv)
 
   rc = TRUE;
  error:
-  extra = destroyString(extra);
-  record = destroyRecord(record);
+  destroyString(extra);
+  destroyString(extra2);
+  if (connexion) destroyRecordTree(connexion->message);
+  free (connexion);
   freeConfiguration();
   ENDINGS;
   rc=!rc;

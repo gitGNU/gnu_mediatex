@@ -1,4 +1,4 @@
-#  * Version: $Id: mediatex_comp,v 1.6 2015/08/14 01:53:41 nroche Exp $
+#  * Version: $Id: mediatex_comp,v 1.7 2015/08/23 23:39:14 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -133,7 +133,7 @@ commit bind unbind mount umount get"
 	    _cd_devices
 	    return 0
 	    ;;
-	umount|get|on|file|catalog|rules|key)
+	umount|file|catalog|rules|key)
 	    _filedir
 	    return 0
 	    ;;
@@ -173,6 +173,10 @@ upload++ motd upgrade upgrade+ make clean su"
 	    COMPREPLY=( $( compgen -W "as" -- $cur ) )
 	    return 0
 	    ;;
+	on)
+	    COMPREPLY=( $( compgen -W "to" -- $cur ) )
+	    return 0
+	    ;;
 	file)
 	    if [ $COMP_CWORD -gt 3 ]; then
 		case "${COMP_WORDS[COMP_CWORD-4]}" in
@@ -190,6 +194,14 @@ upload++ motd upgrade upgrade+ make clean su"
 	    return 0
 	    ;;
 	as)
+	      if [ $COMP_CWORD -gt 3 ]; then
+		  case "${COMP_WORDS[COMP_CWORD-4]}" in
+		      get) # get PATH as
+			  COMPREPLY=( $( compgen -W "on" -- $cur ) )
+			  return 0
+			  ;;
+		  esac
+	      fi
 	    if [ $COMP_CWORD -gt 5 ]; then
 		case "${COMP_WORDS[COMP_CWORD-6]}" in
 		    catalog) # catalog FILE file FILE as

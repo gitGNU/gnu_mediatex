@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.10 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: upload.c,v 1.11 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -359,9 +359,10 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   int socket = -1;
   RecordTree* tree = 0;
   Record* record = 0;
+  char buf[MAX_SIZE_STRING] = "";
   char* extra = 0;
   char* message = 0;
-  char reply[256];
+  char reply[576];
   int status = 0;
   int n = 0;
 
@@ -374,7 +375,18 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   if (!(tree = createRecordTree())) goto error; 
   tree->collection = coll;
   tree->messageType = UPLOAD; 
+
+  // tels "/source:target"
   if (!(extra = absolutePath(source))) goto error;
+  if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", extra, 
+	       target?":":"", target?target:"") 
+      >= MAX_SIZE_STRING) {
+    logMain(LOG_ERR, "buffer too few to copy source and target paths");
+    goto error;
+  }
+
+  extra = destroyString(extra);
+  extra = createString(buf);
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
   extra = 0;
@@ -382,11 +394,6 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   record = 0;
   
   // ask daemon to upload the file into the cache
-  logMain(LOG_INFO, "ask daemon to upload %s", source);
-  if (env.noRegression) {
-    logRecordTree(LOG_MAIN, LOG_INFO, tree, 0);
-    goto end;
-  }
   if ((socket = connectServer(coll->localhost)) == -1) goto error;
   if (!upgradeServer(socket, tree, 0)) goto error;
     

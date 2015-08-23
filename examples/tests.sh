@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.6 2015/08/19 01:09:08 nroche Exp $
+# * Version: $Id: tests.sh,v 1.7 2015/08/23 23:39:14 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -30,6 +30,23 @@
 ############################################
 # remanent tasks
 ############################################
+
+## demo
+SEVERITY_CLIENT=notice
+SEVERITY_SERVER=notice
+DEBUG_CLIENT_SCRIPT=""
+DEBUG_SERVER=0
+
+## debug
+#SEVERITY_CLIENT=debug
+#SEVERITY_SERVER=debug
+#DEBUG_CLIENT_SCRIPT="-S"
+#DEBUG_SERVER=1          # need to run "$ xhost +" first
+#ADDON_SERVER=valgrind
+
+### not done
+## ADDON_SERVER=gdb
+## cf: gdb -ex "set args -c serv1" -ex "r" mediatexd
 
 # $1 topo to display
 function topo()
@@ -63,7 +80,7 @@ function mdtxA()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -snotice -c $SERVER $QUERY
+    mediatex -c $SERVER -s $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT $QUERY 
 }
 
 # $1 publisher query
@@ -73,7 +90,7 @@ function mdtxP()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -snotice -c $SERVER su <<EOF
+    mediatex -c $SERVER -s $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT su <<EOF
 mediatex $QUERY
 EOF
 }
@@ -149,37 +166,119 @@ function startInitdScript()
     query "start" $SERVER
     
     # replace localhost by 127.0.0.1 in configuration
-    sedInPlace "s/\(host.*\)localhost/\1127.0.0.1/" /etc/mediatex/$SERVER.conf
+    sedInPlace "s/\(host.*\)localhost/\1127.0.0.1/" \
+	/etc/mediatex/$SERVER.conf
 
     # copy initd script
     sed -e "s|mediatexd|mediatexd-$SERVER|" \
 	-e "s|\(DAEMON=/usr/bin\)/.*|\1/mediatexd|" \
 	-e "s|mdtx|$SERVER|" \
+	-e "s|--severity notice|--severity $SEVERITY_SERVER|" \
 	/etc/init.d/mediatexd > /etc/init.d/mediatexd-$SERVER
     chmod +x /etc/init.d/mediatexd-$SERVER
     systemctl daemon-reload # needed by systemd
-    
-    /etc/init.d/mediatexd-$SERVER start
+
+    if [ $DEBUG_SERVER -eq 0 ]; then
+	/etc/init.d/mediatexd-$SERVER start
+    else 
+	cat >/tmp/doNotClose.sh <<EOF
+#!/bin/bash
+echo "---- run: \$@ ----"
+\$@
+echo "---- exited ----"
+bash
+EOF
+	chmod +x /tmp/doNotClose.sh
+	su $SERVER -c \
+	    "env -u SESSION_MANAGER xterm -e \
+              /tmp/doNotClose.sh $ADDON_SERVER mediatexd \
+               -c $SERVER -s$SEVERITY_SERVER -ffile -S &"	    
+	sleep 1
+	mkdir -p /var/run/mediatex
+
+	case "$ADDON_SERVER" in
+	    valgrind)
+		PS=$(ps -ef | grep "valgrind.bin [m]ediatexd -c $SERVER")
+		;;
+	    *)
+		PS=$(ps -ef | grep "0 [m]ediatexd -c $SERVER")
+	esac
+
+	echo $PS | awk '{print $2}' >/var/run/mediatex/${SERVER}d.pid
+    fi
 }
 
-# idem
+# $1 mdtx user (serv1 by default)
 function statusInitdScript()
 {
     SERVER=${1-serv1}
 
     query "status" $SERVER
-    /etc/init.d/mediatexd-$SERVER status
+
+    if [ $DEBUG_SERVER -eq 0 ]; then
+	/etc/init.d/mediatexd-$SERVER status
+    else
+	ps -ef | grep $(cat /var/run/mediatex/${SERVER}d.pid)
+    fi
 }
 
-# idem
+
+# $1 mdtx user (serv1 by default)
 function stopInitdScript()
 {
     SERVER=${1-serv1}
 
     query "stop" $SERVER
-    if [ -f /etc/init.d/mediatexd-$SERVER ]; then
-	/etc/init.d/mediatexd-$SERVER stop
-	rm -f /etc/init.d/mediatexd-$SERVER
+
+    if [ $DEBUG_SERVER -eq 0 ]; then
+	if [ -f /etc/init.d/mediatexd-$SERVER ]; then
+	    /etc/init.d/mediatexd-$SERVER stop
+	fi
+    else
+	if [ -f /var/run/mediatex/${SERVER}d.pid ]; then
+	    kill -TERM $(cat /var/run/mediatex/${SERVER}d.pid)
+	    rm /var/run/mediatex/${SERVER}d.pid
+	fi
+    fi
+
+    rm -f /etc/init.d/mediatexd-$SERVER
+}
+
+# $1 mdtx user (serv1 by default)
+function reloadInitdScript()
+{
+    SERVER=${1-serv1}
+
+    query "reload" $SERVER
+
+    if [ $DEBUG_SERVER -eq 0 ]; then
+	if [ -f /etc/init.d/mediatexd-$SERVER ]; then
+	    /etc/init.d/mediatexd-$SERVER reload
+	fi
+    else
+	if [ -f /var/run/mediatex/${SERVER}d.pid ]; then
+	    kill -HUP $(cat /var/run/mediatex/${SERVER}d.pid)
+	fi
+    fi
+}
+
+# $1 mdtx user (serv1 by default)
+function restartInitdScript()
+{
+    SERVER=${1-serv1}
+
+    query "restart" $SERVER
+
+    if [ $DEBUG_SERVER -eq 0 ]; then
+	if [ -f /etc/init.d/mediatexd-$SERVER ]; then
+	    /etc/init.d/mediatexd-$SERVER restart
+	fi
+    else
+	stopInitdScript $SERVER
+	if [ x"$ADDON_SERVER" == "valgrind" ]; then
+	    sleep 3
+	fi
+	startInitdScript $SERVER
     fi
 }
 
@@ -244,11 +343,12 @@ function test3()
 	topo "Create 'Hello' collection on server1"
 	mdtxA "adm add coll hello@localhost"
 	
-	# workaround for multiple server instances (already done else)
-	/etc/init.d/mediatexd-serv1 restart
+	# workaround for multiple server instances (because of systemd)
+	restartInitdScript
 	
 	mdtxP "make coll hello"
-	finalQuestion "is https://localhost/~serv1-hello/ correct ? (login is serv1)"
+	finalQuestion \
+	    "is https://127.0.0.1/~serv1-hello/ correct ? (login is serv1)"
     else
 	topo "Cleanup"
 	mdtxA "adm del coll hello"
@@ -302,7 +402,7 @@ function test5()
 	mdtxP "del supp iso2 from coll hello"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
-	/etc/init.d/mediatexd-serv1 reload serv1
+	reloadInitdScript
     fi
 }
 
@@ -323,18 +423,18 @@ EOF
 	topo "Upload file"
 	mdtxP "upload file $FILE catalog /tmp/test.cat to coll hello"
 	mdtxP "make coll hello"
-	finalQuestion "browse score index and download mediatex.css"
+	finalQuestion "Please, browse score index and download mediatex.css"
 	[ $TEST_OK -eq 0 ] && return
 	
 	# clean extracted files (from test5) on cache in prevision of next tests
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
-	/etc/init.d/mediatexd-serv1 reload
+	reloadInitdScript
     else
 	topo "Cleanup"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/incoming
 	sed -i -e "/(REC/, /)/ d" /etc/mediatex/serv1-hello/extract000.txt
-	/etc/init.d/mediatexd-serv1 reload
+	reloadInitdScript
     fi
 }
 
@@ -345,7 +445,8 @@ function test7()
 	topo "Configure server 2 (as a private network gateway)"
 	mdtxA "adm init" serv2
 	sedInPlace "s/6561/6002/" /etc/mediatex/serv2.conf
-	sedInPlace "s/www/www, private/" /etc/mediatex/serv2.conf
+	sedInPlace "s/networks   www/networks   www, private/" \
+	    /etc/mediatex/serv2.conf
 	echo "Gateways private" >> /etc/mediatex/serv2.conf
 	startInitdScript serv2
 	finalQuestion "is 2nd server running ?" "statusInitdScript serv2"
@@ -375,7 +476,7 @@ function test8()
 	mdtxA "adm add coll serv1-hello" serv2
 
 	# workaround for multiple server instances (already done else)
-	/etc/init.d/mediatexd-serv2 restart
+	restartInitdScript serv2
 	
 	question "connected to serv1 cvsroot ?" \
 		 "cat /var/cache/mediatex/serv2/cvs/serv2-hello/CVS/Root"
@@ -455,7 +556,7 @@ function test10()
 	mdtxP "del supp iso1" serv2
 	for SERV in serv1 serv2; do
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
-	    /etc/init.d/mediatexd-$SERV reload
+	    reloadInitdScript $SERV
 	done
 	mdtxP "srv notify" serv2
     fi
@@ -470,7 +571,8 @@ function test11()
 
 	mdtxA "adm init" serv3
 	sedInPlace "s/6561/6003/" /etc/mediatex/serv3.conf
-	sedInPlace "s/www/private/" /etc/mediatex/serv3.conf
+	sedInPlace "s/networks   www/networks   private/" \
+	    /etc/mediatex/serv3.conf
 	startInitdScript serv3
 	finalQuestion "is 3rd server running ?" "statusInitdScript serv3"
     else
@@ -500,7 +602,7 @@ function test12()
 	mdtxA "adm add coll serv1-hello" serv3
 
 	# workaround for multiple server instances (already done else)
-	/etc/init.d/mediatexd-serv3 restart
+	restartInitdScript serv3
 	
 	question "connected to serv1 cvsroot ?" \
 		 "cat /var/cache/mediatex/serv3/cvs/serv3-hello/CVS/Root"
@@ -579,10 +681,10 @@ function test14()
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logoP2.cat
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo.tgz
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo
-	    /etc/init.d/mediatexd-$SERV reload
+	    reloadInitdScript $SERV
 	done
 	rm -fr /var/cache/mediatex/serv3/cache/serv3-hello/logo*
-	/etc/init.d/mediatexd-serv3 reload
+	reloadInitdScript serv3
     fi
 }
 

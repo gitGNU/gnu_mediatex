@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.3 2015/08/14 01:53:41 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.4 2015/08/23 23:39:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -56,7 +56,7 @@ parser/ut$TEST.tab adm bind >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab adm unbind >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab adm mount ISO on PATH >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab adm umount PATH >>parser/$TEST.out 2>&1
-parser/ut$TEST.tab adm get PATH1 as COLL on PATH2 >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab adm get PATH1 as COLL on PATH2 as PATH3 >>parser/$TEST.out 2>&1
 
 # srvQuery
 parser/ut$TEST.tab srv save >>parser/$TEST.out 2>&1

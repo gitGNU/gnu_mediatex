@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: umount.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
+# * Version: $Id: umount.sh,v 1.5 2015/08/23 23:39:15 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -35,5 +35,4 @@ Debug "mount"
 MNT=$1
 
 /bin/umount $MNT
-rmdir $MNT
 Info "done"

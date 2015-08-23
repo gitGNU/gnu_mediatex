@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.11 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.12 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -763,6 +763,124 @@ int diseaseCacheTree(Collection* coll)
   rc = TRUE;
  error:
   if (!rc) logMemory(LOG_ERR, "diseaseCacheTree fails");
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : buildTargetFile
+ * Description: create a new empty file and return its absolute path
+ * Synopsis   : int 
+ *              buildTargetFile(Collection* coll, char** newAbsolutePath, 
+ *              char* prefix, char* postfix)
+ * Input      : Collection* coll
+ *              char* prefix: directory path we know it is accessible 
+ *              (without the leading '/')
+ *              char* postfix: path to work on (directory without the 
+ *              heading '/') + filename
+ * Output     : char** newAbsolutePath: allocated new path
+ *              TRUE on success
+ =======================================================================*/
+int
+buildTargetFile(Collection* coll, char** newAbsolutePath, 
+		char* prefix, char* postfix)
+{
+  int rc = FALSE;
+  int err = 0;
+  CacheTree* cache = 0;
+  FILE* fd = 0;
+  mode_t mask;
+
+  logMain(LOG_DEBUG, "buildTargetFile %s / %s", prefix, postfix);
+  checkCollection(coll);
+  cache = coll->cacheTree;
+
+  if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_TARGET]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    goto error;
+  }
+
+  if (!buildAbsoluteTargetPath(newAbsolutePath, prefix, postfix)) 
+    goto error2;
+
+  if (!makeDir(prefix, *newAbsolutePath, 0770)) goto error2;
+  
+  mask = umask(0117);
+  if (!(fd = fopen(*newAbsolutePath, "w"))) {
+    logMemory(LOG_ERR, "fdopen %s fails: %s", 
+	      *newAbsolutePath, strerror(errno));
+    mask = umask(mask);
+    goto error2;
+  }
+  mask = umask(mask);
+
+  if ((fclose(fd))) {
+    logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
+    goto error2;
+  }
+
+  rc = TRUE;
+ error2:
+  if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_TARGET]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    rc = FALSE;
+  }
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "buildTargetFile fails");
+    *newAbsolutePath = 0;
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : buildTargetDir
+ * Description: create a new directory and return its absolute path
+ * Synopsis   : int 
+ *              buildTargetDir(Collection* coll, char** newAbsolutePath, 
+ *                             char* prefix, char* postfix)
+ * Input      : Collection* coll
+ *              char* prefix: directory path we know it is accessible 
+ *              (without the leading '/')
+ *              char* postfix: path to work on (directory without the 
+ *              heading and leading '/')
+ * Output     : char** newAbsolutePath: allocated new path with
+ *                                      leading '/'
+ *              TRUE on success
+ =======================================================================*/
+int
+buildTargetDir(Collection* coll, char** newAbsolutePath, 
+	       char* prefix, char* postfix)
+{
+  int rc = FALSE;
+  int err = 0;
+  CacheTree* cache = 0;
+
+  logMain(LOG_DEBUG, "buildTargetDir %s / %s", prefix, postfix);
+  checkCollection(coll);
+  cache = coll->cacheTree;
+
+  if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_TARGET]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    goto error;
+  }
+
+  if (!buildAbsoluteTargetPath(newAbsolutePath, prefix, postfix)) 
+    goto error2;
+
+  if (!(*newAbsolutePath = catString(*newAbsolutePath, "/"))) goto error2;
+  if (!makeDir(prefix, *newAbsolutePath, 0700)) goto error2;
+
+  rc = TRUE;
+ error2:
+  if ((err = pthread_mutex_unlock(&cache->mutex[MUTEX_TARGET]))) {
+    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    rc = FALSE;
+  }
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "buildTargetDir fails");
+    *newAbsolutePath = 0;
+  }
   return rc;
 }
 

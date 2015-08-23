@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.5 2015/08/10 12:24:26 nroche Exp $
+ * Version: $Id: utperm.c,v 1.6 2015/08/23 23:39:12 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -42,6 +42,7 @@ void usage(char* programName)
   miscOptions();
   fprintf(stderr, "  ---\n"
 	  "  -d, --dir\tpath to the directory to check\n"
+	  "  -w, --pwd\tpath to the current directory (for make distcheck)\n"
 	  "  -u, --user\texpected owner user of the directory\n"
 	  "  -g, --group\texpected owner group of the directory\n"
 	  "  -p, --perm\texpected permissions on the directory (777)\n");
@@ -62,20 +63,29 @@ int
 main(int argc, char** argv)
 {
   char* inputPath = 0;
+  char* pwdPath = ".";
   char* user = 0;
   char* group = 0;
   mode_t mode = 0111;
+  char file[MAX_SIZE_STRING+1];
+  char dir[MAX_SIZE_STRING+1];
+  char post[MAX_SIZE_STRING+1];
+  char* output = 0;
+  int isThere = 0;
+  int isDirectory = 0;
+  FILE* fd = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"d:u:g:p:";
+  char* options = MISC_SHORT_OPTIONS"d:u:g:p:w:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
     {"dir", required_argument, 0, 'd'},
     {"user", required_argument, 0, 'u'},
     {"group", required_argument, 0, 'g'},
     {"perm", required_argument, 0, 'p'},
+    {"pwd", required_argument, 0, 'w'},
     {0, 0, 0, 0}
   };
 
@@ -150,6 +160,24 @@ main(int argc, char** argv)
       }
       break;
 
+    case 'w':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for directory\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if (strcmp(optarg, ".")) {
+	if ((pwdPath = malloc(strlen(optarg) + 1)) == 0) {
+	  fprintf(stderr, "cannot malloc the directory path: %s", 
+		  strerror(errno));
+	  rc = ENOMEM;
+	  break;
+	}
+	strncpy(pwdPath, optarg, strlen(optarg)+1);
+      }
+      break;
+
       GET_MISC_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -159,32 +187,167 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  logMain(LOG_NOTICE, "unit test's current date : %d", currentTime());
-
   if (inputPath == 0) {
     usage(programName);
     logMain(LOG_ERR, "Please provide a directory to check");
     goto error;
   }
 
-  if (user == 0) {
-    usage(programName);
-    logMain(LOG_ERR, "Please provide a user");
-    goto error;
-  }
+  // Unit tests
+  logMain(LOG_NOTICE, "***********************************************"); 
+  if (user == 0 && group == 0) {
+    logMain(LOG_NOTICE, "* Perm: internal tests");
+    logMain(LOG_NOTICE, "***********************************************"); 
+   
+    // cleaning
+    logMain(LOG_NOTICE, "* cleaning");
+    sprintf(dir, "%s%s", pwdPath, "/tmp/dir1/");
+    removeDir(pwdPath, dir);
+    sprintf(dir, "%s%s", pwdPath, "/tmp/dir2/");
+    removeDir(pwdPath, dir);
+    sprintf(file, "%s%s", pwdPath, "/tmp/foo/bar.txt");
+    unlink(file);
+    sprintf(file, "%s%s", pwdPath, "/tmp/foo_00");
+    unlink(file);
+    sprintf(dir, "%s%s", pwdPath, "/tmp/foo/");
+    removeDir(pwdPath, dir);
 
-  if (group == 0) {
-    usage(programName);
-    logMain(LOG_ERR, "Please provide a group");
-    goto error;
-  }
+    // currentTime
+    logMain(LOG_NOTICE, "* unit test's current date: %d", currentTime());
 
-  if (!checkDirectory(inputPath, user, group, mode)) goto error;
+    // callAccess
+    logMain(LOG_NOTICE, "* callAccess");
+    if (!sprintf(file, "%s%s", pwdPath, "/doNotExists")) goto error;
+    if (!callAccess(file, &isThere)) goto error;
+    if (isThere) goto error;    
+    // -
+    if (!sprintf(file, "%s%s", inputPath, "/../misc/logo.png")) goto error;
+    if (!callAccess(file, &isThere)) goto error;
+    if (!isThere) goto error;
+
+    // checkDirectory
+    logMain(LOG_NOTICE, "* checkDirectory");
+    if (!checkDirectory(file, &isDirectory)) goto error;
+    if (isDirectory) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", pwdPath, "/doNotExists")) goto error;
+    if (checkDirectory(dir, &isDirectory)) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", inputPath, "/../misc")) goto error;
+    if (!checkDirectory(dir, &isDirectory)) goto error;
+    if (!isDirectory) goto error;
+
+    // makeDir
+    logMain(LOG_NOTICE, "* makeDir");
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp")) goto error;
+    if (!checkDirectory(dir, &isThere)) goto error;
+    if (!isThere) goto error;
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/someFile")) goto error;
+    if (!makeDir(pwdPath, dir, 0777)) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/dir1/")) goto error;
+    if (!makeDir(pwdPath, dir, 0777)) goto error;
+    if (!checkDirectory(dir, &isThere)) goto error;
+    if (!isThere) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/dir2/dir2/")) goto error;
+    if (!makeDir(pwdPath, dir, 0777)) goto error;
+    if (!checkDirectory(dir, &isThere)) goto error;
+    if (!isThere) goto error;
+
+    // removeDir
+    logMain(LOG_NOTICE, "* removeDir");
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/")) goto error;
+    if (!removeDir(pwdPath, dir)) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/dir1/someFile")) goto error;
+    if (!removeDir(pwdPath, dir)) goto error;
+    if (!callAccess(dir, &isThere)) goto error;
+    if (isThere) goto error;
+    // -
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/dir2/dir2/")) goto error;
+    if (!removeDir(pwdPath, dir)) goto error;
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/dir2/")) goto error;
+    if (!callAccess(dir, &isThere)) goto error;
+    if (isThere) goto error;
+
+    // getUnusedPath
+    logMain(LOG_NOTICE, "* getUnusedPath");
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo")) goto error;
+    if (!(fd = fopen(file, "w"))) goto error;
+    if ((fclose(fd))) goto error;
+    if (!getUnusedPath(file, 3)) goto error;
+    logMain(LOG_NOTICE, "tmp/foo => %s", file);
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo")) goto error;
+    if (unlink(file)) goto error;
+    //-
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/bar.txt")) goto error;
+    if (!(fd = fopen(file, "w"))) goto error;
+    if ((fclose(fd))) goto error;
+    if (!getUnusedPath(file, 7)) goto error;
+    logMain(LOG_NOTICE, "tmp/bar.txt => %s", file);
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/bar.txt")) goto error;
+    if (unlink(file)) goto error;
+
+    // buildAbsoluteTargetPath
+    logMain(LOG_NOTICE, "* buildAbsoluteTargetPath");
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo/")) goto error;
+    if (!makeDir(pwdPath, file, 0777)) goto error;
+    if (!sprintf(post, "%s", "tmp/foo")) goto error;
+    if (!buildAbsoluteTargetPath(&output, pwdPath, post)) goto error;
+    logMain(LOG_NOTICE, "tmp/foo => %s", output);
+    output = destroyString(output);
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo_00")) goto error;
+    if (!(fd = fopen(file, "w"))) goto error;
+    if ((fclose(fd))) goto error;
+    //-
+    if (!sprintf(post, "%s", "tmp/foo/bar.txt")) goto error;
+    if (!buildAbsoluteTargetPath(&output, pwdPath, post)) goto error;
+    logMain(LOG_NOTICE, "tmp/foo/bar.txt => %s", output);
+    output = destroyString(output);
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo/bar.txt")) 
+      goto error;
+    if (!(fd = fopen(file, "w"))) goto error;
+    if ((fclose(fd))) goto error;
+    //-
+    if (!buildAbsoluteTargetPath(&output, pwdPath, post)) goto error;
+    logMain(LOG_NOTICE, "tmp/foo/bar.txt => %s", output);
+    output = destroyString(output);
+    
+    // cleaning
+    logMain(LOG_NOTICE, "* cleaning");
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo/bar.txt")) goto error;
+    if (unlink(file)) goto error;
+    if (!sprintf(file, "%s%s", pwdPath, "/tmp/foo_00")) goto error;
+    if (unlink(file)) goto error;
+    if (!sprintf(dir, "%s%s", pwdPath, "/tmp/foo/")) goto error;
+    if (!removeDir(pwdPath, dir)) goto error;
+  }
+  else {
+     // Tests using more arguments 
+    logMain(LOG_NOTICE, "* Perm: %s %s %s %o (noRegression=%i)", 
+	    inputPath, user, group , mode, env.noRegression);
+    logMain(LOG_NOTICE, "***********************************************"); 
+    if (user == 0) {
+      usage(programName);
+      logMain(LOG_ERR, "Please provide a user");
+      goto error;
+    }
+    
+    if (group == 0) {
+      usage(programName);
+      logMain(LOG_ERR, "Please provide a group");
+      goto error;
+    }
+
+    if (!checkDirectoryPerm(inputPath, user, group, mode)) goto error;
+  }
   /************************************************************************/
 
   rc = TRUE;
  error:
   if (inputPath) free(inputPath);
+  if (strcmp(pwdPath, ".")) free(pwdPath);
   if (user) free(user);
   if (group) free(group);
   env.noRegression = TRUE;

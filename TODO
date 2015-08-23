@@ -1,16 +1,19 @@
 
 *** TO CORRECT: cache policy    
 
-.........................................................
 ** UPLOAD
 - rename cache/incoming/date to cache/date
 - provide upload target path
-- do not load into cache unknown archive from extract.txt
+- move callAccess, makeDir, removeDir and extractCp from cache to extract
+- dedicated server module for upload
+- extract: get uniq path on directory too (if a file have directory name)
+.........................................................
+
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- simulate extraction and check md5sum from content ?
+- do not load into cache unknown archive from extract.txt
+
 
 ** FINALE-SUPLLY
-- add a sha1 field for supports ?
 - supports also include files on disk:
 -- name = absolute path 
 - cache.c also read supports.txt to get final-supply records
@@ -27,7 +30,7 @@
 - display cache size (all/used/allocated/free)
 
 ** HTML
-- notify server lastComit
+- notify server lastCommit
 - (final supplies automaticaly included into image score computation)
 - notify orphanes
 
@@ -38,12 +41,15 @@
 
 ** TRUST
 - serversTree->server[]->lastCommit = DATE used by computeScore
-- new client query: mdtc check content [coll COLL]
+- new client query: mdtx audit [coll COLL] for MAIL
 -- generate a content file (from extraction rules)
--- register a special order+mail
--- deliver maintain the content file (delete lines on succes)
--- ... and finaly end it to the mail address
+-- register FINAL_DEMAND with extra "audit:nroche@narval.tk"
+-- deliver maintain the content file (checksum and delete lines on succes)
+-- ... and finaly send it to the mail address and upload it
 - buildRule.sh script
+
+** DOC
+- gdb mdtx: remove setuid bit and run it as root
 
 *** CHANGES (to document)
 
@@ -106,12 +112,15 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
+- add a sha1 field for supports
+- move extract.c into common/extractRules.c so as to run it during upload
 - replace gethostby*_r by getaddrinfo and co
 - i10n for french
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- refuse "^../" as content extraction rule
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - move dirname into extract rule header to reduce extract.txt file size

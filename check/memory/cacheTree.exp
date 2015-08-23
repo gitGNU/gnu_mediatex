@@ -8,7 +8,7 @@ S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> USED
 [notice utcacheTree.c] del record from cache
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> UNUSED

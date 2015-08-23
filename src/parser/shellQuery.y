@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.6 2015/08/14 01:53:43 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.7 2015/08/23 23:39:16 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -444,14 +444,14 @@ admConfQuery: shellINIT shellEOL
     if (!mdtxUmount($2)) YYABORT;
   }
 }
-            | shellGET shellSTRING shellAS shellSTRING shellON 
-	    shellSTRING shellEOL
+            | shellGET shellSTRING shellAS shellSTRING shellON shellSTRING 
+	               shellAS shellSTRING shellEOL
 {
-  logParser(LOG_INFO, "get %s as %s on %s", $2, $4, $6);
+  logParser(LOG_INFO, "get %s as %s on %s to %s", $2, $4, $6, $8);
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     env.noCollCvs = TRUE; // do not upgrade
-    if (!mdtxScp($4, $6, $2)) YYABORT;
+    if (!mdtxScp($4, $6, $2, $8)) YYABORT;
   }
 }
 

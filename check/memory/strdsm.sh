@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: strdsm.sh,v 1.1 2015/07/01 10:49:41 nroche Exp $
+# * Version: $Id: strdsm.sh,v 1.2 2015/08/23 23:39:10 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -25,7 +25,7 @@
 
 # retrieve environment
 [ -z $srcdir ] && srcdir=.
-. ${srcdir}/utmediatex.sh
+. utmediatex.sh
 
 TEST=$(basename $0)
 TEST=${TEST%.sh}

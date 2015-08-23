@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.12 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: supp.c,v 1.13 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -443,7 +443,7 @@ notifyHave(Support* supp, char* path)
   int isShared = FALSE;
 
   // warning tcpRead seems to read more than 1 and erase the stack
-  char reply[64];
+  char reply[576];
 
   logMain(LOG_DEBUG, "notifyHave");
   if (supp == 0) goto error;

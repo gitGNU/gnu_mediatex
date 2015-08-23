@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.15 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: cache.c,v 1.16 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -27,7 +27,7 @@
 #include <dirent.h> // alphasort
 
 /*=======================================================================
- * Function   : getAbsCachePath
+ * Function   : getAbsoluteCachePath
  * Description: get an absolute path to the cache
  * Synopsis   : char* absCachePath(Collection* coll, char* path) 
  * Input      : Collection* coll = the related collection
@@ -35,13 +35,13 @@
  * Output     : absolute path, 0 on failure
  =======================================================================*/
 char*
-getAbsCachePath(Collection* coll, char* path) 
+getAbsoluteCachePath(Collection* coll, char* path) 
 {
   char* rc = 0;
 
   checkCollection(coll);
   checkLabel(path);
-  logMain(LOG_DEBUG, "getAbsCachePath %s", path);
+  logMain(LOG_DEBUG, "getAbsoluteCachePath %s", path);
 
   if (!(rc = createString(coll->cacheDir))) goto error;
   if (!(rc = catString(rc, "/"))) goto error;
@@ -49,7 +49,7 @@ getAbsCachePath(Collection* coll, char* path)
   
  error:
   if (!rc) {
-    logMain(LOG_ERR, "getAbsCachePath fails");
+    logMain(LOG_ERR, "getAbsoluteCachePath fails");
   }
   return rc;
 }
@@ -71,7 +71,7 @@ getFinalSupplyInPath(char* path)
   checkLabel(path);
   logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
 
-  if (!(rc = catString(rc, path))) goto error;
+  if (!(rc = createString(path))) goto error;
 
   // remove ending ':supportName' if there
   for (ptr=rc; *ptr && *ptr != ':'; ++ptr);
@@ -95,9 +95,10 @@ getFinalSupplyOutPath(char* path)
 {
   char* rc = 0;
   char* ptr = 0;
+  char* tmp = 0;
 
   checkLabel(path);
-  logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
+  logMain(LOG_DEBUG, "getFinalSupplyOutPath %s", path);
 
   // look for ending ':supportName' if there
   for (ptr=path; *ptr && *ptr != ':'; ++ptr);
@@ -105,10 +106,21 @@ getFinalSupplyOutPath(char* path)
     if (!(rc = createString(ptr+1))) goto error;
   }
 
+  // get the filename on first part
+  while (ptr > path && *ptr-- != '/');
+  if (!(tmp = createString(ptr))) goto error;
+   
+  // no second part or second part is a directory
+  if (!tmp || tmp[strlen(tmp)] == '/') {  
+    rc = catString(rc, tmp);
+    tmp = 0;
+  }
+
  error:
   if (!rc) {
-    logMain(LOG_ERR, "getFinalSupplyInputPath fails");
+    logMain(LOG_ERR, "getFinalSupplyOutPath fails");
   }
+  destroyString(tmp);
   return rc;
 }
 
@@ -121,20 +133,20 @@ getFinalSupplyOutPath(char* path)
  * Output     : path where to find the record file, 0 on failure
  =======================================================================*/
 char*
-getAbsRecordPath(Collection* coll, Record* record) 
+getAbsoluteRecordPath(Collection* coll, Record* record) 
 {
   char* rc = 0;
 
   checkCollection(coll);
   checkRecord(record);
-  logMain(LOG_DEBUG, "getAbsRecordPath: %s", strRecordType(record));
+  logMain(LOG_DEBUG, "getAbsoluteRecordPath: %s", strRecordType(record));
 
   switch (getRecordType(record)) {
   case FINAL_SUPPLY:
     if (!(rc = getFinalSupplyInPath(record->extra))) goto error;
     break;
   case LOCAL_SUPPLY:
-    if (!(rc = getAbsCachePath(coll, record->extra))) goto error;
+    if (!(rc = getAbsoluteCachePath(coll, record->extra))) goto error;
     break;
   default:
     logMain(LOG_ERR, "cannot return path for %s", strRecordType(record));
@@ -142,7 +154,7 @@ getAbsRecordPath(Collection* coll, Record* record)
   
  error:
   if (!rc) {
-    logMain(LOG_ERR, "getAbsRecordPath fails");
+    logMain(LOG_ERR, "getAbsoluteRecordPath fails");
   }
   return rc;
 }
@@ -298,33 +310,33 @@ scanRepository(Collection* coll, const char* path, int toKeep)
     
     //logMain(LOG_INFO, "scaning '%s'", relativePath);
     
-      switch (entry->d_type) {
+    switch (entry->d_type) {
 
-      case DT_DIR: 
-	if ((relativePath = catString(relativePath, "/")) == 0 ||
-	    !scanRepository(coll, relativePath, toKeep)) goto error;
-	break;
+    case DT_DIR: 
+      if ((relativePath = catString(relativePath, "/")) == 0 ||
+	  !scanRepository(coll, relativePath, toKeep)) goto error;
+      break;
 	
-      case DT_REG: 
-	if ((absolutePath2 = createString(absolutePath)) == 0 ||
-	    (absolutePath2 = catString(absolutePath2, entry->d_name)) 
-	    == 0) goto error;
-	if (!scanFile(coll, absolutePath2, relativePath, toKeep)) goto error;
-	break;
+    case DT_REG: 
+      if ((absolutePath2 = createString(absolutePath)) == 0 ||
+	  (absolutePath2 = catString(absolutePath2, entry->d_name)) 
+	  == 0) goto error;
+      if (!scanFile(coll, absolutePath2, relativePath, toKeep)) goto error;
+      break;
 	
-      case DT_LNK:
-	logMain(LOG_INFO, "do not handle simlink up today"); 
-	break;
+    case DT_LNK:
+      logMain(LOG_INFO, "do not handle simlink up today"); 
+      break;
 
-      case DT_UNKNOWN:
-      default: 
-	logMain(LOG_INFO, "ignore not regular file \'%s%s\'", 
-		absolutePath, entry->d_name);
-	break;
-      }   
+    case DT_UNKNOWN:
+    default: 
+      logMain(LOG_INFO, "ignore not regular file \'%s%s\'", 
+	      absolutePath, entry->d_name);
+      break;
+    }   
       
-      relativePath = destroyString(relativePath);
-      absolutePath2 = destroyString(absolutePath2);
+    relativePath = destroyString(relativePath);
+    absolutePath2 = destroyString(absolutePath2);
   }
 
   rc = TRUE;
@@ -378,7 +390,7 @@ quickScan(Collection* coll)
 
     // test if the file is really there 
     path = destroyString(path);
-    if (!(path = getAbsRecordPath(coll, supply))) goto error3;
+    if (!(path = getAbsoluteRecordPath(coll, supply))) goto error3;
     if (access(path, R_OK) != -1) continue;
 
     // del the record from the cache
@@ -560,7 +572,7 @@ freeCache(Collection* coll, off_t need, int* success)
     if (!computeArchiveStatus(coll, archive)) goto error;
     if (archive->state >= TOKEEP) continue;
 
-    if (!(path = getAbsRecordPath(coll, record))) goto error;
+    if (!(path = getAbsoluteRecordPath(coll, record))) goto error;
 
     // un-index the record from cache (do not free the record)
     if (!delCacheEntry(coll, record)) goto error;
@@ -672,324 +684,6 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
   return rc;
 }
 
-/*=======================================================================
- * Function   : call access
- * Description: check a path access
- * Synopsis   : int callAcess(char* path, int* isThere)
- * Input      : char* path = the path to check
- * Output     : int* isThere: state if file is found or not
- *              TRUE on success
- =======================================================================*/
-int
-callAccess(char* path, int* isThere) 
-{
-  int rc = FALSE;
-
-  *isThere = FALSE;
-  checkLabel(path);
-  logMain(LOG_DEBUG, "call access on %s", path);
-
-  if (!access(path, R_OK)) {
-    *isThere = TRUE;
-  }
-  else {
-    if (!errno == ENOENT) {
-      logMain(LOG_ERR, "unexpected error code (%i): %s", 
-	      errno, strerror(errno));
-      goto error;
-    }
-  }
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "access fails");
-  }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : makeDir
- * Description: build directories recursively
- * Synopsis   : int makeDir(char* path) 
- * Input      : char* base = directory path already there
- *              char* path = directory path to build
- * Output     : TRUE on success
-
- * TODO       : check mode of new created directory
- =======================================================================*/
-int
-makeDir(char* base, char* path, mode_t mode) 
-{
-  int rc = FALSE;
-  int i = 0;
-  int l = 0;
-  mode_t mask;
-  int isThere = FALSE;
-
-  mask = umask(0000);
-  checkLabel(path);
-  logMain(LOG_DEBUG, "makeDir %s", path);
-
-  // build the target directory into the cache
-  i = strlen(base)+1;
-  l = strlen(path);
-  while (i<l) {
-    while (i<l && path[i] != '/') ++i;
-    if (path[i] == '/') {
-      path[i] = (char)0;
-
-      if (mkdir(path, mode)) { // (mode & ~umask & 0777)
-	if (errno != EEXIST) {
-	  logMain(LOG_ERR, "mkdir fails: %s", strerror(errno));
-	  goto error;
-	}
-	else {
-	  // already there (we should check mode).
-	  if (!callAccess(path, &isThere)) goto error;
-	  if (!isThere) goto error;
-	}
-      }
-      
-      path[i] = '/';
-       ++i;
-    }
-  }
-  
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "makeDir fails");
-  }
-  umask(mask);
-  return rc;
-}
-
-/*=======================================================================
- * Function   : removeDir
- * Description: build directories recursively
- * Synopsis   : int removeDir(char* path) 
- * Input      : char* base = directory path already there
- *              char* path = directory path to build
- * Output     : path is modified: '/' are replaced by '\0'
- *              TRUE on success
- =======================================================================*/
-int
-removeDir(char* base, char* path) 
-{
-  int rc = FALSE;
-  int i = 0;
-  int l = 0;
-
-  checkLabel(path);
-  logMain(LOG_DEBUG, "removeDir %s", path);
-
-  // remove the temporary extraction directory into the cache
-  i = strlen(path)-1;
-  l = strlen(base);
-
-  // eat filename
-  while (i>l && path[i] != '/') --i; 
-  if (i <= l) goto end;
-    path[i] = (char)0;
-
-  while (--i > l) {
-    while (i>l && path[i] != '/') --i;
-
-    logMain(LOG_INFO, "rmdir %s", path);
-    if (rmdir(path)) {
-      if (errno != ENOTEMPTY || errno != EBUSY) {
-	logMain(LOG_ERR, "rmdir fails: %s", strerror(errno));
-	goto error;
-      }
-      else {
-	// still used
-	goto end;
-      }
-    }
-    path[i] = (char)0;
-  }
-  
- end:
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "removeDir fails");
-  }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : extractCp
- * Description: call cp
- * Synopsis   : int extractCp(char* source, char* target)
- * Input      : char* source
- *              char* target
- * Output     : TRUE on success
- =======================================================================*/
-int 
-extractCp(char* source, char* target)
-{
-  int rc = FALSE;
-  char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
-
-  checkLabel(source);
-  checkLabel(target);
-  logMain(LOG_DEBUG, "extractCp %s", target);
-
-  argv[2] = source;
-  argv[3] = target;
-
-  if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "extractCp fails");
-  } 
-  return rc;
-}
-
-/*=======================================================================
- * Function   : cacheUpload
- * Description: try to upload a file on cache
- * Synopsis   : int cacheUpload(Collection* coll, off_t need, int* rcode)
- * Input      : Collection* collection : collections to use
- *              char* sourcePath: file to upload
- * Output     : TRUE on success
- =======================================================================*/
-static int
-cacheUpload(Collection* coll, Record* record)
-{
-  int rc = FALSE;
-  char* basename = 0;
-  char targetRelDirname[24];
-  char* targetRelPath = 0;
-  char* targetAbsDirname = 0;
-  char* targetAbsPath = 0;
-  Record* record2 = 0;
-  struct stat statBuffer;
-  struct tm date;
-
-  checkCollection(coll);
-  if (isEmptyString(record->extra)) {
-    logMain(LOG_ERR, "please provide a file to upload");
-    goto error;
-  }
-
-  logMain(LOG_DEBUG, "upload file: %s", record->extra);
-
-  // build target paths: .../upload/AAAAMM/basename
-  if (localtime_r(&record->date, &date) == (struct tm*)0) {
-    logMain(LOG_ERR, "localtime_r returns on error");
-    goto error;
-  }
-  basename = strrchr(record->extra, '/');
-  basename = (basename == 0) ? record->extra : (basename + 1);
-  sprintf(targetRelDirname, "/incoming/%04i-%02i/",
-	  date.tm_year + 1900, date.tm_mon+1);
-  if (!(targetRelPath = createString(targetRelDirname + 1)) ||
-      !(targetRelPath = catString(targetRelPath, basename)) ||
-      !(targetAbsDirname = createString(coll->cacheDir)) ||
-      !(targetAbsDirname = catString(targetAbsDirname, targetRelDirname))|| 
-      !(targetAbsPath = createString(targetAbsDirname)) ||
-      !(targetAbsPath = catString(targetAbsPath, basename))) 
-    goto error;
-
-  // assert target path is not already used
-  if (stat(targetAbsPath, &statBuffer) == 0) {
-    logMain(LOG_WARNING, "target path already exists: %s", targetAbsPath);
-    goto end;
-  }
-
-  // ask for place in cache and build record
-  if (!cacheAlloc(&record2, coll, record->archive)) goto error;
-
-  // copy file into the cache
-  if (!makeDir(coll->cacheDir, targetAbsDirname, 0750)) goto error;
-  if (!extractCp(record->extra, targetAbsPath)) goto error;
-
-  // toggle !malloc record to local-supply...
-  record2->extra = destroyString(record2->extra);
-  record2->extra = targetRelPath;
-  targetRelPath = 0;
-
-  // TODO: add to-keep
-
- end:
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_WARNING, "fails to upload file");
-    if (record2) delCacheEntry(coll, record2);
-  } 
-  targetRelPath = destroyString(targetRelPath);
-  targetAbsDirname = destroyString(targetAbsDirname);
-  targetAbsPath = destroyString(targetAbsPath);
-
-  return rc;
-}
-
-/*=======================================================================
- * Function   : uploadFinaleArchive
- * Description: Upload a new final supply into the cache
- * Synopsis   : int uploadFinaleArchive(ArchiveTree* finalSupplies)
- * Input      : Connexion* connexion
- * Output     : TRUE on success
- =======================================================================*/
-int 
-uploadFinaleArchive(Connexion* connexion)
-{
-  int rc = FALSE;
-  Collection* coll = 0;
-  Record* record = 0;
-
-  static char status[][64] = {
-    "210 ok",
-    "310 empty message",
-    "332 message do not provide a final supply %s",
-    "313 already exists %s:%lli" 
-  };
-
-  logMain(LOG_DEBUG, "uploadFinaleArchive");
-  coll = connexion->message->collection;
-  checkCollection(coll);
-  
-  // check we get a final supplies
-  if (isEmptyRing(connexion->message->records)) {
-    sprintf(connexion->status, "%s", status[1]);
-    goto error;
-  }
-  if (!(record = rgHead(connexion->message->records))) goto error;
-  if (getRecordType(record) != FINAL_SUPPLY) {
-    sprintf(connexion->status, status[2], record->extra);
-    goto error;
-  }
-
-  if (!loadCollection(coll, EXTR | CACH)) goto error;
-  if (!lockCacheRead(coll)) goto error2;
- 
-  // check archive is not already there
-  if ((record->archive->localSupply)) {
-    sprintf(connexion->status, status[3],
-	    record->archive->hash, record->archive->size);
-    goto error3;
-  }
-
-  if (!(cacheUpload(coll, record))) goto error3;
-
-  sprintf(connexion->status, "%s", status[0]);
-  rc = TRUE;
- error3:
-  if (!unLockCache(coll)) rc = FALSE;
- error2:
-  if (!releaseCollection(coll, EXTR | CACH)) rc = FALSE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "uploadFinaleArchive fails");
-  }
-  return rc;
-} 
 
 /* Local Variables: */
 /* mode: c */

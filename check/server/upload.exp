@@ -1,0 +1,285 @@
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] Clean the cache:
+[notice utupload.c] .......................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info openClose.c] load coll3 records
+[notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[notice utupload.c] .......................................................
+[notice utupload.c] Scan gives :
+[notice utupload.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * No message ring:
+[notice utupload.c] .......................................................
+[err upload.c] uploadFinaleArchive fails
+[notice utupload.c] reply : 310 empty message
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Empty message ring:
+[notice utupload.c] .......................................................
+[err upload.c] uploadFinaleArchive fails
+[notice utupload.c] reply : 310 empty message
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Not a final suply:
+[notice utupload.c] .......................................................
+[err upload.c] uploadFinaleArchive fails
+[notice utupload.c] reply : 332 message do not provide a final supply _home/nroche/cvs/mediatex/check/./../misc/README
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Upload using default target:
+[notice utupload.c] .......................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5 X )
+[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection ( SX )
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
+[info openClose.c] steps: 0 / 93
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: UNUSED -> USED
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used              0
+[info cache.c] = free      104857600
+[info cache.c]   total     104857600
+[info cache.c] - frozen            0
+[info cache.c] = avail     104857600
+[info cache.c] need             1937
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: USED -> ALLOCATED
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/2010-01
+[info device.c] absolute path is /HERE/misc/README
+[info device.c] not a symlink: /HERE/misc/README
+[info device.c] do not match a block device: /HERE/misc/README
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: /HERE/check/./../misc/README
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/2010-01/README
+[info command.c] /bin/cp execution returns 0
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/2010-01
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/2010-01/README to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/2010-01/README
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: ALLOCATED -> TOKEEP
+[notice extract.c] 3f18841537668dcf4fafd1471c64d52d:1937 extracted
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/2010-01
+[notice extract.c] 3f18841537668dcf4fafd1471c64d52d:1937 found
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: TOKEEP -> TOKEEP
+[notice utupload.c] .......................................................
+[notice utupload.c] We get 210 ok
+[notice utupload.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 3f18841537668dcf4fafd1471c64d52d                1937 2010-01/README
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Already there:
+[notice utupload.c] .......................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5 X )
+[info openClose.c] steps: 0 / 93
+[err upload.c] uploadFinaleArchive fails
+[notice utupload.c] reply : 313 already exists 3f18841537668dcf4fafd1471c64d52d:1937
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] Clean the cache:
+[notice utupload.c] .......................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: TOKEEP -> UNUSED
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Upload providing a target: store
+[notice utupload.c] .......................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5 X )
+[info openClose.c] steps: 0 / 93
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: UNUSED -> USED
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used              0
+[info cache.c] = free      104857600
+[info cache.c]   total     104857600
+[info cache.c] - frozen            0
+[info cache.c] = avail     104857600
+[info cache.c] need             1937
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: USED -> ALLOCATED
+[info device.c] absolute path is /HERE/misc/README
+[info device.c] not a symlink: /HERE/misc/README
+[info device.c] do not match a block device: /HERE/misc/README
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: /HERE/check/./../misc/README
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store
+[info command.c] /bin/cp execution returns 0
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/store
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: ALLOCATED -> TOKEEP
+[notice extract.c] 3f18841537668dcf4fafd1471c64d52d:1937 extracted
+[notice extract.c] 3f18841537668dcf4fafd1471c64d52d:1937 found
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: TOKEEP -> TOKEEP
+[notice utupload.c] .......................................................
+[notice utupload.c] We get 210 ok
+[notice utupload.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 3f18841537668dcf4fafd1471c64d52d                1937 store
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c]  * Upload providing a target: store/it/here
+[notice utupload.c] .......................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5 X )
+[info openClose.c] steps: 0 / 93
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> USED
+[info cache.c] cache sizes:
+[info cache.c]   total     104857600
+[info cache.c] - used           1937
+[info cache.c] = free      104855663
+[info cache.c]   total     104857600
+[info cache.c] - frozen         1937
+[info cache.c] = avail     104855663
+[info cache.c] need            24075
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> ALLOCATED
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store/it
+[info device.c] absolute path is /HERE/misc/logo.png
+[info device.c] not a symlink: /HERE/misc/logo.png
+[info device.c] do not match a block device: /HERE/misc/logo.png
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: /HERE/check/./../misc/logo.png
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store/it/here
+[info command.c] /bin/cp execution returns 0
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/store_00
+[info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/store_00/it
+[info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store/it/here to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/store_00/it/here
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> TOKEEP
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store/it
+[info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/store
+[notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> TOKEEP
+[notice utupload.c] .......................................................
+[notice utupload.c] We get 210 ok
+[notice utupload.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c] 	Collection	coll3               
+[notice recordTree.c] 	Type		UNKNOWN
+[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 store_00/it/here
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 3f18841537668dcf4fafd1471c64d52d                1937 store
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] -------------------------------------------------------
+[notice utupload.c] Clean the cache:
+[notice utupload.c] .......................................................
+[notice utFunc.c] clean the cache
+[notice utFunc.c] clean cache for all collections
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> UNUSED
+[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: TOKEEP -> UNUSED
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info confTree.c] free configuration
+[info utupload.c] exit on success

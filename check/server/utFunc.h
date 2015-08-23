@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.h,v 1.4 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: utFunc.h,v 1.5 2015/08/23 23:39:14 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -33,7 +33,10 @@
 int utCleanCaches();
 int utCopyFileOnCache(Collection* coll, char* srcdir, char* file);
 
+Record* utLocalRecord(Collection* coll, char* hash, off_t size, 
+		      Type type, char* extra);
 Record* utRemoteDemand(Collection* coll, Server* server);
+
 int utAddFinalDemand(Collection* coll);
 int utAddLocalDemand(Collection* coll, char* hash, off_t size, 
 		     char* extra);

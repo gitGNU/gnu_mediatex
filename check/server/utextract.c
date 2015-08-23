@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextract.c,v 1.2 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: utextract.c,v 1.3 2015/08/23 23:39:14 nroche Exp $
  * Project: MediaTeX
  * Module : extract
  *
@@ -115,7 +115,7 @@ main(int argc, char** argv)
   if (!extractArchives(coll)) goto error;
   utLog("%s", "Now we have :", coll);
   
-  utLog("%s", "Put some files:", 0);
+  utLog("%s", "Put containers files:", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
   

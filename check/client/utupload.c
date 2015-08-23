@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.6 2015/08/13 21:14:29 nroche Exp $
+ * Version: $Id: utupload.c,v 1.7 2015/08/23 23:39:10 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -174,9 +174,8 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  logMain(LOG_NOTICE, "***********************************************"); 
-
   // Unit tests
+  logMain(LOG_NOTICE, "***********************************************"); 
   if (!catalog && !extract &&!file) {
     logMain(LOG_NOTICE, "* Upload: internal tests");
     logMain(LOG_NOTICE, "***********************************************"); 
@@ -212,9 +211,9 @@ main(int argc, char** argv)
     if (!isFileRefbyCatalog(coll, new)) goto error;
     if (areNotAlreadyThere(coll, coll)) goto error;
   }
-
-  // Tests using arguments
   else {
+
+    // Tests using arguments
     logMain(LOG_NOTICE, "* Upload:%s%s%s%s", 
 	    catalog?" catalog":"", 
 	    extract?" extract":"", 

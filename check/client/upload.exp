@@ -100,7 +100,8 @@ Document "css": "css"
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info device.c] absolute path is /HERE/misc/mediatex.css
-[info upload.c] ask daemon to upload ./../misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
 [info recordTree.c] 	Collection	coll2               
@@ -189,7 +190,8 @@ Document "css": "css"
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info device.c] absolute path is /HERE/misc/mediatex.css
-[info upload.c] ask daemon to upload ./../misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
 [info recordTree.c] 	Collection	coll2               
@@ -253,7 +255,8 @@ Document "css": "css"
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info device.c] absolute path is /HERE/misc/mediatex.css
-[info upload.c] ask daemon to upload ./../misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
 [info recordTree.c] 	Collection	coll2               
@@ -298,7 +301,8 @@ Document "css": "css"
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info device.c] absolute path is /HERE/misc/mediatex.css
-[info upload.c] ask daemon to upload ./../misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
 [info recordTree.c] 	Collection	coll2               
@@ -348,6 +352,82 @@ Document "css": "css"
 99b882d1ba57c2c83a53a719e2433518:1004
 =>
 022a34b2f9b893fba5774237e1aa80ea:24075	there/and/there
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] ***********************************************
+[notice utupload.c] * Upload: file target
+[notice utupload.c] ***********************************************
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll2 collection (  X )
+[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info device.c] absolute path is /HERE/misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll2               
+[info recordTree.c] 	Type		UPLOAD
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/
+[info recordTree.c] # ^ FINAL_SUPPLY
+
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(INC
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
+)
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:
+[info confTree.c] free configuration
+[info utupload.c] exit on success
+[notice utupload.c] ***********************************************
+[notice utupload.c] * Upload: file target
+[notice utupload.c] ***********************************************
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
+[info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll2 collection (  X )
+[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
+[info openClose.c] steps: 93 / 93
+[info device.c] absolute path is /HERE/misc/mediatex.css
+[info address.c] build socket address 127.0.0.1:6560
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c] 	Collection	coll2               
+[info recordTree.c] 	Type		UPLOAD
+[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/filename
+[info recordTree.c] # ^ FINAL_SUPPLY
+
+[info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
+# MediaTeX extraction metadata: _upload_
+
+(INC
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
 )
 
 # Local Variables:

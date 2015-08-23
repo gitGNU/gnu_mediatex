@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-server.h,v 1.1 2015/07/01 10:21:03 nroche Exp $
+ * Version: $Id: mediatex-server.h,v 1.2 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -29,6 +29,7 @@
 #include "server/cache.h"
 #include "server/deliver.h"
 #include "server/extract.h"
+#include "server/upload.h"
 #include "server/cgiSrv.h"
 #include "server/have.h"
 #include "server/notify.h"

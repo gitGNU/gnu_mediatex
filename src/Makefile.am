@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.8 2015/08/10 11:07:45 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.9 2015/08/23 23:39:15 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -94,6 +94,7 @@ server_headers = \
 	server/cache.h \
 	server/deliver.h \
 	server/extract.h \
+	server/upload.h \
 	server/cgiSrv.h \
 	server/have.h \
 	server/notify.h \
@@ -164,6 +165,7 @@ server_sources = \
 	server/cache.c \
 	server/deliver.c \
 	server/extract.c \
+	server/upload.c \
 	server/cgiSrv.c \
 	server/have.c \
 	server/notify.c \

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.11 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.12 2015/08/23 23:39:15 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -43,7 +43,7 @@ isNewIncoming(Collection* coll, Archive* archive)
 
   if (!archive->uploadTime) goto end;
   if (currentTime() > archive->uploadTime + coll->serverTree->uploadTTL) {
-    logCommon(LOG_WARNING, "forgotten incoming archive: %s:%lli", 
+    logCommon(LOG_INFO, "obsolete incoming archive: %s:%lli", 
 	      archive->hash, (long long int)archive->size); 
     goto end;
   }

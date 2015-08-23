@@ -10,11 +10,23 @@
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] Scan the cache directory :
@@ -22,37 +34,37 @@
 [notice utFunc.c] copy logo.png to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logo.png
+[info command.c]  arg2: ./../misc/logo.png
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logo.tgz to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logo.tgz
+[info command.c]  arg2: ./../misc/logo.tgz
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP1.cat to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logoP1.cat
+[info command.c]  arg2: ./../misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP2.cat to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logoP2.cat
+[info command.c]  arg2: ./../misc/logoP2.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP1.iso to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logoP1.iso
+[info command.c]  arg2: ./../misc/logoP1.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP2.iso to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logoP2.iso
+[info command.c]  arg2: ./../misc/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
 [info openClose.c] load coll3 records
@@ -65,7 +77,7 @@
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
-[warning extractScore.c] forgotten incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> AVAILABLE
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
@@ -288,53 +300,6 @@
 
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] -------------------------------------------------------
-[notice utcache.c] API to upload files :
-[notice utcache.c] .......................................................
-[info openClose.c] estimate 93 steps for load
-[info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
-[info cache.c] cache sizes:
-[info cache.c]   total     104857600
-[info cache.c] - used         794564
-[info cache.c] = free      104063036
-[info cache.c]   total     104857600
-[info cache.c] - frozen       794564
-[info cache.c] = avail     104063036
-[info cache.c] need             1937
-[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: UNUSED -> ALLOCATED
-[info command.c] execScript: /bin/cp
-[info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/README
-[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/incoming/2010-01/README
-[info command.c] /bin/cp execution returns 0
-[notice utcache.c] .......................................................
-[notice utcache.c] reply : upload ok
-[notice utcache.c] .......................................................
-[notice recordTree.c] # Collection's records:
-[notice recordTree.c] Headers
-[notice recordTree.c] 	Collection	coll3               
-[notice recordTree.c] 	Type		UNKNOWN
-[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[notice recordTree.c] 	DoCypher	FALSE
-[notice recordTree.c] Body
-[notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 3f18841537668dcf4fafd1471c64d52d                1937 incoming/2010-01/README
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-
-[notice utcache.c] -------------------------------------------------------
-[notice utcache.c] -------------------------------------------------------
 [notice utcache.c] Clean the cache:
 [notice utcache.c] .......................................................
 [notice utFunc.c] clean the cache
@@ -345,16 +310,27 @@
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
 [info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
 [info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> UNUSED
-[info cacheTree.c] archive status 3f18841537668dcf4fafd1471c64d52d1937: ALLOCATED -> UNUSED
 [info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: TOKEEP -> UNUSED
 [info cacheTree.c] archive status de5008799752552b7963a2670dc5eb18391168: TOKEEP -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] /bin/bash execution returns 0
+[info command.c] execScript: /bin/bash
+[info command.c]  arg1: -c
+[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
 [info command.c] /bin/bash execution returns 0
 [info confTree.c] free configuration
 [info utcache.c] exit on success

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.9 2015/08/17 01:31:53 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.10 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -440,7 +440,7 @@ serializeServerTree(Collection* coll)
   logMemory(LOG_INFO, "Serializing the server tree file: %s", 
 	  path?path:"stdout");
   if (path && *path != (char)0) {
-    if ((fd = fopen(path, "w")) == 0) {
+    if (!(fd = fopen(path, "w"))) {
       logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
       goto error;

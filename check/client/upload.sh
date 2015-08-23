@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.6 2015/08/13 21:14:29 nroche Exp $
+# * Version: $Id: upload.sh,v 1.7 2015/08/23 23:39:09 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -67,7 +67,7 @@ client/ut$TEST \
     >>client/$TEST.out 2>&1
 
 client/ut$TEST \
-    -F  $srcdir/../misc/mediatex.css \
+    -F $srcdir/../misc/mediatex.css \
     >>client/$TEST.out 2>&1
 
 client/ut$TEST \
@@ -89,6 +89,16 @@ client/ut$TEST \
     -C client/$TEST.cat \
     -E client/$TEST.ext \
     -F $srcdir/../misc/mediatex.css \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -F $srcdir/../misc/mediatex.css \
+    -T dirname/ \
+    >>client/$TEST.out 2>&1
+
+client/ut$TEST \
+    -F $srcdir/../misc/mediatex.css \
+    -T dirname/filename \
     >>client/$TEST.out 2>&1
 
 # compare with the expected output

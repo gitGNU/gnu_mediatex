@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: have.c,v 1.12 2015/08/19 01:09:10 nroche Exp $
+ * Version: $Id: have.c,v 1.13 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -163,7 +163,7 @@ extractFinaleArchives(Connexion* connexion)
   if (!loadCollection(data.coll, SERV | EXTR | CACH)) goto error;
   if (!lockCacheRead(data.coll)) goto error2;
 
-  // Push provided final supplies into the cache
+  // push provided final supplies into the cache
   if (!addCacheEntry(data.coll, record)) goto error3;
   rgRemove(connexion->message->records);
 

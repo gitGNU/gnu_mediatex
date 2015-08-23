@@ -1,10 +1,10 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: log.sh,v 1.2 2015/08/23 23:39:11 nroche Exp $
+# * Version: $Id: upload.sh,v 1.1 2015/08/23 23:39:13 nroche Exp $
 # * Project: MediaTex
-# * Module:  miscellaneous modules
+# * Module:  server modules
 # *
-# * Unit test script for log.c
+# * Unit test script for upoad.c
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 Nicolas Roche
@@ -33,8 +33,8 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-misc/ut$TEST 2> misc/$TEST.out
+server/ut$TEST -d $PWD/$srcdir >server/$TEST.out 2>&1
 
 # compare with the expected output
-mrProperOutputs misc/$TEST.out
-diff $srcdir/misc/$TEST.exp misc/$TEST.out
+mrProperOutputs server/$TEST.out
+diff $srcdir/server/$TEST.exp server/$TEST.out

@@ -22,7 +22,6 @@ NAME=${NAME#"/"}
 DAEMON=CONF_BINDIR/$NAME
 USER=${2-mdtx} # arg2 no more handle by systemd
 DAEMON_ARGS="--conf-label $USER --severity notice --facility local2"
-#DAEMON_ARGS="--conf-label $USER --severity info --facility local2"
 #ulimit -c unlimited # produce core-dump
 PIDDIR=CONF_LOCALSTATEDIR/runCONF_MEDIATEXDIR
 PIDFILE=$PIDDIR/${USER}d.pid

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.h,v 1.4 2015/06/30 17:37:37 nroche Exp $
+ * Version: $Id: extract.h,v 1.5 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTeX
  * Module : extract
  *
@@ -29,14 +29,17 @@
 
 /* API */
 
-
-typedef enum {X_MAIN, X_CGI, X_STEP} ExtractType;
+typedef enum {
+  X_MAIN, // do scp extraction if locally needed
+  X_CGI,  // no scp extraction
+  X_STEP  // force scp extraction on gateway if remotely needed
+} ExtractType;
 
 typedef struct ExtractData {
 
   Collection* coll;
-  ExtractType context; // UNDEF for global extraction
-  RG* toKeeps;  // Archive*
+  ExtractType context; // manage scp rule
+  RG* toKeeps;         // Archive*
   int found;
   Archive* target;
 

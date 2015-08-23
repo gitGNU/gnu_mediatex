@@ -1,3 +1,70 @@
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: internal tests
+[notice utperm.c] ***********************************************
+[notice utperm.c] * cleaning
+[err perm.c] rmdir fails: (2) No such file or directory
+[err perm.c] removeDir fails
+[err perm.c] rmdir fails: (2) No such file or directory
+[err perm.c] removeDir fails
+[err perm.c] rmdir fails: (2) No such file or directory
+[err perm.c] removeDir fails
+[notice utperm.c] * unit test's current date:  XXX
+[notice utperm.c] * callAccess
+[notice utperm.c] * checkDirectory
+[err perm.c] status error on /HERE/check/doNotExists: No such file or directory
+[err perm.c] checkDirectory fails
+[notice utperm.c] * makeDir
+[info perm.c] mkdir /HERE/check/tmp/dir1
+[info perm.c] mkdir /HERE/check/tmp/dir2
+[info perm.c] mkdir /HERE/check/tmp/dir2/dir2
+[notice utperm.c] * removeDir
+[info perm.c] keep not empty directory: /HERE/check/tmp
+[info perm.c] rmdir /HERE/check/tmp/dir1
+[info perm.c] keep not empty directory: /HERE/check/tmp
+[info perm.c] rmdir /HERE/check/tmp/dir2/dir2
+[info perm.c] rmdir /HERE/check/tmp/dir2
+[info perm.c] keep not empty directory: /HERE/check/tmp
+[notice utperm.c] * getUnusedPath
+[notice utperm.c] tmp/foo => /HERE/check/tmp/foo_00
+[notice utperm.c] tmp/bar.txt => /HERE/check/tmp/bar_00.txt
+[notice utperm.c] * buildAbsoluteTargetPath
+[info perm.c] mkdir /HERE/check/tmp/foo
+[notice utperm.c] tmp/foo => /HERE/check/tmp/foo_00
+[notice utperm.c] tmp/foo/bar.txt => /HERE/check/tmp/foo/bar.txt
+[notice utperm.c] tmp/foo/bar.txt => /HERE/check/tmp/foo/bar_00.txt
+[notice utperm.c] * cleaning
+[info perm.c] rmdir /HERE/check/tmp/foo
+[info perm.c] keep not empty directory: /HERE/check/tmp
 [info utperm.c] exit on success
-[notice utperm.c] unit test's current date : 1262304000
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin foo root 755 (noRegression=0)
+[notice utperm.c] ***********************************************
+[err perm.c] /usr/bin should be owne by foo user, not root
+[err perm.c] checkDirectoryPerm fails
+[info utperm.c] exit on error
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin root bar 755 (noRegression=0)
+[notice utperm.c] ***********************************************
+[err perm.c] /usr/bin should be owne by bar group, not root
+[err perm.c] checkDirectoryPerm fails
+[info utperm.c] exit on error
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin root root 777 (noRegression=0)
+[notice utperm.c] ***********************************************
+[err perm.c] /usr/bin should be share as 777, not 755
+[err perm.c] checkDirectoryPerm fails
+[info utperm.c] exit on error
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin root root 755 (noRegression=0)
+[notice utperm.c] ***********************************************
+[info utperm.c] exit on success
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin root root 777 (noRegression=1)
+[notice utperm.c] ***********************************************
+[err perm.c] /usr/bin should be share as 777, not 755
+[err perm.c] checkDirectoryPerm fails
+[info utperm.c] exit on error
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /usr/bin foo bar 755 (noRegression=1)
+[notice utperm.c] ***********************************************
 [info utperm.c] exit on success
