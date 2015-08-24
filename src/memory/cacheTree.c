@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.12 2015/08/23 23:39:15 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.13 2015/08/24 17:48:18 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -314,8 +314,9 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   }
     
  end:
-  logMemory(LOG_INFO, "archive status %s%lli: %s -> %s", 
+  logMemory(LOG_INFO, "%s:%lli (score=%5.2f) : %s -> %s", 
 	    archive->hash, (long long int)archive->size,
+	    archive->extractScore,
 	    strAState(previousState), strAState(archive->state));
 
   // become allocated

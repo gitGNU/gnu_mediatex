@@ -35,11 +35,14 @@
 [notice utnotify.c] -------------------------------------------------------
 [notice utnotify.c] Populate the cache:
 [notice utnotify.c] .......................................................
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection ( SX )
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll1/extract000.txt
-[warning extractFile.y] the extract file was empty
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
+[info openClose.c] steps: 93 / 93
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [notice utFunc.c] copy logoP1.cat to the coll1 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
@@ -58,16 +61,19 @@
 [info command.c]  arg2: ./../misc/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1
 [info command.c] /bin/cp execution returns 0
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection (5 X )
+[info openClose.c] steps: 0 / 93
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: UNUSED -> TOKEEP
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : UNUSED -> TOKEEP
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
-[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: UNUSED -> TOKEEP
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : UNUSED -> AVAILABLE
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f quick md5sum computed on 374784 bytes
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f  full md5sum computed on 374784 bytes
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [notice utnotify.c] .......................................................
 [notice utnotify.c] we have :
 [notice utnotify.c] .......................................................
@@ -95,6 +101,9 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice utnotify.c] -------------------------------------------------------
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll1 collection (5SX )
+[info openClose.c] steps: 0 / 93
 [info address.c] build socket address 127.0.0.1:11111
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -114,9 +123,6 @@
 [info recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [info recordTree.c] # ^ LOCAL_SUPPLY
 
-[info recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[info recordTree.c] # ^ LOCAL_SUPPLY
-
 [notice notify.c] localhost:11111 notified
 [err address.c] gethostbyname_r mediatex.org: Unknown host
 [err address.c] getIpFromHostname fails
@@ -129,11 +135,11 @@
 [notice utnotify.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> WANTED
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> UNUSED
-[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: TOKEEP -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*
@@ -197,7 +203,7 @@
 [err connect.c] buildServerAddress fails
 [err connect.c] connectServer fails
 [notice notify.c] cannot connect mediatex.org
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice utnotify.c] .......................................................
 [notice utnotify.c] Now we have :
 [notice utnotify.c] .......................................................
@@ -218,7 +224,7 @@
 [notice utnotify.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*

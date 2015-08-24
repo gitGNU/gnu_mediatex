@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: users.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
+# * Version: $Id: users.sh,v 1.5 2015/08/24 17:48:18 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -133,13 +133,11 @@ function USERS_coll_populate()
   
     # /var/cache/mediatex/mdtx/*/mdtx-coll
     COLL_CACHE=$CACHES/$1
-    COLL_TOKEEP=$COLL_CACHE/toKeep
     COLL_EXTRACT=$EXTRACT/$1
     COLL_CVS=$CVSCLT/$1
     COLL_HOME=$HOMES/$1
 
     install -o $MDTX -g $1    -m 2750 -d $COLL_CACHE
-    install -o $MDTX -g $1    -m 2750 -d $COLL_TOKEEP
     install -o $MDTX -g $1    -m 2770 -d $COLL_EXTRACT
     install -o $MDTX -g $1    -m 2770 -d $COLL_CVS
     install -o $1    -g $MDTX -m 750  -d $COLL_HOME

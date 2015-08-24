@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.16 2015/08/23 23:39:16 nroche Exp $
+ * Version: $Id: cache.c,v 1.17 2015/08/24 17:48:18 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -162,18 +162,15 @@ getAbsoluteRecordPath(Collection* coll, Record* record)
 /*=======================================================================
  * Function   : scanFile
  * Description: Add, keep or remove a file into a collection cache
- * Synopsis   : int scanFile(RecordTree* self, char* coll, 
- *                            time_t now, char* path, char* relativePath) 
- * Input      : RecordTree* self = the record tree to update
- *              char* coll = the related collection
- *              char* path = where the file is
- *              char* relativePath = use for logging only
- *              int toKeep = tels the directory is to read-only
+ * Synopsis   : int scanFile(char* coll, 
+ *                           char* absolutePath, char* relativePath) 
+ * Input      : char* coll
+ *              char* absolutePath
+ *              char* relativePath
  * Output     : TRUE on success
- * Note       : Only one path for 2 files with same content is stored ?
  =======================================================================*/
 int 
-scanFile(Collection* coll, char* path, char* relativePath, int toKeep) 
+scanFile(Collection* coll, char* absolutePath, char* relativePath) 
 {
   int rc = FALSE;
   RG* archives = 0;
@@ -184,22 +181,19 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   struct stat statBuffer;
   Md5Data md5; 
 
+  logMain(LOG_DEBUG, "scaning file: %s", relativePath);
+  checkLabel(absolutePath);
+  checkLabel(relativePath);
   memset(&md5, 0, sizeof(Md5Data));
 
-  if (isEmptyString(path)) {
-    logMain(LOG_ERR, "please provide a path for the entry");
-    goto error;
-  }
-
-  logMain(LOG_DEBUG, "scaning file: %s", path);
-
   // get file attributes (size)
-  if (stat(path, &statBuffer)) {
-    logMain(LOG_ERR, "status error on %s: %s", path, strerror(errno));
+  if (stat(absolutePath, &statBuffer)) {
+    logMain(LOG_ERR, "status error on %s: %s", 
+	    absolutePath, strerror(errno));
     goto error;
   }
 
-  // first try to look for file in cache
+  // try to look for archive in md5sums file
   archives = coll->cacheTree->archives;
   while((archive = rgNext_r(archives, &curr))) {
     
@@ -208,37 +202,45 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
     if (strcmp(record->extra, relativePath)) continue;
 
     // if already there do not compute the md5sums
-    logMain(LOG_DEBUG, "%s match: md5sum skipped", relativePath);
+    logMain(LOG_INFO, "%s match: md5sum skipped", relativePath);
+    record = 0;
     goto end;
   }
+  record = 0;
 
   // unknown file: compute hash
-  md5.path = path;
+  md5.path = absolutePath;
   md5.size = statBuffer.st_size;
   md5.opp = MD5_CACHE_ID;
   if (!doMd5sum(&md5)) goto error;
 
+  // archive should adready exists from extract metadata
+  if (!(archive =
+	getArchive(coll, md5.fullMd5sum, statBuffer.st_size))) {
+    
+    // remove file from cache if not having extraction rule
+    logMain(LOG_WARNING, "remove %s from cache (having no extract rule)", 
+	    relativePath);
+      if (!env.dryRun) {
+	if (unlink(absolutePath) == -1) {
+	  logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
+	  goto error;
+	}
+      }
+  } 
+
   // assert we have the localhost server object
   if (!getLocalHost(coll)) goto error;
-  
-  // build and add a new cache entry
-  if (!(archive = 
-	addArchive(coll, md5.fullMd5sum, statBuffer.st_size))) 
-    goto error;
-
+    
+  // add a new cache entry
   if (!(extra = createString(relativePath))) goto error;
   if (!(record = 
 	addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
 
-  if (toKeep) {
-    record->date = 0x7FFFFFFF; // maximum date: server will restart before
-    logMain(LOG_DEBUG, 
-	    "is read-only file (will never try to delete it)");
-  }
-
   // add file as local supply and compute its archive status
   if (!addCacheEntry(coll, record)) goto error;
+  record = 0;
 
  end:
   rc = TRUE;
@@ -246,27 +248,23 @@ scanFile(Collection* coll, char* path, char* relativePath, int toKeep)
   if (!rc) {
     logMain(LOG_ERR, "error scanning file");
   }
+  if (record) delRecord(coll, record);
   return rc;
 }
 
 /*=======================================================================
  * Function   : scanRepository
  * Description: Recursively scan a cache directory 
- * Synopsis   : int scanRepository(RecordTree* self, 
- *                  Collection* collection, time_t now, const char* path) 
- * Input      : RecordTree* self = the record tree to update
- *              Collection* collection = the related collection
+ * Synopsis   : int scanRepository(Collection* collection, 
+ *                                 const char* path) 
+ * Input      : Collection* collection = the related collection
  *              const char* path = the directory path
- *              int toKeep = tels the directory is to read-only
- * Output     : RecordTree* self = the record tree updated
- *              TRUE on success
- * Note       : scandir assert the order (readdir_r do not)
-
- * MAYBE       : use symlinkTarget from device.c but scanRepository
-	        is relative to the collection cache which is more secure
+ * Output     : TRUE on success
+ * Note       : scandir assert the order (readdir_r do not),
+ *              this make non-regression tests easier.
  =======================================================================*/
 int 
-scanRepository(Collection* coll, const char* path, int toKeep) 
+scanRepository(Collection* coll, const char* path) 
 {
   int rc = FALSE;
   struct dirent** entries;
@@ -302,35 +300,33 @@ scanRepository(Collection* coll, const char* path, int toKeep)
     entry = entries[n];
     if (!strcmp(entry->d_name, ".")) continue;
     if (!strcmp(entry->d_name, "..")) continue;
-    if (!strcmp(entry->d_name, "toKeep")) toKeep = TRUE;
 
     if ((relativePath = createString(path)) == 0 ||
 	(relativePath = catString(relativePath, entry->d_name)) == 0)
       goto error;
     
-    //logMain(LOG_INFO, "scaning '%s'", relativePath);
-    
+    // loop on sub directories
     switch (entry->d_type) {
 
     case DT_DIR: 
       if ((relativePath = catString(relativePath, "/")) == 0 ||
-	  !scanRepository(coll, relativePath, toKeep)) goto error;
+	  !scanRepository(coll, relativePath)) goto error;
       break;
 	
     case DT_REG: 
       if ((absolutePath2 = createString(absolutePath)) == 0 ||
 	  (absolutePath2 = catString(absolutePath2, entry->d_name)) 
 	  == 0) goto error;
-      if (!scanFile(coll, absolutePath2, relativePath, toKeep)) goto error;
+      if (!scanFile(coll, absolutePath2, relativePath)) goto error;
       break;
 	
     case DT_LNK:
-      logMain(LOG_INFO, "do not handle simlink up today"); 
+      logMain(LOG_DEBUG, "ignore symbolic link"); 
       break;
 
     case DT_UNKNOWN:
     default: 
-      logMain(LOG_INFO, "ignore not regular file \'%s%s\'", 
+      logMain(LOG_WARNING, "ignore irregular file \'%s%s\'", 
 	      absolutePath, entry->d_name);
       break;
     }   
@@ -376,11 +372,11 @@ quickScan(Collection* coll)
   logMain(LOG_DEBUG, "updating cache for %s collection", coll->label);
   checkCollection(coll);
 
-  if (!loadCollection(coll, CACH)) goto error;
+  if (!loadCollection(coll, EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
 
   // add archive if new ones into the physical cache
-  if (!scanRepository(coll, "", FALSE)) goto error3;
+  if (!scanRepository(coll, "")) goto error3;
 
   // del cache entry if no more into the physical cache
   if (!(archive = rgNext_r(coll->cacheTree->archives, &curr))) goto end;
@@ -403,7 +399,7 @@ quickScan(Collection* coll)
  error3:
   if (!unLockCache(coll)) rc = FALSE;
  error2:
-  if (!releaseCollection(coll, CACH)) rc = FALSE;
+  if (!releaseCollection(coll, EXTR|CACH)) rc = FALSE;
  error:
   if (!rc) {
     logMain(LOG_INFO, "fails to update cache for %s collection%",
@@ -451,7 +447,8 @@ quickScanAll(void)
 /*=======================================================================
  * Function   : cacheStatus
  * Description: log cache status
- * Synopsis   : static void cacheStatus(Collection* coll)
+ * Synopsis   : static void cacheSize(CacheTree* self, 
+ *                                    off_t* free, off_t* available)
  * Input      : CacheTree* self
  * Output     : off_t* free : free place on cache
  *              off_t* available : free place if we remove perenials
@@ -460,12 +457,12 @@ quickScanAll(void)
 static void cacheSizes(CacheTree* self, off_t* free, off_t* available)
 {
   /*
-  RG* archives = 0;
-  Archive* archive = 0;
-  Record* record = 0;
-  RGIT* curr = 0;
-  off_t used = 0;
-  off_t frozen = 0;
+    RG* archives = 0;
+    Archive* archive = 0;
+    Record* record = 0;
+    RGIT* curr = 0;
+    off_t used = 0;
+    off_t frozen = 0;
   */
 
   *free = self->totalSize - self->useSize;
@@ -551,9 +548,7 @@ freeCache(Collection* coll, off_t need, int* success)
   }
 
   // We will free some archive from the cache.
-  // some optimisation should be great here: maybe sort on size or
-  // date
-#warning to optimize
+  // some optimisation should be great here: sort on size or date
   //if (!rgSort(tree->records, cmpRecordDate)) goto error;
 
   // - compute scores (do not delete archive with bad score)
@@ -572,21 +567,20 @@ freeCache(Collection* coll, off_t need, int* success)
     if (!computeArchiveStatus(coll, archive)) goto error;
     if (archive->state >= TOKEEP) continue;
 
-    if (!(path = getAbsoluteRecordPath(coll, record))) goto error;
-
     // un-index the record from cache (do not free the record)
     if (!delCacheEntry(coll, record)) goto error;
 
     // free file on disk
+    if (!(path = getAbsoluteRecordPath(coll, record))) goto error;
     logMain(LOG_NOTICE, "unlink %s", path);
     if (!env.dryRun) {
       if (unlink(path) == -1) {
 	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
 	goto error;
       }
-      path = destroyString(path);
     }
 
+    path = destroyString(path);
     free = self->totalSize - self->useSize;
   }
   

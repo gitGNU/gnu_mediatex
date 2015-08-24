@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: notify.sh,v 1.2 2015/08/19 01:09:06 nroche Exp $
+# * Version: $Id: notify.sh,v 1.3 2015/08/24 17:48:17 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -37,6 +37,7 @@ SRC=$CVSCLT/$MDTXUSER-coll1
 loadPaths "mdtx2"
 DST=$CVSCLT/$MDTXUSER-coll1
 cp $SRC$SERVFILE $DST$SERVFILE
+cp $SRC$EXTRFILE $DST$EXTRFILE
 server/ut$TEST -cmdtx2 -d $srcdir >server/$TEST.out 2>&1
 
 # compare with the expected output

@@ -1,27 +1,20 @@
 
 *** TO CORRECT: cache policy    
-
-** UPLOAD
-- rename cache/incoming/date to cache/date
-- provide upload target path
-- move callAccess, makeDir, removeDir and extractCp from cache to extract
-- dedicated server module for upload
-- extract: get uniq path on directory too (if a file have directory name)
 .........................................................
 
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- do not load into cache unknown archive from extract.txt
-
+** POST-TEST
+- !wanted ne s'efface pas quand serv2 fait l'extraction
+  a priori il faudrait que le serv1 le récupère et notifie serv2
 
 ** FINALE-SUPLLY
 - supports also include files on disk:
 -- name = absolute path 
 - cache.c also read supports.txt to get final-supply records
-- remove cache/toKeep directory
-- cache never follow simlinks
 
 ** MOTD
+- check final-supplies saved on disk
 - localScore/mainScore ?
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - add coll selection facility
 - add to burn
 -- only show when mainScore<5 && localScore<5
@@ -73,6 +66,14 @@
 ** UPLOAD
 - cvsPrint manage upload concatenation
 - upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
+- rename cache/incoming/date to cache/date
+- provide upload target path
+- move callAccess, makeDir, removeDir and extractCp from cache to extract
+- dedicated server module for upload
+- extract: get uniq path on directory too (if a file have directory name)
+- remove cache/toKeep directory
+- cache never follow simlinks
+- do not load into cache unknown archive from extract.txt
 
 ** SYNTAX
 - finale -> final
@@ -114,7 +115,9 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - add a sha1 field for supports
 - move extract.c into common/extractRules.c so as to run it during upload
+-- cacheSet and delverArchive must also be defined into client
 - replace gethostby*_r by getaddrinfo and co
+- optimise cache.c::freeCache (sort on date)
 - i10n for french
 
 *** TODO MAYBE

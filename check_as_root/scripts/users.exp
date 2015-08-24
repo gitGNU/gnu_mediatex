@@ -112,7 +112,6 @@ Fait.
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx
       ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache
       ut1-mdtx ut1-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello
-      ut1-mdtx ut1-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello/toKeep
       ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs
       ut1-mdtx       ut1-mdtx drwxrws--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx
       ut1-mdtx ut1-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello

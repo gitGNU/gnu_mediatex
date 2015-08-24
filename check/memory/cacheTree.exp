@@ -9,69 +9,69 @@ S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> USED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> USED
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : USED -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 [warning recordTree.c] get a malloc record ?!
 S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !malloc
 # ^ MALLOC_SUPPLY
           
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> ALLOCATED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: ALLOCATED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 # ^ LOCAL_SUPPLY
           
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> AVAILABLE
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [notice utcacheTree.c] available: score=8.25 toKeep: no
 
 [notice utcacheTree.c] keep record
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [notice utcacheTree.c] unkeep record
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: TOKEEP -> AVAILABLE
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> AVAILABLE
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 # ^ LOCAL_SUPPLY
         
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [notice utcacheTree.c] available: score=3.75 toKeep: yes
 
 [notice utcacheTree.c] keep record
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcacheTree.c] unkeep record
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 # ^ REMOTE_SUPPLY
          
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> USED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> USED
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: USED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : USED -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 # ^ FINAL_DEMAND
      
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
 D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 # ^ LOCAL_DEMAND
            
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice utcacheTree.c] del record from cache
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: WANTED -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info confTree.c] free configuration
 [info utcacheTree.c] exit on success

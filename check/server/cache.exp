@@ -67,33 +67,36 @@
 [info command.c]  arg2: ./../misc/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
 [info command.c] /bin/cp execution returns 0
+[info openClose.c] estimate 93 steps for load
+[info openClose.c] parse coll3 collection (5 X )
 [info openClose.c] load coll3 records
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
+[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[info openClose.c] steps: 93 / 93
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
-[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
-[info openClose.c] steps: 93 / 93
+[info openClose.c] steps: 0 / 93
 [info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: UNUSED -> AVAILABLE
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: UNUSED -> TOKEEP
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : UNUSED -> TOKEEP
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
-[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: UNUSED -> AVAILABLE
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : UNUSED -> AVAILABLE
 [info md5sum.c] de5008799752552b7963a2670dc5eb18 quick md5sum computed on 391168 bytes
 [info md5sum.c] de5008799752552b7963a2670dc5eb18  full md5sum computed on 391168 bytes
-[info cacheTree.c] archive status de5008799752552b7963a2670dc5eb18391168: UNUSED -> AVAILABLE
+[info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : UNUSED -> AVAILABLE
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6 quick md5sum computed on 4066 bytes
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6  full md5sum computed on 4066 bytes
-[info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: UNUSED -> TOKEEP
+[info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : UNUSED -> TOKEEP
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f quick md5sum computed on 374784 bytes
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f  full md5sum computed on 374784 bytes
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: UNUSED -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [notice utcache.c] .......................................................
 [notice utcache.c] Scan gives :
 [notice utcache.c] .......................................................
@@ -127,8 +130,8 @@
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] Keep logoP1.iso and logoP2.iso:
 [notice utcache.c] .......................................................
-[info cacheTree.c] archive status de5008799752552b7963a2670dc5eb18391168: AVAILABLE -> TOKEEP
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> TOKEEP
+[info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : AVAILABLE -> TOKEEP
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcache.c] .......................................................
 [notice utcache.c] Now we have :
 [notice utcache.c] .......................................................
@@ -213,7 +216,7 @@
 [info cache.c] - frozen       794564
 [info cache.c] = avail     104063036
 [info cache.c] need        104018481
-[info cacheTree.c] archive status aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa104018481: UNUSED -> ALLOCATED
+[info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score=-1.00) : UNUSED -> ALLOCATED
 [notice utcache.c] .......................................................
 [notice utcache.c] reply : 1
 [notice utcache.c] .......................................................
@@ -247,7 +250,7 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice utcache.c] -------------------------------------------------------
-[info cacheTree.c] archive status aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa104018481: ALLOCATED -> UNUSED
+[info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score=-1.00) : ALLOCATED -> UNUSED
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] Ask for place so as we need to suppress files :
 [notice utcache.c] .......................................................
@@ -259,12 +262,12 @@
 [info cache.c] - frozen       794564
 [info cache.c] = avail     104063036
 [info cache.c] need        104063036
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> AVAILABLE
-[info cacheTree.c] archive status 022a34b2f9b893fba5774237e1aa80ea24075: AVAILABLE -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.png
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> TOKEEP
-[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> AVAILABLE
-[info cacheTree.c] archive status 1a167d608e76a6a4a8b16d168580873c20480: AVAILABLE -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> TOKEEP
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> AVAILABLE
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
 [notice cache.c] unlink LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP1.cat
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -273,8 +276,8 @@
 [info cache.c]   total     104857600
 [info cache.c] - frozen       794564
 [info cache.c] = avail     104063036
-[info cacheTree.c] archive status bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb104063036: UNUSED -> ALLOCATED
-[info cacheTree.c] archive status bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb104063036: ALLOCATED -> UNUSED
+[info cacheTree.c] bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:104063036 (score=-1.00) : UNUSED -> ALLOCATED
+[info cacheTree.c] bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:104063036 (score=-1.00) : ALLOCATED -> UNUSED
 [notice utcache.c] .......................................................
 [notice utcache.c] reply : 1
 [notice utcache.c] .......................................................
@@ -320,10 +323,10 @@
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
 [info command.c] /bin/bash execution returns 0
-[info cacheTree.c] archive status 0387eee9820fa224525ff8b2e0dfa9be24546: TOKEEP -> UNUSED
-[info cacheTree.c] archive status 0a7ecd447ef2acb3b5c6e4c550e6636f374784: TOKEEP -> UNUSED
-[info cacheTree.c] archive status c0c055a0829982bd646e2fafff01aaa64066: TOKEEP -> UNUSED
-[info cacheTree.c] archive status de5008799752552b7963a2670dc5eb18391168: TOKEEP -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : TOKEEP -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*

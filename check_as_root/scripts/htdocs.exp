@@ -94,7 +94,6 @@ Fait.
       ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache
       ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello/.htaccess
-      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello/toKeep
       ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs
       ut2-mdtx       ut2-mdtx drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx
       ut2-mdtx ut2-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx-hello
