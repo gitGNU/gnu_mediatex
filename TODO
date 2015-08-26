@@ -2,10 +2,6 @@
 *** TO CORRECT: cache policy    
 .........................................................
 
-** POST-TEST
-- !wanted ne s'efface pas quand serv2 fait l'extraction
-  a priori il faudrait que le serv1 le récupère et notifie serv2
-
 ** FINALE-SUPLLY
 - supports also include files on disk:
 -- name = absolute path 

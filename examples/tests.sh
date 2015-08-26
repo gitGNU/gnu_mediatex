@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.7 2015/08/23 23:39:14 nroche Exp $
+# * Version: $Id: tests.sh,v 1.8 2015/08/26 10:50:47 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -651,12 +651,12 @@ function test13()
     fi
 }
 
-# server 3 provides second support and tell it to others
+# Server 3 provides second support and tell it to others
 # (close to test 10)
 function test14()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "server 3 provides second support and tell it to others"
+	topo "Server 3 provides second support and tell it to others"
  
 	mdtxP "add supp iso2 on /usr/share/mediatex/misc/logoP2.iso" \
 	      serv3
@@ -688,11 +688,38 @@ function test14()
     fi
 }
 
-# move CVS repository from serv1 to serv2
+# Server 1 retrieve the archive and notify other it is no more looking for
 function test15()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "move CVS repository from serv1 to serv2"
+	topo "Server 1 retrieve the archive and notify other it is no more looking for"
+ 
+	mdtxP "srv notify" serv2
+	mdtxP "srv extract" serv1
+	mdtxP "srv save" serv1
+	question "does serv1 deliver logo.png (mail sent) ?" \
+		 "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+	
+	mdtxP "srv notify" serv1
+	mdtxP "srv save" serv2
+	mdtxP "srv save" serv3
+	finalQuestion "does serv2 and serv3 are no more looking for logo.png ?" \
+		 "cat /var/cache/mediatex/serv2/md5sums/serv2-hello.md5 \
+                      /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+    else
+	topo "Cleanup"
+	rm -f /var/cache/mediatex/serv1/cache/serv1-hello/logo.png
+	reloadInitdScript serv1
+    fi
+}
+
+# Move CVS repository from serv1 to serv2
+function test16()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Move CVS repository from serv1 to serv2"
 	if [ -d /var/lib/mediatex/serv1/serv1-hello ]; then
 	    cp -fr /var/lib/mediatex/serv1/serv1-hello /tmp/test15
 	    mv /var/lib/mediatex/serv1/serv1-hello \
@@ -728,12 +755,22 @@ function test15()
     fi
 }
 
-# All tests succed !
-function test16()
+# Make all functionnal for manuals tests
+function test17()
 {
-    topo "All tests succed !"
-    cleanAll
-    exit 0
+    if [ "x$1" != "xclean" ]; then
+	topo "Make all functionnal for manuals tests"
+	
+	for SERV in serv1 serv2; do
+	    mdtxP "upgrade+" $SERV
+	done
+	finalQuestion "All tests done ! Do you want to clean all ?"
+	[ $TEST_OK -eq 0 ] && return
+	cleanAll
+	exit 0	
+    else
+	topo "Do not clean (you can run './tests.sh clean' to do it latter)"
+    fi
 }
 
 ############################################
