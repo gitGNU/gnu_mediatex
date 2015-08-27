@@ -1,13 +1,12 @@
 
 *** TO CORRECT: cache policy    
-.........................................................
 
 ** FINALE-SUPLLY
-- supports also include files on disk:
--- name = absolute path 
-- cache.c also read supports.txt to get final-supply records
+- cache.c: also read supports.txt to get final-supply records
+- tests.sh : extract form support files
 
 ** MOTD
+- extractScore should log supports label using getSupportLabel
 - check final-supplies saved on disk
 - localScore/mainScore ?
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
@@ -19,6 +18,7 @@
 - display cache size (all/used/allocated/free)
 
 ** HTML
+- support file names has to be truncated into extractHtml.c
 - notify server lastCommit
 - (final supplies automaticaly included into image score computation)
 - notify orphanes
@@ -94,6 +94,13 @@
 - unit test for mediatexd (sockets messages)
 -- move readMessageinto thread.c
 -- add utmediatexd.c calling this function
+
+** FINALE-SUPLLY
+- supports also include files on disk:
+- mediatex_comp updated
+- shellQuery.y: add file FILE
+-- name = absolute path => remove MAX_SIZE_NAME (and use MAX_SIZE_STRING)
+-- add tests for mdtxAddFile into utsupp.c
 
 *** CLEAN-UP
 

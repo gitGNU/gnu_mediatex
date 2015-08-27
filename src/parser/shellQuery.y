@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.7 2015/08/23 23:39:16 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.8 2015/08/27 10:51:52 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -147,6 +147,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 %type <coll>      newCollection
 %type <string>    collection
 %type <string>    support
+%type <string>    file
 %type <string>    key
 
 %%
@@ -160,6 +161,11 @@ collection: shellCOLL shellSTRING
 }
 
 support: shellSUPP shellSTRING
+{
+  strcpy($$, $2);
+}
+
+file: shellFILE shellSTRING
 {
   strcpy($$, $2);
 }
@@ -216,13 +222,13 @@ target: shellAS shellSTRING
 }
       | // empty
 
-uploadParam: shellFILE shellSTRING target
+uploadParam: file target
 {
   if (upParam->file) {
     logParser(LOG_ERR, "please only provide one data file to upload");
     YYABORT;
   }
-  if (!(upParam->file = createString($2))) YYABORT;
+  if (!(upParam->file = createString($1))) YYABORT;
 }
            | shellCATALOG shellSTRING
 {
@@ -281,6 +287,7 @@ apiQuery: apiSuppQuery
 	   mediatex add supp SUPP to coll COLL
 	   mediatex del supp SUPP from coll COLL
 	   mediatex add supp SUPP on PATH
+	   mediatex add file PATH
 	   mediatex del supp SUPP
 	   mediatex list supp
 	   mediatex note supp as TEXT
@@ -534,6 +541,15 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxAddSupport($2, $4)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
+  }
+}
+            | shellADD file shellEOL
+{
+  logParser(LOG_INFO, "add %s file", $2);
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    if (!mdtxAddFile($2)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }

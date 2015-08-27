@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.4 2015/08/23 23:39:12 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.5 2015/08/27 10:51:51 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -66,6 +66,7 @@ parser/ut$TEST.tab srv deliver >>parser/$TEST.out 2>&1
 
 # apiSuppQuery
 parser/ut$TEST.tab add supp SUPP on PATH >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab add file PATH >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab del supp SUPP >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab list supp >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab add supp SUPP to ALL >>parser/$TEST.out 2>&1

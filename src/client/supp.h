@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.h,v 1.4 2015/06/30 17:37:26 nroche Exp $
+ * Version: $Id: supp.h,v 1.5 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -36,6 +36,7 @@ int mdtxUmount(char* target);
 int mdtxLsSupport();
 int mdtxUpdateSupport(char* label, char* status);
 int mdtxAddSupport(char* label, char* path);
+int mdtxAddFile(char* path);
 int mdtxHaveSupport(char* label, char* path);
 int mdtxDelSupport(char* label);
 

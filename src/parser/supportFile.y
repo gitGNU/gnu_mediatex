@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.y,v 1.5 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: supportFile.y,v 1.6 2015/08/27 10:51:53 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -63,7 +63,7 @@
   time_t time;
   char   hash[MAX_SIZE_HASH+1];
   char   status[MAX_SIZE_STAT+1];
-  char   name[MAX_SIZE_NAME+1];
+  char   name[MAX_SIZE_STRING+1];
 }
 
 %{
@@ -144,7 +144,7 @@ line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
   strncpy(support->fullHash, $5, MAX_SIZE_HASH);
   support->size = $6;
   strncpy(support->status, $7, MAX_SIZE_STAT);
-  strncpy(support->name, $8, MAX_SIZE_NAME);
+  strncpy(support->name, $8, MAX_SIZE_STRING);
   support = 0;
 }
 ;

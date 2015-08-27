@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.h,v 1.4 2015/06/30 17:37:31 nroche Exp $
+ * Version: $Id: device.h,v 1.5 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -25,7 +25,7 @@
 #ifndef MDTX_MISC_DEVICE_H
 #define MDTX_MISC_DEVICE_H 1
 
-char* absolutePath(char* path);
+char* getAbsolutePath(char* path);
 int getDevice(char* inPath, char** outPath);
 int isBlockDevice(char* path, int* isB);
 int getIsoSize(int fd, off_t *size, 

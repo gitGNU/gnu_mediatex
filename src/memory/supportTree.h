@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.h,v 1.4 2015/06/30 17:37:30 nroche Exp $
+ * Version: $Id: supportTree.h,v 1.5 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -29,7 +29,7 @@
 
 struct Support
 {
-  char     name[MAX_SIZE_NAME+1];
+  char     name[MAX_SIZE_STRING+1];
 
   Archive* archive;
   char     quickHash[MAX_SIZE_HASH+1];

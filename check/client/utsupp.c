@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupp.c,v 1.3 2015/08/07 17:50:23 nroche Exp $
+ * Version: $Id: utsupp.c,v 1.4 2015/08/27 10:51:51 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -105,21 +105,40 @@ main(int argc, char** argv)
   
   logMain(LOG_NOTICE, "*** Start like this:");
   conf->checkTTL = 946080000;
-  mdtxLsSupport();
+  if (!mdtxLsSupport()) goto error;
+  conf->fileState[iSUPP] = MODIFIED;
   if (!saveConfiguration("topo")) goto error;
   
   logMain(LOG_NOTICE, "*** Add a support:");
   sprintf(path, "%s/logo.tgz", inputRep);
   if (!mdtxAddSupport("me", path)) goto error;
   if (!saveConfiguration("topo")) goto error;
-  
-  logMain(LOG_NOTICE, "*** Add second time:");
+
+  logMain(LOG_NOTICE, "*** Add a file:");
+  sprintf(path, "%s/logo.tgz", inputRep);
+  if (!mdtxAddFile(path)) goto error;
+  if (!saveConfiguration("topo")) goto error;
+
+  logMain(LOG_NOTICE, "*** List supports:");
+  if (!mdtxLsSupport()) goto error;
+
+  logMain(LOG_NOTICE, "*** Add support a second time:");
   if (mdtxAddSupport("me", path)) goto error;
   if (!saveConfiguration("topo")) goto error;
-  
+
+  logMain(LOG_NOTICE, "*** Add file a second time:");
+  sprintf(path, "%s/logo.tgz", inputRep);
+  if (mdtxAddFile(path)) goto error;
+
+  logMain(LOG_NOTICE, "*** Add support with name begining with '/':");
+  if (mdtxAddSupport("/me", path)) goto error;
+
   logMain(LOG_NOTICE, "*** Have a bad support:");
   sprintf(path, "%s/logo.png", inputRep);
   if (mdtxHaveSupport(supp, path)) goto error;
+
+  logMain(LOG_NOTICE, "*** Have a file:");
+  if (mdtxHaveSupport("/me", path)) goto error;
   
   logMain(LOG_NOTICE, "*** Have a support:");
   sprintf(path, "%s/logoP1.iso", inputRep);

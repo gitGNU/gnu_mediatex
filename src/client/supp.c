@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.13 2015/08/23 23:39:15 nroche Exp $
+ * Version: $Id: supp.c,v 1.14 2015/08/27 10:51:51 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -221,7 +221,7 @@ doCheckSupport(Support *supp, char* path)
   if (!rc) {
     logMain(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
     logMain(LOG_WARNING, "either this is not \"%s\" support at %s", 
-	    supp->name, env.noRegression?"xxx":path);
+	    supp->name, path);
     logMain(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
 	    supp->name);
     goto error;
@@ -277,10 +277,11 @@ mdtxLsSupport()
   while((supp = rgNext(supports))) {
     if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
-  
+
   printf("%5s %*s %s\n", 
-	 "score", MAX_SIZE_STAT, "state", "label");
-  while((supp = rgNext(supports))) {
+	 "score", MAX_SIZE_STAT, "state", "label");  
+
+  while((supp = rgNext(supports))) {     
     printf("%5.2f %*s %s\n", 
 	   supp->score, MAX_SIZE_STAT, supp->status, supp->name);
   }
@@ -312,8 +313,15 @@ mdtxAddSupport(char* label, char* path)
 
   logMain(LOG_DEBUG, "mdtxAddSupport");
   if (isEmptyString(path)) goto error;
+  if (isEmptyString(label)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if ((now = currentTime()) == -1) goto error;
+  
+  // name begining with '/' are reserved for support files
+  if (*label == '/') {
+    logMain(LOG_ERR, "support's name cannot begin with '/'");
+    goto error;
+  }
 
   // look for this name in the support Ring
   if (!loadConfiguration(SUPP)) goto error;
@@ -332,11 +340,61 @@ mdtxAddSupport(char* label, char* path)
  error:
   if (!rc) {
     logMain(LOG_ERR, "error while adding support %s from %s", 
-	    label, env.noRegression?"xxx":path);
+	    label, path);
     if (supp) delSupport(supp);
   }
   return rc;
 }
+
+/*=======================================================================
+ * Function   : mdtxAddFile
+ * Description: add a file in place of a new available support
+ * Synopsis   : int mdtxAddFile(char* path)
+ * Input      : char* path = path of the file to add
+ * Output     : N/A
+ * Note       : support's label will be the absolute path
+ =======================================================================*/
+int 
+mdtxAddFile(char* path)
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Support *supp = 0;
+  time_t now = 0;
+  char* absolutePath = 0;
+
+  logMain(LOG_DEBUG, "mdtxAddFile %s", path);
+  if (isEmptyString(path)) goto error;
+  if (!(conf = getConfiguration())) goto error;
+  if ((now = currentTime()) == -1) goto error;
+
+  // get the absolute path of the file
+  if (!(absolutePath = getAbsolutePath(path))) goto error;
+
+  // look for this name in the support Ring
+  if (!loadConfiguration(SUPP)) goto error;
+  if ((supp = getSupport(absolutePath))) {
+    logMain(LOG_ERR, "a support labeled \"%s\" already exist", 
+	    absolutePath);
+    goto error;
+  }
+
+  // create and complete support object
+  if ((supp = addSupport(absolutePath)) == 0) goto error;
+  supp->firstSeen = now;
+  if (!doCheckSupport(supp, absolutePath)) goto error;
+
+  conf->fileState[iSUPP] = MODIFIED;
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "mdtxAddFile fails");
+    if (supp) delSupport(supp);
+  }
+  destroyString(absolutePath);
+  return rc;
+}
+
 
 /*=======================================================================
  * Function   : addFinalSupplies
@@ -465,7 +523,7 @@ notifyHave(Support* supp, char* path)
 
     // find the support if used by this collection
     while ((name = rgNext_r(coll->supports, &curr2))) {
-      if (!strncmp(name, supp->name, MAX_SIZE_NAME)) break;
+      if (!strncmp(name, supp->name, MAX_SIZE_STRING)) break;
     }
     if (name == 0) continue;
     isShared = TRUE;
@@ -521,9 +579,16 @@ mdtxHaveSupport(char* label, char* path)
   char* absPath = 0;
 
   logMain(LOG_DEBUG, "mdtxHaveSupport");
+  if (isEmptyString(path)) goto error;
+  if (isEmptyString(label)) goto error;  
   if (!(conf = getConfiguration())) goto error;
+  if (*label == '/') {
+    logMain(LOG_ERR, "have function do not handle support file");
+    goto error;
+  }
   if (!(supp = mdtxGetSupport(label))) goto error;
   if (supp == 0) goto error;
+
   if (isEmptyString(path)) goto error;
   if (!doCheckSupport(supp, path)) goto error;
   
@@ -540,7 +605,7 @@ mdtxHaveSupport(char* label, char* path)
   }
   
   // ask the daemon to start extraction on the support
-  if (!(absPath = absolutePath(path))) goto error;
+  if (!(absPath = getAbsolutePath(path))) goto error;
   if (!notifyHave(supp, absPath)) goto error;
 
  end:

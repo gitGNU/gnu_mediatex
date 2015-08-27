@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.7 2015/07/28 11:45:49 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.8 2015/08/27 10:51:52 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -119,8 +119,8 @@ HASH    [[:xdigit:]]{32}
  /* MAX_SIZE_STAT = 10 */
 STATUS  [^[:blank:]\r\n]{1,10}
 
- /* MAX_SIZE_NAME = 64 */
-NAME    [^[:blank:]\r\n]{1,64}
+ /* MAX_SIZE_STRING = 511 */
+NAME    [^[:blank:]\r\n]{1,511}
 
 %%
  /* rules: ==========================================================*/

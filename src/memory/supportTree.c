@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.7 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.8 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -42,7 +42,7 @@ int cmpSupport(const void *p1, const void *p2)
   Support* a1 = *((Support**)p1);
   Support* a2 = *((Support**)p2);
 
-  rc = strncmp(a1->name, a2->name, MAX_SIZE_NAME);
+  rc = strncmp(a1->name, a2->name, MAX_SIZE_STRING);
   return rc;
 }
 
@@ -238,7 +238,7 @@ getSupport(char* name)
   
   // look for support
   while((rc = rgNext_r(conf->supports, &curr)))
-    if (!strncmp(rc->name, name, MAX_SIZE_NAME)) break;
+    if (!strncmp(rc->name, name, MAX_SIZE_STRING)) break;
 
  error:
   return rc;
@@ -267,8 +267,8 @@ addSupport(char* name)
   // add new one if not already there
   if (!(conf = getConfiguration())) goto error;
   if ((supp = createSupport()) == 0) goto error;
-  strncpy(supp->name, name, MAX_SIZE_NAME);
-  supp->name[MAX_SIZE_NAME] = (char)0; // developpement code
+  strncpy(supp->name, name, MAX_SIZE_STRING);
+  supp->name[MAX_SIZE_STRING] = (char)0; // developpement code
   if (!rgInsert(conf->supports, supp)) goto error;
 
  end:

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
+ * Version: $Id: device.c,v 1.8 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -26,9 +26,9 @@
 #include <mntent.h> // setmntent
 
 /*=======================================================================
- * Function   : absolutePath
+ * Function   : getAbsolutePath
  * Description: return the absolute path (and resolv symlinks into dirname)
- * Synopsis   : char* absolutePath(char* path)
+ * Synopsis   : char* getAbsolutePath(char* path)
  * Input      : char* path: potential relative path
  * Output     : char*: absolute path (0 on error)
 
@@ -38,7 +38,7 @@
  *   path/file
  =======================================================================*/
 char* 
-absolutePath(char* path)
+getAbsolutePath(char* path)
 {
   char* rc = 0;
   char* pwd1 = 0;
@@ -250,7 +250,7 @@ int normalizePath(char* inPath, char** outPath)
     if (basename) free(basename);
     
     // get absolute path
-    if ((absPath = absolutePath(path)) == 0) {
+    if ((absPath = getAbsolutePath(path)) == 0) {
       goto error;
     }
     if (path && path != inPath) free(path);

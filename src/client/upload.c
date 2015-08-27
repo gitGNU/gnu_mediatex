@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.11 2015/08/23 23:39:15 nroche Exp $
+ * Version: $Id: upload.c,v 1.12 2015/08/27 10:51:52 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -377,7 +377,7 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   tree->messageType = UPLOAD; 
 
   // tels "/source:target"
-  if (!(extra = absolutePath(source))) goto error;
+  if (!(extra = getAbsolutePath(source))) goto error;
   if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", extra, 
 	       target?":":"", target?target:"") 
       >= MAX_SIZE_STRING) {

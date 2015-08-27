@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.6 2015/08/19 01:09:08 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.7 2015/08/27 10:51:51 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -109,7 +109,6 @@ typedef struct UploadParams {
 #define MAX_SIZE_SIZE 19 // off_t printed using %lli
 #define MAX_SIZE_COLL 20 
 #define MAX_SIZE_STAT 10
-#define MAX_SIZE_NAME 64
 #define MAX_SIZE_AES  16
 #define MAX_SIZE_HOST 255 // http://en.wikipedia.org/wiki/Hostname
 #define MAX_SIZE_CMD 4    // 3 + \0
