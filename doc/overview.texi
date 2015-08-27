@@ -60,18 +60,19 @@ browse and download archives. (@procToolsApache{})
 @cindex collection
 
 The @mediatexO{} 
-system allow several Server to share data and meta-data
+system allow several Servers to share data and meta-data
 related to a collection of archives.
 It manages @acronym{SSH} accounts and @acronym{CVS} repositories
-in order to decentralize them.
+in order to decentralise them.
 
 @image{mediatex-figures/what,,,,}
 
 @itemize @bullet
 @item 
-Supports, mainly optical disks are spreads geographically. 
-They are duplicated using the @acronym{ISO} image format. 
-Only the data disks are manage, not the audio ones for instance.
+Support's images (mainly optical disks) or files are spreads geographically.
+Only the data disks are managed using the @acronym{ISO} image format, not the audio or raw data ones for instance.
+@actorPublisherO{} push/pull images to collection from/to supports. 
+For instance, it provides or burn @acronym{ISO} images for/to @acronym{CD}s.
 
 @itemize @bullet
 @item 
@@ -85,9 +86,8 @@ provide it) is shared by all servers around the related collections.
 @end itemize
 
 @item 
-Servers are connected together via the internet public network or only 
-paired with hosts located on private networks (so as to deal with 
-@acronym{NAT}).
+Servers are connected together via the internet public network.
+Messages exchanged by servers are also relayed into private networks by defining a gateway server.
 @itemize @bullet
 @item 
 A server may participates to several collections.
@@ -107,23 +107,29 @@ Collections groups archives contained on supports
 and make them available around the hosts that share the collection.
 @itemize @bullet
 @item 
-A collection should be shared by several servers, 
-at less 2 to prevent from a site crash. 
-All access parameters are shared around all the hosts belonging 
-to a collection.
-A collection share support's content using there @acronym{ISO} image, 
-the extraction metadata and the content's description as a catalogue index.
+A collection should be joined by several servers, 
+at less 2 to prevent a site crash. 
+@item 
+A collection share support's images, 
+extraction rules metadata and content's description as a catalogue index.
 @item
-The @mediatexO{} 
-system uses the collection concept to allow several 
-hosts to manage together their local supports in order to manage them 
-as -so called- perennial archives.
+All access parameters are also shared around all the hosts belonging 
+to a collection.
 @end itemize
 @end itemize
 
+The @mediatexO{} 
+system uses the collection concept to allow several 
+hosts to operate together on their local supports in order to achieve them 
+as -so called- perennial archives.
+
 What it is not
+
+@mediatexO{}
 @itemize @bullet
-@item A web programming project based on a @acronym{SGBD}.
+@item is not web dynamic application.
+@item is not based on a centralised @acronym{SGBD}.
+@item is not doing mirroring replication.
 @end itemize
 
 @node Where
@@ -137,7 +143,7 @@ Information about supports (support name, status, number of copies)
 is locally hold by each server keeping it private.
 @item
 Collection's meta-data files are duplicated on all servers,
-but versions are managed by a uniq @acronym{CVS} ``master'' server.
+but versions are only managed by the @acronym{CVS} ``master'''s server of the collection.
 
 @image{mediatex-figures/where1,,,,}
 
@@ -146,16 +152,16 @@ Archive's data files are stored in a cache for each collection by each server.
 @item
 A 
 @actorUser{} query is distributed to all servers. 
-If none of them can serve the query, the server which receive 
-the initial query ask for the 
+If none of them can fulfill the query, the server which receive 
+the initial query ask for and register the 
 @actor{User}'s mail. 
 The 
 @actor{User} mail address is never sent to the other servers.
 
 @image{mediatex-figures/where2,,,,}
 
-As the catalogs provide static @acronym{HTML} content, @acronym{DNS}'s round robbin will be usefull to prevent from a site crash.
-
+@item
+As the catalog provide static @acronym{HTML} content, a @acronym{DNS}'s round robbin is usable to switch on server's @acronym{WEB} interface in order to prevent from a site crash.
 @end itemize
 
 @node When
@@ -171,7 +177,7 @@ the other servers update there own copies later using the centralised
 @acronym{CVS} server.
 @item 
 When 
-@actorUser{} queries for a file that no server have in cache, 
+@actorUser{} queries for a file that no server has in their own cache, 
 the first requested server provides an @acronym{HTML} form 
 in order to recall the 
 @actor{User} latter, when the file becomes available.
@@ -183,16 +189,17 @@ in order to recall the
 @item 
 By reading the ``message of the day'', the 
 @actorPublisherO{} 
-is asked to provide supports needed for extraction
+is asked to do some maintenance operation such as provide supports needed for extraction
 or needed to perform a periodic checkup.
-@end itemize
 
-History will be accessible from the @acronym{CVS} modules.
+@item
+Changelog on metadata files is accessible from the @acronym{CVS} modules.
 @example
 $ awk -vRS= '/Document "13421830"/' catalog*.txt
 $ grep 13421830 catalog*,v.txt
 $ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
 @end example
+@end itemize
 
 @node How
 @section How
@@ -209,12 +216,12 @@ system is build around other @acronym{GNU}
 @activityTools{}:
 @itemize @bullet
 @item 
-Trace-ability is done by @sc{Syslog} for binaries messages 
+Trace-ability is done by @sc{Syslog} for programs 
 and by @sc{Cvs} for changes in the meta-data.
 @item 
-Access is granted by @sc{Apache} but when archives need to retrieved, 
-the 
-@actorUser{} will be recall later using @sc{Sendmail}.
+Access is granted by @sc{Apache}, but when archives need to be retrieved, the 
+@actorUser{} will be recall later using the default system mailer, that should
+probably use the @sc{Sendmail} interface.
 @item 
 Catalogue index and extraction rules have to be edited by hand by the 
 @actorPublisher{} using a text editor like @sc{emacs} or
@@ -223,7 +230,7 @@ by concatenating them using @sc{cat}.
 Servers tasks are driven by @sc{Cron}. 
 @item
 @actor{Publisher} is asked to provide local supports 
-via the host's @sc{Motd}.
+via the host's @sc{Motd} (by default).
 @item 
 The support index and servers list files are internally managed 
 by the @mediatex{} system.
@@ -308,8 +315,8 @@ available inodes on the @acronym{HTML} catalogue partition).
 
 All in all, the @mediatexO{} 
 system is designed to handle collections 
-having less than a million archives, but may handle (who knows) numbers 
-of such ``little'' collections.
+having less than half a million archives.
+It should handle numbers of such ``not so big'' collections.
 
 @multitable @columnfractions .20 .14 .10 .10 .10 .10
 @headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
@@ -348,28 +355,27 @@ and a shared @acronym{HTML} access.
 @item 
 @mediatexO{} 
 make possible to rebuild the system mainly from its optical 
-supports (@note{} according that catalogue and extraction meta-data are 
+supports (@note{} according that up to date catalogue and extraction meta-data are 
 available on supports too).
 @item 
-It aims to provide a strong ``storage'' layer on which to build a whole 
+It aims to provide a strong ``storage'' layer on which we should build a whole 
 @acronym{OAIS} system. In that sense, it should provide a positive context 
-for preservation operations, when actual storage technologies will become 
+for preservation operations, in prevision of time when the actual storage technologies will become 
 outdated.
 @item 
-It tries to provide a dedicated workaround for the CAP theorem, 
-due to low data volume.
+It tries to provide a dedicated workaround for the CAP theorem, using @acronym{CVS} merging.
 The also known as Brewer's theorem states that it is impossible 
 for a distributed computer system to simultaneously provide all three 
-of the following guarantees: Consistency, Availability and Partition 
-tolerance.
+of the following guarantees: Consistency, Availability and Partition tolerance.
 @end itemize
 
 Why not
 @itemize @bullet
 @item
-Presently, it seems we all prefer to use the @acronym{RAID} technology 
-to keep data on running computers and make effort to distribute 
-a big database.
+@mediatexO{} is presently still under development and only maintains by one person.
+@item
+Obviously, persons prefer to use @acronym{rsync}/@acronym{inotify} technology mirror a filesystem
+and duplicate database.
 @item 
 Must not occult the forgetting right. 
 As data are burned on optical disks, it is complicated to erase only a

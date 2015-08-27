@@ -10,16 +10,16 @@ make it accessible and preserve it's understanding.
 On numeric ages, time life of hard drive and optical supports is 5 years.
 The numerical archives on hard drives or tapes are sensitive to the earth's magnetic field.
 Burning WORM supports and store them in good conditions provides a compromise (norme NF-Z-42-013).
-Persons prefer do not export data on support and let them on redundant servers, but is-it responsible ?
+Persons prefer to not export data on support and let them on redundant servers, but is-it responsible ?
 
 @item Identify:
 The document understanding shall be linked to other documents defining a context.
 Consequently, it is important to provide a way to identify references from documents to others.
-Grouping documents on collection make index easier and provide a means to determine the scale of data to preserve.
+Grouping documents on collection make indexes easier and provide a means to determine the scope of data to preserve.
 
 @item Other datas:
-Just as supports need a compatible drive, crude data need software to read them.
-It is important to memorise the software and format versions, if not possible store software's source codes and/or format specifications.
+The same way supports need a compatible drive, applicative datas need a software to read them.
+It is important to memorise wich software and format versions are related to the data file, or best, to store software's source and format specifications.
 In order to do so, we need meta-data.
 @end itemize
 
@@ -37,13 +37,13 @@ Using a revision control system is not so obvious:
 meta-data files must be split into acceptable size so as to be merged in memory,
 meta-data must be human readable as automatic merge may fails,
 and we need enough memory to load Meta-data.
-Nevertheless, revision control system not only provides an elegant solution for geographical duplications and crash recovery, but also the change history.
+Nevertheless, revision control system not only provides an elegant solution for geographical duplications and crash recovery, and also provide natively the changelog history.
 @end itemize
 
 @subheading Archive reversibility
 A significant effort will be require to extract archives in order to return them:
-need to compact archives to send them using a media (support or network)
-and need to extract and export meta-data consequently.
+compact archives to send them using a media (support or network)
+and export the related meta-data.
 However, we shall consider that the ERMS becomes obsolete itself and we need to change it.
 Archiving on supports make sense here as we just have to bring them back.
-Parsers designed to load the meta-data offer a software library to export them into the wanted format.
+Parsers designed to load the meta-data offer a software library usable to export them into any format.
