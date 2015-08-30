@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcgiSrv.c,v 1.2 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: utcgiSrv.c,v 1.3 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -42,7 +42,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 

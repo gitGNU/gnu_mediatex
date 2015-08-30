@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.17 2015/08/24 17:48:18 nroche Exp $
+ * Version: $Id: cache.c,v 1.18 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -57,25 +57,29 @@ getAbsoluteCachePath(Collection* coll, char* path)
 /*=======================================================================
  * Function   : getFinalSupplyInPath
  * Description: Get final supply's source path
- * Synopsis   : char* getFinalSupplyInPath(char* path) 
+ * Synopsis   : char* getFinalSupplyInPath(char* extra) 
  * Input      : Collection* coll = the related collection
- *              char* path = the relative path
- * Output     : NULL on failure
+ *              char* extra = the extra record's attribute
+ * Output     : Allocated string with first part or NULL on failure
  =======================================================================*/
 char*
-getFinalSupplyInPath(char* path) 
+getFinalSupplyInPath(char* extra) 
 {
   char* rc = 0;
-  char* ptr = 0;
+  char* ptrColon = 0;
+  char car = 0;
 
-  checkLabel(path);
-  logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", path);
+  checkLabel(extra);
+  logMain(LOG_DEBUG, "getFinalSupplyInputPath %s", extra);
 
-  if (!(rc = createString(path))) goto error;
+  // look for ':' that limit part1 and part2, if there
+  for (ptrColon=extra; *ptrColon && *ptrColon != ':'; ++ptrColon);
 
-  // remove ending ':supportName' if there
-  for (ptr=rc; *ptr && *ptr != ':'; ++ptr);
-  if (*ptr) *ptr = 0;
+  // get first part
+  car = *ptrColon;
+  *ptrColon = 0;
+  if (!(rc = createString(extra))) goto error;
+  *ptrColon = car;
 
  error:
   if (!rc) {
@@ -86,41 +90,58 @@ getFinalSupplyInPath(char* path)
 /*=======================================================================
  * Function   : getFinalSupplyOutPath
  * Description: remove ending ':supportName' if there
- * Synopsis   : char* getFinalSupplyOutPath(char* path) 
- * Input      : char* path = the relative path
- * Output     : NULL on failure
+ * Synopsis   : char* getFinalSupplyOutPath(char* extra) 
+ * Input      : char* extra = the extra record's attribute
+ * Output     : Allocated string based on second part or NULL on failure
  =======================================================================*/
 char*
-getFinalSupplyOutPath(char* path) 
+getFinalSupplyOutPath(char* extra) 
 {
   char* rc = 0;
-  char* ptr = 0;
-  char* tmp = 0;
+  char* ptrOut = 0;
+  char* ptrColon = 0;
+  char* ptrPart2 = 0;
+  char* ptrFilename = 0;
+  char car = 0;
 
-  checkLabel(path);
-  logMain(LOG_DEBUG, "getFinalSupplyOutPath %s", path);
+  checkLabel(extra);
+  logMain(LOG_DEBUG, "getFinalSupplyOutPath %s", extra);
 
-  // look for ending ':supportName' if there
-  for (ptr=path; *ptr && *ptr != ':'; ++ptr);
-  if (*ptr) {
-    if (!(rc = createString(ptr+1))) goto error;
+  // look for ':' that limit part1 and part2, if there
+  for (ptrColon=extra; *ptrColon && *ptrColon != ':'; ++ptrColon);
+
+  // get original part2
+  if (*ptrColon) ptrPart2 = ptrColon+1;
+
+  // split parts
+  car = *ptrColon;
+  *ptrColon = 0;
+
+  // set output to "PART2"
+  if (!isEmptyString(ptrPart2)) {
+    if (!(ptrOut = createString(ptrPart2))) goto error;
   }
 
-  // get the filename on first part
-  while (ptr > path && *ptr-- != '/');
-  if (!(tmp = createString(ptr))) goto error;
-   
-  // no second part or second part is a directory
-  if (!tmp || tmp[strlen(tmp)] == '/') {  
-    rc = catString(rc, tmp);
-    tmp = 0;
+  // if no part2 or part2 is a directory
+  if (isEmptyString(ptrPart2) || ptrPart2[strlen(ptrPart2)-1] == '/') {
+
+    // get the filename on first part
+    for (ptrFilename = ptrColon -1; 
+	 ptrFilename > extra && *ptrFilename != '/';
+	 --ptrFilename);
+    
+    // set output to "/supports/PART2/FILE_NAME"
+    if (!(ptrOut = catString(ptrOut, ptrFilename+1))) goto error;
   }
 
+  rc = ptrOut;
+  ptrOut = 0;
  error:
   if (!rc) {
     logMain(LOG_ERR, "getFinalSupplyOutPath fails");
   }
-  destroyString(tmp);
+  *ptrColon = car; // unsplit parts
+  destroyString(ptrOut);
   return rc;
 }
 
@@ -162,24 +183,25 @@ getAbsoluteRecordPath(Collection* coll, Record* record)
 /*=======================================================================
  * Function   : scanFile
  * Description: Add, keep or remove a file into a collection cache
- * Synopsis   : int scanFile(char* coll, 
- *                           char* absolutePath, char* relativePath) 
+ * Synopsis   : static int scanFile(char* coll, 
+ *                               char* absolutePath, char* relativePath) 
  * Input      : char* coll
  *              char* absolutePath
  *              char* relativePath
  * Output     : TRUE on success
  =======================================================================*/
-int 
+static int 
 scanFile(Collection* coll, char* absolutePath, char* relativePath) 
 {
   int rc = FALSE;
   RG* archives = 0;
   Archive* archive = 0;
   Record *record = 0;
-  char* extra = 0;
   RGIT* curr = 0;
   struct stat statBuffer;
   Md5Data md5; 
+  char* extra = 0;
+  char* ptrFilename = 0;
 
   logMain(LOG_DEBUG, "scaning file: %s", relativePath);
   checkLabel(absolutePath);
@@ -234,6 +256,17 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     
   // add a new cache entry
   if (!(extra = createString(relativePath))) goto error;
+
+  // cat "support:filename" to extra for final supplies
+  if (*relativePath == '/') {
+    // get the filename on first part
+    for (ptrFilename = relativePath + strlen(relativePath); 
+	 ptrFilename > extra && *ptrFilename != '/';
+	 --ptrFilename);
+    if (!(extra = catString(extra, ":supports"))) goto error;
+    if (!(extra = catString(extra, ptrFilename))) goto error;
+  }
+
   if (!(record = 
 	addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
@@ -255,15 +288,15 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
 /*=======================================================================
  * Function   : scanRepository
  * Description: Recursively scan a cache directory 
- * Synopsis   : int scanRepository(Collection* collection, 
- *                                 const char* path) 
+ * Synopsis   : static int 
+ *              scanRepository(Collection* collection, const char* path) 
  * Input      : Collection* collection = the related collection
  *              const char* path = the directory path
  * Output     : TRUE on success
  * Note       : scandir assert the order (readdir_r do not),
  *              this make non-regression tests easier.
  =======================================================================*/
-int 
+static int 
 scanRepository(Collection* coll, const char* path) 
 {
   int rc = FALSE;
@@ -353,9 +386,54 @@ scanRepository(Collection* coll, const char* path)
 }
 
 /*=======================================================================
- * Function   : updateLocalSupply
+ * Function   : scanSupportFiles
+ * Description: scan files provided by support.txt
+ * Synopsis   : static int quickScan(Collection* coll)
+ * Input      : Collection* coll : collections to scan
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+scanSupportFiles(Collection* coll)
+{
+  int rc = FALSE;
+  Archive* archive = 0;
+  Record* supply = 0;
+  Support* supp = 0;
+  RGIT* curr = 0;
+  RGIT* curr2 = 0;
+
+
+  logMain(LOG_DEBUG, "scanSupportFiles");
+  checkCollection(coll);
+
+  if (!loadConfiguration(CFG)) goto error;
+
+  // start by removing all final-supplies from the cache
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+    curr2 = 0;
+    while ((supply = rgNext_r(archive->finalSupplies, &curr2))) {
+      if (!delCacheEntry(coll, supply)) goto error;
+    }
+  } 
+
+  // loop on support files
+  while ((supp = rgNext_r(coll->supports, &curr))) {
+    if (*supp->name != '/') continue;
+    if (!scanFile(coll, supp->name, supp->name)) goto error;    
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_INFO, "scanSupportFiles fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : quickScan
  * Description: scan caches and update local supply in md5sumsDB
- * Synopsis   : int updateLocalSupply(Collection* coll)
+ * Synopsis   : int quickScan(Collection* coll)
  * Input      : Collection* coll : collections to scan
  * Output     : TRUE on success
  =======================================================================*/
@@ -364,24 +442,22 @@ quickScan(Collection* coll)
 {
   int rc = FALSE;
   Archive* archive = 0;
-  Archive* next = 0;
   char* path = 0;
   RGIT* curr = 0;
   Record* supply = 0;
 
-  logMain(LOG_DEBUG, "updating cache for %s collection", coll->label);
+  logMain(LOG_DEBUG, "quickScan");
   checkCollection(coll);
 
   if (!loadCollection(coll, EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
 
-  // add archive if new ones into the physical cache
+  // add archive if new ones founded
   if (!scanRepository(coll, "")) goto error3;
+  if (!scanSupportFiles(coll)) goto error3;
 
   // del cache entry if no more into the physical cache
-  if (!(archive = rgNext_r(coll->cacheTree->archives, &curr))) goto end;
-  do {
-    next = rgNext_r(coll->cacheTree->archives, &curr);
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if ((supply = archive->localSupply) == 0) continue;
 
     // test if the file is really there 
@@ -393,8 +469,7 @@ quickScan(Collection* coll)
     logMain(LOG_WARNING, "file not found in cache as expected: %s", path);
     if (!delCacheEntry(coll, supply)) goto error3;
   } 
-  while ((archive = next));
- end:
+
   rc = TRUE;
  error3:
   if (!unLockCache(coll)) rc = FALSE;
@@ -402,10 +477,9 @@ quickScan(Collection* coll)
   if (!releaseCollection(coll, EXTR|CACH)) rc = FALSE;
  error:
   if (!rc) {
-    logMain(LOG_INFO, "fails to update cache for %s collection%",
-	    coll?coll->label:"?");
+    logMain(LOG_INFO, "quickScan fails");
   } 
-  path = destroyString(path);
+  destroyString(path);
   return rc;
 }
 

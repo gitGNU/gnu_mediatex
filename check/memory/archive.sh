@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: archive.sh,v 1.1 2015/07/01 10:49:35 nroche Exp $
+# * Version: $Id: archive.sh,v 1.2 2015/08/30 17:07:56 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -32,7 +32,7 @@ set -e
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 # run the unit test
-memory/utarchive > memory/$TEST.out 2>&1
+memory/utarchive -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs memory/$TEST.out

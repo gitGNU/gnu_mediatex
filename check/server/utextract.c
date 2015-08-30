@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextract.c,v 1.3 2015/08/23 23:39:14 nroche Exp $
+ * Version: $Id: utextract.c,v 1.4 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : extract
  *
@@ -42,7 +42,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 

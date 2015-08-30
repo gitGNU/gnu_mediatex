@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: confTree.sh,v 1.2 2015/08/19 01:09:05 nroche Exp $
+# * Version: $Id: confTree.sh,v 1.3 2015/08/30 17:07:57 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -88,11 +88,11 @@ populateConfiguration "mdtx2" user2Key_rsa
 populateConfiguration "mdtx3" user3Key_dsa
 
 # run the unit test
-memory/ut$TEST > memory/$TEST.out 2>&1
+memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected output
 loadPaths "mdtx2"
-diff -I '# Version: $Id' \
+diff -I '# Version: $Id' -I '/.*,$' \
     $srcdir/memory/$TEST.exp ${MDTXCVS}/${MDTXUSER}.conf
 mrProperOutputs memory/$TEST.out
 diff $srcdir/memory/$TEST.exp2 memory/$TEST.out

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: supportTree.sh,v 1.1 2015/07/01 10:49:42 nroche Exp $
+# * Version: $Id: supportTree.sh,v 1.2 2015/08/30 17:07:57 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -33,10 +33,10 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-memory/ut$TEST > memory/$TEST.out 2>&1
+memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected outputs
-diff -I '# Version: $Id' \
+diff -I '# Version: $Id' -I '/.*$' \
     $srcdir/memory/$TEST.exp ${MDTXCVS}${SUPPFILE}
 mrProperOutputs memory/$TEST.out
 diff $srcdir/memory/$TEST.exp2 memory/$TEST.out

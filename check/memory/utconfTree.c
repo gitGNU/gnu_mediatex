@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfTree.c,v 1.3 2015/08/19 01:09:05 nroche Exp $
+ * Version: $Id: utconfTree.c,v 1.4 2015/08/30 17:07:58 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -37,9 +37,11 @@ static void
 usage(char* programName)
 {
   memoryUsage(programName);
+  fprintf(stderr, " [ -d repository ]");
 
   memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
+  fprintf(stderr, "  ---\n"
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -55,6 +57,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  char inputRep[256] = ".";
   Configuration* conf = 0;
   Collection* coll = 0;
   char* string = 0;
@@ -63,12 +66,13 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
+  char* options = MEMORY_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MEMORY_LONG_OPTIONS,
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
-       
+  
   // import mdtx environment
   env.dryRun = FALSE;
   getEnv(&env);
@@ -78,6 +82,17 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
+    case 'd':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, 
+		"%s: nil or empty argument for the input repository\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      strncpy(inputRep, optarg, strlen(optarg)+1);
+      break; 
+
       GET_MEMORY_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -88,7 +103,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   // test building and serializing
-  if (!createExempleConfiguration()) goto error;  
+  if (!createExempleConfiguration(inputRep)) goto error;  
   if (!serializeConfiguration(getConfiguration())) goto error;
 
   // test accessing the tree
@@ -124,7 +139,7 @@ main(int argc, char** argv)
   // that runs 3 servers on the same host (using -c option).  
 
   env.confLabel="mdtx2";
-  if (!createExempleConfiguration()) goto error;
+  if (!createExempleConfiguration(inputRep)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(string = addNetwork("www"))) goto error;
   if (!rgInsert(conf->networks, string)) goto error;
@@ -145,7 +160,7 @@ main(int argc, char** argv)
   freeConfiguration();
 
   env.confLabel="mdtx3";
-  if (!createExempleConfiguration()) goto error;
+  if (!createExempleConfiguration(inputRep)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!(string = addNetwork("private1"))) goto error;
   if (!rgInsert(conf->networks, string)) goto error;

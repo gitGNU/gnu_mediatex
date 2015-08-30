@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utnotify.c,v 1.3 2015/08/19 01:09:08 nroche Exp $
+ * Version: $Id: utnotify.c,v 1.4 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -40,9 +40,11 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
+  fprintf(stderr, " [ -d repository ]");
 
   mdtxOptions();
-  //fprintf(stderr, "  ---\n");
+  fprintf(stderr, "  ---\n"
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 

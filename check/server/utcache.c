@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.7 2015/08/23 23:39:14 nroche Exp $
+ * Version: $Id: utcache.c,v 1.8 2015/08/30 17:07:59 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -43,7 +43,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -66,6 +66,7 @@ main(int argc, char** argv)
   Record* record = 0;
   off_t size = 0;
   char* extra = 0;
+  char path[256];
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -107,6 +108,36 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
+
+  utLog("%s", "Paths", 0);
+  strcpy(path, "/path/to/file");
+  extra = getFinalSupplyInPath(path);
+  logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
+  extra = destroyString(extra);
+  extra = getFinalSupplyOutPath(path);
+  logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
+  extra = destroyString(extra);
+  strcpy(path, "/path/to/file:");
+  extra = getFinalSupplyInPath(path);
+  logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
+  extra = destroyString(extra);
+  extra = getFinalSupplyOutPath(path);
+  logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
+  extra = destroyString(extra);
+  strcpy(path, "/path/to/file:place/to/strore/newFilename");
+  extra = getFinalSupplyInPath(path);
+  logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
+  extra = destroyString(extra);
+  extra = getFinalSupplyOutPath(path);
+  logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
+  extra = destroyString(extra);
+  strcpy(path, "/path/to/file:place/to/strore/newDirectory/");
+  extra = getFinalSupplyInPath(path);
+  logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
+  extra = destroyString(extra);
+  extra = getFinalSupplyOutPath(path);
+  logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
+  extra = destroyString(extra);
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;

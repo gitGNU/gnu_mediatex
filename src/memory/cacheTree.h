@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.8 2015/08/23 23:39:16 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.9 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -99,6 +99,8 @@ int getCacheSizes(Collection* coll,
 		 off_t* totalSize, off_t* useSize, off_t* frozenSize);
 
 int diseaseCacheTree(Collection* coll);
+
+int haveRecords(RG* ring);
 
 // call by extract.c
 int buildTargetFile(Collection* coll, char** newAbsolutePath, 

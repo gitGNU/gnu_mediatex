@@ -74,6 +74,9 @@
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f quick md5sum computed on 374784 bytes
 [info md5sum.c] 0a7ecd447ef2acb3b5c6e4c550e6636f  full md5sum computed on 374784 bytes
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info md5sum.c] de5008799752552b7963a2670dc5eb18 quick md5sum computed on 391168 bytes
+[info md5sum.c] de5008799752552b7963a2670dc5eb18  full md5sum computed on 391168 bytes
+[info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : UNUSED -> USED
 [notice utnotify.c] .......................................................
 [notice utnotify.c] we have :
 [notice utnotify.c] .......................................................
@@ -100,10 +103,17 @@
 [notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
+[notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e de5008799752552b7963a2670dc5eb18              391168 /HERE/misc/logoP1.iso:supports/logoP1.iso
+[notice recordTree.c] # ^ FINAL_SUPPLY
+
 [notice utnotify.c] -------------------------------------------------------
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info notify.c] find a remote demand to work on: 022a34b2f9b893fba5774237e1aa80ea:24075
+[info notify.c] found an archive to notify: 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info notify.c] found a final demand to notify: 022a34b2f9b893fba5774237e1aa80ea:24075
+[info notify.c] found a bad score's local top container to notify: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info address.c] build socket address 127.0.0.1:11111
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -140,6 +150,7 @@
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
+[info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : USED -> UNUSED
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*

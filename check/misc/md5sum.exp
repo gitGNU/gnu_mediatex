@@ -1,18 +1,15 @@
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [notice utmd5sum.c] Quick computation, path resolution, progbar
-[info device.c] absolute path is /HERE/misc/logo.png
 [info device.c] not a symlink: /HERE/misc/logo.png
 [info device.c] do not match a block device: /HERE/misc/logo.png
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [notice utmd5sum.c] Full computation, path resolution, progbar
-[info device.c] absolute path is /HERE/misc/logo.png
 [info device.c] not a symlink: /HERE/misc/logo.png
 [info device.c] do not match a block device: /HERE/misc/logo.png
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [notice utmd5sum.c] Full check, path resolution, progbar
-[info device.c] absolute path is /HERE/misc/logo.png
 [info device.c] not a symlink: /HERE/misc/logo.png
 [info device.c] do not match a block device: /HERE/misc/logo.png
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes

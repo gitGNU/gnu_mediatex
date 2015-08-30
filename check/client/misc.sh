@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: misc.sh,v 1.2 2015/07/22 10:45:13 nroche Exp $
+# * Version: $Id: misc.sh,v 1.3 2015/08/30 17:07:55 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-client/ut$TEST -d $srcdir >client/$TEST.out 2>&1
+client/ut$TEST >client/$TEST.out 2>&1
 
 [ -z "$1" ] || {
     cat >${HOME}/mdtx1-coll1/public_html/.htaccess <<EOF

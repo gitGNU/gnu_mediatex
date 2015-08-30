@@ -1,15 +1,17 @@
 
 *** TO CORRECT: cache policy    
+.....................................................
 
-** FINALE-SUPLLY
-- cache.c: also read supports.txt to get final-supply records
-- tests.sh : extract form support files
-
-** MOTD
-- extractScore should log supports label using getSupportLabel
-- check final-supplies saved on disk
+** UPGRADE
+- (support files automaticaly included into image score computation)
+- collection score for support files
+- serversTree->server[]->lastCommit = DATE used by computeScore
 - localScore/mainScore ?
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+
+** MOTD
+- remove query for support files
+- check support files (fileTTL?)
 - add coll selection facility
 - add to burn
 -- only show when mainScore<5 && localScore<5
@@ -18,10 +20,9 @@
 - display cache size (all/used/allocated/free)
 
 ** HTML
-- support file names has to be truncated into extractHtml.c
 - notify server lastCommit
-- (final supplies automaticaly included into image score computation)
 - notify orphanes
+- display cache size (all/used/allocated/free)
 
 ** LOGS
 - make cron upload the cvsroot collection module
@@ -29,18 +30,17 @@
 - ease looking for archive life cycle into cvsroot
 
 ** TRUST
-- serversTree->server[]->lastCommit = DATE used by computeScore
 - new client query: mdtx audit [coll COLL] for MAIL
 -- generate a content file (from extraction rules)
 -- register FINAL_DEMAND with extra "audit:nroche@narval.tk"
 -- deliver maintain the content file (checksum and delete lines on succes)
 -- ... and finaly send it to the mail address and upload it
-- buildRule.sh script
+- buildRule.sh script ?
 
 ** DOC
 - gdb mdtx: remove setuid bit and run it as root
 
-*** CHANGES (to document)
+*** CHANGES DONE (to document)
 
 ** INC
 - extractNNN.txt: agregate uploaded files into one uniq INC container
@@ -95,12 +95,16 @@
 -- move readMessageinto thread.c
 -- add utmediatexd.c calling this function
 
-** FINALE-SUPLLY
+** SUPPORT-FILE
 - supports also include files on disk:
 - mediatex_comp updated
 - shellQuery.y: add file FILE
 -- name = absolute path => remove MAX_SIZE_NAME (and use MAX_SIZE_STRING)
 -- add tests for mdtxAddFile into utsupp.c
+- cache.c: also read supports.txt to get final-supply records
+-- remove -d inputRep from client/utmisc.c (no more used)
+-- use getAbsolutePath instead of -d $PWD/$srcdir
+- utcache.c: add a support file via memory/utFunc.c
 
 *** CLEAN-UP
 
@@ -127,6 +131,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
 - refuse "^../" as content extraction rule
+- use an alias for supports file ?
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - move dirname into extract rule header to reduce extract.txt file size

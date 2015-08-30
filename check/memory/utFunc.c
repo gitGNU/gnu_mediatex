@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.13 2015/08/19 01:09:05 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.14 2015/08/30 17:07:57 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -27,17 +27,86 @@
 #include "memory/utFunc.h"
 
 // share by supports and collection
-static char supportNames[3][3][64] = {
-  {"SUPP11_logo.png", "SUPP12_logo.png", "SUPP13_logo.png"}, 
-  {"SUPP21_logo.part1", "SUPP22_logo.part1", "SUPP23_logo.part1"}, 
-  {"SUPP31_logo.part2", "SUPP32_logo.part2", "SUPP33_logo.part2"}
-};
+/*static char supportNames[3][3][MAX_SIZE_STRING] = { */
+/*   {"SUPP11_logo.png", "SUPP12_logo.png", "SUPP13_logo.png"},  */
+/*   {"SUPP21_logo.part1", "SUPP22_logo.part1", "SUPP23_logo.part1"},  */
+/*   {"SUPP31_logo.part2", "SUPP32_logo.part2", "SUPP33_logo.part2"} */
+/* }; */
+
+static char supportNames[3][3][MAX_SIZE_STRING];
+
+/*=======================================================================
+ * Function   : createExempleSupportTreeNames 
+ * Description: crete supports names
+ * Synopsis   : int createExempleSupportTreeNames
+ * Input      : char* inputPath: absolute directory path to use
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+createExempleSupportTreeNames(char* inputPath)
+{
+  int rc = FALSE;
+  int i=0, j=0, l=0, l2=0;
+  char* miscPath = 0;
+  char* absolutePath = 0;
+  int isThere = 0;
+
+  char supportEndingNames[3][3][64] = {
+    // server1             server2              server3
+    {"SUPP11_logo.png",   "SUPP12_logo.png",   "/logo.png"},
+    {"SUPP21_logo.part1", "/logoP1.iso",       "SUPP23_logo.part1"},
+    {"/logoP2.iso",       "SUPP32_logo.part2", "SUPP33_logo.part2"}
+  };
+
+  logMemory(LOG_DEBUG, "createExempleSupportTreeNames");
+
+  if (isEmptyString(inputPath)) {
+    logMemory(LOG_ERR, 
+	      "you have to provide an absolute path using -d option");
+    goto error;
+  }
+
+  if (!(miscPath = createString(inputPath))) goto error;
+  if (!(miscPath = catString(miscPath, "/../misc/"))) goto error;
+  if (!(absolutePath = getAbsolutePath(miscPath))) goto error;
+  l = strlen(absolutePath);
+
+  for (i=0; i<3; ++i) {
+    for (j=0; j<3; ++j) {
+      l2 = 0;
+      if (*supportEndingNames[i][j] == '/') {
+	strcpy(supportNames[i][j], absolutePath);
+	l2 = l;
+      }
+      
+      strcpy(supportNames[i][j] + l2, supportEndingNames[i][j]);
+      
+      if (l2) {
+	if (!callAccess(supportNames[i][j], &isThere)) goto error;
+	if (!isThere) {
+	  logMemory(LOG_ERR, "cannot find %s support file",
+		    supportNames[i][j]);
+	  goto error;
+	}
+      }
+    }
+  }	     
+    
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMemory(LOG_ERR, "createExempleSupportTreeNames fails");
+  }
+  destroyString(absolutePath);
+  destroyString(miscPath);
+  return rc;
+}
 
 /*=======================================================================
  * Function   : createExempleSupportTree 
  * Description: add 9 supports to configuration
- * Synopsis   : int createExempleSupportTree
- * Input      : N/A
+ * Synopsis   : int createExempleSupportTree(char* inputPath)
+ * Input      : char* inputPath: absolute directory path to use
  * Output     : TRUE on success
  * Note       : As we use addSupport, we must use a Configuration
  .........................................................................
@@ -49,7 +118,7 @@ static char supportNames[3][3][64] = {
  * - logo.part2: 3 supports (2006, 2008, 2010)
  =======================================================================*/
 int
-createExempleSupportTree()
+createExempleSupportTree(char* inputPath)
 {
   Configuration* conf = 0;  
   Support *supp = 0;
@@ -145,6 +214,8 @@ createExempleSupportTree()
     "??", 
     "??"
   };
+
+  if (!createExempleSupportTreeNames(inputPath)) goto error;
 
   if ((conf = getConfiguration()) == 0) {
     logMemory(LOG_ERR, "cannot load configuration");
@@ -463,16 +534,20 @@ createExempleCatalogTree(Collection* coll)
 /*=======================================================================
  * Function   : createExempleConfiguration
  * Description: quick build for other module's tests
- * Synopsis   : int buildTestConfiguration()
- * Input      : N/A
+ * Synopsis   : int buildTestConfiguration(char* inputPath)
+ * Input      : char* inputPath: absolute directory path to use
  * Output     : TRUE on success
  * Note       : Networks and Gateways are defined into utconfTree.c,
  *              except for coll3, using the collection settings
  .........................................................................
  * See        : utconfTree, utconfFile, utserverTree, utnotify
+ *              All unit test use mdtx1 configuration except
+ *              memory/confTree and server/notify that use mdtx2
+ *              Unit test mainly use coll1 except server's unit test
+ *              that use coll3, and client/upload that use coll2?!
  =======================================================================*/
 int 
-createExempleConfiguration()
+createExempleConfiguration(char* inputPath)
 {
   int rc = FALSE;
   Configuration* self = 0;
@@ -485,6 +560,7 @@ createExempleConfiguration()
 
   logMemory(LOG_DEBUG, "build the configuration exemple.");
 
+  if (!createExempleSupportTreeNames(inputPath)) goto error;
   if (!(self = getConfiguration())) goto error;
   host[4] = env.confLabel[4]; // same host number as conf label number
   strncpy(self->host, host, MAX_SIZE_HOST);
@@ -518,7 +594,7 @@ createExempleConfiguration()
   strncpy(coll->masterHost, "host3.mediatex.org", MAX_SIZE_HOST);
   coll->masterPort = 33;
   
-  /* share 9 supports with collection 1 */
+  /* share 9 supports with collection 1 (this function is call 3 times) */
   if (!(coll = getCollection("coll1"))) goto error;
   i = env.confLabel[4] - '1';
   for (j=0; j<3; ++j) {

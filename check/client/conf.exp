@@ -49,9 +49,9 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
-	share	  SUPP11_logo.png,
-		  SUPP21_logo.part1,
-		  SUPP31_logo.part2
+	share	  /HERE/misc/logoP2.iso,
+		  SUPP11_logo.png,
+		  SUPP21_logo.part1
 end
 
 Collection mdtx2-coll2@host2.mediatex.org:22
@@ -115,9 +115,9 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
-	share	  SUPP11_logo.png,
-		  SUPP21_logo.part1,
-		  SUPP31_logo.part2
+	share	  /HERE/misc/logoP2.iso,
+		  SUPP11_logo.png,
+		  SUPP21_logo.part1
 end
 
 Collection mdtx2-coll2@host2.mediatex.org:22
@@ -183,9 +183,9 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
-	share	  SUPP11_logo.png,
-		  SUPP21_logo.part1,
-		  SUPP31_logo.part2
+	share	  /HERE/misc/logoP2.iso,
+		  SUPP11_logo.png,
+		  SUPP21_logo.part1
 end
 
 Collection mdtx2-coll2@host2.mediatex.org:22
@@ -249,9 +249,9 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
-	share	  SUPP11_logo.png,
-		  SUPP21_logo.part1,
-		  SUPP31_logo.part2
+	share	  /HERE/misc/logoP2.iso,
+		  SUPP11_logo.png,
+		  SUPP21_logo.part1
 end
 
 Collection mdtx2-coll2@host2.mediatex.org:22
@@ -315,8 +315,8 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
-	share	  SUPP11_logo.png,
-		  SUPP31_logo.part2
+	share	  /HERE/misc/logoP2.iso,
+		  SUPP11_logo.png
 end
 
 Collection mdtx2-coll2@host2.mediatex.org:22

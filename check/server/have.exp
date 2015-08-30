@@ -83,13 +83,12 @@
 [info cache.c] need            20480
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : USED -> ALLOCATED
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
-[info device.c] absolute path is /HERE/misc/logoP1.cat
 [info device.c] not a symlink: /HERE/misc/logoP1.cat
 [info device.c] do not match a block device: /HERE/misc/logoP1.cat
 [notice extract.c] do cp
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
-[info command.c]  arg2: /HERE/check/./../misc/logoP1.cat
+[info command.c]  arg2: /HERE/misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat
 [info command.c] /bin/cp execution returns 0
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports
@@ -162,7 +161,7 @@
 [notice extract.c] do cat
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
-[info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat /HERE/check/./../misc/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
+[info command.c]  arg2: /bin/cat LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat /HERE/misc/logoP2.cat >LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
 [info command.c] /bin/bash execution returns 0
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : ALLOCATED -> TOKEEP

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.1 2015/08/23 23:39:14 nroche Exp $
+ * Version: $Id: utupload.c,v 1.2 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -43,7 +43,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -63,9 +63,10 @@ main(int argc, char** argv)
   char inputRep[256] = ".";
   Collection* coll = 0;
   Record* record = 0;
-  char* extra = 0;
-  char* extra2 = 0;
   Connexion* connexion = 0;
+  char* miscRep = 0;
+  char* absoluteMiscRep = 0;
+  char* extra = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -107,10 +108,11 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
-  if (!(extra2 = createString(inputRep))) goto error;
-  if (!(extra2 = catString(extra2, "/../misc/"))) goto error;
-  if (!(extra = createString(extra2))) goto error;
-  if (!(extra = catString(extra, "README"))) goto error;
+  if (!(miscRep = createString(inputRep))) goto error;
+  if (!(miscRep = catString(miscRep, "/../misc/"))) goto error;
+  if (!(absoluteMiscRep = getAbsolutePath(miscRep))) goto error;
+  if (!(extra = createString(absoluteMiscRep))) goto error;
+  if (!(extra = catString(extra, "/README"))) goto error;
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
@@ -186,11 +188,13 @@ main(int argc, char** argv)
 
   /*--------------------------------------------------------*/
   utLog(" * Upload providing a target: %s", "store/it/here", 0);
-  if (!(extra2 = catString(extra2, "logo.png:store/it/here"))) goto error;
+  extra = destroyString(extra);
+  if (!(extra = createString(absoluteMiscRep))) goto error;
+  if (!(extra = catString(extra, "/logo.png:store/it/here"))) goto error;
   if (!(record = utLocalRecord(coll,
 			       "022a34b2f9b893fba5774237e1aa80ea", 24075,
-			       SUPPLY, extra2))) goto error;
-  extra2 = 0;
+			       SUPPLY, extra))) goto error;
+  extra = 0;
   if (!rgInsert(connexion->message->records, record)) goto error;
   if (!uploadFinaleArchive(connexion))  {
     utLog("reply : %s", connexion->status, 0);
@@ -205,7 +209,8 @@ main(int argc, char** argv)
   rc = TRUE;
  error:
   destroyString(extra);
-  destroyString(extra2);
+  destroyString(miscRep);
+  destroyString(absoluteMiscRep);
   if (connexion) destroyRecordTree(connexion->message);
   free (connexion);
   freeConfiguration();

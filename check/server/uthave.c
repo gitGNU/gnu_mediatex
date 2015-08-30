@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthave.c,v 1.3 2015/08/19 01:09:07 nroche Exp $
+ * Version: $Id: uthave.c,v 1.4 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -42,7 +42,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -63,6 +63,8 @@ main(int argc, char** argv)
   Collection* coll = 0;
   Connexion* connexion = 0;
   char* extra = 0;
+  char* miscRep = 0;
+  char* absoluteMiscRep = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -104,6 +106,9 @@ main(int argc, char** argv)
 
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
+  if (!(miscRep = createString(inputRep))) goto error;
+  if (!(miscRep = catString(miscRep, "/../misc/"))) goto error;
+  if (!(absoluteMiscRep = getAbsolutePath(miscRep))) goto error;
 
   utLog("%s", "Clean the cache and add part1:", 0);
   if (!utCleanCaches()) goto error;
@@ -114,9 +119,8 @@ main(int argc, char** argv)
   utLog("%s", "Now we have :", coll);
 
   utLog("%s", "provide part 1", 0);
-  if (!(extra = createString(inputRep))) goto error;
-  if (!(extra = catString(extra, "/../misc/"))) goto error;
-  if (!(extra = catString(extra, "logoP1.cat:supports/logoP1.cat")))
+  if (!(extra = createString(absoluteMiscRep))) goto error;
+  if (!(extra = catString(extra, "/logoP1.cat:supports/logoP1.cat")))
     goto error;
   if (!(connexion = utHaveMessage1(coll, extra))) goto error;
   if (!extractFinaleArchives(connexion)) {
@@ -130,9 +134,8 @@ main(int argc, char** argv)
   free (connexion);
 
   utLog("%s", "provide part2", 0);
-  if (!(extra = createString(inputRep))) goto error;
-  if (!(extra = catString(extra, "/../misc/"))) goto error;
-  if (!(extra = catString(extra, "logoP2.cat"))) goto error;
+  if (!(extra = createString(absoluteMiscRep))) goto error;
+  if (!(extra = catString(extra, "/logoP2.cat"))) goto error;
   if (!(connexion = utHaveMessage2(coll, extra))) goto error;
   if (!extractFinaleArchives(connexion)) {
     utLog("reply : %s", connexion->status, 0);
@@ -147,6 +150,8 @@ main(int argc, char** argv)
   rc = TRUE;
  error:
   extra = destroyString(extra);
+  destroyString(miscRep);
+  destroyString(absoluteMiscRep);
   if (connexion) destroyRecordTree(connexion->message);
   free (connexion);
   freeConfiguration();

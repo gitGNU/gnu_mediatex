@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupp.c,v 1.4 2015/08/27 10:51:51 nroche Exp $
+ * Version: $Id: utsupp.c,v 1.5 2015/08/30 17:07:56 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -41,7 +41,7 @@ usage(char* programName)
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 

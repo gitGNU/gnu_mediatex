@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.8 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: device.c,v 1.9 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -105,7 +105,7 @@ getAbsolutePath(char* path)
   rc[len2] = '/';
   strncpy(rc + 1 + len2, base, strlen(base)+1);
 
-  logMisc(LOG_INFO, "absolute path is %s", rc);
+  logMisc(LOG_DEBUG, "absolute path is %s", rc);
   
  error:
   if (!rc) {

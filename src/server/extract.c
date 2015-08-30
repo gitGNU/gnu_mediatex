@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.18 2015/08/23 23:39:17 nroche Exp $
+ * Version: $Id: extract.c,v 1.19 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -780,10 +780,7 @@ cacheSet(ExtractData* data, Record* record,
 
   // toggle !malloc record to local-supply...
   relativeCachePath = absoluteCachePath + strlen(coll->cacheDir) + 1;
-  if (relativeCachePath[0] == '/') {
-    logMain(LOG_ERR, "internal error: local supply cannot begin on '/'");
-    goto error;
-  }
+ 
   record->extra = destroyString(record->extra);
   if (!(record->extra = createString(relativeCachePath))) goto error;
 
@@ -834,6 +831,12 @@ extractRecord(ExtractData* data, Record* sourceRecord)
   if (getRecordType(sourceRecord) == FINAL_SUPPLY) {
     finalSupplySource = getFinalSupplyInPath(sourceRecord->extra);
     finalSupplyTarget = getFinalSupplyOutPath(sourceRecord->extra);
+
+    if (!finalSupplySource || !finalSupplyTarget) {
+      logMain(LOG_ERR, "fails to parse support paths: %s",
+	      sourceRecord->extra);
+      goto error;
+    }
   }
 
   // allocate place on cache
@@ -1207,6 +1210,7 @@ getWantedArchives(Collection* coll)
   RG* ring = 0;
   Archive* archive = 0;
   RGIT* curr = 0;
+  int isBadTop = 0;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "getWantedArchives");
@@ -1214,15 +1218,22 @@ getWantedArchives(Collection* coll)
   if (!(ring = createRing())) goto error;
   if (!computeExtractScore(coll)) goto error;
 
+  // look for archives we will try to extract
   while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
-    // extract wanted content
+
+    // check if it is a top containers having bad score
+    isBadTop =
+      (archive->state < WANTED &&
+       archive->fromContainers->nbItems == 0 &&
+       archive->extractScore <= coll->serverTree->scoreParam.maxScore /2);
+
+    // add all local demands...
     if (archive->state == WANTED ||
-	// or remote top container having bad score
-	(archive->state < WANTED &&
-	 archive->remoteSupplies->nbItems > 0 &&
-	 archive->fromContainers->nbItems == 0 &&
-	 archive->extractScore <= coll->serverTree->scoreParam.maxScore /2)
-	) {
+
+	// ...and available candidates for (local or remote) final supplies
+	isBadTop) {
+
+      /* maybe check minGeoDup and nb REMOTE_SUPPLY too in future */
 
       logMain(LOG_INFO, "looking for %s%lli",
 	      archive->hash, (long long int)archive->size);
@@ -1263,19 +1274,15 @@ int extractArchives(Collection* coll)
 
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
+
+  // for each archives we are looking for
   if (!(archives = getWantedArchives(coll))) goto error3;
-  
-  // for each cache entry
   while((archive = rgNext_r(archives, &curr))) {
     
     // define extraction context : X_MAIN or X_STEP (ie: scp or not)
     data.context = X_STEP;
-    
-    // we scp only if bad score...
-    if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2)
-      data.context = X_MAIN;
-    
-    // ... or locally wanted
+
+    // we scp only when archive is or locally wanted...
     curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) == FINAL_DEMAND) {
@@ -1283,6 +1290,12 @@ int extractArchives(Collection* coll)
 	break;
       }
     }
+    
+    // ...or if bad score but already a final supply (store locally)
+    if ((archive->extractScore <= 
+	coll->serverTree->scoreParam.maxScore /2) &&
+	!haveRecords(archive->finalSupplies))
+      data.context = X_MAIN;
     
     if (!(data.toKeeps = createRing())) goto error3;
     data.target = archive;

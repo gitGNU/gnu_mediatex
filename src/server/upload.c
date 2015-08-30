@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upload.c,v 1.1 2015/08/23 23:39:17 nroche Exp $
+ * Version: $Id: upload.c,v 1.2 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -91,7 +91,7 @@ cacheUpload(Collection* coll, Record* record)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_WARNING, "cacheUpload fails");
+    logMain(LOG_ERR, "cacheUpload fails");
   } 
   destroyOnlyRing(data.toKeeps);
   return rc;

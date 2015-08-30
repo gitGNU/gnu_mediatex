@@ -41,8 +41,8 @@ factSupp   2.00
 Collection mdtx1-coll1@host1.mediatex.org:22
 	# --
 	localhost 6b18ed0194b0fbadd08e0a13cccda00e
-	share	  SUPP12_logo.png,
-		  SUPP22_logo.part1,
+	share	  /home/nroche/cvs/mediatex/misc/logoP1.iso,
+		  SUPP12_logo.png,
 		  SUPP32_logo.part2
 end
 

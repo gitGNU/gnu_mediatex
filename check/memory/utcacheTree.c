@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.6 2015/08/10 12:24:25 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.7 2015/08/30 17:07:58 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -51,11 +51,12 @@ testThread(void* arg)
 static void 
 usage(char* programName)
 {
-  mdtxUsage(programName);
+  memoryUsage(programName);
   fprintf(stderr, " [ -d repository ]");
 
   memoryOptions();
-  //fprintf(stderr, "\t\t---\n");
+  fprintf(stderr, "  ---\n"
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -72,6 +73,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  char inputRep[256] = ".";
   Collection* coll = 0;
   RecordTree* tree = 0;
   Record* record = 0;
@@ -79,9 +81,10 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MEMORY_SHORT_OPTIONS;
+  char* options = MEMORY_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MEMORY_LONG_OPTIONS,
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -94,6 +97,17 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
  
+    case 'd':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, 
+		"%s: nil or empty argument for the input repository\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      strncpy(inputRep, optarg, strlen(optarg)+1);
+      break; 
+
       GET_MEMORY_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -103,7 +117,7 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  if (!createExempleConfiguration()) goto error;
+  if (!createExempleConfiguration(inputRep)) goto error;
   if (!(coll = getCollection("coll1"))) goto error;
 
   if (!lockCacheRead(coll)) goto error;

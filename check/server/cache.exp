@@ -1,5 +1,16 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [notice utcache.c] -------------------------------------------------------
+[notice utcache.c] Paths
+[notice utcache.c] .......................................................
+[notice utcache.c] finalSupply input /path/to/file -> /path/to/file
+[notice utcache.c] finalSupply output /path/to/file -> file
+[notice utcache.c] finalSupply input /path/to/file: -> /path/to/file
+[notice utcache.c] finalSupply output /path/to/file: -> file
+[notice utcache.c] finalSupply input /path/to/file:place/to/strore/newFilename -> /path/to/file
+[notice utcache.c] finalSupply output /path/to/file:place/to/strore/newFilename -> place/to/strore/newFilename
+[notice utcache.c] finalSupply input /path/to/file:place/to/strore/newDirectory/ -> /path/to/file
+[notice utcache.c] finalSupply output /path/to/file:place/to/strore/newDirectory/ -> place/to/strore/newDirectory/file
+[notice utcache.c] -------------------------------------------------------
 [notice utcache.c] Clean the cache:
 [notice utcache.c] .......................................................
 [notice utFunc.c] clean the cache

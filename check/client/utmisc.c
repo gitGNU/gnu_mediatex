@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.4 2015/08/17 01:31:50 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.5 2015/08/30 17:07:56 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -37,11 +37,7 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
-  fprintf(stderr, " [ -d repository ]");
-
   mdtxOptions();
-  fprintf(stderr, "  ---\n"
-	  "  -d, --input-rep\trepository with logo files\n");
   return;
 }
 
@@ -58,16 +54,14 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char inputRep[256] = ".";
   char* path = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"d:";
+  char* options = MDTX_SHORT_OPTIONS;
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -80,17 +74,6 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-    case 'd':
-      if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, 
-		"%s: nil or empty argument for the input repository\n",
-		programName);
-	rc = EINVAL;
-	break;
-      }
-      strncpy(inputRep, optarg, strlen(optarg)+1);
-      break; 
-
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;

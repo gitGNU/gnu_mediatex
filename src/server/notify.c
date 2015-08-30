@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.15 2015/08/19 01:44:12 nroche Exp $
+ * Version: $Id: notify.c,v 1.16 2015/08/30 17:08:01 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -92,12 +92,15 @@ notifyArchive(NotifyData* data, Archive* archive)
   // look for a matching local supply
   if (archive->state >= AVAILABLE) {
     data->found = TRUE;
+    logMain(LOG_INFO, "found an archive to notify: %s:%lli", 
+	    archive->hash, archive->size);
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
     goto end;
   }
 
-  // continue searching as we stop at the first container already there
-  while(!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
+  // continue searching deeper if needed
+  while (!data->found && 
+	(asso = rgNext_r(archive->fromContainers, &curr))) {
     if (!notifyContainer(data, asso->container)) goto error;
   }
 
@@ -111,8 +114,8 @@ notifyArchive(NotifyData* data, Archive* archive)
 } 
 
 /*=======================================================================
- * Function   : getWantedArchives
- * Description: copy all wanted archives into a ring
+ * Function   : getWantedRemoteArchives
+ * Description: copy all remotely wanted archives into a ring
  * Synopsis   : RG* getWantedArchives(Collection* coll)
  * Input      : Collection* coll
  * Output     : a ring of arhives, 0 o error
@@ -128,7 +131,7 @@ getWantedRemoteArchives(Collection* coll)
   RGIT* curr2 = 0;
 
   checkCollection(coll);
-  logMain(LOG_DEBUG, "getWantedArchives");
+  logMain(LOG_DEBUG, "getWantedRemoteArchives");
 
   if (!(ring = createRing())) goto error;
 
@@ -138,6 +141,9 @@ getWantedRemoteArchives(Collection* coll)
     // look for a remote demand
     while((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) != REMOTE_DEMAND) continue;
+
+      logMain(LOG_INFO, "find a remote demand to work on: %s:%lli",
+	      archive->hash, archive->size);
       if (!rgInsert(ring, archive)) goto error;
       break;
     }
@@ -183,6 +189,8 @@ addFinalDemands(NotifyData* data)
       // final demand: add it
       if (getRecordType(record) == FINAL_DEMAND) {
 
+	logMain(LOG_INFO, "found a final demand to notify: %s:%lli",
+		archive->hash, archive->size);
 	if (!(extra = createString("!wanted"))) goto error;
 	if (!(demand = newRecord(coll->localhost, archive, 
 				 DEMAND, extra))) goto error;
@@ -208,8 +216,6 @@ addFinalDemands(NotifyData* data)
  * Synopsis   : int addBadTopLocalSupplies(NotifyData* data)
  * Input      : NotifyData* data
  * Output     : TRUE on success
-
- * TODO       : check minGeoDup and nb REMOTE_SUPPLY
  =======================================================================*/
 int 
 addBadTopLocalSupplies(NotifyData* data)
@@ -232,6 +238,9 @@ addBadTopLocalSupplies(NotifyData* data)
 
     /* maybe check minGeoDup and nb REMOTE_SUPPLY too in future */
 
+    logMain(LOG_INFO, 
+	    "found a bad score's local top container to notify: %s:%lli",
+	    archive->hash, archive->size);
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
   }
 
@@ -263,17 +272,19 @@ buildNotifyRings(Collection* coll, RG* records)
   logMain(LOG_DEBUG, "buildNotifyRings %s collection", coll->label);
   data.coll = coll;
   data.toNotify = records;
+
+  // work on archive wanted by remote servers
   if (!(archives = getWantedRemoteArchives(coll))) goto error;
 
-  // for each cache entry, add local-supplies
+  // for each of them, try to add local-supplies
   while((archive = rgNext_r(archives, &curr))) {
     if (!notifyArchive(&data, archive)) goto error;
   }
 
-  // add final demands
+  // next, add final demands (on localserver)
   if (!addFinalDemands(&data)) goto error;
 
-  // add top archives with bad score
+  // and, add top archives with bad score
   if (!computeExtractScore(data.coll)) goto error;
   if (!addBadTopLocalSupplies(&data)) goto error;
 

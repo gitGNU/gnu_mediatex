@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.h,v 1.2 2015/08/03 12:02:48 nroche Exp $
+ * Version: $Id: utFunc.h,v 1.3 2015/08/30 17:07:57 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -27,8 +27,8 @@
 
 #include "../src/mediatex-types.h"
 
-int createExempleConfiguration();
-int createExempleSupportTree();
+int createExempleConfiguration(char* inputDir);
+int createExempleSupportTree(char* inputDir);
 int createExempleCatalogTree(Collection* coll);
 int createExempleExtractTree(Collection* coll);
 int createExempleServerTree(Collection* coll);

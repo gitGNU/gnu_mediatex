@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.8 2015/08/26 10:50:47 nroche Exp $
+# * Version: $Id: tests.sh,v 1.9 2015/08/30 17:08:00 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -32,14 +32,14 @@
 ############################################
 
 ## demo
-SEVERITY_CLIENT=notice
-SEVERITY_SERVER=notice
+SEVERITY_CLIENT="-s notice"
+#SEVERITY_SERVER="-s notice"
 DEBUG_CLIENT_SCRIPT=""
 DEBUG_SERVER=0
 
 ## debug
-#SEVERITY_CLIENT=debug
-#SEVERITY_SERVER=debug
+#SEVERITY_CLIENT="-s debug"
+SEVERITY_SERVER="-s notice -s info:main"
 #DEBUG_CLIENT_SCRIPT="-S"
 #DEBUG_SERVER=1          # need to run "$ xhost +" first
 #ADDON_SERVER=valgrind
@@ -80,7 +80,7 @@ function mdtxA()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -c $SERVER -s $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT $QUERY 
+    mediatex -c $SERVER $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT $QUERY 
 }
 
 # $1 publisher query
@@ -90,7 +90,7 @@ function mdtxP()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -c $SERVER -s $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT su <<EOF
+    mediatex -c $SERVER $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT su <<EOF
 mediatex $QUERY
 EOF
 }
@@ -173,7 +173,7 @@ function startInitdScript()
     sed -e "s|mediatexd|mediatexd-$SERVER|" \
 	-e "s|\(DAEMON=/usr/bin\)/.*|\1/mediatexd|" \
 	-e "s|mdtx|$SERVER|" \
-	-e "s|--severity notice|--severity $SEVERITY_SERVER|" \
+	-e "s|--severity notice|$SEVERITY_SERVER|" \
 	/etc/init.d/mediatexd > /etc/init.d/mediatexd-$SERVER
     chmod +x /etc/init.d/mediatexd-$SERVER
     systemctl daemon-reload # needed by systemd
@@ -192,7 +192,7 @@ EOF
 	su $SERVER -c \
 	    "env -u SESSION_MANAGER xterm -e \
               /tmp/doNotClose.sh $ADDON_SERVER mediatexd \
-               -c $SERVER -s$SEVERITY_SERVER -ffile -S &"	    
+               -c $SERVER $SEVERITY_SERVER -ffile -S &"	    
 	sleep 1
 	mkdir -p /var/run/mediatex
 
@@ -321,17 +321,16 @@ function test2()
 	mdtxP "ls supp"
 	mdtxP "note supp ex-cd1 as cd1"
 	mdtxP "add supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
-	mdtxP "add supp iso2 on /usr/share/mediatex/misc/logoP2.iso"  
+	mdtxP "add file /usr/share/mediatex/misc/logoP2.iso"  
 	mdtxP "check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso"  
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
-	mdtxP "check supp iso2 on /usr/share/mediatex/misc/logoP2.iso"
 	mdtxP "ls supp"
 	finalQuestion "is support db updated ?" \
 		      "cat /var/cache/mediatex/serv1/cvs/serv1/supports.txt"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso2"
-	mdtxP "del supp iso1"
+	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso"
 	mdtxP "note supp ex-cd1 as ok"
     fi
 }
@@ -366,6 +365,7 @@ function test4()
 	echo "123456789012345" | netcat 127.0.0.1 6001
 	statusInitdScript
 	question "does server survive after a strange message ?"
+	[ $TEST_OK -eq 0 ] && return
 
 	yourMail
 	mdtxP "srv save"
@@ -385,21 +385,26 @@ function test5()
     if [ "x$1" != "xclean" ]; then
     topo "Provide supports to get the requested archive record"
     mdtxP "add supp iso1 to coll hello"
-    mdtxP "add supp iso2 to coll hello"
+    mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello"
     question "does the configuration mention supports ?" \
 	     "grep -A10 Collection /etc/mediatex/serv1.conf"
     [ $TEST_OK -eq 0 ] && return
     
     mdtxP "motd"
     mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
-    mdtxP "check supp iso2 on /usr/share/mediatex/misc/logoP2.iso"
     mdtxP "srv save"
-    finalQuestion "check your mailbox" \
-		  "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"
+    question "check your mailbox" \
+		  "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"*
+    [ $TEST_OK -eq 0 ] && return
+
+    mdtxP "srv extract"
+    mdtxP "srv save"
+    finalQuestion "have simply extract from support. Extract do more ?" \
+	"cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso1 from coll hello"
-	mdtxP "del supp iso2 from coll hello"
+	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
 	reloadInitdScript
@@ -426,14 +431,17 @@ EOF
 	finalQuestion "Please, browse score index and download mediatex.css"
 	[ $TEST_OK -eq 0 ] && return
 	
-	# clean extracted files (from test5) on cache in prevision of next tests
+	# clean extracted files (~test5) on cache for next tests
+	topo "remove support iso2 and extract files"
+	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
+	mdtxP "upgrade+"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
 	reloadInitdScript
     else
 	topo "Cleanup"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/incoming
-	sed -i -e "/(REC/, /)/ d" /etc/mediatex/serv1-hello/extract000.txt
+	sed -i -e "/(INC/, /)/ d" /etc/mediatex/serv1-hello/extract000.txt
 	reloadInitdScript
     fi
 }
@@ -469,7 +477,8 @@ function test8()
 	mdtxA "adm add coll serv1-hello" serv2
 
 	# register serv2-hello key on serv1
-	cp /var/cache/mediatex/serv2/home/serv2-hello/.ssh/id_dsa.pub /tmp/key
+	cp /var/cache/mediatex/serv2/home/serv2-hello/.ssh/id_dsa.pub \
+	    /tmp/key
 	mdtxP "add key /tmp/key to coll hello" serv1
 
 	# server 2 register for collection hello on server 1
@@ -485,7 +494,7 @@ function test8()
 	# seen by first server
 	mdtxP "upgrade" serv1
 	finalQuestion "does 1st server see 2nd server ?" \
-		      "grep -A2 Server /var/cache/mediatex/serv1/cvs/serv1-hello/servers.txt"
+	    "grep -A2 Server /var/cache/mediatex/serv1/cvs/serv1-hello/servers.txt"
     else
 	topo "Cleanup"
 
@@ -533,11 +542,9 @@ function test10()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "server 2 provides first support and tell it to server 1"
-	mdtxP "add supp iso1 on /usr/share/mediatex/misc/logoP1.iso" \
-	      serv2
+	mdtxP "add supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv2
 	mdtxP "add supp iso1 to coll hello" serv2
-	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" \
-	      serv2
+	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv2
 	mdtxP "srv notify" serv2
 
 	# check server 1 was notified
@@ -658,11 +665,9 @@ function test14()
     if [ "x$1" != "xclean" ]; then
 	topo "Server 3 provides second support and tell it to others"
  
-	mdtxP "add supp iso2 on /usr/share/mediatex/misc/logoP2.iso" \
-	      serv3
-	mdtxP "add supp iso2 to coll hello" serv3
-	mdtxP "check supp iso2 on /usr/share/mediatex/misc/logoP2.iso" \
-	      serv3
+	mdtxP "add file /usr/share/mediatex/misc/logoP2.iso" serv3
+	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello" serv3
+	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 get part2 ?" \
 		 "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
@@ -675,7 +680,7 @@ function test14()
 		      "cat /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
     else
 	topo "Cleanup"
-	mdtxP "del supp iso2" serv
+	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso" serv3
 	for SERV in serv1 serv2; do
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logoP2.iso
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logoP2.cat
@@ -804,6 +809,7 @@ TEST_NB=1
 
 # run tests
 while [ $TEST_OK -eq 1 ]; do
+    echo $TEST_NB > /tmp/test.nb
     test$TEST_NB
 done
 
@@ -811,6 +817,5 @@ done
 if [ $TEST_OK -eq 0 ]; then
     # clean last failing test
     test$TEST_NB clean
-    echo $TEST_NB > /tmp/test.nb
 fi
 

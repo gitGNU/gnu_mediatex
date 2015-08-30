@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: recordTree.sh,v 1.1 2015/07/01 10:49:40 nroche Exp $
+# * Version: $Id: recordTree.sh,v 1.2 2015/08/30 17:07:57 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-memory/ut$TEST > memory/$TEST.out 2>&1
+memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs memory/$TEST.out

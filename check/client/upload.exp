@@ -99,7 +99,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -189,7 +188,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -254,7 +252,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -300,7 +297,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -370,7 +366,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -408,7 +403,6 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
-[info device.c] absolute path is /HERE/misc/mediatex.css
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:

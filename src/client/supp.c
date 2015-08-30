@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.14 2015/08/27 10:51:51 nroche Exp $
+ * Version: $Id: supp.c,v 1.15 2015/08/30 17:08:00 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -27,10 +27,10 @@
 
 /*=======================================================================
  * Function   : mdtxMount
- * Description: 
- * Synopsis   : 
- * Input      : 
- *              
+ * Description: Mount an iso support
+ * Synopsis   : int mdtxMount(char* iso, char* target)
+ * Input      : char* iso
+ *              char* target
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -72,9 +72,8 @@ mdtxMount(char* iso, char* target)
 /*=======================================================================
  * Function   : mdtxUmount
  * Description: call umount
- * Synopsis   : 
- * Input      : 
- *              
+ * Synopsis   : int mdtxUmount(char* target)
+ * Input      : char* target
  * Output     : TRUE on success
  =======================================================================*/
 int 
@@ -422,7 +421,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
 
-  // tels "/PATH:supports/SUPPORTNAME" 
+  // tels "/PATH:SUPPORT_NAME" 
   if (snprintf(buf, MAX_SIZE_STRING, "%s:supports/%s", path, supp->name) 
       >= MAX_SIZE_STRING) {
     logMain(LOG_ERR, "buffer too few to copy path and support name");
