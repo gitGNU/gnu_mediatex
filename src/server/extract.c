@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.19 2015/08/30 17:08:01 nroche Exp $
+ * Version: $Id: extract.c,v 1.20 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -1260,6 +1260,7 @@ getWantedArchives(Collection* coll)
 int extractArchives(Collection* coll)
 {
   int rc = FALSE;
+  int rc2 = FALSE;
   RG* archives = 0;
   Archive* archive = 0;
   Record* record = 0;
@@ -1267,8 +1268,8 @@ int extractArchives(Collection* coll)
   RGIT* curr2 = 0;
   ExtractData data;
 
-  checkCollection(coll);
   logMain(LOG_DEBUG, "extractArchives %s collection", coll->label);
+  checkCollection(coll);
   memset(&data, 0, sizeof(ExtractData));
   data.coll = coll;
 
@@ -1277,7 +1278,7 @@ int extractArchives(Collection* coll)
 
   // for each archives we are looking for
   if (!(archives = getWantedArchives(coll))) goto error3;
-  while((archive = rgNext_r(archives, &curr))) {
+  while ((archive = rgNext_r(archives, &curr))) {
     
     // define extraction context : X_MAIN or X_STEP (ie: scp or not)
     data.context = X_STEP;
@@ -1297,13 +1298,16 @@ int extractArchives(Collection* coll)
 	!haveRecords(archive->finalSupplies))
       data.context = X_MAIN;
     
-    if (!(data.toKeeps = createRing())) goto error3;
     data.target = archive;
-    if (!extractArchive(&data, archive)) {
+    if (!(data.toKeeps = createRing())) goto error3;
+    rc2 = extractArchive(&data, archive);
+    data.toKeeps = destroyOnlyRing(data.toKeeps);
+    
+    if (!rc2) {
       logMain(LOG_WARNING, "however continue...");
       continue;
     }
-    
+
     if (data.found) {
       if (!deliverArchive(coll, archive)) goto error3;
     }

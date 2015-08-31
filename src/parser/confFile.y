@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.8 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: confFile.y,v 1.9 2015/08/31 00:14:52 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -338,7 +338,7 @@ Cgateway: confSTRING
 void 
 conf_error(yyscan_t yyscanner, Collection* coll, const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n", message, 
+  logParser(LOG_ERR, "%s on token '%s' line %i", message, 
 	  conf_get_text(yyscanner), LINENO);
 }
 

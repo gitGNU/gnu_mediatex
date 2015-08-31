@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.11 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.12 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -200,13 +200,15 @@ destroyContainer(Container* self)
 /*=======================================================================
  * Function   : serializeContainer
  * Description: Serialize a Container.
- * Synopsis   : int serializeContainer(Container* self, CvsFile* fd)
- * Input      : Container* self : what to serialize
+ * Synopsis   : int serializeContainer(Collection* coll, 
+ *                                     Container* self, CvsFile* fd)
+ * Input      : Collection* coll
+ *              Container* self : what to serialize
  *              CvsFile* fd : where to serialize
  * Output     : TRUE on success
  =======================================================================*/
 int 
-serializeContainer(Container* self, CvsFile* fd)
+serializeContainer(Collection* coll, Container* self, CvsFile* fd)
 {
   int rc = FALSE;
   FromAsso* asso = 0;
@@ -237,7 +239,7 @@ serializeContainer(Container* self, CvsFile* fd)
 
     for(node = self->childs->head; node; node = node->next) {
       asso = node->item;
-      if (self->type == INC && !isIncoming(asso->archive)) continue;
+      if (self->type == INC && !isIncoming(coll, asso->archive)) continue;
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
       fd->print(fd, "\t%s\n", asso->path);
     }
@@ -407,14 +409,14 @@ serializeExtractTree(Collection* coll, CvsFile* fd)
 
   // serialize INC container if not empty
   if (avl_count(self->incoming->childs) > 0) {
-    if (!serializeContainer(self->incoming, fd)) goto error;
+    if (!serializeContainer(coll, self->incoming, fd)) goto error;
   }
 
   // serialize all other containers
   if (avl_count(self->containers)) {
     for(node = self->containers->head; node; node = node->next) {
       container = node->item;
-      if (!serializeContainer(container, fd)) goto error;
+      if (!serializeContainer(coll, container, fd)) goto error;
     }
   }
  

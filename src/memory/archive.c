@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.10 2015/08/16 20:35:09 nroche Exp $
+ * Version: $Id: archive.c,v 1.11 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -449,14 +449,19 @@ diseaseArchives(Collection* coll)
 /*=======================================================================
  * Function   : isIncoming
  * Description: state if an archive belongs to INC container
- * Synopsis   : int isIncoming(Archive* self)
+ * Synopsis   : int isIncoming(Collection* coll, Archive* self)
+ *              Collection* coll
  * Input      : Archive* self
  * Output     : TRUE on success
  * Requirement: loadCollection(coll, EXTR)
+ * Note       : archive is no more an incoming when having a good score
  =======================================================================*/
-int isIncoming(Archive* self)
+int isIncoming(Collection* coll, Archive* self)
 {
-  return self->uploadTime;
+  return self->uploadTime && 
+    (self->extractScore ==-1 || 
+     self->extractScore <
+     coll->serverTree->scoreParam.maxScore /2);
 }
 
 /*=======================================================================
@@ -475,7 +480,7 @@ int hasExtractRule(Archive* self)
   // - only as an incoming content for incoming content having no rules
   return (self->toContainer ||
 	  !isEmptyRing(self->fromContainers) ||
-	  isIncoming(self));
+	  self->uploadTime); // ~isIncoming()
 }
 
 /* Local Variables: */

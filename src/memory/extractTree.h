@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.6 2015/08/11 18:14:24 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.7 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -78,7 +78,7 @@ int cmpFromAssoAvl(const void *p1, const void *p2);
 Container* createContainer(void);
 Container* destroyContainer(Container* self);
 int cmpContainerAvl(const void *p1, const void *p2);
-int serializeContainer(Container* self, CvsFile* fd);
+int serializeContainer(Collection* coll, Container* self, CvsFile* fd);
 
 int serializeExtractRecord(Archive* self, CvsFile* fd);
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-config.h,v 1.3 2015/07/07 09:46:20 nroche Exp $
+ * Version: $Id: mediatex-config.h,v 1.4 2015/08/31 00:14:51 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -85,6 +85,7 @@
 #define CONF_HTMLDIR  "/public_html"
 #define CONF_CONFFILE ".conf"
 #define CONF_PIDFILE  "d.pid"
+#define CONF_SUPPD    ":supports/"
 
 // basenames
 #define CONF_SUPPFILE  "/supports.txt"

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.9 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: archive.h,v 1.10 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -84,7 +84,7 @@ Archive* createArchive(void);
 Archive* destroyArchive(Archive* self);
 int diseaseArchive(Collection* coll, Archive* arch);
 int diseaseArchives(Collection* coll);
-int isIncoming(Archive* self);
+int isIncoming(Collection* coll, Archive* self);
 int hasExtractRule(Archive* self);
 
 #endif /* MDTX_MEMORY_ARCHIVE_H */

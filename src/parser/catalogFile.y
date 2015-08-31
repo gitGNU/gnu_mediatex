@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.6 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.7 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -504,7 +504,7 @@ void cata_error(yyscan_t yyscanner, Collection* coll, Category* category,
 		Human* human, Document* document, Archive* archive,
 		const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, cata_get_text(yyscanner), LINENO);
 }
 

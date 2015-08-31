@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.y,v 1.7 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: extractFile.y,v 1.8 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *
@@ -219,7 +219,7 @@ archive: extrHASH extrCOLON extrSIZE
 void extr_error(yyscan_t yyscanner, Collection* coll,
 		Container* container, const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, extr_get_text(yyscanner), LINENO);
 }
 

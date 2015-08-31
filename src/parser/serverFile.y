@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.8 2015/08/09 16:04:49 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.9 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -349,7 +349,7 @@ gateway: servSTRING
 void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 		const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, serv_get_text(yyscanner), LINENO);
 }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.15 2015/08/30 17:08:00 nroche Exp $
+ * Version: $Id: supp.c,v 1.16 2015/08/31 00:14:51 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -421,9 +421,9 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
 	  supp->fullHash, (long long int)supp->size);
 
-  // tels "/PATH:SUPPORT_NAME" 
-  if (snprintf(buf, MAX_SIZE_STRING, "%s:supports/%s", path, supp->name) 
-      >= MAX_SIZE_STRING) {
+  // tels "/PATH:{CONF_SUPPD}/NAME" 
+  if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", 
+	       path, CONF_SUPPD, supp->name) >= MAX_SIZE_STRING) {
     logMain(LOG_ERR, "buffer too few to copy path and support name");
     goto error;
   }

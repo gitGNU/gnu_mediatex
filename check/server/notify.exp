@@ -103,7 +103,7 @@
 [notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
-[notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e de5008799752552b7963a2670dc5eb18              391168 /HERE/misc/logoP1.iso:supports/logoP1.iso
+[notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e de5008799752552b7963a2670dc5eb18              391168 /HERE/misc/logoP1.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
 
 [notice utnotify.c] -------------------------------------------------------

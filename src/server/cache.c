@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.18 2015/08/30 17:08:01 nroche Exp $
+ * Version: $Id: cache.c,v 1.19 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -201,7 +201,6 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   struct stat statBuffer;
   Md5Data md5; 
   char* extra = 0;
-  char* ptrFilename = 0;
 
   logMain(LOG_DEBUG, "scaning file: %s", relativePath);
   checkLabel(absolutePath);
@@ -257,14 +256,9 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   // add a new cache entry
   if (!(extra = createString(relativePath))) goto error;
 
-  // cat "support:filename" to extra for final supplies
+  // cat ":CONF_SUPPD/" to extra for final supplies
   if (*relativePath == '/') {
-    // get the filename on first part
-    for (ptrFilename = relativePath + strlen(relativePath); 
-	 ptrFilename > extra && *ptrFilename != '/';
-	 --ptrFilename);
-    if (!(extra = catString(extra, ":supports"))) goto error;
-    if (!(extra = catString(extra, ptrFilename))) goto error;
+    if (!(extra = catString(extra, CONF_SUPPD))) goto error;
   }
 
   if (!(record = 
@@ -307,6 +301,8 @@ scanRepository(Collection* coll, const char* path)
   char* absolutePath = 0;
   char* relativePath = 0;
   char* absolutePath2= 0;
+
+  logMain(LOG_DEBUG, "scanRepository %s", path);
 
   if (path == 0) {
     logMain(LOG_ERR, 

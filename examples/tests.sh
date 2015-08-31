@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.9 2015/08/30 17:08:00 nroche Exp $
+# * Version: $Id: tests.sh,v 1.10 2015/08/31 00:14:51 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -33,16 +33,17 @@
 
 ## demo
 SEVERITY_CLIENT="-s notice"
-#SEVERITY_SERVER="-s notice"
+SEVERITY_SERVER="-s notice"
 DEBUG_CLIENT_SCRIPT=""
 DEBUG_SERVER=0
 
 ## debug
 #SEVERITY_CLIENT="-s debug"
-SEVERITY_SERVER="-s notice -s info:main"
+#SEVERITY_SERVER="-s notice -s debug"
 #DEBUG_CLIENT_SCRIPT="-S"
 #DEBUG_SERVER=1          # need to run "$ xhost +" first
-#ADDON_SERVER=valgrind
+#ADDON_SERVER="valgrind --leak-check=full"
+#ADDON_SERVER="valgrind"
 
 ### not done
 ## ADDON_SERVER=gdb
@@ -189,16 +190,17 @@ echo "---- exited ----"
 bash
 EOF
 	chmod +x /tmp/doNotClose.sh
+	mkdir -p /var/run/mediatex
 	su $SERVER -c \
 	    "env -u SESSION_MANAGER xterm -e \
               /tmp/doNotClose.sh $ADDON_SERVER mediatexd \
                -c $SERVER $SEVERITY_SERVER -ffile -S &"	    
-	sleep 1
-	mkdir -p /var/run/mediatex
+
+	read -p "Please tel me when server is started..."
 
 	case "$ADDON_SERVER" in
-	    valgrind)
-		PS=$(ps -ef | grep "valgrind.bin [m]ediatexd -c $SERVER")
+	    valgrind*)
+		PS=$(ps -ef | grep "valgrind.bin" | grep "$SERVER")
 		;;
 	    *)
 		PS=$(ps -ef | grep "0 [m]ediatexd -c $SERVER")
@@ -275,9 +277,7 @@ function restartInitdScript()
 	fi
     else
 	stopInitdScript $SERVER
-	if [ x"$ADDON_SERVER" == "valgrind" ]; then
-	    sleep 3
-	fi
+	read -p "Please tel me when server is stopped..."
 	startInitdScript $SERVER
     fi
 }
@@ -434,10 +434,10 @@ EOF
 	# clean extracted files (~test5) on cache for next tests
 	topo "remove support iso2 and extract files"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
-	mdtxP "upgrade+"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/logo*
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
-	reloadInitdScript
+	mdtxP "upgrade+"
+	# reloadInitdScript (already done by upgrade)
     else
 	topo "Cleanup"
 	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/incoming
@@ -766,7 +766,7 @@ function test17()
     if [ "x$1" != "xclean" ]; then
 	topo "Make all functionnal for manuals tests"
 	
-	for SERV in serv1 serv2; do
+	for SERV in serv1 serv2 serv3; do
 	    mdtxP "upgrade+" $SERV
 	done
 	finalQuestion "All tests done ! Do you want to clean all ?"

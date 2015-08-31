@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.16 2015/08/30 17:08:01 nroche Exp $
+ * Version: $Id: notify.c,v 1.17 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -253,16 +253,17 @@ addBadTopLocalSupplies(NotifyData* data)
 } 
 
 /*=======================================================================
- * Function   : extractArchives
- * Description: Try to extract all the archives one by one
- * Synopsis   : int extractRemoteArchives(Collection* coll)
+ * Function   : buildNotifyRings
+ * Description: build records to send (local supplies + local demands)
+ * Synopsis   : RG* buildNotifyRings(Collection* coll, RG* records)
  * Input      : Collection* coll
+ *              RG* records: the record's ring to push into
  * Output     : TRUE on success
  =======================================================================*/
-RG* 
+int
 buildNotifyRings(Collection* coll, RG* records)
 {
-  RG* rc = 0;
+  int rc = FALSE;
   RG* archives = 0;
   Archive* archive = 0;
   RGIT* curr = 0;
@@ -288,7 +289,7 @@ buildNotifyRings(Collection* coll, RG* records)
   if (!computeExtractScore(data.coll)) goto error;
   if (!addBadTopLocalSupplies(&data)) goto error;
 
-  rc = data.toNotify;
+  rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "buildNotifyRings fails");
@@ -375,7 +376,7 @@ sendRemoteNotify(Collection* coll)
   if (!(localhost = getLocalHost(coll))) goto error2;
   if (!lockCacheRead(coll)) goto error2;
 
-  // build records to send (local-supplies + local-demands)
+  // build records to send (local supplies + local demands)
   if (!buildNotifyRings(coll, recordTree->records)) goto error3;
 
   // note: we may send an empty ring in order to tell we no more look 

@@ -1,23 +1,20 @@
 
 *** TO CORRECT: cache policy    
-.....................................................
 
 ** UPGRADE
-- (support files automaticaly included into image score computation)
-- collection score for support files
+.....................................................
+- conf: fileTTL 
+- servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
-- localScore/mainScore ?
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 
 ** MOTD
-- remove query for support files
-- check support files (fileTTL?)
-- add coll selection facility
-- add to burn
+- check support files (fileTTL)
+- sort by collection:
+-- add to burn (localScore/mainScore)
 -- only show when mainScore<5 && localScore<5
 -- list embedded content too if not all having same score
-- notify orphanes
-- display cache size (all/used/allocated/free)
+-- notify orphanes
+-- display cache size (all/used/allocated/free)
 
 ** HTML
 - notify server lastCommit
@@ -28,6 +25,12 @@
 - make cron upload the cvsroot collection module
 - make cron upload the collection's apache logs
 - ease looking for archive life cycle into cvsroot
+
+** TESTS
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+- make tests.sh modular 
+-- to begin at whatever test number (do truc/undo truc preconditions...)
+-- batch mode to automaticly answer yes to host fingerprint
 
 ** TRUST
 - new client query: mdtx audit [coll COLL] for MAIL
@@ -105,6 +108,10 @@
 -- remove -d inputRep from client/utmisc.c (no more used)
 -- use getAbsolutePath instead of -d $PWD/$srcdir
 - utcache.c: add a support file via memory/utFunc.c
+
+** UPGRADE
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+- #define for "supports/"
 
 *** CLEAN-UP
 

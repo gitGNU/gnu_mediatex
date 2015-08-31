@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.12 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: openClose.c,v 1.13 2015/08/31 00:14:51 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -310,7 +310,10 @@ loadCvsFiles(Collection* coll, int fileIdx)
     }
   }  
   
-  rc = i>0;
+  if (!i) {
+    logCommon(LOG_INFO, "no metadata file founded");
+  }
+  rc = (i >= 0);
  error:
   if (!rc) {
     logCommon(LOG_ERR, "loadCvsFiles fails");

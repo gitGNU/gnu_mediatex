@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.8 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.9 2015/08/31 00:14:53 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -759,7 +759,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 void shell_error(yyscan_t yyscanner, Collection* coll, 
 		 UploadParams* upParam, const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, shell_get_text(yyscanner), LINENO);
   logParser(LOG_NOTICE, "%s", 
 	  "bad invocation of mdtx's shell (try completion)");

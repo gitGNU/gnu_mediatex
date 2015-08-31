@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.y,v 1.3 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: recordFile.y,v 1.4 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -233,7 +233,7 @@ void
 record_error(yyscan_t yyscanner, RecordTree* recordTree,
 		  const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n",
+  logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, record_get_text(yyscanner), LINENO);
 }
 

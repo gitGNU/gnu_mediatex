@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.c,v 1.6 2015/08/13 21:14:33 nroche Exp $
+ * Version: $Id: ardsm.c,v 1.7 2015/08/31 00:14:52 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -113,14 +113,12 @@ rgDelete(RG* ring)
 
   if(ring == (RG *)0) goto error;
 
-  //not empty ring
   while (ring->head != (RGIT *)0) {
     temp = ring->head->next;
     rgDestroy(ring->head);
     ring->head = temp;
   }
 	
-  // empty ring
   ring->curr = ring->tail = (RGIT *)0;
   ring->nbItems = 0;
  error:

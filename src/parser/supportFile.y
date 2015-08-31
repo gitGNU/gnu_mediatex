@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.y,v 1.6 2015/08/27 10:51:53 nroche Exp $
+ * Version: $Id: supportFile.y,v 1.7 2015/08/31 00:14:53 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -164,7 +164,7 @@ line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
 void 
 supp_error(yyscan_t yyscanner, const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i\n", message, 
+  logParser(LOG_ERR, "%s on token '%s' line %i", message, 
 	    supp_get_text(yyscanner), LINENO);
 }
 
