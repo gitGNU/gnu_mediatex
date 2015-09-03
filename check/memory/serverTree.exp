@@ -6,17 +6,20 @@ collKey    1234567890abcdef
 
 # score parameters
 uploadTTL  1 Month
+serverTTL  2 Week
 suppTTL    5 Year
 maxScore   10.00
 badScore   1.00
 powSupp    2.00
 factSupp   2.00
+fileScore  10.00
 minGeoDup  2
 
 Server 6b18ed0194b0fbadd08e0a13cccda00e
 	comment   "this is server2"
 	label     mdtx2
 	host      127.0.0.1
+	lastCommit 1970-01-01,01:00:00 
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443
@@ -36,6 +39,7 @@ Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	comment   "this is server1"
 	label     mdtx1
 	host      localhost
+	lastCommit 1970-01-01,01:00:00 
 	mdtxPort  11111
 	sshPort   22
 	wwwPort   443
@@ -53,6 +57,7 @@ Server bedac32422739d7eced624ba20f5912e
 	comment   "this is server3"
 	label     mdtx3
 	host      mediatex.org
+	lastCommit 1970-01-01,01:00:00 
 	mdtxPort  33333
 	sshPort   2222
 	wwwPort   4443

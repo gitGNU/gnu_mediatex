@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.9 2015/09/03 09:25:46 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.10 2015/09/03 13:02:33 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -135,13 +135,16 @@ typedef struct UploadParams {
 #define DEFAULT_TTL_CACHE 15*DAY    // local-supply TTL on cache
 #define DEFAULT_TTL_QUERY 7*DAY     // final-query  TTL 
 #define DEFAULT_TTL_CHECK 6*MONTH   // support check TTL
+#define DEFAULT_TTL_UPLOAD 1*MONTH  // upload time (no score implication)
 #define DEFAULT_TTL_FILE  2*MONTH   // file support check TTL
 #define DEFAULT_TTL_SUPP  5*YEAR    // support TTL
+#define DEFAULT_TTL_SERVER 2*WEEK   // server (last commit) TTL
 #define DEFAULT_MAX_SCORE 10 // cf above
 #define DEFAULT_BAD_SCORE 1  // cf above
 #define DEFAULT_POW_SUPP  2  // cf above
 #define DEFAULT_FACT_SUPP 2  // cf above
 #define DEFAULT_MIN_GEO   2  // number of distantes copies expected
+#define DEFAULT_FILE_SCORE DEFAULT_MAX_SCORE // support file score
 
 // log defaults
 #define MISC_LOG_FILE 99 // log to stdout
@@ -168,12 +171,12 @@ typedef struct UploadParams {
 #define COMMON_OPEN_CLOSE_PROJECT_ID 6562
 
 struct ScoreParam {
-  float  maxScore; // maximum score (usually 10)
-  float  badScore; // maximum score for outdated supports (usually 1)
-  float  powSupp;  // power that reduce score from age of supports (2)
-  float  factSupp; // factor that reduce score of out-dated supports (2)
-  time_t suppTTL;  // support time to live (around 5 years)
-  float fileScore; // score for local support files
+  float  maxScore;  // maximum score (usually 10)
+  float  badScore;  // maximum score for outdated supports (usually 1)
+  float  powSupp;   // power that reduce score from age of supports (2)
+  float  factSupp;  // factor that reduce score of out-dated supports (2)
+  float  fileScore; // score for local support files
+  time_t suppTTL;   // support time to live (around 5 years)
 };
 
 #define DEFAULT_SCORE_PARAM {			\
@@ -181,9 +184,10 @@ struct ScoreParam {
       DEFAULT_BAD_SCORE,			\
       DEFAULT_POW_SUPP,				\
       DEFAULT_FACT_SUPP,			\
+      DEFAULT_FILE_SCORE,			\
       DEFAULT_TTL_SUPP				\
       }
-
+    
 #define printCacheSize(fd, fmt, lbl, size) {		\
     fprintf(fd, fmt, lbl);				\
     do {						\

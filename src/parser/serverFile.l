@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.8 2015/08/08 06:33:55 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.9 2015/09/03 13:02:33 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -102,6 +102,7 @@
  /* scaner states */
 %x COMMENT
 %x USERVALUE
+%x USERDATE
 
  /* No way to use constants from a c header file */
 
@@ -113,6 +114,14 @@ STRING         [^[:blank:]:,=\r\n]{1,511}
 
  /* (MAX_SIZE_STRING+1)*2-1 = 1023 */
 QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
+
+YEAR    [[:digit:]]{4}
+MONTH   [[:digit:]]{2}
+DAY     [[:digit:]]{2}
+HOUR    [[:digit:]]{2}
+MIN     [[:digit:]]{2}
+SEC     [[:digit:]]{2}
+DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
 
 %%
  /* rules: ==========================================================*/
@@ -135,6 +144,11 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
     return(servHOST);
   }
 
+  lastcommit {
+    BEGIN(USERDATE);
+    return(servLASTCOMMIT);
+  }
+  
   networks {
     BEGIN(USERVALUE);
     return(servNETWORKS);
@@ -214,6 +228,11 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
     return(servCACHESIZE);
   }
 
+  serverttl {
+    BEGIN(USERVALUE);
+    return(servSERVERTTL);
+  }
+
   cachettl {
     BEGIN(USERVALUE);
     return(servCACHETTL);
@@ -254,6 +273,11 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
     return(servFACTSUPP);
   }
 
+  filescore {
+    BEGIN(USERVALUE);
+    return(servFILESCORE);
+  }
+    
   mingeodup {
     BEGIN(USERVALUE);
     return(servMINGEODUP);
@@ -351,7 +375,33 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
   }
  }
 
-<INITIAL,USERVALUE>{
+<USERDATE>{
+  
+  {DATE} {
+    BEGIN(INITIAL);
+    
+    // date conversion into time_t
+    struct tm date;
+    memset(&date, 0, sizeof(struct tm));
+    if (sscanf(yytext, "%d-%d-%d,%d:%d:%d",
+	       &date.tm_year, &date.tm_mon, &date.tm_mday,
+	       &date.tm_hour, &date.tm_min, &date.tm_sec)
+	!= 6) {
+      logParser(LOG_ERR, "sscanf: error parsing date %s", yytext);
+      return(servERROR);
+    }
+    date.tm_year -= 1900; // from GNU/Linux burning date
+    date.tm_mon -= 1;     // month are managed from 0 to 11 
+    date.tm_isdst = -1;   // no informatio available about spring horodation
+    if ((yylval->time = mktime(&date)) == -1) {
+      logParser(LOG_ERR, "%s", "mktime: error while parsing date");
+      return(servERROR);
+    }
+    return(servDATE);
+  }
+ }
+
+<INITIAL,USERVALUE,USERDATE>{
     [[:blank:]]+  /* : eat up any blank character */
     ^#.*$         /* : eat up comments */
     \/\/.*$       /* : eat up comments */
@@ -375,6 +425,7 @@ QUOTED_STRING  \"[^\r\n\"]{1,1023}\"
 	 let bison manage the errors */
     logParser(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
 	    yylineno, yytext);
+    return(servERROR);
   }
  }
    

@@ -103,17 +103,20 @@ collKey    1234567890abcdef
 
 # score parameters
 uploadTTL  1 Month
+serverTTL  2 Week
 suppTTL    5 Year
 maxScore   10.00
 badScore   1.00
 powSupp    2.00
 factSupp   2.00
+fileScore  10.00
 minGeoDup  2
 
 Server 6b18ed0194b0fbadd08e0a13cccda00e
 	comment   "this is server2"
 	label     mdtx2
 	host      127.0.0.1
+	lastCommit 1970-01-01,01:00:00 
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443
@@ -133,6 +136,7 @@ Server 746d6ceeb76e05cfa2dea92a1c5753cd
 	comment   "host1.mediatex.org configuration file"
 	label     mdtx1
 	host      localhost
+	lastCommit 1970-01-01,01:00:00 
 	mdtxPort  6560
 	sshPort   22
 	wwwPort   443
@@ -149,6 +153,7 @@ Server 746d6ceeb76e05cfa2dea92a1c5753cd
 end
 
 Server bedac32422739d7eced624ba20f5912e
+	lastCommit 1970-01-01,01:00:00 
 #	keys:
 	userKey   "ssh-dss AAAAB3NzaC1kc3MAAACBALSNj2g79yICAQHQBrEWzwYp/h7KGJl7KPOkRcgyr1vyBhBYfJJQpxhKZOBLkFs4RoyZmx+NX3tMUNH2FkYPbSWjms1czokhM9nq96ZUGCx/rWZ2oDB5KVNx+sp8rqveTDB45FTfJQ6+2PDoHfajc6kthxM/UUTBzTLaTD5V1ChjAAAAFQCfhKdnRBlZEnyp5U4w+xqJLg/yPwAAAIEAp6SRRiF6ucA+NZ+GxsBBgQMKT/uokI7rxWnljPeyVbAi3c07mdpEoLUDAUbAy4qfatWXEf9RDLGQuFwyMeBkMtRHENmuWyIlRT191xhQzKMAhbFukRNdmjm7lvB9gnlhPiESxmrZqBppeKh13CtntWQyEL8KYv5AVoEwfkwGyGMAAACAAW8BloIq4V7j4/qEJWjvlHUbVHlgeZU9gnOSL2BDaS1zqTYrUTuWo/HKRMWf6xWbh1Es7YpYtQ8EA8Z/fW4xGSH1J+nhCNxepezXNAzejPF/aHph9YcPp7n6qdW0dHoL6GfPJt47Rs+XyXalEiyNU1POm38qn3/BKuHisS49/0o="
 end

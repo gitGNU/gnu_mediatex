@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
+ * Version: $Id: utconfFile.c,v 1.5 2015/09/03 13:02:32 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -137,6 +137,9 @@ main(int argc, char** argv)
     case confSSHPORT:
       strcpy(token, "SSHPORT");
       break;
+    case confWWWPORT:
+      strcpy(token, "WWWPORT");
+      break;
     case confCACHESIZE:
       strcpy(token, "CACHESIZE");
       break;
@@ -148,6 +151,9 @@ main(int argc, char** argv)
       break;
     case confCHECKTTL:
       strcpy(token, "CHECKTTL");
+      break;
+    case confFILETTL:
+      strcpy(token, "FILETTL");
       break;
     case confSUPPTTL:
       strcpy(token, "SUPPTTL");

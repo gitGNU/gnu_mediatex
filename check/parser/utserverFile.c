@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverFile.c,v 1.4 2015/08/13 21:14:31 nroche Exp $
+ * Version: $Id: utserverFile.c,v 1.5 2015/09/03 13:02:33 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -138,6 +138,9 @@ main(int argc, char** argv)
     case servHOST:
       strcpy(token, "HOST");
       break;
+    case servLASTCOMMIT:
+      strcpy(token, "LASTCOMMIT");
+      break;
     case servNETWORKS:
       strcpy(token, "NETWORKS");
       break;
@@ -149,6 +152,9 @@ main(int argc, char** argv)
       break;
     case servSSHPORT:
       strcpy(token, "SSHPORT");
+      break;
+    case servWWWPORT:
+      strcpy(token, "WWWPORT");
       break;
     case servCOLLKEY:
       strcpy(token, "COLLKEY");
@@ -186,6 +192,12 @@ main(int argc, char** argv)
     case servSUPPTTL:
       strcpy(token, "SUPPTTL");
       break;
+    case servUPLOADTTL:
+      strcpy(token, "UPLOADTTL");
+      break;
+    case servSERVERTTL:
+      strcpy(token, "SERVERTTL");
+      break;
     case servMAXSCORE:
       strcpy(token, "MAXSCORE");
       break;
@@ -197,6 +209,9 @@ main(int argc, char** argv)
       break;
     case servFACTSUPP:
       strcpy(token, "FACTSUPP");
+      break;
+    case servFILESCORE:
+      strcpy(token, "FILESCORE");
       break;
     case servMINGEODUP:
       strcpy(token, "MINGEODUP");
@@ -218,6 +233,9 @@ main(int argc, char** argv)
       break;
     case servTIME:
       strcpy(token, "TIME");
+      break;
+    case servDATE:
+      strcpy(token, "DATE");
       break;
 
     case 0:

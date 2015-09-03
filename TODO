@@ -3,9 +3,6 @@
 
 ** UPGRADE
 .....................................................
-- servers: fileScore, serverTTL, lastCommit
-- serversTree->server[]->lastCommit = DATE used by computeScore
-- serversTree->serverTTL = used to check lastCommit
 - upgrade.c: use lastCommit and serverTTL
 
 ** MOTD
@@ -115,6 +112,9 @@
 - #define for "supports/"
 - remove scoreParam and minGeoDup from serverTree->server
 - conf: fileTTL
+- servers: fileScore, serverTTL, lastCommit
+- serversTree->server[]->lastCommit = DATE used by computeScore
+- serversTree->serverTTL = used to check lastCommit
 
 *** CLEAN-UP
 

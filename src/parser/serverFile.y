@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.9 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.10 2015/09/03 13:02:33 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -95,6 +95,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servCOMMENT
 %token            servLABEL
 %token            servHOST
+%token            servLASTCOMMIT
 %token            servNETWORKS
 %token            servGATEWAYS
 %token            servMDTXPORT
@@ -113,11 +114,14 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servQUERYTTL
 %token            servSUPPTTL
 %token            servUPLOADTTL
+%token            servSERVERTTL
 %token            servMAXSCORE
 %token            servBADSCORE
 %token            servPOWSUPP
 %token            servFACTSUPP
+%token            servFILESCORE
 %token            servMINGEODUP
+%token            servERROR
 
 %token <string>   servSTRING
 %token <number>   servNUMBER
@@ -125,6 +129,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token <hash>     servHASH
 %token <size>     servSIZE
 %token <time>     servTIME
+%token <time>     servDATE
 
 %%
  /* grammar rules: =====================================================*/
@@ -164,6 +169,10 @@ header: servMASTER servHASH
 	  "01234567890abcdef", MAX_SIZE_AES);
   strncpy(coll->serverTree->aesKey, $2, MAX_SIZE_AES);
 }
+      | servSERVERTTL servNUMBER servTIME
+{
+  coll->serverTree->serverTTL = $2*$3;
+}
       | servSUPPTTL servNUMBER servTIME
 {
   coll->serverTree->scoreParam.suppTTL = $2*$3;
@@ -187,6 +196,10 @@ header: servMASTER servHASH
       | servFACTSUPP servSCORE
 {
   coll->serverTree->scoreParam.factSupp = $2;
+}
+      | servFILESCORE servSCORE
+{
+   coll->serverTree->scoreParam.fileScore = $2;
 }
       | servMINGEODUP servNUMBER
 {
@@ -244,6 +257,11 @@ line: servLABEL servSTRING
 {
   if (!server) YYERROR;
   strncpy(server->host, $2, MAX_SIZE_HOST);
+}
+    | servLASTCOMMIT servDATE
+{
+  if (!server) YYERROR;
+  server->lastCommit = $2;
 }
     | servNETWORKS networks
     | servGATEWAYS gateways

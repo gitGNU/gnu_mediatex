@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.11 2015/09/03 09:10:08 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.12 2015/09/03 13:02:33 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -237,9 +237,15 @@ serializeServer(Server* self, FILE* fd)
   Image* image = 0;
   char* string = 0;
   RGIT* curr = 0;
+  struct tm date;
 
   if(self == 0) {
     logMemory(LOG_ERR, "cannot serialize empty Server");
+    goto error;
+  }
+
+  if (localtime_r(&self->lastCommit, &date) == (struct tm*)0) {
+    logMemory(LOG_ERR, "localtime_r returns on error");
     goto error;
   }
   
@@ -253,6 +259,11 @@ serializeServer(Server* self, FILE* fd)
   if (!isEmptyString(self->host)) {
     fprintf(fd, "\t%-9s %s\n", "host", self->host);
   }
+  
+  fprintf(fd, "\t%-9s %04i-%02i-%02i,%02i:%02i:%02i \n", "lastCommit",
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec);
+  
   if (self->mdtxPort) {
     fprintf(fd, "\t%-9s %i\n", "mdtxPort", self->mdtxPort);
   }
@@ -369,7 +380,8 @@ createServerTree(void)
   memset(rc, 0, sizeof(ServerTree));
   strncpy(rc->aesKey, "01234567890abcdef", MAX_SIZE_AES);
 
-  rc->uploadTTL = MONTH;
+  rc->uploadTTL = DEFAULT_TTL_UPLOAD;
+  rc->serverTTL = DEFAULT_TTL_SERVER;
   rc->scoreParam = defaultScoreParam;
   rc->minGeoDup = DEFAULT_MIN_GEO;
 
@@ -468,11 +480,13 @@ serializeServerTree(Collection* coll)
 
   fprintf(fd, "\n# score parameters\n");
   printLapsTime(fd, "%-10s", "uploadTTL", self->uploadTTL);
+  printLapsTime(fd, "%-10s", "serverTTL", self->serverTTL);
   printLapsTime(fd, "%-10s", "suppTTL",  self->scoreParam.suppTTL);
   fprintf(fd, "%-10s %.2f\n", "maxScore", self->scoreParam.maxScore);
   fprintf(fd, "%-10s %.2f\n", "badScore", self->scoreParam.badScore);
   fprintf(fd, "%-10s %.2f\n", "powSupp",  self->scoreParam.powSupp);
   fprintf(fd, "%-10s %.2f\n", "factSupp", self->scoreParam.factSupp);
+  fprintf(fd, "%-10s %.2f\n", "fileScore", self->scoreParam.fileScore);
   fprintf(fd,  "%-10s %i", "minGeoDup", self->minGeoDup);
   fprintf(fd, "\n");
 
