@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.8 2015/09/03 09:10:08 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.9 2015/09/03 09:25:46 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -135,6 +135,7 @@ typedef struct UploadParams {
 #define DEFAULT_TTL_CACHE 15*DAY    // local-supply TTL on cache
 #define DEFAULT_TTL_QUERY 7*DAY     // final-query  TTL 
 #define DEFAULT_TTL_CHECK 6*MONTH   // support check TTL
+#define DEFAULT_TTL_FILE  2*MONTH   // file support check TTL
 #define DEFAULT_TTL_SUPP  5*YEAR    // support TTL
 #define DEFAULT_MAX_SCORE 10 // cf above
 #define DEFAULT_BAD_SCORE 1  // cf above

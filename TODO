@@ -3,13 +3,13 @@
 
 ** UPGRADE
 .....................................................
-- conf: fileTTL 
 - servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
 - serversTree->serverTTL = used to check lastCommit
+- upgrade.c: use lastCommit and serverTTL
 
 ** MOTD
-- check support files (fileTTL)
+- check support files (use fileTTL)
 - sort by collection:
 -- add to burn (localScore/mainScore)
 -- only show when mainScore<5 && localScore<5
@@ -114,6 +114,7 @@
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - #define for "supports/"
 - remove scoreParam and minGeoDup from serverTree->server
+- conf: fileTTL
 
 *** CLEAN-UP
 

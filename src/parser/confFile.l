@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.7 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: confFile.l,v 1.8 2015/09/03 09:25:46 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -168,6 +168,11 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
   checkttl {
     BEGIN(USERVALUE);
     return(confCHECKTTL);
+  }
+
+  filettl {
+    BEGIN(USERVALUE);
+    return(confFILETTL);
   }
 
   suppttl {

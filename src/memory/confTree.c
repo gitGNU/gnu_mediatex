@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.10 2015/08/23 23:39:16 nroche Exp $
+ * Version: $Id: confTree.c,v 1.11 2015/09/03 09:25:46 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -616,6 +616,7 @@ createConfiguration(void)
   conf->cacheTTL = DEFAULT_TTL_CACHE;
   conf->queryTTL = DEFAULT_TTL_QUERY;
   conf->checkTTL = DEFAULT_TTL_CHECK;
+  conf->fileTTL = DEFAULT_TTL_FILE;
   conf->scoreParam = defaultScoreParam;
   strncpy(conf->host, DEFAULT_HOST, MAX_SIZE_HOST);
   conf->sshPort = SSH_PORT;
@@ -676,6 +677,7 @@ destroyConfiguration(Configuration* self)
     self->cacheTTL = 0;
     self->queryTTL = 0;
     self->checkTTL = 0;
+    self->fileTTL = 0;
     self->hostKey = destroyString(self->hostKey);
 
     self->allNetworks = 
@@ -907,6 +909,7 @@ serializeConfiguration(Configuration* self)
 
   fprintf(fd, "\n# local support parameters\n");
   printLapsTime(fd,  "%-10s", "checkTTL", self->checkTTL);
+  printLapsTime(fd,  "%-10s", "fileTTL", self->fileTTL);
   printLapsTime(fd, "%-10s", "suppTTL",  self->scoreParam.suppTTL);
   fprintf(fd, "%-10s %.2f\n", "maxScore", self->scoreParam.maxScore);
   fprintf(fd, "%-10s %.2f\n", "badScore", self->scoreParam.badScore);

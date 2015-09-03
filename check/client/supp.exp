@@ -213,6 +213,7 @@ queryTTL   1 Week
 
 # local support parameters
 checkTTL   6 Month
+fileTTL    2 Month
 suppTTL    5 Year
 maxScore   10.00
 badScore   1.00

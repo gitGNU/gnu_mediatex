@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.9 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: confFile.y,v 1.10 2015/09/03 09:25:46 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -100,6 +100,7 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 %token          confCACHETTL
 %token          confQUERYTTL
 %token          confCHECKTTL
+%token          confFILETTL
 %token          confSUPPTTL
 %token          confMAXSCORE
 %token          confBADSCORE
@@ -248,6 +249,11 @@ confLine: confHOST confSTRING
 {
   logParser(LOG_DEBUG, "line %-3i %s", LINENO, "check TTL");
   getConfiguration()->checkTTL = $2*$3;
+}
+       | confFILETTL confNUMBER confTIME
+{
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "check TTL");
+  getConfiguration()->fileTTL = $2*$3;
 }
        | confSUPPTTL confNUMBER confTIME
 {
