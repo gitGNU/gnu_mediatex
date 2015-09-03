@@ -2,17 +2,18 @@
 *** TO CORRECT: cache policy    
 
 ** MOTD
-- check support files (use fileTTL)
-- sort by collection:
--- add to burn (localScore/mainScore)
--- only show when mainScore<5 && localScore<5
--- list embedded content too if not all having same score
--- notify orphanes
--- display cache size (all/used/allocated/free)
+- * local supports *
+-- check support files (use fileTTL)
+-- SUPP wanted FOR PERIDIC CHECK | by coll COLL
+- * content to burn * (by collection)
+-- ABSOLUTE_PATH (local score / main score) only upper file
+- * orphanes * (by collection)
+-- factorize tests from client::upload.c
+- * cache size * (by collection)
+-- all/used/allocated/free
 
 ** HTML
-- notify orphanes
-- display cache size (all/used/allocated/free) ?
+- notify orphanes ?
 
 ** LOGS
 - make cron upload the cvsroot collection module
