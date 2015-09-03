@@ -1,15 +1,15 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
 [info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
-[info upgrade.c] laps < suppTTL: pow ( 0.199452, 1/2.00 ) * 9.00 + 1.00 = 5.02
+[info upgrade.c] file: = 10.00
 [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
 [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
 [info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
 [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (/HERE/misc/logo.png)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.40)) ) * 1.00 = 0.26
+[info upgrade.c] file: = 10.00
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (/HERE/misc/logoP1.iso)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (0.60)) ) * 1.00 = 0.45
+[info upgrade.c] file: = 10.00
 [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP12_logo.png)
 [info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.80)) ) * 1.00 = 0.22
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP23_logo.part1)
@@ -72,8 +72,6 @@
 Mediatex's message of the day
 *****************************
 Need to check your local supports:
-- /HERE/misc/logo.png
-- /HERE/misc/logoP1.iso
 - SUPP11_logo.png
 - SUPP12_logo.png
 - SUPP21_logo.part1

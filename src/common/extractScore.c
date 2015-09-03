@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.12 2015/08/23 23:39:15 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.13 2015/09/03 14:06:50 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -41,7 +41,7 @@ isNewIncoming(Collection* coll, Archive* archive)
 {
   int rc = FALSE;
 
-  if (!archive->uploadTime) goto end;
+  if (!isIncoming(coll, archive)) goto end;
   if (currentTime() > archive->uploadTime + coll->serverTree->uploadTTL) {
     logCommon(LOG_INFO, "obsolete incoming archive: %s:%lli", 
 	      archive->hash, (long long int)archive->size); 
@@ -74,6 +74,7 @@ populateExtractTree(Collection* coll)
   Archive* archive = 0;
   Image* image = 0;
   int i = 0;
+  time_t now = 0;
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "populateExtractTree: %s", coll->label);
@@ -90,6 +91,9 @@ populateExtractTree(Collection* coll)
  	    "cannot populate tree with an empty ServerTree");
     goto error;
   }
+  
+  // date
+  if ((now = currentTime()) == -1) goto error;
 
   // for each server
   rgRewind(serverTree->servers);
@@ -122,6 +126,10 @@ populateExtractTree(Collection* coll)
 
       i=0;
       while((image = rgNext(archive->images))) {
+
+	// ignore image from a mute server
+	if (image->server->lastCommit + serverTree->serverTTL < now) continue;
+	
 	archive->imageScore += image->score;
 	logCommon(LOG_DEBUG, "%c %5.2f", (i > 1)?'+':' ', image->score);
 	++i;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.14 2015/08/30 17:07:57 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.15 2015/09/03 14:06:49 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -27,12 +27,6 @@
 #include "memory/utFunc.h"
 
 // share by supports and collection
-/*static char supportNames[3][3][MAX_SIZE_STRING] = { */
-/*   {"SUPP11_logo.png", "SUPP12_logo.png", "SUPP13_logo.png"},  */
-/*   {"SUPP21_logo.part1", "SUPP22_logo.part1", "SUPP23_logo.part1"},  */
-/*   {"SUPP31_logo.part2", "SUPP32_logo.part2", "SUPP33_logo.part2"} */
-/* }; */
-
 static char supportNames[3][3][MAX_SIZE_STRING];
 
 /*=======================================================================
@@ -724,6 +718,7 @@ createExempleServerTree(Collection* coll)
     server->mdtxPort = mdtxPorts[i];
     server->sshPort = sshPorts[i];
     server->wwwPort = wwwPorts[i];
+    server->lastCommit = currentTime();
 
     // keys
     if (!(server->userKey = createString(userKeys[i]))) goto error;

@@ -1,10 +1,6 @@
 
 *** TO CORRECT: cache policy    
 
-** UPGRADE
-.....................................................
-- upgrade.c: use lastCommit and serverTTL
-
 ** MOTD
 - check support files (use fileTTL)
 - sort by collection:
@@ -115,6 +111,8 @@
 - servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
 - serversTree->serverTTL = used to check lastCommit
+- upgrade.c: use lastCommit and serverTTL
+- scoreSupport.c: use fileScore
 
 *** CLEAN-UP
 
@@ -140,8 +138,8 @@
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- move date parser code into perm.c ?
 - refuse "^../" as content extraction rule
-- use an alias for supports file ?
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - move dirname into extract rule header to reduce extract.txt file size

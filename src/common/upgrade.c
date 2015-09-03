@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.10 2015/08/16 20:35:09 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.11 2015/09/03 14:06:50 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -40,6 +40,7 @@ scoreSupport(Support* supp, ScoreParam *p)
   Configuration* conf = 0;
   time_t now = 0;
   time_t laps = 0;
+  time_t ttl = 0;
   int rc = FALSE;
 
   checkSupport(supp);
@@ -47,9 +48,7 @@ scoreSupport(Support* supp, ScoreParam *p)
 	  supp->fullHash, supp->size, supp->name);
 
   if (!(conf = getConfiguration())) goto error;
-
-  // date
-  if ((now = currentTime()) == -1) goto error;
+  if ((now = currentTime()) == -1) goto error;  
   supp->score = 0; // obsolete: need to be checked
 
   // check data consistancy
@@ -69,16 +68,22 @@ scoreSupport(Support* supp, ScoreParam *p)
   }
 
   // check support validity
+  ttl = (*supp->name == '/')?conf->fileTTL:conf->checkTTL;
   laps = now - supp->lastCheck;
-  if (conf->checkTTL < 0 ||
-      (conf->checkTTL >= 0 &&
-       laps > conf->checkTTL)) {
+  if (ttl < 0 || (ttl >= 0 && laps > ttl)) {
     logCommon(LOG_WARNING, "\"%s\" support have expired since %d days",
-    	    supp->name, laps/(60*60*24));
+	      supp->name, laps/(60*60*24));
     // score = 0: unchecked support for too many time (may be broken)
     goto end;
   }
 
+  // static score for support file
+  if (*supp->name == '/') {
+    supp->score = p->fileScore;
+    logCommon(LOG_INFO, "file: = %.2f", supp->score);
+    goto end;
+  }
+  
   // compute a support score base on its age
   laps = now - supp->firstSeen;
 
@@ -350,7 +355,7 @@ scanCvsClientDirectory(Collection* coll, char* path)
  * Input      : Collection* coll = collection to upgrade              
  * Output     : TRUE on success 
 
- * Note       : Should not be called by the server (to save memory).
+ * Note       : Must only be call by client (nor server or cgi).
  *              This function do almost all the consistency job:
  *              - re-compute the local image's score
  *              - update own configuration values into servers.txt
@@ -399,6 +404,9 @@ upgradeCollection(Collection* coll)
       || !(localhost->user = catString(localhost->user, "-"))
       || !(localhost->user = catString(localhost->user, coll->label)))
     goto error;
+
+  // update lastCommit
+  if (!(localhost->lastCommit = currentTime())) goto error;
 
   // get networks and gateway from configuration
   ring = coll->networks;
