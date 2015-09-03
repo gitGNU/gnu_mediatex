@@ -24,6 +24,7 @@
 <P>
 <UL>
 <LI>fingerprint: <code>6b18ed0194b0fbadd08e0a13cccda00e</code></LI>
+<LI>last commit: <code>2010-01-01,01:00:00</code></LI>
 <LI>mdtx port: <code>6560</code></LI>
 <LI>ssh port: <code>22</code></LI>
 </UL>
@@ -75,6 +76,7 @@ Provide images: 2
 <P>
 <UL>
 <LI>fingerprint: <code>746d6ceeb76e05cfa2dea92a1c5753cd</code></LI>
+<LI>last commit: <code>2010-01-01,01:00:00</code></LI>
 <LI>mdtx port: <code>11111</code></LI>
 <LI>ssh port: <code>22</code></LI>
 </UL>
@@ -114,6 +116,7 @@ Provide images: 1
 <P>
 <UL>
 <LI>fingerprint: <code>bedac32422739d7eced624ba20f5912e</code></LI>
+<LI>last commit: <code>2010-01-01,01:00:00</code></LI>
 <LI>mdtx port: <code>33333</code></LI>
 <LI>ssh port: <code>2222</code></LI>
 </UL>
@@ -1160,6 +1163,8 @@ should be burned into supports:<!--#include virtual='../header.shtml' -->
 
 Score parameters:
 <UL>
+<LI>serverTTL : 2 Week
+</LI>
 <LI>uploadTTL : 1 Month
 </LI>
 <LI>suppTTL   : 5 Year
@@ -1171,6 +1176,8 @@ Score parameters:
 <LI>powSupp   : 2.00
 </LI>
 <LI>factSupp  : 2.00
+</LI>
+<LI>fileScore : 10.00
 </LI>
 <LI>minGeoDup : 2</LI>
 </UL>

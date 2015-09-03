@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.11 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.12 2015/09/03 15:03:40 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -517,8 +517,14 @@ serializeHtmlServer(Collection* coll, Server* server)
   char url[128];
   char text[128];
   char score[8];
+  struct tm date;
 
   checkServer(server);
+  if (localtime_r(&server->lastCommit, &date) == (struct tm*)0) {
+    logMain(LOG_ERR, "localtime_r returns on error");
+    goto error;
+  }
+  
   if (!(path = createString(coll->htmlScoreDir))) goto error;
   if (!(path = catString(path, "/servers/srv_"))) goto error;
   if (!(path = catString(path, server->fingerPrint))) goto error;
@@ -551,6 +557,13 @@ serializeHtmlServer(Collection* coll, Server* server)
   htmlLiOpen(fd);
   if (!fprintf(fd, _("fingerprint: "))) goto error;
   htmlVerb(fd, server->fingerPrint);
+  htmlLiClose(fd);
+  htmlLiOpen(fd);
+  if (!fprintf(fd, _("last commit: "))) goto error;
+  if (!sprintf(text, "%04i-%02i-%02i,%02i:%02i:%02i",
+	       date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	       date.tm_hour, date.tm_min, date.tm_sec)) goto error;
+  htmlVerb(fd, text);
   htmlLiClose(fd);
   htmlLiOpen(fd);
   if (!fprintf(fd, _("mdtx port: "))) goto error;
@@ -1023,6 +1036,9 @@ serializeHtmsScoreIndex(Collection* coll)
   if (!fprintf(fd, _("\nScore parameters:\n"))) goto error;
   htmlUlOpen(fd);
   htmlLiOpen(fd);
+  printLapsTime(fd, "%-10s:", "serverTTL",  serverTree->serverTTL);
+  htmlLiClose(fd);
+  htmlLiOpen(fd);
   printLapsTime(fd, "%-10s:", "uploadTTL",  serverTree->uploadTTL);
   htmlLiClose(fd);
   htmlLiOpen(fd);
@@ -1039,6 +1055,9 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlLiClose(fd);
   htmlLiOpen(fd);
   fprintf(fd, "%-10s: %.2f\n", "factSupp", serverTree->scoreParam.factSupp);
+  htmlLiClose(fd);
+  htmlLiOpen(fd);
+  fprintf(fd, "%-10s: %.2f\n", "fileScore", serverTree->scoreParam.fileScore);
   htmlLiClose(fd);
   htmlLiOpen(fd);
   fprintf(fd,  "%-10s: %i", "minGeoDup", serverTree->minGeoDup);

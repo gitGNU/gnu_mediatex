@@ -11,9 +11,8 @@
 -- display cache size (all/used/allocated/free)
 
 ** HTML
-- notify server lastCommit
 - notify orphanes
-- display cache size (all/used/allocated/free)
+- display cache size (all/used/allocated/free) ?
 
 ** LOGS
 - make cron upload the cvsroot collection module
@@ -113,6 +112,9 @@
 - serversTree->serverTTL = used to check lastCommit
 - upgrade.c: use lastCommit and serverTTL
 - scoreSupport.c: use fileScore
+
+** HTML
+- notify server lastCommit
 
 *** CLEAN-UP
 
