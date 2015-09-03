@@ -6,6 +6,7 @@
 - conf: fileTTL 
 - servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
+- serversTree->serverTTL = used to check lastCommit
 
 ** MOTD
 - check support files (fileTTL)
@@ -112,6 +113,7 @@
 ** UPGRADE
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - #define for "supports/"
+- remove scoreParam and minGeoDup from serverTree->server
 
 *** CLEAN-UP
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.7 2015/08/27 10:51:51 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.8 2015/09/03 09:10:08 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -172,6 +172,7 @@ struct ScoreParam {
   float  powSupp;  // power that reduce score from age of supports (2)
   float  factSupp; // factor that reduce score of out-dated supports (2)
   time_t suppTTL;  // support time to live (around 5 years)
+  float fileScore; // score for local support files
 };
 
 #define DEFAULT_SCORE_PARAM {			\

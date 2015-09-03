@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.10 2015/08/23 23:39:16 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.11 2015/09/03 09:10:08 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -175,8 +175,6 @@ createServer(void)
   // note: we do not set default ports (to allow to change them)
   rc->score = -1;
   rc->address.sin_addr.s_addr = LOCALHOST; // localhost by default
-  rc->scoreParam = (ScoreParam)DEFAULT_SCORE_PARAM;
-  rc->minGeoDup = DEFAULT_MIN_GEO;
 
   if ((rc->networks = createRing()) == 0) goto error;
   if ((rc->gateways = createRing()) == 0) goto error;

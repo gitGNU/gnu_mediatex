@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.6 2015/07/06 16:05:18 nroche Exp $
+ * Version: $Id: confTree.h,v 1.7 2015/09/03 09:10:08 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -141,7 +141,8 @@ struct Configuration {
   time_t queryTTL;  // time to live for queries in memory
 
   /* local parameters */
-  time_t checkTTL;  // time period between 2 md5 checks on support
+  time_t checkTTL;  // time period between 2 md5 checks on supports
+  time_t fileTTL;   // time period between 2 md5 checks on support files
   ScoreParam scoreParam; // parameter use to compute score
 
   /* keys (not parsed from the configuration file) */

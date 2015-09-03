@@ -38,4 +38,3 @@
 [notice utmessage.c] reply : 304 message contains a record not related to author 746d6ceeb76e05cfa2dea92a1c5753cd but aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 [info confTree.c] free configuration
 [info utmessage.c] exit on success
-[warning alloc.c] Memory leaks: n6, sum= 496

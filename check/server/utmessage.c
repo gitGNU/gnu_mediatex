@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmessage.c,v 1.2 2015/08/30 17:08:00 nroche Exp $
+ * Version: $Id: utmessage.c,v 1.3 2015/09/03 09:10:07 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -123,6 +123,7 @@ main(int argc, char** argv)
 
   rc = TRUE;
  error:
+  destroyServer(server);
   if (connexion) destroyRecordTree(connexion->message);
   free (connexion);
   freeConfiguration();
