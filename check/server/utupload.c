@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.2 2015/08/30 17:08:00 nroche Exp $
+ * Version: $Id: utupload.c,v 1.3 2015/09/04 15:30:24 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -83,7 +83,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

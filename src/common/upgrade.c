@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.11 2015/09/03 14:06:50 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.12 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -155,7 +155,7 @@ scoreLocalImages(Collection* coll)
 
   // for each support names:
   rgRewind(coll->supports);
-  while((supp = rgNext(coll->supports))) {
+  while ((supp = rgNext(coll->supports))) {
  
     // compute score on support (using collection's parameters)
     if (!scoreSupport(supp, &serverTree->scoreParam)) goto error;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.12 2015/08/17 01:31:52 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.13 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -610,7 +610,7 @@ logRecordTree(int logModule, int logPriority,
 
   rc = TRUE;
   if (self->records) {
-    while((record = rgNext_r(self->records, &curr)))
+    while ((record = rgNext_r(self->records, &curr)))
       if (!logRecord(logModule, logPriority, self, record)) rc = FALSE;
   }
   
@@ -692,7 +692,7 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 
   if(self) {
     if (self->records) {
-      while((record = rgNext_r(self->records, &curr)))
+      while ((record = rgNext_r(self->records, &curr)))
 	if (!serializeRecord(self, record)) rc=FALSE;
     }
   }
@@ -864,7 +864,7 @@ diseaseRecordTree(RecordTree* self)
   logMemory(LOG_DEBUG, "Disease %s related record tree", 
 	  self->collection->label);
   
-  while((record = rgHead(self->records))) {
+  while ((record = rgHead(self->records))) {
     if (!delRecord(self->collection, record)) goto error;
     rgRemove(self->records);
   }

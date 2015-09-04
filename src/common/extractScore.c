@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.13 2015/09/03 14:06:50 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.14 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -103,7 +103,7 @@ populateExtractTree(Collection* coll)
     server->score = -1;
     if (server->images) {
       rgRewind(server->images);
-      while((image = rgNext(server->images))) {
+      while ((image = rgNext(server->images))) {
 	if (server->score == -1 || image->score < server->score) {
 	  server->score = image->score;
 	}
@@ -125,7 +125,7 @@ populateExtractTree(Collection* coll)
 	      archive->hash, archive->size);
 
       i=0;
-      while((image = rgNext(archive->images))) {
+      while ((image = rgNext(archive->images))) {
 
 	// ignore image from a mute server
 	if (image->server->lastCommit + serverTree->serverTTL < now) continue;
@@ -231,7 +231,7 @@ computeArchive(Archive* self, int depth)
   // score = max (from container's scores)
   if (self->fromContainers) {
     rgRewind(self->fromContainers);
-    while((asso = rgNext(self->fromContainers))) {
+    while ((asso = rgNext(self->fromContainers))) {
       if (!computeContainer(asso->container, depth+1)) goto error;
       if (self->extractScore < asso->container->score) {
 	self->extractScore = asso->container->score;

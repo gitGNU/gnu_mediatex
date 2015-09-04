@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.12 2015/09/03 13:02:33 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.13 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -320,7 +320,7 @@ serializeServer(Server* self, FILE* fd)
       image = rgNext_r(self->images, &curr);
       if (image) fprintf(fd, ",\n\t\t  ");
     }
-    while(image);
+    while (image);
     fprintf(fd, "\n");
   } 
 
@@ -492,7 +492,7 @@ serializeServerTree(Collection* coll)
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext_r(self->servers, &curr))) {
+    while ((server = rgNext_r(self->servers, &curr))) {
       if (!serializeServer(server, fd)) goto error;
     }
   }
@@ -541,7 +541,7 @@ getImage(Collection* coll, Server* server, Archive* archive)
 	  (long long int)archive->size);
   
   // look for image
-  while((rc = rgNext_r(server->images, &curr)))
+  while ((rc = rgNext_r(server->images, &curr)))
     if (!cmpArchive(&rc->archive, &archive)) break;
 
  error:
@@ -671,7 +671,7 @@ getServer(Collection* coll, char* fingerPrint)
   logMemory(LOG_DEBUG, "getServer %s", fingerPrint);
   
   // look for server
-  while((rc = rgNext_r(coll->serverTree->servers, &curr)))
+  while ((rc = rgNext_r(coll->serverTree->servers, &curr)))
     if (!strncmp(rc->fingerPrint, fingerPrint, MAX_SIZE_HASH)) break;
 
  error:
@@ -748,7 +748,7 @@ delServer(Collection* coll, Server* server)
     if (!delImage(coll, img)) goto error;
 
   // delete records
-  while((rec = rgHead(server->records)))
+  while ((rec = rgHead(server->records)))
     if (!delRecord(coll, rec)) goto error;
 
   // delete server from collection ring
@@ -850,7 +850,7 @@ diseaseServerTree(Collection* coll)
 
   // disease servers
   curr = 0;
-  while((server = rgNext_r(self->servers, &curr))) {
+  while ((server = rgNext_r(self->servers, &curr))) {
     if (!diseaseServer(coll, server)) goto error;
   }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utssh.c,v 1.2 2015/08/10 12:24:24 nroche Exp $
+ * Version: $Id: utssh.c,v 1.3 2015/09/04 15:30:17 nroche Exp $
  * Project: MediaTeX
  * Module : ssh
 
@@ -71,7 +71,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
+ * Version: $Id: md5sum.c,v 1.8 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -193,7 +193,7 @@ computeQuickMd5(int fd, ssize_t *sum, MD5_CTX *c,
   MD5_Init(c);
   bytes=read(fd, buf, 512);
 
-  while((!size || *sum < size) &&
+  while ((!size || *sum < size) &&
 	*sum < MEGA && bytes > 0) {
     if (*sum + bytes > MEGA) bytes -= ((*sum + bytes) - MEGA);
     *sum += bytes;
@@ -267,7 +267,7 @@ computeFullMd5(int fd, ssize_t *sum, MD5_CTX *c,
   }
   
   bytes=read(fd, buf, 512);
-  while((!size || *sum < size) && bytes > 0) {
+  while ((!size || *sum < size) && bytes > 0) {
     *sum += bytes;
     MD5_Update(c, buf, bytes);
     env.progBar.cur = *sum;

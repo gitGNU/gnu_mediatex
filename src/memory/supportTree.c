@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.8 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.9 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -197,7 +197,7 @@ serializeSupports()
 
   if (!isEmptyRing(conf->supports)) {
     if (!rgSort(conf->supports, cmpSupport)) goto error;
-    while((supp = rgNext_r(conf->supports, &curr))) {
+    while ((supp = rgNext_r(conf->supports, &curr))) {
       if (!serializeSupport(supp, fd)) goto error;
     }
   }
@@ -237,7 +237,7 @@ getSupport(char* name)
   logMemory(LOG_DEBUG, "getSupport %s", name);
   
   // look for support
-  while((rc = rgNext_r(conf->supports, &curr)))
+  while ((rc = rgNext_r(conf->supports, &curr)))
     if (!strncmp(rc->name, name, MAX_SIZE_STRING)) break;
 
  error:
@@ -302,7 +302,7 @@ delSupport(Support* self)
 
   // delete support from collections rings
   curr = 0;
-  while((coll = rgNext_r(conf->collections, &curr)))
+  while ((coll = rgNext_r(conf->collections, &curr)))
     if (!delSupportFromCollection(self, coll)) goto error;
   
   // delete support from configuration ring

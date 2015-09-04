@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.19 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: cache.c,v 1.20 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -216,7 +216,7 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
 
   // try to look for archive in md5sums file
   archives = coll->cacheTree->archives;
-  while((archive = rgNext_r(archives, &curr))) {
+  while ((archive = rgNext_r(archives, &curr))) {
     
     if (archive->size != statBuffer.st_size) continue;
     if ((record = archive->localSupply) == 0) continue;
@@ -500,7 +500,7 @@ quickScanAll(void)
   conf = getConfiguration();
   if (conf->collections) {
     if (!expandConfiguration()) goto error;
-    while((coll = rgNext_r(conf->collections, &curr))) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
       if (!quickScan(coll)) goto error;
       if (!cleanCacheTree(coll)) goto error;
     }

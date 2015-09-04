@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.13 2015/08/31 00:14:51 nroche Exp $
+ * Version: $Id: openClose.c,v 1.14 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -192,7 +192,7 @@ int loadRecords(Collection* coll)
   coll->cacheTree->recordTree->messageType = DISK;
   curr = 0;
 
-  while((record = rgNext_r(coll->cacheTree->recordTree->records, &curr)) 
+  while ((record = rgNext_r(coll->cacheTree->recordTree->records, &curr)) 
 	!= 0) {
     if (!addCacheEntry(coll, record)) goto error;
   }
@@ -515,9 +515,9 @@ loadCollection(Collection* coll, int collFiles)
 }
 
 /*=======================================================================
- * Function   : wasModifiedCollection
+ * Function   : wasModifiedColl
  * Description: Call serializer on private files
- * Synopsis   : int wasModifiedCollection()
+ * Synopsis   : int wasModifiedColl()
  * Input      : N/A
  * Output     : TRUE on success
  =======================================================================*/
@@ -1157,7 +1157,7 @@ clientLoop(int (*callback)(char*))
   if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
   if (conf->collections) {
-    while((coll = rgNext_r(conf->collections, &curr))) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
       if (!callback(coll->label)) goto error;
       
       // free memory as soon as possible
@@ -1197,7 +1197,7 @@ serverLoop(int (*callback)(Collection*))
   if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();
   if (conf->collections) {
-    while((coll = rgNext_r(conf->collections, &curr))) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
       if (!callback(coll)) goto error;
     }
   }

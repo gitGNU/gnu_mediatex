@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.10 2015/08/19 01:09:10 nroche Exp $
+ * Version: $Id: threads.c,v 1.11 2015/09/04 15:30:28 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -472,7 +472,7 @@ int checkMessage(Connexion* con)
   
   // match server from fingerprint in message header
   // (may be masqueraded by a Nat server)
-  while((server = rgNext_r(coll->serverTree->servers, &curr))) {
+  while ((server = rgNext_r(coll->serverTree->servers, &curr))) {
     if (!(strncmp(con->message->fingerPrint, server->fingerPrint, 
 		  MAX_SIZE_HASH))) break;
   }
@@ -485,7 +485,7 @@ int checkMessage(Connexion* con)
   // check all records are related to the message's author
   if (!isEmptyRing(con->message->records)) {
     curr = 0;
-    while((record = rgNext_r(con->message->records, &curr))) {
+    while ((record = rgNext_r(con->message->records, &curr))) {
       if (server != record->server) {
 	sprintf(con->status, status[2], 
 		con->message->fingerPrint, record->server->fingerPrint);

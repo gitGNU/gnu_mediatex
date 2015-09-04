@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utardsm.c,v 1.3 2015/08/13 21:14:30 nroche Exp $
+ * Version: $Id: utardsm.c,v 1.4 2015/09/04 15:30:18 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -87,7 +87,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 
@@ -142,29 +142,29 @@ main(int argc, char** argv)
 
   if (!rgSort(ring, cmpPtr)) goto error;
   fprintf(hout, "E1: ");
-  while((it = rgNext(ring))) fprintf(hout, "%c", *it);
+  while ((it = rgNext(ring))) fprintf(hout, "%c", *it);
   fprintf(hout, "\n");
 
   if (!rgSort(ring2, cmpPtr)) goto error;
   fprintf(hout, "E2: ");
-  while((it = rgNext(ring2))) fprintf(hout, "%c", *it);
+  while ((it = rgNext(ring2))) fprintf(hout, "%c", *it);
   fprintf(hout, "\n");
   
   if (!(cont = rgInter(ring, ring2))) goto error;
   fprintf(hout, "E1 /\\ E2: ");
-  while((it = rgNext(cont))) fprintf(hout, "%c", *it);
+  while ((it = rgNext(cont))) fprintf(hout, "%c", *it);
   fprintf(hout, "\n");
   cont = destroyOnlyRing(cont);
 
   if (!(cont = rgUnion(ring, ring2))) goto error;
   fprintf(hout, "E1 \\/ E2: ");
-  while((it = rgNext(cont))) fprintf(hout, "%c", *it);
+  while ((it = rgNext(cont))) fprintf(hout, "%c", *it);
   fprintf(hout, "\n");
   cont = destroyOnlyRing(cont);
 
   if (!(cont = rgMinus(ring, ring2))) goto error;
   fprintf(hout, "E1 - E2: ");
-  while((it = rgNext(cont))) fprintf(hout, "%c", *it);
+  while ((it = rgNext(cont))) fprintf(hout, "%c", *it);
   fprintf(hout, "\n");
   cont = destroyOnlyRing(cont);
 
@@ -177,7 +177,7 @@ main(int argc, char** argv)
   fprintf(hout, 
 	  "Enter items, one per line.\nEnd the list by EOF (ctl-d)\n");
 		
-  while(fgets(buffer, BUFSIZ, hin)) {
+  while (fgets(buffer, BUFSIZ, hin)) {
     if (!strcmp(buffer, "quit\n")) break;
 
     /*	content acquisition :	*/
@@ -200,17 +200,17 @@ main(int argc, char** argv)
   		       (void*(*)(void*, const void*)) copyString))
       == 0) goto error;
 
-  while((it = (char *)rgNext(ring)) != (char *)0) {
+  while ((it = (char *)rgNext(ring)) != (char *)0) {
     /*	forward :	*/
     fprintf(hout, "fw : %s", it);
   }
   
-  while((it = (char *)rgPrevious(ring)) != (char *)0) {
+  while ((it = (char *)rgPrevious(ring)) != (char *)0) {
     /*	backward :	*/
     fprintf(hout, "bk : %s", it);
   }
 
-  while((it = (char *)rgNext(ring2)) != (char *)0) {
+  while ((it = (char *)rgNext(ring2)) != (char *)0) {
     /*	forward :	*/
     fprintf(hout, "bk2 : %s", it);
   }
@@ -221,14 +221,14 @@ main(int argc, char** argv)
 
   fprintf(hout, "first ring (your inputs)\n");
   rgRewind(cont);
-  while((it = (char *)rgNext(cont)) != (char *)0) {
+  while ((it = (char *)rgNext(cont)) != (char *)0) {
     /*	forward :	*/
     fprintf(hout, "fw : %s", it);
   }
 
   fprintf(hout, "ring sorted\n");
   rgRewind(ring);
-  while((it = (char *)rgNext(ring)) != (char *)0) {
+  while ((it = (char *)rgNext(ring)) != (char *)0) {
     /*	forward :	*/
     fprintf(hout, "fw : %s", it);
   }

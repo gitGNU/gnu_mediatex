@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.7 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: conf.c,v 1.8 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -204,7 +204,7 @@ mdtxListCollection()
       }
     }
     
-    while((collection = rgNext(conf->collections))) {
+    while ((collection = rgNext(conf->collections))) {
       printf("%s%s", nb++?" ":"", collection->label);
     }
   }
@@ -241,7 +241,7 @@ mdtxShareSupport(char* sLabel, char* cLabel)
   if (cLabel == 0) {
     if (conf->collections) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections))) {
+      while ((coll = rgNext(conf->collections))) {
 	if (!addSupportToCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }
@@ -290,7 +290,7 @@ mdtxWithdrawSupport(char* sLabel, char* cLabel)
   if (cLabel == 0) {
     if (conf->collections) {
       rgRewind(conf->collections);
-      while((coll = rgNext(conf->collections))) {
+      while ((coll = rgNext(conf->collections))) {
 	if (!delSupportFromCollection(supp, coll)) goto error;
 	if (!wasModifiedCollection(coll, SERV)) goto error;
       }

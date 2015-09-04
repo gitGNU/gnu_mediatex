@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: catalogTree.c,v 1.10 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *
@@ -981,7 +981,7 @@ serializeCatalogTree(Collection* coll, CvsFile* fd)
   if (!isEmptyRing(self->categories)) {
     //rgSort(self->categories, cmpCategory);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories))) {
+    while ((category = rgNext(self->categories))) {
       if (!serializeCategory(category, fd)) goto error;
     }
   }
@@ -1161,7 +1161,7 @@ getAssoCarac(Collection* coll, Carac* carac, CType type,
   }
 
   // look for assoCarac
-  while((rc = rgNext_r(ring, &curr))) {
+  while ((rc = rgNext_r(ring, &curr))) {
     if (carac == rc->carac && !strcmp(rc->value, value)) break;
   }
   
@@ -1315,7 +1315,7 @@ delRole(Collection* coll, Role* self)
   logMemory(LOG_DEBUG, "delRole %s", self->label);
 
   // delete related assossiations
-  while((aR = rgHead(self->assos))) {
+  while ((aR = rgHead(self->assos))) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
@@ -1359,7 +1359,7 @@ getAssoRole(Collection* coll,
 	  human->firstName, human->secondName, document->label);
 
   // look for assoRole
-  while((rc = rgNext_r(document->assoRoles, &curr))) {
+  while ((rc = rgNext_r(document->assoRoles, &curr))) {
     if (rc->human == human && rc->role == role) break;
   }
   
@@ -1631,12 +1631,12 @@ delHuman(Collection* coll, Human* self)
   logMemory(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
 
   // delete assoRole associations
-  while((aR = rgHead(self->assoRoles)))
+  while ((aR = rgHead(self->assoRoles)))
     if (!delAssoRole(coll, aR)) goto error;
 
   // delete human from categories rings
   curr = 0;
-  while((cat = rgNext_r(self->categories, &curr))) {
+  while ((cat = rgNext_r(self->categories, &curr))) {
     if ((curr2 = rgHaveItem(cat->humans, self))) {
       rgRemove_r(cat->humans, &curr2);
     }
@@ -1896,13 +1896,13 @@ delDocument(Collection* coll, Document* self)
 
   // delete assoRole associations
   curr = 0;
-  while((aR = rgNext_r(self->assoRoles, &curr))) {
+  while ((aR = rgNext_r(self->assoRoles, &curr))) {
     if (!delAssoRole(coll, aR)) goto error;
   }
 
   // delete document from categories rings
   curr = curr2 = 0;
-  while((cat = rgNext_r(self->categories, &curr))) {
+  while ((cat = rgNext_r(self->categories, &curr))) {
     if ((curr2 = rgHaveItem(cat->documents, self))) {
       rgRemove_r(cat->documents, &curr2);
     }
@@ -1910,7 +1910,7 @@ delDocument(Collection* coll, Document* self)
 
   // delete document from archive rings
   curr = curr2 = 0;
-  while((arch = rgNext_r(self->archives, &curr))) {
+  while ((arch = rgNext_r(self->archives, &curr))) {
     if ((curr2 = rgHaveItem(arch->documents, self))) {
       rgRemove_r(arch->documents, &curr2);
     }
@@ -1949,13 +1949,13 @@ delArchiveCatalog(Collection* coll, Archive* self)
 	  self->hash, (long long int)self->size);
 
   // delete assoCarac associations
-  while((aC = rgHead(self->assoCaracs))) {
+  while ((aC = rgHead(self->assoCaracs))) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(aC);
   }
 
   // delete from document rings
-  while((doc = rgHead(self->documents))) {
+  while ((doc = rgHead(self->documents))) {
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   }
 
@@ -2061,7 +2061,7 @@ getCategory(Collection* coll, char* label)
   logMemory(LOG_DEBUG, "getCategory %s", label);
   
   // look for category
-  while((rc = rgNext_r(coll->catalogTree->categories, &curr)) 
+  while ((rc = rgNext_r(coll->catalogTree->categories, &curr)) 
 	!= 0)
     if (!strcmp(rc->label, label)) break;
   
@@ -2130,17 +2130,17 @@ delCategory(Collection* coll, Category* self)
   logMemory(LOG_DEBUG, "delCategory %s", self->label);
 
   // delete category from fathers ring
-  while((cat = rgHead(self->fathers)))
+  while ((cat = rgHead(self->fathers)))
     if (!delCategoryLink(coll, cat, self)) goto error;
 
   // delete category from childs ring  curr = 0;
-  while((cat = rgHead(self->childs)))
+  while ((cat = rgHead(self->childs)))
     if (!delCategoryLink(coll, self, cat)) goto error;
 
   // delete category from humans rings
   curr = 0;
   curr2 = 0;
-  while((hum = rgNext_r(self->humans, &curr))) {
+  while ((hum = rgNext_r(self->humans, &curr))) {
     if ((curr2 = rgHaveItem(hum->categories, self))) {
       rgRemove_r(hum->categories, &curr2);
     }
@@ -2149,7 +2149,7 @@ delCategory(Collection* coll, Category* self)
   // delete category from documents rings
   curr = 0;
   curr2 = 0;
-  while((doc = rgNext_r(self->documents, &curr))) {
+  while ((doc = rgNext_r(self->documents, &curr))) {
     if ((curr2 = rgHaveItem(doc->categories, self))) {
       rgRemove_r(doc->categories, &curr2);
     }
@@ -2195,11 +2195,11 @@ diseaseCatalogTree(Collection* coll)
   logMemory(LOG_DEBUG, "diseaseCatalogTree %s", coll);
  
   // disease roles
-  while((role = rgHead(self->roles))) 
+  while ((role = rgHead(self->roles))) 
     if (!delRole(coll, role)) goto error;
 
  // diseases categories
-  while((category = rgHead(self->categories)))
+  while ((category = rgHead(self->categories)))
     if (!delCategory(coll, category)) goto error;
 
   // disease humans
@@ -2218,7 +2218,7 @@ diseaseCatalogTree(Collection* coll)
   }
 
   // disease caracs
-  while((carac = rgHead(self->caracs)))
+  while ((carac = rgHead(self->caracs)))
     if (!delCarac(coll, carac)) goto error;
 
   // try to disease archives

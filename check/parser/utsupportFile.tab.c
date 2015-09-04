@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupportFile.tab.c,v 1.1 2015/07/01 10:50:03 nroche Exp $
+ * Version: $Id: utsupportFile.tab.c,v 1.2 2015/09/04 15:30:23 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -72,7 +72,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.h,v 1.4 2015/06/30 17:37:25 nroche Exp $
+ * Version: $Id: motd.h,v 1.5 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -26,14 +26,6 @@
 #define MDTX_CLIENT_MOTD_H 1
 
 #include "mediatex-types.h"
-
-typedef struct MotdData {
-
-  Collection* coll;
-  RG* outArchives;
-  int found;
-
-} MotdData;
 
 /* API */
 int updateMotd();

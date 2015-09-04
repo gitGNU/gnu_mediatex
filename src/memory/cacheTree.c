@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.13 2015/08/24 17:48:18 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.14 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -754,7 +754,7 @@ int diseaseCacheTree(Collection* coll)
   // for all records
   if (!expandCollection(coll)) goto error;
   ring = coll->cacheTree->recordTree->records;
-  while((record = rgNext_r(ring, &curr))) {
+  while ((record = rgNext_r(ring, &curr))) {
     if (!(record->type & REMOVE) &&
 	!delCacheEntry(coll, record)) goto error;
   }

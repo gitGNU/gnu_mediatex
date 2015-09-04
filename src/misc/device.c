@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.9 2015/08/30 17:08:01 nroche Exp $
+ * Version: $Id: device.c,v 1.10 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -189,7 +189,7 @@ char* mount2device(char* absPath)
   }
   
   errno = 0;
-  while(1) {
+  while (1) {
     if (getmntent_r(mtab, &mntEntry, buf, buflen) == 0)  {
       if (errno == 0) break;
       logMisc(LOG_ERR, "getmntent_r error: %s", strerror(errno));

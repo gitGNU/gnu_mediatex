@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.7 2015/08/19 01:09:08 nroche Exp $
+ * Version: $Id: cgi.c,v 1.8 2015/09/04 15:30:24 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -154,7 +154,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 
   /* loop on every server */
   rgRewind(sTree->servers);
-  while((server = rgNext(sTree->servers))) {
+  while ((server = rgNext(sTree->servers))) {
 
     logMain(LOG_WARNING, "server: %s/%s", 
 	    server->host, server->fingerPrint);
@@ -637,7 +637,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

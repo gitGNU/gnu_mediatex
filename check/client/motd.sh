@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: motd.sh,v 1.3 2015/07/22 10:45:13 nroche Exp $
+# * Version: $Id: motd.sh,v 1.4 2015/09/04 15:30:15 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -34,6 +34,7 @@ TEST=${TEST%.sh}
 
 # run the unit test
 cp $CVSCLT/$MDTXUSER-coll1$SERVFILE $CVSCLT/$MDTXUSER-coll3$SERVFILE
+#cp $MD5SUMS/$MDTXUSER-coll1.md5 $MD5SUMS/$MDTXUSER-coll3.md5
 client/ut$TEST >client/$TEST.out 2>&1
 
 # compare with the expected output

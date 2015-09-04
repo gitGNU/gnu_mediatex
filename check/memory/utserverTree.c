@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverTree.c,v 1.5 2015/08/30 17:07:58 nroche Exp $
+ * Version: $Id: utserverTree.c,v 1.6 2015/09/04 15:30:18 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -56,7 +56,7 @@ isReachable(Collection* coll, Server* from, Server* to)
 
   // networks we can reach
   if (!(reach = createRing())) goto error;
-  while((it = rgNext_r(from->networks, &curr))) {
+  while ((it = rgNext_r(from->networks, &curr))) {
     if (!rgInsert(reach, it)) goto error;
   }
   nbReachable = reach->nbItems;
@@ -67,11 +67,11 @@ isReachable(Collection* coll, Server* from, Server* to)
 
     /* printf("looping...\n"); */
     /* printf("we now we can reach:"); */
-    /* while((it = rgNext(reach))) printf(" %s", (char*)it); */
+    /* while ((it = rgNext(reach))) printf(" %s", (char*)it); */
     /* printf ("\n"); */
 
     /* printf("we want to reach on of them:"); */
-    /* while((it = rgNext(to->networks))) printf(" %s", (char*)it); */
+    /* while ((it = rgNext(to->networks))) printf(" %s", (char*)it); */
     /* printf ("\n"); */
 
     // exit when reachable
@@ -87,12 +87,12 @@ isReachable(Collection* coll, Server* from, Server* to)
     // look for a new gateway (juste one)
     loop = FALSE;
     curr = 0; 
-    while(!loop && (server = rgNext_r(coll->serverTree->servers, &curr))) {
+    while (!loop && (server = rgNext_r(coll->serverTree->servers, &curr))) {
       if (!(tmp = rgInter(reach, server->gateways))) goto error;
       if (!isEmptyRing(tmp)) {
 
 	/* printf("new reachable networks:"); */
-	/* while((it = rgNext(server->networks))) printf(" %s", (char*)it); */
+	/* while ((it = rgNext(server->networks))) printf(" %s", (char*)it); */
 	/* printf ("\n");      */
 
 	// we find one so we now we can reach its networks
@@ -173,7 +173,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

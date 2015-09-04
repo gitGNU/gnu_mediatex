@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmotd.c,v 1.1 2015/07/01 10:49:28 nroche Exp $
+ * Version: $Id: utmotd.c,v 1.2 2015/09/04 15:30:16 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -56,6 +56,11 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  Collection* coll = 0;
+  Server* server = 0;
+  Archive* archive = 0;
+  char* string = 0;
+  Record* record = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -70,7 +75,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       
@@ -83,12 +88,29 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
+  // force a demand for logo
+  if (!(coll = mdtxGetCollection("coll1"))) goto error;
+  if (!loadCollection(coll, CACH)) goto error;
+  if (!(string = createString("!wanted"))) goto error;
+  if (!(archive = addArchive(coll,
+			     "b281449c229bcc4a3556cdcc0d3ebcec", 815)))
+    goto error;
+  if (!(server = getLocalHost(coll))) goto error;
+  if (!(record = addRecord(coll, server, archive, DEMAND, string))) goto error;
+  archive = 0;
+  string = 0;
+  if (!addCacheEntry(coll, record)) goto error;
+  record = 0;
+    
+  // test
   if (!updateMotd()) goto error;
+  if (!releaseCollection(coll, CACH)) goto error;
   /************************************************************************/
   
   freeConfiguration();
   rc = TRUE;
  error:
+  destroyString(string);
   ENDINGS;
   rc=!rc;
  optError:

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlog.c,v 1.4 2015/08/13 21:14:30 nroche Exp $
+ * Version: $Id: utlog.c,v 1.5 2015/09/04 15:30:20 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -62,7 +62,7 @@ main(int argc, char** argv)
   };
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

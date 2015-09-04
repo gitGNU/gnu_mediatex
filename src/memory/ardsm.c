@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: ardsm.c,v 1.7 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: ardsm.c,v 1.8 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *
@@ -566,7 +566,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
 
     nbItem = 0;
     curr = 0;
-    while((pItem = (void*)rgNext_r(ring, &curr))) {	
+    while ((pItem = (void*)rgNext_r(ring, &curr))) {	
       pItemArray[nbItem++] = pItem;
     }
 	  
@@ -574,7 +574,7 @@ rgSort(RG* ring, int(*compar)(const void *, const void *))
 	  
     nbItem = 0;
     curr = 0;
-    while((pItem = (void*)rgNext_r(ring, &curr))) {	
+    while ((pItem = (void*)rgNext_r(ring, &curr))) {	
       curr->it = pItemArray[nbItem++];
     }
 	    
@@ -608,7 +608,7 @@ rgMatchItem(RG* ring, void* pItem,
   void* pIt = 0;
   RGIT* rc = 0;
 
-  while((pIt = rgNext_r(ring, &rc))) {
+  while ((pIt = rgNext_r(ring, &rc))) {
     if (!compar(&pIt, &pItem)) break;
   }
 
@@ -629,7 +629,7 @@ rgHaveItem(RG* ring, void* pItem)
   RGIT* rc = 0;
   void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &rc))) {
+  while ((pIt = rgNext_r(ring, &rc))) {
     if (pIt == pItem) break;
   }
 
@@ -651,7 +651,7 @@ rgDelItem(RG* ring, void* pItem)
   RGIT* curr = 0;
   void* pIt = 0;
 
-  while((pIt = rgNext_r(ring, &curr))) {
+  while ((pIt = rgNext_r(ring, &curr))) {
     if (pIt == pItem) break;
   }
 
@@ -684,9 +684,9 @@ rgShareItems(RG* ring1, RG* ring2)
   if (isEmptyRing(ring2)) goto end;
   
   // O(n2) but rings should usaly only have 1 or 2 items
-  while((pIt1 = rgNext_r(ring1, &curr1))) {
+  while ((pIt1 = rgNext_r(ring1, &curr1))) {
     pIt2 = 0;
-    while((pIt2 = rgNext_r(ring2, &curr2))) {
+    while ((pIt2 = rgNext_r(ring2, &curr2))) {
       if (pIt1 == pIt2) {
 	rc = TRUE;
 	goto end;
@@ -924,7 +924,7 @@ destroyRing(RG* self, void* (*destroyItem)(void *))
 	
   if(self) {
     //rgRewind(self);
-    while((item = (RG*)rgNext_r(self, &curr))) {
+    while ((item = (RG*)rgNext_r(self, &curr))) {
       if (destroyItem) {
 	item = destroyItem(item);
       }
@@ -970,7 +970,7 @@ copyRing(RG* destination, RG* source,
   
   if(source) {
     //rgRewind(source);
-    while((sourceItem = (void*)rgNext_r(source, &curr))) {
+    while ((sourceItem = (void*)rgNext_r(source, &curr))) {
       if ((destinationItem = copyItem(destinationItem, sourceItem)) == 0) {
 	goto error;
       }

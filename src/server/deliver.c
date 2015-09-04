@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.8 2015/08/16 20:35:10 nroche Exp $
+ * Version: $Id: deliver.c,v 1.9 2015/09/04 15:30:28 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -93,7 +93,7 @@ int deliverArchive(Collection* coll, Archive* archive)
   if ((date = currentTime()) == -1) goto error; 
 
   // find longer to-Keep time to honnor all demands
-  while((record = rgNext_r(archive->demands, &curr))) {
+  while ((record = rgNext_r(archive->demands, &curr))) {
     if (record->type & REMOVE) continue;
 
     switch (getRecordType(record)) {
@@ -118,7 +118,7 @@ int deliverArchive(Collection* coll, Archive* archive)
 
   // deliver mail
   curr = 0;
-  while((record = rgNext_r(archive->demands, &curr))) {
+  while ((record = rgNext_r(archive->demands, &curr))) {
     if (record->type & REMOVE) continue;
     if (getRecordType(record) != FINAL_DEMAND) continue;
 

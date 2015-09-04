@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.12 2015/09/03 15:03:40 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.13 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -100,7 +100,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   // do not sort !
   if (many) htmlUlOpen(fd);
   
-  while((archive = rgNext(container->parents))) {
+  while ((archive = rgNext(container->parents))) {
     if (isHeader) {
       getArchiveUri(url, "../../../..", archive);
     } else {
@@ -381,7 +381,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->documents)) {
     if (!rgSort(self->documents, cmpDocument)) goto error;
-    while((document = rgNext(self->documents))) {
+    while ((document = rgNext(self->documents))) {
       if (!sprintf(text, "%s/../index", home)) goto error;
       getDocumentUri(url, text, document->id);
 
@@ -404,7 +404,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlUlOpen(fd);
   if (!isEmptyRing(self->images)) {
     if (!rgSort(self->images, cmpImage)) goto error;
-    while((image = rgNext(self->images))) {
+    while ((image = rgNext(self->images))) {
       if (!sprintf(text, "%s/servers/srv_%s.shtml", home,
   		   image->server->fingerPrint)) goto error;
 
@@ -429,7 +429,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   if (!isEmptyRing(self->fromContainers)) {
     // already sorted
     rgRewind(self->fromContainers);
-    while((asso = rgNext(self->fromContainers))) {
+    while ((asso = rgNext(self->fromContainers))) {
       htmlFromAsso(asso, fd, isHeader);
     }
   }
@@ -586,7 +586,7 @@ serializeHtmlServer(Collection* coll, Server* server)
     htmlUlOpen(fd);
 				    
     curr = 0;
-    while((string = rgNext_r(server->networks, &curr))) {    
+    while ((string = rgNext_r(server->networks, &curr))) {    
       htmlLiOpen(fd);
       if (!fprintf(fd, "%s\n", string)) goto error;
       htmlLiClose(fd);
@@ -603,7 +603,7 @@ serializeHtmlServer(Collection* coll, Server* server)
     htmlUlOpen(fd);
 				    
     curr = 0;
-    while((string = rgNext_r(server->gateways, &curr))) {    
+    while ((string = rgNext_r(server->gateways, &curr))) {    
       htmlLiOpen(fd);
       if (!fprintf(fd, "%s\n", string)) goto error;
       htmlLiClose(fd);
@@ -621,7 +621,7 @@ serializeHtmlServer(Collection* coll, Server* server)
     htmlUlOpen(fd);
 				    
     curr = 0;
-    while((image = rgNext_r(server->images, &curr))) {    
+    while ((image = rgNext_r(server->images, &curr))) {    
       getArchiveUri(url, "..", image->archive);
       if (!sprintf(text, "%s:%lli ", image->archive->hash, 
 		   (long long int)image->archive->size)) goto error;
@@ -1072,7 +1072,7 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlUlOpen(fd);
   if (!isEmptyRing(serverTree->archives)) {
     if (!rgSort(serverTree->archives, cmpArchive)) goto error;
-    while((archive = rgNext(serverTree->archives))) {
+    while ((archive = rgNext(serverTree->archives))) {
       getArchiveUri(url, "", archive);
       if (!sprintf(text, "%s:%lli ", archive->hash, 
 		   (long long int)archive->size)) goto error;
@@ -1231,7 +1231,7 @@ serializeHtmlScore(Collection* coll)
   // servers
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
-    while((server = rgNext(self->servers))) {
+    while ((server = rgNext(self->servers))) {
       if (!serializeHtmlServer(coll, server)) goto error;
     }
   }

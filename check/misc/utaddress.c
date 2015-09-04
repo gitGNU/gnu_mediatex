@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: utaddress.c,v 1.6 2015/08/07 17:50:24 nroche Exp $
+ * Version: $Id: utaddress.c,v 1.7 2015/09/04 15:30:19 nroche Exp $
  * Project: Mediatex
  * Module : socket address
 
@@ -75,7 +75,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

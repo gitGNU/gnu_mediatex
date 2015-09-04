@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.17 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: notify.c,v 1.18 2015/09/04 15:30:28 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -54,7 +54,7 @@ notifyContainer(NotifyData* data, Container* container)
   data->found = TRUE;
 
   // we notify all parents (only one for TGZ, several for CAT...)
-  while((archive = rgNext_r(container->parents, &curr))) {
+  while ((archive = rgNext_r(container->parents, &curr))) {
     if (!notifyArchive(data, archive)) goto error;
   }
 
@@ -135,11 +135,11 @@ getWantedRemoteArchives(Collection* coll)
 
   if (!(ring = createRing())) goto error;
 
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state < WANTED) continue; // no remote demand
 
     // look for a remote demand
-    while((record = rgNext_r(archive->demands, &curr2))) {
+    while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) != REMOTE_DEMAND) continue;
 
       logMain(LOG_INFO, "find a remote demand to work on: %s:%lli",
@@ -181,10 +181,10 @@ addFinalDemands(NotifyData* data)
   checkCollection(coll);
   logMain(LOG_DEBUG, "addFinalDemands");
 
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
 	!= 0) {
     if (archive->state != WANTED) continue;
-    while((record = rgNext_r(archive->demands, &curr2))) {
+    while ((record = rgNext_r(archive->demands, &curr2))) {
       
       // final demand: add it
       if (getRecordType(record) == FINAL_DEMAND) {
@@ -230,7 +230,7 @@ addBadTopLocalSupplies(NotifyData* data)
   logMain(LOG_DEBUG, "addBadTopLocalSupplies");
 
   // add local top containers having a bad score
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state < AVAILABLE) continue;
     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2) 
       continue;
@@ -278,7 +278,7 @@ buildNotifyRings(Collection* coll, RG* records)
   if (!(archives = getWantedRemoteArchives(coll))) goto error;
 
   // for each of them, try to add local-supplies
-  while((archive = rgNext_r(archives, &curr))) {
+  while ((archive = rgNext_r(archives, &curr))) {
     if (!notifyArchive(&data, archive)) goto error;
   }
 
@@ -383,7 +383,7 @@ sendRemoteNotify(Collection* coll)
   // for any record
 
   // for all servers sharing the collection
-  while((target=rgNext_r(coll->serverTree->servers, &curr))) {
+  while ((target=rgNext_r(coll->serverTree->servers, &curr))) {
     if (target->isLocalhost) continue;
 
     // skip server not directly connected to us
@@ -398,7 +398,7 @@ sendRemoteNotify(Collection* coll)
 
   // free local demands
   curr = 0;
-  while((record = rgNext_r(recordTree->records, &curr))) {
+  while ((record = rgNext_r(recordTree->records, &curr))) {
     if (getRecordType(record) == LOCAL_DEMAND) {
       destroyRecord(record);
       curr->it = 0;
@@ -454,7 +454,7 @@ int acceptRemoteNotify(Connexion* connexion)
     curr = 0;
 
     // ...forward the message to the Nat clients
-    while((target=rgNext_r(coll->serverTree->servers, &curr))) {
+    while ((target=rgNext_r(coll->serverTree->servers, &curr))) {
 
       // skip server already connected to the source
       if (rgShareItems(source->networks, target->networks)) continue;
@@ -475,7 +475,7 @@ int acceptRemoteNotify(Connexion* connexion)
   // del all records we previously get from the calling server
   curr = 0;
   records = coll->cacheTree->recordTree->records;
-  while((record = rgNext_r(records, &curr))) {  
+  while ((record = rgNext_r(records, &curr))) {  
     if (record->server != source) continue;
     if (!delCacheEntry(coll, record)) goto error3;
   }

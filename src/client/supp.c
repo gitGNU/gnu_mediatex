@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.16 2015/08/31 00:14:51 nroche Exp $
+ * Version: $Id: supp.c,v 1.17 2015/09/04 15:30:25 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -273,14 +273,14 @@ mdtxLsSupport()
   supports = conf->supports;
 
   rgRewind(supports);
-  while((supp = rgNext(supports))) {
+  while ((supp = rgNext(supports))) {
     if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
 
   printf("%5s %*s %s\n", 
 	 "score", MAX_SIZE_STAT, "state", "label");  
 
-  while((supp = rgNext(supports))) {     
+  while ((supp = rgNext(supports))) {     
     printf("%5.2f %*s %s\n", 
 	   supp->score, MAX_SIZE_STAT, supp->status, supp->name);
   }
@@ -465,7 +465,7 @@ static int delFinalSupplies(Collection* coll, RecordTree* tree)
 
  logMain(LOG_DEBUG, "delFinalSupplies");
 
-  while((record = rgHead(tree->records))) {
+  while ((record = rgHead(tree->records))) {
     if (!delRecord(coll, record)) goto error;
     rgRemove(tree->records);
   }

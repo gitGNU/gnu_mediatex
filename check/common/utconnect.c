@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconnect.c,v 1.3 2015/08/17 01:31:51 nroche Exp $
+ * Version: $Id: utconnect.c,v 1.4 2015/09/04 15:30:17 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -79,7 +79,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

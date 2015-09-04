@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.c,v 1.2 2015/07/28 11:45:42 nroche Exp $
+ * Version: $Id: utshellQuery.c,v 1.3 2015/09/04 15:30:22 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -78,7 +78,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
 

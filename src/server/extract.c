@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.20 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: extract.c,v 1.21 2015/09/04 15:30:28 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -325,7 +325,7 @@ extractCat(Collection* coll, FromAsso* asso, char* targetPath)
   if (!(cmd = createString("/bin/cat "))) goto error;
  
   // all parts
-  while((archive = rgNext_r(asso->container->parents, &curr))) {
+  while ((archive = rgNext_r(asso->container->parents, &curr))) {
     if (!(path2 = getAbsoluteArchivePath(coll, archive))) goto error;
     if (!(cmd = catString(cmd, path2))) goto error;
     if (!(cmd = catString(cmd, " "))) goto error;
@@ -1038,7 +1038,7 @@ int extractContainer(ExtractData* data, Container* container)
   // we extract all parents (only one for TGZ, several for CAT...)
   curr = 0;
   found = TRUE;
-  while((archive = rgNext_r(container->parents, &curr))) {
+  while ((archive = rgNext_r(container->parents, &curr))) {
     if (!extractArchive(data, archive)) goto error;
     found = found && data->found;
   }
@@ -1052,7 +1052,7 @@ int extractContainer(ExtractData* data, Container* container)
 
     // for each part we have on final supply
     curr = 0;
-    while((archive = rgNext_r(container->parents, &curr))) {
+    while ((archive = rgNext_r(container->parents, &curr))) {
       if (archive->state < AVAILABLE &&
   	  archive->finalSupplies->nbItems > 0) {
   	logMain(LOG_INFO, "extract part from support");
@@ -1144,7 +1144,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   // prefix: scp. Else (postfix) we will scp containers first.
   if (data->context != X_CGI) {
     curr = 0;
-    while(!data->found && 
+    while (!data->found && 
 	  (record = rgNext_r(archive->remoteSupplies, &curr))) {
       if (record->type & REMOVE) continue;
 
@@ -1167,7 +1167,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (!(data->toKeeps = createRing())) goto error;
 
   curr = 0;
-  while(!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
+  while (!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
     if (!extractContainer(data, asso->container)) goto error;
   }
 
@@ -1219,7 +1219,7 @@ getWantedArchives(Collection* coll)
   if (!computeExtractScore(coll)) goto error;
 
   // look for archives we will try to extract
-  while((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
 
     // check if it is a top containers having bad score
     isBadTop =

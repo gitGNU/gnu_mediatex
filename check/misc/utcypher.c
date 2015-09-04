@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.5 2015/08/13 21:14:30 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.6 2015/09/04 15:30:19 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -77,7 +77,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       GET_MISC_OPTIONS; // generic options

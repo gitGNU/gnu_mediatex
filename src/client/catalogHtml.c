@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.9 2015/08/13 21:14:31 nroche Exp $
+ * Version: $Id: catalogHtml.c,v 1.10 2015/09/04 15:30:24 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *
@@ -437,7 +437,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs))) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -556,7 +556,7 @@ serializeHtmlDocument(Collection* coll, Document* self)
     if (!fprintf(fd, "%s", _("Characteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs))) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -795,7 +795,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!fprintf(fd, "%s", _("\nCharacteristics:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->assoCaracs);
-    while((assoCarac = rgNext(self->assoCaracs))) {
+    while ((assoCarac = rgNext(self->assoCaracs))) {
       if (!htmlAssoCarac(fd, assoCarac)) goto error;
     }
     htmlUlClose(fd);
@@ -1269,7 +1269,7 @@ htmlCategoryMenu(FILE* fd, Category* self, int depth)
   rgRewind(self->childs);
   if (!isEmptyRing(self->childs)) {
     htmlUlOpen(fd);
-    while((category = rgNext(self->childs))) {
+    while ((category = rgNext(self->childs))) {
       if (category->show && !htmlCategoryMenu(fd, category, depth+1)) 
 	goto error;
     }
@@ -1326,7 +1326,7 @@ serializeHtmlIndexHeader(Collection* coll)
     if (!fprintf(fd, _("\nClasses:\n"))) goto error;
     htmlUlOpen(fd);
     rgRewind(self->categories);
-    while((category = rgNext(self->categories))) {
+    while ((category = rgNext(self->categories))) {
       if (category->show && isEmptyRing(category->fathers)) {
 	htmlLiOpen(fd);
 	if (!htmlCategoryMenu(fd, category, 0)) goto error;
@@ -1478,7 +1478,7 @@ serializeHtmlIndex(Collection* coll)
   // roles
   if (!isEmptyRing(self->roles)) {
     if (!rgSort(self->roles, cmpRole)) goto error;
-    while((role = rgNext(self->roles))) {
+    while ((role = rgNext(self->roles))) {
       if (!serializeHtmlRole(coll, role)) goto error;
     }
   }
@@ -1486,7 +1486,7 @@ serializeHtmlIndex(Collection* coll)
   // categories
   if (!isEmptyRing(self->categories)) {
     if (!rgSort(self->categories, cmpCategory)) goto error;
-    while((category = rgNext(self->categories))) {
+    while ((category = rgNext(self->categories))) {
       if (!serializeHtmlCategory(coll, category)) goto error;
     }
   }

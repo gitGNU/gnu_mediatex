@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.11 2015/09/03 09:25:46 nroche Exp $
+ * Version: $Id: confTree.c,v 1.12 2015/09/04 15:30:27 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -743,7 +743,7 @@ expandConfiguration()
 
   // expand collections
   if (conf->collections) {
-    while((coll = rgNext_r(conf->collections, &curr))) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
       if (!expandCollection(coll)) goto error;
     }
   }
@@ -1002,7 +1002,7 @@ getCollection(char *label)
   logMemory(LOG_DEBUG, "getCollection %s", label);
 
   // look for collection
-  while((rc = rgNext_r(conf->collections, &curr)))
+  while ((rc = rgNext_r(conf->collections, &curr)))
     if (!strncmp(rc->label, label, MAX_SIZE_COLL)) break;
 
  error:
@@ -1067,7 +1067,7 @@ delCollection(Collection* self)
 
   // delete support associations
   curr = 0;
-  while((supp = rgHead(self->supports))) {
+  while ((supp = rgHead(self->supports))) {
     if (!delSupportFromCollection(supp, self)) goto error;
   }
 
@@ -1105,7 +1105,7 @@ getNetwork(char *label)
   logMemory(LOG_DEBUG, "getNetwork %s", label);
 
   // look for network
-  while((rc = rgNext_r(conf->allNetworks, &curr)))
+  while ((rc = rgNext_r(conf->allNetworks, &curr)))
     if (!strcmp(rc, label)) break;
 
  error:

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.6 2015/08/23 23:39:13 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.7 2015/09/04 15:30:23 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -47,7 +47,7 @@ utCleanCaches(void)
   if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!conf->collections) goto error;
-  while((coll = rgNext_r(conf->collections, &curr))) {
+  while ((coll = rgNext_r(conf->collections, &curr))) {
     if (!diseaseCacheTree(coll)) goto error;
 
     // clean cache dir

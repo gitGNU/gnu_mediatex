@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utgetcgivars.c,v 1.3 2015/07/28 11:45:41 nroche Exp $
+ * Version: $Id: utgetcgivars.c,v 1.4 2015/09/04 15:30:19 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -72,7 +72,7 @@ main(int argc, char** argv)
   getEnv(&env);
 
   // parse the command line
-  while((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
+  while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
       

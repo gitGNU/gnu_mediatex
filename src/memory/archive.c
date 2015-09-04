@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.11 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: archive.c,v 1.12 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -321,12 +321,12 @@ delArchive(Collection* coll, Archive* self)
 
   // delete archive from record ring
   curr = 0;
-  while((rec = rgNext_r(self->records, &curr)))
+  while ((rec = rgNext_r(self->records, &curr)))
     if (!delRecord(coll, rec)) goto error;
 
   // delete archive from image ring
   curr = 0;
-  while((img = rgNext_r(self->images, &curr)))
+  while ((img = rgNext_r(self->images, &curr)))
     if (!delImage(coll, img)) goto error;
 
   // delete archive from container ring
@@ -334,17 +334,17 @@ delArchive(Collection* coll, Archive* self)
 
   // delete archive from content association
   curr = 0;
-  while((af = rgNext_r(self->fromContainers, &curr)))
+  while ((af = rgNext_r(self->fromContainers, &curr)))
     if (!delFromAsso(coll, af)) goto error;
   
   // delete archive from document ring
   curr = 0;
-  while((doc = rgNext_r(self->documents, &curr)))
+  while ((doc = rgNext_r(self->documents, &curr)))
     if (!delArchiveFromDocument(coll, self, doc)) goto error;
   
   // delete archive from assoCarac ring
   curr = 0;
-  while((ac = rgNext_r(self->assoCaracs, &curr))) {
+  while ((ac = rgNext_r(self->assoCaracs, &curr))) {
     rgRemove(self->assoCaracs);
     destroyAssoCarac(ac);
   }
