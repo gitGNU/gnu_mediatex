@@ -45,6 +45,12 @@ $ libtool --mode=execute valgrind ./@var{BINARY} @var{ARGS}
 $ libtool --mode=execute gdb @var{BINARY}
 @end example
 
+@item drop setuid bit from mediatex client:
+@example
+# chmod -s /usr/bin/mediatex
+# valgrind mediatex ls coll
+@end example
+
 @item @code{gdb} using emacs:
 @example
 # xhost local:mdtx

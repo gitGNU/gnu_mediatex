@@ -124,10 +124,10 @@ score      state label
 [info device.c] not a symlink: /HERE/misc/logo.png
 [info device.c] do not match a block device: /HERE/misc/logo.png
 [warning md5sum.c] size doesn't match: 24075 vs 391168 expected
-[warning supp.c] wrong size on "SUPP21_logo.part1" support
-[warning supp.c] please manualy check "SUPP21_logo.part1" support
-[warning supp.c] either this is not "SUPP21_logo.part1" support at ./../misc/logo.png
-[warning supp.c] or maybe the "SUPP21_logo.part1" support is obsolete
+[warning upgrade.c] wrong size on "SUPP21_logo.part1" support
+[warning upgrade.c] please manualy check "SUPP21_logo.part1" support
+[warning upgrade.c] either this is not "SUPP21_logo.part1" support at ./../misc/logo.png
+[warning upgrade.c] or maybe the "SUPP21_logo.part1" support is obsolete
 [err supp.c] have query on SUPP21_logo.part1 support failed
 [notice utsupp.c] *** Have a file:
 [err supp.c] have function do not handle support file

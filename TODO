@@ -1,30 +1,11 @@
 
 *** TO CORRECT: cache policy    
-
-** MOTD
-- * local supports *
--- check support files (use fileTTL)
--- SUPP wanted FOR PERIDIC CHECK | by coll COLL
-- * content to burn * (by collection)
--- ABSOLUTE_PATH (local score / main score) only upper file
-- * orphanes * (by collection)
--- factorize tests from client::upload.c
-- * cache size * (by collection)
--- all/used/allocated/free
-
-** HTML
-- notify orphanes ?
+......................................................
 
 ** LOGS
 - make cron upload the cvsroot collection module
 - make cron upload the collection's apache logs
 - ease looking for archive life cycle into cvsroot
-
-** TESTS
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- make tests.sh modular 
--- to begin at whatever test number (do truc/undo truc preconditions...)
--- batch mode to automaticly answer yes to host fingerprint
 
 ** TRUST
 - new client query: mdtx audit [coll COLL] for MAIL
@@ -34,8 +15,23 @@
 -- ... and finaly send it to the mail address and upload it
 - buildRule.sh script ?
 
-** DOC
-- gdb mdtx: remove setuid bit and run it as root
+** TESTS
+- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
+- make tests.sh modular 
+-- to begin at whatever test number (do truc/undo truc preconditions...)
+-- batch mode to automaticly answer yes to host fingerprint
+
+(maybe)
+
+** MOTD
+- * orphanes * (by collection)
+-- factorize tests from client::upload.c
+- * cache size * (by collection)
+-- all/used/allocated/free
+
+** HTML
+- bad archives sum computation
+- notify orphan
 
 *** CHANGES DONE (to document)
 
@@ -116,6 +112,14 @@
 
 ** HTML
 - notify server lastCommit
+
+** MOTD
+- move computeExtractScore call upper
+- * local supports *
+-- check support files (use fileTTL)
+-- SUPP wanted FOR PERIDIC CHECK | by coll COLL
+- * content to burn * (by collection)
+-- ABSOLUTE_PATH (local score / main score) only upper file
 
 *** CLEAN-UP
 

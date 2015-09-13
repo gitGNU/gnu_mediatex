@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.17 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: supp.c,v 1.18 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -137,121 +137,6 @@ mdtxUpdateSupport(char* label, char* status)
 }
 
 /*=======================================================================
- * Function   : checkSupport 
- * Description: Do checksums on an available support
- * Synopsis   : int checkSupport(Support *supp, char* path)
- * Input      : Support *supp = the support object
- *              char* path = the device that host the support
- * Output     : TRUE on success
- *
- * Note       : supp->lastCheck: (O will force check)
- *              the input path is free
- =======================================================================*/
-static int 
-doCheckSupport(Support *supp, char* path)
-{
-  int rc = FALSE;
-  time_t now = 0;
-  time_t laps = 0;
-  Md5Data data;
-
-  logMain(LOG_DEBUG, "doCheckSupport");
-  memset(&data, 0, sizeof(Md5Data));
-  
-  if ((data.path = createString(path)) == 0) {
-    logMain(LOG_ERR, "cannot dupplicate path string");
-    goto error;
-  }
-  
-  // current date
-  if ((now = currentTime()) == -1) goto error;
- 
-  // by default do not exists: full computation (no check)
-  data.opp = MD5_SUPP_ADD;
-
-  // check if support need to be full checked or not
-  if (supp->lastCheck > 0) {
-    // exists: quick check
-    data.opp = MD5_SUPP_ID;
-    laps = now - supp->lastCheck;
-    if (getConfiguration()->checkTTL/2 >= 0 &&
-	laps > getConfiguration()->checkTTL/2) {
-      // nearly obsolete: full check
-      data.opp = MD5_SUPP_CHECK;
-      logMain(LOG_NOTICE, "support no checked since %d days: checking...", 
-	      laps/60/60/24);
-    }
-  }
-  
-  // copy size and current checksums to compare them
-  switch (data.opp) {
-  case MD5_SUPP_CHECK:
-    strncpy(data.fullMd5sum, supp->fullHash, MAX_SIZE_HASH);
-  case MD5_SUPP_ID:
-    data.size = supp->size;
-    strncpy(data.quickMd5sum, supp->quickHash, MAX_SIZE_HASH);
-  default:
-    break;
-  }
-
-  // checksum computation
-  rc = TRUE;
-  if (!doMd5sum(&data)) {
-      logMain(LOG_DEBUG, 
-	      "internal error on md5sum computation for \"%s\" support", 
-	      supp->name);
-      rc = FALSE;
-      goto error;
-  }
-
-  if (data.rc == MD5_FALSE_SIZE) {
-    logMain(LOG_WARNING, "wrong size on \"%s\" support", supp->name);
-    rc = FALSE;
-  }
-  if (data.rc == MD5_FALSE_QUICK) {
-    logMain(LOG_WARNING, "wrong quick hash on \"%s\" support", supp->name);
-    rc = FALSE;
-  }
-  if (data.rc == MD5_FALSE_FULL) {
-    logMain(LOG_WARNING, "wrong full hash on \"%s\" support", supp->name);
-    rc = FALSE;
-  }
-
-  if (!rc) {
-    logMain(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
-    logMain(LOG_WARNING, "either this is not \"%s\" support at %s", 
-	    supp->name, path);
-    logMain(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
-	    supp->name);
-    goto error;
-  }
-
-  // store results
-  switch (data.opp) {
-  case  MD5_SUPP_ADD:
-    supp->size = data.size;
-    strncpy(supp->quickHash, data.quickMd5sum, MAX_SIZE_HASH);
-    strncpy(supp->fullHash, data.fullMd5sum, MAX_SIZE_HASH);
-  case MD5_SUPP_CHECK:
-    if (env.noRegression)
-      supp->lastCheck = currentTime() + 1*DAY;
-    else
-      supp->lastCheck = now;
-  case MD5_SUPP_ID:
-    if (env.noRegression)
-      supp->lastSeen = currentTime() + 1*DAY;
-    else
-      supp->lastSeen = now;
-  default:
-    break;
-  }
-
- error:
-  free(data.path);
-  return rc;
-}
-
-/*=======================================================================
  * Function   : lsSupport 
  * Description: list all availables supports
  * Synopsis   : int lsSupport()
@@ -334,7 +219,6 @@ mdtxAddSupport(char* label, char* path)
   supp->firstSeen = now;
   if (!doCheckSupport(supp, path)) goto error;
 
-  conf->fileState[iSUPP] = MODIFIED;
   rc = TRUE;
  error:
   if (!rc) {
@@ -383,7 +267,6 @@ mdtxAddFile(char* path)
   supp->firstSeen = now;
   if (!doCheckSupport(supp, absolutePath)) goto error;
 
-  conf->fileState[iSUPP] = MODIFIED;
   rc = TRUE;
  error:
   if (!rc) {
@@ -608,8 +491,6 @@ mdtxHaveSupport(char* label, char* path)
   if (!notifyHave(supp, absPath)) goto error;
 
  end:
-  // update support's dates
-  conf->fileState[iSUPP] = MODIFIED;
   rc = TRUE;
  error:
   if (!rc) {

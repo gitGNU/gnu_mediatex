@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.10 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: motd.c,v 1.11 2015/09/13 23:47:34 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -25,335 +25,6 @@
 #include "mediatex-config.h"
 #include "client/mediatex-client.h"
 
-/* int motdArchive(MotdData* data, Archive* archive); */
-
-/* /\*======================================================================= */
-/*  * Function   : updateMotdFromSupportDB */
-/*  * Description: List all obsolete supports */
-/*  * Synopsis   : SupportTree* updateMotdFromSupportDB() */
-/*  * Input      : N/A */
-/*  * Output     : SupportTree* = osolete supports list */
-/*  =======================================================================*\/ */
-/* RG*  */
-/* updateMotdFromSupportDB() */
-/* { */
-/*   RG* rc = 0; */
-/*   Configuration* conf = 0; */
-/*   Support *support = 0; */
-
-/*   logMain(LOG_DEBUG, "update motd from supports"); */
-
-/*   if (!(conf = getConfiguration())) goto error; */
-/*   if (!(rc = createRing())) goto error; */
-
-/*   rgRewind(conf->supports); */
-/*   while ((support = rgNext(conf->supports))) { */
-/*     if (!scoreSupport(support, &conf->scoreParam)) goto error; */
-/*     if (support->score <= conf->scoreParam.badScore) { */
-/*       if (!rgInsert(rc, support)) goto error; */
-/*     }  */
-/*   } */
-  
-/*   return rc; */
-/*  error: */
-/*   logMain(LOG_ERR, "fails to update motd from supports"); */
-/*   destroyOnlyRing(rc); // do not free support objetcs */
-/*   return (RG*)0; */
-/* } */
-
-/* /\*======================================================================= */
-/*  * Function   : motdContainer */
-/*  * Description: Find image related to a container */
-/*  * Synopsis   : int motdContainer */
-/*  * Input      : Collection* coll = context */
-/*  *              Container* container = what to motd */
-/*  * Output     : int *found = TRUE when image is already available */
-/*  *              FALSE on error */
-/*  =======================================================================*\/ */
-/* int motdContainer(MotdData* data, Container* container) */
-/* { */
-/*   int rc = FALSE; */
-/*   Archive* archive = 0; */
-/*   RGIT* curr = 0; */
-
-/*   logMain(LOG_DEBUG, "motd a container %s/%s:%lli",  */
-/* 	  strEType(container->type), container->parent->hash, */
-/* 	  (long long int)container->parent->size); */
-
-/*   data->found = FALSE; */
-/*   checkCollection(data->coll); */
-
-/*   if (isEmptyRing(container->parents)) goto end; */
-/*   data->found = TRUE; */
-
-/*   // we motd all parents (only one for TGZ, several for CAT...) */
-/*   while ((archive = rgNext_r(container->parents, &curr))) { */
-/*     if (!motdArchive(data, archive)) goto error; */
-/*   } */
-
-/*  end: */
-/*   rc = TRUE; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "motdContainer fails"); */
-/*   } */
-/*   return rc; */
-/* }  */
-
-/* /\*======================================================================= */
-/*  * Function   : motdArchive */
-/*  * Description: Find image related to an archive */
-/*  * Synopsis   : int motdArchive */
-/*  * Input      : Collection* coll = context */
-/*  *              Archive* archive = what to motd */
-/*  * Output     : int *found = TRUE image is already available */
-/*  *              FALSE on error */
-/*  =======================================================================*\/ */
-/* int motdArchive(MotdData* data, Archive* archive) */
-/* { */
-/*   int rc = FALSE; */
-/*   FromAsso* asso = 0; */
-/*   RGIT* curr = 0; */
-
-/*   logMain(LOG_DEBUG, "motd an archive: %s:%lli",  */
-/* 	  archive->hash, archive->size); */
-
-/*   data->found = FALSE; */
-/*   checkCollection(data->coll); */
-
-/*   if (archive->state == AVAILABLE) { */
-/*     data->found = TRUE; */
-/*     goto end; */
-/*   } */
-
-/*   // look for a matching image  */
-/*   if (archive->images->nbItems > 0) { */
-/*     logMain(LOG_DEBUG, "archive match %i images", archive->images->nbItems); */
-/*     if (!rgInsert(data->outArchives, archive)) goto error; */
-/*   } */
-
-/*   // continue searching as we stop at the first container already there */
-/*   while (!data->found &&  */
-/* 	(asso = rgNext_r(archive->fromContainers, &curr))) { */
-/*     if (!motdContainer(data, asso->container)) goto error; */
-/*   } */
-
-/*  end: */
-/*   rc = TRUE; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "motdArchive fails"); */
-/*   } */
-/*   return rc; */
-/* }  */
-
-/* /\*======================================================================= */
-/*  * Function   : updateMotdFromMd5sumsDB */
-/*  * Description: List all requested supports */
-/*  * Synopsis   : SupportTree* updateMotdFromMd5sumsDB() */
-/*  * Input      : RG* rc = input ring to merge */
-/*  * Output     : SupportTree* = list of requested supports */
-/*  * Note       : O(records x supports) */
-/*  =======================================================================*\/ */
-/* RG*  */
-/* updateMotdFromMd5sumsDB(RG* ring, Collection* coll) */
-/* { */
-/*   RG* rc = 0; */
-/*   Archive* archive = 0; */
-/*   Support* support = 0; */
-/*   RGIT* curr = 0; */
-/*   MotdData data; */
-
-/*   logMain(LOG_DEBUG, "update motd from server for %s collection", */
-/* 	  coll->label); */
-/*   memset(&data, 0, sizeof(MotdData)); */
-
-/*   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error; */
-/*   if (!(data.outArchives = createRing())) goto error2; */
-/*   data.coll = coll; */
-
-/*   // for each cache entry */
-/*   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))  */
-/* 	!= 0) { */
-
-/*     // scan wanted archives */
-/*     if (archive->state != WANTED) continue; */
-/*     if (!motdArchive(&data, archive)) goto error2; */
-/*   } */
-
-/*   // for each record (that all are images), match supports */
-/*   rgRewind(data.outArchives); */
-/*   while ((archive = rgNext(data.outArchives))) { */
-
-/*     // match support shared with that collection */
-/*     rgRewind(coll->supports); */
-/*     while ((support = rgNext(coll->supports))) { */
-/*       if (!strncmp(support->fullHash, archive->hash, MAX_SIZE_HASH) && */
-/* 	  support->size == archive->size) { */
-	
-/* 	// add support */
-/* 	if (support) { */
-/* 	  if (!rgInsert(ring, support)) goto error2; */
-/* 	} */
-/*       } */
-/*     } */
-
-/*   }    */
-/*   rc = ring;  */
-/*  error2: */
-/*   if (!releaseCollection(coll, SERV|EXTR|CACH)) rc = 0; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "fails to update motd from server for %s collection", */
-/* 	    coll->label); */
-/*     destroyOnlyRing(ring); // do not free support objetcs */
-/*   } */
-/*   destroyOnlyRing(data.outArchives); */
-/*   return rc; */
-/* } */
-
-/* /\*======================================================================= */
-/*  * Function   : updateMotdFromAllMd5sumsDB */
-/*  * Description: List all requested supports */
-/*  * Synopsis   : SupportTree* updateMotdAllFromMd5sumsDB() */
-/*  * Input      : N/A */
-/*  * Output     : SupportTree* = list of requested supports */
-/*  =======================================================================*\/ */
-/* RG*  */
-/* updateMotdFromAllMd5sumsDB() */
-/* { */
-/*   RG* rc = 0; */
-/*   RG* ring = 0; */
-/*   Configuration* conf = 0; */
-/*   Collection* coll = 0; */
-
-/*   logMain(LOG_DEBUG, "update motd from server"); */
-/*   if (!(conf = getConfiguration())) goto error; */
-/*   if (!(ring = createRing())) goto error; */
-
-/*   if (!env.noRegression) { */
-/*     // ask daemon to update md5sumsDB file */
-/*     if (!mdtxSyncSignal(MDTX_SAVEMD5)) { */
-/*       logMain(LOG_WARNING, "fail to update md5sumsDB file"); */
-/*     } */
-/*   } */
-
-/*   if (conf->collections == 0) goto error; */
-/*   rgRewind(conf->collections); */
-/*   while ((coll = rgNext(conf->collections))) { */
-
-/*     // assert we have the localhost server object */
-/*     if (!getLocalHost(coll)) goto error; */
-    
-/*     // match records to local images  */
-/*     if (!(ring = updateMotdFromMd5sumsDB(ring, coll))) goto error; */
-/*   } */
-
-/*   rc = ring; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "fails to update motd from server"); */
-/*     rgDelete(ring); // do not free support objects */
-/*   } */
-/*   return rc; */
-/* } */
-
-
-/* /\*======================================================================= */
-/*  * Function   : updateMotd */
-/*  * Description: Print the motd */
-/*  * Synopsis   : int updateMotd() */
-/*  * Input      : N/A */
-/*  * Output     : TRUE on success */
-/*  * TODO       : show sharable supports ? */
-/*  =======================================================================*\/ */
-/* int  */
-/* updateMotd() */
-/* { */
-/*   int rc = FALSE; */
-/*   Configuration* conf = 0; */
-/*   RG* tree1 = 0; */
-/*   RG* tree2 = 0; */
-/*   Support *support = 0; */
-/*   Support *prev = 0; */
-/*   Collection* coll = 0; */
-/*   char* text = 0; */
-/*   off_t badSize = 0; */
-/*   char buf[30]; */
-
-/*   logMain(LOG_DEBUG, "updateMotd"); */
-
-/*   if (!allowedUser(env.confLabel)) goto error; */
-/*   if (!(conf = getConfiguration())) goto error; */
-/*   if (!loadConfiguration(CFG|SUPP)) goto error; */
-/*   if (!expandConfiguration()) goto error2; */
-
-/*   if (!(tree1 = updateMotdFromSupportDB()))  { */
-/*     logMain(LOG_ERR, "cannot update motd from supportDB"); */
-/*     goto error2; */
-/*   } */
-  
-/*   if (!(tree2 = updateMotdFromAllMd5sumsDB())) { */
-/*     logMain(LOG_ERR, "cannot update motd from md5sumsDB"); */
-/*     goto error2; */
-/*   } */
-
-/*   printf("\n%s\n", "*****************************"); */
-/*   printf("%s\n", "Mediatex's message of the day"); */
-/*   printf("%s\n", "*****************************"); */
-
-/*   if (tree1) { */
-/*     if (!rgSort(tree1, cmpSupport)) goto error2; */
-/*     printf("Need to check your local supports:\n"); */
-/*     while ((support = rgNext(tree1))) { */
-/*       printf("- %s\n", support->name); */
-/*     } */
-/*   } */
- 
-/*   if (tree2) {    */
-/*     if (!rgSort(tree2, cmpSupport)) goto error2;   */
-/*     printf("Looking for content from your shared supports:\n");  */
-/*     while ((support = rgNext(tree2))) { */
-/*       // do not display support twice */
-/*       if (!prev || cmpSupport(&support, &prev))  */
-/* 	printf("- %s\n", support->name); */
-/*       prev = support; */
-/*     } */
-/*   } */
-
-/*   // display collections global status  */
-/*   printf("Looking for content to burn:\n");  */
-/*   if (conf->collections == 0) goto error2; */
-/*   rgRewind(conf->collections); */
-/*   while ((coll = rgNext(conf->collections))) { */
-/*     if (!computeExtractScore(coll)) goto error2; */
-/*     if (!(text = getExtractStatus(coll, &badSize, 0)))  */
-/*       goto error2; */
-
-/*     if (badSize == 0) goto next; */
-/*     sprintSize(buf, badSize); */
-/*     printf("- %s (%5.2f): %s", coll->label, coll->extractTree->score, buf); */
-
-/*   next: */
-/*     text = destroyString(text); */
-/*   } */
-
-/*   printf("\n"); */
-/*   rc = TRUE; */
-/*  error2: */
-/*   if (!loadConfiguration(CFG|SUPP)) rc = FALSE; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "fails to update motd"); */
-/*   } */
-/*   tree1 = destroyOnlyRing(tree1); */
-/*   tree2 = destroyOnlyRing(tree2); */
-/*   return rc; */
-/* } */
-
-//////////////////////////////////////////////////////
-
-
 typedef struct MotdSupport {
 
   Support* support;
@@ -362,9 +33,17 @@ typedef struct MotdSupport {
 
 } MotdSupport;
 
+typedef struct MotdRecord {
+
+  Collection* coll;
+  RG* records;
+
+} MotdRecord;
+
 typedef struct Motd {
   
-  RG* motdSupports; // MotdSupport*
+  RG* motdSupports; // MotdSupport*: support to ask for
+  RG* motdRecords;  // MotdRecord*: records to burn
   
 } Motd;
 
@@ -381,7 +60,7 @@ int motdArchive(MotdSearch* data, Archive* archive);
 /*=======================================================================
  * Function   : destroyMotdSupport
  * Description: Destroy an object by freeing all the allocate memory.
- * Synopsis   : void destroyMotdSupport(Motd* self)
+ * Synopsis   : void destroyMotdSupport(MotdSearch* self)
  * Input      : MotdSupport* self = the address of the object to destroy.
  * Output     : NULL address
  =======================================================================*/
@@ -419,8 +98,53 @@ createMotdSupport(void)
 
   return rc;
  error:
-  logMain(LOG_ERR, "malloc: cannot create MotdSuuport");
+  logMain(LOG_ERR, "malloc: cannot create MotdSuport");
   return destroyMotdSupport(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyMotdRecord
+ * Description: Destroy an object by freeing all the allocate memory.
+ * Synopsis   : void destroyMotdRecord(MotdRecord* self)
+ * Input      : MotdRecord* self = the address of the object to destroy.
+ * Output     : NULL address
+ =======================================================================*/
+MotdRecord* 
+destroyMotdRecord(MotdRecord* self)
+{
+  MotdRecord* rc = 0;
+
+  if (!self) goto error;
+
+  // delete records association
+  self->records = destroyOnlyRing(self->records);
+  
+  free(self);
+  
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : createMotdRecord
+ * Description: Create, by memory allocation a motd support object
+ * Synopsis   : Motd* createMotdRecord(void)
+ * Input      : N/A
+ * Output     : The address of the created empty object
+ =======================================================================*/
+MotdRecord* 
+createMotdRecord(void)
+{
+  MotdRecord* rc = 0;
+
+  if (!(rc = (MotdRecord*)malloc(sizeof(MotdRecord)))) goto error;
+  memset(rc, 0, sizeof(MotdRecord));
+  if ((rc->records = createRing()) == 0) goto error;
+
+  return rc;
+ error:
+  logMain(LOG_ERR, "malloc: cannot create MotdRecord");
+  return destroyMotdRecord(rc);
 }
 
 /*=======================================================================
@@ -437,13 +161,15 @@ destroyMotd(Motd* self)
 
   if (!self) goto error;
 
-  // delete motdSupports association
   self->motdSupports
     = destroyRing(self->motdSupports,
 		  (void*(*)(void*)) destroyMotdSupport);
-  
-  free(self);
-  
+
+  self->motdRecords
+    = destroyRing(self->motdRecords,
+		  (void*(*)(void*)) destroyMotdRecord);
+
+  free(self);  
  error:
   return rc;
 }
@@ -465,6 +191,7 @@ createMotd(void)
    
   memset(rc, 0, sizeof(Motd));
   if ((rc->motdSupports = createRing()) == 0) goto error;
+  if ((rc->motdRecords = createRing()) == 0) goto error;
 
   return rc;
  error:
@@ -509,7 +236,8 @@ addMotdSupport(Motd* motd, Support* support, Collection* coll)
   MotdSupport* motdSupp = 0;
   RGIT* curr = 0;
    
-  logMain(LOG_DEBUG, "addMotdSupport %s form %s", support->name, coll->label);
+  logMain(LOG_DEBUG, "addMotdSupport %s form %s", 
+	  support->name, coll->label);
   checkSupport(support);
   if (!motd) goto error;
 
@@ -547,7 +275,7 @@ addMotdSupport(Motd* motd, Support* support, Collection* coll)
  * Function   : updateMotdFromSupportDB
  * Description: List all obsolete supports
  * Synopsis   : SupportTree* updateMotdFromSupportDB(Motd* motd)
- * Input      : N/A
+ * Input      : Motd* motd: where we write results 
  * Output     : TRUE on success
  =======================================================================*/
 int
@@ -560,8 +288,7 @@ updateMotdFromSupportDB(Motd* motd)
   logMain(LOG_DEBUG, "updateMotdFromSupportDB");
   if (!(conf = getConfiguration())) goto error;
 
-#warning TODO: check support files here
-
+  // notify bad supports
   rgRewind(conf->supports);
   while ((support = rgNext(conf->supports))) {
     if (!scoreSupport(support, &conf->scoreParam)) goto error;
@@ -669,19 +396,24 @@ int motdArchive(MotdSearch* data, Archive* archive)
 
 /*=======================================================================
  * Function   : updateMotdFromMd5sumsDB
- * Description: List all requested supports
- * Synopsis   : SupportTree* updateMotdFromMd5sumsDB(
- * Input      : 
+ * Description: work on record tree the server manage
+ * Synopsis   : int updateMotdFromMd5sumsDB(Motd* motd, Collection* coll, 
+ *                                          MotdRecord* motdRecord)
+ * Input      : Motd* motd: where we write results 
+ *              Collection* coll: collection we are working on
+ *              MotdRecord* motdRecord: where we write records to burn
  * Output     : TRUE on success
  =======================================================================*/
 int
-updateMotdFromMd5sumsDB(Motd* motd, Collection* coll)
+updateMotdFromMd5sumsDB(Motd* motd, Collection* coll, 
+			MotdRecord* motdRecord)
 {
   int rc = FALSE;
   Archive* archive = 0;
   Support* support = 0;
   RGIT* curr = 0;
   MotdSearch data;
+  Image* image = 0;
 
   logMain(LOG_DEBUG, "updateMotdFromMd5sumsDB for %s collection",
 	  coll->label);
@@ -690,32 +422,57 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll)
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!(data.imagesWanted = createRing())) goto error2;
   data.coll = coll;
-
-  // for each cache entry
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= 0) {
+  
+  // 1) for each cache entry
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
 
     // scan wanted archives not available
     if (archive->state != WANTED) continue;
     if (!motdArchive(&data, archive)) goto error2;
   }
-
-  // for each archive (that all are images), match supports
+  
+  // for images, match supports
   rgRewind(data.imagesWanted);
   while ((archive = rgNext(data.imagesWanted))) {
-
+    
     // match support shared with that collection
     rgRewind(coll->supports);
     while ((support = rgNext(coll->supports))) {
       if (!strncmp(support->fullHash, archive->hash, MAX_SIZE_HASH) &&
 	  support->size == archive->size) {
 	
-	// add a motd notification on support
+	// add a motd notification on support (to check)
 	if (!addMotdSupport(motd, support, coll)) goto error2;
       }
     }
-
   }   
+  
+  // 2) for each cache entry
+  motdRecord->coll = coll;
+  if (!computeExtractScore(coll)) goto error2;
+  curr = 0;
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+
+    // looking for top containers as content cannot have worse score
+    if (!isEmptyRing(archive->fromContainers)) continue;
+
+    // looking for archive having a bad score
+    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
+      continue;      
+    
+    // looking for archive that available into the cache
+    if (archive->state < AVAILABLE) continue;
+ 
+    // looking for archive that have a no local image...
+    if ((image = getImage(coll, coll->localhost, archive)) &&
+	// ...or a local bad score
+	image->score > coll->serverTree->scoreParam.maxScore / 2)
+      continue;
+
+    // add a motd notification on record (to burn)
+    if (!rgInsert(motdRecord->records, archive->localSupply)) goto error2;
+  }
+
   rc = TRUE; 
  error2:
   if (!releaseCollection(coll, SERV|EXTR|CACH)) rc = 0;
@@ -741,6 +498,7 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
   int rc = FALSE;
   Configuration* conf = 0;
   Collection* coll = 0;
+  MotdRecord* motdRecord = 0;
 
   logMain(LOG_DEBUG, "updateMotdFromAllMd5sumsDB");
   if (!(conf = getConfiguration())) goto error;
@@ -761,8 +519,11 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
     // assert we have the localhost server object
     if (!getLocalHost(coll)) goto error;
     
-    // match records to local images 
-    if (!updateMotdFromMd5sumsDB(motd, coll)) goto error;
+    // match wanted records to local images and find record to burn
+    if (!(motdRecord = createMotdRecord())) goto error;
+    if (!updateMotdFromMd5sumsDB(motd, coll, motdRecord)) goto error;
+    if (!rgInsert(motd->motdRecords, motdRecord)) goto error;
+    motdRecord = 0;
   }
 
   rc = TRUE;
@@ -770,6 +531,7 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
   if (!rc) {
     logMain(LOG_ERR, "updateMotdFromAllMd5sumsDB fails");
   }
+  destroyMotdRecord(motdRecord);
   return rc;
 }
 
@@ -786,13 +548,15 @@ updateMotd()
 {
   int rc = FALSE;
   Configuration* conf = 0;
+  Collection* coll = 0;
   Motd* motd = 0;
   MotdSupport* motdSupp = 0;
-  Collection* coll = 0;
-  char* text = 0;
-  off_t badSize = 0;
-  char buf[30];
+  MotdRecord* motdRec = 0;
+  Record* record = 0;
   char car = ':';
+  //char* text = 0;
+  //off_t badSize = 0;
+  //char buf[30];
 
   logMain(LOG_DEBUG, "updateMotd");
 
@@ -800,8 +564,7 @@ updateMotd()
   if (!(conf = getConfiguration())) goto error;
   if (!loadConfiguration(CFG|SUPP)) goto error;
   if (!expandConfiguration()) goto error2;
-
-  if (!(motd = createMotd())) goto error;
+  if (!(motd = createMotd())) goto error2;
   
   if (!updateMotdFromSupportDB(motd))  {
     logMain(LOG_ERR, "cannot update motd from supportDB");
@@ -817,8 +580,9 @@ updateMotd()
   printf("%s\n", "Mediatex's message of the day");
   printf("%s\n", "*****************************");
 
+  // supports to ask for
   if (!rgSort(motd->motdSupports, cmpMotdSupport)) goto error2;
-  printf("Need to check your local supports:\n");
+  printf("Please provide theses local supports:\n");
   while ((motdSupp = rgNext(motd->motdSupports))) {
     printf("- %s", motdSupp->support->name);
     car = ':';
@@ -835,25 +599,37 @@ updateMotd()
     }
     printf("%s", "\n");
   }
- 
-  // display collections global status 
-  printf("Looking for content to burn:\n"); 
-  if (conf->collections == 0) goto error2;
-  rgRewind(conf->collections);
-  while ((coll = rgNext(conf->collections))) {
-    if (!computeExtractScore(coll)) goto error2;
-    if (!(text = getExtractStatus(coll, &badSize, 0))) 
-      goto error2;
 
-    if (badSize == 0) goto next;
-    sprintSize(buf, badSize);
-    printf("- %s (%5.2f): %s", coll->label, coll->extractTree->score, buf);
-
-  next:
-    text = destroyString(text);
+  // records to burn
+  printf("Please burn theses files:\n"); 
+  while ((motdRec = rgNext(motd->motdRecords))) {
+    if (isEmptyRing(motdRec->records)) continue;
+    printf("- Collection %s:\n", motdRec->coll->label); 
+    rgRewind(motdRec->records);
+    while ((record = rgNext(motdRec->records))) {
+      printf(" - %s/%s (%5.2f)\n", motdRec->coll->cacheDir,
+	     record->extra, record->archive->extractScore); 
+    }
   }
 
-  printf("\n");
+  /* // display collections global status  */
+  /* printf("Looking for content to burn:\n");  */
+  /* if (conf->collections == 0) goto error2; */
+  /* rgRewind(conf->collections); */
+  /* while ((coll = rgNext(conf->collections))) { */
+  /*   if (!computeExtractScore(coll)) goto error2; */
+  /*   if (!(text = getExtractStatus(coll, &badSize, 0)))  */
+  /*     goto error2; */
+
+  /*   if (badSize == 0) goto next; */
+  /*   sprintSize(buf, badSize); */
+  /*   printf("- %s (%5.2f): %s", coll->label, coll->extractTree->score, buf); */
+
+  /* next: */
+  /*   text = destroyString(text); */
+  /* } */
+  /* printf("\n"); */
+
   rc = TRUE;
  error2:
   if (!loadConfiguration(CFG|SUPP)) rc = FALSE;

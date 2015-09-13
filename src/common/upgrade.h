@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
+ * Version: $Id: upgrade.h,v 1.5 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -27,6 +27,7 @@
 
 #include "mediatex-types.h"
 
+int doCheckSupport(Support *supp, char* path);
 int scoreSupport(Support* supp, ScoreParam *p);
 int scoreLocalImages(Collection* coll);
 int upgradeCollection(Collection* collection);

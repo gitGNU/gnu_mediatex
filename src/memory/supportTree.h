@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.h,v 1.5 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: supportTree.h,v 1.6 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -64,6 +64,8 @@ int serializeSupports();
 Support* getSupport(char* label);
 Support* addSupport(char* label);
 int delSupport(Support* self);
+
+int isSupportFile(Support* self);
 
 #endif /* MDTX_MEMORY_SUPP_H */
 

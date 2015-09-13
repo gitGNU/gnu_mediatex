@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.14 2015/09/04 15:30:26 nroche Exp $
+ * Version: $Id: cacheTree.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -264,9 +264,6 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   previousState = archive->state;
   logMemory(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
 	  archive->hash, archive->size);
-
-  // compute scores (only once) so as to keep archive with bad score
-  if (!computeExtractScore(coll)) goto error;
 
   if ((date = currentTime()) == -1) goto error; 
 

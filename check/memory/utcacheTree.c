@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcacheTree.c,v 1.8 2015/09/04 15:30:18 nroche Exp $
+ * Version: $Id: utcacheTree.c,v 1.9 2015/09/13 23:47:33 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -130,6 +130,7 @@ main(int argc, char** argv)
   if (!unLockCache(coll)) goto error;
 
   if (!(tree = createExempleRecordTree(coll))) goto error;
+  if (!computeExtractScore(coll)) goto error;
 
   // index the record tree into cache
   logMemory(LOG_DEBUG, "___ test indexation ___");

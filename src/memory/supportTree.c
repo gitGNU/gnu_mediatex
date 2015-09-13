@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.9 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.10 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -317,6 +317,25 @@ delSupport(Support* self)
  if (!rc) {
     logMemory(LOG_ERR, "delSupport fails");
   }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : isSupportFile
+ * Description: check if support is in fact a local file
+ * Synopsis   : int isSupportFile(Support* self)
+ * Input      : Support* self
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+isSupportFile(Support* self)
+{
+  int rc = FALSE;
+
+  checkSupport(self);
+  rc = (*self->name == '/');
+  
+ error:
   return rc;
 }
 

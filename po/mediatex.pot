@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mediatex 0.4\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-09-03 17:03+0200\n"
+"POT-Creation-Date: 2015-09-14 01:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/common/extractScore.c:370
+#: src/common/extractScore.c:372
 msgid "Perenniality lost"
 msgstr ""
 
-#: src/common/extractScore.c:374
+#: src/common/extractScore.c:376
 msgid "Serious risk to loose perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:378
+#: src/common/extractScore.c:380
 msgid "Bad perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:382
+#: src/common/extractScore.c:384
 msgid "Good perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:385
+#: src/common/extractScore.c:387
 msgid "Very good perenniality"
 msgstr ""
 

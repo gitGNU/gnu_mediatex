@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.7 2015/09/04 15:30:23 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.8 2015/09/13 23:47:34 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -63,6 +63,9 @@ utCleanCaches(void)
     if (!(argv[2] = catString(argv[2], "/*"))) goto error;
     if (!execScript(argv, 0, 0, FALSE)) goto error;
     argv[2] = destroyString(argv[2]);
+
+    // this emulate loadRecords call (we dont call it into unit tests)
+    if (!computeExtractScore(coll)) goto error;
   }
 
   rc = TRUE;

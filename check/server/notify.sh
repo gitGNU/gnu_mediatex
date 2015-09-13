@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: notify.sh,v 1.3 2015/08/24 17:48:17 nroche Exp $
+# * Version: $Id: notify.sh,v 1.4 2015/09/13 23:47:34 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -35,9 +35,12 @@ TEST=${TEST%.sh}
 # run the unit test
 SRC=$CVSCLT/$MDTXUSER-coll1
 loadPaths "mdtx2"
-DST=$CVSCLT/$MDTXUSER-coll1
-cp $SRC$SERVFILE $DST$SERVFILE
-cp $SRC$EXTRFILE $DST$EXTRFILE
+for I in $(seq 1 3); do
+    DST=$CVSCLT/$MDTXUSER-coll$I
+    cp $SRC$SERVFILE $DST$SERVFILE
+    cp $SRC$EXTRFILE $DST$EXTRFILE
+done
+
 server/ut$TEST -cmdtx2 -d $srcdir >server/$TEST.out 2>&1
 
 # compare with the expected output

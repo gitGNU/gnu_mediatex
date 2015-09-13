@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.14 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -121,35 +121,37 @@ populateExtractTree(Collection* coll)
       archive->imageScore = 0;
       rgRewind(archive->images);
 
-      logCommon(LOG_DEBUG, "local image score for %s:%lli",
+      logCommon(LOG_INFO, "local image score for %s:%lli",
 	      archive->hash, archive->size);
 
       i=0;
       while ((image = rgNext(archive->images))) {
 
 	// ignore image from a mute server
-	if (image->server->lastCommit + serverTree->serverTTL < now) continue;
+	if (image->server->lastCommit + serverTree->serverTTL < now) 
+	  continue;
 	
 	archive->imageScore += image->score;
-	logCommon(LOG_DEBUG, "%c %5.2f", (i > 1)?'+':' ', image->score);
+	logCommon(LOG_INFO, "%c %5.2f", (i > 1)?'+':' ', image->score);
 	++i;
       }
     }
     
-    logCommon(LOG_DEBUG, "= %5.2f", archive->imageScore);
+    logCommon(LOG_INFO, "= %5.2f", archive->imageScore);
 
     // archive->imageScore /= minGeoDup
     archive->imageScore /= serverTree->minGeoDup;
-    logCommon(LOG_DEBUG, "/ %i", serverTree->minGeoDup);
+    logCommon(LOG_INFO, "/ %i", serverTree->minGeoDup);
 
     // truncate it if more than maxScore
     if (archive->imageScore > coll->serverTree->scoreParam.maxScore) {
       archive->imageScore = coll->serverTree->scoreParam.maxScore;
-      logCommon(LOG_DEBUG, "> %5.2f", coll->serverTree->scoreParam.maxScore);
+      logCommon(LOG_INFO, "> %5.2f", 
+		coll->serverTree->scoreParam.maxScore);
     }
 
-    logCommon(LOG_DEBUG, "-------", archive->imageScore);
-    logCommon(LOG_DEBUG, "= %5.2f", archive->imageScore);
+    logCommon(LOG_INFO, "-------", archive->imageScore);
+    logCommon(LOG_INFO, "= %5.2f", archive->imageScore);
   }    
 
   rc = TRUE;
@@ -181,7 +183,7 @@ computeContainer(Container* self, int depth)
     goto error;
   }
 
-  logCommon(LOG_DEBUG, "%*s computeContainer %s/%s:%lli", 
+  logCommon(LOG_DEBUG, "%*scomputeContainer %s/%s:%lli", 
 	  depth, "", strEType(self->type),
 	  self->parent->hash, (long long int)self->parent->size);
 
@@ -195,7 +197,7 @@ computeContainer(Container* self, int depth)
   }
   
  quit:
-  logCommon(LOG_DEBUG, " %*s container %s/%s:%lli = %.2f", depth, "",
+  logCommon(LOG_INFO, "%*s container %s/%s:%lli = %.2f", depth, "",
 	  strEType(self->type), self->parent->hash, 
 	  (long long int)self->parent->size, self->score);
   rc = TRUE;
@@ -222,7 +224,7 @@ computeArchive(Archive* self, int depth)
 
   checkArchive(self);
   if (self->extractScore != -1) goto quit; // already computed
-  logCommon(LOG_DEBUG, "%*s computeArchive: %s:%lli", 
+  logCommon(LOG_DEBUG, "%*scomputeArchive: %s:%lli", 
 	  depth, "", self->hash, self->size);
 
   // score = max (image's scores)
@@ -240,7 +242,7 @@ computeArchive(Archive* self, int depth)
   }
 
  quit:
-  logCommon(LOG_DEBUG, " %*s archive %s:%lli = %.2f", depth, "",
+  logCommon(LOG_INFO, "%*s archive %s:%lli = %.2f", depth, "",
 	  self->hash, self->size, self->extractScore);
   rc = TRUE;
  error:
@@ -359,7 +361,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
     }
   }
 
-  logCommon(LOG_DEBUG, "extraction score = %.2f", self->score);
+  logCommon(LOG_INFO, "extraction score = %.2f", self->score);
 
   if (self->score < 0) {
     // should never be reached
@@ -370,15 +372,15 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
     rc = createString(_("Perenniality lost"));
     goto next;
   }
-  if (self->score < coll->serverTree->scoreParam.badScore) {
+  if (self->score <= coll->serverTree->scoreParam.badScore) {
     rc = createString(_("Serious risk to loose perenniality"));
     goto next;
   }
-  if (self->score < 5) {
+  if (self->score <= coll->serverTree->scoreParam.maxScore/2) {
     rc = createString(_("Bad perenniality"));
     goto next;
   }
-  if (self->score < 7.5) {
+  if (self->score <= coll->serverTree->scoreParam.maxScore*3/4) {
     rc = createString(_("Good perenniality"));
     goto next;
   }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.14 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: openClose.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -158,13 +158,15 @@ int loadRecords(Collection* coll)
   Record* record = 0;
   
   checkCollection(coll);
-  logCommon(LOG_INFO, "load %s records", coll->label);
-  logCommon(LOG_DEBUG, "records file is: %s", coll->md5sumsDB);
+  logCommon(LOG_DEBUG, "load %s records", coll->label);
+  logCommon(LOG_INFO, "parse records file: %s", coll->md5sumsDB);
+
+  // compute scores (only once), as score will be used by addCacheEntry
+  if (!computeExtractScore(coll)) goto error;
 
   if (access(coll->md5sumsDB, R_OK) == -1) {
     logCommon(LOG_NOTICE, "no md5sums file: %s", coll->md5sumsDB);
-    rc = TRUE;
-    goto error;
+    goto end;
   }
 
   // open md5sumsDB file
@@ -197,6 +199,7 @@ int loadRecords(Collection* coll)
     if (!addCacheEntry(coll, record)) goto error;
   }
    
+ end:
   rc = TRUE;
  error:
   if (!rc) {

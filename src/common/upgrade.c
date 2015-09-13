@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.12 2015/09/04 15:30:26 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.13 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -25,6 +25,130 @@
 #include "mediatex-config.h"
 #include <math.h>      // pow
 #include <dirent.h>    // scandir
+
+/*=======================================================================
+ * Function   : checkSupport 
+ * Description: Do checksums on an available support
+ * Synopsis   : int checkSupport(Support *supp, char* path)
+ * Input      : Support *supp = the support object
+ *              char* path = the device that host the support
+ * Output     : TRUE on success
+ *
+ * Note       : supp->lastCheck: (O will force check)
+ *              also call by supp module
+ =======================================================================*/
+int 
+doCheckSupport(Support *supp, char* path)
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  time_t now = 0;
+  time_t laps = 0;
+  time_t ttl = 0;
+  Md5Data data;
+
+  logMain(LOG_DEBUG, "doCheckSupport");
+  if (!(conf = getConfiguration())) goto error;
+  checkSupport(supp);
+  memset(&data, 0, sizeof(Md5Data));
+  
+  if ((data.path = createString(path)) == 0) {
+    logMain(LOG_ERR, "cannot dupplicate path string");
+    goto error;
+  }
+  
+  // current date
+  if ((now = currentTime()) == -1) goto error;
+ 
+  // by default do not exists: full computation (no check)
+  data.opp = MD5_SUPP_ADD;
+
+  // check if support need to be full checked or not
+  if (supp->lastCheck > 0) {
+
+    // exists: quick check
+    data.opp = MD5_SUPP_ID;
+
+    // but maybe need to be re-checked fully
+    ttl = (isSupportFile(supp))?conf->fileTTL:conf->checkTTL;
+    laps = now - supp->lastCheck;
+    if (laps > ttl/2) {
+
+      // soon obsolete: full check
+      data.opp = MD5_SUPP_CHECK;
+      logMain(LOG_NOTICE, "support no checked since %d days: checking...", 
+	      laps/60/60/24);
+    }
+  }
+  
+  // copy size and current checksums to compare them
+  switch (data.opp) {
+  case MD5_SUPP_CHECK:
+    strncpy(data.fullMd5sum, supp->fullHash, MAX_SIZE_HASH);
+  case MD5_SUPP_ID:
+    data.size = supp->size;
+    strncpy(data.quickMd5sum, supp->quickHash, MAX_SIZE_HASH);
+  default:
+    break;
+  }
+
+  // checksum computation
+  rc = TRUE;
+  if (!doMd5sum(&data)) {
+      logMain(LOG_DEBUG, 
+	      "internal error on md5sum computation for \"%s\" support", 
+	      supp->name);
+      rc = FALSE;
+      goto error;
+  }
+
+  if (data.rc == MD5_FALSE_SIZE) {
+    logMain(LOG_WARNING, "wrong size on \"%s\" support", supp->name);
+    rc = FALSE;
+  }
+  if (data.rc == MD5_FALSE_QUICK) {
+    logMain(LOG_WARNING, "wrong quick hash on \"%s\" support", supp->name);
+    rc = FALSE;
+  }
+  if (data.rc == MD5_FALSE_FULL) {
+    logMain(LOG_WARNING, "wrong full hash on \"%s\" support", supp->name);
+    rc = FALSE;
+  }
+
+  if (!rc && !isSupportFile(supp)) {
+    logMain(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
+    logMain(LOG_WARNING, "either this is not \"%s\" support at %s", 
+	    supp->name, path);
+    logMain(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
+	    supp->name);
+    goto error;
+  }
+
+  // store results
+  switch (data.opp) {
+  case  MD5_SUPP_ADD:
+    supp->size = data.size;
+    strncpy(supp->quickHash, data.quickMd5sum, MAX_SIZE_HASH);
+    strncpy(supp->fullHash, data.fullMd5sum, MAX_SIZE_HASH);
+  case MD5_SUPP_CHECK:
+    if (env.noRegression)
+      supp->lastCheck = currentTime() + 1*DAY;
+    else
+      supp->lastCheck = now;
+  case MD5_SUPP_ID:
+    if (env.noRegression)
+      supp->lastSeen = currentTime() + 1*DAY;
+    else
+      supp->lastSeen = now;
+  default:
+    break;
+  }
+
+  conf->fileState[iSUPP] = MODIFIED;
+ error:
+  free(data.path);
+  return rc;
+}
 
 /*=======================================================================
  * Function   : scoreSupport
@@ -68,9 +192,9 @@ scoreSupport(Support* supp, ScoreParam *p)
   }
 
   // check support validity
-  ttl = (*supp->name == '/')?conf->fileTTL:conf->checkTTL;
+  ttl = (isSupportFile(supp))?conf->fileTTL:conf->checkTTL;
   laps = now - supp->lastCheck;
-  if (ttl < 0 || (ttl >= 0 && laps > ttl)) {
+  if (laps > ttl) {
     logCommon(LOG_WARNING, "\"%s\" support have expired since %d days",
 	      supp->name, laps/(60*60*24));
     // score = 0: unchecked support for too many time (may be broken)
@@ -78,7 +202,17 @@ scoreSupport(Support* supp, ScoreParam *p)
   }
 
   // static score for support file
-  if (*supp->name == '/') {
+  if (isSupportFile(supp)) {
+
+    // check support file before they become obsolete
+    if (laps > ttl/2) {
+      if (!doCheckSupport(supp, supp->name)) {
+	logMain(LOG_WARNING, "\"%s\" support file seems lost", supp->name);
+	// score = 0: fails to check support file on disk
+	goto end;
+      }
+    }
+      
     supp->score = p->fileScore;
     logCommon(LOG_INFO, "file: = %.2f", supp->score);
     goto end;
@@ -140,7 +274,6 @@ scoreLocalImages(Collection* coll)
   Image* image1 = 0;
   Image* image2 = 0;
   Image* image3 = 0;
-  //char* label = 0;
   int nbSupp = 0;
 
   checkCollection(coll);
@@ -172,7 +305,7 @@ scoreLocalImages(Collection* coll)
   // sort supports on the ring by scores and grouped by images
   if (!rgSort(images, cmpImageScore)) goto error;
 
-   // for each group of support names:
+  // for each group of support names:
   rgRewind(images);
   image1 = image2 = rgNext(images);
   while (image1) {
