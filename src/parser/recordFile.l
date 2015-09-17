@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.l,v 1.4 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: recordFile.l,v 1.5 2015/09/17 18:53:49 nroche Exp $
  * Project: Mediatex
  * Module : record scanner
 
@@ -127,7 +127,7 @@ MIN     [[:digit:]]{2}
 SEC     [[:digit:]]{2}
 DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
 
- /* MAX_SIZE_HASH = 32 */
+ /* MAX_SIZE_MD5 = 32 */
 HASH    [[:xdigit:]]{32}
 
  /* MAX_SIZE_STRING = 511 */

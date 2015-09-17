@@ -35,59 +35,63 @@ score      state label
 # Version:  XXX
 # Local Supports:
 
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? /HERE/misc/logo.png
-2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? /HERE/misc/logoP1.iso
-2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? /HERE/misc/logoP2.iso
-1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
-1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
-2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP21_logo.part1
-2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
-2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? /HERE/misc/logo.png
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? /HERE/misc/logoP1.iso
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? /HERE/misc/logoP2.iso
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP12_logo.png
+2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP21_logo.part1
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP23_logo.part1
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP33_logo.part2
 [notice utsupp.c] *** Add a support:
 [info device.c] not a symlink: /HERE/misc/logo.tgz
 [info device.c] do not match a block device: /HERE/misc/logo.tgz
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
+[info md5sum.c] 98a84fe4c8a0708831c861938fbe7043193d5340 quick sha1sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
+[info md5sum.c] 98a84fe4c8a0708831c861938fbe7043193d5340 full sha1sum computed on 24546 bytes
 [info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.
 # Version:  XXX
 # Local Supports:
 
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? /HERE/misc/logo.png
-2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? /HERE/misc/logoP1.iso
-2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? /HERE/misc/logoP2.iso
-1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
-1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
-2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP21_logo.part1
-2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
-2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
-2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be               24546         ok me
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? /HERE/misc/logo.png
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? /HERE/misc/logoP1.iso
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? /HERE/misc/logoP2.iso
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP12_logo.png
+2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP21_logo.part1
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP23_logo.part1
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP33_logo.part2
+2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be 98a84fe4c8a0708831c861938fbe7043193d5340 98a84fe4c8a0708831c861938fbe7043193d5340               24546         ok me
 [notice utsupp.c] *** Add a file:
 [info device.c] not a symlink: /HERE/misc/logo.tgz
 [info device.c] do not match a block device: /HERE/misc/logo.tgz
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
+[info md5sum.c] 98a84fe4c8a0708831c861938fbe7043193d5340 quick sha1sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
+[info md5sum.c] 98a84fe4c8a0708831c861938fbe7043193d5340 full sha1sum computed on 24546 bytes
 [info supportTree.c] Serializing the supports list file: stdout
 # This file is managed by MediaTeX software.
 # Version:  XXX
 # Local Supports:
 
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? /HERE/misc/logo.png
-2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be               24546         ok /HERE/misc/logo.tgz
-2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? /HERE/misc/logoP1.iso
-2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? /HERE/misc/logoP2.iso
-1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
-1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
-2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP21_logo.part1
-2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
-2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
-2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be               24546         ok me
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? /HERE/misc/logo.png
+2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be 98a84fe4c8a0708831c861938fbe7043193d5340 98a84fe4c8a0708831c861938fbe7043193d5340               24546         ok /HERE/misc/logo.tgz
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? /HERE/misc/logoP1.iso
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? /HERE/misc/logoP2.iso
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP12_logo.png
+2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP21_logo.part1
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP23_logo.part1
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP33_logo.part2
+2010-01-01,01:00:00 2010-01-02,01:00:00 2010-01-02,01:00:00 0387eee9820fa224525ff8b2e0dfa9be 0387eee9820fa224525ff8b2e0dfa9be 98a84fe4c8a0708831c861938fbe7043193d5340 98a84fe4c8a0708831c861938fbe7043193d5340               24546         ok me
 [notice utsupp.c] *** List supports:
 [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (/HERE/misc/logo.png)
 [info upgrade.c] file: = 10.00
@@ -128,14 +132,15 @@ score      state label
 [warning upgrade.c] please manualy check "SUPP21_logo.part1" support
 [warning upgrade.c] either this is not "SUPP21_logo.part1" support at ./../misc/logo.png
 [warning upgrade.c] or maybe the "SUPP21_logo.part1" support is obsolete
-[err supp.c] have query on SUPP21_logo.part1 support failed
+[err supp.c] mdtxHaveSupport fails
 [notice utsupp.c] *** Have a file:
 [err supp.c] have function do not handle support file
-[err supp.c] have query on unknown support failed
+[err supp.c] mdtxHaveSupport fails
 [notice utsupp.c] *** Have a support:
 [info device.c] not a symlink: /HERE/misc/logoP1.iso
 [info device.c] do not match a block device: /HERE/misc/logoP1.iso
 [info md5sum.c] de5008799752552b7963a2670dc5eb18 quick md5sum computed on 391168 bytes
+[info md5sum.c] 6ed0e67ccd882f6e94f931a07834bc6bc6394583 quick sha1sum computed on 391168 bytes
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -168,16 +173,16 @@ score      state label
 # Version:  XXX
 # Local Supports:
 
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? /HERE/misc/logo.png
-2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? /HERE/misc/logoP1.iso
-2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? /HERE/misc/logoP2.iso
-1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
-1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
-2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-02,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168 too much c SUPP21_logo.part1
-2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
-2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? /HERE/misc/logo.png
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? /HERE/misc/logoP1.iso
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? /HERE/misc/logoP2.iso
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP12_logo.png
+2000-01-01,01:00:00 2010-01-01,01:00:00 2010-01-02,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168 too much c SUPP21_logo.part1
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP23_logo.part1
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP33_logo.part2
 [notice utsupp.c] *** Remove a support:
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
 [info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/servers.txt
@@ -249,14 +254,14 @@ end
 # Version:  XXX
 # Local Supports:
 
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? /HERE/misc/logo.png
-2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? /HERE/misc/logoP1.iso
-2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? /HERE/misc/logoP2.iso
-1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP11_logo.png
-1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea               24075         ?? SUPP12_logo.png
-2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ?? SUPP23_logo.part1
-2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP32_logo.part2
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f              374784         ?? SUPP33_logo.part2
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+1998-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? /HERE/misc/logo.png
+2002-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? /HERE/misc/logoP1.iso
+2006-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? /HERE/misc/logoP2.iso
+1970-01-01,01:00:00 1975-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP11_logo.png
+1996-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 022a34b2f9b893fba5774237e1aa80ea 022a34b2f9b893fba5774237e1aa80ea d9a9ae94d33064ca68a513eaf589dc47f6412e65 d9a9ae94d33064ca68a513eaf589dc47f6412e65               24075         ?? SUPP12_logo.png
+2004-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ?? SUPP23_logo.part1
+2008-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP32_logo.part2
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 0a7ecd447ef2acb3b5c6e4c550e6636f 0a7ecd447ef2acb3b5c6e4c550e6636f 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7 90d2ef4315e4693ed35f2a84011ac6d8b5467cc7              374784         ?? SUPP33_logo.part2
 [info confTree.c] free configuration
 [info utsupp.c] exit on success

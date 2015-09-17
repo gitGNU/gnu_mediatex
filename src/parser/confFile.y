@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.10 2015/09/03 09:25:46 nroche Exp $
+ * Version: $Id: confFile.y,v 1.11 2015/09/17 18:53:48 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -162,7 +162,7 @@ collectionLine: confSHARE supports
               | confLOCALHOST confSTRING
 {
   logParser(LOG_DEBUG, "line %-3i localhost = %s", LINENO, $2);
-  strncpy(coll->userFingerPrint, $2, MAX_SIZE_HASH+1);
+  strncpy(coll->userFingerPrint, $2, MAX_SIZE_MD5+1);
 }
               | confNETWORKS cnetworks
               | confGATEWAYS cgateways

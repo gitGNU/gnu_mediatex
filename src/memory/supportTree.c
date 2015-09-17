@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.10 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.11 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -125,19 +125,23 @@ serializeSupport(Support* self, FILE *fd)
     goto error;
   }
 
-  fprintf(fd, "\
-%04i-%02i-%02i,%02i:%02i:%02i \
-%04i-%02i-%02i,%02i:%02i:%02i \
-%04i-%02i-%02i,%02i:%02i:%02i \
-%*s %*s %*lli %*s %s\n", 
+  fprintf(fd, 
+	  "%04i-%02i-%02i,%02i:%02i:%02i "
+	  "%04i-%02i-%02i,%02i:%02i:%02i "
+	  "%04i-%02i-%02i,%02i:%02i:%02i "
+	  "%*s %*s "
+	  "%*s %*s "
+	  "%*lli %*s %s\n", 
 	  firstSeen.tm_year + 1900, firstSeen.tm_mon+1, firstSeen.tm_mday,
 	  firstSeen.tm_hour, firstSeen.tm_min, firstSeen.tm_sec,
 	  lastCheck.tm_year + 1900, lastCheck.tm_mon+1, lastCheck.tm_mday,
 	  lastCheck.tm_hour, lastCheck.tm_min, lastCheck.tm_sec,
 	  lastSeen.tm_year + 1900, lastSeen.tm_mon+1, lastSeen.tm_mday,
 	  lastSeen.tm_hour, lastSeen.tm_min, lastSeen.tm_sec,
-	  MAX_SIZE_HASH, self->quickHash, 
-	  MAX_SIZE_HASH, self->fullHash, 
+	  MAX_SIZE_MD5, self->quickMd5sum, 
+	  MAX_SIZE_MD5, self->fullMd5sum, 
+	  MAX_SIZE_SHA, self->quickShasum, 
+	  MAX_SIZE_SHA, self->fullShasum, 
 	  MAX_SIZE_SIZE, (long long int)self->size, 
 	  MAX_SIZE_STAT, self->status, self->name);
 
@@ -190,9 +194,13 @@ serializeSupports()
   fprintf(fd, "# Version: $" "Id" "$\n");
   fprintf(fd, "# Local Supports:\n\n");
 
-  fprintf(fd, "# %17s %19s %19s %*s %*s %*s %*s %s\n", 
+  fprintf(fd, "# %17s %19s %19s "
+	  "%*s %*s "
+	  "%*s %*s "
+	  "%*s %*s %s\n", 
 	  "firstSeen", "lastCheck", "lastSeen",
-	  MAX_SIZE_HASH, "quickHash", MAX_SIZE_HASH, "fullHash",
+	  MAX_SIZE_MD5, "quickMd5sum", MAX_SIZE_MD5, "fullMd5sum",
+	  MAX_SIZE_SHA, "quickShasum", MAX_SIZE_SHA, "fullShasum",
 	  MAX_SIZE_SIZE, "size", MAX_SIZE_STAT, "status", "name");
 
   if (!isEmptyRing(conf->supports)) {

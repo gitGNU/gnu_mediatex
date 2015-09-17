@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
+ * Version: $Id: md5sum.h,v 1.5 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -22,37 +22,39 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  =======================================================================*/
 
-#ifndef MDTX_MISC_MD5SUM_H
-#define MDTX_MISC_MD5SUM_H 1
+#ifndef MDTX_MISC_CHECKSUM_H
+#define MDTX_MISC_CHECKSUM_H 1
 
 #include "mediatex-types.h"
 
 // Operation supported by API:
-typedef enum Md5Opp { 
-  MD5_CACHE_ID,       // full computation, no path resolution, no progbar
-  MD5_SUPP_ID,        // quick check, path resolution, progbar
-  MD5_SUPP_ADD,       // full computation, path resolution, progbar
-  MD5_SUPP_CHECK      // full check, path resolution, progbar
-} Md5Opp;
+typedef enum CheckOpp { 
+  CHECK_CACHE_ID,       // full computation, no path resolution, no progbar
+  CHECK_SUPP_ID,        // quick check, path resolution, progbar
+  CHECK_SUPP_ADD,       // full computation, path resolution, progbar
+  CHECK_SUPP_CHECK      // full check, path resolution, progbar
+} CheckOpp;
 
-// only used by MD5_SUPP_CHECK
-typedef enum Md5Rc { 
-  MD5_SUCCESS = 0, 
-  MD5_ERROR = 1,       // report errors (not bad checks)
-  MD5_FALSE_SIZE = 2,
-  MD5_FALSE_QUICK = 4, 
-  MD5_FALSE_FULL = 8,
-  MD5_SYSTEM_MASK = 14
-} Md5Rc;   
+// only used by CHECK_SUPP_CHECK
+typedef enum CheckRc { 
+  CHECK_SUCCESS = 0, 
+  CHECK_ERROR = 1,      // report errors (not bad checks)
+  CHECK_FALSE_SIZE = 2,
+  CHECK_FALSE_QUICK = 4, 
+  CHECK_FALSE_FULL = 8,
+  CHECK_SYSTEM_MASK = 14
+} CheckRc;   
 
-typedef struct Md5Data {
-  char *path;          // path file to work in
-  Md5Opp opp;          // operation to do
-  off_t size;          // internal data (for progbar)
-  char quickMd5sum[MAX_SIZE_HASH + 1];
-  char fullMd5sum[MAX_SIZE_HASH + 1];
-  Md5Rc rc;            // only used by MD5_SUPP_CHECK
-} Md5Data;
+typedef struct CheckData {
+  char *path;           // path file to work in
+  CheckOpp opp;         // operation to do
+  off_t size;           // internal data (for progbar)
+  char quickMd5sum[MAX_SIZE_MD5 + 1];
+  char fullMd5sum[MAX_SIZE_MD5 + 1];
+  char quickShasum[MAX_SIZE_SHA + 1];
+  char fullShasum[MAX_SIZE_SHA + 1];
+  CheckRc rc;           // only used by CHECK_SUPP_CHECK
+} CheckData;
 
 typedef struct MdtxProgBar {
   ProgBar bar;
@@ -64,9 +66,9 @@ typedef struct MdtxProgBar {
 int startProgBar(char* label);
 void stopProgBar();
 
-int doMd5sum(Md5Data* data);
+int doChecksum(CheckData* data);
 
-#endif /* MDTX_MISC_MD5SUM_H */
+#endif /* MDTX_MISC_CHECKSUM_H */
 
 /* Local Variables: */
 /* mode: c */

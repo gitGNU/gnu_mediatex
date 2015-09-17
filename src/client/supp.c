@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supp.c,v 1.18 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: supp.c,v 1.19 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : supp
  *
@@ -302,7 +302,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   char* extra = 0;
 
   logMain(LOG_DEBUG, "addFinalSupplies: %s:%lli",
-	  supp->fullHash, (long long int)supp->size);
+	  supp->fullMd5sum, (long long int)supp->size);
 
   // tels "/PATH:{CONF_SUPPD}/NAME" 
   if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", 
@@ -314,7 +314,7 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   if (!getLocalHost(coll)) goto error;
   if (!(extra = createString(buf))) goto error;
 
-  if (!(archive = addArchive(coll, supp->fullHash, supp->size))) 
+  if (!(archive = addArchive(coll, supp->fullMd5sum, supp->size))) 
     goto error;
 
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
@@ -494,8 +494,7 @@ mdtxHaveSupport(char* label, char* path)
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "have query on %s support failed", 
-	    supp?supp->name:"unknown");
+    logMain(LOG_ERR, "mdtxHaveSupport fails");
   }
   absPath = destroyString(absPath);
   return rc;

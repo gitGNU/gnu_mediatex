@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.10 2015/08/31 00:14:51 nroche Exp $
+# * Version: $Id: tests.sh,v 1.11 2015/09/17 18:53:46 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -549,7 +549,7 @@ function test10()
 
 	# check server 1 was notified
 	mdtxP "srv save" serv1
-	question "do the 2nd server notifies it gets materials ?" \
+	question "do the 2nd server notify it gets materials ?" \
 		 "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"
 	[ $TEST_OK -eq 0 ] && return
 	

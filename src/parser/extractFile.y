@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.y,v 1.8 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: extractFile.y,v 1.9 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *
@@ -61,7 +61,7 @@
 %union {
   off_t  size;
   char   string[MAX_SIZE_STRING+1];
-  char   hash[MAX_SIZE_HASH+1];
+  char   hash[MAX_SIZE_MD5+1];
   EType  type; 
   Archive* archive;
 }

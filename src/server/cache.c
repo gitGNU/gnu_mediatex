@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.20 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: cache.c,v 1.21 2015/09/17 18:53:50 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -199,13 +199,13 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   Record *record = 0;
   RGIT* curr = 0;
   struct stat statBuffer;
-  Md5Data md5; 
+  CheckData md5; 
   char* extra = 0;
 
   logMain(LOG_DEBUG, "scaning file: %s", relativePath);
   checkLabel(absolutePath);
   checkLabel(relativePath);
-  memset(&md5, 0, sizeof(Md5Data));
+  memset(&md5, 0, sizeof(CheckData));
 
   // get file attributes (size)
   if (stat(absolutePath, &statBuffer)) {
@@ -232,8 +232,8 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   // unknown file: compute hash
   md5.path = absolutePath;
   md5.size = statBuffer.st_size;
-  md5.opp = MD5_CACHE_ID;
-  if (!doMd5sum(&md5)) goto error;
+  md5.opp = CHECK_CACHE_ID;
+  if (!doChecksum(&md5)) goto error;
 
   // archive should adready exists from extract metadata
   if (!(archive =

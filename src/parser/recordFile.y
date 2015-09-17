@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordFile.y,v 1.4 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: recordFile.y,v 1.5 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -64,7 +64,7 @@
   off_t   size;
   int     msgval;
   char    string[MAX_SIZE_STRING+1];
-  char    hash[MAX_SIZE_HASH+1];
+  char    hash[MAX_SIZE_MD5+1];
   Record* record;
 }
 
@@ -147,7 +147,7 @@ hLine: recordCOLL recordSTRING
 }
      | recordSERVER recordSTRING
 {
-  strncpy(recordTree->fingerPrint, $2, MAX_SIZE_HASH);
+  strncpy(recordTree->fingerPrint, $2, MAX_SIZE_MD5);
 }
      | recordMSGTYPE recordMSGVAL
 {
@@ -177,8 +177,8 @@ newLine: line
 	    ($1->type & 0x3) == SUPPLY?'S':'?',
 	    date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
 	    date.tm_hour, date.tm_min, date.tm_sec,
-	    MAX_SIZE_HASH, $1->server->fingerPrint, 
-	    MAX_SIZE_HASH, $1->archive->hash, 
+	    MAX_SIZE_MD5, $1->server->fingerPrint, 
+	    MAX_SIZE_MD5, $1->archive->hash, 
 	    MAX_SIZE_SIZE, (long long int)$1->archive->size, 
 	    $1->extra?$1->extra:"");
  

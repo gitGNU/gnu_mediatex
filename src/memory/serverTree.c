@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.13 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: serverTree.c,v 1.14 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -672,7 +672,7 @@ getServer(Collection* coll, char* fingerPrint)
   
   // look for server
   while ((rc = rgNext_r(coll->serverTree->servers, &curr)))
-    if (!strncmp(rc->fingerPrint, fingerPrint, MAX_SIZE_HASH)) break;
+    if (!strncmp(rc->fingerPrint, fingerPrint, MAX_SIZE_MD5)) break;
 
  error:
   return rc;
@@ -702,13 +702,13 @@ addServer(Collection* coll, char* fingerPrint)
 
   // add new one if not already there
   if (!(server = createServer())) goto error;
-  strncpy(server->fingerPrint, fingerPrint, MAX_SIZE_HASH);
-  server->fingerPrint[MAX_SIZE_HASH] = (char)0; // developpement code
+  strncpy(server->fingerPrint, fingerPrint, MAX_SIZE_MD5);
+  server->fingerPrint[MAX_SIZE_MD5] = (char)0; // developpement code
   if (!rgInsert(coll->serverTree->servers, server)) goto error;
 
   // shorter than a function even if not used a lot
   server->isLocalhost = 
-    !strncmp(fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
+    !strncmp(fingerPrint, coll->userFingerPrint, MAX_SIZE_MD5);
 
  end:
   rc = server;

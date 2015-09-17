@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.16 2015/09/04 15:30:17 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.17 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -160,7 +160,7 @@ createExempleSupportTree(char* inputPath)
     1262304000
   };
 
-  char quickHashs[][33] = {
+  char quickMd5sums[][MAX_SIZE_MD5+1] = {
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
@@ -172,7 +172,7 @@ createExempleSupportTree(char* inputPath)
     "0a7ecd447ef2acb3b5c6e4c550e6636f"
   };
 
-  char fullHashs[][33] = {
+  char fullMd5sums[][MAX_SIZE_MD5+1] = {
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
     "022a34b2f9b893fba5774237e1aa80ea",
@@ -182,6 +182,30 @@ createExempleSupportTree(char* inputPath)
     "0a7ecd447ef2acb3b5c6e4c550e6636f",
     "0a7ecd447ef2acb3b5c6e4c550e6636f",
     "0a7ecd447ef2acb3b5c6e4c550e6636f"
+  };
+
+  char quickShasums[][MAX_SIZE_SHA+1] = {
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7"
+  };
+
+  char fullShasums[][MAX_SIZE_SHA+1] = {
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "d9a9ae94d33064ca68a513eaf589dc47f6412e65",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "6ed0e67ccd882f6e94f931a07834bc6bc6394583",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7",
+    "90d2ef4315e4693ed35f2a84011ac6d8b5467cc7"
   };
 
   // maximum size is 2305843009213693952ULL =2^61 (2^40=1TeraBytes)
@@ -223,8 +247,10 @@ createExempleSupportTree(char* inputPath)
       supp->firstSeen = firstSeens[k];
       supp->lastCheck = lastChecks[k];
       supp->lastSeen = lastSeens[k];
-      strncpy(supp->quickHash, quickHashs[k], 32);
-      strncpy(supp->fullHash, fullHashs[k], 32);
+      strncpy(supp->quickMd5sum, quickMd5sums[k], MAX_SIZE_MD5);
+      strncpy(supp->fullMd5sum, fullMd5sums[k], MAX_SIZE_MD5);
+      strncpy(supp->quickShasum, quickShasums[k], MAX_SIZE_SHA);
+      strncpy(supp->fullShasum, fullShasums[k], MAX_SIZE_SHA);
       supp->size = sizes[k];
       strncpy(supp->status, status[k], 9);    
     }
@@ -651,7 +677,7 @@ createExempleServerTree(Collection* coll)
   int wwwPorts[] = {443, 443, 4443};
 
   // fingerprints related to confTree
-  char serverId[][MAX_SIZE_HASH+1] = {
+  char serverId[][MAX_SIZE_MD5+1] = {
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "6b18ed0194b0fbadd08e0a13cccda00e",
     "bedac32422739d7eced624ba20f5912e"};
@@ -789,7 +815,7 @@ createExempleRecordTree(Collection* coll)
   // LOCAL_DEMAND
   // REMOTE_DEMAND
 
-  char fingerPrints[][MAX_SIZE_HASH+1] = {
+  char fingerPrints[][MAX_SIZE_MD5+1] = {
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "746d6ceeb76e05cfa2dea92a1c5753cd",
     "746d6ceeb76e05cfa2dea92a1c5753cd",

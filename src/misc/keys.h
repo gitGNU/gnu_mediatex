@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.h,v 1.4 2015/06/30 17:37:32 nroche Exp $
+ * Version: $Id: keys.h,v 1.5 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -28,7 +28,7 @@
 #include "mediatex-types.h"
 
 char* readPublicKey(char* path);
-int getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1]);
+int getFingerPrint(char* key, char fingerprint[MAX_SIZE_MD5+1]);
 
 #endif /* MDTX_MISC_KEYS_H */
 

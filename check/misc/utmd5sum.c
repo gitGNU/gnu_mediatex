@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmd5sum.c,v 1.4 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utmd5sum.c,v 1.5 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -60,7 +60,7 @@ int
 main(int argc, char** argv)
 {
   char* inputPath = 0;
-  Md5Data data;
+  CheckData data;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -119,26 +119,28 @@ main(int argc, char** argv)
 
   memset((void*)&data, 0, sizeof(data)); // valgrind complains
   data.path = inputPath;
-  data.size = 0; // undef
   
-  logMain(LOG_DEBUG, 
+  logMain(LOG_NOTICE, 
 	  "Quick computation, no path resolution, no progbar");
-  data.opp = MD5_CACHE_ID;
-  if (!doMd5sum(&data)) goto error;
+  data.opp = CHECK_CACHE_ID;
+  if (!doChecksum(&data)) goto error;
   
-  logMain(LOG_NOTICE, "Quick computation, path resolution, progbar");
-  data.opp = MD5_SUPP_ID;
-  if (!doMd5sum(&data)) goto error;
-      
+  memset((void*)&data, 0, sizeof(data));
+  data.path = inputPath;
+
   logMain(LOG_NOTICE, "Full computation, path resolution, progbar");
-  data.opp = MD5_SUPP_ADD;
-  if (!doMd5sum(&data)) goto error;
-  
+  data.opp = CHECK_SUPP_ADD;
+  if (!doChecksum(&data)) goto error;
+
+  logMain(LOG_NOTICE, "Quick computation, path resolution, progbar");
+  data.opp = CHECK_SUPP_ID;
+  if (!doChecksum(&data)) goto error;
+        
   logMain(LOG_NOTICE, "Full check, path resolution, progbar");
-  data.opp = MD5_SUPP_CHECK;
-  if (!doMd5sum(&data)) goto error;
+  data.opp = CHECK_SUPP_CHECK;
+  if (!doChecksum(&data)) goto error;
   
-  if (data.rc != MD5_SUCCESS) goto error;
+  if (data.rc != CHECK_SUCCESS) goto error;
   /************************************************************************/
 
   rc = TRUE;

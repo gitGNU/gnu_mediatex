@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: keys.c,v 1.6 2015/08/07 17:50:31 nroche Exp $
+ * Version: $Id: keys.c,v 1.7 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
@@ -96,9 +96,9 @@ readPublicKey(char* path)
  * Description: compute the fingerprint of a key as:
  *              ssh-keygen -lf /etc/ssh/ssh_host_dsa_key.pub
  * Synopsis   : int getFingerPrint(char* key, 
- *                                 char fingerprint[MAX_SIZE_HASH])
+ *                                 char fingerprint[MAX_SIZE_MD5])
  * Input      : char* key: the input key
- *              char fingerprint[MAX_SIZE_HASH]: the fingerprint to store
+ *              char fingerprint[MAX_SIZE_MD5]: the fingerprint to store
  * Output     : TRUE on success
  *
  * Note       :
@@ -110,7 +110,7 @@ readPublicKey(char* path)
  * strange (but working)
  =======================================================================*/
 int 
-getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
+getFingerPrint(char* key, char fingerprint[MAX_SIZE_MD5+1])
 {
   int rc = FALSE;
   unsigned char *key_unbase64 = (unsigned char *)0;
@@ -183,7 +183,7 @@ getFingerPrint(char* key, char fingerprint[MAX_SIZE_HASH+1])
   // retrieve the md5sum
   for(i=0; i<MD5_DIGEST_LENGTH; i++)
     sprintf(fingerprint+(i<<1), "%02x", md_value[i]);
-  fingerprint[MAX_SIZE_HASH] = (char)0;
+  fingerprint[MAX_SIZE_MD5] = (char)0;
  
   EVP_MD_CTX_cleanup(&mdctx);
   rc = TRUE;

@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.12 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: upload.c,v 1.13 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -103,7 +103,7 @@ uploadContent(Collection* upload, char* path)
 { 
   Archive* rc = 0;
   struct stat statBuffer;
-  Md5Data md5; 
+  CheckData md5; 
   Archive* archive = 0;
   time_t time = 0;
   struct tm date;
@@ -125,11 +125,11 @@ uploadContent(Collection* upload, char* path)
   }
 
   // compute hash
-  memset(&md5, 0, sizeof(Md5Data));
+  memset(&md5, 0, sizeof(CheckData));
   md5.path = path;
   md5.size = statBuffer.st_size;
-  md5.opp = MD5_CACHE_ID;
-  if (!doMd5sum(&md5)) goto error;
+  md5.opp = CHECK_CACHE_ID;
+  if (!doChecksum(&md5)) goto error;
 
   // archive to upload
   if (!(archive = addArchive(upload, md5.fullMd5sum, statBuffer.st_size)))

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.11 2015/09/04 15:30:28 nroche Exp $
+ * Version: $Id: threads.c,v 1.12 2015/09/17 18:53:50 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -474,7 +474,7 @@ int checkMessage(Connexion* con)
   // (may be masqueraded by a Nat server)
   while ((server = rgNext_r(coll->serverTree->servers, &curr))) {
     if (!(strncmp(con->message->fingerPrint, server->fingerPrint, 
-		  MAX_SIZE_HASH))) break;
+		  MAX_SIZE_MD5))) break;
   }
   if (server == 0) {
     sprintf(con->status, status[1], 

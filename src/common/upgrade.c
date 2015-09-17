@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.13 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.14 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -45,12 +45,12 @@ doCheckSupport(Support *supp, char* path)
   time_t now = 0;
   time_t laps = 0;
   time_t ttl = 0;
-  Md5Data data;
+  CheckData data;
 
   logMain(LOG_DEBUG, "doCheckSupport");
   if (!(conf = getConfiguration())) goto error;
   checkSupport(supp);
-  memset(&data, 0, sizeof(Md5Data));
+  memset(&data, 0, sizeof(CheckData));
   
   if ((data.path = createString(path)) == 0) {
     logMain(LOG_ERR, "cannot dupplicate path string");
@@ -61,13 +61,13 @@ doCheckSupport(Support *supp, char* path)
   if ((now = currentTime()) == -1) goto error;
  
   // by default do not exists: full computation (no check)
-  data.opp = MD5_SUPP_ADD;
+  data.opp = CHECK_SUPP_ADD;
 
   // check if support need to be full checked or not
   if (supp->lastCheck > 0) {
 
     // exists: quick check
-    data.opp = MD5_SUPP_ID;
+    data.opp = CHECK_SUPP_ID;
 
     // but maybe need to be re-checked fully
     ttl = (isSupportFile(supp))?conf->fileTTL:conf->checkTTL;
@@ -75,7 +75,7 @@ doCheckSupport(Support *supp, char* path)
     if (laps > ttl/2) {
 
       // soon obsolete: full check
-      data.opp = MD5_SUPP_CHECK;
+      data.opp = CHECK_SUPP_CHECK;
       logMain(LOG_NOTICE, "support no checked since %d days: checking...", 
 	      laps/60/60/24);
     }
@@ -83,18 +83,20 @@ doCheckSupport(Support *supp, char* path)
   
   // copy size and current checksums to compare them
   switch (data.opp) {
-  case MD5_SUPP_CHECK:
-    strncpy(data.fullMd5sum, supp->fullHash, MAX_SIZE_HASH);
-  case MD5_SUPP_ID:
+  case CHECK_SUPP_CHECK:
+    strncpy(data.fullMd5sum, supp->fullMd5sum, MAX_SIZE_MD5);
+    strncpy(data.fullShasum, supp->fullShasum, MAX_SIZE_SHA);
+  case CHECK_SUPP_ID:
     data.size = supp->size;
-    strncpy(data.quickMd5sum, supp->quickHash, MAX_SIZE_HASH);
+    strncpy(data.quickMd5sum, supp->quickMd5sum, MAX_SIZE_MD5);
+    strncpy(data.quickShasum, supp->quickShasum, MAX_SIZE_SHA);
   default:
     break;
   }
 
   // checksum computation
   rc = TRUE;
-  if (!doMd5sum(&data)) {
+  if (!doChecksum(&data)) {
       logMain(LOG_DEBUG, 
 	      "internal error on md5sum computation for \"%s\" support", 
 	      supp->name);
@@ -102,15 +104,15 @@ doCheckSupport(Support *supp, char* path)
       goto error;
   }
 
-  if (data.rc == MD5_FALSE_SIZE) {
+  if (data.rc == CHECK_FALSE_SIZE) {
     logMain(LOG_WARNING, "wrong size on \"%s\" support", supp->name);
     rc = FALSE;
   }
-  if (data.rc == MD5_FALSE_QUICK) {
+  if (data.rc == CHECK_FALSE_QUICK) {
     logMain(LOG_WARNING, "wrong quick hash on \"%s\" support", supp->name);
     rc = FALSE;
   }
-  if (data.rc == MD5_FALSE_FULL) {
+  if (data.rc == CHECK_FALSE_FULL) {
     logMain(LOG_WARNING, "wrong full hash on \"%s\" support", supp->name);
     rc = FALSE;
   }
@@ -126,16 +128,18 @@ doCheckSupport(Support *supp, char* path)
 
   // store results
   switch (data.opp) {
-  case  MD5_SUPP_ADD:
+  case  CHECK_SUPP_ADD:
     supp->size = data.size;
-    strncpy(supp->quickHash, data.quickMd5sum, MAX_SIZE_HASH);
-    strncpy(supp->fullHash, data.fullMd5sum, MAX_SIZE_HASH);
-  case MD5_SUPP_CHECK:
+    strncpy(supp->quickMd5sum, data.quickMd5sum, MAX_SIZE_MD5);
+    strncpy(supp->fullMd5sum, data.fullMd5sum, MAX_SIZE_MD5);
+    strncpy(supp->quickShasum, data.quickShasum, MAX_SIZE_SHA);
+    strncpy(supp->fullShasum, data.fullShasum, MAX_SIZE_SHA);
+  case CHECK_SUPP_CHECK:
     if (env.noRegression)
       supp->lastCheck = currentTime() + 1*DAY;
     else
       supp->lastCheck = now;
-  case MD5_SUPP_ID:
+  case CHECK_SUPP_ID:
     if (env.noRegression)
       supp->lastSeen = currentTime() + 1*DAY;
     else
@@ -169,7 +173,7 @@ scoreSupport(Support* supp, ScoreParam *p)
 
   checkSupport(supp);
   logCommon(LOG_INFO, "compute support score for %s:%lli (%s)", 
-	  supp->fullHash, supp->size, supp->name);
+	  supp->fullMd5sum, supp->size, supp->name);
 
   if (!(conf = getConfiguration())) goto error;
   if ((now = currentTime()) == -1) goto error;  
@@ -294,7 +298,7 @@ scoreLocalImages(Collection* coll)
     if (!scoreSupport(supp, &serverTree->scoreParam)) goto error;
 
     // add supports to temporary ring
-    if (!(archive = addArchive(coll, supp->fullHash, supp->size)))
+    if (!(archive = addArchive(coll, supp->fullMd5sum, supp->size)))
       goto error;
     if ((image1 = createImage()) == 0) goto error;
     image1->archive = archive;

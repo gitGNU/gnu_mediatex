@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.13 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.14 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -249,8 +249,8 @@ logRecord(int logModule, int logPriority, RecordTree* tree, Record* self)
 	  (self->type & 0x3) == SUPPLY?'S':'?',
 	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
 	  date.tm_hour, date.tm_min, date.tm_sec,
-	  MAX_SIZE_HASH, self->server->fingerPrint, 
-	  MAX_SIZE_HASH, self->archive->hash, 
+	  MAX_SIZE_MD5, self->server->fingerPrint, 
+	  MAX_SIZE_MD5, self->archive->hash, 
 	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
 	  self->extra?self->extra:"");
 
@@ -307,8 +307,8 @@ serializeRecord(RecordTree* tree, Record* self)
 	  (self->type & 0x3) == SUPPLY?'S':'?',
 	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
 	  date.tm_hour, date.tm_min, date.tm_sec,
-	  MAX_SIZE_HASH, self->server->fingerPrint, 
-	  MAX_SIZE_HASH, self->archive->hash, 
+	  MAX_SIZE_MD5, self->server->fingerPrint, 
+	  MAX_SIZE_MD5, self->archive->hash, 
 	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
 	  self->extra?self->extra:"");
 
@@ -603,8 +603,8 @@ logRecordTree(int logModule, int logPriority,
   // body
   logEmit(logModule, logPriority, "# %19s %*s %*s %*s %s",
 	   "date", 
-	   MAX_SIZE_HASH, "host",
-	   MAX_SIZE_HASH, "hash", 
+	   MAX_SIZE_MD5, "host",
+	   MAX_SIZE_MD5, "hash", 
 	   MAX_SIZE_SIZE, "size", 
 	   "extra");
 
@@ -684,8 +684,8 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
   if (self->doCypher) aes->doCypher = TRUE;
   aesPrint(aes, "# %19s %*s %*s %*s %s\n",
 	   "date", 
-	   MAX_SIZE_HASH, "host",
-	   MAX_SIZE_HASH, "hash", 
+	   MAX_SIZE_MD5, "host",
+	   MAX_SIZE_MD5, "hash", 
 	   MAX_SIZE_SIZE, "size", 
 	   "extra");
   rc = TRUE;

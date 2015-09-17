@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.l,v 1.8 2015/08/27 10:51:52 nroche Exp $
+ * Version: $Id: supportFile.l,v 1.9 2015/09/17 18:53:49 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -113,8 +113,11 @@ MIN     [[:digit:]]{2}
 SEC     [[:digit:]]{2}
 DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
 
- /* MAX_SIZE_HASH = 32 */
-HASH    [[:xdigit:]]{32}
+ /* MAX_SIZE_MD5 = 32 */
+MD5     [[:xdigit:]]{32}
+
+ /* MAX_SIZE_SHA = 40 */
+SHA     [[:xdigit:]]{40}
 
  /* MAX_SIZE_STAT = 10 */
 STATUS  [^[:blank:]\r\n]{1,10}
@@ -149,9 +152,14 @@ NAME    [^[:blank:]\r\n]{1,511}
     return(suppDATE);
   }
   
-  {HASH} {
-    strcpy(yylval->hash, yytext);
-    return(suppHASH);
+  {SHA} {
+    strcpy(yylval->shasum, yytext);
+    return(suppSHA);
+  }
+
+  {MD5} {
+    strcpy(yylval->md5sum, yytext);
+    return(suppMD5);
   }
   
   [[:digit:]]+ {

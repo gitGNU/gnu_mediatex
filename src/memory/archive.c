@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.12 2015/09/04 15:30:26 nroche Exp $
+ * Version: $Id: archive.c,v 1.13 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -76,7 +76,7 @@ destroyArchive(Archive* self)
 
 #if 0 // developpement mode
   strncpy(self->hash, "................................", 
-	  MAX_SIZE_HASH);
+	  MAX_SIZE_MD5);
   self->size = 0;
   self->imageScore = -1;
   self->extractScore = -1;
@@ -122,7 +122,7 @@ cmpArchive(const void *p1, const void *p2)
   Archive* a1 = *((Archive**)p1);
   Archive* a2 = *((Archive**)p2);
 
-  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_HASH);
+  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
   if (!rc) rc = a1->size - a2->size; // growing sizes
  
   return rc;
@@ -140,7 +140,7 @@ cmpArchive2(const void *p1, const void *p2)
   Archive* a1 = (Archive*)p1;
   Archive* a2 = (Archive*)p2;
 
-  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_HASH);
+  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
   if (!rc) rc = a1->size - a2->size; // growing sizes
  
   return rc;
@@ -166,7 +166,7 @@ cmpArchiveSize(const void *p1, const void *p2)
   Archive* a2 = *((Archive**)p2);
 
   rc = a1->size - a2->size; // growing sizes
-  if (!rc) rc = strncmp(a1->hash, a2->hash, MAX_SIZE_HASH);
+  if (!rc) rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
  
   return rc;
 }
@@ -191,7 +191,7 @@ cmpArchiveScore(const void *p1, const void *p2)
   Archive* a2 = *((Archive**)p2);
 
   rc = a1->extractScore - a2->extractScore; // growing scores
-  if (!rc) rc = strncmp(a1->hash, a2->hash, MAX_SIZE_HASH);
+  if (!rc) rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
   if (!rc) rc = a1->size - a2->size; // growing sizes
  
   return rc;
@@ -241,7 +241,7 @@ getArchive(Collection* coll, char* hash, off_t size)
   logMemory(LOG_DEBUG, "getArchive %s:%lli", hash, (long long int) size);
 
   // look for archive
-  strncpy(archive.hash, hash, MAX_SIZE_HASH);
+  strncpy(archive.hash, hash, MAX_SIZE_MD5);
   archive.size = size;
   if ((node = avl_search(coll->archives, &archive))) {
     rc = (Archive*)node->item;
@@ -276,9 +276,9 @@ addArchive(Collection* coll, char* hash, off_t size)
 
   // add new one if not already there
   if (!(archive = createArchive())) goto error;
-  strncpy(archive->hash, hash, MAX_SIZE_HASH);
+  strncpy(archive->hash, hash, MAX_SIZE_MD5);
 #if 1
-  archive->hash[MAX_SIZE_HASH] = (char)0; // developpement code
+  archive->hash[MAX_SIZE_MD5] = (char)0; // developpement code
 #endif
   archive->size = size;
   archive->id = coll->maxId++;

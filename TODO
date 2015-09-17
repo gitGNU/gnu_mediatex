@@ -3,8 +3,8 @@
 ......................................................
 
 ** LOGS
-- make cron upload the cvsroot collection module
-- make cron upload the collection's apache logs
+- cron_monthly.src upload the cvsroot collection module
+-- mediatex ls master coll
 - ease looking for archive life cycle into cvsroot
 
 ** TRUST
@@ -30,7 +30,7 @@
 -- all/used/allocated/free
 
 ** HTML
-- bad archives sum computation
+- change bad archive's sum computation ?
 - notify orphan
 
 *** CHANGES DONE (to document)
@@ -121,11 +121,16 @@
 - * content to burn * (by collection)
 -- ABSOLUTE_PATH (local score / main score) only upper file
 
+** SUPPORTS
+- add sha1 computation
+- add a sha1 field for supports
+
 *** CLEAN-UP
 
+- compilation warnings
 - src/misc/host.c (to remove)
 - src/misc/udp.c (to remove)
-- compilation warnings
+- src/misc/md5sums.c -> checksums.c
 
 *** TO TEST
 
@@ -135,9 +140,9 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- add a sha1 field for supports
 - move extract.c into common/extractRules.c so as to run it during upload
 -- cacheSet and delverArchive must also be defined into client
+- upload the apache logs using /etc/logrotate.d/httpd-prerotate
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)
 - i10n for french
@@ -152,7 +157,6 @@
 - move dirname into extract rule header to reduce extract.txt file size
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init
-  vhost for apache logs and one mdtx.log for each daemon
 - replace ardsm by mqueue
 - add thread ID to the log
 - replace cvs+viewvc by git+cgit

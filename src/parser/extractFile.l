@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractFile.l,v 1.8 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: extractFile.l,v 1.9 2015/09/17 18:53:49 nroche Exp $
  * Project: Mediatex
  * Module : extract scanner
 
@@ -107,7 +107,7 @@
 
  /* No way to use constants from a c header file */
 
- /* MAX_SIZE_HASH = 32 */
+ /* MAX_SIZE_MD5 = 32 */
 HASH    [[:xdigit:]]{32}
 
  /* MAX_SIZE_STRING = 511 */

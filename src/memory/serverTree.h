@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.8 2015/09/03 09:10:08 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.9 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -40,7 +40,7 @@ struct Image {
 };
 
 struct Server {
-  char  fingerPrint[MAX_SIZE_HASH+1]; // destruction id
+  char  fingerPrint[MAX_SIZE_MD5+1]; // destruction id
   char* label; // ie "MDTX2"
   char* user;  // ie "MDTX2-COLL"
 

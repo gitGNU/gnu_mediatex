@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.9 2015/09/03 13:02:33 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.10 2015/09/17 18:53:49 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -106,7 +106,7 @@
 
  /* No way to use constants from a c header file */
 
- /* MAX_SIZE_HASH = 32 */
+ /* MAX_SIZE_MD5 = 32 */
 HASH           [[:xdigit:]]{32}
 
  /* MAX_SIZE_STRING = 511 */
@@ -344,8 +344,8 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
   
   {HASH} {
     BEGIN(INITIAL);
-    strncpy(yylval->hash, yytext, MAX_SIZE_HASH);
-    yylval->hash[MAX_SIZE_HASH] = (char)0;
+    strncpy(yylval->hash, yytext, MAX_SIZE_MD5);
+    yylval->hash[MAX_SIZE_MD5] = (char)0;
     return(servHASH);
   }
 

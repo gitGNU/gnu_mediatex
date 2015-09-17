@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.7 2015/08/13 21:14:32 nroche Exp $
+ * Version: $Id: serv.c,v 1.8 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : serv
  *
@@ -324,7 +324,7 @@ addKey(char* label, char* path)
   int rc = FALSE;
   Collection* coll = 0;
   char* key = 0;
-  char hash[MAX_SIZE_HASH+1];
+  char hash[MAX_SIZE_MD5+1];
   ServerTree* servers = 0;
   Server* server = 0;
 
@@ -339,7 +339,7 @@ addKey(char* label, char* path)
   // look if key is ouself
   if (!(key = readPublicKey(path))) goto error;
   if (!getFingerPrint(key, hash)) goto error;
-  if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_HASH)) {
+  if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_MD5)) {
     logMain(LOG_WARNING, "key \"%s\" is our %s collection key", 
 	    hash, coll->label);
     goto error;
@@ -349,7 +349,7 @@ addKey(char* label, char* path)
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
   while ((server = rgNext(servers->servers))) {
-    if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
+    if (!strncmp(server->fingerPrint, hash, MAX_SIZE_MD5)) break;
   }
 
   if (server) {
@@ -395,7 +395,7 @@ delKey(char* label, char* key)
 {
   int rc = FALSE;
   Collection* coll = 0;
-  char hash[MAX_SIZE_HASH+1];
+  char hash[MAX_SIZE_MD5+1];
   ServerTree* servers = 0;
   Server* server = 0;
 
@@ -404,14 +404,14 @@ delKey(char* label, char* key)
   logMain(LOG_INFO, "del %s key from %s collection", key, label);
 
   // we are expecting a fingerprint
-  strncpy(hash, key, MAX_SIZE_HASH+1);
+  strncpy(hash, key, MAX_SIZE_MD5+1);
 
   // parse server DB for merge
   if (!(coll = mdtxGetCollection(label))) goto error;
   servers = coll->serverTree;
 
   // look if key is ouself
-  if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_HASH)) {
+  if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_MD5)) {
     logMain(LOG_WARNING, "key \"%s\" is our %s collection key", 
 	    hash, coll->label);
     goto error;
@@ -421,7 +421,7 @@ delKey(char* label, char* key)
   if (!loadCollection(coll, SERV)) goto error;
   rgRewind(servers->servers);
   while ((server = rgNext(servers->servers))) {
-    if (!strncmp(server->fingerPrint, hash, MAX_SIZE_HASH)) break;
+    if (!strncmp(server->fingerPrint, hash, MAX_SIZE_MD5)) break;
   }
 
   if (server == 0) {

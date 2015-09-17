@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.6 2015/09/04 15:30:19 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.7 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -118,7 +118,7 @@ main(int argc, char** argv)
   data.doCypher = TRUE;
   aesPrint(&data, "# %20s %15s %*s %*s %s\n",
 	   "date", "host", 
-	   MAX_SIZE_HASH, "hash", 
+	   MAX_SIZE_MD5, "hash", 
 	   MAX_SIZE_SIZE, "size", 
 	   "path");
   aesFlush(&data);
@@ -143,7 +143,7 @@ main(int argc, char** argv)
   data.doCypher = TRUE;
   aesPrint(&data, "# %20s %15s %*s %*s %s\n",
 	   "date", "host", 
-	   MAX_SIZE_HASH, "hash", 
+	   MAX_SIZE_MD5, "hash", 
 	   MAX_SIZE_SIZE, "size", 
 	   "path");
   aesFlush(&data);

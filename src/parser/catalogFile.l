@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.7 2015/07/28 11:45:48 nroche Exp $
+ * Version: $Id: catalogFile.l,v 1.8 2015/09/17 18:53:48 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 
@@ -104,7 +104,7 @@
 
  /* No way to use constants from a c header file */
 
- /* MAX_SIZE_HASH = 32 */
+ /* MAX_SIZE_MD5 = 32 */
 HASH           [[:xdigit:]]{32}     
 
  /* MAX_SIZE_STRING = 511
@@ -154,8 +154,8 @@ QUOTED_STRING  \"(\\\"|[^\n\"]){0,511}\"
   }
   
   {HASH} {
-    strncpy(yylval->hash, yytext, MAX_SIZE_HASH);
-    yylval->hash[MAX_SIZE_HASH] = (char)0;
+    strncpy(yylval->hash, yytext, MAX_SIZE_MD5);
+    yylval->hash[MAX_SIZE_MD5] = (char)0;
     return(cataHASH);
   }
 

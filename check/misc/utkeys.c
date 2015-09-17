@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utkeys.c,v 1.2 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utkeys.c,v 1.3 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : keys
  *
@@ -60,7 +60,7 @@ main(int argc, char** argv)
 {
   char* inputFile = 0;
   char* key = 0;
-  char fingerprint[MAX_SIZE_HASH+1];
+  char fingerprint[MAX_SIZE_MD5+1];
   int i;
   // ---
   int rc = 0;
@@ -117,7 +117,7 @@ main(int argc, char** argv)
 
   // print the fingerprint
   printf("%c%c", fingerprint[0], fingerprint[1]);
-  for (i=2; i<MAX_SIZE_HASH; i+=2)
+  for (i=2; i<MAX_SIZE_MD5; i+=2)
     printf(":%c%c", fingerprint[i], fingerprint[i+1]);
   printf("\n");
   /************************************************************************/

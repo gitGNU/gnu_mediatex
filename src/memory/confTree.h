@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.7 2015/09/03 09:10:08 nroche Exp $
+ * Version: $Id: confTree.h,v 1.8 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -78,7 +78,7 @@ struct Collection {
 
   /* shared parameters (used by servers.txt) */
   char *userKey;   // ~/.ssh/id_dsa.pub content
-  char  userFingerPrint[MAX_SIZE_HASH+1];
+  char  userFingerPrint[MAX_SIZE_MD5+1];
 
   /* -load/save */
   MemoryState memoryState;
@@ -147,7 +147,7 @@ struct Configuration {
 
   /* keys (not parsed from the configuration file) */
   char* hostKey;  // /etc/ssh/ssh_host_dsa.pub content
-  char  hostFingerPrint[MAX_SIZE_HASH+1];
+  char  hostFingerPrint[MAX_SIZE_MD5+1];
 
   /* computed paths */
   char* cvsRootDir;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconnect.c,v 1.4 2015/09/04 15:30:17 nroche Exp $
+ * Version: $Id: utconnect.c,v 1.5 2015/09/17 18:53:44 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -100,7 +100,7 @@ main(int argc, char** argv)
   // new record tree
   if ((tree = createRecordTree())== 0) goto error;
   tree->collection = coll;
-  strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_HASH);
+  strncpy(tree->fingerPrint, coll->userFingerPrint, MAX_SIZE_MD5);
 
   // new server as localhost:12345
   if (!(server = addServer(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))) 

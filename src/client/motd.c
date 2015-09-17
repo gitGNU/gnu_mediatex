@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.11 2015/09/13 23:47:34 nroche Exp $
+ * Version: $Id: motd.c,v 1.12 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -438,7 +438,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
     // match support shared with that collection
     rgRewind(coll->supports);
     while ((support = rgNext(coll->supports))) {
-      if (!strncmp(support->fullHash, archive->hash, MAX_SIZE_HASH) &&
+      if (!strncmp(support->fullMd5sum, archive->hash, MAX_SIZE_MD5) &&
 	  support->size == archive->size) {
 	
 	// add a motd notification on support (to check)

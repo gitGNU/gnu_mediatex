@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.10 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: archive.h,v 1.11 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -34,7 +34,7 @@ typedef enum {UNUSED = 0, USED, WANTED, ALLOCATED, AVAILABLE, TOKEEP,
 struct Archive
 {
   // not easy to parse into uchar[16]
-  char  hash[MAX_SIZE_HASH+1]; 
+  char  hash[MAX_SIZE_MD5+1]; 
   int   id;  // id used to serialize html pages
   int   tag; // dedicated for external use
 

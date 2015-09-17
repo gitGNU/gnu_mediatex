@@ -1,4 +1,5 @@
 # This file is managed by MediaTeX software.
 # Local Supports:
-#         firstSeen           lastCheck            lastSeen                        quickHash                         fullHash                size     status name
-2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18              391168         ok ex-cd1
+#         firstSeen           lastCheck            lastSeen                      quickMd5sum                       fullMd5sum                              quickShasum                               fullShasum                size     status name
+2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00 de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18 6ed0e67ccd882f6e94f931a07834bc6bc6394583 6ed0e67ccd882f6e94f931a07834bc6bc6394583              391168         ok ex-cd1
+

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.h,v 1.6 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: supportTree.h,v 1.7 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -32,8 +32,10 @@ struct Support
   char     name[MAX_SIZE_STRING+1];
 
   Archive* archive;
-  char     quickHash[MAX_SIZE_HASH+1];
-  char     fullHash[MAX_SIZE_HASH+1];
+  char     quickMd5sum[MAX_SIZE_MD5+1];
+  char     fullMd5sum[MAX_SIZE_MD5+1];
+  char     quickShasum[MAX_SIZE_SHA+1];
+  char     fullShasum[MAX_SIZE_SHA+1];
 
   // off_t must be on 64bit to manage CDRom
   // (set -D_FILE_OFFSET_BITS=64 to CFLAGS)

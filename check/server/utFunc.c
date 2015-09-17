@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.8 2015/09/13 23:47:34 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.9 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *
@@ -249,7 +249,7 @@ utConnexion(Collection* coll, MessageType messageType, Server* from)
   rc->message = tree;
   rc->message->collection = coll;
   rc->message->messageType = messageType;
-  strncpy(rc->message->fingerPrint, from->fingerPrint, MAX_SIZE_HASH);
+  strncpy(rc->message->fingerPrint, from->fingerPrint, MAX_SIZE_MD5);
 
  error:
   if (!rc) {

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupportFile.c,v 1.4 2015/09/04 15:30:23 nroche Exp $
+ * Version: $Id: utsupportFile.c,v 1.5 2015/09/17 18:53:45 nroche Exp $
  * Project: Mediatex
  * Module : support scanner
 
@@ -126,8 +126,11 @@ main(int argc, char** argv)
     case suppDATE:
       strcpy(token, "DATE");
       break;
-    case suppHASH:
-      strcpy(token, "HASH");
+    case suppMD5:
+      strcpy(token, "MD5");
+      break;
+    case suppSHA:
+      strcpy(token, "SHA");
       break;
     case suppSIZE:
       strcpy(token, "SIZE");

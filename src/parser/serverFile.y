@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.10 2015/09/03 13:02:33 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.11 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -64,7 +64,7 @@
   time_t time;
   float  score;
   char   string[(MAX_SIZE_STRING+1)*2]; // keys needs more place
-  char   hash[MAX_SIZE_HASH+1];
+  char   hash[MAX_SIZE_MD5+1];
 }
 
 %{

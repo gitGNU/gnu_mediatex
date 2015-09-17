@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportFile.y,v 1.7 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: supportFile.y,v 1.8 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -61,7 +61,8 @@
 %union {
   off_t  size;
   time_t time;
-  char   hash[MAX_SIZE_HASH+1];
+  char   md5sum[MAX_SIZE_MD5+1];
+  char   shasum[MAX_SIZE_SHA+1];
   char   status[MAX_SIZE_STAT+1];
   char   name[MAX_SIZE_STRING+1];
 }
@@ -88,7 +89,8 @@ void supp_error(yyscan_t yyscanner, const char* message);
 %start file
 
 %token <time>   suppDATE
-%token <hash>   suppHASH
+%token <md5sum> suppMD5
+%token <shasum> suppSHA
 %token <size>   suppSIZE
 %token <status> suppSTATUS
 %token <name>   suppNAME
@@ -108,7 +110,10 @@ lines: lines line
      | line
 ;
 
-line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
+line: suppDATE suppDATE suppDATE 
+      suppMD5 suppMD5 
+      suppSHA suppSHA
+      suppSIZE suppSTATUS suppNAME
 {
   Support *support = 0;
   struct tm date1;
@@ -122,9 +127,13 @@ line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
     YYABORT;
   }
 
-  logParser(LOG_DEBUG, "line %-3i: %04i-%02i-%02i,%02i:%02i:%02i "
-	    "%04i-%02i-%02i,%02i:%02i:%02i %04i-%02i-%02i,%02i:%02i:%02i "
-	    "%*s %*s %*lli %*s %s",
+  logParser(LOG_DEBUG, "line %-3i: "
+	    "%04i-%02i-%02i,%02i:%02i:%02i "
+	    "%04i-%02i-%02i,%02i:%02i:%02i "
+	    "%04i-%02i-%02i,%02i:%02i:%02i "
+	    "%*s %*s "
+	    "%*s %*s "
+	    "%*lli %*s %s",
 	    LINENO,
 	    date1.tm_year + 1900, date1.tm_mon+1, date1.tm_mday,
 	    date1.tm_hour, date1.tm_min, date1.tm_sec,
@@ -132,19 +141,22 @@ line: suppDATE suppDATE suppDATE suppHASH suppHASH suppSIZE suppSTATUS suppNAME
 	    date2.tm_hour, date2.tm_min, date2.tm_sec,
 	    date3.tm_year + 1900, date3.tm_mon+1, date3.tm_mday,
 	    date3.tm_hour, date3.tm_min, date3.tm_sec,
-	    MAX_SIZE_HASH, $4, MAX_SIZE_HASH, $5,
-	    MAX_SIZE_SIZE, (long long int)$6, 
-	    MAX_SIZE_STAT, $7, $8);
+	    MAX_SIZE_MD5, $4, MAX_SIZE_MD5, $5,
+	    MAX_SIZE_SHA, $6, MAX_SIZE_SHA, $7,
+	    MAX_SIZE_SIZE, (long long int)$8, 
+	    MAX_SIZE_STAT, $9, $10);
 
-  if ((support = addSupport($8)) == 0) YYERROR;
+  if ((support = addSupport($10)) == 0) YYERROR;
   support->firstSeen = $1;
   support->lastCheck = $2;
   support->lastSeen = $3;
-  strncpy(support->quickHash, $4, MAX_SIZE_HASH);
-  strncpy(support->fullHash, $5, MAX_SIZE_HASH);
-  support->size = $6;
-  strncpy(support->status, $7, MAX_SIZE_STAT);
-  strncpy(support->name, $8, MAX_SIZE_STRING);
+  strncpy(support->quickMd5sum, $4, MAX_SIZE_MD5);
+  strncpy(support->fullMd5sum, $5, MAX_SIZE_MD5);
+  strncpy(support->quickShasum, $6, MAX_SIZE_SHA);
+  strncpy(support->fullShasum, $7, MAX_SIZE_SHA);
+  support->size = $8;
+  strncpy(support->status, $9, MAX_SIZE_STAT);
+  strncpy(support->name, $10, MAX_SIZE_STRING);
   support = 0;
 }
 ;

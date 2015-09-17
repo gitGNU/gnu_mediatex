@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.7 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.8 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -61,7 +61,7 @@
 %union {
   off_t  size;
   char   string[MAX_SIZE_STRING+1];
-  char   hash[MAX_SIZE_HASH+1];
+  char   hash[MAX_SIZE_MD5+1];
   Category* category;
   Human*    human;
   Document* document;

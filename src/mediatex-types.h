@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex-types.h,v 1.10 2015/09/03 13:02:33 nroche Exp $
+ * Version: $Id: mediatex-types.h,v 1.11 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -105,7 +105,8 @@ typedef struct UploadParams {
 #define LOCALHOST 0 
 
 // maximum size needed for char conversion (without the leading \0)
-#define MAX_SIZE_HASH 32 // MD5_DIGEST_LENGTH bytes printed using %x
+#define MAX_SIZE_MD5 32 // MD5_DIGEST_LENGTH bytes printed using %x
+#define MAX_SIZE_SHA 40 // SHA_DIGEST_LENGTH bytes printed using %x
 #define MAX_SIZE_SIZE 19 // off_t printed using %lli
 #define MAX_SIZE_COLL 20 
 #define MAX_SIZE_STAT 10
