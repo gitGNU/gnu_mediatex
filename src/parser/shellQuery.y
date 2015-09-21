@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.9 2015/08/31 00:14:53 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.10 2015/09/21 01:01:52 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -106,6 +106,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 %token            shellTO
 %token            shellFROM
 %token            shellAS
+%token            shellFOR
 %token            shellON
 
 %token            shellINIT
@@ -135,6 +136,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 %token            shellGET
 %token            shellSU
 %token            shellMOTD
+%token            shellAUDIT
 %token            shellDELIVER
 %token            shellSAVE
 %token            shellEXTRACT
@@ -306,28 +308,30 @@ apiQuery: apiSuppQuery
 	   mediatex clean coll COLL
 	   mediatex clean
 	   mediatex su
-	   mediatex su coll COLL */
+	   mediatex su coll COLL 
+	   mediatex audit coll COLL for MAIL
+	*/
 
 
  /* to call scripts directely (for daemon, admin or expert user) */
 
 admConfQuery: shellINIT shellEOL
 {
-  logParser(LOG_INFO, "%s", "initializing mediatex software");
+  logParser(LOG_INFO, "initializing mediatex software");
   if (!env.noRegression) {
     if (!mdtxInit()) YYABORT;
   }
 }
             | shellREMOVE shellEOL
 {
-  logParser(LOG_INFO, "%s", "removing mediatex software");
+  logParser(LOG_INFO, "removing mediatex software");
   if (!env.noRegression) {
     if (!mdtxRemove()) YYABORT;
   }
 }
             | shellPURGE shellEOL
 {
-  logParser(LOG_INFO, "%s", "purging mediatex software");
+  logParser(LOG_INFO, "purging mediatex software");
   if (!env.noRegression) {
     if (!mdtxPurge()) YYABORT;
   }
@@ -369,7 +373,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellUPDATE shellEOL
 {
-  logParser(LOG_INFO, "%s", "update all");
+  logParser(LOG_INFO, "update all");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!clientLoop(mdtxUpdate)) YYABORT;
@@ -378,7 +382,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellUPDATE collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "update collection");
+  logParser(LOG_INFO, "update collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUpdate($2)) YYABORT;
@@ -387,7 +391,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellCOMMIT shellEOL
 {
-  logParser(LOG_INFO, "%s", "commit all");
+  logParser(LOG_INFO, "commit all");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!clientLoop(mdtxCommit)) YYABORT;
@@ -396,7 +400,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellCOMMIT collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "commit collection");
+  logParser(LOG_INFO, "commit collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxCommit($2)) YYABORT;
@@ -405,7 +409,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellMAKE shellEOL
 {
-  logParser(LOG_INFO, "%s", "quickly make all");
+  logParser(LOG_INFO, "quickly make all");
   if (!env.noRegression) {
     env.noCollCvs = TRUE; // disable update/commit
     if (!clientLoop(mdtxMake)) YYABORT;
@@ -413,7 +417,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellMAKE collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "quickly make collection");
+  logParser(LOG_INFO, "quickly make collection");
   if (!env.noRegression) {
     env.noCollCvs = TRUE;
     if (!mdtxMake($2)) YYABORT;
@@ -421,7 +425,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellBIND shellEOL
 {
-  logParser(LOG_INFO, "%s", "bind mediatex directories");
+  logParser(LOG_INFO, "bind mediatex directories");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxBind()) YYABORT;
@@ -429,7 +433,7 @@ admConfQuery: shellINIT shellEOL
 }
             | shellUNBIND shellEOL
 {
-  logParser(LOG_INFO, "%s", "unbind mediatex directories");
+  logParser(LOG_INFO, "unbind mediatex directories");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxUnbind()) YYABORT;
@@ -466,7 +470,7 @@ admConfQuery: shellINIT shellEOL
 
 srvQuery: shellSAVE shellEOL
 {
-  logParser(LOG_INFO, "%s", "send SAVEMD5 signal to daemon");
+  logParser(LOG_INFO, "send SAVEMD5 signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxSyncSignal(MDTX_SAVEMD5)) YYABORT;
@@ -474,7 +478,7 @@ srvQuery: shellSAVE shellEOL
 }
         | shellEXTRACT shellEOL
 {
-  logParser(LOG_INFO, "%s", "send EXTRACT signal to daemon");
+  logParser(LOG_INFO, "send EXTRACT signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxSyncSignal(MDTX_EXTRACT)) YYABORT;
@@ -482,7 +486,7 @@ srvQuery: shellSAVE shellEOL
 }
         | shellNOTIFY shellEOL
 {
-  logParser(LOG_INFO, "%s", "send NOTIFY signal to daemon");
+  logParser(LOG_INFO, "send NOTIFY signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxSyncSignal(MDTX_NOTIFY)) YYABORT;
@@ -490,7 +494,7 @@ srvQuery: shellSAVE shellEOL
 }
         | shellDELIVER shellEOL
 {
-  logParser(LOG_INFO, "%s", "send DELIVER signal to daemon");
+  logParser(LOG_INFO, "send DELIVER signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     if (!mdtxSyncSignal(MDTX_DELIVER)) YYABORT;
@@ -501,7 +505,7 @@ srvQuery: shellSAVE shellEOL
 
 apiSuppQuery: shellADD support shellTO shellALL shellEOL
 {
-  logParser(LOG_INFO, "%s", "add a support to all collection");
+  logParser(LOG_INFO, "add a support to all collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxShareSupport($2, 0)) YYABORT;
@@ -510,7 +514,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellADD support shellTO collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "add a support to a collection");
+  logParser(LOG_INFO, "add a support to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxShareSupport($2, $4)) YYABORT;
@@ -519,7 +523,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellDEL support shellFROM shellALL shellEOL
 {
-  logParser(LOG_INFO, "%s", "del a support from all collection");
+  logParser(LOG_INFO, "del a support from all collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxWithdrawSupport($2, 0)) YYABORT;
@@ -528,7 +532,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellDEL support shellFROM collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "del a support from a collection");
+  logParser(LOG_INFO, "del a support from a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxWithdrawSupport($2, $4)) YYABORT;
@@ -555,7 +559,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellDEL support shellEOL
 {
-  logParser(LOG_INFO, "%s", "remove a support");
+  logParser(LOG_INFO, "remove a support");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxDelSupport($2)) YYABORT;
@@ -564,7 +568,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellLIST shellSUPP shellEOL
 {
-  logParser(LOG_INFO, "%s", "list local supports");
+  logParser(LOG_INFO, "list local supports");
   if (!env.noRegression) {
     if (!mdtxLsSupport()) YYABORT;
   }
@@ -589,7 +593,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellUPLOAD uploadParams shellTO collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "upload a file to a collection");
+  logParser(LOG_INFO, "upload a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUpload($4, upParam->catalog, upParam->extract, 
@@ -599,7 +603,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellUPLOADP uploadParams shellTO collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "upload+ a file to a collection");
+  logParser(LOG_INFO, "upload+ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUploadPlus($4, upParam->catalog, upParam->extract, 
@@ -609,7 +613,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 }
             | shellUPLOADPP uploadParams shellTO collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "upload++ a file to a collection");
+  logParser(LOG_INFO, "upload++ a file to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUploadPlusPlus($4, upParam->catalog, upParam->extract, 
@@ -622,7 +626,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
 
 apiCollQuery: shellADD key shellTO collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "add a key to a collection");
+  logParser(LOG_INFO, "add a key to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!addKey($4, $2)) YYABORT;
@@ -631,7 +635,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellDEL key shellFROM collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "del a key to a collection");
+  logParser(LOG_INFO, "del a key to a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!delKey($4, $2)) YYABORT;
@@ -640,21 +644,21 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellLIST shellCOLL shellEOL
 {
-  logParser(LOG_INFO, "%s", "listing enabled collections");
+  logParser(LOG_INFO, "listing enabled collections");
   if (!env.noRegression) {
     if (!mdtxListCollection()) YYABORT;
   }
 }
             | shellMOTD shellEOL
 {
-  logParser(LOG_INFO, "%s", "message of the day");
+  logParser(LOG_INFO, "message of the day");
   if (!env.noRegression) {
     if (!updateMotd()) YYABORT;
   }
 }
             | shellUPGRADE shellEOL
 {
-  logParser(LOG_INFO, "%s", "upgrade all");
+  logParser(LOG_INFO, "upgrade all");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     
@@ -668,7 +672,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellUPGRADE collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "upgrade a collection");
+  logParser(LOG_INFO, "upgrade a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUpgrade($2)) YYABORT;
@@ -677,7 +681,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellMAKE shellEOL
 {
-  logParser(LOG_INFO, "%s", "make all");
+  logParser(LOG_INFO, "make all");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!clientLoop(mdtxMake)) YYABORT;
@@ -686,7 +690,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellMAKE collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "build a HTML catalog");
+  logParser(LOG_INFO, "build a HTML catalog");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxMake($2)) YYABORT;
@@ -695,7 +699,7 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellCLEAN shellEOL
 {
-  logParser(LOG_INFO, "%s", "clean all");
+  logParser(LOG_INFO, "clean all");
   if (!env.noRegression) {
     if (!clientLoop(mdtxClean)) YYABORT;
   }
@@ -709,21 +713,21 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellSU shellEOL
 {
-  logParser(LOG_INFO, "%s", "change to mediatex user");
+  logParser(LOG_INFO, "change to mediatex user");
   if (!env.noRegression) {
     if (!mdtxSu(0)) YYABORT;
   }
 }
             | shellSU collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "change to collection user");
+  logParser(LOG_INFO, "change to collection user");
   if (!env.noRegression) {
     if (!mdtxSu($2)) YYABORT;
   }
 }
             | shellUPGRADEP shellEOL
 {
-  logParser(LOG_INFO, "%s", "upgrade+ all");
+  logParser(LOG_INFO, "upgrade+ all");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     
@@ -737,10 +741,19 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 }
             | shellUPGRADEP collection shellEOL
 {
-  logParser(LOG_INFO, "%s", "upgrade+ a collection");
+  logParser(LOG_INFO, "upgrade+ a collection");
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUpgradePlus($2)) YYABORT;
+    if (!clientWriteUnlock()) YYABORT;
+  }
+}
+            | shellAUDIT collection shellFOR shellSTRING shellEOL
+{
+  logParser(LOG_INFO, "audit collection");
+  if (!env.noRegression) {
+    if (!clientWriteLock()) YYABORT;
+    if (!mdtxAudit($2, $4)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -761,7 +774,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 {
   logParser(LOG_ERR, "%s on token '%s' line %i",
 	  message, shell_get_text(yyscanner), LINENO);
-  logParser(LOG_NOTICE, "%s", 
+  logParser(LOG_NOTICE, 
 	  "bad invocation of mdtx's shell (try completion)");
 }
 
@@ -787,7 +800,7 @@ parseShellQuery(int argc, char** argv, int optind)
 
   // initialise parser
   if (shell_lex_init(&scanner)) {
-    logParser(LOG_ERR, "%s", "shell_lex_init fails");
+    logParser(LOG_ERR, "shell_lex_init fails");
     goto error;
   }
 
@@ -807,7 +820,7 @@ parseShellQuery(int argc, char** argv, int optind)
   shell_lex_destroy(scanner);  
  error:
   if (!rc) {
-    logParser(LOG_ERR, "%s", "query fails");
+    logParser(LOG_ERR, "query fails");
   }
   destroyString(upParam.catalog);
   destroyString(upParam.extract);

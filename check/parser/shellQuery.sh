@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.5 2015/08/27 10:51:51 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.6 2015/09/21 01:01:49 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -94,6 +94,7 @@ parser/ut$TEST.tab clean >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab clean coll COLL >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab su >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab su coll COLL >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab audit coll COLL for MAIL >>parser/$TEST.out 2>&1
 
 # compare with the expected output
 mrProperOutputs parser/$TEST.out

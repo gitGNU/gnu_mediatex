@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.11 2015/08/23 23:39:15 nroche Exp $
+ * Version: $Id: misc.c,v 1.12 2015/09/21 01:01:50 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -547,6 +547,153 @@ mdtxScp(char* label, char* fingerPrint, char* source, char* target)
     logMain(LOG_ERR, "mdtxScp fails");
   } 
   argv[1] = destroyString(argv[1]);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : mdtxAudit
+ * Description: simulate extraction on all archive of a collection
+ * Synopsis   : int mdtxAudit(char* label, char* mail)
+ * Input      : char* label: collection label
+ *              char* mail: mail to use to return the audit
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+mdtxAudit(char* label, char* mail)
+{ 
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RecordTree* tree = 0;
+  Archive* archive = 0;
+  Record* record = 0;
+  AVLNode *node = 0;
+  FILE* fd = stdout; 
+  char path[MAX_SIZE_STRING];
+  char extra[MAX_SIZE_STRING];
+  char* ptrMail = 0;
+  char* tmp = 0;
+  time_t now = 0;
+  struct tm date;
+  int socket = -1;
+  int n = 0;
+  char reply[255] = "100 nobody";
+  int status = 0;
+
+  logMain(LOG_DEBUG, "audit %s collection for %s", label, mail);
+  checkLabel(label);
+  checkLabel(mail);
+
+  if (!(conf = getConfiguration())) goto error;
+  if (!env.noRegression) {
+    // check if daemon is awake
+    if (access(conf->pidFile, R_OK) == -1) {
+      logMain(LOG_INFO, "cannot read daemon's pid file: %s", 
+	      strerror(errno));
+      goto end;
+    }
+  }
+
+  if (!becomeUser(env.confLabel, TRUE)) goto error;
+  if (!(coll = mdtxGetCollection(label))) goto error;
+  if (!(tree = createRecordTree())) goto error;
+  if (!getLocalHost(coll)) goto error;
+  tree->collection = coll;
+  tree->messageType = CGI;
+
+  // open audit file
+  if ((now = currentTime()) == -1) goto error;
+  if (localtime_r(&now, &date) == (struct tm*)0) {
+    logMemory(LOG_ERR, "localtime_r returns on error");
+    goto error;
+  }
+ 
+  sprintf(path, "%s/%s%04i%02i%02i-%02i%02i%02i.txt",
+	  coll->extractDir, CONF_AUDIT,
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec);
+  strcpy(extra, path + strlen(coll->extractDir) + 1);
+  ptrMail = extra + strlen(extra) - 3;
+  *(ptrMail - 1) = ':';
+
+  if (!env.dryRun) {
+    if ((fd = fopen(path, "w")) == 0) {
+      logMemory(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
+      fd = stdout;
+      goto error;
+    }
+    if (!lock(fileno(fd), F_WRLCK)) goto error;
+  }
+
+  logMemory(LOG_INFO, "Serializing audit into: %s", 
+	    env.dryRun?"stdout":path);
+
+  if (!loadCollection(coll, CTLG|EXTR)) goto error;
+
+  fprintf(fd, "Audit on %s collection\n", coll->label);
+  fprintf(fd, " requested on %04i-%02i-%02i %02i:%02i:%02i\n",
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	  date.tm_hour, date.tm_min, date.tm_sec); 
+  fprintf(fd, " requested by %s\n", mail);
+  fprintf(fd, " %i archives to check\n", avl_count(coll->archives));
+  fprintf(fd, " %i archives checked:\n", 0);
+  fprintf(fd, "  %i archives ok\n", 0);
+  fprintf(fd, "  %i archives ko\n", 0);
+
+  fprintf(fd, "\nArchive to check:\n");
+  if (avl_count(coll->archives)) {
+    for(node = coll->archives->head; node; node = node->next) {
+      archive = (Archive*)node->item;
+      fprintf(fd, " %s:%lli\n", archive->hash, archive->size);
+      
+      // add a final demand
+      strcpy(ptrMail, mail);
+      if (!(tmp = createString(extra))) goto error2; 
+      if (!(record = newRecord(coll->localhost, archive, DEMAND, tmp))) 
+	goto error;
+      tmp = 0;
+      if (!rgInsert(tree->records, record)) goto error2;
+      record = 0;
+    }
+  }
+  fflush(fd);
+
+  // connect server and write query
+  if (env.noRegression) goto end;
+  if ((socket = connectServer(coll->localhost)) == -1) goto error2;
+  if (!upgradeServer(socket, tree, 0)) goto error2;
+  
+  // read reply
+  if (env.dryRun) goto end;
+  n = tcpRead(socket, reply, 255);
+  // erase the \n send by server
+  if (n<=0) n = 1;
+  reply[n-1] = (char)0; 
+  if (sscanf(reply, "%i", &status) < 1) {
+    logMain(LOG_ERR, "error reading server reply: %s", reply);
+    goto error;
+  }
+  
+  logMain(LOG_INFO, "receive: %s", reply);
+  logMain(LOG_NOTICE, "please check motd and performe extraction", reply);
+ end:
+  rc = (env.noRegression || env.dryRun || status == 221);
+ error2:
+  if (!releaseCollection(coll, CTLG|EXTR)) goto error;
+ error:
+  if (fd != stdout) {
+    if (!unLock(fileno(fd))) rc = FALSE;
+    if (fclose(fd)) {
+      logMemory(LOG_ERR, "fclose fails: %s", strerror(errno));
+      rc = FALSE;
+    }
+  }
+  if (!rc) {
+    logMain(LOG_ERR, "mdtx audit fails");
+  }
+  destroyString(tmp);
+  destroyRecord(record);
+  destroyRecordTree(tree);
   return rc;
 }
 

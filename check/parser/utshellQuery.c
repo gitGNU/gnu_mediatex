@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.c,v 1.3 2015/09/04 15:30:22 nroche Exp $
+ * Version: $Id: utshellQuery.c,v 1.4 2015/09/21 01:01:49 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -145,6 +145,9 @@ main(int argc, char** argv)
     case shellAS:
       strcpy(token, "AS");
       break;
+    case shellFOR:
+      strcpy(token, "FOR");
+      break;
     case shellON:
       strcpy(token, "ON");
       break;
@@ -210,6 +213,9 @@ main(int argc, char** argv)
       break;
     case shellMOTD:
       strcpy(token, "MOTD");
+      break;
+    case shellAUDIT:
+      strcpy(token, "AUDIT");
       break;
     case shellDELIVER:
       strcpy(token, "DELIVER");

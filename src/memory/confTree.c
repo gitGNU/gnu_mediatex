@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.12 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: confTree.c,v 1.13 2015/09/21 01:01:51 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -839,7 +839,7 @@ serializeConfiguration(Configuration* self)
   if (!becomeUser(env.confLabel, TRUE)) goto error;
 
   // output file
-  if (env.dryRun == FALSE) path = self->confFile;
+  if (!env.dryRun) path = self->confFile;
   logMemory(LOG_INFO, "Serializing configuration into: %s", 
 	  path?path:"stdout");
   if (path && *path != (char)0) {

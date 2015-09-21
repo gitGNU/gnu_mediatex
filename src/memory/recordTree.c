@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.14 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.15 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -186,41 +186,6 @@ destroyRecord(Record* self)
  error:
   return(rc);
 }
-
-/* /\*======================================================================= */
-/*  * Function   : copyRecord */
-/*  * Description: Copy a source configuration into a destination */
-/*  *              configuration. */
-/*  * Synopsis   : Record* copyRecord(Record* destination, Record* source) */
-/*  * Input      : Record* destination */
-/*  *              Record* source */
-/*  * Output     : Record* destination */
-/*  =======================================================================*\/ */
-/* Record*  */
-/* copyRecord(Record* destination, Record* source) */
-/* { */
-/*   destination = destroyRecord(destination); */
-
-/*   if (source == 0) */
-/*     goto error; */
-
-/*   if ((destination = createRecord()) == 0) */
-/*     goto error; */
-
-/*   if (!isEmptyString(source->extra) && */
-/*       (destination->extra = createString(source->extra)) == 0) */
-/*     goto error; */
-
-/*   destination->archive = source->archive; */
-/*   destination->server = source->server; */
-/*   destination->date = source->date; */
-/*   destination->type = source->type; */
-
-/*   return destination; */
-/*  error: */
-/*   logMemory(LOG_ERR, "malloc: cannot copy Record"); */
-/*   return destroyRecord(destination); */
-/* } */
 
 /*=======================================================================
  * Function   : logRecord
@@ -487,50 +452,6 @@ destroyRecordTree(RecordTree* self)
   return(rc);
 }
 
-/* /\*======================================================================= */
-/*  * Function   : copyRecordTree */
-/*  * Description: Copy a source configuration into a destination */
-/*  *              configuration. */
-/*  * Synopsis   : RecordTree* copyRecordTree(RecordTree* destination,  */
-/*  *                                           RecordTree* source) */
-/*  * Input      : RecordTree* destination */
-/*  *              RecordTree* source */
-/*  * Output     : RecordTree* destination */
-/*  * Note       : We still not copy the AES key */
-/*  =======================================================================*\/ */
-/* RecordTree*  */
-/* copyRecordTree(RecordTree* destination, RecordTree* source) */
-/* { */
-/*   RecordTree* rc = 0; */
-
-/*   destination = destroyRecordTree(destination); */
-
-/*   if(source) */
-/*     { */
-/*       destination = createRecordTree(); */
-/*     } */
-
-/*   if (destination) */
-/*     { */
-/*       //strncpy(destination->collectionLabel, source->collectionLabel, */
-/*       //      MAX_SIZE_COLL); */
-
-/*       if ((destination->records  */
-/* 	   = copyRing(destination->records,  */
-/* 		      source->records,  */
-/* 		      (void*(*)(void*)) destroyRecord, */
-/* 		      (void*(*)(void*, const void*)) copyRecord))  */
-/* 	  == 0) goto error; */
-
-/*       rc = destination; */
-/*     } */
-  
-/*   return(rc); */
-/*  error: */
-/*   logMemory(LOG_ERR, "malloc: cannot copy RecordTree !"); */
-/*   return destroyRecordTree(destination); */
-/* } */
-
 /*=======================================================================
  * Function   : strMessageType
  * Description: return a string for the record type
@@ -713,8 +634,8 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 /*=======================================================================
  * Function   : newRecord
  * Description: find a record 
- * Synopsis   : Record* newRecord(time_t now, char* coll, Type type,
- *	                            char* hash, off_t size, char* extra)
+ * Synopsis   : Record* newRecord(Server* server, Archive* archive, 
+ *                                Type type, char* extra)
  * Input      : Collection* coll: where to find
  *              Server* server: id1
  *              Archive* archive: id2
@@ -763,9 +684,8 @@ newRecord(Server* server, Archive* archive, Type type, char* extra)
 /*=======================================================================
  * Function   : addRecord
  * Description: find a record 
- * Synopsis   : Record* addRecord(Collection* coll
- *                   time_t now, char* coll, Type type,
- *		     char* hash, off_t size, char* extra)
+ * Synopsis   : Record* addRecord(Collection* coll, Server* server, 
+ *                            Archive* archive, Type type, char* extra)
  * Input      : Collection* coll: where to find
  *              Server* server: id1
  *              Archive* archive: id2

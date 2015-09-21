@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: deliver.sh,v 1.4 2015/06/30 17:37:21 nroche Exp $
+# * Version: $Id: deliver.sh,v 1.5 2015/09/21 01:01:50 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -44,7 +44,7 @@ AVAILABLE=$3
 FILE=$4
 URL=$5
 
-USER="$MDTX-$1"
+USER="$MDTX-$COLL"
 NAME=$(echo $ADDRESS | cut -d "@" -f1)
 SUBJECT="$USER delivery"
 

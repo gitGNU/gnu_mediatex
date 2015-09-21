@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.11 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: archive.h,v 1.12 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -63,7 +63,7 @@ struct Archive
   AState  state;
   RG*     demands;        // Record*
   RG*     remoteSupplies; // Record*
-  RG*     finalSupplies; // Record*
+  RG*     finalSupplies;  // Record*
   Record* localSupply;
   int     nbKeep;
   time_t  backupDate;     // date to set after last unkeep

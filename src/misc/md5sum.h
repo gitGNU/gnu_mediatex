@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: md5sum.h,v 1.5 2015/09/17 18:53:48 nroche Exp $
+ * Version: $Id: md5sum.h,v 1.6 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -48,7 +48,7 @@ typedef enum CheckRc {
 typedef struct CheckData {
   char *path;           // path file to work in
   CheckOpp opp;         // operation to do
-  off_t size;           // internal data (for progbar)
+  off_t size;           // must be provided for CACHE_ID only
   char quickMd5sum[MAX_SIZE_MD5 + 1];
   char fullMd5sum[MAX_SIZE_MD5 + 1];
   char quickShasum[MAX_SIZE_SHA + 1];

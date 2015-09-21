@@ -1,3 +1,4 @@
+[notice utmisc.c] *************************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info openClose.c] estimate 137 steps for load
 [info openClose.c] parse coll1 collection ( SXC)
@@ -86,5 +87,34 @@
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 [info misc.c] steps: 29 / 19
 [info misc.c] ending
+[notice utmisc.c] *************************************************
+[info misc.c] Serializing audit into: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/audit_20100101-010000.txt
+[notice utmisc.c] *************************************************
+[info misc.c] Serializing audit into: stdout
+Audit on coll1 collection
+ requested on 2010-01-01 01:00:00
+ requested by test@mediatex.org
+ 16 archives to check
+ 0 archives checked:
+  0 archives ok
+  0 archives ko
+
+Archive to check:
+ 022a34b2f9b893fba5774237e1aa80ea:24075
+ 0387eee9820fa224525ff8b2e0dfa9be:24546
+ 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+ 1a167d608e76a6a4a8b16d168580873c:20480
+ 3a04277dd1f43740a5fe17fd0ae9a5aa:24457
+ 65f1464142f405dbbeeea4830c95ddd3:25600
+ 7808473c7db9a9e3493a6b61f44f8805:20480
+ b281449c229bcc4a3556cdcc0d3ebcec:815
+ b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088
+ b5810aba99ed0d15f1f0a073e646d5bd:25045
+ c0c055a0829982bd646e2fafff01aaa6:4066
+ d79581b67ec1932fd276dcf3b6d6db9a:24733
+ db8b80896f7202b656913f99d438075c:4090
+ de5008799752552b7963a2670dc5eb18:391168
+ f54fba7d2e070d48051ac3f8f1c2eb98:30720
+ fa2b0b536bf61f61617528c474e0bf61:24973
 [info confTree.c] free configuration
 [info utmisc.c] exit on success

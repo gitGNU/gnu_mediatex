@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.11 2015/09/17 18:53:46 nroche Exp $
+# * Version: $Id: tests.sh,v 1.12 2015/09/21 01:01:49 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -760,8 +760,29 @@ function test16()
     fi
 }
 
-# Make all functionnal for manuals tests
+# Audit on server 1
 function test17()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Audit on server"
+ 
+	read -p "Please enter your mail: " MAIL
+	mdtxP "audit coll hello for $MAIL" serv1
+	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
+	mdtxP "srv extract" serv1
+
+	finalQuestion "do you receive the audit repport ?"
+	[ $TEST_OK -eq 0 ] && return
+    else
+	topo "Cleanup"
+	stopInitdScript
+	rm -f /var/cache/mediatex/serv1/md5sums/serv1-hello.md5
+	startInitdScript
+    fi
+}
+
+# Make all functionnal for manuals tests
+function test18()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Make all functionnal for manuals tests"

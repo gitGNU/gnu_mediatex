@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgiSrv.c,v 1.9 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: cgiSrv.c,v 1.10 2015/09/21 01:01:52 nroche Exp $
  * Project: MediaTeX
  * Module : cgi-server
  *
@@ -117,10 +117,15 @@ cgiServer(Connexion* connexion)
   }
   else {
     // case2: query providing a mail => register the query
-    if (!(extra = createString(record->extra))) goto error2;
-    if (!(record2 = addRecord(coll, coll->localhost, archive, 
-			      DEMAND, extra))) goto error2;
-    if (!addCacheEntry(coll, record2)) goto error2;
+    //  we may handle several records here (at least for audit)
+    rgRewind(connexion->message->records);
+    while ((record = rgNext(connexion->message->records))) {
+      if (!(archive = record->archive)) goto error2;
+      if (!(extra = createString(record->extra))) goto error2;
+      if (!(record2 = addRecord(coll, coll->localhost, archive, 
+				DEMAND, extra))) goto error2;
+      if (!addCacheEntry(coll, record2)) goto error2;
+    }
     sprintf(connexion->status, "%s", status[2]);
   }
       

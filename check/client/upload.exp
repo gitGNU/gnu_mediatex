@@ -37,6 +37,7 @@
 [notice utupload.c] ***********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
 # MediaTeX collection catalog: _upload_
 
@@ -74,6 +75,7 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
 # MediaTeX extraction metadata: _upload_
 
@@ -112,6 +114,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
 # MediaTeX extraction metadata: _upload_
 
@@ -136,6 +139,7 @@ Document "css": "css"
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
 # MediaTeX collection catalog: _upload_
 
@@ -201,6 +205,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
 # MediaTeX collection catalog: _upload_
 
@@ -265,6 +270,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
 # MediaTeX extraction metadata: _upload_
 
@@ -310,6 +316,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/catalogNNN.txt
 # MediaTeX collection catalog: _upload_
 
@@ -379,6 +386,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
 # MediaTeX extraction metadata: _upload_
 
@@ -416,6 +424,7 @@ Document "css": "css"
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/filename
 [info recordTree.c] # ^ FINAL_SUPPLY
 
+[info openClose.c] steps: 0 / 0
 [info cvsPrint.c] serialize into LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extractNNN.txt
 # MediaTeX extraction metadata: _upload_
 

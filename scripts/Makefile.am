@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:37:17 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/09/21 01:01:49 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts files
 #  *
@@ -36,7 +36,7 @@ dist_scripts_SCRIPTS = \
 	addUser.sh delUser.sh \
 	bind.sh unbind.sh \
 	mount.sh umount.sh \
-	deliver.sh \
+	deliver.sh audit.sh \
 	cron_hourly.sh cron_daily.sh
 
 dist_scriptslib_SCRIPTS = \

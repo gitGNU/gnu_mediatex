@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.21 2015/09/04 15:30:28 nroche Exp $
+ * Version: $Id: extract.c,v 1.22 2015/09/21 01:01:52 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -1223,12 +1223,12 @@ getWantedArchives(Collection* coll)
 
     // check if it is a top containers having bad score
     isBadTop =
-      (archive->state < WANTED &&
+      (archive->state <= WANTED &&
        archive->fromContainers->nbItems == 0 &&
        archive->extractScore <= coll->serverTree->scoreParam.maxScore /2);
 
     // add all local demands...
-    if (archive->state == WANTED ||
+    if (haveRecords(archive->demands) ||
 
 	// ...and available candidates for (local or remote) final supplies
 	isBadTop) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cgi.sh,v 1.3 2015/08/19 01:09:04 nroche Exp $
+# * Version: $Id: cgi.sh,v 1.4 2015/09/21 01:01:48 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *
@@ -58,3 +58,12 @@ EOF
 # compare with the expected output
 mrProperOutputs $TEST.out
 diff $srcdir/$TEST.exp $TEST.out
+
+# note for gdb:
+# M-x gdb
+# Run gdb (like this): libtool --mode=execute gdb --annotate=3 ../src/cgi
+# > set env REQUEST_METHOD=GET
+# > set env QUERY_STRING=hash=40485334450b64014fd7a4810b5698b3&size=12
+# > set env SCRIPT_FILENAME=/mdtx1-coll1/public_html/cgi/get.cgi
+# > set env MDTX_NO_REGRESSION=1
+# > set args -n -s debug

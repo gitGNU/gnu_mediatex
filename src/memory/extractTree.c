@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.13 2015/09/04 15:30:27 nroche Exp $
+ * Version: $Id: extractTree.c,v 1.14 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -818,7 +818,7 @@ delContainer(Collection* coll, Container* self)
   // delete container link with archives
   while ((arch = rgHead(self->parents))) {
     arch->toContainer = 0;
-    rgDelete(self->parents);
+    rgRemove(self->parents);
   }
 
   // delete container from extract tree and free it

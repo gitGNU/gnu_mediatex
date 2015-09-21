@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.8 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: cgi.c,v 1.9 2015/09/21 01:01:50 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -82,9 +82,8 @@ int sendTemplate(Collection* coll, char* filename)
  * Function   : queryServer
  * Description: write the "GET hash size" query into the soket
  *              and extract the server response from the socket
- *              
  * Synopsis   : void queryServer(Server* server, RecordTree* tree, 
- *                                                         char* reply)
+ *                               char* reply)
  * Input      : Server* server: server to query
  *              RecordTree* tree: tree with a single record to query
  * Output     : char* reply: the response from server
@@ -176,7 +175,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 
     // looking for the reply
     if (sscanf(reply, "%i", &status) < 1) {
-      logMain(LOG_ERR, "error reading reply: %s", reply);
+      logMain(LOG_ERR, "error reading server reply: %s", reply);
     }
     else {
       logMain(LOG_INFO, "%s:%i tel (%i) %s",
@@ -206,17 +205,16 @@ int mdtxSearch(RecordTree* rTree, char* reply)
 int mdtxFind(RecordTree *tree)
 {
   int rc = FALSE;
-  char *reply = 0;
   char *url;
   int status = 0;
   Collection* coll = 0;
   Record* record = 0;
+  char reply[255] = "100 nobody";
   
   logMain(LOG_DEBUG, "mdtxFind");
 
   if (!(coll = tree->collection)) goto error;
   if (!(record = (Record*)tree->records->head->it)) goto error;
-  if (!(reply = createSizedString(255, "100 nobody"))) goto error;
 
   // send query
   if (!mdtxSearch(tree, reply)) goto error;
@@ -276,7 +274,6 @@ int mdtxFind(RecordTree *tree)
   if (!rc) {
     logMain(LOG_ERR, "mdtxFind fails");
   }
-  destroyString(reply);
   return rc;
 }
 
@@ -291,11 +288,11 @@ int mdtxFind(RecordTree *tree)
 int mdtxRegister(RecordTree *tree)
 {
   int rc = FALSE;
-  char *reply = 0;
   int status = 0;
   Server* server = 0;
   Collection* coll = 0;
   Record* record = 0;
+  char reply[255] = "100 nobody";
   
   logMain(LOG_DEBUG, "mdtxRegister");
 
@@ -303,7 +300,6 @@ int mdtxRegister(RecordTree *tree)
   if (!(coll = tree->collection)) goto error;
   if (!(record = (Record*)tree->records->head->it)) goto error;
   if (!(server = getLocalHost(coll))) goto error;
-  if (!(reply = createSizedString(255, "100 nobody"))) goto error;
   if (!queryServer(server, tree, reply)) goto error;
   
   if (env.dryRun) {
@@ -338,7 +334,7 @@ int mdtxRegister(RecordTree *tree)
     break;
 
   default:
-    logMain(LOG_DEBUG, "not found");
+    logMain(LOG_ERR, "registration fails");
     
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "\r\n");
@@ -361,7 +357,6 @@ int mdtxRegister(RecordTree *tree)
   if (!rc) {
     logMain(LOG_ERR, "mdtxRegister fails");
   }
-  destroyString(reply);
   return rc;
 }
 
@@ -425,7 +420,7 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (sscanf(cgivars[3], "%llu", (unsigned long long int*)&size) != 1)
     goto error;
   if (!(archive = addArchive(coll, cgivars[1], size))) goto error;
-  if ((tree = createRecordTree()) == 0) goto error;
+  if (!(tree = createRecordTree())) goto error;
 
   tree->collection = coll;
   tree->messageType = CGI;
@@ -435,9 +430,11 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (!extra && !(extra = createString("!wanted"))) goto error; 
   if (!(record = newRecord(coll->localhost, archive, DEMAND, extra))) 
     goto error;
+  extra = 0;
   if (!rgInsert(tree->records, record)) goto error;
   logMain(LOG_INFO, "querying for %s %i", 
 	  record->archive->hash, record->archive->size);
+  record = 0;
 
   rc = tree;
   tree = 0;
@@ -445,7 +442,9 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (!rc) {
     logMain(LOG_ERR, "scanCgiQuery fails");
   }
-  tree = destroyRecordTree(tree);
+  destroyString(extra);
+  destroyRecord(record);
+  destroyRecordTree(tree);
   freecgivars(cgivars);
   return rc;
 }

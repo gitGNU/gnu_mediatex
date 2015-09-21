@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.6 2015/09/04 15:30:16 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.7 2015/09/21 01:01:49 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -84,9 +84,19 @@ main(int argc, char** argv)
   
   /************************************************************************/
   // build the HTML catalog
+  logMain(LOG_NOTICE, "*************************************************");
   env.dryRun = FALSE;
   if (!mdtxMake("coll1")) goto error;
+
+  // build the audit file (for later test done by utdeliver.c)
+  logMain(LOG_NOTICE, "*************************************************");
+  env.dryRun = FALSE;
+  if (!mdtxAudit("coll1", "test@mediatex.org")) goto error;
+
+  // display the audit file
+  logMain(LOG_NOTICE, "*************************************************");
   env.dryRun = TRUE;
+  if (!mdtxAudit("coll1", "test@mediatex.org")) goto error;
   /************************************************************************/
 
   rc = TRUE;

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.8 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: confTree.h,v 1.9 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -73,8 +73,8 @@ struct Collection {
   RG *supports; // ring of support (Support*)
 
   /* ... expanded data ... */
-  char  *user;                   // ie: "MDTX-COLL""
-  char  *masterUser;             // ie: "MDTX2-COLL"
+  char  *user;       // ie: "MDTX-COLL""
+  char  *masterUser; // ie: "MDTX2-COLL"
 
   /* shared parameters (used by servers.txt) */
   char *userKey;   // ~/.ssh/id_dsa.pub content
@@ -118,10 +118,10 @@ struct Collection {
   char *cacheUrl;   // base url to cache repository
 
   /* -parsed trees: */  
-  ServerTree*   serverTree;
-  ExtractTree*  extractTree;
-  CatalogTree*  catalogTree;  
-  CacheTree*    cacheTree;
+  ServerTree*  serverTree;
+  ExtractTree* extractTree;
+  CatalogTree* catalogTree;  
+  CacheTree*   cacheTree;
 };
 
 struct Configuration {

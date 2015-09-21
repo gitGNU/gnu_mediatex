@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: openClose.c,v 1.16 2015/09/21 01:01:50 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -308,7 +308,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
 
     // cgi and server only read the meta-data
     if (!env.noCollCvs) {
-      // force to re-serialize and commit it
+      // force re-serialize and commit to eat NNN.txt
       coll->fileState[fileIdx] = MODIFIED;
     }
   }  
@@ -939,7 +939,7 @@ int serverSaveAll()
 
 /*=======================================================================
  * Function   : diseaseCollection
- * Description: Call serializer on private files
+ * Description: Release memory used to parse metadata files
  * Synopsis   : int diseaseCollection()
  * Input      : N/A
  * Output     : TRUE on success

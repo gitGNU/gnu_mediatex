@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.7 2015/08/31 00:14:52 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.8 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -29,13 +29,13 @@
 
 // Container types
 typedef enum {UNDEF=0, 
-	      INC,                   // for uploads not already burned
-	      ISO,                   // CD image
-	      CAT,                   // generic way to do multi-volume
-	      TGZ, TBZ, AFIO,        // GNU/Linux agregation + compression
-	      TAR, CPIO,             // GNU/Linux agregation only
-	      GZIP, BZIP,            // GNU/Linux compression only  
-	      ZIP, RAR,              // windows agregation + compression
+	      INC,             // for uploads not already burned
+	      ISO,             // CD image
+	      CAT,             // generic way to do multi-volume
+	      TGZ, TBZ, AFIO,  // GNU/Linux agregation + compression
+	      TAR, CPIO,       // GNU/Linux agregation only
+	      GZIP, BZIP,      // GNU/Linux compression only  
+	      ZIP, RAR,        // windows agregation + compression
 	      ETYPE_MAX} EType;
 
 // note: native multi-volume is only managed for rar archives
@@ -51,13 +51,13 @@ struct FromAsso {
 
 struct Container {
   // the 2 entries bellow are the primary key
-  EType    type;               // container type: IMG, CAT, TGZ, ISO...
-  Archive* parent;             // same as the first entry in bellow ring
+  EType    type;         // container type: IMG, CAT, TGZ, ISO...
+  Archive* parent;       // same as the first entry in bellow ring
 
-  RG*      parents;            // ex: RAR source files (Archives)
-  AVLTree* childs;             // ex: RAR target files (FromAsso)
+  RG*      parents;      // ex: RAR source files (Archives)
+  AVLTree* childs;       // ex: RAR target files (FromAsso)
 
-  float    score;              // use by mdtx-make
+  float    score;        // use by mdtx-make
 };
 
 struct ExtractTree {
@@ -66,7 +66,6 @@ struct ExtractTree {
 
   float score;           // global score for the collection
 };
-
 
 char* strEType(EType self);
 EType getEType(char* label);

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: deliver.c,v 1.9 2015/09/04 15:30:28 nroche Exp $
+ * Version: $Id: deliver.c,v 1.10 2015/09/21 01:01:52 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *
@@ -74,10 +74,80 @@ callMail(Collection* coll, Record* record, char* address)
 }
 
 /*=======================================================================
+ * Function   : auditArchive
+ * Description: check archive on notice it
+ * Synopsis   : int auditArchive(Collection* coll, Record* record)
+ * Input      : Collection* coll
+ *              Record* record
+ * Output     : TRUE on success
+ =======================================================================*/
+int auditArchive(Collection* coll, Record* demand)
+{
+  int rc = FALSE;
+  Record* supply = 0;
+  struct stat statBuffer;
+  CheckData md5; 
+  char* path = 0;
+  char *argv[] = {0, 0, 0, 0, 0, 0, 0};
+  char size[MAX_SIZE_SIZE+1];
+  char status[2];
+  
+  logMain(LOG_DEBUG, "auditArchive");
+  checkCollection(coll);
+  checkRecord(demand);
+  supply = demand->archive->localSupply;
+  checkRecord(supply);
+
+  // get file attributes (size)
+  if (!(path = getAbsoluteRecordPath(coll, supply))) goto error;
+  if (stat(path, &statBuffer)) {
+    logMain(LOG_ERR, "status error on %s: %s", supply->extra, 
+	    strerror(errno));
+    goto error;
+  }
+
+  // check hash (result is given by md5.rc)
+  memset(&md5, 0, sizeof(CheckData));
+  md5.path = path;
+  md5.size = statBuffer.st_size;
+  md5.opp = CHECK_CACHE_ID;
+  if (!doChecksum(&md5)) goto error;
+
+  // call script to update report
+  if (!(argv[0] = createString(getConfiguration()->scriptsDir))
+      || !(argv[0] = catString(argv[0], "/audit.sh"))) 
+    goto error;
+
+  argv[1] = coll->label;
+  argv[2] = demand->extra;
+  argv[3] = demand->archive->hash;
+  sprintf(size, "%lli", (long long int)demand->archive->size);
+  argv[4] = size;
+  sprintf(status, "%i", md5.rc);
+  argv[5] = status;
+  
+  if (!env.noRegression && !env.dryRun) {
+    if (!execScript(argv, 0, 0, FALSE)) goto error;
+  }
+
+  demand->type |= REMOVE;
+  if (!delCacheEntry(coll, demand)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "auditArchive fails");
+  }
+  destroyString(path);
+  return rc;
+}
+
+/*=======================================================================
  * Function   : deliverArchive
  * Description: adjuste toKeep time and eventually send mails
  * Synopsis   : int deliverArchive()
  * Input      : Collection* coll
+ *              Archive* archive
  * Output     : TRUE on success
  =======================================================================*/
 int deliverArchive(Collection* coll, Archive* archive)
@@ -98,6 +168,13 @@ int deliverArchive(Collection* coll, Archive* archive)
 
     switch (getRecordType(record)) {
     case FINAL_DEMAND: // mail + download http
+      
+      // workaround for audit
+      if (!strncmp(record->extra, CONF_AUDIT, strlen(CONF_AUDIT))) {
+	if (!auditArchive(coll, record)) goto error;
+	continue;
+      }
+
       date += coll->cacheTTL;
       date -= 1*DAY;
     case REMOTE_DEMAND: // scp (time between 2 cron)
@@ -121,6 +198,7 @@ int deliverArchive(Collection* coll, Archive* archive)
   while ((record = rgNext_r(archive->demands, &curr))) {
     if (record->type & REMOVE) continue;
     if (getRecordType(record) != FINAL_DEMAND) continue;
+    if (!strncmp(record->extra, CONF_AUDIT, strlen(CONF_AUDIT))) continue;
 
     // we should use a lock to prevent mail to be sent twice
     record->type |= REMOVE;

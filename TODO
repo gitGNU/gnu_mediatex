@@ -1,19 +1,15 @@
 
 *** TO CORRECT: cache policy    
-......................................................
+
+- move extract.c into common/extractRules.c so as to run it during upload
+-- cacheSet and delverArchive must also be defined into client
+- ease looking for archive life cycle into cvsroot
+- buildRule.sh script ?
 
 ** LOGS
 - cron_monthly.src upload the cvsroot collection module
 -- mediatex ls master coll
-- ease looking for archive life cycle into cvsroot
-
-** TRUST
-- new client query: mdtx audit [coll COLL] for MAIL
--- generate a content file (from extraction rules)
--- register FINAL_DEMAND with extra "audit:nroche@narval.tk"
--- deliver maintain the content file (checksum and delete lines on succes)
--- ... and finaly send it to the mail address and upload it
-- buildRule.sh script ?
+- upload the apache logs using /etc/logrotate.d/httpd-prerotate
 
 ** TESTS
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
@@ -63,6 +59,9 @@
 - remove cache/toKeep directory
 - cache never follow simlinks
 - do not load into cache unknown archive from extract.txt
+- saveCollection unlink extractNNN.txt when first loaded
+  changes given by upload on extractNNN.txt are then lost
+-- extractTree::delContainer use rgRemove instead of rgDelete
 
 ** SYNTAX
 - finale -> final
@@ -125,6 +124,10 @@
 - add sha1 computation
 - add a sha1 field for supports
 
+** AUDIT
+- new client query: mdtx audit [coll COLL] for MAIL
+- supp check lock the client so report upload explain into the mail
+
 *** CLEAN-UP
 
 - compilation warnings
@@ -140,12 +143,10 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- move extract.c into common/extractRules.c so as to run it during upload
--- cacheSet and delverArchive must also be defined into client
-- upload the apache logs using /etc/logrotate.d/httpd-prerotate
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)
 - i10n for french
+- test clains-based authentication (openId)
 
 *** TODO MAYBE
 
@@ -160,5 +161,3 @@
 - replace ardsm by mqueue
 - add thread ID to the log
 - replace cvs+viewvc by git+cgit
-
-

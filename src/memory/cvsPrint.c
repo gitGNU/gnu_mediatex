@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cvsPrint.c,v 1.9 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: cvsPrint.c,v 1.10 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -87,7 +87,7 @@ int cvsCutOpen(CvsFile* fd)
   if (!(path = createString(fd->path))
       || !(path = catString(path, "000.txt"))) goto error;
 
-  // first call: unlink existing files
+  // first call: empty existing files
   if (fd->nb == 0 && fd->fd != stdout) {
     // empty part files
     do {

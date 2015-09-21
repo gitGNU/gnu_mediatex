@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.13 2015/09/17 18:53:46 nroche Exp $
+ * Version: $Id: upload.c,v 1.14 2015/09/21 01:01:50 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -333,10 +333,10 @@ areNotAlreadyThere(Collection *coll, Collection* upload)
   }
 
  error:
+  if (!releaseCollection(coll, EXTR)) rc = FALSE;
   if (!rc) {
     logMain(LOG_ERR, "areNotAlreadyThere fails");
   }
-  if (!releaseCollection(coll, EXTR)) goto error;
   return rc;
 }
 
@@ -399,17 +399,21 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
     
   // read reply
   if (env.dryRun) goto end;
-  n = tcpRead(socket, reply, 255);
-  tcpRead(socket, reply, 1);
-  if (sscanf(reply, "%i %s", &status, message) < 1) {
-    reply[(n<=0)?0:n-1] = (char)0; // remove ending \n
+  if ((n = tcpRead(socket, reply, 255)) > 0) {
+    reply[n-1] = (char)0; // remove ending \n
+  }
+  if (sscanf(reply, "%i", &status) < 1) {
     logMain(LOG_ERR, "error parsing daemon reply: %s", reply);
     goto error;
   }
+  message = strstr(reply, " ");
     
-  logMain(LOG_INFO, "daemon says (%i) %s", status, message);
-  if (status != 210) goto error;
+  if (status != 210) {
+    logMain(LOG_ERR, "daemon says (%i)%s", status, message);
+    goto error;
+  }
 
+  logMain(LOG_INFO, "daemon says (%i)%s", status, message);
  end:
   rc = TRUE;
  error:
@@ -538,6 +542,10 @@ mdtxUpload(char* label, char* catalog, char* extract,
 
   // ask daemon to upload the file
   if (file && !uploadFile(coll, archive, file, targetPath)) goto error;
+
+  // prevent saveCollection from unlinking new NNN.txt files,
+  // and also force reload on upload+[+] to use the new NNN.txt files
+  if (!clientDiseaseAll()) goto error;
 
   // concatenate metadata to the true collection
   upload->memoryState |= EXPANDED;

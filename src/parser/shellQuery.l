@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.6 2015/08/14 01:53:43 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.7 2015/09/21 01:01:52 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -210,6 +210,11 @@
 	  return(shellAS);
 	}
 
+	for {
+	  BEGIN(USERVALUE);
+	  return(shellFOR);
+	}
+
 	on {
 	  BEGIN(USERVALUE);
 	  return(shellON);
@@ -291,6 +296,10 @@
 
 	motd {
 	  return(shellMOTD);
+	}
+
+	audit {
+	  return(shellAUDIT);
 	}
 
 	save {
