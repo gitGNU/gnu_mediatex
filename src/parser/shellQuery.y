@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.10 2015/09/21 01:01:52 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.11 2015/09/22 11:42:41 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -101,6 +101,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 
 %token            shellADMIN
 %token            shellSERVER
+%token            shellMASTER
 
 %token            shellALL
 %token            shellTO
@@ -642,11 +643,18 @@ apiCollQuery: shellADD key shellTO collection shellEOL
     if (!clientWriteUnlock()) YYABORT;
   }
 }
+            | shellLIST shellMASTER shellCOLL shellEOL
+{
+  logParser(LOG_INFO, "listing locally hosted collections");
+  if (!env.noRegression) {
+    if (!mdtxListCollection(TRUE)) YYABORT;
+  }
+}
             | shellLIST shellCOLL shellEOL
 {
-  logParser(LOG_INFO, "listing enabled collections");
+  logParser(LOG_INFO, "listing collections");
   if (!env.noRegression) {
-    if (!mdtxListCollection()) YYABORT;
+    if (!mdtxListCollection(FALSE)) YYABORT;
   }
 }
             | shellMOTD shellEOL

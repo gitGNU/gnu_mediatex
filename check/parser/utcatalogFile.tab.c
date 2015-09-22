@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.tab.c,v 1.3 2015/09/04 15:30:21 nroche Exp $
+ * Version: $Id: utcatalogFile.tab.c,v 1.4 2015/09/22 11:42:38 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -61,6 +61,7 @@ main(int argc, char** argv)
   Collection* coll = 0;
   CvsFile fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
   char* inputPath = 0;
+  char* extractPath = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -101,6 +102,9 @@ main(int argc, char** argv)
   if (!parseConfiguration(conf->confFile)) goto error;
   if (!(coll = getCollection("coll1"))) goto error;
   if (!expandCollection(coll)) goto error;
+  if (!(extractPath = createString(coll->extractDB))) goto error;
+  if (!(extractPath = catString(extractPath, "000.txt"))) goto error;
+  if (!parseExtractFile(coll, extractPath)) goto error;
 
   if (!parseCatalogFile(coll, inputPath)) goto error;
   if (!serializeCatalogTree(coll, &fd)) goto error;
@@ -108,6 +112,7 @@ main(int argc, char** argv)
 
   rc = TRUE;
  error:
+  destroyString(extractPath);
   freeConfiguration();
   free(inputPath);
   ENDINGS;

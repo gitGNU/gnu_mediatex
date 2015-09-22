@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.13 2015/08/14 01:53:42 nroche Exp $
+ * Version: $Id: command.c,v 1.14 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -39,7 +39,7 @@ void
 version()
 {
   fprintf(stderr, 
-	  "\n" PACKAGE_STRING " Copyright (C) 2014 <Nicolas Roche>\n"
+	  "\n" PACKAGE_STRING " Copyright (C) 2014 2015 <Nicolas Roche>\n"
 	  "\n<http://www.gnu.org/licenses/gpl.html>\n"
 	  "This program comes with ABSOLUTELY NO WARRANTY\n"
 	  "This is free software, and you are welcome to redistribute it\n"
@@ -64,7 +64,7 @@ miscUsage(char* programName)
   fprintf(stderr, 
 	  "\t\t[ -f facility ] [ -l logFile ]\n"
 	  "\t\t[ -s severity[:module(,module)*] ]\n"
-	  "\t\t[ -a memoryLimit ] [ -S ] [ -n ]");
+	  "\t\t[ -m memoryLimit ] [ -S ] [ -n ]");
 }
 
 /*=======================================================================
@@ -78,7 +78,6 @@ void
 memoryUsage(char* programName)
 {
   miscUsage(programName);
-  fprintf(stderr, "\n\t\t[ -M ]");
 }
 
 /*=======================================================================
@@ -92,7 +91,7 @@ void
 parserUsage(char* programName)
 {
   memoryUsage(programName);
-  fprintf(stderr, "\n\t\t[ -L ] [ -P ]");
+  fprintf(stderr, "\n\t\t[ -L ]");
 }
 
 /*=======================================================================
@@ -106,7 +105,7 @@ void
 mdtxUsage(char* programName)
 {
   parserUsage(programName);
-  fprintf(stderr, "\n\t\t[ -O ] [ -c confFile ]");
+  fprintf(stderr, "\n\t\t[ -c confFile ]");
 }
 
 /*=======================================================================
@@ -177,8 +176,7 @@ mdtxOptions()
 {
   parserOptions();
   fprintf(stderr, 
-	  "  -c, --conf-label\toverhide 'mdtx.conf' configuration file\n"
-	  "  -a, --alone\tdo not make cvs remote queries\n");
+	  "  -c, --conf-label\toverhide 'mdtx.conf' configuration file\n");
 }
 
 /*=======================================================================

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.7 2015/09/21 01:01:52 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.8 2015/09/22 11:42:41 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -143,24 +143,6 @@
 	  return(shellUSER);
 	}
 
-	bind {
-	  return(shellBIND);
-	}
-
-	unbind {
-	  return(shellUNBIND);
-	}
-
-	mount {
-	  BEGIN(USERVALUE);
-	  return(shellMOUNT);
-	}
-
-	umount {
-	  BEGIN(USERVALUE);
-	  return(shellUMOUNT);
-	}
-
 	file {
 	  BEGIN(USERVALUE);
 	  return(shellFILE);
@@ -176,11 +158,6 @@
 	  return(shellRULES);
 	}
 
-	get {
-	  BEGIN(USERVALUE);
-	  return(shellGET);
-	}
-
 	/* prefixs */
 
 	adm(in)? {
@@ -189,6 +166,10 @@
 
 	(srv|serv|server) {
 	  return(shellSERVER);
+	}
+
+	master {
+	  return(shellMASTER);
 	}
 
 	/* locutions */
@@ -220,7 +201,30 @@
 	  return(shellON);
 	}
 
-	/* conf orders */
+	/* orders */
+
+	get {
+	  BEGIN(USERVALUE);
+	  return(shellGET);
+	}
+
+	bind {
+	  return(shellBIND);
+	}
+
+	unbind {
+	  return(shellUNBIND);
+	}
+
+	mount {
+	  BEGIN(USERVALUE);
+	  return(shellMOUNT);
+	}
+
+	umount {
+	  BEGIN(USERVALUE);
+	  return(shellUMOUNT);
+	}
 
 	init(ialize)? {
 	  return(shellINIT);

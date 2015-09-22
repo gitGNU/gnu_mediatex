@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.17 2015/09/17 18:53:45 nroche Exp $
+ * Version: $Id: utFunc.c,v 1.18 2015/09/22 11:42:38 nroche Exp $
  * Project: MediaTeX
  * Module : utFunc
  *
@@ -594,7 +594,7 @@ createExempleConfiguration(char* inputPath)
   /* test1 collection */
   if (!(coll = addCollection("coll1"))) goto error;
   if (!(coll->masterLabel = createString("mdtx1"))) goto error;
-  strncpy(coll->masterHost, "host1.mediatex.org", MAX_SIZE_HOST);
+  strncpy(coll->masterHost, "localhost", MAX_SIZE_HOST);
   coll = 0;
 
   /* test2 collection */

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.22 2015/09/21 01:01:52 nroche Exp $
+ * Version: $Id: extract.c,v 1.23 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -1167,7 +1167,8 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (!(data->toKeeps = createRing())) goto error;
 
   curr = 0;
-  while (!data->found && (asso = rgNext_r(archive->fromContainers, &curr))) {
+  while (!data->found && 
+	 (asso = rgNext_r(archive->fromContainers, &curr))) {
     if (!extractContainer(data, asso->container)) goto error;
   }
 

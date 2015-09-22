@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/09/21 01:01:49 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.6 2015/09/22 11:42:39 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts files
 #  *
@@ -37,7 +37,7 @@ dist_scripts_SCRIPTS = \
 	bind.sh unbind.sh \
 	mount.sh umount.sh \
 	deliver.sh audit.sh \
-	cron_hourly.sh cron_daily.sh
+	cron_hourly.sh cron_daily.sh cron_monthly.sh
 
 dist_scriptslib_SCRIPTS = \
 	lib/log.sh \
@@ -52,12 +52,14 @@ EXTRA_DIST = \
 	lib/include.src \
 	mediatexd.src \
 	cron_hourly.src \
-	cron_daily.src
+	cron_daily.src \
+	cron_monthly.src
 CLEANFILES = \
 	lib/include.sh \
 	mediatexd \
 	cron_hourly.sh \
-	cron_daily.sh
+	cron_daily.sh \
+	cron_monthly.sh
 
 mediatexd: mediatexd.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
@@ -70,4 +72,7 @@ cron_hourly.sh: cron_hourly.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
 cron_daily.sh: cron_daily.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
+
+cron_monthly.sh: cron_monthly.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.11 2015/08/19 01:09:09 nroche Exp $
+ * Version: $Id: command.h,v 1.12 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -51,8 +51,7 @@
 #define MDTX_SHORT_OPTIONS PARSER_SHORT_OPTIONS "c:a"
 #define MDTX_LONG_OPTIONS				\
   PARSER_LONG_OPTIONS,					\
-  {"conf-label", required_argument, 0, 'c'},		\
-  {"alone", no_argument, 0, 'a'}
+  {"conf-label", required_argument, 0, 'c'}
 
 void version();
 
@@ -203,10 +202,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.confLabel = optarg;						\
     break;								\
 									\
-  case 'a':								\
-    env.noCollCvs = 1;							\
-    break;								\
- 									\
   GET_PARSER_OPTIONS;
 
 /*=======================================================================

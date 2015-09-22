@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.4 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.5 2015/09/22 11:42:40 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -42,8 +42,9 @@ usage(char* programName)
   mdtxUsage(programName);
   fprintf(stderr, "\n\t\t[ -w ] query");
   mdtxOptions();
-  fprintf(stderr, "  -w, --no-www-cvs\tdo not call cvs for collections\n");
+  fprintf(stderr, "  -a, --alone\tdo not make cvs remote queries\n");
   fprintf(stderr, "  ---\n\n"
+#warning "to complete"
 	  "Admin queries:\n\n"
 	  "  adm (init|remove|purge)\n\n"
 	  "  adm (add|del) user USER\n\n"
@@ -101,7 +102,7 @@ main(int argc, char** argv)
   char* options = MDTX_SHORT_OPTIONS "w";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
-    {"no-www-cvs", required_argument, 0, 'w'},
+    {"alone", no_argument, 0, 'a'},
     {0, 0, 0, 0}
   };
 
@@ -131,7 +132,7 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
       
-    case 'w':
+    case 'a':
       env.noCollCvs = 1;
       break;
       

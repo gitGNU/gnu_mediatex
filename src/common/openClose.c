@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.16 2015/09/21 01:01:50 nroche Exp $
+ * Version: $Id: openClose.c,v 1.17 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -486,6 +486,9 @@ loadCollection(Collection* coll, int collFiles)
   logCommon(LOG_DEBUG, "load %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
+  // force catalog to use archives from extract (assert no ophanes)
+  if (collFiles & CTLG) collFiles |= EXTR;
+
   if (!expandCollection(coll)) goto error;
 
   if (!env.noCollCvs) {
@@ -643,7 +646,10 @@ releaseCollection(Collection* coll, int collFiles)
   logCommon(LOG_DEBUG, "release %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
- if (!collectionLoop(coll, collFiles, releaseColl)) goto error;
+  // force catalog to use archives from extract (assert no ophanes)
+  if (collFiles & CTLG) collFiles |= EXTR;
+
+  if (!collectionLoop(coll, collFiles, releaseColl)) goto error;
 
   rc = TRUE;
  error:

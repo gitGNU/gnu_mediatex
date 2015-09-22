@@ -7,4 +7,5 @@ Makefile
 # make
 cron_daily.sh
 cron_hourly.sh
+cron_monthly.sh
 mediatexd

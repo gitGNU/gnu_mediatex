@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.8 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: conf.c,v 1.9 2015/09/22 11:42:40 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -181,15 +181,15 @@ mdtxDelCollection(char* label)
  * Function   : listCollection
  * Description: print label of collections in configuration
  * Synopsis   : listCollection()
- * Input      : N/A
+ * Input      : int onlyMasterColl: only list locally hosted collections
  * Output     : number of matching collections
  =======================================================================*/
 int
-mdtxListCollection()
+mdtxListCollection(int onlyMasterColl)
 {
   int rc = FALSE; 
   Configuration* conf = 0;
-  Collection* collection = 0;
+  Collection* coll = 0;
   int nb = 0;
 
   // search into the configuration
@@ -204,8 +204,12 @@ mdtxListCollection()
       }
     }
     
-    while ((collection = rgNext(conf->collections))) {
-      printf("%s%s", nb++?" ":"", collection->label);
+    while ((coll = rgNext(conf->collections))) {
+      if (onlyMasterColl) {
+	if (strcmp(coll->masterHost, conf->host)) continue;
+	if (strcmp(coll->masterLabel, env.confLabel)) continue;
+      }
+      printf("%s%s", nb++?" ":"", coll->label);
     }
   }
   printf("\n");

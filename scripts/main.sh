@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: main.sh,v 1.4 2015/06/30 17:37:21 nroche Exp $
+# * Version: $Id: main.sh,v 1.5 2015/09/22 11:42:40 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -27,7 +27,7 @@ set -e
 
 [ -z $srcdir ] && srcdir=.
 [ -z $libdir ] && libdir=$srcdir/lib
-[ ! -z $MDTX_SH_MODULE ] || source $libdir/module.sh
+[ ! -z $MDTX_SH_MODULE ] || source $libdir/include.sh
 
 # this only add a log message
 fonction "main" 

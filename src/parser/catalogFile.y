@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.8 2015/09/17 18:53:48 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.9 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -372,7 +372,11 @@ newArchive: cataARCHIVE archive
 archive: cataHASH cataCOLON cataNUMBER
 {
   logParser(LOG_DEBUG, "line %i: archive: %s:%lli", LINENO, $1, $3);
-  if (!($$ = addArchive(coll, $1, $3))) YYERROR;
+  if (!($$ = getArchive(coll, $1, $3))) {
+    logParser(LOG_ERR, "line %i: unknown archive %s:%lli", 
+	      LINENO, $1, $3);
+    YYERROR;
+  }
 }
 ;
 

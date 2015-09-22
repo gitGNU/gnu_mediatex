@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.8 2015/09/04 15:30:16 nroche Exp $
+ * Version: $Id: utupload.c,v 1.9 2015/09/22 11:42:38 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -197,18 +197,18 @@ main(int argc, char** argv)
 	 addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 123))
 	== 0) goto error;
     
-    if (!(isCatalogRefbyExtract(coll))) goto error;
+    //if (!(isCatalogRefbyExtract(coll))) goto error;
     if (!isFileRefbyExtract(coll, iso1)) goto error;
     if (!isFileRefbyExtract(coll, zip)) goto error;
-    if (!isFileRefbyCatalog(coll, logo)) goto error;
+    //if (!isFileRefbyCatalog(coll, logo)) goto error;
     
     // now, run them on error
     if (!addArchiveToDocument(coll, new, getDocument(coll, "panthere"))) 
       goto error;
-    if (isCatalogRefbyExtract(coll)) goto error;
+    //if (isCatalogRefbyExtract(coll)) goto error;
     if (isFileRefbyExtract(coll, new)) goto error;
     if (isFileRefbyExtract(coll, logo)) goto error;
-    if (!isFileRefbyCatalog(coll, new)) goto error;
+    //if (!isFileRefbyCatalog(coll, new)) goto error;
     if (areNotAlreadyThere(coll, coll)) goto error;
   }
   else {

@@ -1,15 +1,10 @@
 
-*** TO CORRECT: cache policy    
-
-- move extract.c into common/extractRules.c so as to run it during upload
--- cacheSet and delverArchive must also be defined into client
-- ease looking for archive life cycle into cvsroot
-- buildRule.sh script ?
+*** TO CORRECT: cache policy
+........................................................
 
 ** LOGS
-- cron_monthly.src upload the cvsroot collection module
--- mediatex ls master coll
 - upload the apache logs using /etc/logrotate.d/httpd-prerotate
+- ease looking for archive life cycle into cvsroot
 
 ** TESTS
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
@@ -19,15 +14,15 @@
 
 (maybe)
 
-** MOTD
-- * orphanes * (by collection)
--- factorize tests from client::upload.c
-- * cache size * (by collection)
--- all/used/allocated/free
+** EXAMPLES
+- buildRule.sh script ?
+- extractMeta communication|restitution|elimination SUPP=>supp.cat supp.ext
 
 ** HTML
 - change bad archive's sum computation ?
-- notify orphan
+
+** CACHE ?
+- monitor cache sizes: all/used/allocated/free
 
 *** CHANGES DONE (to document)
 
@@ -128,12 +123,21 @@
 - new client query: mdtx audit [coll COLL] for MAIL
 - supp check lock the client so report upload explain into the mail
 
+** ORPHANES
+- catalogTree only do getArchive to prevent orphanes
+
+** LOGS
+- cron_monthly.src upload the cvsroot collection module
+-- mediatex ls master coll
+
 *** CLEAN-UP
 
 - compilation warnings
 - src/misc/host.c (to remove)
 - src/misc/udp.c (to remove)
 - src/misc/md5sums.c -> checksums.c
+- script/main.sh
+- script/lib/module.sh
 
 *** TO TEST
 
@@ -161,3 +165,5 @@
 - replace ardsm by mqueue
 - add thread ID to the log
 - replace cvs+viewvc by git+cgit
+- move extract.c into common/extractRules.c so as to run it during upload
+  ... but cannot handle CAT rules

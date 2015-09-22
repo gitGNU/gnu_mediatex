@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.7 2015/08/23 23:39:09 nroche Exp $
+# * Version: $Id: upload.sh,v 1.8 2015/09/22 11:42:38 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -57,10 +57,10 @@ EOF
 client/ut$TEST \
     >client/$TEST.out 2>&1
 
+# catalog cannot refer unknown archive
 client/ut$TEST \
     -C client/$TEST.cat \
-    >>client/$TEST.out 2>&1
-
+    >>client/$TEST.out 2>&1 || true
 
 client/ut$TEST \
     -E client/$TEST.ext \

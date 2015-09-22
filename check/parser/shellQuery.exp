@@ -38,7 +38,8 @@
 [info shellQuery.y] upload a file to a collection
 [info shellQuery.y] add a key to a collection
 [info shellQuery.y] del a key to a collection
-[info shellQuery.y] listing enabled collections
+[info shellQuery.y] listing collections
+[info shellQuery.y] listing locally hosted collections
 [info shellQuery.y] message of the day
 [info shellQuery.y] upgrade all
 [info shellQuery.y] upgrade a collection

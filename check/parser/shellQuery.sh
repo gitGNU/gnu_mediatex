@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.6 2015/09/21 01:01:49 nroche Exp $
+# * Version: $Id: shellQuery.sh,v 1.7 2015/09/22 11:42:38 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *
@@ -85,6 +85,7 @@ parser/ut$TEST.tab upload cat FILE extr FILE file FILE to coll COLL >>parser/$TE
 parser/ut$TEST.tab add key keyFile.txt to coll COLL >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab del key 0123456789abcdef0123456789abcdef from coll COLL >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab list coll >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab list master coll >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab motd >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab upgrade >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab upgrade coll COLL >>parser/$TEST.out 2>&1

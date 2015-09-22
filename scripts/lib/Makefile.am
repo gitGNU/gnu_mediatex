@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:25 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.4 2015/09/22 11:42:40 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts libraries (called by scripts)
 #  *
@@ -25,7 +25,6 @@ include $(top_srcdir)/Make-rules
 scriptsdir = $(datarootdir)@mdtx_mediatexdir@/scripts/lib
 dist_scripts_SCRIPTS = \
 	include.sh \
-	unitTest.sh \
 	log.sh \
 	users.sh \
 	ssh.sh \
@@ -37,7 +36,6 @@ EXTRA_DIST = include.src
 CLEANFILES = include.sh
 
 TESTS = \
-	unitTest.sh \
 	log.sh \
 	include.sh \
 	users.sh \

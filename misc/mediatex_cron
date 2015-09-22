@@ -1,4 +1,4 @@
-#  * Version: $Id: mediatex_cron,v 1.1 2015/07/01 10:50:24 nroche Exp $
+#  * Version: $Id: mediatex_cron,v 1.2 2015/09/22 11:42:39 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  exemples files
 #  *
@@ -24,6 +24,7 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
 
-# m h dom mon dow user	command
-#XX  *   * * *   root    DATADIR/scripts/cron_hourly.sh
-#YY ZZ   * * *   root    DATADIR/scripts/cron_daily.sh
+# m  h dom mon dow user	command
+#M1  *   *   *   * root DATADIR/scripts/cron_hourly.sh
+#M2 H1   *   *   * root DATADIR/scripts/cron_daily.sh
+#M3 H2   1   *   * root DATADIR/scripts/cron_monthly.sh

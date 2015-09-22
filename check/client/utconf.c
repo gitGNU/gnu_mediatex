@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utconf.c,v 1.4 2015/09/04 15:30:15 nroche Exp $
+ * Version: $Id: utconf.c,v 1.5 2015/09/22 11:42:38 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -90,7 +90,10 @@ main(int argc, char** argv)
   if (!(coll3 = addCollection("coll3"))) goto error;
 
   logMain(LOG_NOTICE, "*** List collections: ");
-  if (!mdtxListCollection()) goto error;
+  if (!mdtxListCollection(FALSE)) goto error;
+
+  logMain(LOG_NOTICE, "*** List master collections: ");
+  if (!mdtxListCollection(TRUE)) goto error;
 
   logMain(LOG_NOTICE, "*** Add a collection:");
   if (!(coll4 = createCollection())) goto error;
@@ -100,7 +103,7 @@ main(int argc, char** argv)
   coll4 = destroyCollection(coll4);
 
   logMain(LOG_NOTICE, "*** List collections:");
-  if (!mdtxListCollection()) goto error;
+  if (!mdtxListCollection(FALSE)) goto error;
 
   logMain(LOG_NOTICE, "*** Del collection coll 4:");
   if (!mdtxDelCollection("coll4")) goto error;

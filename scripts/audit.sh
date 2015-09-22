@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: audit.sh,v 1.1 2015/09/21 01:01:49 nroche Exp $
+# * Version: $Id: audit.sh,v 1.2 2015/09/22 11:42:39 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -63,58 +63,55 @@ CUR=$(head -n5 $FILEPATH | tail -n +5 | cut -d' ' -f2)
 OK=$(head -n6 $FILEPATH | tail -n +6 | cut -d' ' -f3)
 KO=$(head -n7 $FILEPATH | tail -n +7 | cut -d' ' -f3)
 
-# assert not already checked
+# assert archive was not already checked
 if [ $(grep -c "$HASH:$SIZE" $FILEPATH) -ne 1 ]; then
-    Error "archive $HASH:$SIZE already audited for $EXTRA"
-fi
-
-# if check on archive was successful
-if [ $STATUS -eq $TRUE ]; then
-    echo " $HASH:$SIZE $(date)" >> $FILEPATH_OK
-    OK=$[$OK + 1]
+    Info "archive $HASH:$SIZE already audited for $EXTRA"
 else
-    echo " $HASH:$SIZE $(date)" >> $FILEPATH_KO
-    KO=$[$KO + 1]
+    # if check on archive was successful
+    if [ $STATUS -eq $TRUE ]; then
+	echo " $HASH:$SIZE $(date)" >> $FILEPATH_OK
+	OK=$[$OK + 1]
+    else
+	echo " $HASH:$SIZE $(date)" >> $FILEPATH_KO
+	KO=$[$KO + 1]
+    fi
+
+    # archive now checked
+    CUR=$[$CUR + 1]
+
+    sed -i $FILEPATH \
+	-e "5 s/[0-9]\+/$CUR/" \
+	-e "6 s/[0-9]\+/$OK/" \
+	-e "7 s/[0-9]\+/$KO/" \
+	-e "/$HASH:$SIZE/ d"
+
+    # finalise the audit repport    
+    if [ $CUR -eq $MAX ]; then
+	echo -e "\nArchive OK:" >> $FILEPATH
+	if [ -e $FILEPATH_OK ]; then
+	    cat $FILEPATH_OK >> $FILEPATH
+	else
+	    echo " none" >> $FILEPATH
+	fi
+	echo -e "\nArchive KO:" >> $FILEPATH
+	if [ -e $FILEPATH_KO ]; then
+	    cat $FILEPATH_KO >> $FILEPATH
+	else
+	    echo " none" >> $FILEPATH
+	fi
+	rm -f $FILEPATH_OK $FILEPATH_KO
+    fi
 fi
 
-# archive was checked
-CUR=$[$CUR + 1]
-sed -i $FILEPATH \
-    -e "5 s/[0-9]\+/$CUR/" \
-    -e "6 s/[0-9]\+/$OK/" \
-    -e "7 s/[0-9]\+/$KO/" \
-    -e "/$HASH:$SIZE/ d"
-
+# upload the audit report and send a mail
 if [ $CUR -eq $MAX ]; then
 
-    # finalise the audit repport
-    echo -e "\nArchive OK:" >> $FILEPATH
-    if [ -e $FILEPATH_OK ]; then
-	cat $FILEPATH_OK >> $FILEPATH
-    else
-	echo " none" >> $FILEPATH
-    fi
-    echo -e "\nArchive KO:" >> $FILEPATH
-    if [ -e $FILEPATH_KO ]; then
-	cat $FILEPATH_KO >> $FILEPATH
-    else
-	echo " none" >> $FILEPATH
-    fi
-    rm -f $FILEPATH_OK $FILEPATH_KO
-
-    # send a mail
     SIGN=$(md5sum $FILEPATH | cut -d' ' -f 1)
     SIGN=$SIGN:$(ls $FILEPATH -l | cut -d' ' -f 5)
-    /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF2
-Dear $NAME,
 
-The audit you requested on $COLL collection success.
-
-Please copy/paste the following instruction if you want
-to upload the repport into the collection :
-
---------------------------------------------------------
-cat >/tmp/$AUDIT.cat <<EOF
+    cat >/tmp/$AUDIT.cat <<EOF
+Top Category "~mediatex"
+Category "audits": "~mediatex"
 Top Category "audit"
 Document "$AUDIT": "audit"
   With "auditor" = "$ADDRESS" ""
@@ -123,17 +120,17 @@ Document "$AUDIT": "audit"
   $SIGN
 EOF
 
-mediatex -c $MDTX upload++ \\
- file $FILEPATH \\
- catalog /tmp/$AUDIT.cat \\
- to coll $COLL
+  mediatex -c $MDTX upload++ file $FILEPATH as mediatex/audits/ \
+      catalog /tmp/$AUDIT.cat to coll $COLL
+  rm -f /tmp/$AUDIT.cat $FILEPATH
 
-rm -f /tmp/$AUDIT.cat \\
-      $FILEPATH
---------------------------------------------------------
+  /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
+Dear $NAME,
+
+The audit you requested on $COLL collection is uploaded.
 
 $([ ! -f /usr/games/cowsay ] || /usr/games/cowsay mheu)
-EOF2
+EOF
 fi
 
 Info "done"

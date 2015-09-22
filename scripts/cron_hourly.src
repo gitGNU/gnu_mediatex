@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -x
 #=======================================================================
-# * Version: $Id: cron_hourly.src,v 1.4 2015/06/30 17:37:20 nroche Exp $
+# * Version: $Id: cron_hourly.src,v 1.5 2015/09/22 11:42:40 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -24,7 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
 
-CACHEDIR="CONF_LOCALSTATEDIR/cacheCONF_MEDIATEX"
 BINDIR=CONF_BINDIR
 
 $BINDIR/mediatex -swarning -ffile srv extract    

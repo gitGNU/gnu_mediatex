@@ -1,6 +1,8 @@
 [notice utconf.c] *** List collections: 
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
 coll1 coll2 coll3
+[notice utconf.c] *** List master collections: 
+coll1
 [notice utconf.c] *** Add a collection:
 [info serverFile.y] parse coll4 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll4/servers.txt
 [notice utconf.c] *** List collections:
@@ -47,7 +49,7 @@ factSupp   2.00
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
 
-Collection mdtx1-coll1@host1.mediatex.org:22
+Collection mdtx1-coll1@localhost:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  /HERE/misc/logoP2.iso,
@@ -114,7 +116,7 @@ factSupp   2.00
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
 
-Collection mdtx1-coll1@host1.mediatex.org:22
+Collection mdtx1-coll1@localhost:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  /HERE/misc/logoP2.iso,
@@ -183,7 +185,7 @@ factSupp   2.00
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
 
-Collection mdtx1-coll1@host1.mediatex.org:22
+Collection mdtx1-coll1@localhost:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  /HERE/misc/logoP2.iso,
@@ -250,7 +252,7 @@ factSupp   2.00
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
 
-Collection mdtx1-coll1@host1.mediatex.org:22
+Collection mdtx1-coll1@localhost:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  /HERE/misc/logoP2.iso,
@@ -317,7 +319,7 @@ factSupp   2.00
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
 
-Collection mdtx1-coll1@host1.mediatex.org:22
+Collection mdtx1-coll1@localhost:22
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  /HERE/misc/logoP2.iso,

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: users.sh,v 1.5 2015/08/24 17:48:18 nroche Exp $
+# * Version: $Id: users.sh,v 1.6 2015/09/22 11:42:40 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -57,11 +57,15 @@ function USERS_root_populate()
     install -o root -g root -m 640 $MISC/mediatex_cron $SYSCONFDIR/cron.d
     sed $CRON_FILE -i -e "s!DATADIR!$DATADIR!"
     USERS_root_random 59
-    sed $CRON_FILE -i -e "s!#XX!$rand!"
+    sed $CRON_FILE -i -e "s!#M1!$rand!"
     USERS_root_random 59
-    sed $CRON_FILE -i -e "s!#YY!$rand!"
+    sed $CRON_FILE -i -e "s!#M2!$rand!"
+    USERS_root_random 59
+    sed $CRON_FILE -i -e "s!#M3!$rand!"
     USERS_root_random 23
-    sed $CRON_FILE -i -e "s!ZZ!$rand!"
+    sed $CRON_FILE -i -e "s!H1!$rand!"
+    USERS_root_random 23
+    sed $CRON_FILE -i -e "s!H2!$rand!"
 }
 
 # this function remove the root directories

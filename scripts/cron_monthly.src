@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -x
 #=======================================================================
-# * Version: $Id: cron_daily.src,v 1.5 2015/09/22 11:42:39 nroche Exp $
+# * Version: $Id: cron_monthly.src,v 1.1 2015/09/22 11:42:40 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -24,15 +24,32 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
 
+STATEDIR=CONF_LOCALSTATEDIR/libCONF_MEDIATEXDIR
 BINDIR=CONF_BINDIR
 
-# LOGFILE=$(mktemp)
+# backup cvs module
+for COLL in $($BINDIR/mediatex ls master coll); do
+    DATE=$(date +'%Y%m%d')
+    NAME=/tmp/cvs_$COLL_$DATE
 
-# $BINDIR/mediatex -swarning -ffile make >/dev/null 2>$LOGFILE
-# $BINDIR/mediatex -swarning -ffile motd >CONF_SYSCONFDIR/motd 2>>$LOGFILE
+    tar -zcf $NAME.tgz $STATEDIR/mdtx/mdtx-$COLL 2>/dev/null
+    SIGN=$(md5sum $NAME.tgz | cut -d' ' -f 1)
+    SIGN=$SIGN:$(ls $NAME.tgz -l | cut -d' ' -f 5)
 
-# cat $LOGFILE | sort | uniq
-# rm -f $LOGFILE
+    cat >$NAME.cat <<EOF
+Top Category "~internal"
+Category "backups": "~mediatex"
 
-$BINDIR/mediatex -swarning -ffile make >/dev/null
-$BINDIR/mediatex -swarning -ffile motd >CONF_SYSCONFDIR/motd
+Document "cvs_$DATE": "backups"
+ "uploaded from" = "$(hostname -f)"
+ $SIGN
+EOF
+
+    $BINDIR/mediatex upload++ \
+	file $NAME.tgz as mediatex/backups/ \
+	catalog $NAME.cat \
+	to coll $COLL
+
+    rm -f $NAME.tgz $NAME.cat
+done
+

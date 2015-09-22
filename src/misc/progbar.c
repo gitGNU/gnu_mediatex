@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: progbar.c,v 1.5 2015/08/13 21:14:35 nroche Exp $
+ * Version: $Id: progbar.c,v 1.6 2015/09/22 11:42:41 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -85,9 +85,9 @@ void
 e2fsck_clear_progbar(struct ProgBar* progbar)
 {
 #if !MISC_CHECKSUMS_PROGBAR_DEBUG
-  printf("%s\r", progbar->spaces + (sizeof(progbar->spaces) - 80));
+  fprintf(stderr, "%s\r", progbar->spaces + (sizeof(progbar->spaces) - 80));
 #else
-  printf("(clear)\n");
+  fprintf(stderr, "(clear)\n");
 #endif
 }
 
@@ -134,22 +134,22 @@ e2fsck_simple_progress(struct ProgBar* progbar, const char *label,
   dpywidth = 8 * (dpywidth / 8);
   
   i = ((percent * dpywidth) + 50) / 100;
-  printf("%s: |%s%s", label,
+  fprintf(stderr, "%s: |%s%s", label,
 	 progbar->bar + (sizeof(progbar->bar) - (i+1)),
 	 progbar->spaces + (sizeof(progbar->spaces) - (dpywidth - i + 1)));
   if (fixed_percent == 1000)
-    fputc('|', stdout);
+    fputc('|', stderr);
   else
-    fputc(spinner[progbar->progress_pos & 3], stdout);
-  printf(" %4.1f%%  ", percent);
+    fputc(spinner[progbar->progress_pos & 3], stderr);
+  fprintf(stderr, " %4.1f%%  ", percent);
 #if !MISC_CHECKSUMS_PROGBAR_DEBUG
-  fputs(" \r", stdout);
+  fputs(" \r", stderr);
 #else
-  fputs(" \n", stdout);
+  fputs(" \n", stderr);
 #endif
   if (fixed_percent == 1000)
     e2fsck_clear_progbar(progbar);
-  fflush(stdout);
+  fflush(stderr);
   
   return;
 }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: conf.h,v 1.4 2015/06/30 17:37:24 nroche Exp $
+ * Version: $Id: conf.h,v 1.5 2015/09/22 11:42:40 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -31,7 +31,7 @@
 int upgradeWrapper(int doCollection, Collection* coll);
 int mdtxAddCollection(Collection* coll);
 int mdtxDelCollection(char* label);
-int mdtxListCollection();
+int mdtxListCollection(int onlyMasterColl);
 int mdtxShareSupport(char* sLabel, char* cLabel);
 int mdtxWithdrawSupport(char* sLabel, char* cLabel);
 int mdtxAddNatClient(char* cLabel, char* proxy);
