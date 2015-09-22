@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: users.sh,v 1.6 2015/09/22 11:42:40 nroche Exp $
+# * Version: $Id: users.sh,v 1.7 2015/09/22 23:05:55 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -173,6 +173,7 @@ function USERS_coll_disease()
     rm -fr $COLL_EXTRACT
     rm -fr $COLL_CVS
     rm -fr $COLL_HOME
+    rm -f  $MD5SUMS/$1.md5
 
     # /etc/mediatex/mdtx-coll (link)
     rm -f $ETCDIR/$1

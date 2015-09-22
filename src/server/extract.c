@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.23 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: extract.c,v 1.24 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -706,7 +706,6 @@ extractAddToKeep(ExtractData* data, Archive* archive)
  *              RG* toKeeps
  * Output     : TRUE on success
  =======================================================================*/
-#warning why not same parameter as extractAddToKeep ?
 int
 extractDelToKeeps(Collection* coll, RG* toKeeps)
 {
@@ -771,6 +770,7 @@ cacheSet(ExtractData* data, Record* record,
     goto error;
 
   // move from extract dir into the cache dir
+  // (rename do not remove source due to bind mount)
   logMain(LOG_INFO, "move %s to %s", 
 	  absoluteExtractPath, absoluteCachePath);  
   if (rename(absoluteExtractPath, absoluteCachePath)) {

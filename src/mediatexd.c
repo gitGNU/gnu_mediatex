@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.9 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.10 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -109,7 +109,6 @@ signalJob(void* arg)
     if (rc2 == MDTX_ERROR) rc3 = MDTX_ERROR;
   } while (loop);
 
-
   if (!serverLoop(cleanCacheTree)) goto error;
   rc = TRUE;
  error:
@@ -139,7 +138,6 @@ int
 hupManager()
 {
   int rc = FALSE;
-
   
   if (!serverSaveAll()) {
     logMain(LOG_ERR, "Fails to save md5sums before reloading");

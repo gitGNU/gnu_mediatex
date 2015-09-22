@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: misc.sh,v 1.3 2015/08/30 17:07:55 nroche Exp $
+# * Version: $Id: misc.sh,v 1.4 2015/09/22 23:05:54 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -59,4 +59,5 @@ EOF
 
 # compare with the expected output
 mrProperOutputs client/$TEST.out
+sed -i client/$TEST.out -e "s/\(audit_20100101-010000_\).*/\1_XXX.txt)/"
 diff $srcdir/client/$TEST.exp client/$TEST.out

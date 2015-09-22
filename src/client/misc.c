@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.12 2015/09/21 01:01:50 nroche Exp $
+ * Version: $Id: misc.c,v 1.13 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -608,10 +608,11 @@ mdtxAudit(char* label, char* mail)
     goto error;
   }
  
-  sprintf(path, "%s/%s%04i%02i%02i-%02i%02i%02i.txt",
+  sprintf(path, "%s/%s%04i%02i%02i-%02i%02i%02i_%s.txt",
 	  coll->extractDir, CONF_AUDIT,
 	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
-	  date.tm_hour, date.tm_min, date.tm_sec);
+	  date.tm_hour, date.tm_min, date.tm_sec,
+	  coll->userFingerPrint);
   strcpy(extra, path + strlen(coll->extractDir) + 1);
   ptrMail = extra + strlen(extra) - 3;
   *(ptrMail - 1) = ':';
@@ -628,7 +629,7 @@ mdtxAudit(char* label, char* mail)
   logMemory(LOG_INFO, "Serializing audit into: %s", 
 	    env.dryRun?"stdout":path);
 
-  if (!loadCollection(coll, CTLG|EXTR)) goto error;
+  if (!loadCollection(coll, EXTR)) goto error;
 
   fprintf(fd, "Audit on %s collection\n", coll->label);
   fprintf(fd, " requested on %04i-%02i-%02i %02i:%02i:%02i\n",
@@ -679,7 +680,7 @@ mdtxAudit(char* label, char* mail)
  end:
   rc = (env.noRegression || env.dryRun || status == 221);
  error2:
-  if (!releaseCollection(coll, CTLG|EXTR)) goto error;
+  if (!releaseCollection(coll, EXTR)) goto error;
  error:
   if (fd != stdout) {
     if (!unLock(fileno(fd))) rc = FALSE;

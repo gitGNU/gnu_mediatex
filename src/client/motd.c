@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.12 2015/09/17 18:53:46 nroche Exp $
+ * Version: $Id: motd.c,v 1.13 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -331,7 +331,7 @@ int motdContainer(MotdSearch* data, Container* container)
   if (isEmptyRing(container->parents)) goto end;
 
 #warning TODO: try to remove this line
-  data->isAvailable = TRUE; // is this needed ?
+  //data->isAvailable = TRUE; // is this needed ?
 
   // we motd all parents (only one for TGZ, several for CAT...)
   while ((archive = rgNext_r(container->parents, &curr))) {
@@ -460,7 +460,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
     if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
       continue;      
     
-    // looking for archive that available into the cache
+    // looking for archive available into the cache
     if (archive->state < AVAILABLE) continue;
  
     // looking for archive that have a no local image...

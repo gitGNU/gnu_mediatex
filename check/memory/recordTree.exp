@@ -1,9 +1,9 @@
 # Collection's records:
 Headers
-	Collection	coll1               
-	Type		DISK
-	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-	DoCypher	FALSE          
+  Collection coll1               
+  Type       DISK
+  Server     746d6ceeb76e05cfa2dea92a1c5753cd
+  DoCypher   FALSE            
 Body          
 #                date                             host                             hash                size extra
 S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !malloc

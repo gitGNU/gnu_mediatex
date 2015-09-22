@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:36:59 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/09/22 23:05:55 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -29,7 +29,10 @@ rsyslogdir = $(sysconfdir)/rsyslog.d
 dist_rsyslog_DATA = mediatex_log.conf
 
 logrotatedir = $(sysconfdir)/logrotate.d
-dist_logrotate_DATA = mediatex_rotate.conf
+dist_logrotate_DATA = mediatex_logrotate.conf
+
+logrotateApachedir = $(logrotatedir)/httpd-prerotate
+dist_logrotateApache_SCRIPTS = mediatex_logrotate
 
 ldsoconfdir = $(sysconfdir)/ld.so.conf.d
 dist_ldsoconf_DATA = mediatex_ld.conf
@@ -41,11 +44,13 @@ EXTRA_DIST = \
 	apache.src \
 	rsyslog.src \
 	logrotate.src \
+	logrotate_apache.src \
 	ld.src
 CLEANFILES = \
 	mediatex.conf \
 	mediatex_log.conf \
-	mediatex_rotate.conf \
+	mediatex_logrotate.conf \
+	mediatex_logrotate \
 	mediatex_ld.conf
 
 mediatex.conf: apache.src $(top_srcdir)/config.h
@@ -54,8 +59,12 @@ mediatex.conf: apache.src $(top_srcdir)/config.h
 mediatex_log.conf: rsyslog.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-mediatex_rotate.conf: logrotate.src $(top_srcdir)/config.h
+mediatex_logrotate.conf: logrotate.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
+
+mediatex_logrotate: logrotate_apache.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
 mediatex_ld.conf: ld.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
+

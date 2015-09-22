@@ -1,12 +1,18 @@
 
 *** TO CORRECT: cache policy
-........................................................
 
+** BUGS
+* => dans les logs
+* FILENAME dans extract.txt
+* Perenity lost 
+
+........................................................
 ** LOGS
-- upload the apache logs using /etc/logrotate.d/httpd-prerotate
 - ease looking for archive life cycle into cvsroot
 
 ** TESTS
+-- audit
+-- apache2 access log
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - make tests.sh modular 
 -- to begin at whatever test number (do truc/undo truc preconditions...)
@@ -129,6 +135,7 @@
 ** LOGS
 - cron_monthly.src upload the cvsroot collection module
 -- mediatex ls master coll
+- upload the apache logs using /etc/logrotate.d/httpd-prerotate
 
 *** CLEAN-UP
 
@@ -150,7 +157,7 @@
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)
 - i10n for french
-- test clains-based authentication (openId)
+- test an apache configuration using clains-based authentication (openId)
 
 *** TODO MAYBE
 

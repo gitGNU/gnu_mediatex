@@ -6,5 +6,6 @@ Makefile
 .deps
 mediatex.conf
 mediatex_log.conf
-mediatex_rotate.conf
+mediatex_logrotate.conf
+mediatex_logrotate
 mediatex_ld.conf

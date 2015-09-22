@@ -37,10 +37,10 @@
 *** server receive:
 # Collection's records:
 Headers
-	Collection	coll1               
-	Type		UNKNOWN
-	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-	DoCypher	FALSE       
+  Collection coll1               
+  Type       UNKNOWN
+  Server     746d6ceeb76e05cfa2dea92a1c5753cd
+  DoCypher   FALSE         
 Body          
 #                date                             host                             hash                size extra
 D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1

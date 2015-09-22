@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: audit.sh,v 1.2 2015/09/22 11:42:39 nroche Exp $
+# * Version: $Id: audit.sh,v 1.3 2015/09/22 23:05:55 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -105,26 +105,47 @@ fi
 
 # upload the audit report and send a mail
 if [ $CUR -eq $MAX ]; then
-
-    SIGN=$(md5sum $FILEPATH | cut -d' ' -f 1)
-    SIGN=$SIGN:$(ls $FILEPATH -l | cut -d' ' -f 5)
-
+    
+    SIGN1=$(md5sum $FILEPATH | cut -d' ' -f 1)
+    SIGN1=$SIGN1:$(ls $FILEPATH -l | cut -d' ' -f 5)
+  
+    gzip -c $FILEPATH > $FILEPATH.gz
+    SIGN2=$(md5sum $FILEPATH.gz | cut -d' ' -f 1)
+    SIGN2=$SIGN2:$(ls $FILEPATH.gz -l | cut -d' ' -f 5)
+  
     cat >/tmp/$AUDIT.cat <<EOF
 Top Category "~mediatex"
 Category "audits": "~mediatex"
-Top Category "audit"
-Document "$AUDIT": "audit"
-  With "auditor" = "$ADDRESS" ""
-  "requested on" = "$(date)"
-  "archive checked" = "$CUR"
-  $SIGN
+Document "$AUDIT": "audits"
+ "requested on" = "$(date)"
+ "requested by" = "$ADDRESS"
+ "requested from" = "$(hostname -f)"
+ "archive checked" = "$CUR"
+$SIGN1
+$SIGN2
+
+Archive $SIGN1
+ "format" = "text"
+Archive $SIGN2
+ "format" = "gz"
+EOF
+    
+    TARGETDIR="mediatex/audits"
+    cat >/tmp/$AUDIT.ext <<EOF
+(GZIP
+$SIGN2
+=>
+$SIGN1 $TARGETDIR/$FILENAME
+)
 EOF
 
-  mediatex -c $MDTX upload++ file $FILEPATH as mediatex/audits/ \
-      catalog /tmp/$AUDIT.cat to coll $COLL
-  rm -f /tmp/$AUDIT.cat $FILEPATH
+    mediatex -c $MDTX upload++ file $FILEPATH.gz as $TARGETDIR/ \
+	catalog /tmp/$AUDIT.cat rules /tmp/$AUDIT.ext \
+	to coll $COLL
 
-  /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
+    rm -f /tmp/$AUDIT.cat /tmp/$AUDIT.ext $FILEPATH $FILEPATH.gz
+
+    /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
 Dear $NAME,
 
 The audit you requested on $COLL collection is uploaded.

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.15 2015/09/21 01:01:51 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.16 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -511,12 +511,12 @@ logRecordTree(int logModule, int logPriority,
   // headers
   logEmit(logModule, logPriority, "%s", "# Collection's records:");
   logEmit(logModule, logPriority, "%s", "Headers"); 
-  logEmit(logModule, logPriority, "\tCollection\t%-*s",
+  logEmit(logModule, logPriority, "  Collection %-*s",
 	   MAX_SIZE_COLL, self->collection->label);
-  logEmit(logModule, logPriority, "\tType\t\t%s", 
+  logEmit(logModule, logPriority, "  Type       %s", 
 	  strMessageType(self->messageType));
-  logEmit(logModule, logPriority, "\tServer\t\t%s", fingerPrint);
-  logEmit(logModule, logPriority, "\tDoCypher\t%s", 
+  logEmit(logModule, logPriority, "  Server     %s", fingerPrint);
+  logEmit(logModule, logPriority, "  DoCypher   %s", 
 	  (self->doCypher==TRUE)?"TRUE":"FALSE");
 
   logEmit(logModule, logPriority, "%s", "Body");
@@ -591,15 +591,14 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
   
   aesPrint(aes, "%s", "# Collection's records:\n");
   aesPrint(aes, "%s", "Headers\n"); 
-  aesPrint(aes, "\tCollection\t%-*s\n",
+  aesPrint(aes, "  Collection %-*s\n",
 	   MAX_SIZE_COLL, self->collection->label);
-  aesPrint(aes, "\tType\t\t%s\n", strMessageType(self->messageType));
-  aesPrint(aes, "\tServer\t\t%s\n", fingerPrint);
-  aesPrint(aes, "\tDoCypher\t%s", (self->doCypher==TRUE)?"TRUE":"FALSE");
+  aesPrint(aes, "  Type       %s\n", strMessageType(self->messageType));
+  aesPrint(aes, "  Server     %s\n", fingerPrint);
+  aesPrint(aes, "  DoCypher   %s", (self->doCypher==TRUE)?"TRUE":"FALSE");
 
-  // finish properly the un-encrypted headers
-  aesFlush(aes);
-  aesPrint(aes, "%s", "\nBody          \n"); // take care here !!
+  aesFlush(aes); // finish properly the un-encrypted headers
+  aesPrint(aes, "%s", "\nBody          \n"); // must be 16 char here
 
   // crypted body
   if (self->doCypher) aes->doCypher = TRUE;

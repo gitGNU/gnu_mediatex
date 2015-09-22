@@ -88,7 +88,7 @@
 [info misc.c] steps: 29 / 19
 [info misc.c] ending
 [notice utmisc.c] *************************************************
-[info misc.c] Serializing audit into: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/audit_20100101-010000.txt
+[info misc.c] Serializing audit into: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/audit_20100101-010000__XXX.txt)
 [notice utmisc.c] *************************************************
 [info misc.c] Serializing audit into: stdout
 Audit on coll1 collection

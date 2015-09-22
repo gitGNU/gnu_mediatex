@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.16 2015/09/22 23:05:56 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -25,7 +25,6 @@
 #include "mediatex-config.h"
 
 int computeArchive(Archive* self, int depth);
-
 
 /*=======================================================================
  * Function   : isNewIncoming
