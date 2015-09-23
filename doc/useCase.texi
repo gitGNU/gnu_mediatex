@@ -4,6 +4,7 @@
 
 @menu
 * Firewall::    Configuration behind a firewall
+* CvsLogs::     Search the metadata history
 * Portail::	Minimal Php inerface
 * Linking::	Library API
 @end menu
@@ -63,6 +64,53 @@ RewriteEngine On
 RewriteCond %@{SERVER_PORT@} !^4443$
 RewriteCond %@{SERVER_PORT@} !^443$
 RewriteRule .* https://%@{HTTP_HOST@}%@{REQUEST_URI@} [QSA,R=301,L]
+@end example
+
+@node CvsLogs
+@section Search the metadata history
+
+Actually, this spend a lot of ressources :
+@example
+#!/bin/bash
+#set -x
+set -e
+
+if [ $# -lt 1 ]; then
+    echo "usage: "
+    echo " $ mediates su coll COLLECTION"
+    echo " $ cd ~/cvs"
+    echo " $ PATH/$0 KEYWORD"
+    exit
+fi
+
+echo "looking for '$1' into cvs history"
+
+for DIR in $(find . -type d | grep -v '/CVS$'); do
+
+ for LINE in $(cat $DIR/CVS/Entries | 
+     cut -d" " -f1 | grep -v "^D" | grep -v /1.1.1.1/); do
+  FILE=$(echo $LINE | cut -d"/" -f2)
+  VMAX=$(echo $LINE | cut -d"/" -f3 | cut -d"." -f2)
+  [ $VMAX -gt 1 ] || continue
+
+  for VER in $(seq 2 $VMAX); do
+   if [ $(cvs diff -r 1.$[$VER - 1] -r 1.$VER $FILE 2>/dev/null | 
+	       grep -c "$1") -gt 0 ]; then
+    echo "$FILE 1.$VER"
+   fi
+
+  done
+ done
+done
+@end example
+
+Git do it very much quickly, but we loose the revisions numbers :
+@example
+# apt-get install git-cvs
+$ git cvsimport -d /var/lib/mediatex/mdtx mdtx-hello
+$ git log -S 'panthere'
+commit <COMMIT_NUMBER>
+$ git diff <COMMIT_NUMBER>
 @end example
 
 @node Portail
