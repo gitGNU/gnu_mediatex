@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: logrotate_apache.src,v 1.1 2015/09/22 23:05:55 nroche Exp $
+# * Version: $Id: logrotate_apache.src,v 1.2 2015/09/23 19:10:19 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -29,23 +29,23 @@ BINDIR=CONF_BINDIR
 
 # backup apache access logs
 for COLL in $($BINDIR/mediatex ls coll); do
-    DATE=$(date +'%Y%m%d')
-    HOST=$(hostname -f)
+    DATE=$(/bin/date +'%Y%m%d')
+    HOST=$(/bin/hostname -f)
     NAME=apache_${DATE}_${HOST}
 
-    grep "mdtx-$COLL" /var/log/apache2/access.log >/tmp/$NAME.log
-    SIGN1=$(md5sum /tmp/$NAME.log | cut -d' ' -f 1)
+    /bin/grep "mdtx-$COLL" /var/log/apache2/access.log >/tmp/$NAME.log
+    SIGN1=$(/usr/bin/md5sum /tmp/$NAME.log | cut -d' ' -f 1)
     SIGN1=$SIGN1:$(ls /tmp/$NAME.log -l | cut -d' ' -f 5)
 
-    gzip -f /tmp/$NAME.log
-    SIGN2=$(md5sum /tmp/$NAME.log.gz | cut -d' ' -f 1)
-    SIGN2=$SIGN2:$(ls /tmp/$NAME.log.gz -l | cut -d' ' -f 5)
+    /bin/gzip -f /tmp/$NAME.log
+    SIGN2=$(/usr/bin/md5sum /tmp/$NAME.log.gz | cut -d' ' -f 1)
+    SIGN2=$SIGN2:$(/bin/ls /tmp/$NAME.log.gz -l | cut -d' ' -f 5)
 
-    cat >/tmp/$NAME.cat <<EOF
+    /bin/cat >/tmp/$NAME.cat <<EOF
 Top Category "~mediatex"
 Category "access": "~mediatex"
 Document "$NAME": "access"
- "date" = "$(date)"
+ "date" = "$(/bin/date)"
  "extracted from" = "$HOST"
  $SIGN1
  $SIGN2
@@ -57,7 +57,7 @@ Archive $SIGN2
 EOF
 
     TARGETDIR="mediatex/audits"
-    cat >/tmp/$NAME.ext <<EOF
+    /bin/cat >/tmp/$NAME.ext <<EOF
 (GZIP
 $SIGN2
 =>
@@ -70,5 +70,5 @@ EOF
         catalog /tmp/$NAME.cat rules /tmp/$NAME.ext \
         to coll $COLL
 
-    rm -f /tmp/$NAME.log.gz /tmp/$NAME.cat /tmp/$NAME.ext
+    /bin/rm -f /tmp/$NAME.log.gz /tmp/$NAME.cat /tmp/$NAME.ext
 done

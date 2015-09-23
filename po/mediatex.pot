@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mediatex 0.4\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-09-14 01:26+0200\n"
+"POT-Creation-Date: 2015-09-23 21:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/common/extractScore.c:372
+#: src/common/extractScore.c:387
 msgid "Perenniality lost"
 msgstr ""
 
-#: src/common/extractScore.c:376
+#: src/common/extractScore.c:391
 msgid "Serious risk to loose perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:380
+#: src/common/extractScore.c:395
 msgid "Bad perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:384
+#: src/common/extractScore.c:399
 msgid "Good perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:387
+#: src/common/extractScore.c:402
 msgid "Very good perenniality"
 msgstr ""
 
@@ -156,138 +156,143 @@ msgstr ""
 msgid "part %i "
 msgstr ""
 
-#: src/client/extractHtml.c:356
+#: src/client/extractHtml.c:357
 msgid "Record:"
 msgstr ""
 
-#: src/client/extractHtml.c:379
+#: src/client/extractHtml.c:380
 #, c-format
 msgid ""
 "\n"
 "Catalog reference as documents:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:395
+#: src/client/extractHtml.c:396
 #, c-format
 msgid "Not in catalog\n"
 msgstr ""
 
-#: src/client/extractHtml.c:403
+#: src/client/extractHtml.c:404
 #, c-format
 msgid ""
 "\n"
 "Provided by servers:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:419
+#: src/client/extractHtml.c:420
 #, c-format
 msgid "Is not an image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:427
+#: src/client/extractHtml.c:428
 #, c-format
 msgid ""
 "\n"
 "Comes from:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:438
+#: src/client/extractHtml.c:445
+#, c-format
+msgid "Cache: uploaded on "
+msgstr ""
+
+#: src/client/extractHtml.c:453
 #, c-format
 msgid "External source"
 msgstr ""
 
-#: src/client/extractHtml.c:446
+#: src/client/extractHtml.c:462
 #, c-format
 msgid ""
 "\n"
 "Content: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:473
+#: src/client/extractHtml.c:489
 #, c-format
 msgid "No content\n"
 msgstr ""
 
-#: src/client/extractHtml.c:538
+#: src/client/extractHtml.c:554
 #, c-format
 msgid "Server%s "
 msgstr ""
 
-#: src/client/extractHtml.c:540
+#: src/client/extractHtml.c:556
 msgid " master"
 msgstr ""
 
-#: src/client/extractHtml.c:558
+#: src/client/extractHtml.c:574
 #, c-format
 msgid "fingerprint: "
 msgstr ""
 
-#: src/client/extractHtml.c:562
+#: src/client/extractHtml.c:578
 #, c-format
 msgid "last commit: "
 msgstr ""
 
-#: src/client/extractHtml.c:569
+#: src/client/extractHtml.c:585
 #, c-format
 msgid "mdtx port: "
 msgstr ""
 
-#: src/client/extractHtml.c:575
+#: src/client/extractHtml.c:591
 #, c-format
 msgid "ssh port: "
 msgstr ""
 
-#: src/client/extractHtml.c:585
+#: src/client/extractHtml.c:601
 #, c-format
 msgid "On networks:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:602
+#: src/client/extractHtml.c:618
 #, c-format
 msgid "Gateway for:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:619
+#: src/client/extractHtml.c:635
 #, c-format
 msgid "Provide images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:777 src/client/extractHtml.c:1150
+#: src/client/extractHtml.c:793 src/client/extractHtml.c:1166
 msgid "All archives"
 msgstr ""
 
-#: src/client/extractHtml.c:948 src/client/extractHtml.c:1155
+#: src/client/extractHtml.c:964 src/client/extractHtml.c:1171
 msgid "Bad archives"
 msgstr ""
 
-#: src/client/extractHtml.c:958
+#: src/client/extractHtml.c:974
 msgid "should be burned into supports:"
 msgstr ""
 
-#: src/client/extractHtml.c:1032 src/client/extractHtml.c:1142
+#: src/client/extractHtml.c:1048 src/client/extractHtml.c:1158
 msgid "score"
 msgstr ""
 
-#: src/client/extractHtml.c:1036
+#: src/client/extractHtml.c:1052
 #, c-format
 msgid ""
 "\n"
 "Score parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1070
+#: src/client/extractHtml.c:1086
 #, c-format
 msgid ""
 "\n"
 "All images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1090
+#: src/client/extractHtml.c:1106
 #, c-format
 msgid "No image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1141
+#: src/client/extractHtml.c:1157
 msgid "Score"
 msgstr ""
 

@@ -2,9 +2,7 @@
 *** TO CORRECT: cache policy
 
 ** BUGS
-* => dans les logs
-* FILENAME dans extract.txt
-* Perenity lost 
+- apache logs: cron do not have a good PATH (I guess)
 
 ........................................................
 ** LOGS
@@ -23,9 +21,6 @@
 ** EXAMPLES
 - buildRule.sh script ?
 - extractMeta communication|restitution|elimination SUPP=>supp.cat supp.ext
-
-** HTML
-- change bad archive's sum computation ?
 
 ** CACHE ?
 - monitor cache sizes: all/used/allocated/free
@@ -112,6 +107,8 @@
 
 ** HTML
 - notify server lastCommit
+- change bad archive's sum computation (done)
+- notify from incoming
 
 ** MOTD
 - move computeExtractScore call upper

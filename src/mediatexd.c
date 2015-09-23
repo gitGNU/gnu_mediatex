@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.10 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.11 2015/09/23 19:10:19 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -262,7 +262,6 @@ socketJob(void* arg)
   logMain(LOG_NOTICE, "%s", con->status);
   rc = TRUE;
  error:
-#warning seems not needed here
   //if (!cleanCacheTree(con->message->collection)) rc = FALSE;
   if (!rc) {
     logMain(LOG_ERR, "%s", con->status);

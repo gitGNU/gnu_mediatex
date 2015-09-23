@@ -9,10 +9,10 @@
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll1               
-[info recordTree.c] 	Type		CGI
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll1               
+[info recordTree.c]   Type       CGI
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
@@ -24,10 +24,10 @@
 [info connect.c] connected to 127.0.0.1 (6b18ed0194b0fbadd08e0a13cccda00e)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll1               
-[info recordTree.c] 	Type		CGI
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll1               
+[info recordTree.c]   Type       CGI
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
@@ -56,10 +56,10 @@ Content-Type: text/html
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll1               
-[info recordTree.c] 	Type		CGI
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll1               
+[info recordTree.c]   Type       CGI
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 test@test.org

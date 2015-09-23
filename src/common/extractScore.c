@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractScore.c,v 1.16 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: extractScore.c,v 1.17 2015/09/23 19:10:20 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *
@@ -24,33 +24,7 @@
 
 #include "mediatex-config.h"
 
-int computeArchive(Archive* self, int depth);
-
-/*=======================================================================
- * Function   : isNewIncoming
- * Description: state if an archive was newly upload
- * Synopsis   : static int isNewIncoming(Collection* coll, 
- *                                                    Archive* archive)
- * Input      : Collection* coll: to get uploadTTL parameter
- *              Archive* archive
- * Output     : TRUE on success
- =======================================================================*/
-static int 
-isNewIncoming(Collection* coll, Archive* archive)
-{
-  int rc = FALSE;
-
-  if (!isIncoming(coll, archive)) goto end;
-  if (currentTime() > archive->uploadTime + coll->serverTree->uploadTTL) {
-    logCommon(LOG_INFO, "obsolete incoming archive: %s:%lli", 
-	      archive->hash, (long long int)archive->size); 
-    goto end;
-  }
-  
-  rc = TRUE;
- end:
-  return rc;
-}
+int computeArchive(Collection* coll, Archive* self, int depth);
 
 
 /*=======================================================================
@@ -165,12 +139,15 @@ populateExtractTree(Collection* coll)
 /*=======================================================================
  * Function   : computeContainer
  * Description: Compute container's scores (from its parents files)
- * Synopsis   : int computeContainer(Container* self)
- * Input      : ExtractTree* self
+ * Synopsis   : int computeContainer(Collection coll, Container* self, 
+ *                                   int depth)
+ * Input      : Collection* coll
+ *              Container* self
+ *              int depth: use to indent logs
  * Output     : TRUE on success
  =======================================================================*/
 int 
-computeContainer(Container* self, int depth)
+computeContainer(Collection* coll, Container* self, int depth)
 {
   int rc = FALSE;
   Archive* archive = 0;
@@ -187,9 +164,11 @@ computeContainer(Container* self, int depth)
 	  self->parent->hash, (long long int)self->parent->size);
 
   // score = min ( content's scores )
+  self->incInherency = FALSE;
   rgRewind(self->parents);
   while ((archive = rgNext(self->parents))) {
-    if (!computeArchive(archive, depth+1)) goto error;
+    if (!computeArchive(coll, archive, depth+1)) goto error;
+    self->incInherency |= archive->incInherency;
     if (self->score == -1 || self->score > archive->extractScore) {
       self->score = archive->extractScore;
     }
@@ -207,16 +186,45 @@ computeContainer(Container* self, int depth)
   return rc;
 }
 
+/*=======================================================================
+ * Function   : isNewIncoming
+ * Description: state if an archive was newly upload
+ * Synopsis   : static int isNewIncoming(Collection* coll, 
+ *                                                    Archive* archive)
+ * Input      : Collection* coll: to get uploadTTL parameter
+ *              Archive* archive
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+isNewIncoming(Collection* coll, Archive* archive)
+{
+  int rc = FALSE;
+
+  if (!isIncoming(coll, archive)) goto end;
+  if (currentTime() > archive->uploadTime + coll->serverTree->uploadTTL) {
+    logCommon(LOG_INFO, "obsolete incoming archive: %s:%lli", 
+	      archive->hash, (long long int)archive->size); 
+    goto end;
+  }
+  
+  rc = TRUE;
+ end:
+  return rc;
+}
+
 
 /*=======================================================================
  * Function   : computeArchive
  * Description: Compute content score (from container's scores)
- * Synopsis   : int computeArchive(Archive* self)
- * Input      : ExtractTree* self
+ * Synopsis   : int computeArchive(Collection* coll, Archive* self, 
+ *                                 int depth)
+ * Input      : Collection* coll
+ *              Archive* self
+ *              int depth: use to indent logs
  * Output     : TRUE on success
  =======================================================================*/
 int 
-computeArchive(Archive* self, int depth)
+computeArchive(Collection* coll, Archive* self, int depth)
 {
   int rc = FALSE;
   FromAsso* asso = 0;
@@ -229,14 +237,19 @@ computeArchive(Archive* self, int depth)
   // score = max (image's scores)
   self->extractScore = (self->imageScore > 0)?self->imageScore:0;
 
+  if (isEmptyRing(self->fromContainers)) {
+    self->incInherency = isNewIncoming(coll, self);
+    goto quit;
+  }
+
   // score = max (from container's scores)
-  if (self->fromContainers) {
-    rgRewind(self->fromContainers);
-    while ((asso = rgNext(self->fromContainers))) {
-      if (!computeContainer(asso->container, depth+1)) goto error;
-      if (self->extractScore < asso->container->score) {
-	self->extractScore = asso->container->score;
-      }
+  self->incInherency = TRUE;
+  rgRewind(self->fromContainers);
+  while ((asso = rgNext(self->fromContainers))) {
+    if (!computeContainer(coll, asso->container, depth+1)) goto error;
+    self->incInherency &= asso->container->incInherency;
+    if (self->extractScore < asso->container->score) {
+      self->extractScore = asso->container->score;
     }
   }
 
@@ -287,14 +300,14 @@ computeExtractScore(Collection* coll)
   if (!populateExtractTree(coll)) goto error2;
 
   // compute archives score recursively
-  self->score = 20.00;
+  self->score = coll->serverTree->scoreParam.maxScore;
   if (coll->archives) {
     for (node = coll->archives->head; node; node = node->next) {
       archive = (Archive*)node->item;
-      if (!computeArchive(archive, 0)) goto error2;
+      if (!computeArchive(coll, archive, 0)) goto error2;
 
       // new incomings are ignored into score computation
-      if (isNewIncoming(coll, archive)) continue;
+      if (archive->incInherency) continue;
 
       // global score = min ( archive's score )
       if (archive->extractScore > -1) {
@@ -340,21 +353,24 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
   if (!(self = coll->extractTree)) goto error;
   logCommon(LOG_DEBUG, "getExtractStatus: %s", coll->label);
 
-  // already computed (and not diseased since)
   if (self->score == -1) {
-    logCommon(LOG_ERR, "please call computeExtractScore first");
-    goto error;
+    // if scores are not already computed (not used yet)
+    if (!computeExtractScore(coll)) goto error;
   }
 
   // put bad archives into a new ring
   *badSize = 0;
   for(node = coll->archives->head; node; node = node->next) {
     archive = (Archive*) node->item;
-    
-    // do not display a global bad score due to incomings
-    if (isNewIncoming(coll, archive)) continue;
 
-    if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2) {
+    // looking for top containers as content cannot have worse score
+    if (!isEmptyRing(archive->fromContainers)) continue;
+
+    // do not display a global bad score due to incomings
+    if (archive->incInherency) continue;
+
+    if (archive->extractScore <= 
+	coll->serverTree->scoreParam.maxScore /2) {
       if (badArchives && !rgInsert(*badArchives, archive)) goto error;
       *badSize += archive->size;
     }

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractTree.h,v 1.8 2015/09/21 01:01:51 nroche Exp $
+ * Version: $Id: extractTree.h,v 1.9 2015/09/23 19:10:20 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -58,6 +58,7 @@ struct Container {
   AVLTree* childs;       // ex: RAR target files (FromAsso)
 
   float    score;        // use by mdtx-make
+  int      incInherency; // is a new incoming (even by inherency)
 };
 
 struct ExtractTree {

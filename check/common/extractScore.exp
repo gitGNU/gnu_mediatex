@@ -49,6 +49,7 @@
 [debug extractScore.c]     computeArchive: c0c055a0829982bd646e2fafff01aaa6:4066
 [debug extractScore.c]      computeContainer ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [debug extractScore.c]       computeArchive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info extractScore.c]        archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
 [info extractScore.c]       container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
 [info extractScore.c]      archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
@@ -92,7 +93,6 @@
 [info extractScore.c]  archive 022a34b2f9b893fba5774237e1aa80ea:24075 = 8.25
 [info extractScore.c]  archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
 [info extractScore.c]  archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info extractScore.c]  archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
 [info extractScore.c]  archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
 [info extractScore.c]  archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
@@ -119,7 +119,6 @@
 [debug openClose.c] do release coll1 collection ( S  )
 [debug openClose.c] do release coll1 collection (  X )
 [debug extractScore.c] getExtractStatus: coll1
-[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info extractScore.c] extraction score = 0.00
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 [info confTree.c] free configuration

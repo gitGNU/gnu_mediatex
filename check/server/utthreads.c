@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utthreads.c,v 1.5 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: utthreads.c,v 1.6 2015/09/23 19:10:18 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -120,8 +120,7 @@ void* socketJob(void* arg)
   me = taskSocketNumber;
   connexion = (Connexion*)arg;
 
-#warning redondant
-  //close(connexion->sock);
+  //close(connexion->sock); // redondant
   usleep(50000);
   logMain(LOG_NOTICE, "doing job %i for %s", me, connexion->host);
   usleep(50000);

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.13 2015/09/04 15:30:25 nroche Exp $
+ * Version: $Id: extractHtml.c,v 1.14 2015/09/23 19:10:19 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -293,6 +293,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   char headerHome[] = "../../../..";
   char* home = mainHome;
   int nb = 0, n = 0, i = 0;
+  struct tm date;
 
   checkArchive(self);
   if (!(conf = getConfiguration())) goto error;
@@ -434,9 +435,24 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
     }
   }
   else {
-    htmlLiOpen(fd);
-    if (!fprintf(fd, _("External source"))) goto error;
-    htmlLiClose(fd);
+    if (self->uploadTime) {
+      if (localtime_r(&self->uploadTime, &date) == (struct tm*)0) {
+	logMemory(LOG_ERR, "localtime_r returns on error");
+	goto error;
+      }
+      
+      htmlLiOpen(fd);
+      if (!fprintf(fd, _("Cache: uploaded on "))) goto error;
+      if (!fprintf(fd, "%04i-%02i-%02i %02i:%02i:%02i",
+	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+		   date.tm_hour, date.tm_min, date.tm_sec)) goto error;
+      htmlLiClose(fd);
+    }
+    else {
+      htmlLiOpen(fd);
+      if (!fprintf(fd, _("External source"))) goto error;
+      htmlLiClose(fd);
+    }
   }
   htmlUlClose(fd);
   htmlPClose(fd);

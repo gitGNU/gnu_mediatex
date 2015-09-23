@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.h,v 1.12 2015/09/21 01:01:51 nroche Exp $
+ * Version: $Id: archive.h,v 1.13 2015/09/23 19:10:20 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *
@@ -49,8 +49,9 @@ struct Archive
   // extractTree related data
   RG*        fromContainers; // (FromAsso*)
   Container* toContainer;    // only one: (choose a rule TGZ or TAR+GZ)
-  float      extractScore;   // computed value used by cache
   time_t     uploadTime;     // uploaded archive (from INC container)
+  float      extractScore;   // computed value used by cache
+  int        incInherency;   // is a new incoming (even by inherency)
 
   // documentTree related data
   RG* documents;

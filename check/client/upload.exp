@@ -81,10 +81,10 @@
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
@@ -172,10 +172,10 @@ Document "css": "css"
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
@@ -237,10 +237,10 @@ Document "css": "css"
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
@@ -283,10 +283,10 @@ Document "css": "css"
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
@@ -353,10 +353,10 @@ Document "css": "css"
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/
@@ -391,10 +391,10 @@ Document "css": "css"
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll2               
-[info recordTree.c] 	Type		UPLOAD
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll2               
+[info recordTree.c]   Type       UPLOAD
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/filename

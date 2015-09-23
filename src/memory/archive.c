@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.13 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: archive.c,v 1.14 2015/09/23 19:10:20 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *
@@ -81,6 +81,7 @@ destroyArchive(Archive* self)
   self->imageScore = -1;
   self->extractScore = -1;
   self->state = UNUSED;
+  self->incInherency = FALSE;
 #endif
 
   // delete assoCarac associations

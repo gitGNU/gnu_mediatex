@@ -11,10 +11,10 @@
 [notice utmessage.c] .......................................................
 [notice recordTree.c] # Collection's records:
 [notice recordTree.c] Headers
-[notice recordTree.c] 	Collection	coll1               
-[notice recordTree.c] 	Type		UNKNOWN
-[notice recordTree.c] 	Server		aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c]   Collection coll1               
+[notice recordTree.c]   Type       UNKNOWN
+[notice recordTree.c]   Server     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+[notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
@@ -25,10 +25,10 @@
 [notice utmessage.c] .......................................................
 [notice recordTree.c] # Collection's records:
 [notice recordTree.c] Headers
-[notice recordTree.c] 	Collection	coll1               
-[notice recordTree.c] 	Type		UNKNOWN
-[notice recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[notice recordTree.c] 	DoCypher	FALSE
+[notice recordTree.c]   Collection coll1               
+[notice recordTree.c]   Type       UNKNOWN
+[notice recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted

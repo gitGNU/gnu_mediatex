@@ -19,10 +19,10 @@
 [info connect.c] connected to localhost (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)
 [info recordTree.c] # Collection's records:
 [info recordTree.c] Headers
-[info recordTree.c] 	Collection	coll1               
-[info recordTree.c] 	Type		UNKNOWN
-[info recordTree.c] 	Server		746d6ceeb76e05cfa2dea92a1c5753cd
-[info recordTree.c] 	DoCypher	FALSE
+[info recordTree.c]   Collection coll1               
+[info recordTree.c]   Type       UNKNOWN
+[info recordTree.c]   Server     746d6ceeb76e05cfa2dea92a1c5753cd
+[info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1
