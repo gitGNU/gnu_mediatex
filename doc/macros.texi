@@ -119,7 +119,6 @@
 
 @macro mediatexO
 @activity{Mediatex}
-@cindex mediatex
 @end macro
 @macro mediatex
 @mediatexO{} 

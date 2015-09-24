@@ -16,7 +16,7 @@
 @copying
 Mediatex archival storage system implements the related @sc{Oais} entity 
 and try to match it with the @sc{NF Z 42-013} requirements.
-Copyright @copyright{} 2014 Free Software Foundation, Inc.
+Copyright @copyright{} 2014 2015 Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -70,7 +70,7 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 * Use cases::                   Configuration examples.
 * Consistency howto::           Consistency howto.
 * Reporting bugs::              Sending bug reports and feature suggestions.
-* Documentation License::       Copying and sharing this documentation.
+* GNU Free Documentation License:: Copying and sharing this documentation.
 * Concept index::	        Index of concepts.
 @end menu
 
@@ -106,7 +106,7 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @chapter Reporting bugs
 @include bugs.texi
 
-@node Documentation License
+@node GNU Free Documentation License
 @appendix GNU Free Documentation License
 @include fdl.texi
 

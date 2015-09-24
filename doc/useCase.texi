@@ -104,7 +104,14 @@ for DIR in $(find . -type d | grep -v '/CVS$'); do
 done
 @end example
 
-Git do it very much quickly, but we loose the revisions numbers :
+Changelog on metadata files should be retrieve quicker from the @acronym{CVS} modules.
+@example
+$ awk -vRS= '/Document "13421830"/' catalog*.txt
+$ grep 13421830 catalog*,v.txt
+$ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
+@end example
+
+Git do it very much more quickly, but we loose the revisions numbers:
 @example
 # apt-get install git-cvs
 $ git cvsimport -d /var/lib/mediatex/mdtx mdtx-hello
