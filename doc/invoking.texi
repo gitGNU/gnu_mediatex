@@ -9,7 +9,7 @@ and to test it by setting an ``hello world'' collection example.
 * Scenario 1::	        Manage supports.
 * Scenario 2::	        Manage collections.
 * Scenario 3::          Extract an archive.
-* Scenario 4::          Adding meta-data.
+* Scenario 4::          Adding new archives.
 * Scenario 5::          Adding a server.
 * Scenario 6::          Adding a nat server.
 @end menu
@@ -104,12 +104,13 @@ Next, a test script automate the 6 following scenarios:
 @cindex supports
 First of all, initialise the default @code{mdtx} server.
 @note{} this is already done by the @acronym{DEBIAN} package.
-You now have local access to the meta-data history using 
-this @acronym{url}: @*
-@url{http://localhost/~mdtx}
 @example
 # mediatex adm init
 @end example
+
+You now have local access to the local meta-data history using 
+this @acronym{url}: @*
+@url{http://localhost/~mdtx}
 
 Add a new 
 @actorPublisher{} user using an already existing user login.
@@ -126,14 +127,12 @@ When initialising, @command{mediatex}
 has added an out-dated example support.
 As @sc{Publisher}, please check the ``message of the day'' 
 and provide the wanted support. @*
-@note{} here we use an @sc{iso} file (so as not to wast a @sc{cd}),
-but real supports also works instead.
 @example
 $ mediatex motd
-$ mediatex check supp ex-cd1 on /usr/share/mediatex/examples/logoP1.iso
+$ mediatex check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso
 @end example
 
-This is what @sc{Mediatex} is mainly designed for: 
+This is what @mediatexO{} is mainly designed for: 
 to provide a simple @sc{api} to load supports on demand.
 
 Now @sc{motd} will not complain any more about this support 
@@ -146,8 +145,17 @@ $ mediatex ls supp
 Add a new support. @*
 @note{} There is a 10 chars string you can use to put what you want in order to record a state for each support.
 @example
-$ mediatex add supp ex-cd2 on /usr/share/mediatex/examples/logoP2.iso
+$ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
 $ mediatex note supp ex-cd2 as what_you_want
+$ mediatex ls supp
+@end example
+
+@note{} here we use @sc{iso} files (so as not to wast a @sc{cd}),
+but real supports also works instead.
+Adding a file as a support should be in fact done as following so as
+@mediatexO{} will automatically acces it:
+@example
+$ mediatex add file /usr/share/mediatex/misc/logoP1.iso
 $ mediatex ls supp
 @end example
 
@@ -164,7 +172,7 @@ Once again you will need to re-login so as
 the 
 @actorPublisher{} belongs to the new @code{mdtx-hello} group.
 @example
-# mediatex adm add coll hello@@localhost
+# mediatex adm add coll hello
 # su @var{username1}
 @end example
 
@@ -197,12 +205,14 @@ the following file: @*
 @example
 index: mdtx @var{usename2}
 cache: mdtx @var{usename2}
-score: mdtx
-history: mdtx
+score: mdtx @var{usename2}
+history: mdtx @var{usename2}
 @end example
 
-Browses the collection via this @sc{url}: @*
+Browses the remotely available collection's catalog via this @sc{url}: @*
 @url{https://@var{hostname1}/~mdtx-hello}
+
+@note{}: for remote access, ensure @var{hostname1} is known, by adding it to the @file{/etc/hosts} file of clients.
 
 Change the logo:
 @example
@@ -230,60 +240,64 @@ As @sc{Publisher}, please check the ``message of the day''
 and provide wanted supports.
 @example
 $ mediatex motd
-$ mediatex check supp ex-cd1 on /usr/share/mediatex/examples/logoP1.iso
-$ mediatex check supp ex-cd2 on /usr/share/mediatex/examples/logoP2.iso
+$ mediatex check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso
+$ mediatex check supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
 @end example
 
-Now you should receive an email telling the previous link you try
-is now be available. 
+If your host is configurated to send emails, 
+you should have received an email telling the previous link you try
+is now be available.
 
 @node Scenario 4
 @section Scenario 4: adding new archives
 @cindex archive
 @cindex upload
-Add a new support to the catalogue using its @sc{md5} hash sum and its size.
+
+Add a new container to the catalogue using its @sc{md5} hash sum and its size:
 @example
-$ md5sum yourFile.dat
-$ ls -l yourFile.dat
+# apt-get install cowsay
+$ mkdir cow1
+$ cowsay mheu1 > cow1/cow1.txt
+$ tar -zxf cow1.tgz cow1/
+$ MD5_1=$(md5sum cow1/cow1.txt | cut -d' ' -f 1)
+$ SIZE_1=$(ls cow1/cow1.txt -l | cut -d' ' -f 5)
+$ MD5_2=$(md5sum cow1.tgz | cut -d' ' -f 1)
+$ SIZE_2=$(ls cow1.tgz -l | cut -d' ' -f 5)
 
-$ cat > /etc/mediatex/mdtx-hello/catalogNN.txt <<EOF
-Document "your file"
-  fe232064504e7889b6aa15670c2ff210:25455
+$ cat > cow1.cat <<EOF
+Document "cow1": "animal"
+  $MD5_1:$SIZE_1
 EOF
 
-$ cat > /etc/mediatex/mdtx-hello/extractNN.txt <<EOF
-(REC fe232064504e7889b6aa15670c2ff210:25455)
+$ cat > cow1.ext <<EOF
+(TGZ 
+  $MD5_2:$SIZE_2
+=>
+  $MD5_1:$SIZE_1 cow1/cow1.txt
+)
 EOF
 
-$ chmod g+w /etc/mediatex/mdtx-hello/*NN.txt
+$ mediatex upload file cow1.tgz catalog cow1.cat rules cow1.ext to coll hello
+@end example
+
+Only add a file:
+@example
+$ cowsay mheu2 > cow2.txt
+$ mediatex upload file cow2.txt to coll hello
 @end example
 
 Then, the 
-@actor{publisher} have to provide the 
-new support to the collection
+@actor{publisher} have to retrieve the files form the cache
+, store them into a support and provide this new support to the collection.
 @example
-$ mediatex add supp ex-new-doc on yourFile.dat
-$ mediatex add supp ex-new-doc to coll hello
-$ mediatex check supp ex-new-doc on yourFile.dat
+$ mediatex motd
+$ mediatex add supp ex-cow1 on cow1.tgz
+$ mediatex add supp ex-cow1 to coll hello
 @end example
 
-As the upper method is dedicated for already burned supports, 
-one other way is to upload files into the cache (waiting we have
-so many files to burn them on a new support).
-This will automatically add the extraction rule, but you still 
-have to edit the catalogue file by hand.
-@example
-$ mediatex upload yourFile.dat to coll hello
-
-$ cat > /etc/mediatex/mdtx-hello/catalogNN.txt <<EOF
-Document "your file"
-  fe232064504e7889b6aa15670c2ff210:25455
-EOF
-@end example
-
-After rebuild the @acronym{html} catalogue, 
-you should now access the new archive through it
-as we seen previously (@ref{Scenario 3}).
+Now rebuild the @acronym{html} catalogue, 
+and you should have access to the new archive
+as seen previously (@ref{Scenario 3}).
 @example
 $ mediatex make coll hello
 @end example
@@ -297,7 +311,7 @@ existing user login (on this server).
 @example
  @var{hostname2}# mediatex adm init
  @var{hostname2}# mediatex adm add user @var{username1}
- @var{hostname2}# su @var{username1}
+ @var{hostname2}$ su @var{username1}
 @end example
 
 Change the hostname in @file{/etc/mediatex/mdtx.conf} configuration file
@@ -330,7 +344,7 @@ Send it to a
 Finally, retry to join the collection.
 @example
  @var{hostname2}# mediatex adm add coll hello@@@var{hostname1}
- @var{hostname2}# su @var{username1}
+ @var{hostname2}$ su @var{username1}
 @end example
 
 Now the second server should be connected. We will check it. 
@@ -338,14 +352,13 @@ Now the second server should be connected. We will check it.
 First, empty the @var{hostname1} cache and reload the daemon.
 @example
 @var{hostname1}# rm -fr ~mdtx/cache/mdtx-hello/logo*
+@var{hostname1}# rm -fr ~mdtx/cache/mdtx-hello/supports
 @var{hostname1}$ mediatex upgrade
 @end example
 
 Secondly, share the @code{ex-cd1} support with the collection on
 @var{hostname2}.
 @example
- @var{hostname2}$ mediatex add supp ex-cd1 on \
-                           /usr/share/mediatex/examples/logoP1.iso
  @var{hostname2}$ mediatex add supp ex-cd1 to coll hello
 @end example
 
@@ -362,17 +375,17 @@ it will notify the second server.
 @example
  @var{hostname2}$ mediatex motd
  @var{hostname2}$ mediatex check supp ex-cd1 on \
-                           /usr/share/mediatex/examples/logoP1.iso
+                           /usr/share/mediatex/misc/logoP1.iso
 @end example
 
-Once second server notify, first server will copy back the file it needs, to serve the @sc{User} query.
+Once second server notify, first server will copy back the provided file it needs, to serve the @sc{User} query.
 @example
  @var{hostname2}$ mediatex srv notify
 @var{hostname1}$ mediatex srv extract
 @var{hostname1}$ ls ~mdtx/cache/mdtx-hello
 @end example
 
-@note{} as for every supports that have a bad score, the uploaded files
+@note{} as for every supports having a bad score, the uploaded files
 ((@ref{Scenario 4}) are duplicated too.
 @example
  @var{hostname2}$ mediatex srv extract
@@ -396,7 +409,7 @@ Network configuration example:
  eth0 ... (internet)
  eth1 ... (private network)
  @var{hostname2}# echo 1 > /proc/sys/net/ipv4/ip_forward
- @var{hostname2}# iptables -t nat -A POSTROUTING -s 192.168.1.0/8 -o eth0 \
+ @var{hostname2}# iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o eth0 \
                            -j MASQUERADE
   @var{hostname3}# ping gnu.org (ok)
 @var{hostname1}# ping @sc{hostname3} (ko: Destination Host Unreachable)
@@ -424,10 +437,10 @@ With this settings, the second server will relay queries and contents
 between the first and the third server:
 @itemize @bullet
 @item
-messages from @var{hostname1} are forwarded to @var{hostname3}
+messages from @var{hostname1} are forwarded to @var{hostname3}.
 @item
 @var{hostname3} do not send messages to @var{hostname1} as its contents 
-is sent back to @var{hostname2}
+are retrieved back by @var{hostname2}.
 @end itemize
 
 Checking it:
@@ -436,7 +449,7 @@ First, share the @code{ex-cd2} support with the collection on
 @var{hostname3}.
 @example
   @var{hostname3}$ mediatex add supp ex-cd2 on \
-                            /usr/share/mediatex/examples/logoP2.iso
+                            /usr/share/mediatex/misc/logoP2.iso
   @var{hostname3}$ mediatex add supp ex-cd2 to coll hello
 @end example
 
@@ -452,7 +465,7 @@ to provide the supports it shares.
 @example
   @var{hostname3}$ mediatex motd
   @var{hostname3}$ mediatex check supp ex-cd2 on \
-                            /usr/share/mediatex/examples/logoP2.iso
+                            /usr/share/mediatex/misc/logoP2.iso
 @end example
 
 Once third server notify, second server will copy (and extract) the files 

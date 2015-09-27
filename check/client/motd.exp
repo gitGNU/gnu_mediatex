@@ -282,9 +282,7 @@ Mediatex's message of the day
 Please provide theses local supports:
 - /HERE/misc/logoP2.iso: coll1
 - SUPP11_logo.png: periodic check
-- SUPP12_logo.png: periodic check
-- SUPP21_logo.part1: periodic check, coll1
-- SUPP23_logo.part1: periodic check
+- SUPP21_logo.part1: coll1
 Please burn theses files:
 - Collection coll1:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/logoP2.iso ( 3.75)

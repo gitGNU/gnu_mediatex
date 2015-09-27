@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: init.sh,v 1.4 2015/06/30 17:37:21 nroche Exp $
+# * Version: $Id: init.sh,v 1.5 2015/09/27 21:32:52 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -50,7 +50,9 @@ HTDOCS_configure_mdtx_apache2
 
 # only needed once
 if [ $MDTX = mdtx ]; then
-    /usr/sbin/a2enmod auth_digest autoindex env include rewrite userdir ssl
+    /usr/sbin/a2enmod \
+	auth_digest authz_groupfile autoindex cgi env include rewrite \
+	userdir ssl
     /usr/sbin/a2ensite default-ssl
     /usr/sbin/invoke-rc.d rsyslog restart
     /sbin/ldconfig

@@ -1,9 +1,5 @@
 
 *** TO CORRECT: cache policy
-
-** BUGS
-- apache logs: cron do not have a good PATH (I guess)
-
 ........................................................
 
 (maybe)
@@ -19,6 +15,7 @@
 ** EXAMPLES
 - buildRule.sh script ?
 - extractMeta communicate|restituate|eliminate SUPP=>supp.cat supp.ext
+- open_icon as a use case (~/src/open_icon/)
 
 ** CACHE ?
 - monitor cache sizes: all/used/allocated/free
@@ -152,9 +149,7 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)
-- replace cvs+viewvc by git+cgit
 - i10n for french
-- test an apache configuration using clains-based authentication (openId)
 
 *** TODO MAYBE
 
@@ -163,6 +158,9 @@
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
+- serialize b-tree using another order and use add-if-not-there function
+- replace cvs+viewvc by git+cgit
+- test an apache configuration using clains-based authentication (openId)
 - move dirname into extract rule header to reduce extract.txt file size
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init

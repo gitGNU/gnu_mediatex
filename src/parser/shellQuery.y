@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.11 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.12 2015/09/27 21:32:52 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -68,8 +68,6 @@
 %{
   // upper YYSTYPE union is required by Flex headers
 #include "parser/shellQuery.h"
-
-#define LINENO shell_get_lineno(yyscanner)
 
 void shell_error(yyscan_t yyscanner, Collection* coll, 
 		 UploadParams* upParam, const char* message);
@@ -780,8 +778,8 @@ apiCollQuery: shellADD key shellTO collection shellEOL
 void shell_error(yyscan_t yyscanner, Collection* coll, 
 		 UploadParams* upParam, const char* message)
 {
-  logParser(LOG_ERR, "%s on token '%s' line %i",
-	  message, shell_get_text(yyscanner), LINENO);
+  logParser(LOG_ERR, "%s on token '%s'",
+	  message, shell_get_text(yyscanner));
   logParser(LOG_NOTICE, 
 	  "bad invocation of mdtx's shell (try completion)");
 }

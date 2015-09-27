@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.8 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: shellQuery.l,v 1.9 2015/09/27 21:32:52 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -70,7 +70,6 @@
 %option noposix-compat
 %option nostdinit
 %option noyywrap
-%option yylineno
    
 /* Code-Level And API Options: */
 %option ansi-definitions
@@ -386,8 +385,8 @@
 
   . {  /* : eat up any unmatched character and 
 	  let bison manage the errors */
-    logParser(LOG_WARNING, "line %i: scanner read unexpected caractere '%s'", 
-	    yylineno, yytext);
+    logParser(LOG_WARNING, "scanner read unexpected caractere '%s'", 
+	    yytext);
     return(shellERROR);
   }
 }

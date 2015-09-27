@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.13 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: motd.c,v 1.14 2015/09/27 21:32:52 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -273,7 +273,7 @@ addMotdSupport(Motd* motd, Support* support, Collection* coll)
 
 /*=======================================================================
  * Function   : updateMotdFromSupportDB
- * Description: List all obsolete supports
+ * Description: List not seens for a while supports
  * Synopsis   : SupportTree* updateMotdFromSupportDB(Motd* motd)
  * Input      : Motd* motd: where we write results 
  * Output     : TRUE on success
@@ -292,7 +292,7 @@ updateMotdFromSupportDB(Motd* motd)
   rgRewind(conf->supports);
   while ((support = rgNext(conf->supports))) {
     if (!scoreSupport(support, &conf->scoreParam)) goto error;
-    if (support->score <= conf->scoreParam.badScore) {
+    if (!support->score) { // obsolete: need to be checked
       if (!addMotdSupport(motd, support, 0)) goto error;
     }
   }
@@ -329,9 +329,6 @@ int motdContainer(MotdSearch* data, Container* container)
   checkCollection(data->coll);
 
   if (isEmptyRing(container->parents)) goto end;
-
-#warning TODO: try to remove this line
-  //data->isAvailable = TRUE; // is this needed ?
 
   // we motd all parents (only one for TGZ, several for CAT...)
   while ((archive = rgNext_r(container->parents, &curr))) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.6 2015/07/03 16:02:14 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.7 2015/09/27 21:32:52 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -165,7 +165,7 @@ function CVS_mdtx_checkout()
 
 	QUERY="cvs -d $CVSROOT co $MDTX" 
 	Info "su MDTX -c \"$QUERY\""
-	su $MDTX -c "$QUERY" | sort ||
+	su $MDTX -c "$QUERY" 2>&1 | sort ||
 	Error "cannot checkout module: $MDTX"
 
 	eval $UMASK
