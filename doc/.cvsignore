@@ -25,4 +25,5 @@ mediatex.tp
 mediatex.vr
 mediatex.pdf
 mediatex.ps
-# make check
+# make pdf
+mediatex.t2p

@@ -317,12 +317,12 @@ Involved licences:
 @item cvs @tab             GPLv2+ @tab   http://cvs.nongnu.org/
 @item findutils @tab       GPLv3+ @tab   http://www.gnu.org/software/findutils/
 @item gzip @tab            GPLv2+ @tab   http://www.gnu.org/software/gzip/
-@item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
 @item ssh @tab             BSD @tab      http://www.openssh.com/
 @item tar @tab             GPLv3+ @tab   http://www.gnu.org/software/tar/
 @item unzip @tab           BSD @tab      http://info-zip.org/
 @item viewvc @tab          BSD @tab      http://www.viewvc.org/
 @end multitable
+@c @item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
 
 @item Optionnal: (and non-free)
 @multitable @columnfractions .2 .2 .6
@@ -431,7 +431,7 @@ and to include the new public @acronym{IP} addresses into the actual
 
 Why not
 @itemize @bullet
-@mediatexO{} is still under development and only maintains by only one person.
+@mediatexO{} is a prototype and still need to be optimized.
 @item
 Presently, it seems we all tend to use the @acronym{RAID} and 
 @acronym{CLOUD} technologies to keep data on running computers 

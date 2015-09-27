@@ -19,25 +19,33 @@ and to test it by setting an ``hello world'' collection example.
 @node Install
 @section Install
 @cindex install
+
+Get the sources:
+@example
+$ cvs -z3 \
+   -d:pserver:anonymous@@cvs.savannah.nongnu.org:/sources/mediatex \
+   co mediatex
+@end example
+
 Software requirements.
 @itemize @bullet
 @item Compilation:
 automake gettext libtool make flex bison texinfo transfig help2man libssl-dev libavl-dev 
-@item Documentation (others format than texinfo and man) :
+@item Documentation in others format than texinfo and man (optional) :
 imagemagick texlive
 @item Installation:
-ssh apache2 cvs viewvc initramfs-tools libavl1 tar cpio gzip bzip2 unzip bc findutils
+ssh apache2 cvs viewvc libavl1 tar cpio gzip bzip2 unzip bc findutils
 @end itemize
+@c initramfs-tools 
 
 Here are the steps used to build the project from scratch:
 @example
 $ autoscan
 $ autoreconf -i
 $ ./configure
-$ make
-$ make check
-$ make distcheck
-$ make dist
+$ make V=0
+$ make check V=0
+$ make distcheck V=0
 @end example
 
 However this have to be adapt to be really functional for installation 
@@ -56,12 +64,19 @@ $ make CFLAGS="-Wall -O0 -g" V=0
 # make install
 @end example
 
+Other formats than @acronym{GNU INFO} of this documentation are also available from the sources (optional):
+@example
+$ cd doc
+$ make html pdf
+# make install-html install-pdf
+@end example
+
 Someone may also prefers to build and install a @acronym{DEBIAN} package:
 @example
 $ make dist
-$ cp mediatex-0.1.tar.gz mediatex_0.1.orig.tar.gz
-$ tar -zxf mediatex-0.1.tar.gz
-$ cd mediatex-0.1
+$ cp mediatex-0.4.tar.gz mediatex_0.4.orig.tar.gz
+$ tar -zxf mediatex-0.4.tar.gz
+$ cd mediatex-0.4
 $ cp -fr ../debian .
 $ dpkg-buildpackage -us -uc
 $ ls ..
@@ -69,18 +84,19 @@ $ ls ..
 
 The fully @acronym{DEBIAN} build process should finish using @code{pbuilder}:
 @example
+$ cd mediatex-0.4
+$ cp -fr ../debian .
 # pbuilder create --distribution squeeze \
-  --basetgz ../wheezy.tgz \
+  --basetgz ../jessie.tgz \
   --mirror http://ftp.fr.debian.org/debian
-# cd mediatex-0.1
 # pdebuild --use-pdebuild-internal \
   --debbuildopts -sa -- \
-  --basetgz ../wheezy.tgz
+  --basetgz ../jessie.tgz
 @end example
 
-Next, a script may automate the 6 following scenarios
+Next, a test script automate the 6 following scenarios:
 @example
-# /usr/share/mediatex/useCases/tests.sh
+# /usr/share/mediatex/examples/tests.sh
 @end example
 
 @node Scenario 1

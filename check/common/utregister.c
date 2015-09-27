@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utregister.c,v 1.4 2015/09/04 15:30:17 nroche Exp $
+ * Version: $Id: utregister.c,v 1.5 2015/09/27 01:00:38 nroche Exp $
  * Project: MediaTeX
  * Module : register
  
@@ -178,6 +178,7 @@ main(int argc, char** argv)
   /************************************************************************/
 
  error:
+  env.logHandler->severity[LOG_MEMORY]->code = LOG_NOTICE;
   freeConfiguration();
   ENDINGS;
   rc=!rc;

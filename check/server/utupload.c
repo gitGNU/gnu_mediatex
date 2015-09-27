@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.3 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: utupload.c,v 1.4 2015/09/27 01:00:38 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -145,7 +145,7 @@ main(int argc, char** argv)
   utLog("%s", " * Not a final suply:", 0);
   if (!(connexion = utUploadMessage(coll, extra))) goto error;
   if (!(record = rgHead(connexion->message->records))) goto error;
-  record->extra[0] = '_';
+  strcpy(record->extra, "notBeginningWithSlash");
   if (uploadFinaleArchive(connexion)) goto error;
   logMain(LOG_NOTICE, "reply : %s", connexion->status);
   destroyRecordTree(connexion->message);

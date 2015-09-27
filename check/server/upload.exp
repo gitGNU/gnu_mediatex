@@ -291,7 +291,7 @@
 [notice utupload.c]  * Not a final suply:
 [notice utupload.c] .......................................................
 [err upload.c] uploadFinaleArchive fails
-[notice utupload.c] reply : 332 message do not provide a final supply _home/nroche/cvs/mediatex/misc/README
+[notice utupload.c] reply : 332 message do not provide a final supply notBeginningWithSlash
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Upload using default target:
 [notice utupload.c] .......................................................

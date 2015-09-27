@@ -1,3 +1,6 @@
+# autoscan
+autoscan.log
+configure.scan
 # autoreconf
 COPYING
 INSTALL
@@ -29,3 +32,4 @@ stamp-h1
 
 # make dist
 mediatex-*
+

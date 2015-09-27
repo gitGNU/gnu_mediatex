@@ -1,4 +1,4 @@
-dnl  * Version: $Id: configure.ac,v 1.5 2015/07/03 11:53:58 nroche Exp $
+dnl  * Version: $Id: configure.ac,v 1.6 2015/09/27 01:00:38 nroche Exp $
 dnl  * Project: MediaTex
 dnl  * Module:  autotools
 dnl  *
@@ -39,6 +39,67 @@ AC_PROG_LN_S
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/mediatex.h])
 AC_CONFIG_HEADERS([config.h])
+
+AC_CHECK_FUNCS([alarm])
+AC_CHECK_FUNCS([dup2])
+AC_CHECK_FUNCS([getcwd])
+AC_CHECK_FUNCS([gethostbyaddr])
+AC_CHECK_FUNCS([getpagesize])
+AC_CHECK_FUNCS([gettimeofday])
+AC_CHECK_FUNCS([inet_ntoa])
+AC_CHECK_FUNCS([localtime_r])
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([mkdir])
+AC_CHECK_FUNCS([regcomp])
+AC_CHECK_FUNCS([rmdir])
+AC_CHECK_FUNCS([setenv])
+AC_CHECK_FUNCS([setlocale])
+AC_CHECK_FUNCS([socket])
+AC_CHECK_FUNCS([strcasecmp])
+AC_CHECK_FUNCS([strchr])
+AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([strerror])
+AC_CHECK_FUNCS([strrchr])
+AC_CHECK_FUNCS([strstr])
+
+AC_CHECK_HEADERS([arpa/inet.h])
+AC_CHECK_HEADERS([fcntl.h])
+AC_CHECK_HEADERS([libintl.h])
+AC_CHECK_HEADERS([locale.h])
+AC_CHECK_HEADERS([malloc.h])
+AC_CHECK_HEADERS([mntent.h])
+AC_CHECK_HEADERS([netdb.h])
+AC_CHECK_HEADERS([netinet/in.h])
+AC_CHECK_HEADERS([stddef.h])
+AC_CHECK_HEADERS([sys/socket.h])
+AC_CHECK_HEADERS([sys/time.h])
+AC_CHECK_HEADERS([syslog.h])
+
+AC_CHECK_HEADER_STDBOOL
+AC_C_INLINE
+AC_FUNC_ALLOCA
+AC_FUNC_FORK
+AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
+AC_FUNC_MALLOC
+AC_FUNC_MKTIME
+AC_FUNC_REALLOC
+AC_PROG_CXX
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_INT8_T
+AC_TYPE_MODE_T
+AC_TYPE_OFF_T
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+AC_TYPE_UID_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT8_T
+
+AC_PREREQ
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
 
 AC_CONFIG_FILES([
 	Makefile
