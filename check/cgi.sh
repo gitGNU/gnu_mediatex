@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cgi.sh,v 1.4 2015/09/21 01:01:48 nroche Exp $
+# * Version: $Id: cgi.sh,v 1.5 2015/10/01 21:52:39 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *

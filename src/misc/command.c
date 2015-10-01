@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.14 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: command.c,v 1.15 2015/10/01 21:52:40 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -39,14 +39,30 @@ void
 version()
 {
   fprintf(stderr, 
-	  "\n" PACKAGE_STRING " Copyright (C) 2014 2015 <Nicolas Roche>\n"
-	  "\n<http://www.gnu.org/licenses/gpl.html>\n"
-	  "This program comes with ABSOLUTELY NO WARRANTY\n"
-	  "This is free software, and you are welcome to redistribute it\n"
-	  "\nPlease report bugs to: <" PACKAGE_BUGREPORT ">.\n"
-	  PACKAGE_NAME " home page: <http://www.nongnu.org/mediatex>.\n"
+	  PACKAGE_STRING "\n"
+	  "\nCopyright (C) 2014 2015 <Nicolas Roche>.\n"
+	  "License GPLv3+: GNU GPL version 3 or later"
+	  " <http://www.gnu.org/licenses/gpl.html>\n"
+	  "This is free software, and you are welcome to redistribute it.\n"
+	  "There is NO WARRANTY, to the extent permitted by law.\n"
+	  "\nWritten by Nicolas Roche.");
+}
+
+/*=======================================================================
+ * Function   : help
+ * Description: Print ending help
+ * Synopsis   : void help()
+ * Input      : N/A
+ * Output     : N/A
+ =======================================================================*/
+void 
+mdtxHelp()
+{
+  fprintf(stderr,
+	  "\nReport bugs to: <" PACKAGE_BUGREPORT ">.\n"
+	  PACKAGE_NAME " home page: <http://www.nongnu.org/mediatex>\n"
 	  "General help using GNU software: "
-	  "<http://www.gnu.org/gethelp/>\n\n");
+	  "<http://www.gnu.org/gethelp/>\n");
 }
 
 /*=======================================================================
@@ -59,12 +75,12 @@ version()
 void 
 miscUsage(char* programName)
 {
-  fprintf(stderr, "The usage for %s is:\n", basename(programName));
-  fprintf(stderr, "%s\t{ -h | -v |\n", basename(programName));
+  fprintf(stderr, "\nUsage: %s", basename(programName));
   fprintf(stderr, 
-	  "\t\t[ -f facility ] [ -l logFile ]\n"
-	  "\t\t[ -s severity[:module(,module)*] ]\n"
-	  "\t\t[ -m memoryLimit ] [ -S ] [ -n ]");
+	  "-h | -v |"
+	  " [ -f facility ] [ -l logFile ]"
+	  " [ -s severity[:module(,module)*] ]"
+	  " [ -m memoryLimit ] [ -S ] [ -n ]");
 }
 
 /*=======================================================================
@@ -91,7 +107,7 @@ void
 parserUsage(char* programName)
 {
   memoryUsage(programName);
-  fprintf(stderr, "\n\t\t[ -L ]");
+  fprintf(stderr, " [ -L ]");
 }
 
 /*=======================================================================
@@ -105,7 +121,7 @@ void
 mdtxUsage(char* programName)
 {
   parserUsage(programName);
-  fprintf(stderr, "\n\t\t[ -c confFile ]");
+  fprintf(stderr, " [ -c confFile ]");
 }
 
 /*=======================================================================
@@ -119,7 +135,7 @@ void
 miscOptions()
 {
   fprintf(stderr, 
-	  " }\nwhere:\n"
+	  "\n\nOptions:\n"
 	  "  -h, --help\t\tdisplay this message\n"
 	  "  -v, --version\t\tdisplay the " PACKAGE_NAME 
 	  " software version\n"
@@ -128,9 +144,9 @@ miscOptions()
 	  "  -l, --log-file\tlog into a file\n"
 	  "\t\t\tneeds 'file' facility (default)\n"
 	  "  -s, --severity\tuse severity for logging\n"
-	  "\t\t\tseverity amongs 'err' 'warning' 'notice' 'info' 'debug'\n"
-	  "\t\t\tmodule amongs 'alloc' 'script' 'misc' 'memory' 'parser'\n"
-	  "\t\t\t              'common' and 'main'\n"
+	  "\t\t\tseverity amongs 'err' 'warning' 'notice' 'info' 'debug';"
+	  "\n\t\t\tmodule amongs 'alloc' 'script' 'misc' 'memory' 'parser'"
+	  " 'common' and 'main'\n"
 	  "  -m, --memory-limit\tnice limit for malloc in Mo\n"
 	  "  -S, --script-out\tenable stdout for scripts\n"
 	  "  -n, --dry-run\t\tdo a dry run\n");

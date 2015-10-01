@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.12 2015/09/27 21:32:52 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.13 2015/10/01 21:52:40 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -264,17 +264,17 @@ query: shellADMIN admConfQuery
 	  mediatex adm del user
 	  mediatex adm add coll COLL@HOST:PORT
 	  mediatex adm del coll COLL
-	  mediatex adm update coll COLL
 	  mediatex adm update
-	  mediatex adm commit coll COLL
+	  mediatex adm update coll COLL
 	  mediatex adm commit
-	  mediatex adm make coll COLL
+	  mediatex adm commit coll COLL
 	  mediatex adm make
+	  mediatex adm make coll COLL
 	  mediatex adm bind 
 	  mediatex adm unbind
 	  mediatex adm mount ISO on PATH
 	  mediatex adm umount PATH
-	  mediatex get PATH as COLL on FINGERPRINT */
+	  mediatex get PATH as COLL on FINGERPRINT as PATH */
      | shellSERVER srvQuery
        /* mediatex srv save
 	  mediatex srv extract
@@ -284,8 +284,8 @@ query: shellADMIN admConfQuery
         
 apiQuery: apiSuppQuery
         /* mediatex add supp SUPP to all
-	   mediatex del supp SUPP from all
 	   mediatex add supp SUPP to coll COLL
+	   mediatex del supp SUPP from all
 	   mediatex del supp SUPP from coll COLL
 	   mediatex add supp SUPP on PATH
 	   mediatex add file PATH
@@ -293,19 +293,20 @@ apiQuery: apiSuppQuery
 	   mediatex list supp
 	   mediatex note supp as TEXT
 	   mediatex check supp on PATH 
-	   mediatex upload file PATH catalog PATH extract PATH to coll COLL 
+	   mediatex upload+{0,2} file PATH catalog PATH extract PATH to coll COLL 
 	*/
           | apiCollQuery
 	/* mediatex add key PATH to coll COLL
 	   mediatex del key FINGERPRINT from coll COLL
+	   mediatex list master coll
 	   mediatex list coll
 	   mediatex motd
-	   mediatex upgrade
-	   mediatex upgrade coll COLL 
-	   mediatex make coll COLL
+	   mediatex upgrade[+]
+	   mediatex upgrade[+] coll COLL 
 	   mediatex make
-	   mediatex clean coll COLL
+	   mediatex make coll COLL
 	   mediatex clean
+	   mediatex clean coll COLL
 	   mediatex su
 	   mediatex su coll COLL 
 	   mediatex audit coll COLL for MAIL
@@ -457,7 +458,7 @@ admConfQuery: shellINIT shellEOL
             | shellGET shellSTRING shellAS shellSTRING shellON shellSTRING 
 	               shellAS shellSTRING shellEOL
 {
-  logParser(LOG_INFO, "get %s as %s on %s to %s", $2, $4, $6, $8);
+  logParser(LOG_INFO, "get %s as %s on %s as %s", $2, $4, $6, $8);
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
     env.noCollCvs = TRUE; // do not upgrade

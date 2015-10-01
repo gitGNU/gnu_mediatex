@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-man_MANS = mediatex.1 mediatexd.1
+man_MANS = mediatex.1 mediatexd.1 mediatex.cgi.1
 EXTRA_DIST = $(man_MANS)
 MAINTAINERCLEANFILES = $(man_MANS)
 

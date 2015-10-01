@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.11 2015/09/23 19:10:19 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.12 2015/10/01 21:52:40 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -286,10 +286,14 @@ socketJob(void* arg)
 static void 
 usage(char* programName)
 {
+  fprintf(stderr,
+	  "`" PACKAGE_NAME "' "
+	  "archival storage system implements the related `oais' entity"
+	  " and try to match it with the `nf z 42-013' requirements.\n"
+	  );
   mdtxUsage(programName);
-
   mdtxOptions();
-  //fprintf(stderr, "  ---\n");
+  mdtxHelp();
   return;
 }
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.h,v 1.12 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: command.h,v 1.13 2015/10/01 21:52:40 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -59,6 +59,7 @@ void miscUsage(char* programName);
 void memoryUsage(char* programName);
 void parserUsage(char* programName);
 void mdtxUsage(char* programName);
+void mdtxHelp();
 
 void miscOptions();
 void memoryOptions();

@@ -60,8 +60,8 @@ from @actorUserO
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
 @itemx @eventClientMiscMake
-@itemx @eventClientMiscClean
-@itemx @eventServerCacheUpload
+@itemx @eventClientMiscUpload
+@itemx @eventClientMiscAudit
 from @actorPublisherO
 @item @eventScriptsInitdStart 
 @itemx @eventScriptsInitdStop

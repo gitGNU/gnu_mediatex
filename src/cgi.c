@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.9 2015/09/21 01:01:50 nroche Exp $
+ * Version: $Id: cgi.c,v 1.10 2015/10/01 21:52:39 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -578,23 +578,48 @@ static void usageHtml(Collection* coll, char* programName)
 static void 
 usage(char* programName)
 {
-  fprintf(stderr, "The %s program should be served by Apache "
-	  "and then called by your browser.\nAn other way to test it "
-	  " is to call it like as described bellow.\n\n"
-	  "REQUEST_METHOD=GET \\\n"
-	  "QUERY_STRING=\"hash=HASH&size=SIZE\" \\\n"
-	  "SCRIPT_FILENAME=/MDTX-COLL/public_html/cgi/get.cgi \\\n"
-	  "cgi [OPTIONS]\n\n", programName);
-  fprintf(stderr, "Here is an exemple:\n"
-	  "REQUEST_METHOD=GET \\\n"
-	  "QUERY_STRING=\"hash=40485334450b64014fd7a4810b5698b3&size=12\""
-	  " \\\n" 
-	  "SCRIPT_FILENAME=/mdtx-test1/public_html/cgi/get.cgi \\\n" 
-	  "MDTX_NO_REGRESSION=1 ./utcgi\n\n");
-  mdtxUsage(programName);
+  fprintf(stderr,
+	  "`" PACKAGE_NAME "' "
+	  "archival storage system implements the related `oais' entity"
+	  " and try to match it with the `nf z 42-013' requirements.\n"
+	  );
 
+  mdtxUsage(programName);
   mdtxOptions();
-  //fprintf(stderr, "  ---\n");
+
+  fprintf(stderr, "\nEnvironment:\n"
+	  "This program should be served by Apache "
+	  "and then called by your browser."
+	  "So as to test it, call it like as described bellow.\n"
+	  "  ask for content:  (get query)\n"
+	  "REQUEST_METHOD=GET"
+	  " QUERY_STRING=\"hash=HASH&size=SIZE\""
+	  " SCRIPT_FILENAME=/MDTX-COLL/public_html/cgi/get.cgi"
+	  " cgi [OPTIONS]\n"
+	  "  provide email:    (put query)\n"
+	  "echo \"hash=HASH&size=SIZE&mail=MAIL\" |"
+	  " REQUEST_METHOD=POST"
+	  " SCRIPT_FILENAME=/MDTXUSER-COLL/public_html/cgi/get.cgi"
+	  " CONTENT_TYPE=application/x-www-form-urlencoded"
+	  " CONTENT_LENGTH=64"
+	  " cgi [OPTIONS]\n");
+
+  fprintf(stderr, "\nExamples:\n"
+	  "  ask for content:  (get query)\n"
+	  "REQUEST_METHOD=GET"
+	  " QUERY_STRING=\"hash=40485334450b64014fd7a4810b5698b3&size=12\""
+	  " SCRIPT_FILENAME=/mdtx-hello/public_html/cgi/get.cgi" 
+	  " cgi\n"
+	  "  provide email:    (put query)\n"
+	  "echo \"hash=40485334450b64014fd7a4810b5698b3&size=12&mail=test@test.org\" |"
+	  " REQUEST_METHOD=POST"
+	  " SCRIPT_FILENAME=/mdtx-hello/public_html/cgi/get.cgi"
+	  " CONTENT_TYPE=application/x-www-form-urlencoded"
+	  " CONTENT_LENGTH=64"
+	  " cgi\n");
+
+  mdtxHelp();
+
   return;
 }
 

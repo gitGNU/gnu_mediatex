@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.5 2015/09/22 11:42:40 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.6 2015/10/01 21:52:40 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -39,45 +39,58 @@ GLOBAL_STRUCT_DEF_BIN;
 static void 
 usage(char* programName)
 {
+  fprintf(stderr,
+	  "`" PACKAGE_NAME "' "
+	  "archival storage system implements the related `oais' entity"
+	  " and try to match it with the `nf z 42-013' requirements.\n"
+	  );
+
   mdtxUsage(programName);
-  fprintf(stderr, "\n\t\t[ -w ] query");
+  fprintf(stderr, " [ -a ] query");
+
   mdtxOptions();
   fprintf(stderr, "  -a, --alone\tdo not make cvs remote queries\n");
-  fprintf(stderr, "  ---\n\n"
-#warning "to complete"
-	  "Admin queries:\n\n"
-	  "  adm (init|remove|purge)\n\n"
-	  "  adm (add|del) user USER\n\n"
-	  "  adm add coll COLL[@HOST[:PORT]]\n\n"
-	  "  adm del coll COLL\n\n"
+  
+  fprintf(stderr, "\nExamples:\n"	  
+	  "\nAdmin queries:\n"
+	  "  adm (init|remove|purge)  ...\n"
+	  "  adm (add|del) user USER  ...\n"
+	  "  adm add coll COLL[@HOST[:PORT]]  ...\n"
+	  "  adm del coll COLL  ...\n"
 
-	  "Debugging queries:\n\n"
-	  "  adm (update|commit|make) [coll COLL]\n\n"
-	  "  adm (bind|unbind)\n\n"
-	  "  adm mount ISO on PATH\n\n"
-	  "  adm umount PATH\n\n"
-	  "  adm get PATH as COLL on HASH\n\n"
+	  "\nDebugging queries:\n"
+	  "  adm (update|commit|make) [coll COLL]  ...\n"
+	  "  adm (bind|unbind)  ...\n"
+	  "  adm mount ISO on PATH  ...\n"
+	  "  adm umount PATH  ...\n"
+	  "  adm get PATH as COLL on HASH as PATH  ...\n"
 
-	  "Queries to daemon:\n\n"
-	  "  srv (save|extract|notify|deliver)\n\n"
+	  "\nQueries to daemon:\n"
+	  "  srv (save|extract|notify|deliver)  ...\n"
 
-	  "Data management:\n\n"
-	  "  add supp SUPP to (all|coll COLL)\n\n"
-	  "  del supp SUPP from (all|coll COLL)\n\n"
-	  "  add supp SUPP on PATH\n\n"
-	  "  del supp SUPP\n\n"
-	  "  note supp SUPP as TEXT\n\n"
-	  "  check supp SUPP on PATH\n\n"
-	  "  upload PATH to coll COLL\n\n"
+	  "\nData management:\n"
+	  "  add supp SUPP to (all|coll COLL)  ...\n"
+	  "  del supp SUPP from (all|coll COLL)  ...\n"
+	  "  add supp SUPP on PATH  ...\n"
+	  "  del supp SUPP  ...\n"
+	  "  list supp  ...\n"
+	  "  note supp SUPP as TEXT  ...\n"
+	  "  check supp SUPP on PATH  ...\n"
+	  "  upload+{0,2} PATH to coll COLL  ...\n"
 	  
-	  "Meta-data management:\n\n"
-	  "  add key PATH to coll COLL\n\n"
-	  "  del key HASH from coll COLL\n\n"
-	  "  list (supp|coll)\n\n"	  
-	  "  motd\n\n"
-	  "  (upgrade|make) [coll COLL]\n\n"
-	  "  su [coll COLL]\n\n"
+	  "\nMeta-data management:\n"
+	  "  add key PATH to coll COLL  ...\n"
+	  "  del key FINGERPRINT from coll COLL  ...\n"
+	  "  list [master] coll  ...\n"	  
+	  "  motd  ...\n"
+	  "  upgrade[+] [coll COLL]  ...\n"
+	  "  make [coll COLL]  ...\n"
+	  "  clean [coll COLL]  ...\n"
+	  "  su [coll COLL]  ...\n"
+	  "  audit coll COLL] for MAIL  ...\n"
 	  );
+
+  mdtxHelp();
   return;
 }
 
@@ -99,7 +112,7 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS "w";
+  char* options = MDTX_SHORT_OPTIONS "a";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
     {"alone", no_argument, 0, 'a'},

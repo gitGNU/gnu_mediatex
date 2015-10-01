@@ -490,7 +490,7 @@
 @event{$ mediatex adm commit [coll @var{coll}]}
 @end macro
 @macro eventClientServUpgrade
-@event{$ mediatex upgrade [coll @var{coll}]}
+@event{$ mediatex upgrade[+] [coll @var{coll}]}
 @end macro
 @macro eventClientServUpgradeCall
 @event{upgrade()}
@@ -499,11 +499,11 @@
 @event{$ mediatex add key @var{file} to coll @var{coll}}
 @end macro
 @macro eventClientServDelKey
-@event{$ mediatex del key @var{hash} from coll @var{coll}}
+@event{$ mediatex del key @var{fingerprint} from coll @var{coll}}
 @end macro
 @c     - conf
 @macro eventClientConfList
-@event{$ mediatex ls coll}
+@event{$ mediatex ls [master] coll}
 @end macro
 @macro eventClientConfAddColl
 @event{# mediatex adm add coll [@var{serv}-]@var{coll}[@@@var{host}[:@var{port}]]}
@@ -512,10 +512,10 @@
 @event{# mediatex adm del coll @var{coll}}
 @end macro
 @macro eventClientConfShareSupport
-@event{$ mediatex add supp @var{supp} to (ALL|coll @var{coll})}
+@event{$ mediatex add supp @var{supp} to (all|coll @var{coll})}
 @end macro
 @macro eventClientConfWithdrawSupp
-@event{$ mediatex del supp @var{supp} from (ALL|coll @var{coll})}
+@event{$ mediatex del supp @var{supp} from (all|coll @var{coll})}
 @end macro
 @macro eventClientConfWithdrawSuppCall
 @event{withdraw_supp()}
@@ -584,7 +584,10 @@
 @event{$ mediatex adm get @var{path} as @var{coll} on @var{path}}
 @end macro
 @macro eventClientMiscUpload
-@event{$ mediatex upload @var{file} to coll @var{coll}}
+@event{$ mediatex upload[++] [file @var{file}] [catalog @var{file}] [rules @var{file}] to coll @var{coll}}
+@end macro
+@macro eventClientMiscAudit
+@event{$ mediatex audit coll @var{coll} for @var{mail}}
 @end macro
 
 @c out Events
