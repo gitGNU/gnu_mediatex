@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.15 2015/10/01 21:52:40 nroche Exp $
+ * Version: $Id: command.c,v 1.16 2015/10/02 18:02:21 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -45,7 +45,7 @@ version()
 	  " <http://www.gnu.org/licenses/gpl.html>\n"
 	  "This is free software, and you are welcome to redistribute it.\n"
 	  "There is NO WARRANTY, to the extent permitted by law.\n"
-	  "\nWritten by Nicolas Roche.");
+	  "\nWritten by Nicolas Roche.\n");
 }
 
 /*=======================================================================

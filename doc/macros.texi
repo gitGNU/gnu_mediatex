@@ -530,6 +530,9 @@
 @macro eventClientMiscSuppAdd
 @event{$ mediatex add supp @var{supp} on @var{path}}
 @end macro
+@macro eventClientMiscFileAdd
+@event{$ mediatex add file @var{path}}
+@end macro
 @macro eventClientMiscSuppDel
 @event{$ mediatex del supp @var{supp}}
 @end macro
@@ -599,6 +602,9 @@
 @c   - to publisher
 @macro eventActorPublisherMotd
 @event{(motd)}
+@end macro
+@macro eventActorPublisherMail
+@event{(mail)}
 @end macro
 @c   - to user
 @macro eventActorUserHtmlForm

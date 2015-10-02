@@ -16,7 +16,7 @@
 [info shellQuery.y] unbind mediatex directories
 [info shellQuery.y] mount ISO on PATH
 [info shellQuery.y] umount PATH
-[info shellQuery.y] get PATH1 as COLL on PATH2 to PATH3
+[info shellQuery.y] get PATH1 as COLL on PATH2 as PATH3
 [info shellQuery.y] send SAVEMD5 signal to daemon
 [info shellQuery.y] send EXTRACT signal to daemon
 [info shellQuery.y] send NOTIFY signal to daemon

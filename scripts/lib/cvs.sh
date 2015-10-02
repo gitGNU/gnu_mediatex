@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.7 2015/09/27 21:32:52 nroche Exp $
+# * Version: $Id: cvs.sh,v 1.8 2015/10/02 18:02:21 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -67,7 +67,7 @@ function CVS_mdtx_import()
 	# add files from /usr/share/mediatex/misc/
 	install -o $MDTX -g $MDTX -m 660 $MISC$MEDIATEX$CONF_CONFFILE \
 	    $MDTX$CONF_CONFFILE
-	install -o $MDTX -g $MDTX -m 660 $MISC$CONF_SUPPFILE .
+	install -o $MDTX -g $MDTX -m 640 $MISC$CONF_SUPPFILE .
 
 	# import them
 	QUERY="CVSUMASK=027"
@@ -186,28 +186,24 @@ function CVS_coll_checkout()
     EXT_MODULE="$2-$3"
     EXT_CVSROOT=":ext:${2}-${3}@${4}:/var/lib/cvsroot"
 
-#    if [ -d $CVSCLT/$1/CVS ]; then
-#	Warning "re-use already checkout cvs module: $1"
-#    else
-	cd $CVSCLT || Error "cannot cd to cvs working directory: $CVSCLT"
-	[ "$EXT_MODULE" = "$1" ] || mv $1 $EXT_MODULE
+    cd $CVSCLT || Error "cannot cd to cvs working directory: $CVSCLT"
+    [ "$EXT_MODULE" = "$1" ] || mv $1 $EXT_MODULE
+    
+    # force checkout
+    rm -fr $CVSCLT/$EXT_MODULE/*
+    rm -f $CVSCLT/$EXT_MODULE/.cvsignore
+    
+    UMASK=$(umask -p)
+    umask 0007
 
-	# force checkout
-	rm -fr $CVSCLT/$EXT_MODULE/*
-	rm -f $CVSCLT/$EXT_MODULE/.cvsignore
-
-	UMASK=$(umask -p)
-	umask 0007
-
-	QUERY="cvs -d $EXT_CVSROOT co $EXT_MODULE" 
-	Info "su USER -c \"$QUERY\""
-	su $USER -c "$QUERY" 2>&1 ||
-	Error "cannot checkout module: $EXT_MODULE (never raised)"
-
-	eval $UMASK
-	[ "$EXT_MODULE" = "$1" ] || mv $EXT_MODULE $1
-	cd - > /dev/null || true
-#    fi
+    QUERY="cvs -d $EXT_CVSROOT co $EXT_MODULE" 
+    Info "su USER -c \"$QUERY\""
+    su $USER -c "$QUERY" 2>&1 ||
+    Error "cannot checkout module: $EXT_MODULE (never raised)"
+    
+    eval $UMASK
+    [ "$EXT_MODULE" = "$1" ] || mv $EXT_MODULE $1
+    cd - > /dev/null || true
 }
 
 # this function update a module
@@ -230,6 +226,9 @@ function CVS_update()
 
     # fix buggy cvs remote update
     chmod -R g+w *
+    if [ "$1" == "$MDTX" ]; then
+	chmod g-w supports.txt
+    fi
 
     eval $UMASK
     cd - > /dev/null 2>&1 || true

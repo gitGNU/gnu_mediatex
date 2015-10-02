@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.11 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: supportTree.c,v 1.12 2015/10/02 18:02:21 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -167,6 +167,7 @@ serializeSupports()
   Support *supp = 0;
   RGIT* curr = 0;
   int uid = getuid();
+  mode_t mask;
 
   logMemory(LOG_DEBUG, "serialize supports");
 
@@ -182,11 +183,14 @@ serializeSupports()
   logMemory(LOG_INFO, "Serializing the supports list file: %s", 
 	  path?path:"stdout");
   if (path && *path != (char)0) {
+    mask = umask(0177);
     if ((fd = fopen(path, "w")) == 0) {
       logMemory(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno));
       fd = stdout;
+      mask = umask(mask);
       goto error;
     }
+    mask = umask(mask);
     if (!lock(fileno(fd), F_WRLCK)) goto error;
   }
 

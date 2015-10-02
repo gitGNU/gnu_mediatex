@@ -7,9 +7,9 @@ There are 6 main meta-data files share between 3 categories.
 @item 3 Remotely shared collection files
 @end itemize
 All of theses file are locked by the kernel when parsing and serializing using the reader/writer algorithm.
-This ensure the different process will not read and modify the same ressource at same time. 
+This ensure the different processes will not read and modify the same ressource at same time. 
 
-The 3 shared collection files are processed to build a browsable @acronym{HTML} index (@pxref{misc}).
+The 3 shared collection files are processed to build the same browsable @acronym{HTML} index on each servers (@pxref{misc}).
 
 @menu
 Local server files:
@@ -37,7 +37,7 @@ Relational schema:
 @end itemize
 Below entities are all dupplicated for each collection:
 @itemize @bullet
-@item The @sc{Server} entity lists all the server (for an unique collection)
+@item The @sc{Server} entity lists all the servers
 @item The @sc{Image} entity lists on @sc{iso} images hold by a server
 @item The @sc{Archive} entity lists all archives known at running time
 @cindex archive
@@ -50,11 +50,11 @@ Below entities are all dupplicated for each collection:
 @multitable @columnfractions .20 .14 .10 .10 .10
 @headitem File @tab @actor{Publisher} @tab @activity{client} @tab @process{cgi} @tab @activity{server} 
 @item mediatex.conf @tab rw @tab rw @tab r @tab r
-@item supports.txt  @tab -  @tab rw @tab - @tab -  
-@item md5sums.txt   @tab -  @tab r  @tab - @tab rw 
+@item supports.txt  @tab r  @tab rw @tab - @tab -  
+@item md5sums.txt   @tab r  @tab r  @tab - @tab rw 
 @item catalog.txt   @tab rw @tab rw @tab - @tab -
 @item extract.txt   @tab rw @tab rw @tab - @tab r 
-@item servers.txt   @tab -  @tab rw @tab r @tab r
+@item servers.txt   @tab rw  @tab rw @tab r @tab r
 @end multitable
 
 @item Life cycle for local files:
@@ -66,11 +66,11 @@ Below entities are all dupplicated for each collection:
 @c @table @state
 @table @code
 @item diseased
-data remains on disk file which is up to date
+data remains on disk (file is up to date)
 @item loaded
-the file is loaded in memory
+the file is loaded into memory
 @item modified
-the last change on data remains in memory
+changes on data only remains in memory
 @end table
 
 @item Events in
@@ -78,16 +78,16 @@ the last change on data remains in memory
 @table @code
 @item load
 from @state{diseased} to @state{loaded}:@*
-a @process{Process} tells it need the file to be load
+a @process{Process} tells it needs the file to be load
 @item modify
 from @state{loaded} to @state{modified}:@*
-a @process{Process} tells it had modified the data
+a @process{Process} tells it has modified the data
 @item save
 from @state{modified} to @state{loaded}:@*
-an @activity{Activity} save all modifications on disk
+an @activity{Activity} saves all modifications on disk
 @item free
 from @state{loaded} to @state{diseased}:@*
-@activity{Server} reload the configuration
+an @activity{Activity} ends or will reload the data
 @end table
 @end itemize
 
@@ -96,40 +96,40 @@ from @state{loaded} to @state{diseased}:@*
 @image{mediatex-figures/data3,,,,}
 
 @itemize @bullet
-@note{} The @state{loaded} and @state{modified} states are group
+@note{} The @state{loaded} and @state{modified} states are grouped
 into the @state{inUse} meta-state.
 @item States
 @c @table @state
 @table @code
 @item diseased
-data remains on disk file which is up to date
+data remains on disk (file is up to date)
 @item loaded
-the file is loaded in memory
+the file is loaded into memory
 @item modified
-the last change on data remains in memory
+changes on data remains in memory
 @end table
 
-@item Events in
+@item Events in@*
 @note{} the number of threads using the data (n) is registered in 
 order to know if we may or not release memory.
 @c @table @event
 @table @code
 @item load (n+=1)
-a @process{Process} tells it need the file to be load@*
 from @state{diseased} to @state{loaded} if n==0 or@*
-from @state{inUse} to @state{inUse} if n>0
+from @state{inUse} to @state{inUse} if n>0@*
+a @process{Process} tells it needs the file to be load
 @item release (n-=1)
 from @state{inUse} to @state{inUse}:@*
-a @process{Process} tells it need the file to be load
+a @process{Process} tells it no more need the file
 @item modify
 from @state{loaded} to @state{modified}:@*
-a @process{Process} tells it had modified the data
+a @process{Process} tells it has modified the data
 @item save
 from @state{modified} to @state{loaded} if n==0:@*
-an @activity{Activity} save all modifications on disk
+an @activity{Activity} saves all modifications on disk
 @item disease
 from @state{loaded} to @state{diseased} if n==0:@*
-an @activity{Activity} which need place on memory unload the data
+an @activity{Activity} that needs place on memory unloads the data
 @end table
 @end itemize
 @end itemize

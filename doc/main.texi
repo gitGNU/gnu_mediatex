@@ -52,6 +52,7 @@ from @actorUserO
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
 @itemx @eventClientMiscSuppAdd
+@itemx @eventClientMiscFileAdd
 @itemx @eventClientMiscSuppDel
 @itemx @eventClientMiscSuppNote
 @itemx @eventClientMiscSuppCheck
@@ -88,6 +89,7 @@ Commands are detailed into the @mediatex{} specifications.
 @itemx @eventActorUserMail 
 to @actorUserO
 @item @eventActorPublisherMotd
+@itemx @eventActorPublisherMail 
 to @actorPublisherO
 @item @eventActorAdminMail
 to @actorAdminO
