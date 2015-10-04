@@ -1,15 +1,20 @@
 @cindex checksums file
 
-@dataChecksumO{} files are
-internally managed by the 
-@activityServer{} activity for each collections.
-@activity{Client} may asks @activity{Server} to refresh this file in order
-to read the last cache status into.
-Messages the @procScriptsCgi{}, @procClientSupp{} and 
-@procServerNotify{} processes send are very close to this file as
-they are using the same format: an header and a list of records.
+@activityServer{} backup its collection's status into the @dataChecksumO{} file.
+When @actorPublisherO{} or @activityClientO{} want to read into the last status, the need to ask @activityServerO{} the refresh this file.
 
-Relational schema:
+The Messages the @procScriptsCgi{}, @procClientSupp{} and 
+@procServerNotify{} processes exchange via socket are using the same 
+grammar language. There is  type for such messages:
+@itemize @bullet
+@item @code{DISK}: used to serialize the @dataChecksumO{} file
+@item @code{NOTIFY}: used by @activityServerO{}s to talk each others
+@item @code{UPLOAD}: used by @actorPublisherO{} to add new archives
+@item @code{CGI}: used by @procScriptsCgi{} to send @actorUserO{} queries 
+@item @code{HAVE}: used by @actorPublisherO{} to notify that a support is provided
+@end itemize
+
+When loaded into memory, such messages are handled useing the following relational schema:
 
 @image{mediatex-figures/mdtx-COLL.md5,,,,}
 
@@ -19,81 +24,104 @@ Relational schema:
 @item The @sc{Record} entity lists all informations we need to load/save and exchange about archive in the local cache for each collection.
 @end itemize
 
-There is 8 macro type of records
+There is 7 types of records
 @multitable @columnfractions .25 .15 .15 .25
 @headitem Type @tab type @tab host @tab extra 
-@item @code{FINALE_SUPPLY} @tab S @tab local  @tab absolute path
-@item @code{MALLOC_SUPPLY} @tab S @tab local  @tab @code{!malloc} 
-@item @code{LOCALE_SUPPLY} @tab S @tab local  @tab relative path 
-@item @code{REMOTE_SUPPLY} @tab S @tab remote @tab relative path
-@item @code{FINALE_DEMAND} @tab D @tab local  @tab mail
-@item @code{LOCALE_DEMAND} @tab D @tab local  @tab @code{!wanted}
-@item @code{TOKEEP_DEMAND} @tab D @tab local  @tab @code{!to-keep}
+@item @code{FINAL_DEMAND} @tab D @tab local @tab mail
+@item @code{LOCAL_DEMAND} @tab D @tab local @tab @code{!wanted}
 @item @code{REMOTE_DEMAND} @tab D @tab remote @tab @code{!wanted}
+@item @code{FINAL_SUPPLY} @tab S @tab local @tab absolute path
+@item @code{MALLOC_SUPPLY} @tab S @tab local @tab @code{!malloc} 
+@item @code{LOCAL_SUPPLY} @tab S @tab local @tab relative path 
+@item @code{REMOTE_SUPPLY} @tab S @tab remote @tab relative path
 @end multitable
+
+The @code{MALLOC_SUPPLY} is an internal state used when allocating the archive's data file into the @activityServerO{}'s cache.
 
 @item Linked entities
 @itemize @bullet
 @item 
 The @sc{Archive} entity reminds all archives the programm is currently using per collection.
 @cindex archive
-@item 
-The @sc{Server} entity, from @dataServers{}, lists all the remote servers per collection.
+@item
+The @sc{Server} entity, from 
+@dataServers{}, lists all the remote servers per collection.
 @end itemize
 
 @item Relations
 @itemize @bullet
 @item 
-The @sc{demands} relationhip lists all demand for an archive
+The @sc{localSupply} relationhip gives the archive available (@code{LOCAL_DEMAND}) on the local cache.
 @item 
-The @sc{remoteSupplies} relationhip lists all remotly available archives
+The @sc{finalSupplies} relationhip lists all supports presentely available on local host (@code{FINAL_SUPPLY}).
 @item 
-The @sc{finaleSupplies} relationhip lists all supports actually mounted.
+The @sc{remoteSupplies} relationhip lists all archives available remotely (@code{REMOTE_SUPPLY})from the other @activityServerO{}.
 @item 
-The @sc{localSupply} relationhip points on an archive occurancy available on the local cache.
+The @sc{demands} relationhip lists all demand (@code{FINAL_DEMAND}, @code{LOCAL_DEMAND} and @code{REMOTE_DEMAND}) for an archive
 @end itemize
 @end itemize
 
-When cache is loaded, archive objects are never free but marked as deleted.
-A reader/writer lock is used next to unload cache and then free archive object. 3 other locks are also used:
+All the time cache is loaded, archive objects are never free but eventually marked as deleted.
+The cache @acronym{api} is thread safe. 3 locks are used in order to allow concurrent access:
 @enumerate
 @item MUTEX_ALLOC: when modifying the cache size
 @item MUTEX_COMPUTE: when computing archive state
-@item MUTEX_KEEP: when adjusting the archive time to live in cache
+@item MUTEX_KEEP: when adjusting the archive time to live into the cache
+@item MUTEX_TARGET: when creating a new target file
 @end enumerate
+
+Example:@*
+@example
+Headers
+  Collection hello               
+  Type       DISK
+  Server     adc2f7b78c43354df5a86efae3dfe562
+  DoCypher   FALSE            
+Body          
+#                date                             host                             hash                size extra
+D 2015-10-04,23:40:13 adc2f7b78c43354df5a86efae3dfe562 022a34b2f9b893fba5774237e1aa80ea               24075 test@@test.org
+S 2015-10-04,23:40:28 adc2f7b78c43354df5a86efae3dfe562 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+S 2015-10-04,23:40:24 aed9eaf90811167798cd79cfe21f929f 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+S 2015-10-04,23:34:30 adc2f7b78c43354df5a86efae3dfe562 99b882d1ba57c2c83a53a719e2433518                1004 2015-10/mediatex.css
+@end example
 
 Grammar:
 @example
-YEAR  [[:digit:]]@{4@}
-MONTH [[:digit:]]@{2@}
-DAY   [[:digit:]]@{2@}
-HOUR  [[:digit:]]@{2@}
-MIN   [[:digit:]]@{2@}
-SEC   [[:digit:]]@{2@}
-DATE  @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
+YEAR    [[:digit:]]@{4@}
+MONTH   [[:digit:]]@{2@}
+DAY     [[:digit:]]@{2@}
+HOUR    [[:digit:]]@{2@}
+MIN     [[:digit:]]@{2@}
+SEC     [[:digit:]]@{2@}
+DATE    @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
 
-IP [[:digit:]]@{1,3@}\.[[:digit:]]@{1,3@}\.\
-   [[:digit:]]@{1,3@}\.[[:digit:]]@{1,3@}
+ /* MAX_SIZE_MD5 = 32 */
+HASH    [[:xdigit:]]@{32@}
 
- /* MAX_SIZE_HASH = 32 */
-HASH    [[:xdigit:]]+     
+ /* MAX_SIZE_STRING = 511 */
+STRING  [^[:blank:]\r\n]@{1,511@}
 
- /* MAX_SIZE_COLL = 20 */
-COLL    [^[:blank:]\r\n]+
+file: //empty file 
+    | header
+    | header lines
 
-file: lines
+header: HEADERS hLines BODY
+
+hLines: hLines hLine
+     | hLine
+
+hLine: COLL STRING
+     | SERVER STRING
+     | MSGTYPE MSGVAL
+     | DOCYPHER
 
 lines: lines newLine
      | newLine
 
 newLine: line
 
-line: vanillaLine extraLine
-    | vanillaLine
-
-vanillaLine: (-?[Ss]|-?[Dd]) DATE IP HASH [[:digit:]]+ COLL
-
-extraLine: [^[:blank:]\r\n]+
+line: s DATE HASH HASH [[:digit:]]+ STRING
+    | d DATE HASH HASH [[:digit:]]+ STRING
 @end example
 
 Code:
@@ -107,3 +135,31 @@ Code:
 @itemx src/memory/openClose.c
 @itemx src/server/cache.c
 @end table
+
+This code is use to get the record's type:@*
+@example
+RecordType rc = UNDEF_RECORD;
+
+switch (self->type & 0x3) @{
+case DEMAND:
+  if (!self->server->isLocalhost)  
+    rc = REMOTE_DEMAND;
+  else if (self->extra[0] != '!')
+    rc = FINAL_DEMAND;
+  else if (self->extra[1] == 'w')
+    rc = LOCAL_DEMAND;
+  break;
+
+case SUPPLY:
+  if (!self->server->isLocalhost)  
+    rc = REMOTE_SUPPLY;
+  else if (self->extra[0] == '/')
+    rc = FINAL_SUPPLY;
+  else if (self->extra[0] != '!')
+    rc = LOCAL_SUPPLY;
+  else if (self->extra[1] == 'm')
+    rc = MALLOC_SUPPLY;
+  break;
+@}
+@end example
+

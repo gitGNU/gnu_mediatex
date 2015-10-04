@@ -18,7 +18,11 @@ Flood diagram:
 @item Events in
 @table @code
 @item @eventToolsSyslogMessage 
-from @activityClient{}, @activityServer{} and @activityScripts{} to @procToolsSyslog
+from 
+@activityClient{}, 
+@activityServer{} and 
+@activityScripts{}
+ to @procToolsSyslog
 @item @eventToolsApacheHttpGet 
 @itemx @eventToolsApacheHttpPost 
 @itemx @eventToolsApacheStartDownload

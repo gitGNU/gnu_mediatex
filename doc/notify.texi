@@ -3,11 +3,12 @@
 @process{Notify} process exchanges information on cache supplies and demand with other @activity{Mediatex} servers.
 The policy is, servers tells each others:
 @itemize @bullet
-@item local pending demands they records from 
+@item local final demands they records from 
 @actorUser{},
 @item files presently in local cache that may be useful to others,
 @cindex nat
 @item @acronym{NAT} servers forward messages unchanged to its clients
+@item @acronym{NAT} servers relay final demands from its clients
 @end itemize
 
 @note{} messages only contains records related the original sender servers.
@@ -40,10 +41,8 @@ to a remote @process{notify} process.
 @end itemize
 @end itemize
 
-Example:
-@example
-...
-@end example
+Example: Servers communication between private networks@*
+@image{mediatex-figures/notifying,,,,}
 
 Code:
 @table @file

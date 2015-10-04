@@ -146,6 +146,7 @@
 
 *** TODO
 
+- add key word index into paragraphe of the documentation
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.6 2015/09/04 15:30:21 nroche Exp $
+ * Version: $Id: utconfFile.c,v 1.7 2015/10/04 22:15:48 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -166,9 +166,6 @@ main(int argc, char** argv)
       break;
     case confPOWSUPP:
       strcpy(token, "POWSUPP");
-      break;
-     case confPOWIMAGE:
-      strcpy(token, "POWIMAGE");
       break;
     case confFACTSUPP:
       strcpy(token, "FACTSUPP");

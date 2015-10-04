@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.9 2015/08/30 17:08:01 nroche Exp $
+ * Version: $Id: cacheTree.h,v 1.10 2015/10/04 22:15:50 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *
@@ -47,10 +47,9 @@ typedef enum {
   FINAL_DEMAND = 16, 
   LOCAL_DEMAND = 32,
   REMOTE_DEMAND = 64,
-  TOKEEP_DEMAND = 128, // NO MORE USED !
   ALL_SUPPLY    = 1|2|4,
-  ALL_DEMAND    = 16|32|64|128,
-  ALL_RECORD    = 1|2|4|16|32|64|128,
+  ALL_DEMAND    = 16|32|64,
+  ALL_RECORD    = 1|2|4|16|32|64,
 } RecordType;
 
 // cache content

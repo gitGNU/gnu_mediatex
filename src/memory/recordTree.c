@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: recordTree.c,v 1.16 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: recordTree.c,v 1.17 2015/10/04 22:15:50 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *
@@ -76,14 +76,11 @@ cmpRecord(const void *p1, const void *p2)
   if (!rc) rc = cmpArchive(&a1->archive, &a2->archive);
   if (!rc) rc = cmpServer(&a1->server, &a2->server);
 
-  // dont sort on REMOVE flag!
-  //if (!rc) rc = (a1->type & 0x3) - (a2->type & 0x3); 
-  
   // do sort en REMOVE flag!
   if (!rc) rc = a1->type - a2->type; 
 
   if (!rc) {
-    // extra should not but may be 0
+    // extra should not but may be null
     if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
       rc = strcmp(a1->extra, a2->extra);
     if (isEmptyString(a1->extra) && !isEmptyString(a2->extra))
@@ -122,7 +119,7 @@ cmpRecordSize(const void *p1, const void *p2)
   if (!rc) rc = (a1->type & 0x3) - (a2->type & 0x3); 
 
   if (!rc) {
-    // extra should not but may be 0
+    // extra should not but may be null
     if ((a1->type & 0x3) == DEMAND) {
       if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
 	rc = strcmp(a1->extra, a2->extra);
@@ -312,32 +309,21 @@ getRecordType(Record* self)
   case DEMAND:
     if (!self->server->isLocalhost)  
       rc = REMOTE_DEMAND;
-    else {
-	if (self->extra[0] != '!')
-	  rc = FINAL_DEMAND;
-	else {
-	  if (self->extra[1] == 'w')
-	    rc = LOCAL_DEMAND;
-	  if (self->extra[1] == 't')
-	    rc = TOKEEP_DEMAND;
-	}
-    }
+    else if (self->extra[0] != '!')
+      rc = FINAL_DEMAND;
+    else if (self->extra[1] == 'w')
+      rc = LOCAL_DEMAND;
     break;
+
   case SUPPLY:
     if (!self->server->isLocalhost)  
       rc = REMOTE_SUPPLY;
-    else {
-      if (self->extra[0] == '/')
-	rc = FINAL_SUPPLY;
-      else {
-	if (self->extra[0] != '!')
-	  rc = LOCAL_SUPPLY;
-	else {
-	  if (self->extra[1] == 'm')
-	    rc = MALLOC_SUPPLY;
-	}
-      }
-    }
+    else if (self->extra[0] == '/')
+      rc = FINAL_SUPPLY;
+    else if (self->extra[0] != '!')
+      rc = LOCAL_SUPPLY;
+    else if (self->extra[1] == 'm')
+      rc = MALLOC_SUPPLY;
     break;
   }
 
@@ -373,8 +359,6 @@ strRecordType2(RecordType type)
     return "LOCAL_DEMAND";
   case REMOTE_DEMAND:
     return "REMOTE_DEMAND";
-  case TOKEEP_DEMAND:
-    return "TOKEEP_DEMAND";
   default:
     return "UNDEF_RECORD";
   }

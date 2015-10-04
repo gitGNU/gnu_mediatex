@@ -58,8 +58,8 @@ from @procServerDeliver{} to @procScriptsDeliver
 @item Data in
 @table @code
 @c @item @dataConf
-@item @dataConfO (@pxref{mdtx.conf})
-@item @dataServers
+@item @dataConfO{} (@pxref{mdtx.conf})
+@item @dataServersO{} (@pxref{servers.txt})
 @end table
 
 @item Data in/out

@@ -10,7 +10,7 @@ Relational schema:
 @item Proper entities
 @itemize @bullet
 @item 
-The @sc{Container} entity lists all the container files from where archives are extracted. Containes are identified by there type (@sc{iso},@sc{tar}...) and the first file needed for extraction (@file{archive-part1.rar}), also called its first parent.
+The @sc{Container} entity lists all the container files from where archives are extracted. A Container is identified by its type (@sc{iso},@sc{tar}...) and the first file needed for extraction (ex: @file{archive-part1.rar}), also called its first parent.
 @end itemize
 
 @item Linked entities
@@ -22,11 +22,11 @@ The @sc{Archive} entity lists the archive's data files
 @item Relations
 @itemize @bullet
 @item 
-The @sc{fromAsso} relationhip enumerate the content of a container. For instance, all files we have in a tarball archive: @code{tar -tf archive.tar}.
+The @sc{fromAsso} relationhip enumerate the content of a container. For instance, all files there is into a tarball archive: @code{tar -tf archive.tar}.
 @item
-The @sc{parents} relationhip gives all the parts a container is using to perform extraction. (@file{archive-part1.rar}@dots{} @file{archive-part@var{N}.rar}). 
+The @sc{parents} relationhip gives all the parts a container is using to perform extraction. (@file{archive-part1.rar}, @dots{}, @file{archive-part@var{N}.rar}). 
 @item 
-@sc{toContainer} relationship gives the container object an Archive may provides. @note{} we cannot have several containers for an archive: in the case of a compressed tarball for instance, we have to choose between the 2 possibility (@sc{gz} or @sc{tgz}).
+The @sc{toContainer} relationship gives the container object an Archive may provides. @note{} we cannot have several containers for an archive: in the case of a compressed tarball for instance, we have to choose between the two possibilities (@sc{gz} or @sc{tgz}).
 @end itemize
 @end itemize
 

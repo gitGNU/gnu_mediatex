@@ -53,7 +53,8 @@ specific collections.
 @end itemize
 @end itemize
 
-@note{} @dataServers{} concate the @sc{imageFiles}, @sc{networks} and @sc{gateways} relationships from all the hosts sharing a collection.
+@note{} 
+@dataServers{} concate the @sc{imageFiles}, @sc{networks} and @sc{gateways} relationships from all the hosts sharing a collection.
 
 Example:
 @example

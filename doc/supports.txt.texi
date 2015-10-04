@@ -1,8 +1,8 @@
 @cindex supports file
 
-The @dataSuppO{} file 
-is enterly managed by the @activityClient{}. 
+@activityClient{} backup the support's status into the @dataSuppO{} file.
 No other process access to it, not even for reading.
+Supports 
 
 Relational schema:
 
@@ -14,6 +14,18 @@ Relational schema:
 @item The @sc{Support} entity list all the local supports.
 @end itemize
 
+There is 2 kind of records
+@itemize @bullet
+@item external support: @file{relative path}@*
+@actorPublisher{}
+only provides theses supports manually only when they are requiered by @activityClient{}. After the supports are no more accessed by 
+@mediatexO{}.
+External support is a device (@cdrom{}, @usb{} key @dots{}), or a file @actorPublisherO{} know how to access from the local host (@s3{}, @nfs{} @dots{}).
+
+@item external file: @file{absolute path}@*
+Theses supports are files supposed to be permantly available on the local host. @activityClientO{} access diretely to them without needing to ask @actorPublisherO{} to provide them.
+@end itemize
+
 @item Linked entities
 @itemize @bullet
 @item The @sc{Collection} entity, from 
@@ -23,18 +35,24 @@ Relational schema:
 @item Relations
 @itemize @bullet
 @item 
-The @sc{collections} relationship list all the collection a specific support is use for. This relation is not record into this file but into 
+The @sc{collections} relationship list all the collection a specific support is share with. This relation is not recorded into this file but into 
 @dataConfO{}.
 @end itemize
 @end itemize
 
-Example: (line is cut into 3 parts to display it here) 
+Example: (line is cut to display it here)
 @example
 #         firstSeen           lastCheck            lastSeen@dots{}
 2010-01-01,01:00:00 2010-01-01,01:00:00 2010-01-01,01:00:00@dots{}
 
-@dots{}                       quickHash                         fullHash@dots{}
+@dots{}                     quickMd5sum                       fullMd5sum@dots{}
 @dots{}de5008799752552b7963a2670dc5eb18 de5008799752552b7963a2670dc5eb18@dots{}
+
+@dots{}                             quickShasum@dots{}
+@dots{}6ed0e67ccd882f6e94f931a07834bc6bc6394583@dots{}
+
+@dots{}                              fullShasum@dots{}
+@dots{}6ed0e67ccd882f6e94f931a07834bc6bc6394583@dots{}
 
 @dots{}size       status name
 @dots{}391168         ok ex-cd1
@@ -50,7 +68,8 @@ MIN     [[:digit:]]@{2@}
 SEC     [[:digit:]]@{2@}
 DATE    @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
 
-HASH    [[:xdigit:]]@{32@}      
+MD5     [[:xdigit:]]@{32@}      
+SHA     [[:xdigit:]]@{40@}      
 STATUS  [^[:blank:]\r\n]@{1,10@} 
 NAME    [^[:blank:]\r\n]@{1,64@} 
 
@@ -59,7 +78,7 @@ file: lines
 lines: lines line
      | line
 
-line: DATE DATE DATE HASH HASH [[:digit:]]+ STATUS NAME
+line: DATE DATE DATE MD5 MD5 SHA SHA [[:digit:]]+ STATUS NAME
 @end example
 
 Code:
@@ -69,3 +88,19 @@ Code:
 @itemx src/parser/supportFile.l
 @itemx src/parser/supportFile.y
 @end table
+
+This function is used to differenciate external supports from external supports's files:@*
+@example
+int 
+isSupportFile(Support* self)
+@{
+  int rc = FALSE;
+
+  checkSupport(self);
+  rc = (*self->name == '/');
+  
+ error:
+  return rc;
+@}
+@end example
+

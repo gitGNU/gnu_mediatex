@@ -12,23 +12,23 @@ Relational schema:
 @item 
 The @sc{Archive} entity lists all archive's data files.
 @item 
-The @sc{Document} entity groups records (parts or versions of a same document for instance).
+The @sc{Document} entity groups archives (data, parts, versions time-stamps @dots{}) related to an archived document.
 @item 
-The @sc{Category} entity groups document by themes.
+The @sc{Category} entity groups documents by themes (thesaurus).
 @item 
-The @sc{Human} entity lists all the document's contributors.
+The @sc{Human} entity lists humans related to a document.
 @item 
-The @sc{Role} entity lists all titles a human contributing to a document may have.
-The @sc{*_Carac} entities are not truly implemented in order to consume less memory.
+The @sc{Role} entity lists all titles a human contributing to a document may have (ex: producer, actor for a movie).
+@item
+The @sc{*_Carac} entities are unidirectional in order to consume less memory.
 @end itemize
 
 @item Relations
 @itemize @bullet
 @item 
-The @sc{asso_role} relationship matches human, roles and document.
+The @sc{asso_role} relationship matches a human, a role and a document.
 @item 
-The @sc{contains} relationship matches ether humans and containers,
-documents and containers or documents and records.
+The @sc{contains} relationship matches ether humans or documents to categories, or records to documents.
 @end itemize
 @end itemize
 

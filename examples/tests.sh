@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.13 2015/10/04 14:22:27 nroche Exp $
+# * Version: $Id: tests.sh,v 1.14 2015/10/04 22:15:50 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -732,7 +732,7 @@ function test16()
 
 	for SERV in serv1 serv2 serv3; do
 	    stopInitdScript $SERV
-	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
 	    rm -f /var/cache/mediatex/${SERV}/md5sums/${SERV}-hello.md5
 	    startInitdScript $SERV
 	done
@@ -777,26 +777,10 @@ function test17()
 	mdtxP "srv notify" serv1
 
 	mdtxP "srv save" serv3
-	finalQuestion "does 3rd server see iso1 on first support ?" \
-		      "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+	question "does 3rd server see iso1 on 1st server ?" \
+	    "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
 
-    else
-	topo "Cleanup"
-	mdtxP "del supp iso1 from coll hello" serv1
-	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
-	reloadInitdScript serv1
-	stopInitdScript serv3
-	rm -f /var/cache/mediatex/serv3/md5sums/serv3-hello.md5
-	startInitdScript serv3
-    fi	    
-}
-
-# Server 3 retrieve the archive
-function test18()
-{
-    if [ "x$1" != "xclean" ]; then
-	topo "Server 3 retrieve the archive"
- 
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 deliver logo.png (mail sent) ?" \
@@ -807,22 +791,28 @@ function test18()
 	mdtxP "srv notify" serv2
 	mdtxP "srv save" serv1
 	mdtxP "srv save" serv2
+	mdtxP "srv save" serv3
 	finalQuestion "does serv1 and serv2 are no more looking for logo.png ?" \
-		 "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5 \
-                      /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
-	[ $TEST_OK -eq 0 ] && return
+	    "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5 \
+                 /var/cache/mediatex/serv2/md5sums/serv2-hello.md5 \
+                 /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
     else
 	topo "Cleanup"
+	mdtxP "del supp iso1 from coll hello" serv1
+	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
+	reloadInitdScript serv1
+	stopInitdScript serv3
 	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logoP1.iso
 	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logoP1.cat
 	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logo.tgz
 	rm -fr /var/cache/mediatex/serv3/cache/serv3-hello/logo
-	reloadInitdScript serv3
-    fi
+	rm -f /var/cache/mediatex/serv3/md5sums/serv3-hello.md5
+	startInitdScript serv3
+    fi	    
 }
 
 # Move CVS repository from serv1 to serv2
-function test19()
+function test18()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Move CVS repository from serv1 to serv2"
@@ -862,7 +852,7 @@ function test19()
 }
 
 # Audit on server 1
-function test20()
+function test19()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Audit on server"
@@ -883,7 +873,7 @@ function test20()
 }
 
 # Make all functionnal for manuals tests
-function test21()
+function test20()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Make all functionnal for manuals tests"

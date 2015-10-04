@@ -9,6 +9,22 @@
 @strong{TODO:}
 @end macro
 
+@macro cdrom
+@acronym{CDROM}
+@end macro
+
+@macro usb
+@acronym{USB}
+@end macro
+
+@macro nfs
+@acronym{NFS}
+@end macro
+
+@macro s3
+@acronym{S3}
+@end macro
+
 @c Meta
 
 @macro actor{label}
@@ -37,7 +53,6 @@
 @actor{Admin}
 @end macro
 @macro actorAdmin
-@cindex admin user
 @actorAdminO{} (@pxref{Who})
 @end macro
 
@@ -45,7 +60,6 @@
 @actor{Publisher}
 @end macro
 @macro actorPublisher
-@cindex publisher user
 @actorPublisherO{} (@pxref{Who})
 @end macro
 
@@ -53,7 +67,6 @@
 @actor{User}
 @end macro
 @macro actorUser
-@cindex web user 
 @actorUserO{} (@pxref{Who})
 @end macro
 
@@ -61,7 +74,6 @@
 @actor{Date}
 @end macro
 @macro actorDate
-@cindex date
 @actorDateO{} (@pxref{Who})
 @end macro
 
@@ -71,7 +83,6 @@
 @file{/etc/@/mediatex/@/mdtx.conf}
 @end macro
 @macro dataConf
-@cindex configuration file
 @dataConfO{} (@pxref{mdtx.conf})
 @end macro
 
@@ -79,7 +90,6 @@
 @file{~mdtx/@/cvs/@/mdtx/@/supports.txt}
 @end macro
 @macro dataSupp
-@cindex supports list file
 @dataSuppO{} (@pxref{supports.txt})
 @end macro
 
@@ -87,7 +97,6 @@
 @file{~mdtx/@/md5sums/@/mdtx-COLL.md5}
 @end macro
 @macro dataChecksum
-@cindex cache's checksums file
 @dataChecksumO{} (@pxref{mdtxCOLL.md5})
 @end macro
 
@@ -95,7 +104,6 @@
 @file{/etc/@/mediatex/@/mdtx-COLL/@/catalogXXX.txt}
 @end macro
 @macro dataCatalog
-@cindex index catalog file
 @dataCatalogO{} (@pxref{catalog.txt})
 @end macro
 
@@ -103,14 +111,12 @@
 @file{/etc/@/mediatex/@/mdtx-COLL/@/extractXXX.txt}
 @end macro
 @macro dataExtract
-@cindex extraction rules file
 @dataExtractO{} (@pxref{extract.txt})
 @end macro
 
 @macro dataServersO
 @file{/etc/@/mediatex/@/mdtx-@var{COLL}/@/servers.txt}
 @end macro
-@cindex servers list file
 @macro dataServers
 @dataServersO{} (@pxref{servers.txt})
 @end macro
@@ -127,7 +133,6 @@
 
 @macro activityToolsO
 @activity{Tools}
-@cindex tools
 @end macro
 @macro activityTools
 @activityToolsO{} 
@@ -136,7 +141,6 @@
 
 @macro activityScriptsO
 @activity{Scripts}
-@cindex scripts
 @end macro
 @macro activityScripts
 @activityScriptsO{} 
@@ -145,7 +149,6 @@
 
 @macro activityServerO
 @activity{Server}
-@cindex server
 @end macro
 @macro activityServer
 @activityServerO{} 
@@ -166,7 +169,6 @@
 @macro procToolsSyslog
 @process{Syslog} (@pxref{Syslog})
 @end macro
-
 @macro procToolsApache
 @process{Apache} (@pxref{Apache})
 @end macro
@@ -174,7 +176,6 @@
 @macro procToolsExim
 @process{Exim} (@pxref{Exim})
 @end macro
-
 @macro procToolsSsh
 @process{Ssh} (@pxref{Ssh})
 @end macro
@@ -182,7 +183,6 @@
 @macro procToolsCvs
 @process{Cvs} (@pxref{Cvs})
 @end macro
-
 @macro procToolsCron
 @process{Cron} (@pxref{Cron})
 @end macro
@@ -191,7 +191,6 @@
 @macro procScriptsInitd
 @process{init.d} (@pxref{init.d})
 @end macro
-
 @macro procScriptsCgi
 @process{cgiClient} (@pxref{cgiClient})
 @end macro
@@ -199,7 +198,6 @@
 @macro procScriptsCron
 @process{conrHourly-cronDaily} (@pxref{cronHourly-cronDaily})
 @end macro
-
 @macro procScriptsInitRemovePurge
 @process{init-remove-purge} (@pxref{init-remove-purge})
 @end macro
@@ -207,7 +205,6 @@
 @macro procScriptsAddDelUser
 @process{addUser-delUser} (@pxref{addUser-delUser})
 @end macro
-
 @macro procScriptsNewFreeClean
 @process{new-free-clean} (@pxref{new-free-clean})
 @end macro
@@ -215,7 +212,6 @@
 @macro procScriptsUpdateCommit
 @process{update-commit} (@pxref{update-commit})
 @end macro
-
 @macro procScriptsBind
 @process{bind-unbind} (@pxref{bind-unbind})
 @end macro
@@ -223,7 +219,6 @@
 @macro procScriptsMount
 @process{mount-umount} (@pxref{mount-umount})
 @end macro
-
 @macro procScriptsDeliver
 @process{deliver} (@pxref{deliver})
 @end macro
@@ -232,7 +227,6 @@
 @macro procServerCache
 @process{cache} (@pxref{cache})
 @end macro
-
 @macro procServerExtract
 @process{extract} (@pxref{extract})
 @end macro
@@ -240,7 +234,6 @@
 @macro procServerCgiSrv
 @process{cgiServer} (@pxref{cgiServer})
 @end macro
-
 @macro procServerHave
 @process{have} (@pxref{have})
 @end macro
@@ -248,7 +241,6 @@
 @macro procServerNotify
 @process{notify} (@pxref{notify})
 @end macro
-
 @macro procServerDeliver
 @process{delivering} (@pxref{delivering})
 @end macro
@@ -257,7 +249,6 @@
 @macro procClientServ
 @process{serv} (@pxref{serv})
 @end macro
-
 @macro procClientConf
 @process{conf} (@pxref{conf})
 @end macro
@@ -269,7 +260,6 @@
 @macro procClientMisc
 @process{misc} (@pxref{misc})
 @end macro
-
 @macro procClientMotd
 @process{motd} (@pxref{motd})
 @end macro
