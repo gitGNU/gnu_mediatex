@@ -21,7 +21,7 @@
 @acronym{NFS}
 @end macro
 
-@macro s3
+@macro sss
 @acronym{S3}
 @end macro
 

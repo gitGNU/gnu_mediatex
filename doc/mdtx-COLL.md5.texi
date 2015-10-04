@@ -78,11 +78,11 @@ Headers
   Server     adc2f7b78c43354df5a86efae3dfe562
   DoCypher   FALSE            
 Body          
-#                date                             host                             hash                size extra
-D 2015-10-04,23:40:13 adc2f7b78c43354df5a86efae3dfe562 022a34b2f9b893fba5774237e1aa80ea               24075 test@@test.org
-S 2015-10-04,23:40:28 adc2f7b78c43354df5a86efae3dfe562 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-S 2015-10-04,23:40:24 aed9eaf90811167798cd79cfe21f929f 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-S 2015-10-04,23:34:30 adc2f7b78c43354df5a86efae3dfe562 99b882d1ba57c2c83a53a719e2433518                1004 2015-10/mediatex.css
+#                date    host    hash   size extra
+D 2015-10-04,23:40:13 adc2@dots{} 022a@dots{}  24075 test@@test.org
+S 2015-10-04,23:40:28 adc2@dots{} 1a16@dots{}  20480 logoP1.cat
+S 2015-10-04,23:40:24 aed9@dots{} 1a16@dots{}  20480 logoP1.cat
+S 2015-10-04,23:34:30 adc2@dots{} 99b8@dots{}   1004 2015-10/mediatex.css
 @end example
 
 Grammar:

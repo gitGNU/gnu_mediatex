@@ -27,3 +27,5 @@ mediatex.pdf
 mediatex.ps
 # make pdf
 mediatex.t2p
+# make dvi
+mediatex.t2d

@@ -20,7 +20,7 @@ There is 2 kind of records
 @actorPublisher{}
 only provides theses supports manually only when they are requiered by @activityClient{}. After the supports are no more accessed by 
 @mediatexO{}.
-External support is a device (@cdrom{}, @usb{} key @dots{}), or a file @actorPublisherO{} know how to access from the local host (@s3{}, @nfs{} @dots{}).
+External support is a device (@cdrom{}, @usb{} key @dots{}), or a file @actorPublisherO{} know how to access from the local host (@sss{}, @nfs{} @dots{}).
 
 @item external file: @file{absolute path}@*
 Theses supports are files supposed to be permantly available on the local host. @activityClientO{} access diretely to them without needing to ask @actorPublisherO{} to provide them.
