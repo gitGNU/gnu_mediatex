@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: notify.c,v 1.18 2015/09/04 15:30:28 nroche Exp $
+ * Version: $Id: notify.c,v 1.19 2015/10/04 14:22:27 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -92,7 +92,7 @@ notifyArchive(NotifyData* data, Archive* archive)
   // look for a matching local supply
   if (archive->state >= AVAILABLE) {
     data->found = TRUE;
-    logMain(LOG_INFO, "found an archive to notify: %s:%lli", 
+    logMain(LOG_INFO, "found a local supply to notify: %s:%lli", 
 	    archive->hash, archive->size);
     if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
     goto end;
@@ -142,7 +142,7 @@ getWantedRemoteArchives(Collection* coll)
     while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) != REMOTE_DEMAND) continue;
 
-      logMain(LOG_INFO, "find a remote demand to work on: %s:%lli",
+      logMain(LOG_DEBUG, "working on remote demand: %s:%lli",
 	      archive->hash, archive->size);
       if (!rgInsert(ring, archive)) goto error;
       break;
@@ -170,6 +170,7 @@ addFinalDemands(NotifyData* data)
 {
   int rc = FALSE;
   Collection* coll = 0;
+  Server* localhost = 0;
   Archive* archive = 0;
   Record* record = 0;
   Record* demand = 0;
@@ -181,27 +182,49 @@ addFinalDemands(NotifyData* data)
   checkCollection(coll);
   logMain(LOG_DEBUG, "addFinalDemands");
 
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr)) 
-	!= 0) {
+  if (!(localhost = getLocalHost(coll))) goto error;
+
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state != WANTED) continue;
+    
+    // add final demand
+    curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
-      
-      // final demand: add it
       if (getRecordType(record) == FINAL_DEMAND) {
 
 	logMain(LOG_INFO, "found a final demand to notify: %s:%lli",
 		archive->hash, archive->size);
 	if (!(extra = createString("!wanted"))) goto error;
-	if (!(demand = newRecord(coll->localhost, archive, 
-				 DEMAND, extra))) goto error;
+	if (!(demand = newRecord(coll->localhost, archive, DEMAND, extra))) 
+	  goto error;
 	extra = 0;
 	if (!rgInsert(data->toNotify, demand)) goto error;
 	demand = 0;
 	break;
       }
     }
-  }
 
+    // if localhost is a gateway...
+    if (isEmptyRing(coll->localhost->gateways)) continue;
+
+    // ...relay NAT client's final demand too (as our)
+    curr2 = 0;
+    while ((record = rgNext_r(archive->demands, &curr2))) {
+      if (getRecordType(record) == REMOTE_DEMAND &&
+	rgShareItems(localhost->gateways, record->server->networks)) {
+
+	logMain(LOG_INFO, "found a remote demand to manage: %s:%lli",
+		record->archive->hash, record->archive->size);
+	if (!(extra = createString("!wanted"))) goto error;
+	if (!(demand = newRecord(coll->localhost, record->archive, DEMAND, extra))) 
+	  goto error;
+	extra = 0;
+	if (!rgInsert(data->toNotify, demand)) goto error;
+	demand = 0;
+      }
+    }
+  }
+ 
   rc = TRUE;
  error:
   if (!rc) {
@@ -484,6 +507,7 @@ int acceptRemoteNotify(Connexion* connexion)
   while ((record = rgHead(connexion->message->records))) {
     // record remains into the cache
     if (!addCacheEntry(coll, record)) goto error3;
+
     rgRemove(connexion->message->records);
   }
   

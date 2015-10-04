@@ -64,12 +64,12 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @menu
 * Overview::                    General purpose and information.
 * Invoking Mediatex::	        Tutorial.
-* Communication model::	        Main specifications.
-* Relational schema::           Data files descriptions.
-* Conceptual model::	        Details specifications.
+* Communication model::	        Main specification.
+* Relational schema::           Data files description.
+* Conceptual model::	        Detailed specification.
 * Use cases::                   Configuration examples.
-* Consistency howto::           Consistency howto.
-* Reporting bugs::              Sending bug reports and feature suggestions.
+* Consistency how-to::          Consistency how-to.
+* Reporting bugs::              Sending bug reports and debug suggestions.
 * GNU Free Documentation License:: Copying and sharing this documentation.
 * Concept index::	        Index of concepts.
 @end menu
@@ -98,8 +98,8 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @chapter Use cases
 @include useCase.texi
 
-@node Consistency howto
-@chapter Consistency howto
+@node Consistency how-to
+@chapter Consistency how-to
 @include consistency.texi
 
 @node Reporting bugs

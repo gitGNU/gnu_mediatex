@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.12 2015/09/21 01:01:49 nroche Exp $
+# * Version: $Id: tests.sh,v 1.13 2015/10/04 14:22:27 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -49,7 +49,7 @@ DEBUG_SERVER=0
 ## ADDON_SERVER=gdb
 ## cf: gdb -ex "set args -c serv1" -ex "r" mediatexd
 
-# $1 topo to display
+# $1: topo to display
 function topo()
 {
     echo "*************************************************************"
@@ -60,8 +60,8 @@ function topo()
     logger -p local2.NOTICE "******************************************"
 }
 
-# $1 query to display
-# $2 mdtx user (serv1 by default)
+# $1: query to display
+# $2: mdtx user (serv1 by default)
 function query()
 {
     QUERY=$1
@@ -74,8 +74,8 @@ function query()
     logger -p local2.NOTICE "++++++++++++++++++++++++++++++++++++++++++"
 }
 
-# $1 admin query
-# $2 mdtx user (serv1 by default)
+# $1: admin query
+# $2: mdtx user (serv1 by default)
 function mdtxA()
 {
     QUERY=$1
@@ -84,8 +84,8 @@ function mdtxA()
     mediatex -c $SERVER $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT $QUERY 
 }
 
-# $1 publisher query
-# $2 mdtx user (serv1 by default)
+# $1: publisher query
+# $2: mdtx user (serv1 by default)
 function mdtxP()
 {
     QUERY=$1
@@ -96,8 +96,8 @@ mediatex $QUERY
 EOF
 }
 
-# $1 question to ask
-# $2 command to exec before
+# $1: question to ask
+# $2: command to exec before
 function question()
 {
     if [ ! -z "$2" ]; then
@@ -115,8 +115,8 @@ function question()
     esac
 }
 
-# $1 note to display
-# $2 command to exec before
+# $1: note to display
+# $2: command to exec before
 function notice()
 {
     if [ ! -z "$2" ]; then
@@ -128,15 +128,18 @@ function notice()
     echo "> $1"
 }
 
+# $1: mdtx user (serv1 by default)
 function yourMail()
 {
-    echo "> Please, browse https://localhost/~serv1-hello"
+    SERVER=${1-serv1}
+
+    echo "> Please, browse https://localhost/~${SERVER}-hello"
     notice "ask for the logo file and give an email address."
     read -p "> push a key to continue"
 }
 
-# $1 question to ask
-# $2 file to display
+# $1: question to ask
+# $2: file to display
 function finalQuestion()
 {
     echo "**********************************"
@@ -147,8 +150,8 @@ function finalQuestion()
 }
 
 # prevent sed to replace a symbolic link
-# $1 pattern "s/x/y/"
-# $2 file to process
+# $1: pattern "s/x/y/"
+# $2: file to process
 function sedInPlace()
 {
     file=$(mktemp)
@@ -159,7 +162,7 @@ function sedInPlace()
 
 # add init script for new server 
 # (as sytemd cannot handle a single one)
-# $1 mdtx user (serv1 by default)
+# $1: mdtx user (serv1 by default)
 function startInitdScript()
 {
     SERVER=${1-serv1}
@@ -210,7 +213,7 @@ EOF
     fi
 }
 
-# $1 mdtx user (serv1 by default)
+# $1: mdtx user (serv1 by default)
 function statusInitdScript()
 {
     SERVER=${1-serv1}
@@ -225,7 +228,7 @@ function statusInitdScript()
 }
 
 
-# $1 mdtx user (serv1 by default)
+# $1: mdtx user (serv1 by default)
 function stopInitdScript()
 {
     SERVER=${1-serv1}
@@ -246,7 +249,7 @@ function stopInitdScript()
     rm -f /etc/init.d/mediatexd-$SERVER
 }
 
-# $1 mdtx user (serv1 by default)
+# $1: mdtx user (serv1 by default)
 function reloadInitdScript()
 {
     SERVER=${1-serv1}
@@ -264,7 +267,7 @@ function reloadInitdScript()
     fi
 }
 
-# $1 mdtx user (serv1 by default)
+# $1: mdtx user (serv1 by default)
 function restartInitdScript()
 {
     SERVER=${1-serv1}
@@ -720,8 +723,106 @@ function test15()
     fi
 }
 
-# Move CVS repository from serv1 to serv2
+# Third server notify you ask for an archive record not yet available
+# (close to test 9)
 function test16()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Serv3 notify serv1 (via serv2) you ask for an archive record"
+
+	for SERV in serv1 serv2 serv3; do
+	    stopInitdScript $SERV
+	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -f /var/cache/mediatex/${SERV}/md5sums/${SERV}-hello.md5
+	    startInitdScript $SERV
+	done
+
+	# move supp1 from serv2 to serv1
+	mdtxP "del supp iso1 from coll hello" serv2
+	mdtxP "add supp iso1 to coll hello" serv1
+
+	# same as test4
+	mdtxP "make" serv3
+	yourMail serv3
+	mdtxP "srv save" serv3
+	question "do the 3rd server get it ?" \
+	     "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+
+	mdtxP "srv notify" serv3	
+	mdtxP "srv save" serv2
+	question "does 2nd server get your demand ?" \
+		      "cat /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+
+	mdtxP "srv notify" serv2	
+	mdtxP "srv save" serv1
+	finalQuestion "does 1st server get your demand (managed by serv2)?" \
+		      "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5"
+    else
+	topo "Cleanup"
+    fi
+}
+
+# Server 1 provides first support and tell it to others
+# (close to test 10)
+function test17()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Server 3 provides second support and tell it to others"
+
+	mdtxP "motd" serv1
+	mdtxP "add supp iso1 to coll hello" serv1
+	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv1
+	mdtxP "srv notify" serv1
+
+	mdtxP "srv save" serv3
+	finalQuestion "does 3rd server see iso1 on first support ?" \
+		      "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+
+    else
+	topo "Cleanup"
+	mdtxP "del supp iso1 from coll hello" serv1
+	rm -fr /var/cache/mediatex/serv1/cache/serv1-hello/supports
+	reloadInitdScript serv1
+	stopInitdScript serv3
+	rm -f /var/cache/mediatex/serv3/md5sums/serv3-hello.md5
+	startInitdScript serv3
+    fi	    
+}
+
+# Server 3 retrieve the archive
+function test18()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Server 3 retrieve the archive"
+ 
+	mdtxP "srv extract" serv3
+	mdtxP "srv save" serv3
+	question "does serv3 deliver logo.png (mail sent) ?" \
+		 "cat /var/cache/mediatex/serv3/md5sums/serv3-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+
+	mdtxP "srv notify" serv3
+	mdtxP "srv notify" serv2
+	mdtxP "srv save" serv1
+	mdtxP "srv save" serv2
+	finalQuestion "does serv1 and serv2 are no more looking for logo.png ?" \
+		 "cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5 \
+                      /var/cache/mediatex/serv2/md5sums/serv2-hello.md5"
+	[ $TEST_OK -eq 0 ] && return
+    else
+	topo "Cleanup"
+	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logoP1.iso
+	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logoP1.cat
+	rm -f /var/cache/mediatex/serv3/cache/serv3-hello/logo.tgz
+	rm -fr /var/cache/mediatex/serv3/cache/serv3-hello/logo
+	reloadInitdScript serv3
+    fi
+}
+
+# Move CVS repository from serv1 to serv2
+function test19()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Move CVS repository from serv1 to serv2"
@@ -761,7 +862,7 @@ function test16()
 }
 
 # Audit on server 1
-function test17()
+function test20()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Audit on server"
@@ -782,7 +883,7 @@ function test17()
 }
 
 # Make all functionnal for manuals tests
-function test18()
+function test21()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Make all functionnal for manuals tests"

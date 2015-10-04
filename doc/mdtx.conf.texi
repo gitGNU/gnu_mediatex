@@ -1,5 +1,5 @@
 The @dataConfO{} file is used locally as the main
-configuration file. It is read by the 3 binaries:
+@mediatexO{} configuration file. It is read by the 3 binaries:
 @itemize @bullet
 @item @activityClient
 @item @procScriptsCgi
@@ -19,9 +19,9 @@ Relational schema:
 @item
 The @sc{Configuration} entity is the single main contexte.
 @item 
-The @sc{Collection} entity lists all the collections.
+The @sc{Collection} entity lists all the collections shared.
 @item 
-The @sc{Network} entity lists public and private networks we logically defined.
+The @sc{Network} entity lists logical networks the local host belongs to.
 @end itemize
 
 @item Linked entities
@@ -29,20 +29,21 @@ The @sc{Network} entity lists public and private networks we logically defined.
 @item 
 The @sc{Support} entity lists all the local supports.
 @item 
-The @sc{Server} entity lists all the remote servers per collection.
+The @sc{Server} entity lists all servers sharing a given collection.
 @end itemize
 
 @item Proper relations
 @itemize @bullet
 @item 
-The @sc{manage} relationship lists all the collections our local server managed.
+The @sc{manage} relationship lists all the collections our local server share.
 @item 
-The @sc{networks} relationship lists all the networks we belongs to. 
-The configuration relationship may be overwriten by each collection.
+The @sc{networks} relationship lists all the networks the local host belongs to. 
+This relationship may be overwriten for each collection.
 @item 
 The @sc{gateways} relationship lists all the networks for which our local 
-server act as a @acronym{NAT} gateway.
-The configuration relationship may be overwriten by each collection.
+server act like a @acronym{NAT} gateway.
+(see @procServerNotify{} and @pxref{Scenario 6})
+This relationship may be overwriten for each collection.
 @item 
 The @sc{localhost} relationship gives our local server related to the
 collection context.
@@ -52,9 +53,7 @@ specific collections.
 @end itemize
 @end itemize
 
-@note{} The @sc{imageFiles}, @sc{networks} and @sc{gateways} relationship 
-from @dataServers{} file are obtains by concatening all local associations
-we have from the configuration of each remote servers.
+@note{} @dataServers{} concate the @sc{imageFiles}, @sc{networks} and @sc{gateways} relationships from all the hosts sharing a collection.
 
 Example:
 @example
@@ -110,6 +109,7 @@ confLine: HOST string
        | COMMENT string
        | MDTXPORT number
        | SSHPORT number
+       | WWWPORT number
        | NETWORKS networks
        | GATEWAYS gateways
        | CACHESIZE number size
@@ -117,13 +117,14 @@ confLine: HOST string
        | QUERYTTL number time
        | CHECKTTL number time
        | SUPPTTL number time
+       | FILETTL number time
        | MAXSCORE SCORE
        | BADSCORE SCORE
        | POWSUPP SCORE
        | POWIMAGE SCORE
        | FACTSUPP SCORE
 
-collectionStanza: newCollection collectionLines ENDBLOCK
+collectionStanza: newCollection collectionLines END
 
 newCollection: COLLECTION string - string @@ string : number
 

@@ -268,6 +268,7 @@
 [notice utnotify.c] .......................................................
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [notice utFunc.c] copy logoP1.cat to the coll1 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
@@ -319,6 +320,9 @@
 [notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 [notice recordTree.c] # ^ REMOTE_DEMAND
 
+[notice recordTree.c] D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ REMOTE_DEMAND
+
 [notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
@@ -335,9 +339,9 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
-[info notify.c] find a remote demand to work on: 022a34b2f9b893fba5774237e1aa80ea:24075
-[info notify.c] found an archive to notify: 0387eee9820fa224525ff8b2e0dfa9be:24546
+[info notify.c] found a local supply to notify: 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info notify.c] found a final demand to notify: 022a34b2f9b893fba5774237e1aa80ea:24075
+[info notify.c] found a remote demand to manage: 022a34b2f9b893fba5774237e1aa80ea:24075
 [info notify.c] found a bad score's local top container to notify: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 [info address.c] build socket address 127.0.0.1:11111
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
@@ -349,6 +353,9 @@
 [info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+
 [info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 
@@ -370,6 +377,7 @@
 [notice utnotify.c] .......................................................
 [notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED

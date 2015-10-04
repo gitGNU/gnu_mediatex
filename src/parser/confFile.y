@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.11 2015/09/17 18:53:48 nroche Exp $
+ * Version: $Id: confFile.y,v 1.12 2015/10/04 14:22:27 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *
@@ -105,7 +105,6 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 %token          confMAXSCORE
 %token          confBADSCORE
 %token          confPOWSUPP
-%token          confPOWIMAGE
 %token          confFACTSUPP
 %token          confCOLL
 %token          confCOMMENT

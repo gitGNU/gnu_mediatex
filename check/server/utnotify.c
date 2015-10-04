@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utnotify.c,v 1.5 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: utnotify.c,v 1.6 2015/10/04 14:22:27 nroche Exp $
  * Project: MediaTeX
  * Module : notify
 
@@ -68,6 +68,7 @@ main(int argc, char** argv)
   Archive* archive = 0;
   Server* server1 = 0;
   Server* server2 = 0;
+  Server* server3 = 0;
   Record* record = 0;
   char* extra = 0;
   Connexion* connexion = 0;
@@ -116,16 +117,22 @@ main(int argc, char** argv)
   if (!utCleanCaches()) goto error;
   
   /*
-    we try to be in the same situation as describe by utserverTree
+    we try to be in the same situation as describe by utserverTree:
+    srv1 --WWW-- srv2(gateway) --PRIVATE-- srv3(nat client)
     server1: 746d6ceeb76e05cfa2dea92a1c5753cd
     server2: 6b18ed0194b0fbadd08e0a13cccda00e
     server3: bedac32422739d7eced624ba20f5912e
    */
 
+  // we should be server2 as using -c mdtx2
   logMain(LOG_NOTICE, "localhost is %s", server2->fingerPrint);
 
-  // remote server (we should be server2 as using -c mdtx2)
+  // remote server 
   if (!(server1 = addServer(coll, "746d6ceeb76e05cfa2dea92a1c5753cd")))
+    goto error;
+
+  // nat client 
+  if (!(server3 = addServer(coll, "bedac32422739d7eced624ba20f5912e")))
     goto error;
 
   if (!(archive = 
@@ -136,15 +143,21 @@ main(int argc, char** argv)
   utLog("%s", "*** test sending message:", 0);
   utLog("%s", "Populate the cache:", 0);
 
+  // add a local demand
+  if (!utAddFinalDemand(coll)) goto error;
+
   // add a remote demand
   if (!(extra = createString("!wanted"))) goto error;
   if (!(record = addRecord(coll, server1, archive, DEMAND, extra)))
     goto error;
   if (!addCacheEntry(coll, record)) goto error;
   
-  // add a local demand
-  if (!utAddFinalDemand(coll)) goto error;
-
+  // add a remote demand to manage (from NAT client)
+  if (!(extra = createString("!wanted"))) goto error;
+  if (!(record = addRecord(coll, server3, archive, DEMAND, extra)))
+    goto error;
+  if (!addCacheEntry(coll, record)) goto error;
+  
   // add local supplies (logoP1.cat have a good score,others no)
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
@@ -162,7 +175,7 @@ main(int argc, char** argv)
   utLog("%s", "Build message:", 0);
   if (!(connexion = utConnexion(coll, NOTIFY, server1))) goto error;
 
-  // add a remote demand
+  // add a remote demand to forward to NAT client
   if (!(extra = createString("!wanted"))) goto error;
   if (!(record = addRecord(coll, server1, archive, DEMAND, extra)))
     goto error;
