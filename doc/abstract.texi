@@ -40,7 +40,7 @@ and we need enough memory to load Meta-data.
 Nevertheless, revision control system not only provides an elegant solution for geographical duplications and crash recovery, and also provide natively the changelog history.
 @end itemize
 
-@subheading Archive reversibility
+@subheading Reversibility
 A significant effort will be require to extract archives in order to return them:
 compact archives to send them using a media (support or network)
 and export the related meta-data.
