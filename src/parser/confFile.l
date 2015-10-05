@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.8 2015/09/03 09:25:46 nroche Exp $
+ * Version: $Id: confFile.l,v 1.9 2015/10/05 21:46:30 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -296,7 +296,7 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
     return(confTIME);
   }
 
-  s(econde)? {
+  s(econd)? {
     yylval->time = 1;
     return(confTIME);
   }

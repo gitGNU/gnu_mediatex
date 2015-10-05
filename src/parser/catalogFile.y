@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.9 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: catalogFile.y,v 1.10 2015/10/05 21:46:29 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -424,7 +424,7 @@ docCategories: docCategories cataCOMMA category
 	    "docCategories: docCategories , category");
   if (!addDocumentToCategory(coll, document, $3)) YYERROR;
 }
-          | category
+             | category
 {
   logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "docCategories: category");
@@ -448,7 +448,7 @@ docWiths: roles
 {
   logParser(LOG_DEBUG, "line %i: %s", LINENO, "docWiths: roles");
 }
-       | 
+        | 
 {
   logParser(LOG_DEBUG, "line %i: %s", LINENO, "docWiths: (0)");
 }
@@ -474,7 +474,7 @@ docArchives: archives
 {
   logParser(LOG_DEBUG, "line %i: docArchives: archives", LINENO);
 }
-          | 
+           | 
 {
   logParser(LOG_DEBUG, "line %i: docArchives: (0)", LINENO);
 }

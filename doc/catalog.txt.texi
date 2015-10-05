@@ -1,6 +1,11 @@
 @cindex index catalog file
 
-The @dataCatalogO{} files handle the descriptive meta-datas of a collection.
+The @dataCatalogO{} files handle the descriptive meta-data of a collection.
+
+The format of this file is oriented to describe a simple movie database.
+It does not conform to any specific descriptive meta-data schema,
+like the Dublin Core (@url{http://dublincore.org/}).
+However, the translation from and to all meta-data formats remains possible, by adding characteristics to the objects.
 
 Relational schema:
 
@@ -67,78 +72,62 @@ Document "panthere": "animal", "drawing", "hand"
 
 Grammar:
 @example
-** TO RE-DO **
+file: stanzas 
+    | //empy file 
 
 stanzas: stanzas stanza
        | stanza
 
-stanza: defContainer
+stanza: defCategory
       | defHuman
       | defDocument
-      | defRecord
+      | defArchive
 
-/* Carac */
+caracs: caracs carac
+      | carac
 
-contCaracs: contCaracs contCarac
-          | contCarac
+carac: string = string
 
-contCarac: string = string
+defCategory: newCategory : categories caracs
+           | newCategory : categories
+           | newCategory caracs
+           | newCategory
 
-docCaracs: docCaracs docCarac
-         | docCarac
+newCategory: TOP CATEGORY string
+           | CATEGORY string
 
-docCarac: string = string
+categories: categories , category
+          | category
 
-humCaracs: humCaracs humCarac
-         | humCarac
+category: string
 
-humCarac: string = string
+defHuman: newHuman : categories caracs
+        | newHuman : categories
+        | newHuman caracs
+        | newHuman
 
-recCaracs: recCaracs recCarac
-         | recCarac
-
-recCarac: string = string
-
-/* defContainer */
-
-defContainer: CATEGORY container : container contCaracs
-            | CATEGORY container : container
-            | CATEGORY container contCaracs
-            | CATEGORY container
-
-container: string
-
-containers: containers COMMA container
-          | container
-
-/* defHuman */
-
-defHuman: HUMAN human : containers humCaracs
-        | HUMAN human : containers
-        | HUMAN human humCaracs
-        | HUMAN human
+newHuman: HUMAN human
 
 human: string string
 
-/* defRecord */
+defArchive: newArchive archCaracs
+         | newArchive
 
-defRecord: RECORD record recCaracs
-         | RECORD record
+newArchive: ARCHIVE archive
 
-record: hash : number
+archive: hash : number
 
-/* defDocument */
+defDocument: newDocument docCategories docWiths docCaracs docArchives 
 
-defDocument: DOCUMENT document docContainers \
-             docWiths docCaracs2 docRecords 
+newDocument: DOCUMENT document
 
 document: string
 
-docContainers: : containers
+docCategories: : categories
              | 
 
-docCaracs2: docCaracs
-          | 
+docCaracs: caracs
+         | 
 
 docWiths: roles
         | 
@@ -148,14 +137,14 @@ roles: roles role
 
 role: WITH string = human
 
-docRecords: records
-          | 
+docArchives: archives
+           | 
 
-records: records record
-       | record
+archives: archives archive
+        | archive
 
-hash: [[:xdigit:]]+[:blank:]  
-string: \"[^\n\"]*\"
+hash:   [[:xdigit:]]@{32@}     
+string: \"(\\\"|[^\n\"])@{0,511@}\" 
 number: [[:digit:]]+
 @end example
 

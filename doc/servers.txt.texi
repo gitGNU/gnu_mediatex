@@ -14,78 +14,78 @@ Relational schema:
 The @sc{Server} entity lists all the servers participating to a collection.
 @item 
 The @sc{Image} entity lists all the images files known by the collection.
+Images are identifyed by one archive and one server.
+So, 2 @cdrom{}s located on the same host are represented by a uniq image object.
 @item 
 The @sc{Network} entity lists public and private networks we logically defined.
 @end itemize
 
+@item Linked entities
+@itemize @bullet
+@item 
+The @sc{Archive} entity reminds all archives the programm is currently using per collection.
+@end itemize
+
 @item Relations
 @itemize @bullet
-@item The @sc{imageFiles} relationhip list all the image files hosted by a server.
 @item 
 The @sc{networks} relationship lists all the networks a server belongs to. 
 @item 
 The @sc{gateways} relationship lists all the networks for which a server 
-act as a @acronym{NAT} gateway.
+acts like a @acronym{NAT} gateway.
 @end itemize
 @end itemize
 
 Exemple:
 @example
-# MediaTeX coll1@@host1.mediatex.org:22 servers list:
-collKey    1234567890abcdef
+# This file is managed by MediaTeX software.
+# MediaTeX serv1-hello@@127.0.0.1:22 servers list:
+
+master     a3219b5a0512d08a291aa73b85d81674
+collKey    01234567890abcde
 
 # score parameters
+uploadTTL  1 Month
+serverTTL  2 Week
 suppTTL    5 Year
 maxScore   10.00
 badScore   1.00
 powSupp    2.00
 factSupp   2.00
+fileScore  10.00
 minGeoDup  2
 
-Server 746d6ceeb76e05cfa2dea92a1c5753cd
-	comment   "this is server1"
-	host      host1
-	mdtxPort  11111
+Server 58225510312a82b017b07aabf7b89657
+	comment   "Put your personal greeting here"
+	label     serv2
+	host      127.0.0.1
+	lastCommit 2015-10-05,22:52:28 
+	mdtxPort  6002
 	sshPort   22
+	wwwPort   443
+	networks  private, www
+	gateways  private
+	cacheSize 100 Mo
+	cacheTTL  15 Day
+	queryTTL  1 Week
+#	keys:
+	userKey   "@dots{}"
+	hostKey   "@dots{}"
+end
+
+Server a3219b5a0512d08a291aa73b85d81674
+	comment   "Put your personal greeting here"
+	label     serv1
+	host      127.0.0.1
+	lastCommit 2015-10-05,22:52:35 
+	mdtxPort  6001
+	sshPort   22
+	wwwPort   443
 	networks  www
 	cacheSize 100 Mo
 	cacheTTL  15 Day
 	queryTTL  1 Week
-	provide	  de5008799752552b7963a2670dc5eb18:391168=2.00
-#	keys:
-	userKey   "@dots{}"
-	hostKey   "@dots{}"
-end
-
-Server 6b18ed0194b0fbadd08e0a13cccda00e
-	comment   "this is server2"
-	host      localhost
-	mdtxPort  6560
-	sshPort   22
-	networks  private, www
-	gateways  private
-	cacheSize 200 Mo
-	cacheTTL  1 Month
-	queryTTL  2 Week
-	provide	  022a34b2f9b893fba5774237e1aa80ea:24075=7.50,
-		  de5008799752552b7963a2670dc5eb18:391168=10.00
-#	keys:
-	userKey   "@dots{}"
-	hostKey   "@dots{}"
-end
-
-Server bedac32422739d7eced624ba20f5912e
-	comment   "this is server3"
-	host      127.0.0.2
-	mdtxPort  33333
-	sshPort   2222
-	networks  private
-	cacheSize 300 Mo
-	cacheTTL  45 Day
-	queryTTL  3 Week
-	provide	  022a34b2f9b893fba5774237e1aa80ea:24075=14.00,
-		  0a7ecd447ef2acb3b5c6e4c550e6636f:374784=17.50,
-		  de5008799752552b7963a2670dc5eb18:391168=12.00
+	provide	  de5008799752552b7963a2670dc5eb18:391168=10.00
 #	keys:
 	userKey   "@dots{}"
 	hostKey   "@dots{}"
@@ -102,18 +102,20 @@ headers: headers header
        | header
 
 header: COLLKEY string
-      | SUPPTTL number TIME
+      | SERVERTTL number time
+      | SUPPTTL number time
+      | UPLOADTTL number time
       | MAXSCORE score
       | BADSCORE score
       | POWSUPP score
-      | POWIMAGE score
       | FACTSUPP score
+      | FILESCORE score
       | MINGEODUPP number
 
 stanzas: stanzas stanza
        | stanza
 
-stanza: SERVER server lines ENDBLOCK
+stanza: SERVER server lines END
 
 server: HASH
 
@@ -123,10 +125,14 @@ lines: lines line
 line: LABEL string
     | COMMENT string
     | HOST string
+    | LASTCOMMIT date
     | MDTXPORT number
     | SSHPORT number
     | NETWORKS networks
     | GATEWAYS gateways
+    | MDTXPORT number
+    | SSHPORT number
+    | WWWPORT number
     | USERKEY string
     | HOSTKEY string
     | CACHESIZE number size
@@ -135,7 +141,7 @@ line: LABEL string
     | PROVIDE images
 
 networks: networks , string
-          | string
+        | string
 
 gateways: gateways , string
         | string
@@ -146,11 +152,20 @@ images: images , image
 image: hash : number = score
 
 size:    GO | MO | KO | O
-time:    MONTH | WEEK | DAY | HOUR | MINUTE
+time:    MONTH | WEEK | DAY | HOUR | MINUTE | SECOND
 score:   [[:digit:]]+\.[[:digit:]]+
 number:  [[:digit:]]+
-string:  \"[^\n\"]*\"|[^[:blank:]:,=\r\n]+
+string:  [^[:blank:]:,=\r\n]@{1,511@} | \"[^\n\"]@{1,1023@}\"
 hash:    [[:xdigit:]]@{32@}
+
+date:   @{year@}-@{month@}-@{day@},@{HOUR@}:@{min@}:@{sec@}
+
+year:   [[:digit:]]@{4@}
+month:  [[:digit:]]@{2@}
+day:    [[:digit:]]@{2@}
+HOUR:   [[:digit:]]@{2@}
+min:    [[:digit:]]@{2@}
+sec:    [[:digit:]]@{2@}
 @end example
 
 Code:

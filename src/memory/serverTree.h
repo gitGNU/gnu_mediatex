@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.9 2015/09/17 18:53:47 nroche Exp $
+ * Version: $Id: serverTree.h,v 1.10 2015/10/05 21:46:29 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -29,7 +29,7 @@
 //#include <netinet/in.h>
 
 /* 
-   There at more 1 ISO image by archive and server.
+   There is maximum 1 ISO image by archive and server.
    Images are listed by servers and archives.
    Archives matching one or more images are listed by the serverTree
  */

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.10 2015/09/17 18:53:49 nroche Exp $
+ * Version: $Id: serverFile.l,v 1.11 2015/10/05 21:46:30 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -333,7 +333,7 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
     return(servTIME);
   }
 
-  s(econde)? {
+  s(econd)? {
     yylval->time = 1;
     return(servTIME);
   }

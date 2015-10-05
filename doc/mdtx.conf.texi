@@ -160,16 +160,12 @@ gateways: gateways , gateway
 network: string
 
 gateway: string
-
-string: quoted_string
-      | normal_string
       
-quoted_string:  \"[^\r\n\"]@{1,509@}\"
-normal_string:  [^[:blank:],\r\n]@{1,511@}
-coll: [^\r\n[:blank:]:\-@@]@{1,20@}
-size: GO | MO | KO | O
-time: YEAR | MONTH | WEEK | DAY | HOUR | MINUTE | SECOND
-score: [[:digit:]]+\.[[:digit:]]+
+string: [^[:blank:],\r\n]@{1,511@} | \"[^\r\n\"]@{1,509@}\"
+coll:   [^\r\n[:blank:]:\-@@]@{1,20@}
+size:   GO | MO | KO | O
+time:   YEAR | MONTH | WEEK | DAY | HOUR | MINUTE | SECOND
+score:  [[:digit:]]+\.[[:digit:]]+
 number: [[:digit:]]+
 @end example
 

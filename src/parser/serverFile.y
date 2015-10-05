@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.11 2015/09/17 18:53:49 nroche Exp $
+ * Version: $Id: serverFile.y,v 1.12 2015/10/05 21:46:30 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -250,24 +250,20 @@ line: servLABEL servSTRING
 }
     | servCOMMENT servSTRING
 {
-  if (!server) YYERROR;
   if (!(server->comment = createString($2))) YYERROR;
 }
     | servHOST servSTRING
 {
-  if (!server) YYERROR;
   strncpy(server->host, $2, MAX_SIZE_HOST);
 }
     | servLASTCOMMIT servDATE
 {
-  if (!server) YYERROR;
   server->lastCommit = $2;
 }
     | servNETWORKS networks
     | servGATEWAYS gateways
     | servMDTXPORT servNUMBER
 {
-  if (!server) YYERROR;
   if (server) server->mdtxPort = (int)$2;
 }
     | servSSHPORT servNUMBER
@@ -280,12 +276,10 @@ line: servLABEL servSTRING
 }
     | servUSERKEY servSTRING
 {
-  if (!server) YYERROR;
   if (!(server->userKey = createString($2))) YYERROR;
 }
     | servHOSTKEY servSTRING
 {
-  if (!server) YYERROR;
   if (!(server->hostKey = createString($2))) YYERROR;
 }
     | servCACHESIZE servNUMBER servSIZE

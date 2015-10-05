@@ -42,7 +42,6 @@ The @code{MALLOC_SUPPLY} is an internal state used when allocating the archive's
 @itemize @bullet
 @item 
 The @sc{Archive} entity reminds all archives the programm is currently using per collection.
-@cindex archive
 @item
 The @sc{Server} entity, from 
 @dataServers{}, lists all the remote servers per collection.
@@ -96,18 +95,21 @@ header: HEADERS hLines BODY
 hLines: hLines hLine
      | hLine
 
-hLine: COLL string
+hLine: COLLECTION string
      | SERVER string
-     | MSGTYPE MSGVAL
-     | DOCYPHER
+     | TYPE msgval
+     | DOCYPHER bool
 
 lines: lines newLine
      | newLine
 
 newLine: line
 
-line: s date hash hash [[:digit:]]+ string
-    | d date hash hash [[:digit:]]+ string
+line: type date hash hash [[:digit:]]+ string
+
+msgval: DISK | CGI | HAVE | NOTIFY | UPLOAD
+bool: FALSE | TRUE
+type: S | D
 
 date:   @{year@}-@{month@}-@{day@},@{HOUR@}:@{min@}:@{sec@}
 
