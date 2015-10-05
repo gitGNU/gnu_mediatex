@@ -87,20 +87,6 @@ S 2015-10-04,23:34:30 adc2@dots{} 99b8@dots{}   1004 2015-10/mediatex.css
 
 Grammar:
 @example
-YEAR    [[:digit:]]@{4@}
-MONTH   [[:digit:]]@{2@}
-DAY     [[:digit:]]@{2@}
-HOUR    [[:digit:]]@{2@}
-MIN     [[:digit:]]@{2@}
-SEC     [[:digit:]]@{2@}
-DATE    @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
-
- /* MAX_SIZE_MD5 = 32 */
-HASH    [[:xdigit:]]@{32@}
-
- /* MAX_SIZE_STRING = 511 */
-STRING  [^[:blank:]\r\n]@{1,511@}
-
 file: //empty file 
     | header
     | header lines
@@ -110,8 +96,8 @@ header: HEADERS hLines BODY
 hLines: hLines hLine
      | hLine
 
-hLine: COLL STRING
-     | SERVER STRING
+hLine: COLL string
+     | SERVER string
      | MSGTYPE MSGVAL
      | DOCYPHER
 
@@ -120,8 +106,20 @@ lines: lines newLine
 
 newLine: line
 
-line: s DATE HASH HASH [[:digit:]]+ STRING
-    | d DATE HASH HASH [[:digit:]]+ STRING
+line: s date hash hash [[:digit:]]+ string
+    | d date hash hash [[:digit:]]+ string
+
+date:   @{year@}-@{month@}-@{day@},@{HOUR@}:@{min@}:@{sec@}
+
+year:   [[:digit:]]@{4@}
+month:  [[:digit:]]@{2@}
+day:    [[:digit:]]@{2@}
+HOUR:   [[:digit:]]@{2@}
+min:    [[:digit:]]@{2@}
+sec:    [[:digit:]]@{2@}
+
+hash:   [[:xdigit:]]@{32@}
+string: [^[:blank:]\r\n]@{1,511@}
 @end example
 
 Code:

@@ -67,6 +67,8 @@ Document "panthere": "animal", "drawing", "hand"
 
 Grammar:
 @example
+** TO RE-DO **
+
 stanzas: stanzas stanza
        | stanza
 

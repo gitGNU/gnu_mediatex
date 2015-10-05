@@ -60,25 +60,27 @@ Example: (line is cut to display it here)
 
 Grammar:
 @example
-YEAR    [[:digit:]]@{4@}
-MONTH   [[:digit:]]@{2@}
-DAY     [[:digit:]]@{2@}
-HOUR    [[:digit:]]@{2@}
-MIN     [[:digit:]]@{2@}
-SEC     [[:digit:]]@{2@}
-DATE    @{YEAR@}-@{MONTH@}-@{DAY@},@{HOUR@}:@{MIN@}:@{SEC@}
-
-MD5     [[:xdigit:]]@{32@}      
-SHA     [[:xdigit:]]@{40@}      
-STATUS  [^[:blank:]\r\n]@{1,10@} 
-NAME    [^[:blank:]\r\n]@{1,64@} 
-
 file: lines
-
+    | //empty file
+    
 lines: lines line
      | line
 
-line: DATE DATE DATE MD5 MD5 SHA SHA [[:digit:]]+ STATUS NAME
+line: date date date md5 md5 sha sha [[:digit:]]+ status name
+
+date:   @{year@}-@{month@}-@{day@},@{HOUR@}:@{min@}:@{sec@}
+
+year:   [[:digit:]]@{4@}
+month:  [[:digit:]]@{2@}
+day:    [[:digit:]]@{2@}
+HOUR:   [[:digit:]]@{2@}
+min:    [[:digit:]]@{2@}
+sec:    [[:digit:]]@{2@}
+
+md5:    [[:xdigit:]]@{32@}      
+sha:    [[:xdigit:]]@{40@}      
+status: [^[:blank:]\r\n]@{1,10@} 
+name:   [^[:blank:]\r\n]@{1,64@} 
 @end example
 
 Code:

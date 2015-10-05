@@ -58,20 +58,27 @@ specific collections.
 
 Example:
 @example
+# This is the MediaTeX software configuration file.
+
 # comment: greeter for this server
 comment    "Put your personal greeting here"
 
-# host: hostname use in urls
-host       localhost
+# host: hostname used in urls
+host       127.0.0.1
 
 # port: listening port for incoming requests
-mdtxPort   6561
+mdtxPort   6001
 
 # port: listening port for SSHd
 sshPort    22
 
+# port: listening port for Apache
+wwwPort    443
+
 # networks: networks the host belongs to
 networks   www
+
+# gateways: networks the host is a gateway for
 
 # default cache parameters
 cacheSize  100 Mo
@@ -79,23 +86,23 @@ cacheTTL   15 Day
 queryTTL   1 Week
 
 # local support parameters
-checkTTL   1 Year
-suppTTL    10 Year
-maxScore   20.00
+checkTTL   6 Month
+fileTTL    2 Month
+suppTTL    5 Year
+maxScore   10.00
 badScore   1.00
 powSupp    2.00
-powImage   2.00
 factSupp   2.00
 
-# The below section is managed by MediaTeX software.
-# You should not edit it by hand.
-# (host fingerprint: bf8d1517c68ef484b47af68c57d06da9)
+# The below section is also managed by MediaTeX software.
+# You should not edit by hand parameters bellow the -- line.
+# (host fingerprint: 89ff8cc8968fac6bc456757ce563b0b4)
 
-Collection mdtx-hello@@localhost:22
-	localhost 8a34048c4d9428b07b8d67e91deed9ed
-	share	  ex-cd1,
-		  ex-cd2,
-		  ex-new-doc
+Collection serv1-hello@@127.0.0.1:22
+	# --
+	localhost 540321ab656ad5c287e76f9dc361cfff
+	share	  /usr/share/mediatex/misc/logoP2.iso,
+		  iso1
 end
 @end example
 
@@ -105,55 +112,65 @@ stanzas: stanzas confLine
        | stanzas collectionStanza
        | confLine
        | collectionStanza
+ 
+collectionStanza: collection collectionLines ENDBLOCK
 
-confLine: HOST string
-       | COMMENT string
-       | MDTXPORT number
-       | SSHPORT number
-       | WWWPORT number
-       | NETWORKS networks
-       | GATEWAYS gateways
-       | CACHESIZE number size
-       | CACHETTL number time
-       | QUERYTTL number time
-       | CHECKTTL number time
-       | SUPPTTL number time
-       | FILETTL number time
-       | MAXSCORE SCORE
-       | BADSCORE SCORE
-       | POWSUPP SCORE
-       | POWIMAGE SCORE
-       | FACTSUPP SCORE
-
-collectionStanza: newCollection collectionLines END
-
-newCollection: COLLECTION string - string @@ string : number
+collection: coll string - string @@ string : number
 
 collectionLines: collectionLines collectionLine
                | collectionLine
- 
+
 collectionLine: SHARE supports
               | LOCALHOST string
               | NETWORKS networks
               | GATEWAYS gateways
-              | CACHESIZE number size
-              | CACHETTL number time
-              | QUERYTTL number time
+              | CACHESIZE number SIZE
+              | CACHETTL number TIME
+              | QUERYTTL number TIME
 
+supports: supports , support
+        | support
+
+support: string
+
+confLine: HOST string
+       | NETWORKS networks
+       | GATEWAYS gateways
+       | COMMENT string
+       | MDTXPORT number
+       | SSHPORT number
+       | WWWPORT number
+       | CACHESIZE number SIZE
+       | CACHETTL number TIME
+       | QUERYTTL number TIME
+       | CHECKTTL number TIME
+       | FILETTL number TIME
+       | SUPPTTL number TIME
+       | MAXSCORE score
+       | BADSCORE score
+       | POWSUPP score
+       | FACTSUPP score
+
+networks: networks , network
+        | network
+
+gateways: gateways , gateway
+        | gateway
+
+network: string
+
+gateway: string
+
+string: quoted_string
+      | normal_string
+      
+quoted_string:  \"[^\r\n\"]@{1,509@}\"
+normal_string:  [^[:blank:],\r\n]@{1,511@}
+coll: [^\r\n[:blank:]:\-@@]@{1,20@}
 size: GO | MO | KO | O
-time: MONTH | WEEK | DAY | HOUR | MINUTE
-
-networks: networks , string
-        | string
-
-gateways: gateways , string
-        | string
-
-supports: supports , string
-        | string
-
-string: [^[:blank:],\r\n]+
-number: [+-]?[[:digit:]]
+time: YEAR | MONTH | WEEK | DAY | HOUR | MINUTE | SECOND
+score: [[:digit:]]+\.[[:digit:]]+
+number: [[:digit:]]+
 @end example
 
 Code:
