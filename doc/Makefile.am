@@ -30,9 +30,9 @@ mediatex_TEXINFOS = \
 	init-remove-purge.texi new-free-clean.texi \
 	update-commit.texi addUser-delUser.texi bind-unbind.texi \
 	mount-umount.texi deliver.texi \
-	cache.texi extract.texi cgiServer.texi \
-	have.texi notify.texi delivering.texi \
-	serv.texi conf.texi supp.texi misc.texi motd.texi \
+	cache.texi extract.texi cgiServer.texi have.texi srvUpload.texi \
+	notify.texi delivering.texi \
+	serv.texi conf.texi supp.texi misc.texi upload.texi motd.texi \
 	data.texi mdtx.conf.texi supports.txt.texi mdtx-COLL.md5.texi \
 	catalog.txt.texi extract.txt.texi servers.txt.texi \
 	useCase.texi consistency.texi bugs.texi fdl.texi

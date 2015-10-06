@@ -1,8 +1,10 @@
 @cindex mail
 
 @process{Delivering} process call a script in order 
-to warm-up an 
-@actorUser{} that an archive he ask for is now available.
+to warm-up an @actorUser{} that an archive he ask for is now available.
+
+However, when this process was hit for an audit, it will call a dedicated 
+script that will summarise results.
 
 Process conceptual model:
 
@@ -12,7 +14,7 @@ Process conceptual model:
 @item Events in
 @table @code
 @item @eventServerDeliver
-      from @procServerExtract or @procServerHave
+      from @procServerExtract{}, @procServerHave or @procServerCgiSrv
 @item @eventServerDeliverReg
       from @procClientMisc
 @end table
@@ -21,6 +23,8 @@ Process conceptual model:
 @table @code
 @item @eventScriptsDeliver
       to @procScriptsDeliver
+@item @eventScriptsAudit
+      to @procScriptsAudit
 @end table
 
 @item Input data

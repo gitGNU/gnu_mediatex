@@ -20,6 +20,7 @@ from
 @table @code
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
+@itemx @eventScriptsCronMonthly
 to @procScriptsCron
 @item @eventActorAdminMail
 to 
@@ -35,9 +36,10 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
 
-# m h dom mon dow user	command
-50 *    * * *   root   /usr/share/mediatex/scripts/cron_hourly.sh
-10 18   * * *   root   /usr/share/mediatex/scripts/cron_daily.sh
+# m  h dom mon dow user	command
+50  *   *   *   * root /usr/share/mediatex/scripts/cron_hourly.sh
+15 09   *   *   * root /usr/share/mediatex/scripts/cron_daily.sh
+56 07   1   *   * root /usr/share/mediatex/scripts/cron_monthly.sh
 @end example
 
 @end itemize

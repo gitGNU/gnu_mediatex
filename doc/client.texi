@@ -24,6 +24,7 @@ The @activity{Client} activity is divided into 5 process:
 * supp::        @process{supp}
 * serv::        @process{serv}
 * misc::        @process{misc}
+* upload::      @process{upload}
 * motd::        @process{motd}
 @end menu
 
@@ -34,54 +35,63 @@ Flood diagram:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventClientMiscInit
 @itemx @eventClientMiscRemove
 @itemx @eventClientMiscPurge
 @itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-from 
-@actorAdmin{} to @procClientMisc
+from @actorAdmin{} to @procClientMisc
+
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from 
-@actorAdmin{} to @procClientConf
+from @actorAdmin{} to @procClientConf
+
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
-from 
-@actorPublisher{} to @procClientServ
+@itemx @eventClientServUpgrade
+from @actorPublisher{} to @procClientServ
+
 @item @eventClientConfList
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
-from 
-@actorPublisher{} to @procClientConf
-@item @eventClientMiscSuppList
-@itemx @eventClientMiscSuppAdd
-@itemx @eventClientMiscSuppDel
-@itemx @eventClientMiscSuppNote
-@itemx @eventClientMiscSuppCheck
-from 
-@actorPublisher{} to @procClientSupp
+from @actorPublisher{} to @procClientConf
+
+@item @eventClientSuppList
+@itemx @eventClientSuppAdd
+@itemx @eventClientSuppFileAdd
+@itemx @eventClientSuppDel
+@itemx @eventClientSuppNote
+@itemx @eventClientSuppCheck
+from @actorPublisher{} to @procClientSupp
+
 @item @eventClientExtract
 @itemx @eventClientNotify
 from @procScriptsCron{}
+
+@item @eventClientUpload
+from @actorPublisher{} to @procClientUpload
+
 @item @eventClientMotd
 from @procScriptsCron{} to @procClientMotd
+
 @item @eventClientMiscSu
 @itemx @eventClientMiscMake
 @itemx @eventClientMiscClean
-@itemx @eventClientMiscUpload
-@itemx @eventClientServUpgrade
-from 
-@actorPublisher{} to @procClientMisc
+@itemx @eventClientMiscAudit
+from @actorPublisher{} to @procClientMisc
+
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from 
-@activityServer{} to @procClientMisc
+from @activityServer{} to @procClientMisc
+
 @item @eventClientMiscGet
 from @procServerExtract{} to @procClientMisc
-@item @eventClientMiscSuppMount
-@itemx @eventClientMiscSuppUMount
+
+@item @eventClientSuppMount
+@itemx @eventClientSuppUMount
 from @procServerExtract{} to @procClientSupp
+
 @end table
 
 @item Events out
@@ -99,7 +109,7 @@ from @procClientSupp{} to @procScriptsMount
 from @procClientMotd{} to @activityServer
 @item @eventServerHaveQuery
 from @procClientSupp{} to @procServerHave
-@item @eventServerCacheUpload
+@item @eventServerUpload
 from @procClientMisc{} to @procServerCache
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
@@ -174,6 +184,9 @@ Code:
 @node misc
 @subsection misc
 @include misc.texi
+@node upload
+@subsection upload
+@include upload.texi
 @node motd
 @subsection motd
 @include motd.texi

@@ -143,11 +143,15 @@ does not handle dedicated life cycle on archives.
 What it is not
 @itemize @bullet
 @item 
+Doing mirroring replication.
+@item 
 A dynamic @acronym{WEB} programming application.
 @item 
 Based on a centralised or replicated @acronym{SGBD}.
+@item
+Providing dynamic search. To do it you will have to export the metadata into a database and search into.
 @item 
-Doing mirroring replication.
+Doing removal into data.
 @item 
 @acronym{SEDA} or any @acronym{XML} exchange protocol compliant 
 (@url{http://www.archivesdefrance.culture.gouv.fr/seda/index.html})

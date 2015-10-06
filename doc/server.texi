@@ -12,6 +12,7 @@ The @activity{server} activity is diveded into 6 process:
 * extract::     @process{extract}
 * cgiServer::   @process{cgiServer}
 * have::        @process{have}
+* srvUpload::   @process{upload}
 * notify::      @process{notify}
 * delivering::  @process{delivering}
 @end menu
@@ -38,7 +39,7 @@ from @procClientMisc{} respectively to
 from @procScriptsCgi{} to @procServerCgiSrv
 @item @eventServerHaveQuery 
 from @procClientSupp{} to @procServerHave
-@item @eventServerCacheUpload
+@item @eventServerUpload
 from @procClientMisc{} to @procServerCache
 @end table
 
@@ -46,10 +47,10 @@ from @procClientMisc{} to @procServerCache
 @table @code
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-to @procClientMisc
-@item @eventClientMiscSuppMount
-@itemx @eventClientMiscSuppUMount
 @itemx @eventClientMiscGet
+to @procClientMisc
+@item @eventClientSuppMount
+@itemx @eventClientSuppUMount
 from @procServerExtract{} to @procClientSupp
 @item @eventScriptsDeliver 
 from @procServerDeliver{} to @procScriptsDeliver
@@ -104,6 +105,9 @@ Code:
 @node have
 @subsection have
 @include have.texi
+@node srvUpload
+@subsection srvUpload
+@include srvUpload.texi
 @node notify
 @subsection notify
 @include notify.texi

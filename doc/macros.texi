@@ -25,6 +25,10 @@
 @acronym{S3}
 @end macro
 
+@macro api
+@acronym{API}
+@end macro
+
 @c Meta
 
 @macro actor{label}
@@ -172,14 +176,12 @@
 @macro procToolsApache
 @process{Apache} (@pxref{Apache})
 @end macro
-
 @macro procToolsExim
 @process{Exim} (@pxref{Exim})
 @end macro
 @macro procToolsSsh
 @process{Ssh} (@pxref{Ssh})
 @end macro
-
 @macro procToolsCvs
 @process{Cvs} (@pxref{Cvs})
 @end macro
@@ -194,33 +196,32 @@
 @macro procScriptsCgi
 @process{cgiClient} (@pxref{cgiClient})
 @end macro
-
 @macro procScriptsCron
 @process{conrHourly-cronDaily} (@pxref{cronHourly-cronDaily})
 @end macro
 @macro procScriptsInitRemovePurge
 @process{init-remove-purge} (@pxref{init-remove-purge})
 @end macro
-
 @macro procScriptsAddDelUser
 @process{addUser-delUser} (@pxref{addUser-delUser})
 @end macro
 @macro procScriptsNewFreeClean
 @process{new-free-clean} (@pxref{new-free-clean})
 @end macro
-
 @macro procScriptsUpdateCommit
 @process{update-commit} (@pxref{update-commit})
 @end macro
 @macro procScriptsBind
 @process{bind-unbind} (@pxref{bind-unbind})
 @end macro
-
 @macro procScriptsMount
 @process{mount-umount} (@pxref{mount-umount})
 @end macro
 @macro procScriptsDeliver
 @process{deliver} (@pxref{deliver})
+@end macro
+@macro procScriptsAudit
+@process{audit} (@pxref{audit})
 @end macro
 
 @c - server
@@ -234,13 +235,19 @@
 @macro procServerCgiSrv
 @process{cgiServer} (@pxref{cgiServer})
 @end macro
+
 @macro procServerHave
 @process{have} (@pxref{have})
+@end macro
+
+@macro procServerUpload
+@process{srvUpload} (@pxref{srvUpload})
 @end macro
 
 @macro procServerNotify
 @process{notify} (@pxref{notify})
 @end macro
+
 @macro procServerDeliver
 @process{delivering} (@pxref{delivering})
 @end macro
@@ -249,6 +256,7 @@
 @macro procClientServ
 @process{serv} (@pxref{serv})
 @end macro
+
 @macro procClientConf
 @process{conf} (@pxref{conf})
 @end macro
@@ -260,6 +268,11 @@
 @macro procClientMisc
 @process{misc} (@pxref{misc})
 @end macro
+
+@macro procClientUpload
+@process{motd} (@pxref{upload})
+@end macro
+
 @macro procClientMotd
 @process{motd} (@pxref{motd})
 @end macro
@@ -339,12 +352,15 @@
 @macro eventScriptsCgiPostQuery
 @event{<cgiClt-post-query>}
 @end macro
-@c   - cronHourly-cronDaily
+@c   - cronHourly-cronDaily-cronMonthly
 @macro eventScriptsCronHourly
 @event{# bash -i /usr/share/mediatex/scripts/cron_hourly.sh}
 @end macro
 @macro eventScriptsCronDaily
 @event{# bash -i /usr/share/mediatex/scripts/cron_daily.sh}
+@end macro
+@macro eventScriptsCronMonthly
+@event{# bash -i /usr/share/mediatex/scripts/cron_monthly.sh}
 @end macro
 @c   - init-remove-purge
 @macro eventScriptsInit
@@ -404,6 +420,10 @@
 @macro eventScriptsDeliver
 @event{$ /usr/share/mediatex/scripts/deliver.sh}
 @end macro
+@c   - audit
+@macro eventScriptsAudit
+@event{$ /usr/share/mediatex/scripts/audit.sh}
+@end macro
 
 @c - Server
 @macro eventServerStart
@@ -429,7 +449,7 @@
 @macro eventServerCacheAlloc
 @event{cache-alloc()}
 @end macro
-@macro eventServerCacheUpload
+@macro eventServerUpload
 @event{<upload>}
 @end macro
 @c   - cgiSrv
@@ -511,28 +531,28 @@
 @event{withdraw_supp()}
 @end macro
 @c     - supp
-@macro eventClientMiscSuppList
+@macro eventClientSuppList
 @event{$ mediatex ls supp}
 @end macro
-@macro eventClientMiscSuppNote
+@macro eventClientSuppNote
 @event{$ mediatex note supp @var{supp} as @var{text}}
 @end macro
-@macro eventClientMiscSuppAdd
+@macro eventClientSuppAdd
 @event{$ mediatex add supp @var{supp} on @var{path}}
 @end macro
-@macro eventClientMiscFileAdd
+@macro eventClientSuppFileAdd
 @event{$ mediatex add file @var{path}}
 @end macro
-@macro eventClientMiscSuppDel
+@macro eventClientSuppDel
 @event{$ mediatex del supp @var{supp}}
 @end macro
-@macro eventClientMiscSuppCheck
+@macro eventClientSuppCheck
 @event{$ mediatex check supp @var{supp} on @var{file}}
 @end macro
-@macro eventClientMiscSuppMount
+@macro eventClientSuppMount
 @event{$ mediatex adm mount @var{iso} on @var{path}}
 @end macro
-@macro eventClientMiscSuppUMount
+@macro eventClientSuppUMount
 @event{$ mediatex adm umount @var{path}}
 @end macro
 @c     - motd
@@ -576,7 +596,7 @@
 @macro eventClientMiscGet
 @event{$ mediatex adm get @var{path} as @var{coll} on @var{path}}
 @end macro
-@macro eventClientMiscUpload
+@macro eventClientUpload
 @event{$ mediatex upload[++] [file @var{file}] [catalog @var{file}] [rules @var{file}] to coll @var{coll}}
 @end macro
 @macro eventClientMiscAudit

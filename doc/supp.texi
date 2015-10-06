@@ -35,13 +35,13 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
-@item @eventClientMiscSuppList
-@itemx @eventClientMiscSuppAdd
-@itemx @eventClientMiscSuppDel
-@itemx @eventClientMiscSuppNote
-@itemx @eventClientMiscSuppCheck
-from 
-@actorPublisher
+@item @eventClientSuppList
+@itemx @eventClientSuppAdd
+@itemx @eventClientSuppFileAdd
+@itemx @eventClientSuppDel
+@itemx @eventClientSuppNote
+@itemx @eventClientSuppCheck
+from @actorPublisher
 @end table
 
 @item Events out

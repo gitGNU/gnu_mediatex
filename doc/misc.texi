@@ -15,46 +15,54 @@ Process conceptual model:
 
 @item Events in
 @table @code
+
 @item @eventClientMiscInit
 @itemx @eventClientMiscRemove
 @itemx @eventClientMiscPurge
-from 
-@actorAdmin
-@item @eventClientMiscSu
-@itemx @eventClientMiscMake
-@itemx @eventClientMiscUpload
-from 
-@actorPublisher
-@item @eventClientMiscClean
+from @actorAdmin
+
 @item @eventClientMiscAddUser
-@item @eventClientMiscDelUser
-from 
-@actorPublisher
+@itemx @eventClientMiscDelUser
+@itemx @eventClientMiscMake
+@itemx @eventClientMiscClean
+@itemx @eventClientMiscSu
+@itemx @eventClientMiscAudit
+from @actorPublisher
+
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
 from @activityServer
+
 @item @eventClientMiscGet
 from @procServerExtract
+
 @end table
 
 @item Events out
 @table @code
+
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
 @itemx @eventScriptsPurge
 to @procScriptsInitRemovePurge
+
 @item @eventScriptsClean
 to @procScriptsNewFreeClean
+
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
 to @procScriptsAddDelUser
+
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
 to @procScriptsBind
+
+@item @eventServerCgiQuery
+to @procServerCgiSrv
+
 @item @eventToolsSshCopy 
 to @procToolsSsh
-@item @eventServerCacheUpload
-to @procServerCache
+
 @end table
 
 @item Data in/out

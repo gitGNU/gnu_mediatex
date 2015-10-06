@@ -44,17 +44,20 @@ to @procClientServ{}: accept/revoke a remote server ; upgrade local configuratio
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
 from @actorPublisherO{} to @procClientConf{}: list collections ; share/withdraw local supports to collections; connect with @acronym{nat} servers.
-@item @eventClientMiscSuppList
-@itemx @eventClientMiscSuppAdd
-@itemx @eventClientMiscSuppDel
-@itemx @eventClientMiscSuppNote
-@itemx @eventClientMiscSuppCheck
+@item @eventClientSuppList
+@itemx @eventClientSuppAdd
+@itemx @eventClientSuppFileAdd
+@itemx @eventClientSuppDel
+@itemx @eventClientSuppNote
+@itemx @eventClientSuppCheck
 from @actorPublisherO{} to @procClientSupp{}: add/del/provide local supports.
+@item @eventClientUpload
+from @actorPublisherO{} to @procClientUpload{}: upload a new fileinto the cache.
 @item @eventClientMiscMake 
 @itemx @eventClientMiscClean
-@itemx @eventClientMiscUpload
-@item @eventClientMiscSu
-from @actorPublisherO{} to @procClientMisc{}: build/clean the @acronym{HTML} catalog ; upload a new fileinto the cache ; change to server or collection user.
+@itemx @eventClientMiscSu
+@itemx @eventClientMiscAudit
+from @actorPublisherO{} to @procClientMisc{}: build/clean the @acronym{HTML} catalog ; change to server or collection user ; simulate retrieving all archives.
 @item @eventToolsApacheHttpGet 
 @itemx @eventToolsApacheHttpPost 
 @itemx @eventToolsApacheStartDownload
@@ -72,6 +75,8 @@ from @procToolsCron{} to @actorPublisherO
 from @procToolsApache{} to @actorUserO{} depending if archive is available or not.
 @item @eventActorUserMail 
 from @procToolsExim{} to @actorUserO
+@item @eventActorPublisherMail 
+from @procToolsExim{} to @actorPublisherO
 @item @eventActorAdminMail
 from @procToolsCron{} to @actorAdminO
 @end table

@@ -85,8 +85,8 @@ Bellow is the exhaustive list of @activityClient{} queries:
 @item @eventClientMiscAdmMake    @tab    @tab 1  @tab    @tab 4,5,6 @tab    @tab y  @tab    @tab    @tab    @tab
 @item @eventClientMiscBind       @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
 @item @eventClientMiscUnBind     @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientMiscSuppMount  @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientMiscSuppUMount @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientSuppMount      @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
+@item @eventClientSuppUMount     @tab y  @tab    @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
 @item @eventClientMiscGet        @tab    @tab 1  @tab    @tab 6     @tab    @tab y  @tab    @tab    @tab    @tab
 @end multitable
 
@@ -104,12 +104,12 @@ Bellow is the exhaustive list of @activityClient{} queries:
 @headitem Client query             @tab A1 @tab B1   @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2  @tab A2
 @item @eventClientConfShareSupport @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
 @item @eventClientConfWithdrawSupp @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientMiscSuppAdd      @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientMiscSuppDel      @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientMiscSuppList     @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab     @tab
-@item @eventClientMiscSuppNote     @tab    @tab 1,2  @tab    @tab    @tab y  @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientMiscSuppCheck    @tab    @tab 1,2  @tab y  @tab 5  @tab    @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientMiscUpload       @tab    @tab 1    @tab y  @tab 5  @tab    @tab y  @tab 5  @tab y  @tab     @tab y
+@item @eventClientSuppAdd          @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientSuppDel          @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
+@item @eventClientSuppList         @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab     @tab
+@item @eventClientSuppNote         @tab    @tab 1,2  @tab    @tab    @tab y  @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientSuppCheck        @tab    @tab 1,2  @tab y  @tab 5  @tab    @tab y  @tab    @tab    @tab 2   @tab
+@item @eventClientUpload          @tab    @tab 1    @tab y  @tab 5  @tab    @tab y  @tab 5  @tab y  @tab     @tab y
 @end multitable
 
 @item @actorUserO{} meta-data management's queries:

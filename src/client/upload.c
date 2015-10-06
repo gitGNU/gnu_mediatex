@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.15 2015/09/22 11:42:40 nroche Exp $
+ * Version: $Id: upload.c,v 1.16 2015/10/06 22:23:43 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -160,50 +160,6 @@ uploadContent(Collection* upload, char* path)
   return rc;
 }
 
-/*  */
-/* /\*======================================================================= */
-/*  * Function   : isCatalogRefbyExtract */
-/*  * Description: check all archive from catalog are provided by extract */
-/*  * Synopsis   : int isCatalogRefbyExtract(Collection *coll) */
-/*  * Input      : Collection* coll               */
-/*  * Output     : TRUE on success */
-/*  =======================================================================*\/ */
-/* int  */
-/* isCatalogRefbyExtract(Collection *coll) */
-/* {  */
-/*   int rc = FALSE; */
-/*   Archive* archive = 0; */
-/*   AVLNode *node = 0; */
-
-/*   logMain(LOG_DEBUG, "isCatalogRefbyExtract"); */
-/*   checkCollection(coll); */
-
-/*   // loop on archive from upload catalog */
-/*   rc = TRUE; */
-/*   if (!avl_count(coll->archives)) goto end; */
-/*   for(node = coll->archives->head; node; node = node->next) { */
-/*     archive = (Archive*)node->item; */
-/*     if (!isEmptyRing(archive->documents)) { */
-
-/*       // check there is an extraction rule into upload extract */
-/*       if (!hasExtractRule(archive)) { */
-/* 	logMain(LOG_ERR,  */
-/* 		"Extract file should provide rule for %s:%lli " */
-/* 		"provided by catalog", */
-/* 		archive->hash, archive->size); */
-/* 	rc = FALSE; */
-/*       } */
-/*     } */
-/*   } */
-  
-/*  end: */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "isCatalogRefbyExtract fails"); */
-/*   } */
-/*   return rc; */
-/* } */
-
 /*=======================================================================
  * Function   : isFileRefbyExtract
  * Description: check extract provides a container describing the data
@@ -235,38 +191,6 @@ isFileRefbyExtract(Collection *coll, Archive* archive)
   }
   return rc;
 }
-
-/* /\*======================================================================= */
-/*  * Function   : isFileRefbyCatalog */
-/*  * Description: check catalog describes the data */
-/*  * Synopsis   : int isFileRefbyCatalog(Collection *coll,  */
-/*  *                                     Archive* archive) */
-/*  * Input      : Collection* coll */
-/*  *              Archive* archive */
-/*  * Output     : TRUE on success */
-/*  =======================================================================*\/ */
-/* int  */
-/* isFileRefbyCatalog(Collection *coll, Archive* archive) */
-/* {  */
-/*   int rc = FALSE; */
-
-/*   logMain(LOG_DEBUG, "isFileRefbyCatalog"); */
-/*   checkCollection(coll); */
-  
-/*   if (isEmptyRing(archive->documents)) { */
-/*     logMain(LOG_ERR,  */
-/* 	    "Archive %s%lli has no description on catalog", */
-/* 	    archive->hash, archive->size); */
-/*     goto error; */
-/*   } */
-
-/*   rc = TRUE; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "isFileRefbyCatalog fails"); */
-/*   } */
-/*   return rc; */
-/* } */
 
 /*=======================================================================
  * Function   : areNotAlreadyThere
@@ -529,12 +453,8 @@ mdtxUpload(char* label, char* catalog, char* extract,
   if (catalog && !uploadCatalog(upload, catalog)) goto error;
 
   // Do some checks depending on what we have
-  /* if (catalog && extract &&  */
-  /*     !isCatalogRefbyExtract(upload)) goto error; */
   if (extract && file && 
       !isFileRefbyExtract(upload, archive)) goto error;
-  /* if (catalog && !extract && file &&  */
-  /*     !isFileRefbyCatalog(upload, archive)) goto error; */
 
   // Check we erase nothing in actual extraction metadata
   if ((extract || file) &&

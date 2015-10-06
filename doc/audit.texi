@@ -1,0 +1,33 @@
+@cindex audit
+
+This script update an audit report.
+
+When call for the last update, it uploads the report 
+and sending a mail to the @actorPublisher{}.
+
+Process conceptual model:
+
+@image{mediatex-figures/audit,,,,}
+
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventScriptsAudit
+from @procServerDeliver
+@end table
+
+@item Events out
+@table @code
+@item @eventClientUpload 
+to @procClientUpload
+
+@item @eventToolsEximSendMail 
+to @procToolsExim
+@end table
+
+@end itemize
+Code:
+@table @code
+@item /usr/share/mediatex/scripts/deliver.sh
+@end table

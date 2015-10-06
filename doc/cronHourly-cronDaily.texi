@@ -12,6 +12,7 @@ Process conceptual model:
 @table @code
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
+@itemx @eventScriptsCronMonthly
 from @procToolsCron
 @end table
 
@@ -20,11 +21,12 @@ from @procToolsCron
 @item @eventClientExtract
 @itemx @eventClientNotify
 to @activityClient
+@item @eventClientUpload
+to @procClientUpload
 @item @eventClientMotd
 to @procClientMotd
 @item @eventActorPublisherMotd
-to 
-@actorPublisher
+to @actorPublisher
 @end table
 
 @item Data out
@@ -34,8 +36,9 @@ to
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/cronHourly.sh
-@itemx /usr/share/mediatex/scripts/cronDaily.sh
+@item /usr/share/mediatex/scripts/cron_hourly.sh
+@itemx /usr/share/mediatex/scripts/cron_daily.sh
+@itemx /usr/share/mediatex/scripts/cron_monthly.sh
 @end table
 
 @end itemize

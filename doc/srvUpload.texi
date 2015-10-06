@@ -1,0 +1,34 @@
+@cindex upload
+
+@process{Upload} server's process manage finalize the upload process into the server's cache.
+
+Process conceptual model:
+
+@image{mediatex-figures/srvUpload,,,,}
+
+@itemize @bullet
+
+@item Events in
+@table @code
+@item @eventServerUpload
+from @procClientUpload
+@end table
+
+@item Events out
+@table @code
+@item @eventServerCacheAlloc
+to @procServerCache
+@end table
+
+@item Data
+@itemize @bullet
+@item in: @dataConf
+@item in: @dataChecksum
+@end itemize
+
+@end itemize
+
+Code:
+@table @file
+@item src/server/upload.c
+@end table

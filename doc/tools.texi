@@ -61,7 +61,7 @@ from
 @procToolsApache{} to 
 @actorUser 
 @item @eventActorUserMail 
-from @procToolsExim{} to @actorUserO
+from @procToolsExim{} to @actorUserO or @actorPublisher
 @item @eventActorAdminMail
 from 
 @procToolsCron{} to 

@@ -53,8 +53,8 @@ to @procServerCache
 to @procServerDeliver
 @item @eventClientMiscGet
 to @procClientMisc
-@item @eventClientMiscSuppMount
-@itemx @eventClientMiscSuppUMount
+@item @eventClientSuppMount
+@itemx @eventClientSuppUMount
 to @procClientSupp
 @item @eventServerCacheAlloc
 to @procServerCache

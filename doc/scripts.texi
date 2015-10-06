@@ -12,6 +12,7 @@ The @activity{Scripts} activity is diveded into 10 process:
 * bind-unbind::          @process{bind-unbind}
 * mount-umount::         @process{mount-umount}
 * deliver::              @process{deliver}
+* audit::                @process{audit}
 @end menu
 
 Flood diagram:
@@ -19,43 +20,57 @@ Flood diagram:
 @image{mediatex-figures/scripts,,,,}
 
 @itemize @bullet
+
 @item Events in
 @table @code
+
 @item @eventScriptsInitdStart
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload
-from 
-@actorAdmin{} to @procScriptsInitd
+from @actorAdmin{} to @procScriptsInitd
+
 @item @eventScriptsCgiGetQuery
 @itemx @eventScriptsCgiPostQuery 
 from @procToolsApache{} to @procScriptsCgi
+
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
 from @procToolsCron{} to @procScriptsCron
+
 @item @eventScriptsInit 
 @itemx @eventScriptsRemove 
 @itemx @eventScriptsPurge 
 from @procClientMisc{} to @procScriptsInitRemovePurge
+
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
 from @procClientServ{} to @procScriptsAddDelUser
+
 @item @eventScriptsNew
 @itemx @eventScriptsFree
 from @procClientConf{} to @procScriptsNewFreeClean
+
 @item @eventScriptsClean
 from @procClientMisc{} to @procScriptsNewFreeClean
+
 @item @eventScriptsUpdate
 @itemx @eventScriptsCommit
 from @activityClient{} to @procScriptsUpdateCommit
+
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
 from @procClientMisc{} to @procScriptsBind
+
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
 from @procClientSupp{} to  @procScriptsMount
+
 @item @eventScriptsDeliver
 from @procServerDeliver{} to @procScriptsDeliver
+
+@item @eventScriptsAudit
+from @procServerDeliver{} to @procScriptsAudit
 @end table
 
 @item Events out
@@ -64,29 +79,40 @@ from @procServerDeliver{} to @procScriptsDeliver
 @itemx @eventServerStop
 @itemx @eventServerReload
 from @procScriptsInitd{} or @procScriptsInitRemovePurge{} to @activityServer
+
 @item @eventToolsApacheRestart
 from @procScriptsInitRemovePurge{} to @procToolsApache
+
 @item @eventToolsApacheReload
 from @procScriptsNewFreeClean{} to @procToolsApache
+
 @item @eventServerCgiQuery
 from @procScriptsCgi{} to @procServerCgiSrv
+
 @item @eventToolsCvsInit 
 @itemx @eventToolsCvsImport
 @itemx @eventToolsCvsUpdate 
-from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean to @procToolsCvs
+from @procScriptsInitRemovePurge or @procScriptsNewFreeClean to @procToolsCvs
+
 @item @eventToolsCvsUpdate
 @itemx @eventToolsCvsCommit
-from @procScriptsUpdateCommit{} to @procToolsCvs
+from @procScriptsUpdateCommit to @procToolsCvs
+
 @item @eventToolsEximSendMail 
-from @procScriptsDeliver{} to @procToolsExim
+from @procScriptsDeliver or @procScriptsAudit to @procToolsExim
+
+@item @eventClientUpload
+from @procScriptsCron or @procScriptsAudit to @procClientUpload
+
 @item @eventClientExtract
 @itemx @eventClientNotify
 @itemx @eventClientMiscMake
 @itemx @eventClientMotd
-from @procScriptsCron{} respectively to @procClientMotd{}: generate the message of the day.
+from @procScriptsCron{} respectively to @activityClient{}, @procClientMisc and @procClientMotd{}: generate the message of the day.
+
 @item @eventActorPublisherMotd
-from @procScriptsCron{} to 
-@actorPublisher{}: update the (above generated) message of the day.
+from @procScriptsCron{} to @actorPublisher{}: update the (above generated) message of the day.
+
 @end table
 @end itemize
 
@@ -135,3 +161,7 @@ Codes:
 @node deliver
 @subsection deliver
 @include deliver.texi
+
+@node audit
+@subsection audit
+@include audit.texi

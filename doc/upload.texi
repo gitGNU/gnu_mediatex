@@ -1,0 +1,49 @@
+@cindex motd
+
+The @process{Upload} process provide a single @api{} to upload new incoming archives.
+
+@itemize @bullet
+@item parse the provided metadata
+@item check we erase nothing into the extraction rules and into the cache
+@item ask daemon to upload the file
+@end itemize
+
+@activity{Mediatex} system wants to check or extract for.
+
+Process conceptual model:
+
+@image{mediatex-figures/motd,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+
+@item @eventClientUpload
+from @actorPublisher{}, @procScriptsCron or @procScriptsAudit
+@end table
+
+@item Events out
+@table @code
+@item @eventServerUpload
+to @procServerUpload
+
+@end table
+
+@item Data in/out
+@itemize @bullet
+@item @dataExtract
+@end itemize
+
+@item Data out
+@itemize @bullet
+@item @dataCatalog
+@end itemize
+@end itemize
+
+Examples:
+see Scenarios (@ref{Scenario 4})
+ 
+Code:
+@table @file
+@item src/client/upload.c
+@end table
