@@ -22,7 +22,7 @@ from @procServerDeliver
 @item @eventClientUpload 
 to @procClientUpload
 
-@item @eventToolsEximSendMail 
+@item @eventActorPublisherMail
 to @procToolsExim
 @end table
 

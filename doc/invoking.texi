@@ -6,7 +6,6 @@ and to test it by setting an ``hello world'' collection example.
 
 @menu
 * Install::             Compile and install.
-* Commands::            Client queries.
 * Scenario 1::	        Manage supports.
 * Scenario 2::	        Manage collections.
 * Scenario 3::          Extract an archive.
@@ -99,129 +98,6 @@ Next, a test script automate the 6 following scenarios:
 @example
 # /usr/share/mediatex/examples/tests.sh
 @end example
-
-@node Commands
-@section Commands
-@cindex Commands
-
-@mediatexO @activityClient{}'s queries:
-
-@itemize @bullet
-
-@item Admin queries:
-@table @code
-
-@item @eventClientMiscInit
-@itemx @eventClientMiscRemove
-@itemx @eventClientMiscPurge
-Initialise, remove and purge @mediatexO software.
-
-@item @eventClientMiscAddUser
-@itemx @eventClientMiscDelUser
-Manage @actorPublisherO users.
-
-@item @eventClientConfAddColl
-@itemx @eventClientConfDelColl
-Create/subscribe or destroy/unsubscribe a collection. 
-
-@end table
-@item Data management:
-@table @code
-
-@item @eventClientSuppAdd
-Add a new external support: a device or file not always accessible.
-
-@item @eventClientSuppFileAdd
-Add a new external support's file: a file always accessible locally.
-
-@item @eventClientSuppDel
-Remove a support (external support or support's file).
-
-@item @eventClientSuppList
-List supports.
-
-@item @eventClientSuppNote
-Associate a short text (10 character's) with a support, which will be display on the list.
-
-@item @eventClientSuppCheck
-Provide an external support (that is accessible now).
-
-@item @eventClientConfShareSupport
-@itemx @eventClientConfWithdrawSupp
-Manage sharing support with collections.
-
-@item @eventClientUpload
-Upload an incoming archive into the cache.
-Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.
-
-@end table
-@item Meta-data management:
-@table @code
-
-@item @eventClientConfList
-List collections.
-
-@item @eventActorPublisherMotd
-Display actions @actorPublisherO have to perform.
-
-@item @eventClientServAddKey
-@itemx @eventClientServDelKey
-Manage remote servers subscription.
-
-@item @eventClientServUpgrade
-Synchronise local server.
-Appending one '+' will run ``make'' queries too.
-
-@item @eventClientMiscMake
-@itemx @eventClientMiscClean
-Manage the local @acronym{HTML} catalogue.
-
-@item @eventClientMiscSu
-Change to @mediatex or collection system user.
-
-@item @eventClientMiscAudit
-Extract all archives from a collection.
-
-@end table
-@item Queries to daemon:
-@table @code
-
-@item @eventServerSaveReg
-Ask @activityServer to dump its state into disk.
-
-@item @eventServerExtractReg
-Ask server to perform extractions.
-
-@item @eventServerNotifyReg 
-Ask server to communicate its state to other servers.
-
-@item @eventServerDeliverReg
-Ask server to deliver mails related to extracted archives (no more needed).
-
-@end table
-@item Internal/debug queries:
-@table @code
-
-@item @eventClientServUpdate
-@item @eventClientServCommit
-Manage @acronym{CVS} synchronisation (already managed by ``upgrade'' query)
-
-@item @eventClientMiscAdmMake
-Build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
-
-@item @eventClientMiscBind
-@itemx @eventClientMiscUnBind
-Manage collection repository binding on the chrooted jail for SSH remote access (already manage by @file{/etc/init.d/mediatexd})
-
-@item @eventClientSuppMount
-@itemx @eventClientSuppUMount
-Manage mounting @iso devices.
-
-@item @eventClientMiscGet
-Retrieve a remote collection's file via @acronym{SSH}.
-
-@end table
-@end itemize
 
 @node Scenario 1
 @section Scenario 1: manage supports

@@ -170,25 +170,6 @@ only re-serialized and upgraded if the last @file{NN.txt} file was present when 
 @end itemize
 @end itemize
 
-Options:
-@table @option
-@item -n
-@itemx --dry-run
-do a dry run
-@item -m
-@itemx --memory-limit
-Amount of RAM in Mo the soft try to run bellow
-@item -M
-@itemx --debug-alloc	
-Debug information from malloc/free
-@item -c
-@itemx --conf-label
-Allow to manage several configurations (default is mdtx)
-@item -w
-@itemx --no-www-cvs
-Do not synchronise meta-data with master server
-@end table
-
 Code:
 @table @file
 @item src/common/connect.h

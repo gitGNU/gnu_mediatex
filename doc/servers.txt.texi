@@ -1,7 +1,6 @@
 @cindex servers list file
 
-The @dataServersO{} file is used to share information between servers 
-including connectivity keys.
+The @dataServersO{} file is used to share the latest information between servers including connectivity keys.
 
 Relational schema:
 

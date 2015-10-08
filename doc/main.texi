@@ -1,12 +1,200 @@
 @cindex api
 @cindex oais
 
-@sc{Mediatex} focus on providing an @sc{api} to ask for, and retrieve 
-archives from where they are stocked.
-It doesn't cover the ingestion process as precisely as @sc{oais} do
-as it should be used to implement the ``storage'''s @sc{oais} layer.
+@mediatexO focus on providing an @sc{api} to ask for, and retrieve 
+archives from where they are stored.
 
-This following specifications use the @sc{Merise} conception method.
+@menu
+* Commands::            Client queries.
+* Options::	        Options.
+* Communication model:: Main specification.
+@end menu
+
+@node Commands
+@section Commands
+@cindex Commands
+
+@mediatexO @activityClient{}'s queries:
+
+@itemize @bullet
+
+@item Admin queries:
+@table @code
+
+@item @eventClientMiscInit
+@itemx @eventClientMiscRemove
+@itemx @eventClientMiscPurge
+Initialise, remove and purge @mediatexO software.
+
+@item @eventClientMiscAddUser
+@itemx @eventClientMiscDelUser
+Manage @actorPublisherO users.
+
+@item @eventClientConfAddColl
+@itemx @eventClientConfDelColl
+Create/subscribe or destroy/unsubscribe a collection. 
+
+@end table
+@item Data management:
+@table @code
+
+@item @eventClientSuppAdd
+Add a new external support: a device or file not always accessible.
+
+@item @eventClientSuppFileAdd
+Add a new external support's file: a file always accessible locally.
+
+@item @eventClientSuppDel
+Remove a support (external support or support's file).
+
+@item @eventClientSuppList
+List supports.
+
+@item @eventClientSuppNote
+Associate a short text (10 character's) with a support, which will be display on the list.
+
+@item @eventClientSuppCheck
+Provide an external support (that is accessible now).
+
+@item @eventClientConfShareSupport
+@itemx @eventClientConfWithdrawSupp
+Manage sharing support with collections.
+
+@item @eventClientUpload
+Upload an incoming archive into the cache.
+Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.
+
+@end table
+@item Meta-data management:
+@table @code
+
+@item @eventClientConfList
+List collections.
+
+@item @eventActorPublisherMotd
+Display actions @actorPublisherO have to perform.
+
+@item @eventClientServAddKey
+@itemx @eventClientServDelKey
+Manage remote servers subscription.
+
+@item @eventClientServUpgrade
+Synchronise local server.
+Appending one '+' will run ``make'' queries too.
+
+@item @eventClientMiscMake
+@itemx @eventClientMiscClean
+Manage the local @acronym{HTML} catalogue.
+
+@item @eventClientMiscSu
+Change to @mediatex or collection system user.
+
+@item @eventClientMiscAudit
+Extract all archives from a collection.
+
+@end table
+@item Queries to daemon:
+@table @code
+
+@item @eventServerSaveReg
+Ask @activityServer to dump its state into disk.
+
+@item @eventServerExtractReg
+Ask server to perform extractions.
+
+@item @eventServerNotifyReg 
+Ask server to communicate its state to other servers.
+
+@item @eventServerDeliverReg
+Ask server to deliver mails related to extracted archives (no more needed).
+
+@end table
+@item Internal/debug queries:
+@table @code
+
+@item @eventClientServUpdate
+@item @eventClientServCommit
+Manage @acronym{CVS} synchronisation (already managed by ``upgrade'' query)
+
+@item @eventClientMiscAdmMake
+Build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
+
+@item @eventClientMiscBind
+@itemx @eventClientMiscUnBind
+Manage collection repository binding on the chrooted jail for SSH remote access (already manage by @file{/etc/init.d/mediatexd})
+
+@item @eventClientSuppMount
+@itemx @eventClientSuppUMount
+Manage mounting @iso devices.
+
+@item @eventClientMiscGet
+Retrieve a remote collection's file via @acronym{SSH}.
+
+@end table
+@end itemize
+
+@node Options
+@section Options
+@cindex Options
+
+Theses options apply to the 3 binaries provided by @mediatexO.
+
+@table @option
+@item -h
+@itemx --help
+Display the help message.
+
+@item -v, --version
+Display the mediatex software version.
+
+@item -f @var{facility}
+@itemx --facility @var{facility}
+Set facility to use for logging. See syslog(3) : mainly @code{file} to log to the standard output or @code{local2} to log to @acronym{SYSLOG}.
+
+@item -l @var{path}
+@itemx --log-file @var{path}	
+Log into a file. Needs the @code{file} facility (default).
+
+@item -s severity[:module(,module)*]
+@item --severity severity[:module(,module)*]
+Set severity to log, by modules.
+Choose severity amongs @code{err}, @code{warning}, @code{notice}, @code{info} and @code{debug}.
+You may provide modules amongs @code{alloc}, @code{script}, @code{misc}, @code{memory}, @code{parser}, @code{common} and @code{main}.
+If you provide no module, all except the @code{alloc} module will be selected.
+
+@item -m @var{number}
+@itemx --memory-limit @var{number}
+Set a nice limit for malloc in Mo. When @activityServerO overcome this limit, it will try to release objects not used.  
+
+@item -S
+@item --script-out	
+Enable the standard output for scripts (that is hidden by default).
+
+@item -n
+@itemx --dry-run
+Do a dry run: do not write anything.
+
+@item -L, 
+@itemx --debug-lexer
+Enable debug information from lexers.
+
+@item -c @var{mdtxLabel}
+@item --conf-label @var{mdtxLabel}
+Over hide 'mdtx.conf' configuration file and use @var{mdtxLabel} system user instead of @code{mdtx}. This permit to run independent @mediatexO systems on the same machine. This is mainly used for tests.
+
+@item -a
+@itemx --alone
+Do not make @acronym{CVS} queries. This may be useful if you temporary loose your network connection, or if you want to be temporally isolated for tests.
+@note{}: This option is only available on @activityClient as @activityServer and @procScriptsCgi never perform @acronym{CVS} queries.
+
+@end table
+
+
+@node Communication model
+@section Communication model
+@cindex Communication model
+
+The following specifications use the @sc{Merise} conception method.
 Here are the typographical conventions used:
 
 @itemize @bullet
@@ -33,21 +221,22 @@ Communication model:
 @image{mediatex-figures/main,,,,}
 
 @itemize @bullet
-@item 4 actors interact with the @sc{mediatex} activity
+@item 4 actors interact with the @mediatexO activity
 @itemize @minus
 @item @actorUser
 @item @actorPublisher
 @item @actorAdmin
 @item @actorDate
-@item @mediatex
 @end itemize
 
 @item Events in
 @table @code
+
 @item @eventToolsApacheHttpGet 
 @itemx @eventToolsApacheHttpPost 
 @itemx @eventToolsApacheStartDownload
 from @actorUserO
+
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
@@ -64,6 +253,7 @@ from @actorUserO
 @itemx @eventClientMiscMake
 @itemx @eventClientMiscAudit
 from @actorPublisherO
+
 @item @eventScriptsInitdStart 
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
@@ -76,11 +266,13 @@ from @actorPublisherO
 @itemx @eventClientConfAddColl
 @itemx @eventClientConfDelColl
 from @actorAdminO
+
 @item @eventToolsCronDate
 from @actorDateO
+
 @end table
 
-Commands are detailed into the @mediatex{} specifications.
+Commands are detailed into the @mediatex specifications.
 
 @item Events out
 @table @code
@@ -88,11 +280,14 @@ Commands are detailed into the @mediatex{} specifications.
 @itemx @eventActorUserHtmlRedirect 
 @itemx @eventActorUserMail 
 to @actorUserO
+
 @item @eventActorPublisherMotd
 @itemx @eventActorPublisherMail 
 to @actorPublisherO
+
 @item @eventActorAdminMail
 to @actorAdminO
+
 @end table
 
 @item Data in/out
@@ -103,4 +298,5 @@ to @actorAdminO
 @end itemize
 @end itemize
 
-Data files involved are détailed into the next section.
+Data files involved are detailed into the next section.
+

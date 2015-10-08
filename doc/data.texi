@@ -35,6 +35,7 @@ Relational schema:
 @item The @sc{Support} entity lists all the local supports
 @item The @sc{Collection} entity lists all the collections the local serve belongs to
 @end itemize
+
 Below entities are all dupplicated for each collection:
 @itemize @bullet
 @item The @sc{Server} entity lists all the servers

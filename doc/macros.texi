@@ -611,14 +611,14 @@
 
 @c   - to admin
 @macro eventActorAdminMail
-@event{(mail)}
+@event{$ mail ADMIN@@xxx.org)}
 @end macro
 @c   - to publisher
 @macro eventActorPublisherMotd
 @event{(motd)}
 @end macro
 @macro eventActorPublisherMail
-@event{(mail)}
+@event{$ mail PUBLISHER@@xxx.org)}
 @end macro
 @c   - to user
 @macro eventActorUserHtmlForm

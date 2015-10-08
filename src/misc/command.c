@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.17 2015/10/08 00:15:34 nroche Exp $
+ * Version: $Id: command.c,v 1.18 2015/10/08 21:43:50 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -139,11 +139,11 @@ miscOptions()
 	  "  -h, --help\t\tdisplay this message\n"
 	  "  -v, --version\t\tdisplay the " PACKAGE_NAME 
 	  " software version\n"
-	  "  -f, --facility\tuse facility for logging\n"
+	  "  -f, --facility\tset facility to use for logging\n"
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"
 	  "  -l, --log-file\tlog into a file\n"
 	  "\t\t\tneeds 'file' facility (default)\n"
-	  "  -s, --severity\tseverity for logging\n"
+	  "  -s, --severity\tset severity to log, by modules.\n"
 	  "\t\t\tamongs 'err', 'warning', 'notice', 'info', 'debug';\n"
 	  "\t\t\tmodules amongs 'alloc', 'script', 'misc', 'memory', "
 	  "'parser', 'common', 'main'\n"

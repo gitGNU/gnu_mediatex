@@ -68,12 +68,12 @@ lines: lines line
 
 line: date date date md5 md5 sha sha [[:digit:]]+ status name
 
-date:   @{year@}-@{month@}-@{day@},@{HOUR@}:@{min@}:@{sec@}
+date:   @{year@}-@{month@}-@{day@},@{hour@}:@{min@}:@{sec@}
 
 year:   [[:digit:]]@{4@}
 month:  [[:digit:]]@{2@}
 day:    [[:digit:]]@{2@}
-HOUR:   [[:digit:]]@{2@}
+hour:   [[:digit:]]@{2@}
 min:    [[:digit:]]@{2@}
 sec:    [[:digit:]]@{2@}
 

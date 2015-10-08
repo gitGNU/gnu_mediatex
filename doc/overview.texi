@@ -14,9 +14,7 @@ because it aims to provide perennial
 is inspired by @acronym{OAIS} archive system description
 (@url{http://public.ccsds.org/@/publications/@/archive/@/650x0m2.pdf})
 and aims to provide an @acronym{OAIS}'s archival storage entity. 
-However, it focus on already burned support ingestion 
-(where @acronym{OAIS} ingest documents), as its goal is to provide tools 
-that help to manage a @acronym{NF Z 42-013} compliant supports collection.
+Its goal is to provide tools that help to manage a @acronym{NF Z 42-013} compliant supports collection.
 
 @menu
 * Who::		Who is it about?
@@ -44,10 +42,10 @@ system interacts with 3 kind of users:
 @actorAdminO{} or @verb{!root!} system user configures and start services 
 on a given host. He also creates or joins collections.
 @item
-@actorPublisherO{} provides supports and meta-data for collection. (@procScriptsAddDelUser{})
+@actorPublisherO{}s provide supports and meta-data for a collection: @procScriptsAddDelUser{}.
 @item 
 @actorUserO{} log-in via an internet browser to
-browse collection and download archives. (@procToolsApache{})
+browse collection and download archives: @procToolsApache{}.
 @item 
 @actor{Date} schedules the @mediatexO{} 
 system's maintenance operations.
@@ -154,17 +152,17 @@ Providing dynamic search. To do it you will have to export the metadata into a d
 Doing removal into data.
 @item 
 @acronym{SEDA} or any @acronym{XML} exchange protocol compliant 
-(@url{http://www.archivesdefrance.culture.gouv.fr/seda/index.html})
+(@url{http://www.archivesdefrance.culture.gouv.fr/seda/index.html}).
 But if you need it, you still can interface @mediatexO{}
-with an upper layer managing transaction and doing translations on metadata.
+with an upper layer managing transactions and doing translations on metadata.
 @item
 Self managing time-stamps.
-(@url{https://www.openssl.org/docs/manmaster/apps/ts.html})
-But of course, it may store them bellow the related data files.
+(@url{https://www.openssl.org/docs/manmaster/apps/ts.html}).
+Provided time-stamps or whatever meta-data files may still be stored bellow the related data files.
 @item
 Self managing claim-based authentication or any single sign on mechanism. 
 (@url{https://en.wikipedia.org/wiki/OpenID})
-But it should be configurable to be used with.
+But it should support to be configured to be used with.
 @end itemize
 
 In fact @mediatexO{}
@@ -280,7 +278,7 @@ The support index and servers list files are internally managed by the
 Involved licences:
 @itemize @bullet
 @item Copy/past codes
-@multitable @columnfractions .2 .2 .6
+@multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
 @item getcgivar @tab MIT/NCSA? @tab from NCSA server exemples
 @item e2fsck @tab GPLv2* @tab http://e2fsprogs.sourceforge.net/
@@ -289,7 +287,7 @@ Involved licences:
 (*) Author agree to relicense e2fsck's progress bar code under the LGPLv2
 
 @item Compilation
-@multitable @columnfractions .2 .2 .6
+@multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
 @item automake @tab   GPLv2+ @tab  http://www.gnu.org/software/automake/
 @item bison @tab      GPLv3+ @tab  http://www.gnu.org/software/bison/
@@ -305,14 +303,14 @@ Involved licences:
 @end multitable
 
 @item Documentation (others format than texinfo and man)
-@multitable @columnfractions .2 .2 .6
+@multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
 @item imagemagick @tab Apache2 @tab http://www.imagemagick.org/
 @item texlive @tab     LPPL @tab    https://www.tug.org/texlive/
 @end multitable
 
 @item Installation
-@multitable @columnfractions .2 .2 .6
+@multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
 @item apache2 @tab        Apache2 @tab  http://httpd.apache.org/
 @item bc @tab              GPLv3+ @tab   http://www.gnu.org/software/bc/
@@ -329,7 +327,7 @@ Involved licences:
 @c @item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
 
 @item Optionnal: (and non-free)
-@multitable @columnfractions .2 .2 .6
+@multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
 @item rar @tab             EULA @tab     http://www.rarlab.com/
 @item afio @tab               * @tab http://members.chello.nl/~k.holtman/afio.html

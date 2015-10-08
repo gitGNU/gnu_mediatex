@@ -1,6 +1,6 @@
 @cindex cron
 
-This 2 scripts are run fron @procToolsCron{}.
+Theses 3 scripts are run fron @procToolsCron{}.
 
 Process conceptual model:
 
@@ -10,23 +10,40 @@ Process conceptual model:
 
 @item Events in
 @table @code
+
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
 @itemx @eventScriptsCronMonthly
 from @procToolsCron
+
 @end table
+
+@item Processing, for each collections:
+@itemize @bullet
+@item Hourly: ask @activityServerO to extract and notify.
+@item Daily: ask @activityClientO to build the @acronym{HTML} catalog and the message of the day.
+@item Monthly: ask @activityClientO to backup the @acronym{CVSROOT} module.
+@end itemize
 
 @item Events out
 @table @code
+
 @item @eventClientExtract
 @itemx @eventClientNotify
 to @activityClient
+
+@item eventClientMiscMake
+to @procClientMisc
+
 @item @eventClientUpload
 to @procClientUpload
+
 @item @eventClientMotd
 to @procClientMotd
+
 @item @eventActorPublisherMotd
 to @actorPublisher
+
 @end table
 
 @item Data out

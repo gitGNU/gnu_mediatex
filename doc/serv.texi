@@ -58,14 +58,26 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
 from 
 @actorPublisher
+
 @item @eventClientServUpgradeCall
 from @procClientConf
+
 @end table
+
+@item Processing
+@itemize @bullet
+@item 
+The upgrade processing is automatically raised when needed.
+However it permit to force an upgrade now, which may be useful when modifying manually the configuration files.
+@item
+Adding a key will add a server entry into the @dataServersO file and so, allow connections (subscription, synchronisations, copies) from a new remote server to this collection directory on every servers already added.
+@end itemize
 
 @item Data in/out
 @itemize @bullet
@@ -75,7 +87,8 @@ from @procClientConf
 
 @item Data out
 @table @file
-@item /var/cache/mediatex/mdtx/COLL/.ssh/authorized_keys
+@item @dataServers
+@itemx /var/cache/mediatex/mdtx/COLL/.ssh/authorized_keys
 @itemx /var/cache/mediatex/mdtx/COLL/.ssh/known_host
 @itemx /var/cache/mediatex/mdtx/COLL/.ssh/config
 @end table

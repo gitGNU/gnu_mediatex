@@ -16,6 +16,12 @@ Process conceptual model:
 from @procToolsApache
 @end table
 
+@item Processing
+@itemize @bullet
+@item Relay @actorUser{}'s queries comming from @acronym{Apache} to the @activityServerO{}s: all while no positive answer for the @acronym{GET} query and only the local one for the @acronym{POST} query.
+@item Interpret the @activityServerO{}s answers and return a related @acronym{HTML} page or redirection.
+@end itemize
+
 @item Events out
 @table @code
 @item @eventServerCgiQuery

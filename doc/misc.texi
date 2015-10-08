@@ -35,7 +35,7 @@ from @procServerExtract
 
 @item Processings
 @itemize @bullet
-@item Manage the @sc{HTML} catalog.
+@item Manage the @sc{HTML} catalogs.
 @item Wraps queries from @actorAdminO{}, @actorPublisherO{} 
 and @activityServerO{} to @activityScriptsO{}.
 @end itemize

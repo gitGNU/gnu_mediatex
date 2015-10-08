@@ -1,7 +1,7 @@
 #!/bin/sh
 #set -x
 #=======================================================================
-# * Version: $Id: cron_daily.src,v 1.5 2015/09/22 11:42:39 nroche Exp $
+# * Version: $Id: cron_daily.src,v 1.6 2015/10/08 21:43:50 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -25,14 +25,6 @@
 #=======================================================================
 
 BINDIR=CONF_BINDIR
-
-# LOGFILE=$(mktemp)
-
-# $BINDIR/mediatex -swarning -ffile make >/dev/null 2>$LOGFILE
-# $BINDIR/mediatex -swarning -ffile motd >CONF_SYSCONFDIR/motd 2>>$LOGFILE
-
-# cat $LOGFILE | sort | uniq
-# rm -f $LOGFILE
 
 $BINDIR/mediatex -swarning -ffile make >/dev/null
 $BINDIR/mediatex -swarning -ffile motd >CONF_SYSCONFDIR/motd

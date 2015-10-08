@@ -14,8 +14,10 @@
 @c %**end of header
 
 @copying
-Mediatex archival storage system implements the related @sc{Oais} entity 
-and try to match it with the @sc{NF Z 42-013} requirements.
+@acronym{Mediatex} is an Electronic Record Management System 
+(@acronym{ERMS}),
+focusing on the archival storage entity define by the @sc{Oais} draft,
+and on the @sc{NF Z 42-013} requirements.
 Copyright @copyright{} 2014 2015 Free Software Foundation, Inc.
 
 @quotation
@@ -62,12 +64,12 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @include macros.texi
 
 @menu
-* Overview::                    General purpose and information.
-* Invoking Mediatex::	        Tutorial.
-* Communication model::	        Main specification.
-* Relational schema::           Data files description.
-* Conceptual model::	        Detailed specification.
-* Use cases::                   Configuration examples.
+* Overview::                    Description.
+* How-to::	                Quick overview.
+* Invoking Mediatex::	        General help.
+* Relational schema::           Data files.
+* Conceptual model::	        Specifications.
+* Use cases::                   Examples.
 * Consistency how-to::          Consistency how-to.
 * Reporting bugs::              Sending bug reports and debug suggestions.
 * GNU Free Documentation License:: Copying and sharing this documentation.
@@ -75,27 +77,27 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @end menu
 
 @node Overview
-@chapter Overview
+@chapter Description.
 @include overview.texi
 
-@node Invoking Mediatex
-@chapter Invoking @command{mediatex}
+@node How-to
+@chapter Quick overview
 @include invoking.texi
 
-@node Communication model
-@chapter Communication model
+@node Invoking Mediatex
+@chapter General help
 @include main.texi
 
 @node Relational schema
-@chapter Data
+@chapter Data files.
 @include data.texi
 
 @node Conceptual model
-@chapter Conceptual model
+@chapter Specifications
 @include specs.texi
 
 @node Use cases
-@chapter Use cases
+@chapter Examples
 @include useCase.texi
 
 @node Consistency how-to
