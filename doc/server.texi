@@ -70,22 +70,6 @@ from @procServerDeliver{} to @procScriptsDeliver
 @end table
 @end itemize
 
-Options:
-@table @option
-@item -n
-@itemx --dry-run
-do a dry run
-@item -m
-@itemx --memory-limit
-Amount of RAM in Mo the soft try to run bellow
-@item -M
-@itemx --debug-alloc	
-Debug information from malloc/free
-@item -c
-@itemx --conf-label
-Allow to manage several configurations (default is mdtx)
-@end table
-
 Code:
 @table @file
 @item /etc/init.d/mediatex/mdtxd
