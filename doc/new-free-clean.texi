@@ -2,6 +2,7 @@
 
 Theses 2 scripts manage collection subscription/ensubsciption.
 @note{} if local host is the collection master host, theses script also manage the creation/destruction of the collection.
+The third script clean the @acronym{HTML} catalog.
 
 @image{mediatex-figures/new-free-clean,,,,}
 
@@ -16,6 +17,14 @@ from @procClientConf
 @item @eventScriptsClean
 from @procClientMisc
 @end table
+
+@item Processing
+@itemize @bullet
+@item 
+Manage @code{mdtx-COLL} collection system user and group.
+@item
+Manage the collection's repositories.
+@end itemize
 
 @item Events out
 @table @code

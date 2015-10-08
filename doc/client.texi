@@ -41,21 +41,21 @@ Flood diagram:
 @itemx @eventClientMiscPurge
 @itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-from @actorAdmin{} to @procClientMisc
+from @actorAdmin to @procClientMisc
 
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdmin{} to @procClientConf
+from @actorAdmin to @procClientConf
 
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
-from @actorPublisher{} to @procClientServ
+from @actorPublisher to @procClientServ
 
 @item @eventClientConfList
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
-from @actorPublisher{} to @procClientConf
+from @actorPublisher to @procClientConf
 
 @item @eventClientSuppList
 @itemx @eventClientSuppAdd
@@ -63,65 +63,93 @@ from @actorPublisher{} to @procClientConf
 @itemx @eventClientSuppDel
 @itemx @eventClientSuppNote
 @itemx @eventClientSuppCheck
-from @actorPublisher{} to @procClientSupp
-
-@item @eventClientExtract
-@itemx @eventClientNotify
-from @procScriptsCron{}
+from @actorPublisher to @procClientSupp
 
 @item @eventClientUpload
-from @actorPublisher{} to @procClientUpload
-
-@item @eventClientMotd
-from @procScriptsCron{} to @procClientMotd
+from @actorPublisher to @procClientUpload
 
 @item @eventClientMiscSu
 @itemx @eventClientMiscMake
 @itemx @eventClientMiscClean
 @itemx @eventClientMiscAudit
-from @actorPublisher{} to @procClientMisc
+from @actorPublisher to @procClientMisc
+
+@item @eventClientSave
+@itemx @eventClientDeliver (no more used)
+from @actorPublisher to @activityServer
+
+@item @eventClientExtract
+@itemx @eventClientNotify
+from @actorPublisher or @procScriptsCron to @activityServer
+
+@item @eventClientMotd
+from @procScriptsCron to @procClientMotd
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from @activityServer{} to @procClientMisc
+from @activityServer to @procClientMisc
 
 @item @eventClientMiscGet
-from @procServerExtract{} to @procClientMisc
+from @procServerExtract to @procClientMisc
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract{} to @procClientSupp
+from @procServerExtract to @procClientSupp
 
 @end table
 
+@item Processing
+@itemize @bullet
+@item
+Lock concurent access.
+@item
+Wrap the server's query to @activityServer{}:
+@itemize @bullet
+@item @eventServerSaveReg
+@item @eventServerExtractReg
+@item @eventServerNotifyReg
+@item @eventServerDeliverReg
+@end itemize
+@end itemize
+
 @item Events out
 @table @code
+
 @item @eventScriptsUpdate
 @item @eventScriptsCommit
-from @procClientServ{} to @procScriptsUpdateCommit
+from @procClientServ to @procScriptsUpdateCommit
+
 @item @eventScriptsNew 
 @itemx @eventScriptsFree
-from @procClientConf{} to @procScriptsNewFreeClean
+from @procClientConf to @procScriptsNewFreeClean
+
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp{} to @procScriptsMount
+from @procClientSupp to @procScriptsMount
+
 @item @eventServerSaveReg 
-from @procClientMotd{} to @activityServer
+from @procClientMotd to @activityServer
+
 @item @eventServerHaveQuery
-from @procClientSupp{} to @procServerHave
+from @procClientSupp to @procServerHave
+
 @item @eventServerUpload
-from @procClientMisc{} to @procServerCache
+from @procClientMisc to @procServerCache
+
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
 @itemx @eventScriptsPurge
-from @procClientMisc{} to @procScriptsInitRemovePurge
+from @procClientMisc to @procScriptsInitRemovePurge
+
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-from @procClientMisc{} to @procScriptsAddDelUser
+from @procClientMisc to @procScriptsAddDelUser
+
 @item @eventScriptsClean
-from @procClientMisc{} to @procScriptsNewFreeClean
+from @procClientMisc to @procScriptsNewFreeClean
+
 @item @eventToolsSshCopy 
-from @procClientMisc{} to @procToolsSsh
+from @procClientMisc to @procToolsSsh
 @end table
 
 @item Data in/out
@@ -135,8 +163,8 @@ from @procClientMisc{} to @procToolsSsh
 Catalog and extraction rules meta-data files are:
 @itemize @bullet
 @item
-splitted into 10 Mo numbered files by @activityClientO{} in order to ease
-@procToolsCvs{} to work on them,
+splitted into 10 Mo numbered files by @activityClientO in order to ease
+@procToolsCvs to work on them,
 @item
 only re-serialized and upgraded if the last @file{NN.txt} file was present when loading (except if using the @code{upgrade} query).
 @end itemize
@@ -169,6 +197,7 @@ Code:
 @item src/common/register.c
 @item src/client/shellQuery.l
 @item src/client/shellQuery.y
+@item src/client/serv.c
 @item src/client/mdtx.c
 @end table
 

@@ -274,7 +274,7 @@
 @end macro
 
 @macro procClientUpload
-@process{motd} (@pxref{upload})
+@process{upload} (@pxref{upload})
 @end macro
 
 @macro procClientMotd

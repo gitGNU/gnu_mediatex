@@ -17,6 +17,9 @@ from
 @actorAdmin
 @end table
 
+@item Processing
+Manage the @activityServerO{}'s processus.
+
 @item Events out
 @table @code
 @item @eventServerStart

@@ -1,11 +1,6 @@
 @cindex html catalog
 
-The @process{Misc} process mainly:
-@itemize @bullet
-@item build the @sc{html} catalog,
-@item wraps queries from @actorAdminO{}, @actorPublisherO{} 
-and @activityServerO{} to @activityScriptsO{}.
-@end itemize
+The @process{Misc} handle miscellaneous tasks.
 
 Process conceptual model:
 
@@ -37,6 +32,13 @@ from @activityServer
 from @procServerExtract
 
 @end table
+
+@item Processings
+@itemize @bullet
+@item Manage the @sc{HTML} catalog.
+@item Wraps queries from @actorAdminO{}, @actorPublisherO{} 
+and @activityServerO{} to @activityScriptsO{}.
+@end itemize
 
 @item Events out
 @table @code

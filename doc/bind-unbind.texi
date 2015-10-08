@@ -14,22 +14,24 @@ Process conceptual model:
 @item Events in
 @table @code
 @item @eventScriptsBind
-@item @eventScriptsUnBind
+@itemx @eventScriptsUnBind
 from @procClientMisc
-@end table
 
-@note{} bellow calls are directly made to the jail's script library:
-@table @code
 @item @eventScriptsBindCall
 from @procScriptsNewFreeClean
+
 @item @eventScriptsUnBindCall
 from @procScriptsInitRemovePurge
 @end table
+
+@item Processing:
+Manage collection repository binding on the chrooted jail for
+@acronym{SSH} remote access.
 @end itemize
 
 Code:
 @table @code
-@item /usr/share/mediatex/scripts/lib/jail.sh
-@itemx /usr/share/mediatex/scripts/bind.sh
+@item /usr/share/mediatex/scripts/bind.sh
 @itemx /usr/share/mediatex/scripts/unbind.sh
+@itemx /usr/share/mediatex/scripts/lib/jail.sh
 @end table

@@ -9,14 +9,6 @@ do not touch to the collection's meta-data so as to ease an upgrade
 by installing a new software version 
 (called by @acronym{DEBIAN}'s @code{postrm} script for instance).
 
-They add/del a new system user and 2 system groups:
-@table @code
-@item mdtx
-server's user and group
-@item mdtx_md
-common group for all collections related to the server
-@end table
-
 Process conceptual model:
 
 @image{mediatex-figures/init-remove-purge,,,,}
@@ -29,6 +21,20 @@ Process conceptual model:
 @item @eventScriptsPurge 
 from @activityClient
 @end table
+
+@item Processing
+@itemize @bullet
+@item 
+Manage @code{mdtx} system user and 2 system groups:
+@table @code
+@item mdtx
+server's user and group
+@item mdtx_md
+common group for all collections related to the server
+@end table
+@item
+Manage the @mediatexO repositories
+@end itemize
 
 @item Events out
 @table @code
