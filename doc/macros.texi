@@ -29,6 +29,10 @@
 @acronym{API}
 @end macro
 
+@macro iso
+@acronym{ISO}
+@end macro
+
 @c Meta
 
 @macro actor{label}

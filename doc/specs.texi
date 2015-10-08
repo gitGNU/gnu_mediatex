@@ -52,7 +52,7 @@ from @actorPublisherO{} to @procClientConf{}: list collections ; share/withdraw 
 @itemx @eventClientSuppCheck
 from @actorPublisherO{} to @procClientSupp{}: add/del/provide local supports.
 @item @eventClientUpload
-from @actorPublisherO{} to @procClientUpload{}: upload a new fileinto the cache.
+from @actorPublisherO{} to @procClientUpload{}: upload an incoming archive into the cache.
 @item @eventClientMiscMake 
 @itemx @eventClientMiscClean
 @itemx @eventClientMiscSu

@@ -2,6 +2,8 @@
 
 The @dataCatalogO{} files handle the descriptive meta-data of a collection.
 
+Using the ``@eventClientUpload'' query, @actorPublisher should provide related descriptive meta-data for the new archive, using the same grammar language.
+
 The format of this file is oriented to describe a simple movie database.
 It does not conform to any specific descriptive meta-data schema,
 like the Dublin Core (@url{http://dublincore.org/}).

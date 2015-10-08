@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.16 2015/10/02 18:02:21 nroche Exp $
+ * Version: $Id: command.c,v 1.17 2015/10/08 00:15:34 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -143,10 +143,10 @@ miscOptions()
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"
 	  "  -l, --log-file\tlog into a file\n"
 	  "\t\t\tneeds 'file' facility (default)\n"
-	  "  -s, --severity\tuse severity for logging\n"
-	  "\t\t\tseverity amongs 'err' 'warning' 'notice' 'info' 'debug';"
-	  "\n\t\t\tmodule amongs 'alloc' 'script' 'misc' 'memory' 'parser'"
-	  " 'common' and 'main'\n"
+	  "  -s, --severity\tseverity for logging\n"
+	  "\t\t\tamongs 'err', 'warning', 'notice', 'info', 'debug';\n"
+	  "\t\t\tmodules amongs 'alloc', 'script', 'misc', 'memory', "
+	  "'parser', 'common', 'main'\n"
 	  "  -m, --memory-limit\tnice limit for malloc in Mo\n"
 	  "  -S, --script-out\tenable stdout for scripts\n"
 	  "  -n, --dry-run\t\tdo a dry run\n");

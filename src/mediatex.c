@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.6 2015/10/01 21:52:40 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.7 2015/10/08 00:15:34 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -53,41 +53,42 @@ usage(char* programName)
   
   fprintf(stderr, "\nExamples:\n"	  
 	  "\nAdmin queries:\n"
-	  "  adm (init|remove|purge)  ...\n"
-	  "  adm (add|del) user USER  ...\n"
-	  "  adm add coll COLL[@HOST[:PORT]]  ...\n"
-	  "  adm del coll COLL  ...\n"
-
-	  "\nDebugging queries:\n"
-	  "  adm (update|commit|make) [coll COLL]  ...\n"
-	  "  adm (bind|unbind)  ...\n"
-	  "  adm mount ISO on PATH  ...\n"
-	  "  adm umount PATH  ...\n"
-	  "  adm get PATH as COLL on HASH as PATH  ...\n"
-
-	  "\nQueries to daemon:\n"
-	  "  srv (save|extract|notify|deliver)  ...\n"
+	  "  adm (init|remove|purge)  Initialise, remove and purge @mediatex software.\n"
+	  "  adm (add|del) user USER  Manage publishers users.\n"
+	  "  adm add coll COLL[@HOST[:PORT]]  Create/subscribe a collection.\n"
+	  "  adm del coll COLL  Destroy/unsubscribe a collection.\n"
 
 	  "\nData management:\n"
-	  "  add supp SUPP to (all|coll COLL)  ...\n"
-	  "  del supp SUPP from (all|coll COLL)  ...\n"
-	  "  add supp SUPP on PATH  ...\n"
-	  "  del supp SUPP  ...\n"
-	  "  list supp  ...\n"
-	  "  note supp SUPP as TEXT  ...\n"
-	  "  check supp SUPP on PATH  ...\n"
-	  "  upload+{0,2} PATH to coll COLL  ...\n"
+	  "  add supp SUPP on PATH  Add a new external support: a device or file not always accessible.\n"
+	  "  add file PATH  Add a new external support's file: a file always accessible locally.\n"
+	  "  del supp SUPP  Remove a support (external support or support's file).\n"
+	  "  list supp  List supports.\n"
+	  "  note supp SUPP as TEXT  Associate a short text (10 character's) with a support, which will be display on the list.\n"
+	  "  check supp SUPP on PATH  Provide an external support (that is accessible now).\n"
+	  "  add supp SUPP to (all|coll COLL)  Share a support with a collection.\n"
+	  "  del supp SUPP from (all|coll COLL)  Withdraw a support from a collection.\n"
+	  "  upload+{0,2} PATH to coll COLL  Upload an incoming archive into the cache. Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.\n"
 	  
 	  "\nMeta-data management:\n"
-	  "  add key PATH to coll COLL  ...\n"
-	  "  del key FINGERPRINT from coll COLL  ...\n"
-	  "  list [master] coll  ...\n"	  
-	  "  motd  ...\n"
-	  "  upgrade[+] [coll COLL]  ...\n"
-	  "  make [coll COLL]  ...\n"
-	  "  clean [coll COLL]  ...\n"
-	  "  su [coll COLL]  ...\n"
-	  "  audit coll COLL] for MAIL  ...\n"
+	  "  list [master] coll  List collections.\n"	  
+	  "  motd  Display actions @actorPublisherO have to perform.\n"
+	  "  add key PATH to coll COLL  Subscribe a remote server to a collection.\n"
+	  "  del key FINGERPRINT from coll COLL  Unsubscribe a remote server from a collection.\n"
+	  "  upgrade[+] [coll COLL]  Synchronise local server. Appending one '+' will run ``make'' queries too.\n"
+	  "  make [coll COLL]  Build the local HTML catalogue\n"
+	  "  clean [coll COLL]  Remove the local HTML catalogue.\n"
+	  "  su [coll COLL]  Change to mediatex or collection system user.\n"
+	  "  audit coll COLL] for MAIL  Extract all archives from a collection.\n"
+
+	  "\nQueries to daemon:\n"
+	  "  srv (save|extract|notify|deliver)  repectively ask server to dump its state into disk, perform extractions, communicate its state to other servers, deliver mails related to extracted archives (no more needed).\n"
+
+	  "\nInternal/debug queries:\n"
+	  "  adm (update|commit|make) [coll COLL]  Manage CVS synchronisation (already managed by ``upgrade'' query) or Build the local HTML catalogue without CVS synchronisation.\n"
+	  "  adm (bind|unbind)  Manage collection repository binding on the chrooted jail for SSH remote access (already manage by /etc/init.d/mediatexd).\n"
+	  "  adm mount ISO on PATH  Mount an ISO devices.\n"
+	  "  adm umount PATH  Un-mount an ISO devices.\n"
+	  "  adm get PATH as COLL on HASH as PATH  Retrieve a remote collection's file via SSH.\n"
 	  );
 
   mdtxHelp();

@@ -68,7 +68,8 @@ to @procToolsSsh
 @item Data in/out
 @itemize @bullet
 @item @dataConf
-@item @dataSupp
+@item @dataCatalog
+@item @dataExtract
 @end itemize
 
 @item Data out

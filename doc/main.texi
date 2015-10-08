@@ -98,9 +98,9 @@ to @actorAdminO
 @item Data in/out
 @itemize @bullet
 @item @dataConf
-@item @dataSupp
-@item @dataServers
 @item @dataCatalog
 @item @dataExtract
 @end itemize
 @end itemize
+
+Data files involved are détailed into the next section.
