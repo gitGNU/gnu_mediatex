@@ -6,12 +6,12 @@
 is used by all @activity{mediatex}'s binaries and scripts.
 
 3 environment variables manage the content to log:
-@table @code
-@item MDTX_LOG_FACILITY
-@item MDTX_LOG_FILE
-@item MDTX_LOG_SEVERITY
-@end table
-These variables are overwritten when using the corresponding command line options (@xref{Options}).
+@itemize @bullet
+@item @var{MDTX_LOG_FACILITY}
+@item @var{MDTX_LOG_FILE}
+@item @var{MDTX_LOG_SEVERITY}
+@end itemize
+These variables are overwritten when using the corresponding command line options (@pxref{Options}).
 
 @image{mediatex-figures/syslog,,,,}
 
@@ -32,13 +32,15 @@ Log the activity.
 
 @item /etc/rsyslog.d/mediatex_log.conf
 @example
-local2.notice /var/log/mediatex.log
+local2.info /var/log/mediatex.log
 @end example
-@note{} Here we do not display anymore the @code{info} and @code{debug} messages.
-The higher the level is, the less messages you get:
-@example
-err > warning > notice > info > debug
-@end example
+
+@note{} This configuration tel @acronym{RSYSLOG} to ignore @code{debug} messages (even if @mediatexO send debug messages, you will not get them). The higher the level is and the less messages you get:
+@code{err > warning > notice > info > debug}
+
+@item /etc/rsyslog.conf
+Also, @acronym{RSYSLOG} will drop messages when they are coming too quickly,
+and you may want to change this setting (@pxref{Reporting bugs}).
 
 @end table
 
