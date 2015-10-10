@@ -179,7 +179,7 @@ Code:
 @item src/client/shellQuery.l
 @item src/client/shellQuery.y
 @item src/client/serv.c
-@item src/client/mdtx.c
+@item src/mdtx.c
 @end table
 
 @node conf

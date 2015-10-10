@@ -1,6 +1,7 @@
 @cindex scripts
 
-The @activity{Scripts} activity is diveded into 10 process:
+The @activity{Scripts} activity gather system level operations @mediatexO is using. This activity provides basic fonctions on @acronym{BASH} files that are not describe in this documentation.
+This activity is diveded into 10 process:
 @menu
 * init.d::               @process{init.d}
 * cgiClient::            @process{cgiClient}
@@ -28,98 +29,112 @@ Flood diagram:
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload
-from @actorAdmin{} to @procScriptsInitd
+from @actorAdmin to @procScriptsInitd{}: start/stop the @mediatexO{} daemon.
 
 @item @eventScriptsCgiGetQuery
 @itemx @eventScriptsCgiPostQuery 
-from @procToolsApache{} to @procScriptsCgi
+from @procToolsApache to @procScriptsCgi{}: @actorUserO's @acronym{HTTP} forwarded query.
 
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
-from @procToolsCron{} to @procScriptsCron
+@itemx @eventScriptsCronMonthly
+from @procToolsCron to @procScriptsCron{}: scheduled tasks.
 
 @item @eventScriptsInit 
 @itemx @eventScriptsRemove 
 @itemx @eventScriptsPurge 
-from @procClientMisc{} to @procScriptsInitRemovePurge
+from @procClientMisc to @procScriptsInitRemovePurge{}: initialise, remove and purge @mediatexO software.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-from @procClientServ{} to @procScriptsAddDelUser
+from @procClientServ to @procScriptsAddDelUser{}: manage @actorPublisherO users.
 
 @item @eventScriptsNew
 @itemx @eventScriptsFree
-from @procClientConf{} to @procScriptsNewFreeClean
+from @procClientConf to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 
 @item @eventScriptsClean
-from @procClientMisc{} to @procScriptsNewFreeClean
+from @procClientMisc to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
 @item @eventScriptsUpdate
 @itemx @eventScriptsCommit
-from @activityClient{} to @procScriptsUpdateCommit
+from @activityClient to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
 
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
-from @procClientMisc{} to @procScriptsBind
+from @procClientMisc to @procScriptsBind{}: manage collection repository binding on the chrooted jail for SSH remote access.
 
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp{} to  @procScriptsMount
+from @procClientSupp to  @procScriptsMount{}: manage mounting @iso devices.
 
 @item @eventScriptsDeliver
-from @procServerDeliver{} to @procScriptsDeliver
+from @procServerDeliver to @procScriptsDeliver{}: manage archive availability notification.
 
 @item @eventScriptsAudit
-from @procServerDeliver{} to @procScriptsAudit
+from @procServerDeliver to @procScriptsAudit{}: audit an archive.
+
 @end table
+@item Processing
+
+Provide a @acronym{BASH} library.
 
 @item Events out
 @table @code
+
 @item @eventServerStart
 @itemx @eventServerStop
 @itemx @eventServerReload
-from @procScriptsInitd{} or @procScriptsInitRemovePurge{} to @activityServer
+from @procScriptsInitd or @procScriptsInitRemovePurge to @activityServer{}: 
+standard @acronym{UNIX} process management (HUP signal for reload...).
 
 @item @eventToolsApacheRestart
-from @procScriptsInitRemovePurge{} to @procToolsApache
+from @procScriptsInitRemovePurge to @procToolsApache{}: re-configure @acronym{APACHE}.
 
 @item @eventToolsApacheReload
-from @procScriptsNewFreeClean{} to @procToolsApache
+from @procScriptsNewFreeClean to @procToolsApache{}: make @acronym{APACHE} aware of changes into its configuration.
 
 @item @eventServerCgiQuery
-from @procScriptsCgi{} to @procServerCgiSrv
+from @procScriptsCgi to @procServerCgiSrv{}: socket query asking for an archive.
 
 @item @eventToolsCvsInit 
-@itemx @eventToolsCvsImport
-@itemx @eventToolsCvsUpdate 
-from @procScriptsInitRemovePurge or @procScriptsNewFreeClean to @procToolsCvs
+from @procScriptsInitRemovePurge to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
+
+@item @eventToolsCvsImport
+@itemx @eventToolsCvsCheckout 
+from @procScriptsInitRemovePurge or @procScriptsNewFreeClean to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
 
 @item @eventToolsCvsUpdate
 @itemx @eventToolsCvsCommit
-from @procScriptsUpdateCommit to @procToolsCvs
+from @procScriptsUpdateCommit to @procToolsCvs{}: synchronise a @acronym{CVS} module.
 
 @item @eventToolsEximSendMail 
-from @procScriptsDeliver or @procScriptsAudit to @procToolsExim
+from @procScriptsDeliver or @procScriptsAudit to @procToolsExim{}: send a mail.
 
 @item @eventClientUpload
-from @procScriptsCron or @procScriptsAudit to @procClientUpload
+from @procScriptsCron or @procScriptsAudit to @procClientUpload{}: upload an incoming archive into the cache.
 
 @item @eventClientExtract
 @itemx @eventClientNotify
 @itemx @eventClientMiscMake
 @itemx @eventClientMotd
-from @procScriptsCron{} respectively to @activityClient{}, @procClientMisc and @procClientMotd{}: generate the message of the day.
+from @procScriptsCron respectively to @activityClient{}, @procClientMisc and @procClientMotd{}: scheduled tasks.
 
 @item @eventActorPublisherMotd
-from @procScriptsCron{} to @actorPublisher{}: update the (above generated) message of the day.
+from @procScriptsCron to @actorPublisher{}: update the (above generated) message of the day.
 
 @end table
 @end itemize
 
 Codes:
 @table @file
-@item /usr/share/mediatex/scripts/*.sh
-@item src/common/cgi.c
+@item /usr/share/mediatex/scripts/lib/cvs.sh
+@itemx /usr/share/mediatex/scripts/lib/htdocs.sh
+@itemx /usr/share/mediatex/scripts/lib/include.sh
+@itemx /usr/share/mediatex/scripts/lib/jails.sh
+@itemx /usr/share/mediatex/scripts/lib/log.sh
+@itemx /usr/share/mediatex/scripts/lib/ssh.sh
+@itemx /usr/share/mediatex/scripts/lib/users.sh
 @end table
 
 @node init.d

@@ -14,7 +14,7 @@ Process conceptual model:
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
 @itemx @eventScriptsCronMonthly
-from @procToolsCron
+from @procToolsCron{}: scheduled tasks.
 
 @end table
 
@@ -30,19 +30,19 @@ from @procToolsCron
 
 @item @eventClientExtract
 @itemx @eventClientNotify
-to @activityClient
+to @activityClient{}: ask server to perform extractions or to communicate its state to other servers.
 
 @item eventClientMiscMake
-to @procClientMisc
+to @procClientMisc{}: build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
 
 @item @eventClientUpload
-to @procClientUpload
+to @procClientUpload{}: upload collection's @acronym{CVSROOT} modules into the cache so as to backup them.
 
 @item @eventClientMotd
-to @procClientMotd
+to @procClientMotd{}: build the message of the day (actions @actorPublisherO have to perform).
 
 @item @eventActorPublisherMotd
-to @actorPublisher
+to @actorPublisher{}: store the message of the day into @file{/etc/motd}.
 
 @end table
 

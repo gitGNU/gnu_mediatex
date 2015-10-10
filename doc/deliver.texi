@@ -11,14 +11,21 @@ Process conceptual model:
 
 @item Events in
 @table @code
+
 @item @eventScriptsDeliver
 from @procServerDeliver
+
 @end table
+@item Processing
+
+@todo: this script should check if a replacement hook is available for the related collection and use it.
 
 @item Events out
 @table @code
+
 @item @eventToolsEximSendMail
-to @procToolsExim
+to @procToolsExim{}: notify archive availability to @actorUserO{}.
+
 @end table
 
 @end itemize

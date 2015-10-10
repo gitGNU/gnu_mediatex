@@ -52,7 +52,7 @@ and you may want to change this setting (@pxref{Reporting bugs}).
 
 Code:
 @table @file
-@item /scripts/lib/log.sh
-@item /src/misc/log.h
+@item /usr/share/mediatex/scripts/lib/log.sh
+@item /usr/share/mediatex/src/misc/log.h
 @item /src/misc/log.c
 @end table

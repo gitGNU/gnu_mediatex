@@ -8,6 +8,7 @@ archives from where they are stored.
 * Commands::            Client queries.
 * Options::	        Options.
 * Communication model:: Main specification.
+* Accessing an archive:: HTML framework.
 @end menu
 
 @node Commands
@@ -96,16 +97,16 @@ Extract all archives from a collection.
 @item Queries to daemon:
 @table @code
 
-@item @eventServerSaveReg
+@item @eventClientSave
 Ask @activityServer to dump its state into disk.
 
-@item @eventServerExtractReg
+@item @eventClientExtract
 Ask server to perform extractions.
 
-@item @eventServerNotifyReg 
+@item @eventClientNotify
 Ask server to communicate its state to other servers.
 
-@item @eventServerDeliverReg
+@item @eventClientDeliver
 Ask server to deliver mails related to extracted archives (no more needed).
 
 @end table
@@ -121,7 +122,7 @@ Build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-Manage collection repository binding on the chrooted jail for SSH remote access (already manage by @file{/etc/init.d/mediatexd})
+Manage collection repository binding on the chrooted jail for @acronym{SSH} remote access (already manage @activityServerO{}).
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
@@ -188,7 +189,6 @@ Do not make @acronym{CVS} queries. This may be useful if you temporary loose you
 @note{}: This option is only available on @activityClient as @activityServer and @procScriptsCgi never perform @acronym{CVS} queries.
 
 @end table
-
 
 @node Communication model
 @section Communication model
@@ -276,6 +276,7 @@ Commands are detailed into the @mediatex specifications.
 
 @item Events out
 @table @code
+
 @item @eventActorUserHtmlForm 
 @itemx @eventActorUserHtmlRedirect 
 @itemx @eventActorUserMail 
@@ -289,14 +290,25 @@ to @actorPublisherO
 to @actorAdminO
 
 @end table
-
 @item Data in/out
 @itemize @bullet
 @item @dataConf
 @item @dataCatalog
 @item @dataExtract
 @end itemize
-@end itemize
 
 Data files involved are detailed into the next section.
+@end itemize
+
+@node Accessing an archive
+@section Accessing an archive
+@cindex Accessing an archive
+
+This diagram describes what happen when a @actorUser access an archive:
+@itemize @bullet
+@item available on some @activityServer{}'s caches
+@item not available on any @activityServer{}'s cache.
+@end itemize
+
+@image{mediatex-figures/accessing,,,,}
 

@@ -1,8 +1,7 @@
 @cindex cgi
 
 @process{cgiClient} is a frontend that dispatch the 
-@actorUser{} queries 
-around all the remote collection's @activityServer{}.
+@actorUser{} queries around all the remote collection's @activityServer{}.
 
 Process conceptual model:
 
@@ -18,16 +17,31 @@ from @procToolsApache
 
 @item Processing
 @itemize @bullet
-@item Relay @actorUser{}'s queries comming from @acronym{Apache} to the @activityServerO{}s: all while no positive answer for the @acronym{GET} query and only the local one for the @acronym{POST} query.
-@item Interpret the @activityServerO{}s answers and return a related @acronym{HTML} page or redirection.
+@item Relays @actorUserO{}'s queries comming from @acronym{Apache} to the @activityServerO{}s: 
+@itemize @bullet 
+@item On @acronym{GET} query, connects all @activityServerO{}s until it gets a positive answer.
+@item On @acronym{POST} query, only connects the local @activityServerO{}.
+@end itemize
+
+@item Interprets the @activityServerO{}s answers and return a related @acronym{HTML} page or redirection that @acronym{Apache} will relay to the @actorUserO{}'s internet browser.
 @end itemize
 
 @item Events out
 @table @code
 @item @eventServerCgiQuery
 to @procServerCgiSrv
-@end table
 
+@end table
+@item
+@note the standard output of this scripts result on 2 envents sent by @procToolsApache:
+@table @code
+@item @eventActorUserHtmlForm 
+(if archive is not available) ...
+@item @eventActorUserHtmlRedirect 
+(if archive is available) @*
+to @actorUserO{}: send back either a form asking for an @acronym{eMAIL} address, or a redirection link to the archive into one server's cache.
+
+@end table
 @item Data in
 @itemize @bullet
 @item @dataConf
@@ -39,5 +53,5 @@ Code:
 @table @file
 @item src/common/connect.h
 @item src/common/connect.c
-@item src/common/cgi.c 
+@item src/cgi.c 
 @end table

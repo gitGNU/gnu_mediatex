@@ -11,10 +11,10 @@ AddHandler cgi-script .cgi
        Require group index
 </Files>
 
-<Files search.cgi>
-       # login/password
-       Require group index
-</Files>
+#<Files search.cgi>
+#       # login/password
+#       Require group index
+#</Files>
 
 <Files viewvc.cgi>
        # login/password

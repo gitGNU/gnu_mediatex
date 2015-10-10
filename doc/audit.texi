@@ -1,33 +1,41 @@
 @cindex audit
 
-This script update an audit report.
-
-When call for the last update, it uploads the report 
-and sending a mail to the @actorPublisher{}.
+This script manage the build of a collection's audit report.
 
 Process conceptual model:
 
 @image{mediatex-figures/audit,,,,}
 
 @itemize @bullet
-
 @item Events in
 @table @code
+
 @item @eventScriptsAudit
 from @procServerDeliver
-@end table
 
+@end table
+@item Processing
+
+@itemize @bullet
+@item 
+Emulate the @procScriptsDeliver script: instead of sending a @actorUserO notification, notify the archive into an audit report.
+@item
+When all archives involved by the report have raised this script,
+uploads the report to the collection and send a mail to the @actorPublisher{}.
+
+@end itemize
 @item Events out
 @table @code
-@item @eventClientUpload 
-to @procClientUpload
 
-@item @eventActorPublisherMail
-to @procToolsExim
+@item @eventClientUpload 
+to @procClientUpload{}: upload the audit report.
+
+@item @eventToolsEximSendMail
+to @procToolsExim{}: notify @actorPublisherO the audit report was uploaded.
 @end table
 
 @end itemize
 Code:
 @table @code
-@item /usr/share/mediatex/scripts/deliver.sh
+@item /usr/share/mediatex/scripts/audit.sh
 @end table

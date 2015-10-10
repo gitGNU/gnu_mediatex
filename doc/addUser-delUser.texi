@@ -12,10 +12,15 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventScriptsAddUser
 @item @eventScriptsDelUser
 from @activityClient
+
 @end table
+@item Processing
+
+Manage @actorPublisherO users.
 
 @item Data in/out
 @table @file

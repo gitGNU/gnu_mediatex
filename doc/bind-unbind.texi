@@ -29,6 +29,27 @@ Manage collection repository binding on the chrooted jail for
 @acronym{SSH} remote access.
 @end itemize
 
+@pxref{init-remove-purge}:
+@example
+/
+|- var/
+   +- lib/
+    |  +- mediatex/
+    |     +- mdtx/                       (1)
+    |       |- CVSROOT/
+    |       +- mdtx/
+    |          |- mdtx.conf,v 
+    |          +- supports.txt,v
+    +- cache/
+       +- mediatex/
+          +- mdtx/
+             |- cache/                   (2)
+             +- jail/
+                +- var/
+                   |- lib        (bind -> 1)
+                   |- cache      (bind -> 2)
+@end example
+
 Code:
 @table @code
 @item /usr/share/mediatex/scripts/bind.sh

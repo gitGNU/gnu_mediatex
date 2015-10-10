@@ -13,19 +13,18 @@ Process conceptual model:
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload
-from 
-@actorAdmin
+from @actorAdmin{}: start/stop the @mediatexO{} daemon.
 @end table
 
 @item Processing
-Manage the @activityServerO{}'s processus.
+Manage the @activityServerO{}'s processus as a daemon.
 
 @item Events out
 @table @code
 @item @eventServerStart
 @itemx @eventServerStop
 @itemx @eventServerReload
-to @activityServer
+to @activityServer{}: standard @acronym{UNIX} process management
 @end table
 
 @item Data in/out

@@ -29,7 +29,7 @@ mediatex_TEXINFOS = \
 	initd.texi cgiClient.texi cronHourly-cronDaily.texi \
 	init-remove-purge.texi new-free-clean.texi \
 	update-commit.texi addUser-delUser.texi bind-unbind.texi \
-	mount-umount.texi deliver.texi \
+	mount-umount.texi deliver.texi audit.texi \
 	cache.texi extract.texi cgiServer.texi have.texi srvUpload.texi \
 	notify.texi delivering.texi \
 	serv.texi conf.texi supp.texi misc.texi upload.texi motd.texi \

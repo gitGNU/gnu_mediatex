@@ -2,8 +2,7 @@
 
 Theses 2 scripts manage collections update from remote @sc{Cvs}
 modules.
-However, @process{commit} is also used by @activityClient{} to 
-log changes in the local meta-data.
+They are also used by @activityClient{} to log changes in the local meta-data.
 
 Process conceptual model:
 
@@ -12,18 +11,24 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventScriptsUpdate
 @item @eventScriptsCommit
 from @activityClient
-@end table
 
+@item Processing
+
+The purpose of this script is to provide an @acronym{API} for @activityClientO in order to use the @activityScriptsO{}'s @acronym{BASH} library.
+
+@end table
 @item Events out
 @table @code
+
 @item @eventToolsCvsUpdate
 @item @eventToolsCvsCommit
-to @procToolsCvs
-@end table
+to @procToolsCvs: synchronise a @acronym{CVS} module.
 
+@end table
 @item Data in/out
 @itemize @bullet
 @item @dataServers
@@ -40,7 +45,7 @@ to @procToolsCvs
 
 Code:
 @table @code
-@item /usr/share/mediatex/scripts/lib/cvs.sh
-@itemx /usr/share/mediatex/scripts/update.sh
+@item /usr/share/mediatex/scripts/update.sh
 @itemx /usr/share/mediatex/scripts/commit.sh
+@itemx /usr/share/mediatex/scripts/lib/cvs.sh
 @end table

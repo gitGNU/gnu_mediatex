@@ -611,14 +611,14 @@
 
 @c   - to admin
 @macro eventActorAdminMail
-@event{$ mail ADMIN@@xxx.org)}
+@event{(mail to ADMIN)}
 @end macro
 @c   - to publisher
 @macro eventActorPublisherMotd
 @event{(motd)}
 @end macro
 @macro eventActorPublisherMail
-@event{$ mail PUBLISHER@@xxx.org)}
+@event{(mail to PUBLISHER)}
 @end macro
 @c   - to user
 @macro eventActorUserHtmlForm
@@ -628,5 +628,5 @@
 @event{<html-redirect>}
 @end macro
 @macro eventActorUserMail
-@event{(mail)}
+@event{(mail to USER)}
 @end macro

@@ -11,9 +11,8 @@ and one for each collection on ``master'' servers.
 Remote servers access the ``master'' @sc{cvs} collection's repository
 by using @procToolsSsh{}.
 The @procToolsApache{} configuration files and the @process{Ssh}'s 
-public keys are also distributed along servers using @sc{Cvs}.
-The @sc{cvs} modules are setup by @procScriptsInitRemovePurge{} 
-and @procScriptsNewFreeClean{} scripts.
+public keys are also distributed among servers using @sc{Cvs}.
+The @sc{cvs} server's and collection's modules are setup respectively by @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean{} scripts.
 
 Process conceptual model:
 
@@ -22,35 +21,43 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventToolsCvsInit 
-from @procScriptsInitRemovePurge
+from @procScriptsInitRemovePurge{}: initialise the local server's repository.
+
 @item @eventToolsCvsImport
 @item @eventToolsCvsCheckout
-from @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean
+from @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean{}: respectively create or join a new @acronym{CVS} module.
+
 @item @eventToolsCvsUpdate 
 @item @eventToolsCvsCommit 
-from @procScriptsUpdateCommit
+from @procScriptsUpdateCommit{}: synchronise a @acronym{CVS} module.
+
 @end table
+@item Processing
+
+Synchronise the meta-data files between servers.
 
 @item Events out
 @table @code
-@item @eventToolsSshConnect
-to @procToolsSsh
-@end table
 
+@item @eventToolsSshConnect
+to @procToolsSsh{}: access the @code{CVSROOT} repository.
+
+@end table
 @item Data
 @table @file
 @item /var/lib/mediatex/mdtx/CVSROOT
 @itemx /var/lib/mediatex/mdtx/mdtx
 @itemx /var/lib/mediatex/mdtx/mdtx-COLL
-The @sc{Cvs} repository and its modules
+The @sc{Cvs} root repositories
 
 @item ~/mdtx/cvs/mdtx
 @itemx ~/mdtx/cvs/mdtx-COLL
 @itemx ~/mdtx/cvs/mdtx-COLL/CVS/Root
-The @sc{Cvs} checkout modules
+The @sc{Cvs} checkout-ed modules. 
+The third file is mentioned as it is manage by @mediatexO upgrade (@pxref{Scenario E}).
 @end table
-
 @end itemize
 
 Code:

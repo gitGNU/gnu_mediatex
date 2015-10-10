@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.7 2015/10/08 00:15:34 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.8 2015/10/10 13:54:21 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -85,7 +85,7 @@ usage(char* programName)
 
 	  "\nInternal/debug queries:\n"
 	  "  adm (update|commit|make) [coll COLL]  Manage CVS synchronisation (already managed by ``upgrade'' query) or Build the local HTML catalogue without CVS synchronisation.\n"
-	  "  adm (bind|unbind)  Manage collection repository binding on the chrooted jail for SSH remote access (already manage by /etc/init.d/mediatexd).\n"
+	  "  adm (bind|unbind)  Manage collection repository binding on the chrooted jail for SSH remote access (already manage by mediatexd).\n"
 	  "  adm mount ISO on PATH  Mount an ISO devices.\n"
 	  "  adm umount PATH  Un-mount an ISO devices.\n"
 	  "  adm get PATH as COLL on HASH as PATH  Retrieve a remote collection's file via SSH.\n"

@@ -1,8 +1,8 @@
 @cindex collection
 
-Theses 2 scripts manage collection subscription/ensubsciption.
-@note{} if local host is the collection master host, theses script also manage the creation/destruction of the collection.
-The third script clean the @acronym{HTML} catalog.
+Theses 2 scripts manage collection subscribing/unsubscribing.
+@note{} if local host is the collection master host, theses scripts also manage the creation/destruction of the collection.
+The third script clean the @acronym{HTML} catalogue.
 
 @image{mediatex-figures/new-free-clean,,,,}
 
@@ -11,11 +11,14 @@ Process conceptual model:
 
 @item Events in
 @table @code
+
 @item @eventScriptsNew
 @itemx @eventScriptsFree
-from @procClientConf
+from @procClientConf{}: manage collection subscribing/unsubscribing.
+
 @item @eventScriptsClean
-from @procClientMisc
+from @procClientMisc{}: clean the @acronym{HTML} catalogue.
+
 @end table
 
 @item Processing
@@ -24,17 +27,22 @@ from @procClientMisc
 Manage @code{mdtx-COLL} collection system user and group.
 @item
 Manage the collection's repositories.
+@item
+Setup the @acronym{CVSROOT} module for a new collection or connect to a 
+remote @acronym{CVSROOT} module to join an already existing collection.
 @end itemize
 
 @item Events out
 @table @code
+
 @item @eventScriptsBindCall
-to @procScriptsBind
+to @procScriptsBind{}: make collection repository accessible from the chrooted jail for @acronym{SSH} remote access.
+
 @item @eventToolsCvsImport
 @itemx @eventToolsCvsCheckout
-to @procToolsCvs
-@end table
+to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
 
+@end table
 @item Data in/out
 @itemize @bullet
 @item @dataConf
@@ -90,8 +98,19 @@ to @procToolsCvs
 @end example
 @end itemize
 
+Exemples:
+@itemize @bullet
+@item Create a new collection: @pxref{Scenario 2}.
+@item Join an already existing collection: @pxref{Scenario 5}.
+@end itemize
+
 Code:
 @table @file
 @item /usr/share/mediatex/scripts/new.sh
 @itemx /usr/share/mediatex/scripts/free.sh
+@itemx /usr/share/mediatex/scripts/clean.sh
+@itemx /usr/share/mediatex/scripts/lib/cvs.sh
+@itemx /usr/share/mediatex/scripts/lib/htdocs.sh
+@itemx /usr/share/mediatex/scripts/lib/ssh.sh
+@itemx /usr/share/mediatex/scripts/lib/users.sh
 @end table

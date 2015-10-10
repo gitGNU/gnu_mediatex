@@ -148,10 +148,12 @@
 
 *** TODO
 
-- add key word index into paragraphe of the documentation
+- add key words index into paragraph of the documentation
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (sort on date)
+- serialize b-tree using another order and use add-if-not-there function
+- replace cvs+viewvc by git+cgit
 - i10n for french
 
 *** TODO MAYBE
@@ -161,8 +163,7 @@
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
-- serialize b-tree using another order and use add-if-not-there function
-- replace cvs+viewvc by git+cgit
+- hook for ~mdtx-hello/cvs/scripts/deliver.sh
 - test an apache configuration using clains-based authentication (openId)
 - move dirname into extract rule header to reduce extract.txt file size
 - add supp: wait CD doors is locked (cf v3)

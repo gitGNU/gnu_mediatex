@@ -28,10 +28,10 @@ from @actorDate
 @item @eventScriptsCronHourly
 @itemx @eventScriptsCronDaily
 @itemx @eventScriptsCronMonthly
-to @procScriptsCron
+to @procScriptsCron{}: scheduled tasks.
 
-@item @eventActorAdminMail
-to @procToolsExim
+@item @eventToolsEximSendMail
+to @procToolsExim{}: notify scheduled task errors to @actorAdmin{}.
 
 @end table
 

@@ -1,7 +1,6 @@
 @cindex mount
 
 These 2 scripts mount/unmount an @sc{iso} disk or file.
-Here we decided to use a script to do it quickly
 (@code{mount (3)} function and the @code{loop} device related to @code{ioctl} may do the same job).
 
 Process conceptual model:
@@ -11,10 +10,16 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventScriptsMount
 @item @eventScriptsUmount
 from @procClientSupp
+
 @end table
+
+@item Processing
+
+This script mount both @iso devices or @iso image files.
 @end itemize
 
 Code:

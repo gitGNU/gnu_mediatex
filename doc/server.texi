@@ -24,36 +24,51 @@ Flood diagram:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventServerStart 
 @itemx @eventServerStop
-@item @eventServerReload
-from @procScriptsInitd
+@itemx @eventServerReload
+from @procScriptsInitd{}: standard @acronym{UNIX} process management (HUP signal for reload...).
+
 @item @eventServerSaveReg
-from @procClientMisc
+from @procClientMisc{}: serialize the last cache status into a file.
+
 @item @eventServerExtractReg
 @itemx @eventServerNotifyReg 
 @itemx @eventServerDeliverReg
-from @procClientMisc{} respectively to 
-@procServerExtract{}, @procServerNotify{} and @procServerDeliver
+from @activityClientO{} respectively to 
+@procServerExtract{}, @procServerNotify{} and @procServerDeliver{}: ask to extract, notify or deliver (no more used) by setting a value into share memory and sending a signal.
+
 @item @eventServerCgiQuery 
-from @procScriptsCgi{} to @procServerCgiSrv
+from @procScriptsCgi{} to @procServerCgiSrv{}: socket query asking for an archive.
+
 @item @eventServerHaveQuery 
-from @procClientSupp{} to @procServerHave
+from @procClientSupp{} to @procServerHave{}: socket query providing archives from a support.
+
 @item @eventServerUpload
-from @procClientMisc{} to @procServerCache
+from @procClientMisc{} to @procServerCache{}: socket query providing an archive and asking to handle it into the cache.
+
 @end table
+@item Processing
+
+Manage HUP signal to re-scan the cache 
+and serialising the last cache status in order to keep in mind remote supplies and demands on next start-up.
 
 @item Events out
 @table @code
+
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
 @itemx @eventClientMiscGet
-to @procClientMisc
+to @procClientMisc{}: tel client to make operation that needs privileges, like binding directories into the chroot jail and using collection account to retrieve archives remotely.
+
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract{} to @procClientSupp
+from @procServerExtract to @procClientSupp{}: tel client to mount supports as it need root privileges.
+
 @item @eventScriptsDeliver 
-from @procServerDeliver{} to @procScriptsDeliver
+from @procServerDeliver to @procScriptsDeliver{}: to tel @actorUser an archive he was looking for is now available.
+
 @end table
 
 @item Data in
@@ -74,7 +89,7 @@ Code:
 @table @file
 @item /etc/init.d/mediatex/mdtxd
 @itemx src/server/threads.c
-@itemx src/server/mdtx.c
+@itemx src/mdtxd.c
 @end table
 
 @node cache

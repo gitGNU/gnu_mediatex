@@ -15,13 +15,14 @@ Process conceptual model:
 
 @itemize @bullet
 @item Events in
+
 @table @code
 @item @eventScriptsInit 
 @item @eventScriptsRemove 
 @item @eventScriptsPurge 
 from @activityClient
-@end table
 
+@end table
 @item Processing
 @itemize @bullet
 @item 
@@ -33,25 +34,29 @@ server's user and group
 common group for all collections related to the server
 @end table
 @item
-Manage the @mediatexO repositories
+Install the @mediatexO repositories
 @end itemize
 
 @item Events out
 @table @code
+
 @item @eventScriptsUnBindCall
-to @procScriptsBind
+to @procScriptsBind{}: 
+
 @item @eventScriptsInitdStart 
 @itemx @eventScriptsInitdStop
-to @procScriptsInitd
+to @procScriptsInitd{}: start/stop the @mediatexO{} daemon.
+
 @item @eventToolsCvsInit 
 @item @eventToolsCvsImport 
 @item @eventToolsCvsCheckout
-to @procToolsCvs
+to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
+
 @item eventToolsApacheReload
 @itemx eventToolsApacheRestart
-to @procToolsApache
-@end table
+to @procToolsApache{}: make @acronym{APACHE} aware of potential new module and system users this script has configured.
 
+@end table
 @item Data out
 @itemize @bullet
 @item @dataConf

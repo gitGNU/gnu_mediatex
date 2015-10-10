@@ -160,17 +160,13 @@ Self managing time-stamps.
 (@url{https://www.openssl.org/docs/manmaster/apps/ts.html}).
 Provided time-stamps or whatever meta-data files may still be stored bellow the related data files.
 @item
-Self managing claim-based authentication or any single sign on mechanism. 
-(@url{https://en.wikipedia.org/wiki/OpenID})
-But it should support to be configured to be used with.
+Self managing claim-based authentication or any single sign on mechanism
+(@url{https://en.wikipedia.org/wiki/OpenID}),
+but it should support to be configured to be used with.
 @end itemize
 
-In fact @mediatexO{}
-system is designed to be crashed anywhere but still alive elsewhere.
-Time-stamps and claim-based authentication servers which
-need static certificates and a static @acronym{IP} address 
-are monolithic servers
-and so, resides out of this scope.
+In fact @mediatexO system is designed to be crashed anywhere but still alive elsewhere.
+Time-stamps and claim-based authentication servers which need static certificates and a static @acronym{IP} address are monolithic servers and so, resides out of this scope.
 
 @node Where
 @section Where
