@@ -97,15 +97,15 @@ from @procServerDeliver to @procScriptsDeliver or @procScriptsAudit{}: respectiv
 
 @item Data in
 @table @code
-@c @item @dataConf
-@item @dataConfO{} (@pxref{mdtx.conf})
-@item @dataServersO{} (@pxref{servers.txt})
+@item @dataConf
+@itemx @dataServers
+@itemx @dataExtract
+@itemx @dataSupp
 @end table
 
 @item Data in/out
 @table @code
-@c @item @dataChecksum
-@item @dataChecksumO (@pxref{mdtxCOLL.md5})
+@item @dataChecksum
 @end table
 @end itemize
 

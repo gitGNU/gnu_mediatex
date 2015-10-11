@@ -1,11 +1,10 @@
 
 *** TO CORRECT
 
-*** CHANGES DONE (to document)
+** AUDIT
+- mediatex_comp (to do for audit)
 
-** INC
-- extractNNN.txt: agregate uploaded files into one uniq INC container
-- score: look INC date to decide if score inpact or not on collection
+*** CHANGES DONE (to document)
 
 ** HAVE
 - find a way to pass a string for have/upload recordTree messages
@@ -13,22 +12,14 @@
 ** SERVER API
 - meditexd add -X- module into return code
 
-** SUPPORT-FILE
-- name = absolute path => remove MAX_SIZE_NAME (and use MAX_SIZE_STRING)
-- cache.c: also read supports.txt to get final-supply records
-
 ** UPGRADE
+- extractNNN.txt: agregate uploaded files into one uniq INC container
+- score: look INC date to decide if score inpact or not on collection
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
 - conf: fileTTL
 - servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
 - scoreSupport.c: use fileScore
-
-** SUPPORTS
-- add a sha1 field for supports
-
-** AUDIT
-- mediatex_comp updated (to do for audit)
 
 ** LOGS
 - upload the apache logs using /etc/logrotate.d/httpd-prerotate

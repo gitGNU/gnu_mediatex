@@ -36,12 +36,13 @@ from @procServerExtract{}: allocate place into the cache.
 @item Reserve space for newly allocated archives (during extract or upload)
 @end itemize
 
-@item Data
+@item Data in
 @itemize @bullet
-@item in: @dataConf
-@item in: @dataChecksum
-@item in: @dataServers
-@item in: @dataExtract
+@item @dataConf
+@item @dataChecksum
+@item @dataServers
+@item @dataExtract
+@item @dataSupp
 @end itemize
 @end itemize
 

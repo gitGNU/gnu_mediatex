@@ -51,7 +51,7 @@ Below entities are all dupplicated for each collection:
 @multitable @columnfractions .20 .14 .10 .10 .10
 @headitem File @tab @actor{Publisher} @tab @activity{client} @tab @process{cgi} @tab @activity{server} 
 @item mediatex.conf @tab rw @tab rw @tab r @tab r
-@item supports.txt  @tab r  @tab rw @tab - @tab -  
+@item supports.txt  @tab r  @tab rw @tab - @tab r  
 @item md5sums.txt   @tab r  @tab r  @tab - @tab rw 
 @item catalog.txt   @tab rw @tab rw @tab - @tab -
 @item extract.txt   @tab rw @tab rw @tab - @tab r 

@@ -160,25 +160,31 @@ from @procClientMisc to @procScriptsNewFreeClean{}: clean the local @acronym{HTM
 from @procClientMisc to @procToolsSsh{}: copy file from one remote server's cache.
 @end table
 
+@item Data in
+@table @file
+@item @dataChecksum
+@end table
+@end itemize
+
 @item Data in/out
 @itemize @bullet
 @item @dataConf
-@item @dataServers
-@item @dataCatalog
-@item @dataExtract
+@itemx @dataServers
+@itemx @dataCatalog
+@itemx @dataExtract
 @end itemize
 @end itemize
 
 Code:
 @table @file
 @item src/common/connect.h
-@item src/common/connect.c
-@item src/common/register.h
-@item src/common/register.c
-@item src/client/shellQuery.l
-@item src/client/shellQuery.y
-@item src/client/serv.c
-@item src/mdtx.c
+@itemx src/common/connect.c
+@itemx src/common/register.h
+@itemx src/common/register.c
+@itemx src/client/shellQuery.l
+@itemx src/client/shellQuery.y
+@itemx src/client/serv.c
+@itemx src/mdtx.c
 @end table
 
 @node conf
