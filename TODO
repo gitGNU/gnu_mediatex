@@ -1,174 +1,65 @@
 
-*** TO CORRECT: cache policy
-........................................................
-
-- refuse INC containers on upload
-
-(maybe)
-
-** TESTS
--- audit
--- apache2 access log
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- make tests.sh modular 
--- to begin at whatever test number (do truc/undo truc preconditions...)
--- batch mode to automaticly answer yes to host fingerprint
-
-** EXAMPLES
-- buildRule.sh script ?
-- extractMeta communicate|restituate|eliminate SUPP=>supp.cat supp.ext
-- open_icon as a use case (~/src/open_icon/)
-
-** CACHE ?
-- monitor cache sizes: all/used/allocated/free
+*** TO CORRECT
 
 *** CHANGES DONE (to document)
 
 ** INC
 - extractNNN.txt: agregate uploaded files into one uniq INC container
---> computeArchiveStatus => ComputeExtractScore
-- REC code removed
 - score: look INC date to decide if score inpact or not on collection
-- no unit test for extract.c::getWantedArchives
-- extract.c::extractRecord modify tmpBasename for INC
-- uploadTTL parmeter into servers.txt
-- extract rule automatically remove related INC content
 
 ** HAVE
-- have: mount done by server
-- mediatexd (ex: have) do not pass log facility to mdtx (but scripts ok)
 - find a way to pass a string for have/upload recordTree messages
-- remove [info cache.c] access fails: No such file or directory
-- remove thereIs function
-
-** UPLOAD
-- cvsPrint manage upload concatenation
-- upload (manage all 5-E-C combinaisons) -> concat into NNN.txt
-- rename cache/incoming/date to cache/date
-- provide upload target path
-- move callAccess, makeDir, removeDir and extractCp from cache to extract
-- dedicated server module for upload
-- extract: get uniq path on directory too (if a file have directory name)
-- remove cache/toKeep directory
-- cache never follow simlinks
-- do not load into cache unknown archive from extract.txt
-- saveCollection unlink extractNNN.txt when first loaded
-  changes given by upload on extractNNN.txt are then lost
--- extractTree::delContainer use rgRemove instead of rgDelete
-
-** SYNTAX
-- finale -> final
-- locale -> local / setlocale / LOCALEDIR / locale.h
 
 ** SERVER API
-- simplify cgiSrv code
-- add a function to log recordTree (into recordTree.c)
-- move env.dryRun test into connect.c (notify, cgi, supp, upload)
-- move isRechable into utserverTree (never used elsewhere)
-- call logRecordTree into unit-tests (instead of utLog)
-- send all sockets messages into mediatexd (cache, have, cgiSrv, notify)
---  only in cgiSrv.c (why) 
-  if (connexion->sock != STDOUT_FILENO && 
-      shutdown(connexion->sock, SHUT_WR) == -1) {
 - meditexd add -X- module into return code
-- check messages servers unit tests (cache, cgiSrv, have, notify)
-- have.sh: use $PWD instead of a copy on /tmp (cf cache.sh)
-- test for cgi POST query
-- unit test for notify (receiving message)
-- skip alloc when putting default severity to debug
-- unit test for mediatexd (sockets messages)
--- move readMessageinto thread.c
--- add utmediatexd.c calling this function
 
 ** SUPPORT-FILE
-- supports also include files on disk:
-- mediatex_comp updated
-- shellQuery.y: add file FILE
--- name = absolute path => remove MAX_SIZE_NAME (and use MAX_SIZE_STRING)
--- add tests for mdtxAddFile into utsupp.c
+- name = absolute path => remove MAX_SIZE_NAME (and use MAX_SIZE_STRING)
 - cache.c: also read supports.txt to get final-supply records
--- remove -d inputRep from client/utmisc.c (no more used)
--- use getAbsolutePath instead of -d $PWD/$srcdir
-- utcache.c: add a support file via memory/utFunc.c
 
 ** UPGRADE
 - isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- #define for "supports/"
-- remove scoreParam and minGeoDup from serverTree->server
 - conf: fileTTL
 - servers: fileScore, serverTTL, lastCommit
 - serversTree->server[]->lastCommit = DATE used by computeScore
-- serversTree->serverTTL = used to check lastCommit
-- upgrade.c: use lastCommit and serverTTL
 - scoreSupport.c: use fileScore
 
-** HTML
-- notify server lastCommit
-- change bad archive's sum computation (done)
-- notify when archive comes from a fresh upload
-
-** MOTD
-- move computeExtractScore call upper
-- * local supports *
--- check support files (use fileTTL)
--- SUPP wanted FOR PERIDIC CHECK | by coll COLL
-- * content to burn * (by collection)
--- ABSOLUTE_PATH (local score / main score) only upper file
-
 ** SUPPORTS
-- add sha1 computation
 - add a sha1 field for supports
 
 ** AUDIT
-- new client query: mdtx audit [coll COLL] for MAIL
-- supp check lock the client so report upload explain into the mail
-
-** ORPHANES
-- catalogTree only do getArchive to prevent orphanes
+- mediatex_comp updated (to do for audit)
 
 ** LOGS
-- cron_monthly.src upload the cvsroot collection module
--- mediatex ls master coll
 - upload the apache logs using /etc/logrotate.d/httpd-prerotate
-- ease looking for archive life cycle into cvsroot
-
-*** CLEAN-UP
-
-- compilation warnings
-- src/misc/host.c (to remove)
-- src/misc/udp.c (to remove)
-- src/misc/md5sums.c -> checksums.c
-- script/main.sh
-- script/lib/module.sh
 
 *** TO TEST
 
 - pgrof: test with more than 100k entries
-- find historical event into cvs's collections
 
 *** TODO
 
-- add key words index into paragraph of the documentation
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- replace gethostby*_r by getaddrinfo and co
-- optimise cache.c::freeCache (sort on date)
+- add key words index into paragraph of the documentation
 - serialize b-tree using another order and use add-if-not-there function
 - replace cvs+viewvc by git+cgit
+- replace gethostby*_r by getaddrinfo and co
+- optimise cache.c::freeCache (sort on date)
 - i10n for french
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- src/misc/md5sums.c -> checksums.c
 - move date parser/serialiser code into perm.c
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh
+- monitor cache sizes: all/used/allocated/free
 - test an apache configuration using clains-based authentication (openId)
 - move dirname into extract rule header to reduce extract.txt file size
 - add supp: wait CD doors is locked (cf v3)
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log
-- move extract.c into common/extractRules.c so as to run it during upload
-  ... but cannot handle CAT rules
