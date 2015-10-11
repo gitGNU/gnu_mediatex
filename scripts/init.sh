@@ -2,7 +2,7 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: init.sh,v 1.5 2015/09/27 21:32:52 nroche Exp $
+# * Version: $Id: init.sh,v 1.6 2015/10/11 21:11:13 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -64,6 +64,6 @@ fi
 # script is not automatically installed for other instances than mdtx
 if [ $MDTX = mdtx ]; then
     /usr/sbin/update-rc.d ${MEDIATEX#/}d defaults
-    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d start $MDTX
+    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
 fi
 Info "done"

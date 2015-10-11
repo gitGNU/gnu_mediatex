@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.13 2015/10/01 21:52:40 nroche Exp $
+ * Version: $Id: shellQuery.y,v 1.14 2015/10/11 21:11:14 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -309,7 +309,7 @@ apiQuery: apiSuppQuery
 	   mediatex clean coll COLL
 	   mediatex su
 	   mediatex su coll COLL 
-	   mediatex audit coll COLL for MAIL
+	   mediatex audit file FILE target PATH catalog FILE rules FILE coll COLL for MAIL
 	*/
 
 

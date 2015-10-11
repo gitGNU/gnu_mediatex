@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.13 2015/09/21 01:01:51 nroche Exp $
+ * Version: $Id: confTree.c,v 1.14 2015/10/11 21:11:14 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -584,14 +584,6 @@ createConfiguration(void)
       || !(conf->mdtxCvsDir = catString(conf->mdtxCvsDir, label))
       || !(conf->hostSshDir = catString(conf->hostSshDir, CONF_HOSTSSH+i)))
     goto error;
-
-  /* logMemory(LOG_NOTICE, "CONF_PIDDIR=%s", CONF_PIDDIR); */
-  /* logMemory(LOG_NOTICE, "CONF_PIDDIR+i=%s", CONF_PIDDIR+i); */
-  /* logMemory(LOG_NOTICE, "pidDir=%s", pidDir); */
-
-  /* logMemory(LOG_NOTICE, "CONF_CACHEDIR=%s", CONF_CACHEDIR); */
-  /* logMemory(LOG_NOTICE, "CONF_CACHEDIR+i=%s", CONF_CACHEDIR+i); */
-  /* logMemory(LOG_NOTICE, "homeDir=%s", conf->homeDir); */
 
   // files
   if (!(conf->supportDB = createString(conf->mdtxCvsDir))

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.14 2015/09/17 18:53:46 nroche Exp $
+ * Version: $Id: upgrade.c,v 1.15 2015/10/11 21:11:13 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -283,10 +283,7 @@ scoreLocalImages(Collection* coll)
   checkCollection(coll);
   logCommon(LOG_DEBUG, "scores for %s collection", coll->label);
 
-#ifndef utMAIN
   if (!loadConfiguration(SUPP)) goto error;
-#endif
-
   if ((images = createRing()) == 0)  goto error;
   serverTree = coll->serverTree;
 

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.21 2015/09/17 18:53:50 nroche Exp $
+ * Version: $Id: cache.c,v 1.22 2015/10/11 21:11:14 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -214,6 +214,18 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     goto error;
   }
 
+  if (!statBuffer.st_size) {
+    // remove empty file from cache
+    logMain(LOG_WARNING, "remove %s from cache (empty file)", relativePath);
+    if (!env.dryRun) {
+      if (unlink(absolutePath) == -1) {
+	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
+	goto error;
+      }
+    }
+    goto end;
+  }
+
   // try to look for archive in md5sums file
   archives = coll->cacheTree->archives;
   while ((archive = rgNext_r(archives, &curr))) {
@@ -242,13 +254,26 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     // remove file from cache if not having extraction rule
     logMain(LOG_WARNING, "remove %s from cache (having no extract rule)", 
 	    relativePath);
-      if (!env.dryRun) {
-	if (unlink(absolutePath) == -1) {
-	  logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
-	  goto error;
-	}
+    if (!env.dryRun) {
+      if (unlink(absolutePath) == -1) {
+	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
+	goto error;
       }
+    }
+    goto end;
   } 
+
+  // remove doublons
+  if (archive->localSupply && !(archive->localSupply->type & REMOVE)) {
+    logMain(LOG_WARNING, "remove %s from cache (doublon)", relativePath);
+    if (!env.dryRun) {
+      if (unlink(absolutePath) == -1) {
+	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
+	goto error;
+      }
+    }
+    goto end;
+  }
 
   // assert we have the localhost server object
   if (!getLocalHost(coll)) goto error;

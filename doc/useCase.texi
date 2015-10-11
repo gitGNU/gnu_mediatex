@@ -14,22 +14,62 @@
 @itemize @bullet
 @item 
 It divides the application complexity 
-as the ``Administration'' and ``Preservation planing'' functionalities
+as the ``Administration'' and ``Preservation planing'' functionality
 are already taken into account for many features.
 @item 
-It make the application modulable: we can easily replace a
-layer since the API beween them remains clear.
+It make the application more robust: we can easily replace a
+component since we have an API defined.
 @end itemize
 
 @node Exemple
 @section Archiving icons
 
+Testing @mediatex{} with about 50000 archives. 
+@note: this example last very long time@dots{}
+
+Download the Open Icons Library and build the related catalog and extraction rules files.
+@example
+$ /usr/share/mediatex/examples/example.sh
+@end example
+
+If not already done, please configure the @code{mdtx-hello} collection: @pxref{Scenario 2}.
+
+Uploding the icons and build the @acronym{HTML} catalog:
+@example
+$ mediatex upload++ file download as OpenIconsLibrary.tbz \
+   catalog icons.cat rules icons.ext to coll hello
+@end example
+
+Browses the icons catalog via this @sc{url}: @*
+@url{https://localhost/~mdtx-hello}, using @code{mdtx} log-in and the password you provide before.
+
+The first time you request for an archive, it take long time to extract it from this big @acronym{TBZ} container. 
+To speed up the audit process that simulate all archive extraction, first manually extract all archives from the @acronym{TBZ} container:
+@example
+# /etc/init.d/mediatexd stop
+$ mediatex su
+$ cd ~/cache/mdtx-hello
+$ tar -jxf OpenIconsLibrary.tbz
+# /etc/init.d/mediatexd start
+@end example
+
+The server will take long time too to scan the cache directory.
+
+Audit the collection:
+@example
+$ mediatex audit coll hello for @var{email_address}
+$ mediatex srv extract
+# tail -f /var/log/mediatex
+@end example
+
+You should be notified by mail that the audit report is uploaded to the collection.
+
 @node Firewall
 @section Configuration behind a firewall
 
 This configuration is needed when you cannot install mediatex on the
-routeur of your private network
-(the bellow configuration cannot serv collections hosted on the true gateway as @file{ssh/config} file cannot handle 2 ports for the same hostname).
+router of your private network
+(the bellow configuration cannot serves collections hosted on the true gateway as @file{ssh/config} file cannot handle 2 ports for the same hostname).
 
 Mediatex must be configured as if it was hosted on the gateway.
 
@@ -247,10 +287,8 @@ file is provided as an example.
 It convert all the collection's meta-data to an @acronym{SQL} script:
 @example
 #include "mediatex.h"
-#include "misc/log.h"
-#include "misc/command.h"
-#include "memory/confTree.h"
-#include "common/openClose.h"
+#include "client/commonHtml.h"
+#include "client/catalogHtml.h"
 
 #include <locale.h>
 
@@ -302,8 +340,6 @@ main(int argc, char** argv)
   setlocale(LC_NUMERIC, "C"); 
 
   // import mdtx environment
-  env.allocNiceLimit = 256;
-  env.allocSoftLimit = 512;
   getEnv(&env);
 
   // parse the command line
@@ -317,7 +353,6 @@ main(int argc, char** argv)
   @}
 
   // export mdtx environment
-  env.allocDiseaseCallBack = clientDiseaseAll;
   if (!setEnv(programName, &env)) goto optError;
  
   /*******************************************************************/

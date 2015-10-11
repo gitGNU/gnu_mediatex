@@ -51,6 +51,8 @@ browse collection and download archives: @procToolsApache{}.
 system's maintenance operations.
 @end itemize
 
+Correspondance with system users is detailed next: @pxref{System users}.
+
 @node What
 @section What
 @cindex supports 

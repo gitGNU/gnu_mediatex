@@ -102,7 +102,7 @@ from @procServerExtract to @procClientSupp{}: manage mounting @iso devices.
 
 @itemize @bullet
 @item
-Lock concurent access.
+Lock concurent access from any other @activityClient's @acronym{UNIX} process.
 @item
 Catalog and extraction rules meta-data files are:
 @itemize @bullet

@@ -54,8 +54,25 @@ from a remote @activityServerO to @procServerNotify{}: receive a socket query pr
 @end table
 @item Processing
 
-Manage HUP signal to re-scan the cache 
-and serialising the last cache status in order to keep in mind remote supplies and demands on next start-up.
+@itemize @bullet
+@item 
+Serialise cache index into @dataChecksum{}, on @eventServerExtractReg
+query. 
+Remote supplies and demands are now readable by @activityClientO{}, or on next @activityServer start-up.
+
+@item Re-index the cache when reciving HUP signal:
+@itemize @bullet
+@item wait until all threads end,
+@item lock concurent threads setup
+@item serialise cache index into @dataChecksum{},
+@item free all memory used,
+@item parse @dataConf file configuration,
+@item parse @dataChecksum{},
+@item scan the cache dirrectory
+@item unlock concurent threads setup
+@end itemize
+@item 
+@end itemize
 
 @item Events out
 @table @code

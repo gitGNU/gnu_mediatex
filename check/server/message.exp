@@ -19,7 +19,7 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
 [err threads.c] checkMessage fails
-[notice utmessage.c] reply : 303 message from server aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa not registered into coll1 collection
+[notice utmessage.c] reply : 303 message from server 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' not registered into coll1 collection
 [notice utmessage.c] -------------------------------------------------------
 [notice utmessage.c] record related to other server
 [notice utmessage.c] .......................................................
