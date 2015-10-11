@@ -9,18 +9,36 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventServerCgiQuery 
-from @procScriptsCgi
+from @procScriptsCgi{}: receive a socket query asking for an archive.
+
 @end table
+@item Processing
+
+This process handle 2 kind of queries:
+@itemize @bullet
+@item When no email address is provided, try to extract archive and:
+@itemize @bullet
+@item if archive is available on cache returns @code{220} and its path,
+@item if not, returns @code{120}.
+@end itemize
+@item When a email address is provided:
+@itemize @bullet
+@item returns @code{221} and remind a @actorUser is looking for the related archive and want to be notified when it becomes available using this email address.
+@end itemize
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerExtract 
-to @procServerExtract
-@item @eventServerDeliver 
-to @procServerDeliver
-@end table
 
+@item @eventServerExtract 
+to @procServerExtract{}: internally ask to start extraction.
+
+@item @eventServerDeliver 
+to @procServerDeliver{}: deliver mails related to an extracted archive.
+
+@end table
 @item Input data
 @itemize @bullet
 @item @dataConf
@@ -31,10 +49,10 @@ to @procServerDeliver
 Example:
 @example
 $ telnet localhost 6560
-# Collection's records:
 Headers
 	Collection	hello
-	Type		DISK
+        Server          fbc144f6da753a9a4288e2915df14edd
+	Type		CGI
 	DoCypher	FALSE
 Body
 #                date                             host @dots{}
@@ -44,7 +62,7 @@ D 2013-12-10,10:24:24 fbc144f6da753a9a4288e2915df14edd @dots{}
 @dots{} 365acad0657b0113990fe669972a65de               15106 test@@test.org
 ^]quit
 
-$ tail -f /var/log/mediatex.log
+# tail -f /var/log/mediatex.log
 [info mdtxd.c:384] socketJob
 ...
 [notice mdtxd.c:400] hello: DISK message from \

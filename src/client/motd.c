@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.14 2015/09/27 21:32:52 nroche Exp $
+ * Version: $Id: motd.c,v 1.15 2015/10/11 01:03:54 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -551,9 +551,6 @@ updateMotd()
   MotdRecord* motdRec = 0;
   Record* record = 0;
   char car = ':';
-  //char* text = 0;
-  //off_t badSize = 0;
-  //char buf[30];
 
   logMain(LOG_DEBUG, "updateMotd");
 
@@ -608,24 +605,6 @@ updateMotd()
 	     record->extra, record->archive->extractScore); 
     }
   }
-
-  /* // display collections global status  */
-  /* printf("Looking for content to burn:\n");  */
-  /* if (conf->collections == 0) goto error2; */
-  /* rgRewind(conf->collections); */
-  /* while ((coll = rgNext(conf->collections))) { */
-  /*   if (!computeExtractScore(coll)) goto error2; */
-  /*   if (!(text = getExtractStatus(coll, &badSize, 0)))  */
-  /*     goto error2; */
-
-  /*   if (badSize == 0) goto next; */
-  /*   sprintSize(buf, badSize); */
-  /*   printf("- %s (%5.2f): %s", coll->label, coll->extractTree->score, buf); */
-
-  /* next: */
-  /*   text = destroyString(text); */
-  /* } */
-  /* printf("\n"); */
 
   rc = TRUE;
  error2:

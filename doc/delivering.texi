@@ -13,24 +13,36 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventServerDeliver
-      from @procServerExtract{}, @procServerHave or @procServerCgiSrv
+from @procServerExtract{}: deliver an extracted archive.
+
 @item @eventServerDeliverReg
-      from @procClientMisc
+from @procClientMisc{}: (no more use)
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item On normal context, adjust the archive time-to-live to the type of related demands.
+@item On audit context, check the archive's md5sum and size.
+@item For a final demand, switch to the appropriate delivering script (mail to @actorUserO or audit).
+@item Remove the final demand (email) from the cache index.
+@end itemize
 
 @item Events out
 @table @code
-@item @eventScriptsDeliver
-      to @procScriptsDeliver
-@item @eventScriptsAudit
-      to @procScriptsAudit
-@end table
 
+@item @eventScriptsDeliver
+to @procScriptsDeliver{}: tel @actorUser an archive he was looking for is now available.
+
+@item @eventScriptsAudit
+to @procScriptsAudit{}: audit an archive.
+
+@end table
 @item Input data
 @itemize @bullet
 @item @dataConf
-@item @dataChecksum
 @end itemize
 @end itemize
 

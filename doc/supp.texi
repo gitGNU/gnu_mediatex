@@ -6,27 +6,27 @@ A score is computed for each local support, based on its age (@math{t}).@*
 @image{mediatex-figures/score1,,,,}
 
 @math{t <= T: score = ({T-t \over T})^{-a} *(M-b))+b} @*
-@math{t > T: score = ({1 + c*(t - T)}^{-1}) * b} @*
+@math{t > T: score = ({1 + c*(t-T)}^{-1}) * b} @*
 
-where: (default value)
+where: (default values)
 @table @math
-@item T 
-is the support time to live (10 years)
+@item T = 10 years
+is the support time to live
 @item t
 is the current support age
-@item a 
-power that reduce score from age of supports (2)
-@item M 
-the maximum score (10)
-@item b
-maximum score for outdated supports (1)
-@item c
-factor that reduce score of out-dated supports (2)
+@item a = 2
+power that reduce score from age of supports
+@item M = 10.00
+the maximum score
+@item b = 1.00
+maximum score for outdated supports
+@item c = 2
+factor that reduce score of out-dated supports
 @end table
 
 @note{} with the default values this gives: @*
-@math{t <= T: score = (\sqrt{T-t \over T} *(19))+1} @*
-@math{t > T: score = {1 \over 1 + 2*(t - T)}} @*
+@math{t <= T: score = (\sqrt{T-t \over T} *(9))+1} @*
+@math{t > T: score = {1 \over 1 + 2*(t-T)}} @*
 
 Process conceptual model:
 
@@ -35,26 +35,41 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventClientSuppList
 @itemx @eventClientSuppAdd
 @itemx @eventClientSuppFileAdd
 @itemx @eventClientSuppDel
 @itemx @eventClientSuppNote
 @itemx @eventClientSuppCheck
-from @actorPublisher
-@end table
+from @actorPublisher{}: manage local supports.
 
+@end table
+@item Processing
+@itemize @bullet
+
+@item 
+Manage supports information related to the @dataSupp file.
+@item
+Automatically withdraw a support from all collection on removal.
+@item
+When @actorPublisherO provides a support, ensure the @activityServer may work with it. 
+
+@end itemize
 @item Events out
 @table @code
+
 @item @eventClientConfWithdrawSuppCall
-to @procClientConf
+to @procClientConf{}: withdraw a local supports from collections.
+
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-to @procScriptsMount
-@item @eventServerHaveQuery
-to @procServerHave
-@end table
+to @procScriptsMount{}: manage mounting @iso devices.
 
+@item @eventServerHaveQuery
+to @procServerHave{}: tels @activityServerO{} a support is now available.
+
+@end table
 @item Data in/out
 @itemize @bullet
 @item @dataSupp
@@ -62,7 +77,9 @@ to @procServerHave
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 1})
+@itemize @bullet
+@item Manage supports: @pxref{Scenario 1}.
+@end itemize
 
 Code:
 @table @file

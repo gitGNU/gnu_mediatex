@@ -1,7 +1,6 @@
 @cindex supports
 
-@process{Have} process is call when 
-@actorPublisher provide a support. 
+@process{Have} process is call when @actorPublisher provide a support. 
 
 Process conceptual model:
 
@@ -10,18 +9,29 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
-@item @eventServerHaveQuery 
-from @procClientSupp
+
+@item @eventServerHaveQuery
+from @procClientSupp{}: receive socket query providing archives from a support.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item add the support as a remote supply into the cache index,
+@item recursively extract demands from the support,
+@item remove the support's remote supply from the cache index.
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerExtract 
-to @procServerExtract
-@item @eventServerDeliver 
-to @procServerDeliver
-@end table
 
+@item @eventServerExtract 
+to @procServerExtract{}: internally ask to start extraction.
+
+@item @eventServerDeliver 
+to @procServerDeliver{}: deliver mails related to an extracted archive.
+
+@end table
 @item Input data
 @itemize @bullet
 @item @dataConf
@@ -30,12 +40,7 @@ to @procServerDeliver
 @end itemize
 @end itemize
 
-Example:
-@example
-...
-@end example
-
 Code:
 @table @file
-@item src/server/cgiSrv.c
+@item src/server/have.c
 @end table

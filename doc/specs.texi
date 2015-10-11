@@ -31,7 +31,7 @@ from @actorAdminO to @procClientMisc{}: configure the @mediatexO{} system.
 
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdminO to @procClientConf{}: configure collections. 
+from @actorAdminO to @procClientConf{}: configure collections.
 
 @item @eventToolsCronDate
 from @actorDate to @procToolsCron{}: scheduled tasks.

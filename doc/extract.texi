@@ -1,9 +1,9 @@
 @cindex extraction rules
 @cindex nat
 
-@process{Extract} process extracts file into the local server cache 
-by using the extraction rules. @acronym{NAT} servers brings back available
-files wanted by other severs from its clients.
+@process{Extract} process extracts archives into the local server cache 
+by applying the extraction rules.
+@acronym{NAT} servers also brings back available files wanted by other severs from its clients.
 
 @cindex cat
 12 extraction rules are implemented: 
@@ -19,17 +19,14 @@ Other should be added if necessary.
 Other containers must be cut using @code{split} and re-assembled with @code{cat}. However, native multi-volumes archives extraction may still be implement for each format if necessary.
 @table @code
 @item cpio
-      GNU multi-volume archives are not supported. (no compression)
+GNU multi-volume archives are not supported. (no compression)
 @item tar
-      Multi-volume support is a GNU extension 
-and the archives created in this mode should be read only using GNU tar.
+Multi-volume support is a GNU extension and the archives created in this mode should be read only using GNU tar.
 @example
 $ tar -cM -L1000 -f multi1 -f multi2 -f multi3  data 
 @end example
 @item afio
-      compressed archives that are fault tolerant:
-thanks to the individual files compression,
-if there is a single byte error you will only loose one or two files.
+Compressed archives that are fault tolerant: thanks to the individual files compression, if there is a single byte error you will only loose one or two files.
 @end table
 
 Process conceptual model:
@@ -39,30 +36,45 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventServerExtractReg
-from @procClientMisc
+from @procClientMisc{}: ask to start extraction by setting a value into share memory and sending a signal.
+
 @item @eventServerExtract
-from @procServerCgiSrv{} or @procServerHave
+from @procServerCgiSrv{} or @procServerHave{}: internally ask to start extraction.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item When not call internally, first list all archives that will need to be extracted: demands and unsafe archives not already extracted.
+@item Next, when performing an archive extraction:
+@itemize @bullet
+@item allocate space into the cache
+@item extract archive into the temporary extraction directory
+@item move the archive into the cache
+@item adjust the archive time-to-live so as recursive extraction using this archive will not remove it by allocating new places.
+@item send a notification to @actorUser who was looking for the newly extracted archive.
+@end itemize
+@end itemize
 
 @item Events out
 @table @code
+
 @item @eventServerCacheAlloc 
-to @procServerCache
+to @procServerCache{}: allocate place into the cache.
+
 @item @eventServerDeliver
-to @procServerDeliver
+to @procServerDeliver{}: deliver mails related to an extracted archive.
+
 @item @eventClientMiscGet
-to @procClientMisc
+to @procClientMisc{}: retrieve a remote collection's file via @acronym{SSH}.
+
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-to @procClientSupp
-@item @eventServerCacheAlloc
-to @procServerCache
-@item @eventServerDeliver 
-to @procServerDeliver
+to @procClientSupp{}: manage mounting @iso devices.
 
 @end table
-
 @item Input data
 @itemize @bullet
 @item @dataConf

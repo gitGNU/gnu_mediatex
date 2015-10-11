@@ -1,14 +1,15 @@
 @cindex motd
 
-The @process{Upload} process provide a single @api{} to upload new incoming archives.
-
+The @process{Upload} process provide a single @api{} to upload new incoming archives. This query can take 4 parameters:
 @itemize @bullet
-@item parse the provided metadata
-@item check we erase nothing into the extraction rules and into the cache
-@item ask daemon to upload the file
+@item some descriptive meta-data (to concatenate into the @dataCatalog{} file)
+@item extraction rules (to concatenate into the @dataExtract{} file) when the the file provided is an archive container (@acronym{TGZ}@dots{}).
+@item an archive file
+@item a target path where to store the archive into the cache.
 @end itemize
 
-@activity{Mediatex} system wants to check or extract for.
+Checks are made to optimise the meta-data consistency so the provided meta-data files are first parsed into memory, using the same parsers as usual.
+Because we always assert that an archive description should be linked to an existing archive, we cannot upload here descriptions without a related archive or extraction rules. To do it, you will have to edit or concatenate yourself the @dataCatalog{} file.
 
 Process conceptual model:
 
@@ -19,13 +20,22 @@ Process conceptual model:
 @table @code
 
 @item @eventClientUpload
-from @actorPublisher{}, @procScriptsCron or @procScriptsAudit
+from @actorPublisher{}, @procScriptsCron or @procScriptsAudit{}: upload an incoming archive into the cache.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item parse the provided meta-data
+@item check archive is not already into the current extraction rules
+@item ask daemon to upload the file
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerUpload
-to @procServerUpload
+
+@item @eventServerUploadQuery
+to @procServerUpload{}: ask @activityServerO{} to upload an incoming archive into its cache.
 
 @end table
 
@@ -41,7 +51,9 @@ to @procServerUpload
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 4})
+@itemize @bullet
+@item Adding new archives: @pxref{Scenario 4}.
+@end itemize
  
 Code:
 @table @file

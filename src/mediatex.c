@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.8 2015/10/10 13:54:21 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.9 2015/10/11 01:03:54 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -41,9 +41,9 @@ usage(char* programName)
 {
   fprintf(stderr,
 	  "`" PACKAGE_NAME "' "
-	  "archival storage system implements the related `oais' entity"
-	  " and try to match it with the `nf z 42-013' requirements.\n"
-	  );
+	  "is an Electronic Record Management System (ERMS), "
+	  "focusing on the archival storage entity define by the `OAIS' "
+	  "draft and on the `NF Z 42-013' requirements.\n");
 
   mdtxUsage(programName);
   fprintf(stderr, " [ -a ] query");
@@ -67,7 +67,7 @@ usage(char* programName)
 	  "  check supp SUPP on PATH  Provide an external support (that is accessible now).\n"
 	  "  add supp SUPP to (all|coll COLL)  Share a support with a collection.\n"
 	  "  del supp SUPP from (all|coll COLL)  Withdraw a support from a collection.\n"
-	  "  upload+{0,2} PATH to coll COLL  Upload an incoming archive into the cache. Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.\n"
+	  "  upload+{0,2} [file FILE as TARGET] [catalog FILE] [rules FILE] to coll COLL  Upload an incoming archive into the cache. Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.\n"
 	  
 	  "\nMeta-data management:\n"
 	  "  list [master] coll  List collections.\n"	  
@@ -78,7 +78,7 @@ usage(char* programName)
 	  "  make [coll COLL]  Build the local HTML catalogue\n"
 	  "  clean [coll COLL]  Remove the local HTML catalogue.\n"
 	  "  su [coll COLL]  Change to mediatex or collection system user.\n"
-	  "  audit coll COLL] for MAIL  Extract all archives from a collection.\n"
+	  "  audit coll COLL for MAIL  Extract all archives from a collection.\n"
 
 	  "\nQueries to daemon:\n"
 	  "  srv (save|extract|notify|deliver)  repectively ask server to dump its state into disk, perform extractions, communicate its state to other servers, deliver mails related to extracted archives (no more needed).\n"

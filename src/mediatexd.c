@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.12 2015/10/01 21:52:40 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.13 2015/10/11 01:03:54 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -288,9 +288,10 @@ usage(char* programName)
 {
   fprintf(stderr,
 	  "`" PACKAGE_NAME "' "
-	  "archival storage system implements the related `oais' entity"
-	  " and try to match it with the `nf z 42-013' requirements.\n"
-	  );
+	  "is an Electronic Record Management System (ERMS), "
+	  "focusing on the archival storage entity define by the `OAIS' "
+	  "draft and on the `NF Z 42-013' requirements.\n");
+
   mdtxUsage(programName);
   mdtxOptions();
   mdtxHelp();

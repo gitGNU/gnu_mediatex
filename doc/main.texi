@@ -101,13 +101,13 @@ Extract all archives from a collection.
 Ask @activityServer to dump its state into disk.
 
 @item @eventClientExtract
-Ask server to perform extractions.
+Ask @activityServerO to perform extractions.
 
 @item @eventClientNotify
-Ask server to communicate its state to other servers.
+Ask @activityServerO to communicate its state to other servers.
 
 @item @eventClientDeliver
-Ask server to deliver mails related to extracted archives (no more needed).
+Ask @activityServerO to deliver mails related to extracted archives (no more needed).
 
 @end table
 @item Internal/debug queries:

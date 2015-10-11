@@ -1,19 +1,10 @@
 @cindex configuration file
 
 The @process{Conf} process handle queries about collections.
-@itemize @bullet
-@item 
-A single query is used to create a new collection or to join
+
+@note: A single query is used to create a new collection or to join
 an existing remote collection. 
-Be careful because a single query is used too, 
-to remove a collection or to retract from a remote collection.
-@item
-Servers may be linked together over private networks. 
-In this case, queries for private server will be relayed by the 
-@acronym{NAT} gateway.
-@item 
-Supports may be share or withdraw to collections.
-@end itemize
+Also, a single query is used too to retract from a remote collection or to remove a local collection.
 
 Process conceptual model:
 
@@ -22,27 +13,40 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from 
-@actorAdmin
-@item @eventClientConfList
-@itemx @eventClientConfWithdrawSupp
-from 
-@actorPublisher
-@eventClientConfWithdrawSuppCall
-from @procClientSupp
-@end table
+from @actorAdmin{}: configure collections.
 
+@item @eventClientConfList
+@itemx @eventClientConfShareSupport
+@itemx @eventClientConfWithdrawSupp
+from @actorPublisher{}: respectively list collections or share a local support to collections.
+
+@item @eventClientConfWithdrawSuppCall
+from @actorPublisher or @procClientSupp{}: withdraw a local supports from collections.
+
+@end table
+@item Processing
+@itemize @bullet
+
+@item 
+Manage collection (new/join/unsubscribe/remove)
+@item 
+Manage sharing or withdrawing suports to/from collections.
+
+@end itemize
 @item Events out
 @table @code
+
 @item @eventClientServUpgradeCall
-to @procClientServ
+to @procClientServ{}: upgrade the meta-data.
+
 @item @eventScriptsNew 
 @itemx @eventScriptsFree
-to @procScriptsNewFreeClean
-@end table
+to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 
+@end table
 @item Data in/out
 @itemize @bullet
 @item @dataConf
@@ -50,7 +54,11 @@ to @procScriptsNewFreeClean
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 2})
+@itemize @bullet
+@item Create a new collection: @pxref{Scenario 2}.
+@item Sharing supports with a collection: @pxref{Scenario 3}.
+@item Join an already existing collection: @pxref{Scenario 5}.
+@end itemize
 
 Code:
 @table @file

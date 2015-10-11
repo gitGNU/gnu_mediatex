@@ -14,30 +14,36 @@ Process conceptual model:
 @item @eventClientMiscInit
 @itemx @eventClientMiscRemove
 @itemx @eventClientMiscPurge
-from @actorAdmin
-
-@item @eventClientMiscAddUser
+@itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-@itemx @eventClientMiscMake
+from @actorAdmin{}: configure the @mediatexO{} system.
+
+@item @eventClientMiscMake
 @itemx @eventClientMiscClean
 @itemx @eventClientMiscSu
 @itemx @eventClientMiscAudit
-from @actorPublisher
+from @actorPublisher{}: build/clean the @acronym{HTML} catalogue ; change to server or collection system user ; simulate retrieving all archives.
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from @activityServer
+from @activityServer{}: manage collection repository binding on the chroot-ed jail for @acronym{SSH} remote access.
 
 @item @eventClientMiscGet
-from @procServerExtract
+from @procServerExtract{}: retrieve a remote collection's file via @acronym{SSH}.
 
 @end table
-
 @item Processings
+
 @itemize @bullet
-@item Manage the @sc{HTML} catalogs.
+@item Build the @sc{HTML} catalogues.
 @item Wraps queries from @actorAdminO{}, @actorPublisherO{} 
 and @activityServerO{} to @activityScriptsO{}.
+@note: some operations required the @code{root} privileges. For security reason, only the @activityClientO allow it thanks to its ``setuid'' bit.
+@example
+$ ls -l /usr/bin/mediatex
+-rwsr-xr-x 1 root root @dots{}
+@end example
+@item Begin an audit processing.
 @end itemize
 
 @item Events out
@@ -46,28 +52,27 @@ and @activityServerO{} to @activityScriptsO{}.
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
 @itemx @eventScriptsPurge
-to @procScriptsInitRemovePurge
+to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
 
 @item @eventScriptsClean
-to @procScriptsNewFreeClean
+to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-to @procScriptsAddDelUser
+to @procScriptsAddDelUser{}: manage @actorPublisherO users.
 
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
-to @procScriptsBind
+to @procScriptsBind{}: manage collection repository binding on the chrooted jail for SSH remote access.
 
 @item @eventServerCgiQuery
-to @procServerCgiSrv
+to @procServerCgiSrv{}: socket query asking for all archives from a collection (for a collection audit).
 
 @item @eventToolsSshCopy 
-to @procToolsSsh
+to @procToolsSsh{}: copy file from one remote server's cache.
 
 @end table
-
-@item Data in/out
+@item Data in
 @itemize @bullet
 @item @dataConf
 @item @dataCatalog
@@ -77,18 +82,22 @@ to @procToolsSsh
 @item Data out
 @table @file
 @item ~mdtx-COLL/public_html/
+@item ~mdtx/tmp/mdtx-COLL/audit_YYYYMMDD-HHmmSS_FINGERPRINT.txt
 @end table
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 1})
+@itemize @bullet
+@item Initialise @mediatexO{}: @pxref{Scenario 1}.
+@item Build the @acronym{HTML} catalogue: @pxref{Scenario 5}.
+@end itemize
 
 Code:
 @table @file
 @item src/misc/html.h
-@item src/misc/html.c
-@item src/client/catalogHtml.c
-@item src/client/extractHtml.c
-@item src/client/serverHtml.c
-@item src/client/misc.c
+@itemx src/misc/html.c
+@itemx src/client/catalogHtml.c
+@itemx src/client/extractHtml.c
+@itemx src/client/serverHtml.c
+@itemx src/client/misc.c
 @end table

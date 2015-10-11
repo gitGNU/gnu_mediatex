@@ -1,17 +1,9 @@
 @cindex notify
+@cindex nat
 
 @process{Notify} process exchanges information on cache supplies and demand with other @activity{Mediatex} servers.
-The policy is, servers tells each others:
-@itemize @bullet
-@item local final demands they records from 
-@actorUser{},
-@item files presently in local cache that may be useful to others,
-@cindex nat
-@item @acronym{NAT} servers forward messages unchanged to its clients
-@item @acronym{NAT} servers relay final demands from its clients
-@end itemize
 
-@note{} messages only contains records related the original sender servers.
+@note{} messages only contains records related to the original sender servers.
 When receiving a message, server forgives and replace all records previously sends by the related server. Consequently, empty message are used too.
 
 Process conceptual model:
@@ -21,18 +13,45 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventServerNotifyReg 
-from @procClientMisc
+from @procClientMisc{}: ask notify by setting a value into share memory and sending a signal.
+
 @item @eventServerNotifyQuery 
-from a remote @process{notify} process.
+from a remote @process{notify} process: receive a socket query providing remote cache content index.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item 
+The policy is, servers tells each others:
+@itemize @bullet
+@item final demands they have to extract,
+@item local supplies (presently into theire cache) that may be useful to others or are unsafe.
+@end itemize
+@item
+However:
+@itemize @bullet
+@item servers do not try to send messages to unreachable @acronym{NAT}'s client servers,
+@item @acronym{NAT} client servers do not send messages to servers that cannot reach them.
+@end itemize
+@item
+So, @acronym{NAT} gateway servers do:
+@itemize @bullet
+@item forward messages unchanged to its @acronym{NAT}'s client servers,
+@item relay (doing masquerade) final demands of its @acronym{NAT}'s client servers.
+@end itemize
+
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerNotifyQuery
-to a remote @process{notify} process.
-@end table
 
+@item @eventServerNotifyQuery
+to a remote @process{notify} process: send a socket query providing local cache content index.
+
+@end table
 @item Input data
 @itemize @bullet
 @item @dataConf
@@ -41,7 +60,8 @@ to a remote @process{notify} process.
 @end itemize
 @end itemize
 
-Example: Servers communication between private networks@*
+Example: Servers communication between private networks
+
 @image{mediatex-figures/notifying,,,,}
 
 Code:

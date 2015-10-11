@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: threads.c,v 1.12 2015/09/17 18:53:50 nroche Exp $
+ * Version: $Id: threads.c,v 1.13 2015/10/11 01:03:54 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -440,7 +440,7 @@ int checkMessage(Connexion* con)
 
   static char status[][64] = {
    "302 message without collection",
-   "303 message from server %s not registered into %s collection",
+   "303 message from server '%s' not registered into %s collection",
    "304 message contains a record not related to author %s but %s",
    "401 fails to read message",
    "402 fails to load %s collection's serverTree",

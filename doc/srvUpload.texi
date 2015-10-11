@@ -1,31 +1,39 @@
 @cindex upload
 
-@process{Upload} server's process manage finalize the upload process into the server's cache.
+@process{Upload} server's process manage finalise the upload process into the server's cache.
 
 Process conceptual model:
 
 @image{mediatex-figures/srvUpload,,,,}
 
 @itemize @bullet
-
 @item Events in
 @table @code
-@item @eventServerUpload
-from @procClientUpload
+
+@item @eventServerUploadQuery
+from @procClientUpload{}: receive a socket query providing an archive and asking to handle it into the cache.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item add the archive to upload as a remote supply into the cache index,
+@item extract demands from the archive, and consequently copy it into the cache directory,
+@item add the upload archive's remote supply from the cache index.
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerCacheAlloc
-to @procServerCache
-@end table
 
+@item @eventServerExtract 
+to @procServerExtract{}: internally ask to start extraction.
+
+@end table
 @item Data
 @itemize @bullet
 @item in: @dataConf
 @item in: @dataChecksum
 @end itemize
-
 @end itemize
 
 Code:

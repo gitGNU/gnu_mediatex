@@ -1,6 +1,6 @@
 @cindex cache
 
-@process{Cache} process manage the local server storage place. Files into cache's directories called @file{toKeep} will never be deleted. Symlink are not followed.
+@process{Cache} process manage the local server cache's directory.
 
 @process{Cache} use 3 options defined into the 
 @dataConf{} file:
@@ -8,10 +8,10 @@
 @item cacheSize
 the maximum size that limit growing operations into the cache
 @item cacheTTL
-the minimum time a file notifyed to 
+the minimum time a file notified to 
 @actorUser{} has to be keept into the cache
 @item queryTTL
-the time to live of a @actorUserO{} query is keept into the
+the time to live of a @actorUserO{} query is kept into the
 @dataChecksum{} file
 @end table
 
@@ -20,11 +20,21 @@ Process conceptual model:
 @image{mediatex-figures/cache,,,,}
 
 @itemize @bullet
+
 @item Events in
 @table @code
 @item @eventServerCacheAlloc 
-from @procServerExtract{} or @procServerUpload{}
+from @procServerExtract{}: allocate place into the cache.
+
 @end table
+@item Processing
+
+@itemize @bullet
+@item Scan the cache directory @file{~mdtx/cache/mdtx-COLL} without following symlinks.
+@item Compute available and frozen (unsafe archive) spaces.
+@item Remove safe archives when more place is needed for allocation.
+@item Reserve space for newly allocated archives (during extract or upload)
+@end itemize
 
 @item Data
 @itemize @bullet

@@ -1,7 +1,7 @@
 @cindex serv
 
-The @process{Serv} maintains the integrity of the data files,
-by calculating a perennial score on archives.
+The @process{Serv} maintains the integrity of the meta-data files.
+Moreover, it manage a perennial score on every archives.
 
 @itemize @bullet
 @item 
@@ -10,13 +10,14 @@ It is computed by summing the local support's scores computed by @procClientSupp
 
 @image{mediatex-figures/score2,,,,}
 
-@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)} , M)} @*
-The sum may be greater than the maximum score (default is 10) 
-if there are several local supports burn from the same image, 
-so we truncate it.
+@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)} , M)}
+
+When there are many local supports burned from the same image, 
+this sum may be greater than the maximum score, so we truncate it.
 
 @item
-The server score equals the worst local image's score on the server. @*
+The server score equals the worst local image's score on the server.
+
 @math{serverScore(x) = \min_{i=1..N} imageScore(x_i)}
 
 @item
@@ -28,21 +29,21 @@ An archive score is computed from all local and remote images:
 @*
 where: (default value)
 @table @math
-@item d
-the minimum number of support's geopraphical duplications we want to be safe (2)
-@item M
-is the maximum score (10)
+@item d = 2
+is the minimum number of geographical duplication required
+@item M = 10.00
+is the maximum score
 @end table
 
-Summing image's scores may provide a score greater than the maximum score 
-(default is 10) if there are more than the wanted number of supports 
-geographically duplicated, so we truncate it. @*
-Next, archive scores are computed recursively:
+When there are more image geographically duplicated than required,
+this sum may be greater than the maximum score, so we truncate it.
+
+Next, archive's scores are computed recursively:
 @itemize @bullet
 @item 
-using @math{\max} when archive is provided by concurrent containers ,
+using @math{\max} when archive is provided by several containers,
 @item 
-or @math{\min} when archive comes from combined containers.
+or using @math{\min} when archive comes from combined containers (CAT or RAR).
 @end itemize
 
 @item
@@ -62,14 +63,12 @@ Process conceptual model:
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
-from 
-@actorPublisher
+from @actorPublisher{}: manage collection settings.
 
 @item @eventClientServUpgradeCall
-from @procClientConf
+from @procClientConf{}: upgrade the meta-data.
 
 @end table
-
 @item Processing
 @itemize @bullet
 @item 
@@ -88,14 +87,17 @@ Adding a key will add a server entry into the @dataServersO file and so, allow c
 @item Data out
 @table @file
 @item @dataServers
-@itemx /var/cache/mediatex/mdtx/COLL/.ssh/authorized_keys
-@itemx /var/cache/mediatex/mdtx/COLL/.ssh/known_host
-@itemx /var/cache/mediatex/mdtx/COLL/.ssh/config
+@itemx ~mdtx-COLL/.ssh/authorized_keys
+@itemx ~mdtx-COLL/.ssh/known_host
+@itemx ~mdtx-COLL/.ssh/config
 @end table
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 4})
+@itemize @bullet
+@item Join an already existing collection: @pxref{Scenario 5}.
+@item Synchronise servers together via upgrade query: @pxref{Scenario 4}.
+@end itemize
 
 Code:
 @table @file

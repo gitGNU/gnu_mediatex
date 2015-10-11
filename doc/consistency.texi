@@ -4,6 +4,7 @@
 
 @menu
 * Client queries::      Impact of client's queries.
+* Resolving conflict::  Resolving a CVS conflict
 * Scenario A::	        Address's change.
 * Scenario B::	        Socket key's change.
 * Scenario C::          Collection user key's change.
@@ -147,6 +148,9 @@ the default behaviour is to not serialise
 This intents to speed-up some queries ending (as @code{make}).
 In order to force serialising theses files you have to use the @code{upgrade} query.
 @end itemize
+
+@node Resolving conflict
+@section Resolving a CVS conflict
 
 @node Scenario A
 @section Address's change

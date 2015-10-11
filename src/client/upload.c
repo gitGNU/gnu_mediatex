@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: upload.c,v 1.16 2015/10/06 22:23:43 nroche Exp $
+ * Version: $Id: upload.c,v 1.17 2015/10/11 01:03:54 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *
@@ -70,6 +70,7 @@ static int
 uploadExtract(Collection* upload, char* path)
 { 
   int rc = FALSE;
+  ExtractTree* self = 0;
 
   logMain(LOG_DEBUG, "uploadExtract");
   checkCollection(upload);
@@ -79,6 +80,13 @@ uploadExtract(Collection* upload, char* path)
   if (!(upload->extractDB = createString(path))) goto error;
 
   if (!parseExtractFile(upload, path)) goto error;
+
+  // assert there is no INC content  
+  if (!(self = upload->extractTree)) goto error;
+  if (avl_count(self->incoming->childs) > 0) {
+    logMain(LOG_ERR, "Incoming rules should not provide INC contents");
+    rc = FALSE;
+  }
 
   rc = TRUE;
  error:

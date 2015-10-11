@@ -1,36 +1,59 @@
 @cindex motd
 
 The @process{Motd} process display the list of supports
-the @activity{Mediatex} system wants to check or extract for.
+the @activity{Mediatex} system wants to check or extract for,
+and the archives that needs to be put on external supports to be safe.
 
 Process conceptual model:
+
+@process{Motd} use 1 option defined into the 
+@dataConf{}
+@table @code
+@item checkTTL 
+the interval in wich we have to check supports before we consider them obsolete (you ever can provide support after).
+@end table
 
 @image{mediatex-figures/motd,,,,}
 
 @itemize @bullet
 @item Events in
 @table @code
+
 @item @eventClientMotd
-from @procScriptsCron
+from @procScriptsCron{}
+
 @end table
+@item Processing
+
+Ask @actorPublisherO for:
+@itemize @bullet
+@item supports not seen for a while (and so having no score computed),
+@item supports needed to extract local or remote remands,
+@item and cache content to put on external supports.
+@end itemize
 
 @item Events out
 @table @code
-@item @eventServerSaveReg 
-to @activityServer
-@end table
 
+@item @eventServerSaveReg 
+to @activityServer{}: ask @activityServer to dump its state into disk.
+
+@end table
 @item Data in
-@itemize @bullet
+@table @file
 @item @dataConf
-@item @dataSupp
-@item @dataServers
-@item @dataChecksum
-@end itemize
+@itemx @dataSupp
+@itemx @dataServers
+@itemx @dataChecksum
+@end table
 @end itemize
 
 Examples:
-see Scenarios (@ref{Scenario 2})
+@itemize @bullet
+@item Extract an archive: @pxref{Scenario 3}.
+@item Adding new archives: @pxref{Scenario 4}.
+@item Add a second server: @pxref{Scenario 5}.
+@end itemize
 
 Code:
 @table @file

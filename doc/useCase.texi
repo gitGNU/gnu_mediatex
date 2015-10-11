@@ -3,6 +3,7 @@
 @cindex oais
 
 @menu
+* Exemple::     Archiving icons
 * Firewall::    Configuration behind a firewall
 * CvsLogs::     Search the metadata history
 * Portail::	Minimal Php inerface
@@ -19,6 +20,9 @@ are already taken into account for many features.
 It make the application modulable: we can easily replace a
 layer since the API beween them remains clear.
 @end itemize
+
+@node Exemple
+@section Archiving icons
 
 @node Firewall
 @section Configuration behind a firewall

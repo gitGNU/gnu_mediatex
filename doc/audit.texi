@@ -34,7 +34,12 @@ to @procClientUpload{}: upload the audit report.
 to @procToolsExim{}: notify @actorPublisherO the audit report was uploaded.
 @end table
 
+@item Data in/out
+@table @file
+@item ~mdtx/tmp/mdtx-COLL/audit_YYYYMMDD-HHmmSS_FINGERPRINT.txt
+@end table
 @end itemize
+
 Code:
 @table @code
 @item /usr/share/mediatex/scripts/audit.sh

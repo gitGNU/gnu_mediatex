@@ -41,21 +41,21 @@ Flood diagram:
 @itemx @eventClientMiscPurge
 @itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-from @actorAdmin to @procClientMisc
+from @actorAdmin to @procClientMisc{}: configure the @mediatexO{} system.
 
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdmin to @procClientConf
+from @actorAdminO to @procClientConf{}: configure collections.
 
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
-from @actorPublisher to @procClientServ
+from @actorPublisherO to @procClientServ{}: manage collection settings.
 
 @item @eventClientConfList
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
-from @actorPublisher to @procClientConf
+from @actorPublisherO to @procClientConf{}: list collections ; share/withdraw local supports to collections.
 
 @item @eventClientSuppList
 @itemx @eventClientSuppAdd
@@ -63,52 +63,53 @@ from @actorPublisher to @procClientConf
 @itemx @eventClientSuppDel
 @itemx @eventClientSuppNote
 @itemx @eventClientSuppCheck
-from @actorPublisher to @procClientSupp
+from @actorPublisher to @procClientSupp{}: manage local supports.
 
 @item @eventClientUpload
-from @actorPublisher to @procClientUpload
+from @actorPublisherO to @procClientUpload{}: upload an incoming archive into the cache.
 
-@item @eventClientMiscSu
-@itemx @eventClientMiscMake
+@item @eventClientMiscMake
 @itemx @eventClientMiscClean
+@itemx @eventClientMiscSu
 @itemx @eventClientMiscAudit
-from @actorPublisher to @procClientMisc
+from @actorPublisherO to @procClientMisc{}: build/clean the @acronym{HTML} catalogue ; change to server or collection system user ; simulate retrieving all archives.
 
 @item @eventClientSave
 @itemx @eventClientDeliver (no more used)
-from @actorPublisher to @activityServer
+from @actorPublisherO to @activityServer{}: repectively ask @activityServer to dump its state into disk or to deliver mails related to extracted archives (no more needed).
 
 @item @eventClientExtract
 @itemx @eventClientNotify
-from @actorPublisher or @procScriptsCron to @activityServer
+from @actorPublisherO or @procScriptsCron to @activityServer{}: repectively ask @activityServerO to perform extractions or to communicate its state to other servers.
 
 @item @eventClientMotd
-from @procScriptsCron to @procClientMotd
+from @procScriptsCron to @procClientMotd{}: build the message of the day (actions @actorPublisherO have to perform).
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from @activityServer to @procClientMisc
+from @activityServer to @procClientMisc{}: manage collection repository binding on the chrooted jail for @acronym{SSH} remote access.
 
 @item @eventClientMiscGet
-from @procServerExtract to @procClientMisc
+from @procServerExtract to @procClientMisc{}: retrieve a remote collection's file via @acronym{SSH}.
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract to @procClientSupp
+from @procServerExtract to @procClientSupp{}: manage mounting @iso devices.
 
 @end table
 
 @item Processing
+
 @itemize @bullet
 @item
 Lock concurent access.
 @item
-Wrap the server's query to @activityServer{}:
+Catalog and extraction rules meta-data files are:
 @itemize @bullet
-@item @eventServerSaveReg
-@item @eventServerExtractReg
-@item @eventServerNotifyReg
-@item @eventServerDeliverReg
+@item
+split into 500 ko numbered files, the maximum size @acronym{VIEWVC} advice.
+@item
+automatically re-serialized and upgraded if the last @file{NN.txt} file was present when loading.
 @end itemize
 @end itemize
 
@@ -117,39 +118,46 @@ Wrap the server's query to @activityServer{}:
 
 @item @eventScriptsUpdate
 @item @eventScriptsCommit
-from @procClientServ to @procScriptsUpdateCommit
+from @procClientServ to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
 
 @item @eventScriptsNew 
 @itemx @eventScriptsFree
-from @procClientConf to @procScriptsNewFreeClean
+from @procClientConf to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp to @procScriptsMount
+from @procClientSupp to @procScriptsMount{}: manage mounting @iso devices.
 
-@item @eventServerSaveReg 
-from @procClientMotd to @activityServer
+@item @eventServerSaveReg
+@itemx @eventServerExtractReg
+@itemx @eventServerNotifyReg
+@itemx @eventServerDeliverReg
+from @activityClient to @activityServer{}: wrap the queries to @activityServerO{}.
 
 @item @eventServerHaveQuery
-from @procClientSupp to @procServerHave
+from @procClientSupp to @procServerHave{}: tels @activityServerO{} a support is now available.
 
-@item @eventServerUpload
-from @procClientMisc to @procServerCache
+@item @eventServerUploadQuery
+from @procClientMisc to @procServerCache{}: ask @activityServerO{} to upload an incoming archive into its cache.
 
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
 @itemx @eventScriptsPurge
-from @procClientMisc to @procScriptsInitRemovePurge
+from @procClientMisc to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-from @procClientMisc to @procScriptsAddDelUser
+from @procClientMisc to @procScriptsAddDelUser{}: manage @actorPublisherO users.
+
+@item @eventScriptsNew
+@itemx @eventScriptsFree
+from @procClientConf to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection.
 
 @item @eventScriptsClean
-from @procClientMisc to @procScriptsNewFreeClean
+from @procClientMisc to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
 @item @eventToolsSshCopy 
-from @procClientMisc to @procToolsSsh
+from @procClientMisc to @procToolsSsh{}: copy file from one remote server's cache.
 @end table
 
 @item Data in/out
@@ -158,15 +166,6 @@ from @procClientMisc to @procToolsSsh
 @item @dataServers
 @item @dataCatalog
 @item @dataExtract
-@end itemize
-
-Catalog and extraction rules meta-data files are:
-@itemize @bullet
-@item
-splitted into 10 Mo numbered files by @activityClientO in order to ease
-@procToolsCvs to work on them,
-@item
-only re-serialized and upgraded if the last @file{NN.txt} file was present when loading (except if using the @code{upgrade} query).
 @end itemize
 @end itemize
 

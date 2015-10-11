@@ -36,17 +36,20 @@ from @procClientMisc{}: serialize the last cache status into a file.
 @item @eventServerExtractReg
 @itemx @eventServerNotifyReg 
 @itemx @eventServerDeliverReg
-from @activityClientO{} respectively to 
+from @activityClientO respectively to 
 @procServerExtract{}, @procServerNotify{} and @procServerDeliver{}: ask to extract, notify or deliver (no more used) by setting a value into share memory and sending a signal.
 
 @item @eventServerCgiQuery 
-from @procScriptsCgi{} to @procServerCgiSrv{}: socket query asking for an archive.
+from @procScriptsCgi to @procServerCgiSrv{}: receive a socket query asking for an archive.
 
 @item @eventServerHaveQuery 
-from @procClientSupp{} to @procServerHave{}: socket query providing archives from a support.
+from @procClientSupp to @procServerHave{}: receive a socket query providing archives from a support.
 
-@item @eventServerUpload
-from @procClientMisc{} to @procServerCache{}: socket query providing an archive and asking to handle it into the cache.
+@item @eventServerUploadQuery
+from @procClientMisc to @procServerCache{}: receive a socket query providing an archive and asking to handle it into the cache.
+
+@item @eventServerNotifyQuery
+from a remote @activityServerO to @procServerNotify{}: receive a socket query providing remote cache content index.
 
 @end table
 @item Processing
@@ -66,8 +69,12 @@ to @procClientMisc{}: tel client to make operation that needs privileges, like b
 @itemx @eventClientSuppUMount
 from @procServerExtract to @procClientSupp{}: tel client to mount supports as it need root privileges.
 
+@item @eventServerNotifyQuery
+from @procServerNotify{} to a remote @activityServerO{}: send a socket query providing local cache content index.
+
 @item @eventScriptsDeliver 
-from @procServerDeliver to @procScriptsDeliver{}: to tel @actorUser an archive he was looking for is now available.
+@item @eventScriptsAudit
+from @procServerDeliver to @procScriptsDeliver or @procScriptsAudit{}: respectively notify archive availability to @actorUserO{} or audit an archive.
 
 @end table
 
