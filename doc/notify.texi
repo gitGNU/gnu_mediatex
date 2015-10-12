@@ -25,7 +25,7 @@ from a remote @process{notify} process: receive a socket query providing remote 
 
 @itemize @bullet
 @item 
-The policy is, servers tells each others:
+The policy is, sender servers tells each others:
 @itemize @bullet
 @item final demands they have to extract,
 @item local supplies (presently into theire cache) that may be useful to others or are unsafe.
@@ -41,6 +41,8 @@ So, @acronym{NAT} gateway servers do:
 @itemize @bullet
 @item forward messages unchanged to its @acronym{NAT}'s client servers,
 @item relay (doing masquerade) final demands of its @acronym{NAT}'s client servers.
+@item
+Receiver server returns @code{240}.
 @end itemize
 
 @end itemize

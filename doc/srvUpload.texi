@@ -17,9 +17,11 @@ from @procClientUpload{}: receive a socket query providing an archive and asking
 @item Processing
 
 @itemize @bullet
+@item if archive is already indexed into the cache returns @code{313},
 @item add the archive to upload as a remote supply into the cache index,
 @item extract demands from the archive, and consequently copy it into the cache directory,
-@item add the upload archive's remote supply from the cache index.
+@item add the upload archive's remote supply from the cache index,
+@item returns @code{210}.
 @end itemize
 
 @item Events out

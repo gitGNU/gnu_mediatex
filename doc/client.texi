@@ -66,7 +66,7 @@ from @actorPublisherO to @procClientConf{}: list collections ; share/withdraw lo
 from @actorPublisher to @procClientSupp{}: manage local supports.
 
 @item @eventClientUpload
-from @actorPublisherO to @procClientUpload{}: upload an incoming archive into the cache.
+from @actorPublisherO{}, @procToolsSyslog{}, @procScriptsCron or @procScriptsAudit to @procClientUpload{}: upload an incoming archive into the cache.
 
 @item @eventClientMiscMake
 @itemx @eventClientMiscClean
@@ -164,15 +164,14 @@ from @procClientMisc to @procToolsSsh{}: copy file from one remote server's cach
 @table @file
 @item @dataChecksum
 @end table
-@end itemize
 
 @item Data in/out
-@itemize @bullet
+@table @file
 @item @dataConf
 @itemx @dataServers
 @itemx @dataCatalog
 @itemx @dataExtract
-@end itemize
+@end table
 @end itemize
 
 Code:
@@ -184,7 +183,7 @@ Code:
 @itemx src/client/shellQuery.l
 @itemx src/client/shellQuery.y
 @itemx src/client/serv.c
-@itemx src/mdtx.c
+@itemx src/mediatex.c
 @end table
 
 @node conf

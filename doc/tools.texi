@@ -81,6 +81,9 @@ from @procToolsExim to @actorAdminO{}: scheduled task error notification.
 @itemx @eventScriptsCronDaily
 @itemx @eventScriptsCronMonthly
 from @procToolsCron{} to @procScriptsCron{}: scheduled tasks.
+
+@item @eventClientUpload
+from @procToolsSyslog to @procClientUpload{}: upload collection's @acronym{APACHE} access logs to the cache so as to backup them.
 @end table
 
 @end itemize

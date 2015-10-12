@@ -2,6 +2,7 @@
 
 The @process{Serv} maintains the integrity of the meta-data files.
 Moreover, it manage a perennial score on every archives.
+For bellow computation, values and parameters are read from the @dataChecksum{} file.
 
 @itemize @bullet
 @item 
@@ -10,10 +11,12 @@ It is computed by summing the local support's scores computed by @procClientSupp
 
 @image{mediatex-figures/score2,,,,}
 
-@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)} , M)}
+@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)) , M}}
 
 When there are many local supports burned from the same image, 
-this sum may be greater than the maximum score, so we truncate it.
+this sum may be greater than the maximum score (@code{maxScore}), so we truncate it.
+
+@note: if the server's @code{lastCommit} value is outdated compared to the current date added to @code{serverTTL} parameter, the image's score if set to 0 for this server as server is supposed crashed.
 
 @item
 The server score equals the worst local image's score on the server.
@@ -25,14 +28,14 @@ An archive score is computed from all local and remote images:
 
 @image{mediatex-figures/score3,,,,}
 
-@math{archiveScore(x) = \min {({\sum_{i=1}^N imageScore(x_i) \over d}}, M)}
-@*
+@math{archiveScore(x) = \min {({\sum_{i=1}^N imageScore(x_i) \over d}), M}}
+
 where: (default value)
 @table @math
-@item d = 2
-is the minimum number of geographical duplication required
+@item d = 2 
+is the minimum number of geographical duplication required (@code{minGeoDup})
 @item M = 10.00
-is the maximum score
+is the maximum score (@code{maxScore})
 @end table
 
 When there are more image geographically duplicated than required,
@@ -51,6 +54,8 @@ Finally, the global collection score equals to the worst
 archive score. @*
 @math{collectionScore = \min_{i=1..N} archiveScore(x_i)}
 @end itemize
+
+However, new uploaded archives (since @code{uploadTTL}) that still have a bad score (@math{< M \over 2}) are not taken into account for this global score.
 
 Process conceptual model:
 

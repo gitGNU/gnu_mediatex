@@ -6,11 +6,13 @@ and the archives that needs to be put on external supports to be safe.
 
 Process conceptual model:
 
-@process{Motd} use 1 option defined into the 
+@process{Motd} use 2 options defined into the 
 @dataConf{}
 @table @code
 @item checkTTL 
-the interval in wich we have to check supports before we consider them obsolete (you ever can provide support after).
+The time interval we have to re-check supports before @mediatexO consider them obsolete (scores are impacted now ; you ever can provide the support after and recover your previous scores).
+@item fileTTL
+Twice the time interval @mediatexO will automatically re-check support's files.
 @end table
 
 @image{mediatex-figures/motd,,,,}

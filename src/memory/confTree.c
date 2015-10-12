@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.14 2015/10/11 21:11:14 nroche Exp $
+ * Version: $Id: confTree.c,v 1.15 2015/10/12 23:28:51 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -1246,8 +1246,6 @@ int delSupportFromCollection(Support* support, Collection* coll)
  * Synopsis   : Server* getLocalHost(Collection* coll)
  * Input      : Collection* coll: 
  * Output     : The localhost server, 0 on error
- *
- * TODO       : to call by loadConfiguration for instance
  =======================================================================*/
 Server* 
 getLocalHost(Collection* coll)

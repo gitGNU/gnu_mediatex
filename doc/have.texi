@@ -19,7 +19,8 @@ from @procClientSupp{}: receive socket query providing archives from a support.
 @itemize @bullet
 @item add the support as a remote supply into the cache index,
 @item recursively extract demands from the support,
-@item remove the support's remote supply from the cache index.
+@item remove the support's remote supply from the cache index,
+@item returns @code{230}.
 @end itemize
 
 @item Events out

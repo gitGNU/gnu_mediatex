@@ -109,11 +109,67 @@ from @procServerDeliver to @procScriptsDeliver or @procScriptsAudit{}: respectiv
 @end table
 @end itemize
 
+Return codes on @event{<@var{socket}>} messages:
+
+@itemize @bullet
+@item status (@code{X--})
+@table @code
+@item 1-- @dots{}
+negative reply
+@item 2-- @dots{}
+ok
+@item 3-- @dots{}
+bad request
+@item 4-- @dots{}
+internal error
+@end table
+
+@item Generic messages (@code{-0-})
+@table @code
+@item 301 message parser error
+@item 302 message without collection
+@item 303 message from server '%s' not registered into %s collection
+@item 304 message contains a record not related to author %s but %s
+@item 305 unknown message type: %s
+@item 400 internal error
+@item 401 fails to read message
+@item 402 fails to load %s collection's serverTree
+@item 403 fails to get localhost
+@end table
+
+@item @procServerUpload messages (@code{-1-})
+@table @code
+@item 210 ok
+@item 310 empty message
+@item 332 message do not provide a final supply %s
+@item 313 already exists %s:%lli
+@end table
+
+@item @procServerCgiSrv messages (@code{-2-})
+@table @code
+@item 120 not found %s:%lli
+@item 220 ok %s/%s
+@item 221 ok
+@item 320 empty message
+@end table
+
+@item @procServerHave messages (@code{-3-})
+@table @code
+@item 230 ok
+@item 330 empty message
+@item 331 message do not provide a final supply %s
+@end table
+
+@item @procServerNotify messages (@code{-4-})
+@table @code
+@item 240 ok
+@end table
+@end itemize
+
 Code:
 @table @file
-@item /etc/init.d/mediatex/mdtxd
-@itemx src/server/threads.c
-@itemx src/mdtxd.c
+@item src/server/threads.c
+@itemx src/mediatexd.c
 @end table
 
 @node cache

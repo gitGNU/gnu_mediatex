@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.17 2015/09/22 11:42:41 nroche Exp $
+ * Version: $Id: openClose.c,v 1.18 2015/10/12 23:28:51 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -879,7 +879,6 @@ saveCollection(Collection* coll, int collFiles)
  * Synopsis   : int clientSaveAll(char* cmdLine)
  * Input      : N/A
  * Output     : TRUE on success
- * TODO       : save collection before configuration (as a stack) ?
  =======================================================================*/
 int 
 clientSaveAll()

@@ -1,7 +1,8 @@
 @cindex supports
 
 The @process{Supp} process handle @actor{Publisher} queries about supports.
-A score is computed for each local support, based on its age (@math{t}).@*
+A score is computed for each local support, based on its age (@math{t}).
+However if support wasn't checked recently (@code{checkTTL}) its score is set to 0 as it is supposed to be corrupted or lost;
 
 @image{mediatex-figures/score1,,,,}
 
@@ -11,22 +12,30 @@ A score is computed for each local support, based on its age (@math{t}).@*
 where: (default values)
 @table @math
 @item T = 10 years
-is the support time to live
+is the support time to live (@code{suppTTL})
 @item t
 is the current support age
-@item a = 2
-power that reduce score from age of supports
+@item a = 2 
+power that reduce score from age of supports  (@code{powSupp})
 @item M = 10.00
-the maximum score
+the maximum score (@code{maxScore})
 @item b = 1.00
-maximum score for outdated supports
+maximum score for outdated supports (@code{badScore})
 @item c = 2
-factor that reduce score of out-dated supports
+factor that reduce score of out-dated supports (@code{factSupp})
 @end table
 
 @note{} with the default values this gives: @*
 @math{t <= T: score = (\sqrt{T-t \over T} *(9))+1} @*
 @math{t > T: score = {1 \over 1 + 2*(t-T)}} @*
+
+@note: 
+@itemize @bullet
+@item 
+The same formula apply for local and shared scores (respectively given by @code{@eventClientSuppList{}} or written into @dataServersO file). So theses parameters appears both into @dataConfO and @dataServersO{}.
+@item 
+for support's files, the score is constant and given by the @code{fileScore} parameter from @dataConfO file was checked recently (@code{fileTTL}), else score is set to 0 as it it supposed to be deleted from the file-system.
+@end itemize
 
 Process conceptual model:
 
@@ -72,7 +81,9 @@ to @procServerHave{}: tels @activityServerO{} a support is now available.
 @end table
 @item Data in/out
 @itemize @bullet
+@item @dataConf
 @item @dataSupp
+@item @dataServers
 @end itemize
 @end itemize
 

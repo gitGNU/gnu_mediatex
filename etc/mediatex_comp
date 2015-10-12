@@ -1,4 +1,4 @@
-#  * Version: $Id: mediatex_comp,v 1.9 2015/09/22 11:42:39 nroche Exp $
+#  * Version: $Id: mediatex_comp,v 1.10 2015/10/12 23:28:51 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  configuration files
 #  *
@@ -37,8 +37,6 @@ LONG_OPTION="\
 SHORT_OPTION="-h -v -f -s -l -n -m -S -L -c -a"
 FACILITY="file local2"
 SEVERITY="err warning notice info debug"
-
-#_mediatex_adm_add_coll()
 
 _mediatexd()
 {
@@ -89,8 +87,8 @@ _mediatex()
 	    return 0
 	    ;;
 	adm)
-	    WORDS="init remove purge add del update update+ update++ \
-commit bind unbind mount umount get"
+	    WORDS="init remove purge add del update commit \
+bind unbind mount umount get"
 	    COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
 	    return 0
 	    ;;
@@ -121,7 +119,7 @@ commit bind unbind mount umount get"
 	    COMPREPLY=( $( compgen -u -- $cur ) )
 	    return 0
 	    ;;
-	update|update+|update++|commit|upgrade|upgrade+|make|clean)
+	update|commit|upgrade|upgrade+|make|clean|audit)
 	    COMPREPLY=( $( compgen -W "coll" -- $cur ) )
 	    return 0
 	    ;;
@@ -159,7 +157,7 @@ commit bind unbind mount umount get"
 
     if [ $COMP_CWORD -eq 1 ]; then
 	WORDS="adm serv list new add del note check upload upload+ \
-upload++ motd upgrade upgrade+ make clean su"
+upload++ motd upgrade upgrade+ make clean su audit"
 	COMPREPLY=( $( compgen -W "$WORDS" -- $cur ) )
 	return 0;
     fi
@@ -285,6 +283,15 @@ upload++ motd upgrade upgrade+ make clean su"
 	    esac
 	    return 0
 	    ;;
+	coll)
+	    [ $COMP_CWORD -gt 2 ] || return 0;
+	    case "${COMP_WORDS[COMP_CWORD-3]}" in
+		audit) # audit coll COLL
+		    COMPREPLY=( $( compgen -W "for" -- $cur ) )
+		    return 0
+		    ;;
+	    esac
+	    return 0
     esac
         
     [ $COMP_CWORD -gt 3 ] || return 0;

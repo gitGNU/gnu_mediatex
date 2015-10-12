@@ -1,29 +1,4 @@
 
-*** TO CORRECT
-
-** AUDIT
-- mediatex_comp (to do for audit)
-
-*** CHANGES DONE (to document)
-
-** HAVE
-- find a way to pass a string for have/upload recordTree messages
-
-** SERVER API
-- meditexd add -X- module into return code
-
-** UPGRADE
-- extractNNN.txt: agregate uploaded files into one uniq INC container
-- score: look INC date to decide if score inpact or not on collection
-- isIncoming() &&= (archive->mainScore ==-1 || archive->mainScore <= 5)
-- conf: fileTTL
-- servers: fileScore, serverTTL, lastCommit
-- serversTree->server[]->lastCommit = DATE used by computeScore
-- scoreSupport.c: use fileScore
-
-** LOGS
-- upload the apache logs using /etc/logrotate.d/httpd-prerotate
-
 *** TO TEST
 
 - pgrof: test with more than 100k entries
@@ -32,10 +7,12 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - add key words index into paragraph of the documentation
-- serialize b-tree using another order and use add-if-not-there function
+- speed-up cache scanning process (or do not do it too much time) 
+- speed-up audit building process (maybe do not call script)
+- serialise b-tree using another order and use add-if-not-there function
 - replace cvs+viewvc by git+cgit
 - replace gethostby*_r by getaddrinfo and co
-- optimise cache.c::freeCache (sort on date)
+- optimise cache.c::freeCache (ex: sort on dates)
 - i10n for french
 
 *** TODO MAYBE
@@ -48,9 +25,9 @@
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh
 - monitor cache sizes: all/used/allocated/free
-- test an apache configuration using clains-based authentication (openId)
+- test an apache configuration using claim-based authentication (openId)
 - move dirname into extract rule header to reduce extract.txt file size
-- add supp: wait CD doors is locked (cf v3)
+- add supp: wait CD doors is locked
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log

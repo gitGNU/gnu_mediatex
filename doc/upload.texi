@@ -20,15 +20,19 @@ Process conceptual model:
 @table @code
 
 @item @eventClientUpload
-from @actorPublisher{}, @procScriptsCron or @procScriptsAudit{}: upload an incoming archive into the cache.
+from @actorPublisher{}, @procToolsSyslog{}, @procScriptsCron{}, @procScriptsAudit{}: upload an incoming archive into the cache.
 
 @end table
 @item Processing
 
 @itemize @bullet
-@item parse the provided meta-data
-@item check archive is not already into the current extraction rules
-@item ask daemon to upload the file
+@item parse the provided meta-data,
+@item check archive is not already into the current extraction rules,
+@item 
+concatenate new extraction rules to @dataExtract{} file,
+into the dedicated @code{INC} container and associated with current date,
+@item ask daemon to reload,
+@item ask daemon to upload the incoming archive file.
 @end itemize
 
 @item Events out

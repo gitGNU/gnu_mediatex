@@ -25,7 +25,7 @@ component since we have an API defined.
 @section Archiving icons
 
 Testing @mediatex{} with about 50000 archives. 
-@note: this example last very long time@dots{}
+@note: this example last very long time and consequently shows actual limits of @mediatexO{}.
 
 Download the Open Icons Library and build the related catalog and extraction rules files.
 @example
@@ -33,6 +33,13 @@ $ /usr/share/mediatex/examples/example.sh
 @end example
 
 If not already done, please configure the @code{mdtx-hello} collection: @pxref{Scenario 2}.
+
+Empty the catalog and extraction meta-data files:
+@example
+$ cat /dev/null > ~mdtx-hello/cvs/catalog000.txt
+$ cat /dev/null > ~mdtx-hello/cvs/extract000.txt
+$ mediatex upgrade
+@end example
 
 Uploding the icons and build the @acronym{HTML} catalog:
 @example

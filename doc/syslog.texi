@@ -2,7 +2,7 @@
 @cindex parser
 @cindex lexer
 
-@process{syslog} (actually @sc{rsyslog}: see @code{man rsyslogd (8)})
+@process{syslog} (actually @sc{rsyslog}: see @code{man rsyslogd (8)} and @sc{logrorate}: see @code{man logrotate (8)})
 is used by all @activity{mediatex}'s binaries and scripts.
 
 3 environment variables manage the content to log:
@@ -25,7 +25,15 @@ from all @process{processes}
 @end table
 @item Processing
 
-Log the activity.
+Log the activity (and rotate the logs).
+
+@item Events out
+@table @code
+
+@item @eventClientUpload
+to @procClientUpload{}: upload collection's @acronym{APACHE} access logs to the cache so as to backup them.
+
+@end table
 
 @item Data in
 @table @file
@@ -42,6 +50,20 @@ local2.info /var/log/mediatex.log
 Also, @acronym{RSYSLOG} will drop messages when they are coming too quickly,
 and you may want to change this setting (@pxref{Reporting bugs}).
 
+@item /etc/logrotate.d/mediatex_logrotate.conf
+Manage @mediatexO's logs rotation.
+
+@item /etc/logrotate.d/httpd-prerotate/mediatex_logrotate
+Filtre and upload the @procToolsApache{}'s latest logs to the related collections, after rotation.
+@end table
+
+@item Data in
+@table @file
+@item /etc/rsyslog.d/mediatex_log.conf
+@itemx /etc/rsyslog.conf
+@itemx /etc/logrotate.d/mediatex_logrotate.conf
+@itemx /etc/logrotate.d/httpd-prerotate/mediatex_logrotate
+@itemx /var/log/apache2/access.log
 @end table
 
 @item Data out

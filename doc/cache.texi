@@ -2,6 +2,9 @@
 
 @process{Cache} process manage the local server cache's directory.
 
+@note: in order to not delete unsafe archives, @process{Cache} compute
+archive's scores using the same algorithm as @procClientServ{} based on image's score provided by @dataServers{}.
+
 @process{Cache} use 3 options defined into the 
 @dataConf{} file:
 @table @code

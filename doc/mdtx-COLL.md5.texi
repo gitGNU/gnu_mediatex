@@ -36,6 +36,12 @@ There is 7 types of records
 @item @code{REMOTE_SUPPLY} @tab S @tab remote @tab relative path
 @end multitable
 
+@note: for @code{FINAL_SUPPLY} the extra field is more accurately @code{@var{path1}[:@var{path2}]}, where:
+@itemize @bullet
+@item @var{path1} is the absolute path of an external file (archive to upload or available support),
+@item @var{path2} is a potential relative path to the place where the file should be copied into the cache.
+@end itemize
+
 The @code{MALLOC_SUPPLY} is an internal state used when allocating the archive's data file into the @activityServerO{}'s cache.
 
 @item Linked entities

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: motd.c,v 1.15 2015/10/11 01:03:54 nroche Exp $
+ * Version: $Id: motd.c,v 1.16 2015/10/12 23:28:51 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -538,7 +538,7 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
  * Synopsis   : int updateMotd()
  * Input      : N/A
  * Output     : TRUE on success
- * TODO       : show sharable supports ?
+ * MAYBE      : show sharable supports?
  =======================================================================*/
 int 
 updateMotd()

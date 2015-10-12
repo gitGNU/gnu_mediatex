@@ -351,12 +351,11 @@ a database do (moreover, limitation should comes from the number of
 available inodes on the partition where the @acronym{HTML} catalogue is 
 store).
 
-All in all, the @mediatexO{} system is designed to handle collections 
-having less than half a million archives
-It should handle numbers of such ``not so big'' collections.
+All in all, the @mediatexO{} system is not designed to handle collections 
+having more than half a million archives (whereas databases easily handle millions). However, it should handle numbers of such ``not so big'' collections.
 
-Following tests are base on the @acronym{HTML} catalogue operation, which
-is the longest query.
+Following tests are based on the @acronym{HTML} catalogue generation, which
+is the longest query (and wich imply parsing the meta-data files).
 
 @multitable @columnfractions .20 .14 .10 .10 .10 .10
 @headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
@@ -380,10 +379,19 @@ Roughly this should gives about:
 @item 300k @tab 100M @tab 500M @tab 3.3G @tab 750k @tab 60'
 @end multitable
 
-@note{} The 2 last lines are extrapolated (should be @math{O(n*log(n)}).
+@note{}:
+@itemize @bullet
+@item
+Synchronisation times using @acronym{CVS} depends the network connection, 
+but not only as they are sometime quite as long (update+commit) as the @acronym{HTML} catalogue generation. A further version should use @acronym{GIT} instead that is reputed to be faster.
+@item 
+The 2 last lines in the above array are extrapolated (should be @math{O(n*log(n)}).
 The logarithmic factor is accented by the fact the files are serialised and 
 parsed (into b-tree) using the same order, which may be corrected in a 
-next version.
+further version.
+@item
+Other processes like scanning the cache and building the audit report are not yet optimised. So even if theoretically it should be possible to handle 500,000 archives by collection, in practice you should not manage more than 25 000 so easely. 
+@end itemize
 
 @node Why
 @section Why
@@ -400,14 +408,12 @@ Conception was made in order to provides redundancy, trace-ability
 and a shared @acronym{HTML} access.
 @item 
 @mediatexO{} make possible to rebuild the system mainly from its external 
-supports (@note{} according that up to date catalogue and extraction meta-data are 
-available on supports too). 
-This reduce entropy and ease migration/restitution.
+supports (@note{} according that up to date catalogue and extraction meta-data are available on supports too).
+This feature avoid too much entropy and ease migration/restitution.
 @item 
 It aims to provide a strong ``storage'' layer on which we should build a whole 
 @acronym{OAIS} system. In that sense, it should provide a positive context 
-for preservation operations, in prevision of time when the actual storage technologies will become 
-outdated.
+for preservation operations, in prevision of time when the actual storage technologies will become outdated.
 @item 
 It tries to provide a dedicated workaround for the CAP theorem, 
 using @acronym{CVS} merging.
@@ -417,11 +423,9 @@ of the following guarantees: Consistency, Availability and Partition
 tolerance.)
 @itemize @bullet
 @item 
-The uploaded data are not safely managed quickly: RPO (Recovery Point 
+The just uploaded data are not safe: RPO (Recovery Point 
 Objective) is roughly either 1 month (on supports) or 1 day (on caches).
-@item 
-For managed data, the RTO (Recovery Time Objective) is null.
-@item 
+But next, for managed data, the RTO (Recovery Time Objective) should be null:
 DRP (Disaster Recovery Plan) simply consists on adding new servers to 
 the collection (main configuration is already handle by the collection) 
 and to include the new public @acronym{IP} addresses into the actual 
@@ -429,17 +433,17 @@ and to include the new public @acronym{IP} addresses into the actual
 @end itemize
 @end itemize
 
-Why not
+Why not use @mediatexO{}:
 @itemize @bullet
-@mediatexO{} is a prototype and still need to be optimized.
 @item
-Presently, it seems we all tend to use the @acronym{RAID} and 
-@acronym{CLOUD} technologies to keep data on running computers 
-and make effort or buy services to distribute big databases and file 
-systems. 
+Not designed to handle millions of archives.
+@item
+Is a prototype and still need to be optimised.
 @item 
 Must not occult the forgetting right. 
 As data are burned on optical disks, it is complicated to erase only a
 part of them.
 @end itemize
 
+
+@c  LocalWords:  easely

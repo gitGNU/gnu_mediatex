@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.24 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: extract.c,v 1.25 2015/10/12 23:28:52 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -746,8 +746,6 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
  * Note       : as tar cannot rename a file, and in order not to have
  *              collisions, we extract files in a temporary place 
  *              and next rename them
-
- * TODO       : remove extract dirs ~/tmp/... (if empty)
  =======================================================================*/
 int
 cacheSet(ExtractData* data, Record* record,
