@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: misc.c,v 1.13 2015/09/22 23:05:56 nroche Exp $
+ * Version: $Id: misc.c,v 1.14 2015/10/13 08:20:59 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -645,7 +645,8 @@ mdtxAudit(char* label, char* mail)
   if (avl_count(coll->archives)) {
     for(node = coll->archives->head; node; node = node->next) {
       archive = (Archive*)node->item;
-      fprintf(fd, " %s:%lli\n", archive->hash, archive->size);
+      fprintf(fd, " %s:%lli\n", archive->hash,
+	      (long long int)archive->size);
       
       // add a final demand
       strcpy(ptrMail, mail);
