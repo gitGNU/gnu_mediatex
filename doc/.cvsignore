@@ -10,6 +10,7 @@ texinfo.tex
 version.texi
 mediatex.info
 mediatex.html
+.am*
 # make all
 mediatex.aux
 mediatex.cp

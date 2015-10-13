@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.22 2015/10/11 21:11:14 nroche Exp $
+ * Version: $Id: cache.c,v 1.23 2015/10/13 08:44:54 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -247,9 +247,9 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   md5.opp = CHECK_CACHE_ID;
   if (!doChecksum(&md5)) goto error;
 
-  // archive should adready exists from extract metadata
-  if (!(archive =
-	getArchive(coll, md5.fullMd5sum, statBuffer.st_size))) {
+  // archive should adready exists on extraction metadata
+  if (!(archive = getArchive(coll, md5.fullMd5sum, statBuffer.st_size))
+      && *relativePath != '/') { // do not unlink final supplies
     
     // remove file from cache if not having extraction rule
     logMain(LOG_WARNING, "remove %s from cache (having no extract rule)", 
