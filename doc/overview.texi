@@ -8,8 +8,8 @@ It is named @mediatexO{}
 because it aims to provide perennial
 @acronym{URL} on electronic documents.
 
-@cindex oais
-@cindex nf-z42013
+@cindex OAIS
+@cindex NF Z 42-013
 @mediatexO{} 
 is inspired by @acronym{OAIS} archive system description
 (@url{http://public.ccsds.org/@/publications/@/archive/@/650x0m2.pdf})
@@ -80,9 +80,7 @@ Supports was first designed to be optical disks,
 but may also be a file you manually mount from what ever device 
 and file systems, or any locally hosted files.
 Because on GNU/Linux there is a bug with last block on @acronym{CDROM}, 
-only the data disks are manage, not the audio ones for instance. 
-The @acronym{ISO} format image @mediatexO{}
-required is used to get the support size. 
+the @acronym{ISO} format image @mediatexO{} is used to retrieve the support size. 
 So, only the data disks are manage, not the audio ones for instance.
 
 @itemize @bullet

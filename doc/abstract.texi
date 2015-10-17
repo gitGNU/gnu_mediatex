@@ -1,6 +1,5 @@
 
-Perennial archives.
-Briefly, this means we provide the resources to overcome the technological obsolescence of supports and drives we use.
+Perennial archives means we provide the resources to overcome the technological obsolescence of supports and drives we use.
 
 @subheading Objectives
 The perennial archival comes with 3 main objectives: conserve the document,
@@ -9,41 +8,45 @@ make it accessible and preserve it's understanding.
 @item Supports reliability:
 On numeric ages, time life of hard drive and optical supports is 5 years.
 The numerical archives on hard drives or tapes are sensitive to the earth's magnetic field.
-Burning WORM supports and store them in good conditions provides a compromise (norme NF-Z-42-013).
-Persons prefer to not export data on support and let them on redundant servers, but is-it responsible ?
+Burning WORM supports and store them in good conditions provides a compromise (NF-Z-42-013 standard).
 
 @item Identify:
-The document understanding shall be linked to other documents defining a context.
+Document understanding may be linked to other documents defining a context.
 Consequently, it is important to provide a way to identify references from documents to others.
-Grouping documents on collection make indexes easier and provide a means to determine the scope of data to preserve.
+Grouping documents into collection makes indexes easier and gives the perimeter of data to preserve.
 
 @item Other datas:
-The same way supports need a compatible drive, applicative datas need a software to read them.
-It is important to memorise wich software and format versions are related to the data file, or best, to store software's source and format specifications.
+The same way supports need a compatible drive, application data need a software to read them.
+It is important to memorise which software and format versions are related to the data file, or best, to store software's source and format specifications.
 In order to do so, we need meta-data.
 @end itemize
 
 @subheading Geographical duplication
 In order to mitigate natural and technological disasters, archives must be duplicated on several sites.
 @itemize @bullet
-@item Technical solutions:
-Computer science offer several means for redundancy but finally, the meta-data management will remains centralised.
-The NICT mainly based on databases are using "hight availability" to offer crash recovering. Is-it the real purpose ?
-Programmers use revision control system to share their source codes.
-Although using a centralised deposit, this solution offer the advantage to desynchronise updates, that is a way to anticipate crash recoveries.
-
 @item Distribute meta-data as source code:
-Using a revision control system is not so obvious:
-meta-data files must be split into acceptable size so as to be merged in memory,
-meta-data must be human readable as automatic merge may fails,
-and we need enough memory to load Meta-data.
-Nevertheless, revision control system not only provides an elegant solution for geographical duplications and crash recovery, and also provide natively the changelog history.
+Idea is servers share meta-data using a revision control system as programmers use it to share their source codes.
+This is not so obvious: meta-data files must be split into acceptable size so as to be merged in memory,
+must be human readable as automatic merge may fails and need a human arbitrage, and consume memory to be loaded.
+Nevertheless, revision control system does not only provides an elegant solution for geographical duplication, 
+but also provide change's history on meta-data.
+Although using a centralised deposit, this solution offer the advantage to de-synchronise updates, that is a way to anticipate crash recoveries.
+
+@item Pull data into a cache:
+Servers by having up to date (or nevertheless converging) meta-data are able to populate their caches in order 
+to backup unsafe files or to expose files needed from a support.
+They extract a file from containers (extraction meta-data) or retrieve it from an other servers (connection meta-data).
+Indeed, if a cache is deleted, server will rebuild it from local and remote supports.
+
+@item Collaborate for data access:
+Each server build the same static @acronym{HTML} index (compiling the descriptive meta-data) so as any load-balancer is sufficient to prevent form crash disaster (connection meta-data are shared too).
+@acronym{URL} on archives do not changes as they point to a @acronym{CGI} script that will deal with all servers and return an @acronym{HTML} redirection to content into a server's cache.
 @end itemize
 
 @subheading Reversibility
-A significant effort will be require to extract archives in order to return them:
-compact archives to send them using a media (support or network)
+We shall consider that the ERMS becomes obsolete itself and we need to change it.
+A significant effort will be require to return archived content:
+compress, cut and send data using a media (support or network)
 and export the related meta-data.
-However, we shall consider that the ERMS becomes obsolete itself and we need to change it.
 Archiving on supports make sense here as we just have to bring them back.
-Parsers designed to load the meta-data offer a software library usable to export them into any format.
+Parsers designed to load the meta-data after updates offer a native software library usable to export them into any format.

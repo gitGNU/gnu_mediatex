@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/07/03 11:53:59 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.6 2015/10/17 14:11:24 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  figures for the documentation
 #  *
@@ -28,18 +28,23 @@ noinst_HEADERS = $(srcdir)/*.fig logo.xpm logo.txt
 figuresdir = $(INFO_DIR)
 dist_figures_DATA = $(PNG_FILES)
 
-dvi-local: @EPS_FILES@ logo.eps
-ps-local: @EPS_FILES@ logo.eps
+info-local: @PNG_FILES@ logo.png
 html-local: @PNG_FILES@ logo.png
 pdf-local: @PNG_FILES@ logo.png
+dvi-local: @EPS_FILES@ logo.eps
+ps-local: @EPS_FILES@ logo.eps
 
 # foo is just use here to disable an autoconf warning:
 # `%'-style pattern rules are a GNU make extension
 %.eps %.foo: %.fig
-	fig2dev -L eps -F -m 0.65 $< $*.eps
+	fig2dev -L eps -m 0.65 $< $*.eps
+#	fig2dev -L eps -F -m 0.65 $< $*.eps
+#	fig2dev -L eps -Z 13cm $< $*.eps
 
 %.png %.foo: %.fig
-	fig2dev -L png -F -m 0.65 $< $*.png
+	fig2dev -L png -m 0.65 $< $*.png
+#	fig2dev -L png -F -m 0.65 $< $*.png
+#	fig2dev -L png -Z 13cm $< $*.png
 
 logo.eps: logo.xpm
 	convert -resize 50x50 $< logo.eps
