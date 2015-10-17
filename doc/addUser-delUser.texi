@@ -20,7 +20,7 @@ from @activityClient
 @end table
 @item Processing
 
-Manage @actorPublisherO users.
+Manage @actorPublisherO{} users.
 
 @item Data in/out
 @table @file

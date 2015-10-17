@@ -22,15 +22,15 @@ Process conceptual model:
 @item Events in
 @table @code
 
-@item @eventToolsCvsInit 
+@item @eventToolsCvsInit{} 
 from @procScriptsInitRemovePurge{}: initialise the local server's repository.
 
 @item @eventToolsCvsImport
 @item @eventToolsCvsCheckout
 from @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean{}: respectively create or join a new @acronym{CVS} module.
 
-@item @eventToolsCvsUpdate 
-@item @eventToolsCvsCommit 
+@item @eventToolsCvsUpdate{} 
+@item @eventToolsCvsCommit{} 
 from @procScriptsUpdateCommit{}: synchronise a @acronym{CVS} module.
 
 @end table

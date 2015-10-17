@@ -11,7 +11,7 @@ Process conceptual model:
 @item Events in
 @table @code
 @item @eventScriptsCgiGetQuery
-@item @eventScriptsCgiPostQuery 
+@item @eventScriptsCgiPostQuery{} 
 from @procToolsApache
 @end table
 
@@ -33,11 +33,11 @@ to @procServerCgiSrv
 
 @end table
 @item
-@note the standard output of this scripts result on 2 envents sent by @procToolsApache:
+@note the standard output of this scripts result on 2 envents sent by @procToolsApache{}:
 @table @code
-@item @eventActorUserHtmlForm 
+@item @eventActorUserHtmlForm{} 
 (if archive is not available) ...
-@item @eventActorUserHtmlRedirect 
+@item @eventActorUserHtmlRedirect{} 
 (if archive is available) @*
 to @actorUserO{}: send back either a form asking for an @acronym{eMAIL} address, or a redirection link to the archive into one server's cache.
 

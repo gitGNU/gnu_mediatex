@@ -27,7 +27,7 @@ from @procScriptsCron{}
 @end table
 @item Processing
 
-Ask @actorPublisherO for:
+Ask @actorPublisherO{} for:
 @itemize @bullet
 @item supports not seen for a while (and so having no score computed),
 @item supports needed to extract local or remote remands,
@@ -37,8 +37,8 @@ Ask @actorPublisherO for:
 @item Events out
 @table @code
 
-@item @eventServerSaveReg 
-to @activityServer{}: ask @activityServer to dump its state into disk.
+@item @eventServerSaveReg{} 
+to @activityServer{}: ask @activityServer{} to dump its state into disk.
 
 @end table
 @item Data in

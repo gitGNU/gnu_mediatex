@@ -2,7 +2,7 @@
 
 The @dataExtractO{} files handle the extraction rules for a collection.
 
-Using the ``@eventClientUpload'' query, @actorPublisher should provide extraction rules to the new archive to upload, using the same grammar language.
+Using the ``@eventClientUpload{}'' query, @actorPublisher{} should provide extraction rules to the new archive to upload, using the same grammar language.
 
 Relational schema:
 

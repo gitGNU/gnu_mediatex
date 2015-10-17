@@ -1,3 +1,5 @@
+@cindex Configuration
+
 The @dataConfO{} file is used locally as the main
 @mediatexO{} configuration file. It is read by the 3 binaries:
 @itemize @bullet
@@ -5,9 +7,7 @@ The @dataConfO{} file is used locally as the main
 @item @procScriptsCgi
 @item @activityServer
 @end itemize
-Both 
-@actorPublisher{} and 
-@activity{client} may modify it.
+Both @actorPublisher{} and @activityClientO{} may modify it.
 
 Relational schema:
 
@@ -53,8 +53,7 @@ specific collections.
 @end itemize
 @end itemize
 
-@note{} 
-@dataServers{} concate the @sc{imageFiles}, @sc{networks} and @sc{gateways} relationships from all the hosts sharing a collection.
+@note{} @dataServers{} summerize the @sc{imageFiles}, @sc{networks} and @sc{gateways} relationships from all the hosts sharing a collection.
 
 Example:
 @example

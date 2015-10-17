@@ -10,7 +10,7 @@ Process conceptual model:
 @item Events in
 @table @code
 
-@item @eventServerCgiQuery 
+@item @eventServerCgiQuery{} 
 from @procScriptsCgi{}: receive a socket query asking for an archive.
 
 @end table
@@ -25,17 +25,17 @@ This process handle 2 kind of queries:
 @end itemize
 @item When a email address is provided:
 @itemize @bullet
-@item returns @code{221} and remind a @actorUser is looking for the related archive and want to be notified when it becomes available using this email address.
+@item returns @code{221} and remind a @actorUser{} is looking for the related archive and want to be notified when it becomes available using this email address.
 @end itemize
 @end itemize
 
 @item Events out
 @table @code
 
-@item @eventServerExtract 
+@item @eventServerExtract{} 
 to @procServerExtract{}: internally ask to start extraction.
 
-@item @eventServerDeliver 
+@item @eventServerDeliver{} 
 to @procServerDeliver{}: deliver mails related to an extracted archive.
 
 @end table

@@ -15,7 +15,7 @@ Process conceptual model:
 @item Events in
 @table @code
 
-@item @eventToolsEximSendMail 
+@item @eventToolsEximSendMail{} 
 from @procScriptsDeliver{}, @procScriptsAudit{} or @procToolsCron
 
 @end table
@@ -25,10 +25,10 @@ Send a mail.
 
 @item Events out
 @table @code
-@item @eventActorUserMail 
+@item @eventActorUserMail{} 
 to @actorUser{}: when an archive becomes available into the cache.
 
-@item @eventActorPublisherMail 
+@item @eventActorPublisherMail{} 
 to @actorPublisher{}: when an audit was delivered.
 
 @item @eventActorAdminMail

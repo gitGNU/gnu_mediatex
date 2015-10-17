@@ -54,14 +54,14 @@ from @procServerCgiSrv{} or @procServerHave{}: internally ask to start extractio
 @item extract archive into the temporary extraction directory
 @item move the archive into the cache
 @item adjust the archive time-to-live so as recursive extraction using this archive will not remove it by allocating new places.
-@item send a notification to @actorUser who was looking for the newly extracted archive.
+@item send a notification to @actorUser{} who was looking for the newly extracted archive.
 @end itemize
 @end itemize
 
 @item Events out
 @table @code
 
-@item @eventServerCacheAlloc 
+@item @eventServerCacheAlloc{} 
 to @procServerCache{}: allocate place into the cache.
 
 @item @eventServerDeliver

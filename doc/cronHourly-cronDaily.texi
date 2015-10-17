@@ -20,9 +20,9 @@ from @procToolsCron{}: scheduled tasks.
 
 @item Processing, for each collections:
 @itemize @bullet
-@item Hourly: ask @activityServerO to extract and notify.
-@item Daily: ask @activityClientO to build the @acronym{HTML} catalog and the message of the day.
-@item Monthly: ask @activityClientO to backup the @acronym{CVSROOT} module.
+@item Hourly: ask @activityServerO{} to extract and notify.
+@item Daily: ask @activityClientO{} to build the @acronym{HTML} catalog and the message of the day.
+@item Monthly: ask @activityClientO{} to backup the @acronym{CVSROOT} module.
 @end itemize
 
 @item Events out
@@ -39,7 +39,7 @@ to @procClientMisc{}: build the local @acronym{HTML} catalogue without @acronym{
 to @procClientUpload{}: upload collection's @acronym{CVSROOT} modules into the cache so as to backup them.
 
 @item @eventClientMotd
-to @procClientMotd{}: build the message of the day (actions @actorPublisherO have to perform).
+to @procClientMotd{}: build the message of the day (actions @actorPublisherO{} have to perform).
 
 @item @eventActorPublisherMotd
 to @actorPublisher{}: store the message of the day into @file{/etc/motd}.

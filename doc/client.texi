@@ -41,21 +41,21 @@ Flood diagram:
 @itemx @eventClientMiscPurge
 @itemx @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
-from @actorAdmin to @procClientMisc{}: configure the @mediatexO{} system.
+from @actorAdmin{} to @procClientMisc{}: configure the @mediatexO{} system.
 
 @item @eventClientConfAddColl
 @itemx @eventClientConfDelColl
-from @actorAdminO to @procClientConf{}: configure collections.
+from @actorAdminO{} to @procClientConf{}: configure collections.
 
 @item @eventClientServAddKey
 @itemx @eventClientServDelKey
 @itemx @eventClientServUpgrade
-from @actorPublisherO to @procClientServ{}: manage collection settings.
+from @actorPublisherO{} to @procClientServ{}: manage collection settings.
 
 @item @eventClientConfList
 @itemx @eventClientConfShareSupport
 @itemx @eventClientConfWithdrawSupp
-from @actorPublisherO to @procClientConf{}: list collections ; share/withdraw local supports to collections.
+from @actorPublisherO{} to @procClientConf{}: list collections ; share/withdraw local supports to collections.
 
 @item @eventClientSuppList
 @itemx @eventClientSuppAdd
@@ -63,38 +63,38 @@ from @actorPublisherO to @procClientConf{}: list collections ; share/withdraw lo
 @itemx @eventClientSuppDel
 @itemx @eventClientSuppNote
 @itemx @eventClientSuppCheck
-from @actorPublisher to @procClientSupp{}: manage local supports.
+from @actorPublisher{} to @procClientSupp{}: manage local supports.
 
 @item @eventClientUpload
-from @actorPublisherO{}, @procToolsSyslog{}, @procScriptsCron or @procScriptsAudit to @procClientUpload{}: upload an incoming archive into the cache.
+from @actorPublisherO{}, @procToolsSyslog{}, @procScriptsCron{} or @procScriptsAudit{} to @procClientUpload{}: upload an incoming archive into the cache.
 
 @item @eventClientMiscMake
 @itemx @eventClientMiscClean
 @itemx @eventClientMiscSu
 @itemx @eventClientMiscAudit
-from @actorPublisherO to @procClientMisc{}: build/clean the @acronym{HTML} catalogue ; change to server or collection system user ; simulate retrieving all archives.
+from @actorPublisherO{} to @procClientMisc{}: build/clean the @acronym{HTML} catalogue ; change to server or collection system user ; simulate retrieving all archives.
 
 @item @eventClientSave
-@itemx @eventClientDeliver (no more used)
-from @actorPublisherO to @activityServer{}: repectively ask @activityServer to dump its state into disk or to deliver mails related to extracted archives (no more needed).
+@itemx @eventClientDeliver{} (no more used)
+from @actorPublisherO{} to @activityServer{}: repectively ask @activityServer{} to dump its state into disk or to deliver mails related to extracted archives (no more needed).
 
 @item @eventClientExtract
 @itemx @eventClientNotify
-from @actorPublisherO or @procScriptsCron to @activityServer{}: repectively ask @activityServerO to perform extractions or to communicate its state to other servers.
+from @actorPublisherO{} or @procScriptsCron{} to @activityServer{}: repectively ask @activityServerO{} to perform extractions or to communicate its state to other servers.
 
 @item @eventClientMotd
-from @procScriptsCron to @procClientMotd{}: build the message of the day (actions @actorPublisherO have to perform).
+from @procScriptsCron{} to @procClientMotd{}: build the message of the day (actions @actorPublisherO{} have to perform).
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
-from @activityServer to @procClientMisc{}: manage collection repository binding on the chrooted jail for @acronym{SSH} remote access.
+from @activityServer{} to @procClientMisc{}: manage collection repository binding on the chrooted jail for @acronym{SSH} remote access.
 
 @item @eventClientMiscGet
-from @procServerExtract to @procClientMisc{}: retrieve a remote collection's file via @acronym{SSH}.
+from @procServerExtract{} to @procClientMisc{}: retrieve a remote collection's file via @acronym{SSH}.
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract to @procClientSupp{}: manage mounting @iso devices.
+from @procServerExtract{} to @procClientSupp{}: manage mounting @iso devices.
 
 @end table
 
@@ -102,7 +102,7 @@ from @procServerExtract to @procClientSupp{}: manage mounting @iso devices.
 
 @itemize @bullet
 @item
-Lock concurent access from any other @activityClient's @acronym{UNIX} process.
+Lock concurent access from any other @activityClient{}'s @acronym{UNIX} process.
 @item
 Catalog and extraction rules meta-data files are:
 @itemize @bullet
@@ -118,46 +118,46 @@ automatically re-serialized and upgraded if the last @file{NN.txt} file was pres
 
 @item @eventScriptsUpdate
 @item @eventScriptsCommit
-from @procClientServ to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
+from @procClientServ{} to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
 
-@item @eventScriptsNew 
+@item @eventScriptsNew{} 
 @itemx @eventScriptsFree
-from @procClientConf to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
+from @procClientConf{} to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp to @procScriptsMount{}: manage mounting @iso devices.
+from @procClientSupp{} to @procScriptsMount{}: manage mounting @iso devices.
 
 @item @eventServerSaveReg
 @itemx @eventServerExtractReg
 @itemx @eventServerNotifyReg
 @itemx @eventServerDeliverReg
-from @activityClient to @activityServer{}: wrap the queries to @activityServerO{}.
+from @activityClient{} to @activityServer{}: wrap the queries to @activityServerO{}.
 
 @item @eventServerHaveQuery
-from @procClientSupp to @procServerHave{}: tels @activityServerO{} a support is now available.
+from @procClientSupp{} to @procServerHave{}: tels @activityServerO{} a support is now available.
 
 @item @eventServerUploadQuery
-from @procClientMisc to @procServerCache{}: ask @activityServerO{} to upload an incoming archive into its cache.
+from @procClientMisc{} to @procServerCache{}: ask @activityServerO{} to upload an incoming archive into its cache.
 
 @item @eventScriptsInit
 @itemx @eventScriptsRemove
 @itemx @eventScriptsPurge
-from @procClientMisc to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
+from @procClientMisc{} to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-from @procClientMisc to @procScriptsAddDelUser{}: manage @actorPublisherO users.
+from @procClientMisc{} to @procScriptsAddDelUser{}: manage @actorPublisherO{} users.
 
 @item @eventScriptsNew
 @itemx @eventScriptsFree
-from @procClientConf to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection.
+from @procClientConf{} to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection.
 
 @item @eventScriptsClean
-from @procClientMisc to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
+from @procClientMisc{} to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
-@item @eventToolsSshCopy 
-from @procClientMisc to @procToolsSsh{}: copy file from one remote server's cache.
+@item @eventToolsSshCopy{} 
+from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's cache.
 @end table
 
 @item Data in

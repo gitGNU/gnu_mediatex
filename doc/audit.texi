@@ -18,7 +18,7 @@ from @procServerDeliver
 
 @itemize @bullet
 @item 
-Emulate the @procScriptsDeliver script: instead of sending a @actorUserO notification, notify the archive into an audit report.
+Emulate the @procScriptsDeliver{} script: instead of sending a @actorUserO{} notification, notify the archive into an audit report.
 @item
 When all archives involved by the report have raised this script,
 uploads the report to the collection and send a mail to the @actorPublisher{}.
@@ -27,11 +27,11 @@ uploads the report to the collection and send a mail to the @actorPublisher{}.
 @item Events out
 @table @code
 
-@item @eventClientUpload 
+@item @eventClientUpload{} 
 to @procClientUpload{}: upload the audit report.
 
 @item @eventToolsEximSendMail
-to @procToolsExim{}: notify @actorPublisherO the audit report was uploaded.
+to @procToolsExim{}: notify @actorPublisherO{} the audit report was uploaded.
 @end table
 
 @item Data in/out

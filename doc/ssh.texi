@@ -17,7 +17,7 @@ Process conceptual model:
 @item @eventToolsSshConnect
 from @procToolsCvs{}: access the @code{CVSROOT} repository.
 
-@item @eventToolsSshCopy 
+@item @eventToolsSshCopy{} 
 from @procClientMisc{}: retrieve an archive from a remote @activityServer{}'s cache.
 
 @end table

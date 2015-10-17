@@ -26,7 +26,7 @@ Process conceptual model:
 
 @item Events in
 @table @code
-@item @eventServerCacheAlloc 
+@item @eventServerCacheAlloc{} 
 from @procServerExtract{}: allocate place into the cache.
 
 @end table

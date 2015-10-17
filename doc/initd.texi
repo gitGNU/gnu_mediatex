@@ -9,7 +9,7 @@ Process conceptual model:
 @itemize @bullet
 @item Events in
 @table @code
-@item @eventScriptsInitdStart 
+@item @eventScriptsInitdStart{} 
 @itemx @eventScriptsInitdStop
 @itemx @eventScriptsInitdStatus
 @itemx @eventScriptsInitdReload

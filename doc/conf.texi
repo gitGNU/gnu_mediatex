@@ -24,7 +24,7 @@ from @actorAdmin{}: configure collections.
 from @actorPublisher{}: respectively list collections or share a local support to collections.
 
 @item @eventClientConfWithdrawSuppCall
-from @actorPublisher or @procClientSupp{}: withdraw a local supports from collections.
+from @actorPublisher{} or @procClientSupp{}: withdraw a local supports from collections.
 
 @end table
 @item Processing
@@ -42,7 +42,7 @@ Manage sharing or withdrawing suports to/from collections.
 @item @eventClientServUpgradeCall
 to @procClientServ{}: upgrade the meta-data.
 
-@item @eventScriptsNew 
+@item @eventScriptsNew{} 
 @itemx @eventScriptsFree
 to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 

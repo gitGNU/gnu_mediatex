@@ -18,7 +18,7 @@ from @procServerDeliver
 @end table
 @item Processing
 
-@todo: this script should check if a replacement hook is available for the related collection and use it.
+@todo this script should check if a replacement hook is available for the related collection and use it.
 
 @item Events out
 @table @code

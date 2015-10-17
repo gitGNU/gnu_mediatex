@@ -25,7 +25,7 @@ Flood diagram:
 @item Events in
 @table @code
 
-@item @eventServerStart 
+@item @eventServerStart{} 
 @itemx @eventServerStop
 @itemx @eventServerReload
 from @procScriptsInitd{}: standard @acronym{UNIX} process management (HUP signal for reload...).
@@ -34,22 +34,22 @@ from @procScriptsInitd{}: standard @acronym{UNIX} process management (HUP signal
 from @procClientMisc{}: serialize the last cache status into a file.
 
 @item @eventServerExtractReg
-@itemx @eventServerNotifyReg 
+@itemx @eventServerNotifyReg{} 
 @itemx @eventServerDeliverReg
-from @activityClientO respectively to 
+from @activityClientO{} respectively to 
 @procServerExtract{}, @procServerNotify{} and @procServerDeliver{}: ask to extract, notify or deliver (no more used) by setting a value into share memory and sending a signal.
 
-@item @eventServerCgiQuery 
-from @procScriptsCgi to @procServerCgiSrv{}: receive a socket query asking for an archive.
+@item @eventServerCgiQuery{} 
+from @procScriptsCgi{} to @procServerCgiSrv{}: receive a socket query asking for an archive.
 
-@item @eventServerHaveQuery 
-from @procClientSupp to @procServerHave{}: receive a socket query providing archives from a support.
+@item @eventServerHaveQuery{} 
+from @procClientSupp{} to @procServerHave{}: receive a socket query providing archives from a support.
 
 @item @eventServerUploadQuery
-from @procClientMisc to @procServerCache{}: receive a socket query providing an archive and asking to handle it into the cache.
+from @procClientMisc{} to @procServerCache{}: receive a socket query providing an archive and asking to handle it into the cache.
 
 @item @eventServerNotifyQuery
-from a remote @activityServerO to @procServerNotify{}: receive a socket query providing remote cache content index.
+from a remote @activityServerO{} to @procServerNotify{}: receive a socket query providing remote cache content index.
 
 @end table
 @item Processing
@@ -58,7 +58,7 @@ from a remote @activityServerO to @procServerNotify{}: receive a socket query pr
 @item 
 Serialise cache index into @dataChecksum{}, on @eventServerExtractReg
 query. 
-Remote supplies and demands are now readable by @activityClientO{}, or on next @activityServer start-up.
+Remote supplies and demands are now readable by @activityClientO{}, or on next @activityServer{} start-up.
 
 @item Re-index the cache when reciving HUP signal:
 @itemize @bullet
@@ -84,14 +84,14 @@ to @procClientMisc{}: tel client to make operation that needs privileges, like b
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract to @procClientSupp{}: tel client to mount supports as it need root privileges.
+from @procServerExtract{} to @procClientSupp{}: tel client to mount supports as it need root privileges.
 
 @item @eventServerNotifyQuery
 from @procServerNotify{} to a remote @activityServerO{}: send a socket query providing local cache content index.
 
-@item @eventScriptsDeliver 
+@item @eventScriptsDeliver{} 
 @item @eventScriptsAudit
-from @procServerDeliver to @procScriptsDeliver or @procScriptsAudit{}: respectively notify archive availability to @actorUserO{} or audit an archive.
+from @procServerDeliver{} to @procScriptsDeliver{} or @procScriptsAudit{}: respectively notify archive availability to @actorUserO{} or audit an archive.
 
 @end table
 
@@ -137,7 +137,7 @@ internal error
 @item 403 fails to get localhost
 @end table
 
-@item @procServerUpload messages (@code{-1-})
+@item @procServerUpload{} messages (@code{-1-})
 @table @code
 @item 210 ok
 @item 310 empty message
@@ -145,7 +145,7 @@ internal error
 @item 313 already exists %s:%lli
 @end table
 
-@item @procServerCgiSrv messages (@code{-2-})
+@item @procServerCgiSrv{} messages (@code{-2-})
 @table @code
 @item 120 not found %s:%lli
 @item 220 ok %s/%s
@@ -153,14 +153,14 @@ internal error
 @item 320 empty message
 @end table
 
-@item @procServerHave messages (@code{-3-})
+@item @procServerHave{} messages (@code{-3-})
 @table @code
 @item 230 ok
 @item 330 empty message
 @item 331 message do not provide a final supply %s
 @end table
 
-@item @procServerNotify messages (@code{-4-})
+@item @procServerNotify{} messages (@code{-4-})
 @table @code
 @item 240 ok
 @end table

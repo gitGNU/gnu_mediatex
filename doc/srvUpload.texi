@@ -27,7 +27,7 @@ from @procClientUpload{}: receive a socket query providing an archive and asking
 @item Events out
 @table @code
 
-@item @eventServerExtract 
+@item @eventServerExtract{} 
 to @procServerExtract{}: internally ask to start extraction.
 
 @end table

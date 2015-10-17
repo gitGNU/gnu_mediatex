@@ -1,4 +1,5 @@
-@cindex meta-data
+@cindex Meta-data
+@cindex Archive
 
 There are 6 main meta-data files share between 3 categories.
 @itemize @bullet
@@ -32,19 +33,18 @@ Relational schema:
 @itemize @bullet
 @item Entities
 @itemize @bullet
-@item The @sc{Support} entity lists all the local supports
-@item The @sc{Collection} entity lists all the collections the local serve belongs to
+@item The @sc{Support} entity lists all the local supports.
+@item The @sc{Collection} entity lists all the collections the local server belongs to.
 @end itemize
 
 Below entities are all dupplicated for each collection:
 @itemize @bullet
-@item The @sc{Server} entity lists all the servers
-@item The @sc{Image} entity lists on @sc{iso} images hold by a server
-@item The @sc{Archive} entity lists all archives known at running time
-@cindex archive
-@item The @sc{Containter} entity gives rule to extract archives from each others
-@item The @sc{Document} entity groups archives in order to describe them in a catalog
-@item The @sc{Record} entity lists archives we works with
+@item The @sc{Server} entity lists all the servers.
+@item The @sc{Image} entity lists on @sc{iso} images hold by a server.
+@item The @sc{Archive} entity lists all archives known at running time.
+@item The @sc{Containter} entity gives rule to extract archives from each others.
+@item The @sc{Document} entity groups archives in order to describe them in a catalog.
+@item The @sc{Record} entity lists archives we works with.
 @end itemize
 
 @item Data in/out

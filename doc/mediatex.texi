@@ -89,7 +89,7 @@ This manual is for Mediatex (version @value{VERSION}, @value{UPDATED}).
 @include main.texi
 
 @node Relational schema
-@chapter Data files.
+@chapter Data files
 @include data.texi
 
 @node Conceptual model

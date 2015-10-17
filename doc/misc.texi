@@ -38,7 +38,7 @@ from @procServerExtract{}: retrieve a remote collection's file via @acronym{SSH}
 @item Build the @sc{HTML} catalogues.
 @item Wraps queries from @actorAdminO{}, @actorPublisherO{} 
 and @activityServerO{} to @activityScriptsO{}.
-@note: some operations required the @code{root} privileges. For security reason, only the @activityClientO allow it thanks to its ``setuid'' bit.
+@note: some operations required the @code{root} privileges. For security reason, only the @activityClientO{} allow it thanks to its ``setuid'' bit.
 @example
 $ ls -l /usr/bin/mediatex
 -rwsr-xr-x 1 root root @dots{}
@@ -59,7 +59,7 @@ to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser
-to @procScriptsAddDelUser{}: manage @actorPublisherO users.
+to @procScriptsAddDelUser{}: manage @actorPublisherO{} users.
 
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
@@ -68,7 +68,7 @@ to @procScriptsBind{}: manage collection repository binding on the chrooted jail
 @item @eventServerCgiQuery
 to @procServerCgiSrv{}: socket query asking for all archives from a collection (for a collection audit).
 
-@item @eventToolsSshCopy 
+@item @eventToolsSshCopy{} 
 to @procToolsSsh{}: copy file from one remote server's cache.
 
 @end table

@@ -26,7 +26,7 @@ from @procClientMisc{}: (no more use)
 @itemize @bullet
 @item On normal context, adjust the archive time-to-live to the type of related demands.
 @item On audit context, check the archive's md5sum and size.
-@item For a final demand, switch to the appropriate delivering script (mail to @actorUserO or audit).
+@item For a final demand, switch to the appropriate delivering script (mail to @actorUserO{} or audit).
 @item Remove the final demand (email) from the cache index.
 @end itemize
 
@@ -34,7 +34,7 @@ from @procClientMisc{}: (no more use)
 @table @code
 
 @item @eventScriptsDeliver
-to @procScriptsDeliver{}: tel @actorUser an archive he was looking for is now available.
+to @procScriptsDeliver{}: tel @actorUser{} an archive he was looking for is now available.
 
 @item @eventScriptsAudit
 to @procScriptsAudit{}: audit an archive.

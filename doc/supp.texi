@@ -62,7 +62,7 @@ Manage supports information related to the @dataSupp file.
 @item
 Automatically withdraw a support from all collection on removal.
 @item
-When @actorPublisherO provides a support, ensure the @activityServer may work with it. 
+When @actorPublisherO{} provides a support, ensure the @activityServer{} may work with it. 
 
 @end itemize
 @item Events out

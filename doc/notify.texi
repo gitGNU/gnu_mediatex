@@ -14,10 +14,10 @@ Process conceptual model:
 @item Events in
 @table @code
 
-@item @eventServerNotifyReg 
+@item @eventServerNotifyReg{} 
 from @procClientMisc{}: ask notify by setting a value into share memory and sending a signal.
 
-@item @eventServerNotifyQuery 
+@item @eventServerNotifyQuery{} 
 from a remote @process{notify} process: receive a socket query providing remote cache content index.
 
 @end table

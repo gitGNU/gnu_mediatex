@@ -17,9 +17,9 @@ Process conceptual model:
 @item Events in
 
 @table @code
-@item @eventScriptsInit 
-@item @eventScriptsRemove 
-@item @eventScriptsPurge 
+@item @eventScriptsInit{} 
+@item @eventScriptsRemove{} 
+@item @eventScriptsPurge{} 
 from @activityClient
 
 @end table
@@ -43,12 +43,12 @@ Install the @mediatexO{} repositories
 @item @eventScriptsUnBindCall
 to @procScriptsBind{}: 
 
-@item @eventScriptsInitdStart 
+@item @eventScriptsInitdStart{} 
 @itemx @eventScriptsInitdStop
 to @procScriptsInitd{}: start/stop the @mediatexO{} daemon.
 
-@item @eventToolsCvsInit 
-@item @eventToolsCvsImport 
+@item @eventToolsCvsInit{} 
+@item @eventToolsCvsImport{} 
 @item @eventToolsCvsCheckout
 to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
 

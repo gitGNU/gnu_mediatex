@@ -18,7 +18,7 @@ from @activityClient
 
 @item Processing
 
-The purpose of this script is to provide an @acronym{API} for @activityClientO in order to use the @activityScriptsO{}'s @acronym{BASH} library.
+The purpose of this script is to provide an @acronym{API} for @activityClientO{} in order to use the @activityScriptsO{}'s @acronym{BASH} library.
 
 @end table
 @item Events out
@@ -26,7 +26,7 @@ The purpose of this script is to provide an @acronym{API} for @activityClientO i
 
 @item @eventToolsCvsUpdate
 @item @eventToolsCvsCommit
-to @procToolsCvs: synchronise a @acronym{CVS} module.
+to @procToolsCvs{}: synchronise a @acronym{CVS} module.
 
 @end table
 @item Data in/out
