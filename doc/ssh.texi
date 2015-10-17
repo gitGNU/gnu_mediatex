@@ -62,7 +62,7 @@ mdtx-COLL:x:114:124::/var/cache/mediatex/mdtx/home/mdtx-COLL:/bin/bash
 @itemx ~mdtx-COLL/.ssh/id_dsa.pub
 
 @end table
-The @acronym{SSH} client's configuration file bellow is managed during @mediatexO's upgrades. 
+The @acronym{SSH} client's configuration file bellow is managed during @mediatexO{}'s upgrades. 
 @table @file
 @item ~mdtx-COLL/.ssh/config
 @example

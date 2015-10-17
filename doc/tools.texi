@@ -1,6 +1,6 @@
 @cindex tools
 
-The @activity{Tools} activity gather external @acronym{GNU} system tools @mediatexO is using. 
+The @activity{Tools} activity gather external @acronym{GNU} system tools @mediatexO{} is using. 
 This activity is divided into 6 process:
 @menu
 * Syslog::       @process{Syslog}
@@ -19,7 +19,7 @@ Flood diagram:
 @item Events in
 @table @code
 @item @eventToolsSyslogMessage 
-from @activityClient{}, @activityServer and @activityScripts to @procToolsSyslog{}: log @mediatexO operations.
+from @activityClient{}, @activityServer and @activityScripts to @procToolsSyslog{}: log @mediatexO{} operations.
 
 @item @eventToolsApacheHttpGet 
 @itemx @eventToolsApacheHttpPost 

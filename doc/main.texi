@@ -1,7 +1,7 @@
 @cindex api
 @cindex oais
 
-@mediatexO focus on providing an @sc{api} to ask for, and retrieve 
+@mediatexO{} focus on providing an @sc{api} to ask for, and retrieve 
 archives from where they are stored.
 
 @menu
@@ -17,7 +17,7 @@ archives from where they are stored.
 @section Commands
 @cindex Commands
 
-@mediatexO @activityClient{}'s queries:
+@mediatexO{} @activityClient{}'s queries:
 
 @itemize @bullet
 
@@ -27,7 +27,7 @@ archives from where they are stored.
 @item @eventClientMiscInit
 @itemx @eventClientMiscRemove
 @itemx @eventClientMiscPurge
-Initialise, remove and purge @mediatexO software.
+Initialise, remove and purge @mediatexO{} software.
 
 @item @eventClientMiscAddUser
 @itemx @eventClientMiscDelUser
@@ -90,7 +90,7 @@ Appending one '+' will run ``make'' queries too.
 Manage the local @acronym{HTML} catalogue.
 
 @item @eventClientMiscSu
-Change to @mediatex or collection system user.
+Change to @mediatex{} or collection system user.
 
 @item @eventClientMiscAudit
 Extract all archives from a collection.
@@ -183,12 +183,12 @@ Enable debug information from lexers.
 
 @item -c @var{mdtxLabel}
 @item --conf-label @var{mdtxLabel}
-Over hide 'mdtx.conf' configuration file and use @var{mdtxLabel} system user instead of @code{mdtx}. This permit to run independent @mediatexO systems on the same machine. This is mainly used for tests.
+Over hide 'mdtx.conf' configuration file and use @var{mdtxLabel} system user instead of @code{mdtx}. This permit to run independent @mediatexO{} systems on the same machine. This is mainly used for tests.
 
 @item -a
 @itemx --alone
 Do not make @acronym{CVS} queries. This may be useful if you temporary loose your network connection, or if you want to be temporally isolated for tests.
-@note{}: This option is only available on @activityClient as @activityServer and @procScriptsCgi never perform @acronym{CVS} queries.
+@note{} This option is only available on @activityClient as @activityServer and @procScriptsCgi never perform @acronym{CVS} queries.
 
 @end table
 
@@ -223,7 +223,7 @@ Communication model:
 @image{mediatex-figures/main,,,,}
 
 @itemize @bullet
-@item 4 actors interact with the @mediatexO activity
+@item 4 actors interact with the @mediatexO{} activity
 @itemize @minus
 @item @actorUser
 @item @actorPublisher
@@ -274,7 +274,7 @@ from @actorDateO
 
 @end table
 
-Commands are detailed into the @mediatex specifications.
+Commands are detailed into the @mediatex{} specifications.
 
 @item Events out
 @table @code
@@ -318,7 +318,7 @@ This diagram describes what happen when a @actorUser access an archive:
 @node System users
 @section System users and groups
 
-@todo: @mediatexO should better use @code{setfacl}.
+@todo: @mediatexO{} should better use @code{setfacl}.
 
 Systems users:
 @table @code
@@ -339,7 +339,7 @@ Systems groups:
 @item www-data
 @acronym{HTML} content
 @item mdtx
-@mediatexO internal data
+@mediatexO{} internal data
 @item mdtx_md
 @acronym{CVS} internal data
 @item mdtx-@var{col}

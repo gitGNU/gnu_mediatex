@@ -1,7 +1,7 @@
 @cindex supports file
 
 @activityClient{} backup the support's status into the @dataSuppO{} file.
-Support's checksum is compute using @code{md5sum} for internal identification like for all @mediatexO archives, but also using @code{sha1}@dots{} who know.
+Support's checksum is compute using @code{md5sum} for internal identification like for all @mediatexO{} archives, but also using @code{sha1}@dots{} who know.
 
 Relational schema:
 

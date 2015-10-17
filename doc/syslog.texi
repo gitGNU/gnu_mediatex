@@ -43,7 +43,7 @@ to @procClientUpload{}: upload collection's @acronym{APACHE} access logs to the 
 local2.info /var/log/mediatex.log
 @end example
 
-@note{} This configuration tel @acronym{RSYSLOG} to ignore @code{debug} messages (even if @mediatexO send debug messages, you will not get them). The higher the level is and the less messages you get:
+@note{} This configuration tel @acronym{RSYSLOG} to ignore @code{debug} messages (even if @mediatexO{} send debug messages, you will not get them). The higher the level is and the less messages you get:
 @code{err > warning > notice > info > debug}
 
 @item /etc/rsyslog.conf
@@ -51,7 +51,7 @@ Also, @acronym{RSYSLOG} will drop messages when they are coming too quickly,
 and you may want to change this setting (@pxref{Reporting bugs}).
 
 @item /etc/logrotate.d/mediatex_logrotate.conf
-Manage @mediatexO's logs rotation.
+Manage @mediatexO{}'s logs rotation.
 
 @item /etc/logrotate.d/httpd-prerotate/mediatex_logrotate
 Filtre and upload the @procToolsApache{}'s latest logs to the related collections, after rotation.

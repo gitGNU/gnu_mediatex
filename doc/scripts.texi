@@ -1,6 +1,6 @@
 @cindex scripts
 
-The @activity{Scripts} activity gather system level operations @mediatexO is using. This activity provides basic fonctions on @acronym{BASH} files that are not describe in this documentation.
+The @activity{Scripts} activity gather system level operations @mediatexO{} is using. This activity provides basic fonctions on @acronym{BASH} files that are not describe in this documentation.
 This activity is diveded into 10 process:
 @menu
 * init.d::               @process{init.d}
@@ -43,7 +43,7 @@ from @procToolsCron to @procScriptsCron{}: scheduled tasks.
 @item @eventScriptsInit 
 @itemx @eventScriptsRemove 
 @itemx @eventScriptsPurge 
-from @procClientMisc to @procScriptsInitRemovePurge{}: initialise, remove and purge @mediatexO software.
+from @procClientMisc to @procScriptsInitRemovePurge{}: initialise, remove and purge @mediatexO{} software.
 
 @item @eventScriptsAddUser
 @itemx @eventScriptsDelUser

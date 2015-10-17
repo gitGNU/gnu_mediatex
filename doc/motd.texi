@@ -10,9 +10,9 @@ Process conceptual model:
 @dataConf{}
 @table @code
 @item checkTTL 
-The time interval we have to re-check supports before @mediatexO consider them obsolete (scores are impacted now ; you ever can provide the support after and recover your previous scores).
+The time interval we have to re-check supports before @mediatexO{} consider them obsolete (scores are impacted now ; you ever can provide the support after and recover your previous scores).
 @item fileTTL
-Twice the time interval @mediatexO will automatically re-check support's files.
+Twice the time interval @mediatexO{} will automatically re-check support's files.
 @end table
 
 @image{mediatex-figures/motd,,,,}

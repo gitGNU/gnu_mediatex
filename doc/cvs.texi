@@ -56,7 +56,7 @@ The @sc{Cvs} root repositories
 @itemx ~/mdtx/cvs/mdtx-COLL
 @itemx ~/mdtx/cvs/mdtx-COLL/CVS/Root
 The @sc{Cvs} checkout-ed modules. 
-The third file is mentioned as it is manage by @mediatexO upgrade (@pxref{Scenario E}).
+The third file is mentioned as it is manage by @mediatexO{} upgrade (@pxref{Scenario E}).
 @end table
 @end itemize
 

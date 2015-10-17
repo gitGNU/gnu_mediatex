@@ -212,7 +212,7 @@ history: mdtx @var{usename2}
 Browses the remotely available collection's catalog via this @sc{url}: @*
 @url{https://@var{hostname1}/~mdtx-hello}
 
-@note{}: for remote access, ensure @var{hostname1} is known, by adding it to the @file{/etc/hosts} file of clients.
+@note{} for remote access, ensure @var{hostname1} is known, by adding it to the @file{/etc/hosts} file of clients.
 
 Change the logo:
 @example
@@ -277,7 +277,8 @@ $ cat > cow1.ext <<EOF
 )
 EOF
 
-$ mediatex upload file cow1.tgz catalog cow1.cat rules cow1.ext to coll hello
+$ mediatex upload file cow1.tgz catalog cow1.cat rules cow1.ext \
+   to coll hello
 @end example
 
 Only add a file:
@@ -286,8 +287,7 @@ $ cowsay mheu2 > cow2.txt
 $ mediatex upload file cow2.txt to coll hello
 @end example
 
-Then, the 
-@actor{publisher} have to retrieve the files form the cache
+Then, @actorPublisherO{} have to retrieve the files form the cache
 , store them into a support and provide this new support to the collection.
 @example
 $ mediatex motd

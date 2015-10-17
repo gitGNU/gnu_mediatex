@@ -34,7 +34,7 @@ server's user and group
 common group for all collections related to the server
 @end table
 @item
-Install the @mediatexO repositories
+Install the @mediatexO{} repositories
 @end itemize
 
 @item Events out

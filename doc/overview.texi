@@ -1,5 +1,3 @@
-@cindex overview
-
 The GNU @mediatexO{} 
 project intends to make easier as possible 
 archives management by spreading and accessing @acronym{WORM} supports 
@@ -30,10 +28,8 @@ Its goal is to provide tools that help to manage a @acronym{NF Z 42-013} complia
 @section Who
 
 @image{mediatex-figures/who,,,,}
-@cindex admin user
-@cindex publisher user
-@cindex web user
-@cindex date
+@cindex Publisher
+@cindex User
 
 The @mediatexO{} 
 system interacts with 3 kind of users:
@@ -55,12 +51,11 @@ Correspondance with system users is detailed next: @pxref{System users}.
 
 @node What
 @section What
-@cindex supports 
-@cindex iso
-@cindex server
-@cindex collection
-@cindex time-stamp
-@cindex claim-based authentication 
+@cindex Supports 
+@cindex ISO
+@cindex Collection
+@cindex Time-stamp
+@cindex Claim-based authentication 
 
 @mediatexO{} 
 is a distributed system. 
@@ -139,6 +134,13 @@ Moreover, the collection concept is used to classify document as
 does not handle dedicated life cycle on archives.
 
 What it is not
+@cindex SGBD
+@cindex Dynamic search
+@cindex SEDA
+@cindex XML
+@cindex Time-stamps
+@cindex Claim-based authentication
+@cindex Single sign on
 @itemize @bullet
 @item 
 Doing mirroring replication.
@@ -165,14 +167,15 @@ Self managing claim-based authentication or any single sign on mechanism
 but it should support to be configured to be used with.
 @end itemize
 
-In fact @mediatexO system is designed to be crashed anywhere but still alive elsewhere.
+In fact @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.
 Time-stamps and claim-based authentication servers which need static certificates and a static @acronym{IP} address are monolithic servers and so, resides out of this scope.
 
 @node Where
 @section Where
-@cindex cvs
-@cindex meta-data
-@cindex round-Robbin
+@cindex CVS
+@cindex Meta-data
+@cindex Round-Robbin
+@cindex DNS
 
 @itemize @bullet
 @item
@@ -189,11 +192,9 @@ Archive's data files are stored in a cache for each collection by each server.
 @item
 A 
 @actorUser{} query is distributed to all servers. 
-If none of them can fulfill the query, the server which receive 
-the initial query ask for and register the
-@actor{User}'s mail. 
-The 
-@actor{User} mail address is never sent to the other servers.
+If none of them can fulfill the query, the server receiving
+the initial query asks for the @actor{User}'s mail adresse and registers it. 
+The @actor{User} mail address is never sent to the other servers.
 
 @image{mediatex-figures/where2,,,,}
 
@@ -203,8 +204,7 @@ As the catalog provide static @acronym{HTML} content, a @acronym{DNS}'s round ro
 
 @node When
 @section When
-@cindex date
-@cindex cron
+@cindex Date
 
 @itemize @bullet
 @item
@@ -239,15 +239,14 @@ and to add them to the related collection.
 
 @node How
 @section How
-@cindex gnu
-@cindex syslog
-@cindex apache
-@cindex cat
-@cindex motd
-@cindex sendmail
-@cindex motd
+@cindex GNU
+@cindex Syslog
+@cindex Apache
+@cindex Cat
+@cindex Motd
+@cindex Sendmail
 
-@mediatexO{} system is build around other @acronym{GNU} 
+@mediatexO{} system is built around other @acronym{GNU} 
 @activityTools{}:
 @itemize @bullet
 @item 
@@ -282,6 +281,7 @@ Involved licences:
 
 (*) Author agree to relicense e2fsck's progress bar code under the LGPLv2
 
+@sp 1
 @item Compilation
 @multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
@@ -298,6 +298,7 @@ Involved licences:
 @item libssl-dev @tab BSD @tab     http://www.openssl.org/
 @end multitable
 
+@sp 1
 @item Documentation (others format than texinfo and man)
 @multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
@@ -305,6 +306,7 @@ Involved licences:
 @item texlive @tab     LPPL @tab    https://www.tug.org/texlive/
 @end multitable
 
+@sp 1
 @item Installation
 @multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
@@ -322,6 +324,7 @@ Involved licences:
 @end multitable
 @c @item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
 
+@sp 1
 @item Optionnal: (and non-free)
 @multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
@@ -334,9 +337,8 @@ Involved licences:
 
 @node How much
 @section How much
-@cindex cvs
-@cindex parser
-@cindex collection
+@cindex Parsers
+@cindex SGBD
 
 In order to prevent from deny of services, 
 we do not use a centralise database but text files spread on all servers
@@ -377,10 +379,10 @@ Roughly this should gives about:
 @item 300k @tab 100M @tab 500M @tab 3.3G @tab 750k @tab 60'
 @end multitable
 
-@note{}:
+@note{}
 @itemize @bullet
 @item
-Synchronisation times using @acronym{CVS} depends the network connection, 
+Synchronisation times using @acronym{CVS} depends on the network connection, 
 but not only as they are sometime quite as long (update+commit) as the @acronym{HTML} catalogue generation. A further version should use @acronym{GIT} instead that is reputed to be faster.
 @item 
 The 2 last lines in the above array are extrapolated (should be @math{O(n*log(n)}).
@@ -393,10 +395,11 @@ Other processes like scanning the cache and building the audit report are not ye
 
 @node Why
 @section Why
-@cindex round-Robbin
+@cindex Round-Robbin
 @cindex RPO
 @cindex RTO
 @cindex DRP
+@cindex CAP theorem
 
 Objective is to conserve, offer access and preserve intelligibility 
 of electronic archives.
@@ -419,7 +422,6 @@ using @acronym{CVS} merging.
 for a distributed computer system to simultaneously provide all three 
 of the following guarantees: Consistency, Availability and Partition 
 tolerance.)
-@itemize @bullet
 @item 
 The just uploaded data are not safe: RPO (Recovery Point 
 Objective) is roughly either 1 month (on supports) or 1 day (on caches).
@@ -428,7 +430,6 @@ DRP (Disaster Recovery Plan) simply consists on adding new servers to
 the collection (main configuration is already handle by the collection) 
 and to include the new public @acronym{IP} addresses into the actual 
 @acronym{DNS} round-Robbin's pool.
-@end itemize
 @end itemize
 
 Why not use @mediatexO{}:
@@ -442,6 +443,5 @@ Must not occult the forgetting right.
 As data are burned on optical disks, it is complicated to erase only a
 part of them.
 @end itemize
-
 
 @c  LocalWords:  easely
