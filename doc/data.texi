@@ -142,21 +142,32 @@ Code:
 @itemx src/common.openClose.c
 @end table
 
+@page
 @node mdtx.conf
 @section mdtx.conf
 @include mdtx.conf.texi
+
+@page
 @node supports.txt
 @section supports.txt
 @include supports.txt.texi
+
+@page
 @node mdtxCOLL.md5
 @section mdtx-COLL.md5
 @include mdtx-COLL.md5.texi
+
+@page
 @node catalog.txt
 @section catalog.txt
 @include catalog.txt.texi
+
+@page
 @node extract.txt
 @section extract.txt
 @include extract.txt.texi
+
+@page
 @node servers.txt
 @section servers.txt
 @include servers.txt.texi

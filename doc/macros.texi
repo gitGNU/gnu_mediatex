@@ -181,7 +181,7 @@
 @process{Apache} (@pxref{Apache})
 @end macro
 @macro procToolsExim
-@process{Exim} (@pxref{Exim})
+@process{Sendmail} (@pxref{Exim})
 @end macro
 @macro procToolsSsh
 @process{Ssh} (@pxref{Ssh})

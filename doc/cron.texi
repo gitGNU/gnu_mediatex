@@ -50,7 +50,12 @@ XX XX   *   *   * root /usr/share/mediatex/scripts/cron_daily.sh
 XX XX   X   *   * root /usr/share/mediatex/scripts/cron_monthly.sh
 @end example
 
-@note: the triger dates are choosen randomly during @mediatexO{} initialisation.
+@note{} the triger dates are choosen randomly during @mediatexO{} initialisation.
 
 @end itemize
 
+Code:
+
+@table @file
+@item misc/mediatex_cron
+@end table

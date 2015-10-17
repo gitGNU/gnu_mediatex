@@ -5,7 +5,7 @@ This activity is divided into 6 process:
 @menu
 * Syslog::       @process{Syslog}
 * Apache::       @process{Apache}
-* Exim::         @process{Exim}
+* Exim::         @process{Sendmail}
 * Ssh::          @process{Ssh}
 * Cvs::          @process{Cvs}
 * Cron::         @process{Cron}
@@ -97,7 +97,7 @@ from @procToolsSyslog{} to @procClientUpload{}: upload collection's @acronym{APA
 @include apache.texi
 
 @node Exim
-@subsection Exim
+@subsection Sendmail
 @include exim.texi
 
 @node Ssh

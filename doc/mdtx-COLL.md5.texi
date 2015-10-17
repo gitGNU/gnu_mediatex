@@ -1,7 +1,7 @@
 @cindex checksums file
 
 @activityServer{} backup its collection's status into the @dataChecksumO{} file.
-When @actorPublisherO{} or @activityClientO{} want to read into the last status, the need to ask @activityServerO{} the refresh this file.
+When @actorPublisherO{} or @activityClientO{} want to read the lastest status, they need to ask @activityServerO{} the refresh this file.
 
 The Messages the @procScriptsCgi{}, @procClientSupp{} and 
 @procServerNotify{} processes exchange via socket are using the same 
@@ -9,19 +9,21 @@ grammar language. There is  type for such messages:
 @itemize @bullet
 @item @code{DISK}: used to serialize the @dataChecksumO{} file
 @item @code{NOTIFY}: used by @activityServerO{}s to talk each others
-@item @code{UPLOAD}: used by @actorPublisherO{} to add new archives
+@item @code{UPLOAD}: used to add new incoming archives
 @item @code{CGI}: used by @procScriptsCgi{} to send @actorUserO{} queries 
-@item @code{HAVE}: used by @actorPublisherO{} to notify that a support is provided
+@item @code{HAVE}: used when @actorPublisherO{} notify that a support is provided
 @end itemize
 
-When loaded into memory, such messages are handled useing the following relational schema:
+These messages are cyphered using @acronym{AES} algorithm and a key defined into @dataServers{} file. @*
+When loaded into memory, such messages are handled using the following relational schema:
 
 @image{mediatex-figures/mdtx-COLL.md5,,,,}
 
 @itemize @bullet
 @item Proper entities
 @itemize @bullet
-@item The @sc{Record} entity lists all informations we need to load/save and exchange about archive in the local cache for each collection.
+@item The @sc{Record} entity lists all informations we need to load/save and exchange about archives.
+@todo @mediatexO{} should use an hash table to manage records to speed-up cache management.
 @end itemize
 
 There is 7 types of records
@@ -36,7 +38,7 @@ There is 7 types of records
 @item @code{REMOTE_SUPPLY} @tab S @tab remote @tab relative path
 @end multitable
 
-@note: for @code{FINAL_SUPPLY} the extra field is more accurately @code{@var{path1}[:@var{path2}]}, where:
+@note{} for @code{FINAL_SUPPLY} the extra field is more accurately @code{@var{path1}[:@var{path2}]}, where:
 @itemize @bullet
 @item @var{path1} is the absolute path of an external file (archive to upload or available support),
 @item @var{path2} is a potential relative path to the place where the file should be copied into the cache.
@@ -56,11 +58,11 @@ The @sc{Server} entity, from
 @item Relations
 @itemize @bullet
 @item 
-The @sc{localSupply} relationhip gives the archive available (@code{LOCAL_DEMAND}) on the local cache.
+The @sc{localSupply} relationhip gives the archive's file when available (@code{LOCAL_DEMAND}) on the local cache.
 @item 
-The @sc{finalSupplies} relationhip lists all supports presentely available on local host (@code{FINAL_SUPPLY}).
+The @sc{finalSupplies} relationhip lists supports presentely available on local host (@code{FINAL_SUPPLY}).
 @item 
-The @sc{remoteSupplies} relationhip lists all archives available remotely (@code{REMOTE_SUPPLY})from the other @activityServerO{}.
+The @sc{remoteSupplies} relationhip lists all archives available remotely (@code{REMOTE_SUPPLY}) from the other @activityServerO{}.
 @item 
 The @sc{demands} relationhip lists all demand (@code{FINAL_DEMAND}, @code{LOCAL_DEMAND} and @code{REMOTE_DEMAND}) for an archive
 @end itemize
@@ -132,14 +134,14 @@ string: [^[:blank:]\r\n]@{1,511@}
 
 Code:
 @table @file
-@item src/memory/archiveTree.h
+@item src/misc/cypher.c
+@itemx src/memory/archiveTree.h
 @itemx src/memory/archiveTree.c
 @itemx src/memory/recordTree.h
 @itemx src/memory/recordTree.c
 @itemx src/parser/recordFile.l
 @itemx src/parser/recordFile.y
-@itemx src/memory/openClose.c
-@itemx src/server/cache.c
+@itemx src/common/openClose.c
 @end table
 
 This code is use to get the record's type:@*

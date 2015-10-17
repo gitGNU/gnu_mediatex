@@ -1,11 +1,11 @@
 @cindex exim
-@cindex mail
+@cindex sendmail
 
 @sc{Mediatex} uses @sc{Exim4} 
 (@pxref{Top,,, spec, Specification of the Exim Mail Transfer Agent})
 to send mails so as to notify @actor{Actor}s.
 Please configure Exim (or any other mail agent) so as your host can
-send mails.
+effectively delivers sent mails.
 
 Process conceptual model:
 

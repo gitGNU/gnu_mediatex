@@ -7,8 +7,9 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - add key words index into paragraph of the documentation
-- speed-up cache scanning process (or do not do it too much time) 
-- speed-up audit building process (maybe do not call script)
+- manage new group without reloading server (using setfacl)
+- speed-up cache scanning process (use an hash table on records)
+- speed-up audit building process (maybe handle report in C)
 - serialise b-tree using another order and use add-if-not-there function
 - replace cvs+viewvc by git+cgit
 - replace gethostby*_r by getaddrinfo and co

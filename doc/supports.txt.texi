@@ -1,7 +1,7 @@
 @cindex supports file
 
 @activityClient{} backup the support's status into the @dataSuppO{} file.
-Support's checksum is compute using @code{md5sum} for internal identification like for all @mediatexO{} archives, but also using @code{sha1}@dots{} who know.
+Support's checksum is compute using @code{md5sum} for internal identification like for all @mediatexO{} archives, but is also using @code{sha1}@dots{} who know.
 
 Relational schema:
 
@@ -15,14 +15,13 @@ Relational schema:
 
 There is 2 kind of records
 @itemize @bullet
-@item external support: @file{relative path}@*
-@actorPublisher{}
-only provides theses supports manually only when they are requiered by @activityClient{}. After the supports are no more accessed by 
-@mediatexO{}.
-External support is a device (@cdrom{}, @usb{} key @dots{}), or a file @actorPublisherO{} know how to access from the local host (@sss{}, @nfs{} @dots{}).
+@item external support: @file{support's name}@*
+@actorPublisher{} provides theses supports manually only when they are requiered by @activityClient{}. 
+Else the supports are not accessed by @mediatexO{}.
+External supports are devices (@cdrom{}, @usb{} key @dots{}), or files @actorPublisherO{} know how to access from the local host (backups, @sss{}, @dots{}).
 
 @item external file: @file{absolute path}@*
-Theses supports are files supposed to be permantly available on the local host. @activityClientO{} access diretely to them without needing to ask @actorPublisherO{} to provide them.
+Theses supports are files supposed to be permantly available on the local host. @activityClientO{} access diretely to them without asking @actorPublisherO{} to provide them.
 @end itemize
 
 @item Linked entities
@@ -34,7 +33,7 @@ Theses supports are files supposed to be permantly available on the local host. 
 @item Relations
 @itemize @bullet
 @item 
-The @sc{collections} relationship list all the collection a specific support is share with. This relation is not recorded into this file but into 
+The @sc{collections} relationship list all the collection a specific support is shared with. This relation is not recorded into this file but into 
 @dataConfO{}.
 @end itemize
 @end itemize
@@ -92,8 +91,7 @@ Code:
 
 This function is used to differenciate external supports from external supports's files:@*
 @example
-int 
-isSupportFile(Support* self)
+int  isSupportFile(Support* self)
 @{
   int rc = FALSE;
 

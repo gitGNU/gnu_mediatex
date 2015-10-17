@@ -1,8 +1,11 @@
-@cindex index catalog file
+@cindex Catalog
+@cindex Dublin core
+@cindex Ontology
 
 The @dataCatalogO{} files handle the descriptive meta-data of a collection.
 
-Using the ``@eventClientUpload{}'' query, @actorPublisher{} should provide related descriptive meta-data for the new archive, using the same grammar language.
+Using the ``@eventClientUpload{}'' query, @actorPublisher{} should provide related descriptive meta-data file for the new archive, 
+using the same grammar language.
 
 The format of this file is oriented to describe a simple movie database.
 It does not conform to any specific descriptive meta-data schema,
@@ -20,12 +23,13 @@ Relational schema:
 The @sc{Archive} entity lists all archive's data files.
 @item 
 The @sc{Document} entity groups archives (data, parts, versions time-stamps @dots{}) related to an archived document.
+Document are stored using an @acronym{AVL} tree.
 @item 
-The @sc{Category} entity groups documents by themes (thesaurus).
+The @sc{Category} entity groups documents by themes (onthology).
 @item 
-The @sc{Human} entity lists humans related to a document.
+The @sc{Human} entity lists humans (using an @acronym{AVL} tree) related to a document.
 @item 
-The @sc{Role} entity lists all titles a human contributing to a document may have (ex: producer, actor for a movie).
+The @sc{Role} entity lists all titles a human contributing to a document may have (ex: producer, actor, @dots{} for a movie).
 @item
 The @sc{*_Carac} entities are unidirectional in order to consume less memory.
 @end itemize
@@ -35,11 +39,11 @@ The @sc{*_Carac} entities are unidirectional in order to consume less memory.
 @item 
 The @sc{asso_role} relationship matches a human, a role and a document.
 @item 
-The @sc{contains} relationship matches ether humans or documents to categories, or records to documents.
+The @sc{contains} relationships matches ether humans or documents to categories, or records to documents.
 @end itemize
 @end itemize
 
-Exemple:
+Example:
 @example
 # Categories:
 

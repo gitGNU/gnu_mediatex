@@ -29,7 +29,7 @@ factor that reduce score of out-dated supports (@code{factSupp})
 @math{t <= T: score = (\sqrt{T-t \over T} *(9))+1} @*
 @math{t > T: score = {1 \over 1 + 2*(t-T)}} @*
 
-@note: 
+@note{} 
 @itemize @bullet
 @item 
 The same formula apply for local and shared scores (respectively given by @code{@eventClientSuppList{}} or written into @dataServersO file). So theses parameters appears both into @dataConfO and @dataServersO{}.

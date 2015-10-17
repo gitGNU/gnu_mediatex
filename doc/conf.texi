@@ -2,7 +2,7 @@
 
 The @process{Conf} process handle queries about collections.
 
-@note: A single query is used to create a new collection or to join
+@note{} A single query is used to create a new collection or to join
 an existing remote collection. 
 Also, a single query is used too to retract from a remote collection or to remove a local collection.
 

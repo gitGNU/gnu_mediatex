@@ -1,3 +1,4 @@
+
 @cindex client
 
 @activity{Client} is the front-end for the @sc{Mediatex} system.

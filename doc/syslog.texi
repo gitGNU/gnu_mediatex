@@ -55,17 +55,11 @@ Manage @mediatexO{}'s logs rotation.
 
 @item /etc/logrotate.d/httpd-prerotate/mediatex_logrotate
 Filtre and upload the @procToolsApache{}'s latest logs to the related collections, after rotation.
+
+@item /var/log/apache2/access.log
 @end table
 
-@item Data in
-@table @file
-@item /etc/rsyslog.d/mediatex_log.conf
-@itemx /etc/rsyslog.conf
-@itemx /etc/logrotate.d/mediatex_logrotate.conf
-@itemx /etc/logrotate.d/httpd-prerotate/mediatex_logrotate
-@itemx /var/log/apache2/access.log
-@end table
-
+@sp 1
 @item Data out
 @table @file
 @item /var/log/mediatex.log
@@ -74,7 +68,8 @@ Filtre and upload the @procToolsApache{}'s latest logs to the related collection
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/lib/log.sh
-@item /usr/share/mediatex/src/misc/log.h
-@item /src/misc/log.c
+@item etc/rsyslog.src
+@itemx etc/logrotate.src
+@itemx etc/logrotate_apache.src
+@itemx /src/misc/log.c
 @end table

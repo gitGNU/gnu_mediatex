@@ -25,7 +25,7 @@ component since we have an API defined.
 @section Archiving icons
 
 Testing @mediatex{} with about 50000 archives. 
-@note: this example last very long time and consequently shows actual limits of @mediatexO{}.
+@note{} this example last very long time and consequently shows actual limits of @mediatexO{}.
 
 Download the Open Icons Library and build the related catalog and extraction rules files.
 @example

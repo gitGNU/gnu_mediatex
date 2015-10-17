@@ -16,7 +16,7 @@ This activity is diveded into 10 process:
 * audit::                @process{audit}
 @end menu
 
-Flood diagram:
+@c Flood diagram:
 
 @image{mediatex-figures/scripts,,,,}
 
@@ -125,6 +125,12 @@ from @procScriptsCron{} to @actorPublisher{}: update the (above generated) messa
 
 @end table
 @end itemize
+
+To debug a script, you have to launch it using at least the @var{MDTX} environment variable:
+@example
+# cd /usr/share/mediatex/scripts
+# MDTX_MDTXUSER=mdtx MDTX_LOG_SEVERITY_SCRIPT=debug ./bind.sh 
+@end example
 
 Codes:
 @table @file

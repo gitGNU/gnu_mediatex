@@ -12,10 +12,9 @@ Relational schema:
 @item Proper entities
 @itemize @bullet
 @item 
-The @sc{Container} entity lists all the container files from where archives are extracted. A Container is identified by its type (@sc{iso},@sc{tar}...) and the first archive needed for extraction (ex: @file{archive-part1.rar}), also called its first parent.
-
+The @sc{Container} entity lists (using an @acronym{AVL} tree) all the container files from where archives are extracted. A Container is identified by its type (@sc{iso},@sc{tar}...) and the first archive needed for extraction (ex: @file{archive-part1.rar}), also called its first parent.
 @item
-@note: A dedicated @sc{Container} instance is used internally by @mediatex{} to manage the incoming (or uploaded) archives.
+@note{} A dedicated @sc{Container} instance is used internally by @mediatex{} to manage the incoming (or recently uploaded) archives.
 @end itemize
 
 @item Linked entities
@@ -27,9 +26,8 @@ The @sc{Archive} entity lists the archive's data files
 @item Relations
 @itemize @bullet
 @item 
-The @sc{fromAsso} relationship enumerate the content of a container. For instance, all files provided by a tarball archive: @code{tar -tf archive.tar}.
-
-@note: for the incoming @sc{Container} instance, the @sc{fromAsso} relationship gives the date the archive was uploaded.
+The @sc{fromAsso} relationship enumerate (using an @acronym{AVL} tree) the content of a container. For instance, all files provided by a tarball archive: @code{tar -tf archive.tar}.
+@note{} for the incoming @sc{Container} instance, the @sc{fromAsso} relationship gives the date the archive was uploaded.
 
 @item
 The @sc{parents} relationhip gives all the parts a container is using to perform extraction. (@file{archive-part1.rar}, @dots{}, @file{archive-part@var{N}.rar}).

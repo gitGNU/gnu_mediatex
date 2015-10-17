@@ -16,7 +16,7 @@ It is computed by summing the local support's scores computed by @procClientSupp
 When there are many local supports burned from the same image, 
 this sum may be greater than the maximum score (@code{maxScore}), so we truncate it.
 
-@note: if the server's @code{lastCommit} value is outdated compared to the current date added to @code{serverTTL} parameter, the image's score if set to 0 for this server as server is supposed crashed.
+@note{} if the server's @code{lastCommit} value is outdated compared to the current date added to @code{serverTTL} parameter, the image's score if set to 0 for this server as server is supposed crashed.
 
 @item
 The server score equals the worst local image's score on the server.
