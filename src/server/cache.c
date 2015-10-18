@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cache.c,v 1.23 2015/10/13 08:44:54 nroche Exp $
+ * Version: $Id: cache.c,v 1.24 2015/10/18 22:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -264,7 +264,9 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
   } 
 
   // remove doublons
-  if (archive->localSupply && !(archive->localSupply->type & REMOVE)) {
+  if (archive->localSupply && 
+      !(archive->localSupply->type & REMOVE) &&
+      *relativePath != '/') {
     logMain(LOG_WARNING, "remove %s from cache (doublon)", relativePath);
     if (!env.dryRun) {
       if (unlink(absolutePath) == -1) {
