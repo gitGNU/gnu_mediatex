@@ -1,6 +1,7 @@
-@cindex html catalog
+@cindex HTML
+@cindex Catalo
 
-The @process{Misc} handle miscellaneous tasks.
+The @process{Misc} process handle miscellaneous tasks.
 
 Process conceptual model:
 
@@ -38,7 +39,7 @@ from @procServerExtract{}: retrieve a remote collection's file via @acronym{SSH}
 @item Build the @sc{HTML} catalogues.
 @item Wraps queries from @actorAdminO{}, @actorPublisherO{} 
 and @activityServerO{} to @activityScriptsO{}.
-@note{} some operations required the @code{root} privileges. For security reason, only the @activityClientO{} allow it thanks to its ``setuid'' bit.
+@note{} some operations required the @code{root} privileges. For security reason, only the @activityClientO{} allows it thanks to its ``setuid'' bit set.
 @example
 $ ls -l /usr/bin/mediatex
 -rwsr-xr-x 1 root root @dots{}

@@ -1,10 +1,8 @@
-@cindex bind
+@cindex Binding
 
 These 2 scripts mount and unmount both cvsroot and cache directories 
 into the chroot jail, using the bind option (see @code{man 8 mount}).
-It allow @activityServer{} to respectively enable/disable remote 
-meta-data upgrades and data copies when starting/stoping,
-without beeing setuid @code{root}.
+They enable or disable remote meta-data upgrades and remote data copies when @activityServer{} respectively start or stop.
 
 Process conceptual model:
 
@@ -27,6 +25,15 @@ from @procScriptsInitRemovePurge
 @item Processing:
 Manage collection repository binding on the chrooted jail for
 @acronym{SSH} remote access.
+@example
+function JAIL_bind()
+@{
+  @dots{}
+  mount --bind $MDTXHOME/cache $JAIL/var/cache
+  mount --bind $CVSROOT $JAIL/var/lib/cvsroot
+  @dots{}
+@}
+@end example
 @end itemize
 
 @pxref{init-remove-purge}:
@@ -52,7 +59,7 @@ Manage collection repository binding on the chrooted jail for
 
 Code:
 @table @code
-@item /usr/share/mediatex/scripts/bind.sh
-@itemx /usr/share/mediatex/scripts/unbind.sh
-@itemx /usr/share/mediatex/scripts/lib/jail.sh
+@item  scripts/bind.sh
+@itemx scripts/unbind.sh
+@itemx scripts/lib/jail.sh
 @end table

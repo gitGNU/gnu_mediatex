@@ -1,4 +1,4 @@
-@cindex supports file
+@cindex Support file
 
 @activityClient{} backup the support's status into the @dataSuppO{} file.
 Support's checksum is compute using @code{md5sum} for internal identification like for all @mediatexO{} archives, but is also using @code{sha1}@dots{} who know.

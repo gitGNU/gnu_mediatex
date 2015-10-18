@@ -1,4 +1,4 @@
-@cindex consistency
+@cindex Consistency
 
 @sc{Mediatex} should ease managing server changes.
 
@@ -22,8 +22,8 @@ $ mediatex adm update
 @end example
 @item Test daemon socket's connectivity:
 @example
-client$ mediatex srv notify 
-server# tail -f /var/log/mediatex.log
+$ mediatex srv notify 
+# tail -f /var/log/mediatex.log
 [error message]
 @end example
 @end itemize
@@ -31,15 +31,19 @@ server# tail -f /var/log/mediatex.log
 @node Scenario A
 @section CVS conflicts
 
+@todo{}
+Sorry, not documented, please refer to @sc{Cvs} (@pxref{Top,,, cvs, Concurrent Versions System}) documentation.
+If you need specific permissions you can use ``@eventClientMiscSu{}'' to become the collection system user.
+
 @node Scenario B
 @section Address's change
 
 In this section we change the @acronym{IP} on @file{/etc/network/interfaces}.
 
 @itemize
-@item If we change the @acronym{IP} address a server is currently using within its @code{host} parameter from @dataConfO{},
+@item If we change the @acronym{IP} address a server is currently,
 we lost the socket connection from other servers.
-The correction consist to update the @code{host} parameter with the new @acronym{IP} and to upgrade this host.
+The correction consists to update the @code{host} parameter with the new @acronym{IP} and to upgrade this host.
 @example
 $ vi /etc/mediatex/@var{MDTX}.conf 
 <<<
@@ -53,7 +57,7 @@ Other hosts will get the new address as soon as when they will upgrade too.
 
 @item If we change @acronym{IP} on master server,
 we also lost @acronym{CVS} queries from all servers.
-The correction consist in the same as upper, plus re-subscribing to the collection on every slaves.
+The correction consists in the same as upper, plus re-subscribing to the collection on every slaves.
 @example
 slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW_IP}
 @end example
@@ -63,7 +67,7 @@ slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW_IP}
 @c change @code{host} parameter into @dataServersO{} on every slaves and upgrade them.
 @end itemize
 
-@note By using an hostname (configured in @file{/etc/hosts} for instance)
+@note{} By using an hostname (configured in @file{/etc/hosts} for instance)
 instead of an @acronym{IP} address into @code{host} parameter from @dataConfO{}, 
 changing the @acronym{IP} number has no incidence on @mediatexO{}'s configuration.
 
@@ -100,7 +104,8 @@ Changing the collection's keys on a slave server make the @acronym{cvs} connecti
 (s1)$ mediatex upgrade
 @end example
 
-@item On the master host you need to update the master fingerprint into the @dataServersO{} file.
+@item 
+On the master host you only need to update the master fingerprint into the @dataServersO{} file.
 @example
 $ mediatex upgrade
 @end example
@@ -108,7 +113,7 @@ $ mediatex upgrade
 
 Until the new id (the fingerprint of the public key) is not known by servers 
 and so they cannot match an @acronym{IP} address to a known server,
-they will refuse daemon socket's incoming connection.
+they will refuse remote incoming socket's connection.
 
 @node Scenario E
 @section Host key's change
@@ -138,7 +143,7 @@ Are you sure you want to continue connecting (yes/no)?
 @end example
 @end itemize
 
-@note Master host's fingerprint is written into its @dataConfO{} file or
+@note{} Master host's fingerprint is written into its @dataConfO{} file or
 may be obtains using:
 @example
 # ssh-keygen -lf /etc/ssh/ssh_host_rsa_key 
@@ -147,18 +152,18 @@ may be obtains using:
 @node Scenario F
 @section Server's change
 
-In this section we move the @acronym{CVS}'s root collection's repository from one master host to one other. The same procedurer may also be used to backup and restore a collection on the current master host.
+In this section we move the @acronym{CVS}'s root collection's repository from master host to one other. The same procedure may also be used to backup and restore a collection on the current master host.
 
 First we backup the collection on master host:
 @example
 # tar -C /var/lib/mediatex/@var{MDTX}/ @var{MDTX}-@var{COLL} -zcf backup.tgz
 @end example
 
-Next we restore it on the host we choose to act as the new master and we re-add the collection so as to force a fresh checkout:
+Next we restore it on the host we choose as new master and we re-add the collection so as to force a fresh checkout:
 @example
 # rm -fr /var/lib/mediatex/@var{MDTX}/@var{MDTX}-@var{COLL}
 # tar -C /var/lib/mediatex/@var{MDTX}/ -zxf backup.tgz
-# mediatex adm add collection article
+# mediatex adm add coll @var{COLL}
 @end example
 
 @itemize
@@ -167,10 +172,8 @@ On same host (so as to restore an old state of the collection), it enough.
 @item 
 If we move master to a new host or one other host from the collection, all slaves will have to re-subscribe :
 @example
-# mediatex adm add coll @var{MDTX}-@var{COLL}@var{NEW-MASTER}
+# mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW-MASTER}
 @end example
-@c modify confFile parser to not overide mdtxAddCollection settings
 @end itemize
 
-Finally to be short, when ``upgrade'' fails we should use ``adm add coll''
-to re-synchronise collection.
+All in all, when ``upgrade'' fails we can ever re-subscribe to re-synchronise collection.

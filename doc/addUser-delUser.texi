@@ -1,5 +1,5 @@
-@cindex group
-@cindex publisher user
+@cindex Group
+@cindex Publisher
 
 Theses 2 scripts manage 
 @actorPublisher{} users by adding/removing
@@ -24,19 +24,20 @@ Manage @actorPublisherO{} users.
 
 @item Data in/out
 @table @file
+@item @file{/etc/passwd}
 @item @file{/etc/group}
+@end table
 @example
 mdtx:x:120:www-data,@var{USERNAME1}
 mdtx_md:x:123:mdtx,www-data,mdtx-@var{COLL1},mdtx-@var{COLL2},@var{USERNAME1}
 mdtx-@var{COLL1}:x:124:www-data,mdtx,@var{USERNAME1}
 mdtx-@var{COLL2}:x:125:www-data,mdtx,@var{USERNAME1}
 @end example
-@end table
 @end itemize
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/lib/users.sh
-@itemx /usr/share/mediatex/scripts/addUser.sh
-@itemx /usr/share/mediatex/scripts/delUser.sh
+@item  scripts/lib/users.sh
+@itemx scripts/addUser.sh
+@itemx scripts/delUser.sh
 @end table

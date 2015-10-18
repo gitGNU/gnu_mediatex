@@ -245,7 +245,7 @@
 @end macro
 
 @macro procServerUpload
-@process{srvUpload} (@pxref{srvUpload})
+@process{uploadServer} (@pxref{uploadServer})
 @end macro
 
 @macro procServerNotify
@@ -274,7 +274,7 @@
 @end macro
 
 @macro procClientUpload
-@process{upload} (@pxref{upload})
+@process{uploadClient} (@pxref{uploadClient})
 @end macro
 
 @macro procClientMotd

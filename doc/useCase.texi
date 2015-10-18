@@ -1,6 +1,4 @@
-@cindex use case
-@cindex api
-@cindex oais
+@cindex OAIS
 
 @menu
 * Exemple::     Archiving icons
@@ -13,16 +11,16 @@
 @sc{Mediatex} should help building a whole @sc{oais} system.
 @itemize @bullet
 @item 
+It manage redundancy, consistency and unitary access.
+@item 
 It divides the application complexity 
 as the ``Administration'' and ``Preservation planing'' functionality
 are already taken into account for many features.
-@item 
-It make the application more robust: we can easily replace a
-component since we have an API defined.
 @end itemize
 
 @node Exemple
 @section Archiving icons
+@cindex Example
 
 Testing @mediatex{} with about 50000 archives. 
 @note{} this example last very long time and consequently shows actual limits of @mediatexO{}.
@@ -41,7 +39,7 @@ $ cat /dev/null > ~mdtx-hello/cvs/extract000.txt
 $ mediatex upgrade
 @end example
 
-Uploding the icons and build the @acronym{HTML} catalog:
+Uploading the icons and build the @acronym{HTML} catalog:
 @example
 $ mediatex upload++ file download as OpenIconsLibrary.tbz \
    catalog icons.cat rules icons.ext to coll hello
@@ -51,7 +49,7 @@ Browses the icons catalog via this @sc{url}: @*
 @url{https://localhost/~mdtx-hello}, using @code{mdtx} log-in and the password you provide before.
 
 The first time you request for an archive, it take long time to extract it from this big @acronym{TBZ} container. 
-To speed up the audit process that simulate all archive extraction, first manually extract all archives from the @acronym{TBZ} container:
+To speed up the audit process that simulate all archive retrieval, first manually extract all archives from the @acronym{TBZ} container:
 @example
 # /etc/init.d/mediatexd stop
 $ mediatex su
@@ -60,7 +58,7 @@ $ tar -jxf OpenIconsLibrary.tbz
 # /etc/init.d/mediatexd start
 @end example
 
-The server will take long time too to scan the cache directory.
+The server will take too long time to scan the cache directory (I guess because of records managed into a list instead of a hash-table).
 
 Audit the collection:
 @example
@@ -73,6 +71,7 @@ You should be notified by mail that the audit report is uploaded to the collecti
 
 @node Firewall
 @section Configuration behind a firewall
+@cindex Firewall
 
 This configuration is needed when you cannot install mediatex on the
 router of your private network
@@ -82,30 +81,30 @@ Mediatex must be configured as if it was hosted on the gateway.
 
 @file{/etc/mediatex/mdtx.conf}:
 @example
-host     GATEWAY
+host     GW
 mdtxPort 6562
 sshPort  2222
 wwwPort  4443
 @end example
 
-GATEWAY:
+@code{iptables} rules for GATEWAY:
 @example
-iptables -t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to $HOST:22
-iptables -t nat -A PREROUTING -p tcp --dport 4443 -j DNAT --to $HOST:443
-iptables -t nat -A PREROUTING -p tcp --dport 6562 -j DNAT --to $HOST:6562
-iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
-iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 443 -j ACCEPT
-iptables -A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 6562 -j ACCEPT
+-t nat -A PREROUTING -p tcp --dport 2222 -j DNAT --to $HOST:22
+-t nat -A PREROUTING -p tcp --dport 4443 -j DNAT --to $HOST:443
+-t nat -A PREROUTING -p tcp --dport 6562 -j DNAT --to $HOST:6562
+-A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 22 -j ACCEPT
+-A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 443 -j ACCEPT
+-A FORWARD -i $WWW_NET -o $LOCAL_NET -p tcp --dport 6562 -j ACCEPT
 @end example
 
-Localy if your server own collections, you will have to skip the gateway.
-(GATEWAY must match the gateway IP on the WWW_NET interface)
+Locally if your server own collections, you will have to skip the gateway.
+(GW must match the gateway's IP address on the WWW_NET interface)
 
-HOST:
+@code{iptables} rules for HOST:
 @example
-iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 2222 -j DNAT --to $HOST:22
-iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 4443 -j DNAT --to $HOST:443
-iptables -t nat -A OUTPUT -p tcp -d $GATEWAY --dport 6561 -j DNAT --to $HOST:6561
+-t nat -A OUTPUT -p tcp -d $GW --dport 2222 -j DNAT --to $HOST:22
+-t nat -A OUTPUT -p tcp -d $GW --dport 4443 -j DNAT --to $HOST:443
+-t nat -A OUTPUT -p tcp -d $GW --dport 6561 -j DNAT --to $HOST:6561
 @end example
 
 @file{~mdtx-coll/public_html/.htaccess}
@@ -171,9 +170,10 @@ commit <COMMIT_NUMBER>
 $ git diff <COMMIT_NUMBER>
 @end example
 
+@page
 @node Portail
 @section Minimal Php inerface
-@c @unnumberedsec CakePhp
+@cindex Use case
 
 A minimal @sc{cakePhp} application is provided with the sources
 (@file{/usr/@/share/@/mediatex/@/useCases/@/cake.tgz}),
@@ -274,14 +274,17 @@ EOF
 @}
 @end example
 
+To be fully operational, this implementation lakes a process to recover the database from @mediatexO{}. This is the purpose of the following section.
+
 @node Linking
 @section Library API
-@c @unnumberedsec C library
+@cindex C library
+@cindex SQL
 
-@cindex library
-@cindex linking
+@cindex Library
+@cindex Linking
 One other possibility is to link with the @mediatexO{}'s library,
-using the parsers in order to write your own serializer that
+using the parsers in order to write your own steriliser that
 converts @mediatexO{}'s input to your @acronym{OAIS}'s data management
 input format:
 @itemize @bullet

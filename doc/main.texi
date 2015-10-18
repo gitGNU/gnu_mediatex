@@ -1,5 +1,5 @@
-@cindex api
-@cindex oais
+@cindex API
+@cindex OAIS
 
 @mediatexO{} focus on providing an @sc{api} to ask for, and retrieve 
 archives from where they are stored.
@@ -128,7 +128,7 @@ Manage collection repository binding on the chrooted jail for @acronym{SSH} remo
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-Manage mounting @iso devices.
+Manage mounting @iso{} devices.
 
 @item @eventClientMiscGet
 Retrieve a remote collection's file via @acronym{SSH}.
@@ -303,7 +303,7 @@ Files involved are detailed in the next chapter (@pxref{Who}).
 
 @node Accessing an archive
 @section Accessing an archive
-@cindex Accessing an archive
+@cindex Access
 
 This diagram describes what happen when a @actorUser{} access an archive:
 @itemize @bullet

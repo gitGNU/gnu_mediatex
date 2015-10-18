@@ -1,6 +1,8 @@
-@cindex audit
+@cindex Audit
 
 This script manage the build of a collection's audit report.
+
+@todo{} maybe rewrite this code in C to seed-up audit process.
 
 Process conceptual model:
 

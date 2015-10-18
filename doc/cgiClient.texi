@@ -1,4 +1,4 @@
-@cindex cgi
+@cindex CGI
 
 @process{cgiClient} is a frontend that dispatch the 
 @actorUser{} queries around all the remote collection's @activityServer{}.
@@ -33,7 +33,7 @@ to @procServerCgiSrv
 
 @end table
 @item
-@note the standard output of this scripts result on 2 envents sent by @procToolsApache{}:
+@note{} the standard output of this scripts result on 2 events sent by @procToolsApache{}:
 @table @code
 @item @eventActorUserHtmlForm{} 
 (if archive is not available) ...

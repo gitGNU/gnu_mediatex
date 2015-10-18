@@ -1,5 +1,5 @@
-@cindex cvs
-@cindex meta-data
+@cindex CVS
+@cindex Meta-data
 
 @sc{Cvs} 
 (@pxref{Top,,, cvs, Concurrent Versions System})
@@ -62,5 +62,5 @@ The third file is mentioned as it is manage by @mediatexO{} upgrade (@pxref{Scen
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/lib/cvs.sh
+@item scripts/lib/cvs.sh
 @end table

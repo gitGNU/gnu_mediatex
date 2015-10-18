@@ -1,5 +1,4 @@
-
-@cindex client
+@cindex Client
 
 @activity{Client} is the front-end for the @sc{Mediatex} system.
 It runs as @code{setuid root} so as to switch between the different
@@ -7,9 +6,9 @@ collection contents, but also to do some administrative works such
 as mounting and binding directories, create new system accounts...
 Before performing any collection works, @activity{Client} update
 the meta-data using @procToolsCvs{}. And before leaving, it commit 
-modification performed into the configuration and meta-data files.
+modifications performed into the configuration and meta-data files.
 
-There is 2 ways @activity{Client} comunicate with @activity{Server}
+There is 2 ways @activity{Client} use to communicate with @activity{Server}:
 @itemize @bullet
 @item 
 Such as @procScriptsCgi{}, @activity{Client} send queries to the 
@@ -19,14 +18,14 @@ Such as @procScriptsCgi{}, @activity{Client} send queries to the
 @activity{Server}, using share memory and signals.
 @end itemize
 
-The @activity{Client} activity is divided into 5 process:
+The @activity{Client} activity is divided into 6 process:
 @menu
-* conf::        @process{conf}
-* supp::        @process{supp}
-* serv::        @process{serv}
-* misc::        @process{misc}
-* upload::      @process{upload}
-* motd::        @process{motd}
+* conf::         @process{conf}
+* supp::         @process{supp}
+* serv::         @process{serv}
+* misc::         @process{misc}
+* uploadClient:: @process{uploadClient}
+* motd::         @process{motd}
 @end menu
 
 Flood diagram:
@@ -95,7 +94,7 @@ from @procServerExtract{} to @procClientMisc{}: retrieve a remote collection's f
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-from @procServerExtract{} to @procClientSupp{}: manage mounting @iso devices.
+from @procServerExtract{} to @procClientSupp{}: manage mounting @iso{} devices.
 
 @end table
 
@@ -117,17 +116,32 @@ automatically re-serialized and upgraded if the last @file{NN.txt} file was pres
 @item Events out
 @table @code
 
-@item @eventScriptsUpdate
-@item @eventScriptsCommit
-from @procClientServ{} to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
+@item @eventScriptsInit
+@itemx @eventScriptsRemove
+@itemx @eventScriptsPurge
+from @procClientMisc{} to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
 
 @item @eventScriptsNew{} 
 @itemx @eventScriptsFree
 from @procClientConf{} to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection. 
 
+@item @eventScriptsClean
+from @procClientMisc{} to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
+
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp{} to @procScriptsMount{}: manage mounting @iso devices.
+from @procClientSupp{} to @procScriptsMount{}: manage mounting @iso{} devices.
+
+@item @eventScriptsAddUser
+@itemx @eventScriptsDelUser
+from @procClientMisc{} to @procScriptsAddDelUser{}: manage @actorPublisherO{} users.
+
+@item @eventScriptsUpdate
+@item @eventScriptsCommit
+from @procClientServ{} to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
+
+@item @eventToolsSshCopy{} 
+from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's cache.
 
 @item @eventServerSaveReg
 @itemx @eventServerExtractReg
@@ -136,39 +150,22 @@ from @procClientSupp{} to @procScriptsMount{}: manage mounting @iso devices.
 from @activityClient{} to @activityServer{}: wrap the queries to @activityServerO{}.
 
 @item @eventServerHaveQuery
-from @procClientSupp{} to @procServerHave{}: tels @activityServerO{} a support is now available.
+from @procClientSupp{} to @procServerHave{}: tells @activityServerO{} a support is now available.
 
 @item @eventServerUploadQuery
 from @procClientMisc{} to @procServerCache{}: ask @activityServerO{} to upload an incoming archive into its cache.
-
-@item @eventScriptsInit
-@itemx @eventScriptsRemove
-@itemx @eventScriptsPurge
-from @procClientMisc{} to @procScriptsInitRemovePurge{}: start/stop the @mediatexO{} daemon.
-
-@item @eventScriptsAddUser
-@itemx @eventScriptsDelUser
-from @procClientMisc{} to @procScriptsAddDelUser{}: manage @actorPublisherO{} users.
-
-@item @eventScriptsNew
-@itemx @eventScriptsFree
-from @procClientConf{} to @procScriptsNewFreeClean{}: create/subscribe or destroy/unsubscribe a collection.
-
-@item @eventScriptsClean
-from @procClientMisc{} to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
-
-@item @eventToolsSshCopy{} 
-from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's cache.
 @end table
 
 @item Data in
 @table @file
+
 @item @dataChecksum
 @end table
 
 @item Data in/out
 @table @file
-@item @dataConf
+@item  @dataConf
+@itemx @dataSupp
 @itemx @dataServers
 @itemx @dataCatalog
 @itemx @dataExtract
@@ -187,21 +184,32 @@ Code:
 @itemx src/mediatex.c
 @end table
 
+@page
 @node conf
 @subsection conf
 @include conf.texi
+
+@page
 @node supp
 @subsection supp
 @include supp.texi
+
+@page
 @node serv
 @subsection serv
 @include serv.texi
+
+@page
 @node misc
 @subsection misc
 @include misc.texi
-@node upload
-@subsection upload
+
+@page
+@node uploadClient
+@subsection uploadClient
 @include upload.texi
+
+@page
 @node motd
 @subsection motd
 @include motd.texi

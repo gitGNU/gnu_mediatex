@@ -1,8 +1,8 @@
-@cindex supports
+@cindex Support
 
 The @process{Supp} process handle @actor{Publisher} queries about supports.
 A score is computed for each local support, based on its age (@math{t}).
-However if support wasn't checked recently (@code{checkTTL}) its score is set to 0 as it is supposed to be corrupted or lost;
+However if support wasn't checked recently (@code{checkTTL}) its score is set to 0 as it is supposed to be corrupted or lost.
 
 @image{mediatex-figures/score1,,,,}
 
@@ -32,9 +32,9 @@ factor that reduce score of out-dated supports (@code{factSupp})
 @note{} 
 @itemize @bullet
 @item 
-The same formula apply for local and shared scores (respectively given by @code{@eventClientSuppList{}} or written into @dataServersO file). So theses parameters appears both into @dataConfO and @dataServersO{}.
+The same formula apply for local and shared scores (respectively given by @code{@eventClientSuppList{}} or written into @dataServersO{} file). So theses parameters appears both into @dataConfO{} and @dataServersO{}.
 @item 
-for support's files, the score is constant and given by the @code{fileScore} parameter from @dataConfO file was checked recently (@code{fileTTL}), else score is set to 0 as it it supposed to be deleted from the file-system.
+for support's files, the score is constant and given by the @code{fileScore} parameter from @dataConfO{} file was checked recently (@code{fileTTL}), else score is set to 0 as it is supposed to be deleted from the file-system.
 @end itemize
 
 Process conceptual model:
@@ -58,7 +58,7 @@ from @actorPublisher{}: manage local supports.
 @itemize @bullet
 
 @item 
-Manage supports information related to the @dataSupp file.
+Manage supports information related to the @dataSupp{} file.
 @item
 Automatically withdraw a support from all collection on removal.
 @item
@@ -73,7 +73,7 @@ to @procClientConf{}: withdraw a local supports from collections.
 
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-to @procScriptsMount{}: manage mounting @iso devices.
+to @procScriptsMount{}: manage mounting @iso{} devices.
 
 @item @eventServerHaveQuery
 to @procServerHave{}: tels @activityServerO{} a support is now available.

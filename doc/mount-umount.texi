@@ -1,6 +1,7 @@
-@cindex mount
+@cindex Mount
+@cindex ISO
 
-These 2 scripts mount/unmount an @sc{iso} disk or file.
+These 2 scripts mount or un-mount an @sc{iso} disk or file.
 (@code{mount (3)} function and the @code{loop} device related to @code{ioctl} may do the same job).
 
 Process conceptual model:
@@ -19,11 +20,11 @@ from @procClientSupp
 
 @item Processing
 
-This script mount both @iso devices or @iso image files.
+This script mount both @iso{} devices or @iso{} image files.
 @end itemize
 
 Code:
 @table @code
-@item /usr/share/mediatex/scripts/mount.sh
-@itemx /usr/share/mediatex/scripts/umount.sh
+@item  scripts/mount.sh
+@itemx scripts/umount.sh
 @end table

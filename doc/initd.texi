@@ -1,4 +1,4 @@
-@cindex init.d
+@cindex Init
 
 @process{init.d} is the daemon launcher for the @activityServerO{}.
 
@@ -35,5 +35,5 @@ to @activityServer{}: standard @acronym{UNIX} process management
 
 Code:
 @table @file
-@item /etc/init.d/mediatexd 
+@item /script/mediatexd.src 
 @end table

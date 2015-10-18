@@ -1,6 +1,6 @@
-@cindex serv
+@cindex Consistency
 
-The @process{Serv} maintains the integrity of the meta-data files.
+The @process{Serv} process maintains the integrity of the meta-data files.
 Moreover, it manage a perennial score on every archives.
 For bellow computation, values and parameters are read from the @dataChecksum{} file.
 
@@ -11,7 +11,7 @@ It is computed by summing the local support's scores computed by @procClientSupp
 
 @image{mediatex-figures/score2,,,,}
 
-@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i)) , M}}
+@math{imageScore(x) = \min {(\sum_{i=1}^N supportScore(x_i) , M)}}
 
 When there are many local supports burned from the same image, 
 this sum may be greater than the maximum score (@code{maxScore}), so we truncate it.
@@ -28,7 +28,7 @@ An archive score is computed from all local and remote images:
 
 @image{mediatex-figures/score3,,,,}
 
-@math{archiveScore(x) = \min {({\sum_{i=1}^N imageScore(x_i) \over d}), M}}
+@math{archiveScore(x) = \min {({\sum_{i=1}^N imageScore(x_i) \over d}, M)}}
 
 where: (default value)
 @table @math
@@ -55,7 +55,7 @@ archive score. @*
 @math{collectionScore = \min_{i=1..N} archiveScore(x_i)}
 @end itemize
 
-However, new uploaded archives (since @code{uploadTTL}) that still have a bad score (@math{< M \over 2}) are not taken into account for this global score.
+However, new uploaded archives (since @code{uploadTTL}) that still have a bad score (@math{< {M \over 2}}) are not taken into account for this global score.
 
 Process conceptual model:
 
@@ -80,7 +80,7 @@ from @procClientConf{}: upgrade the meta-data.
 The upgrade processing is automatically raised when needed.
 However it permit to force an upgrade now, which may be useful when modifying manually the configuration files.
 @item
-Adding a key will add a server entry into the @dataServersO file and so, allow connections (subscription, synchronisations, copies) from a new remote server to this collection directory on every servers already added.
+Adding a key will add a server entry into the @dataServersO{} file and so, allow connections (subscription, synchronisations, copies) from a new remote server to this collection directory on every servers already added.
 @end itemize
 
 @item Data in/out

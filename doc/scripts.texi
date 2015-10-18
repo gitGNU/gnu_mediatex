@@ -1,7 +1,7 @@
-@cindex scripts
+@cindex Scripts
 
 The @activity{Scripts} activity gather system level operations @mediatexO{} is using. This activity provides basic fonctions on @acronym{BASH} files that are not describe in this documentation.
-This activity is diveded into 10 process:
+This activity is divided into 11 process:
 @menu
 * init.d::               @process{init.d}
 * cgiClient::            @process{cgiClient}
@@ -66,7 +66,7 @@ from @procClientMisc{} to @procScriptsBind{}: manage collection repository bindi
 
 @item @eventScriptsMount
 @itemx @eventScriptsUmount
-from @procClientSupp{} to  @procScriptsMount{}: manage mounting @iso devices.
+from @procClientSupp{} to  @procScriptsMount{}: manage mounting @iso{} devices.
 
 @item @eventScriptsDeliver
 from @procServerDeliver{} to @procScriptsDeliver{}: manage archive availability notification.
@@ -124,6 +124,23 @@ from @procScriptsCron{} respectively to @activityClient{}, @procClientMisc{} and
 from @procScriptsCron{} to @actorPublisher{}: update the (above generated) message of the day.
 
 @end table
+@item Data in or creation
+@itemize @bullet
+@item @dataConf
+@item @dataSupp
+@item @dataCatalog
+@item @dataServers
+@item @dataExtract
+@end itemize
+
+@item Data out
+@table @file
+@item /var/run/mediatex/mdtxd.pid
+@item /etc/motd
+@itemx ~mdtx/
+@itemx ~mdtx-COLL/
+@end table
+
 @end itemize
 
 To debug a script, you have to launch it using at least the @var{MDTX} environment variable:
@@ -134,13 +151,13 @@ To debug a script, you have to launch it using at least the @var{MDTX} environme
 
 Codes:
 @table @file
-@item /usr/share/mediatex/scripts/lib/cvs.sh
-@itemx /usr/share/mediatex/scripts/lib/htdocs.sh
-@itemx /usr/share/mediatex/scripts/lib/include.sh
-@itemx /usr/share/mediatex/scripts/lib/jails.sh
-@itemx /usr/share/mediatex/scripts/lib/log.sh
-@itemx /usr/share/mediatex/scripts/lib/ssh.sh
-@itemx /usr/share/mediatex/scripts/lib/users.sh
+@item  scripts/lib/cvs.sh
+@itemx scripts/lib/htdocs.sh
+@itemx scripts/lib/include.sh
+@itemx scripts/lib/jails.sh
+@itemx scripts/lib/log.sh
+@itemx scripts/lib/ssh.sh
+@itemx scripts/lib/users.sh
 @end table
 
 @node init.d

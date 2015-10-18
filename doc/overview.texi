@@ -51,10 +51,10 @@ Correspondance with system users is detailed next: @pxref{System users}.
 
 @node What
 @section What
-@cindex Supports 
+@cindex Support 
 @cindex ISO
 @cindex Collection
-@cindex Time-stamp
+@cindex Time-stamps
 @cindex Claim-based authentication 
 
 @mediatexO{} 
@@ -242,7 +242,6 @@ and to add them to the related collection.
 @cindex GNU
 @cindex Syslog
 @cindex Apache
-@cindex Cat
 @cindex Motd
 @cindex Sendmail
 

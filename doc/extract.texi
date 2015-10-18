@@ -1,11 +1,11 @@
-@cindex extraction rules
-@cindex nat
+@cindex Rules
+@cindex NAT
+@cindex Cat
 
 @process{Extract} process extracts archives into the local server cache 
 by applying the extraction rules.
 @acronym{NAT} servers also brings back available files wanted by other severs from its clients.
 
-@cindex cat
 12 extraction rules are implemented: 
 @itemize @bullet
 @item @acronym{SCP}, @acronym{ISO}, @acronym{CAT}: multi OS containers
@@ -13,13 +13,10 @@ by applying the extraction rules.
 @item @acronym{TAR}, @acronym{CPIO}, @acronym{GZ}, @acronym{BZ}: @acronym{GNU/Linux} simple containers
 @item @acronym{ZIP}, @acronym{RAR}: @acronym{Windows} combined containers
 @end itemize
-Other should be added if necessary. 
 
-@note{} The native multi-volumes archives are only handle for @acronym{RAR}.
-Other containers must be cut using @code{split} and re-assembled with @code{cat}. However, native multi-volumes archives extraction may still be implement for each format if necessary.
 @table @code
 @item cpio
-GNU multi-volume archives are not supported. (no compression)
+No compression ; GNU multi-volume archives are not supported.
 @item tar
 Multi-volume support is a GNU extension and the archives created in this mode should be read only using GNU tar.
 @example
@@ -28,6 +25,9 @@ $ tar -cM -L1000 -f multi1 -f multi2 -f multi3  data
 @item afio
 Compressed archives that are fault tolerant: thanks to the individual files compression, if there is a single byte error you will only loose one or two files.
 @end table
+@note{} The native multi-volumes archives are only handle for @acronym{RAR}.
+Other containers must be cut using @code{split} and re-assembled with @code{cat}.
+
 
 Process conceptual model:
 
@@ -47,7 +47,7 @@ from @procServerCgiSrv{} or @procServerHave{}: internally ask to start extractio
 @item Processing
 
 @itemize @bullet
-@item When not call internally, first list all archives that will need to be extracted: demands and unsafe archives not already extracted.
+@item When not call internally, first list all archives that will need to be extracted: all demands and unsafe archives that are not already extracted.
 @item Next, when performing an archive extraction:
 @itemize @bullet
 @item allocate space into the cache
@@ -72,7 +72,7 @@ to @procClientMisc{}: retrieve a remote collection's file via @acronym{SSH}.
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
-to @procClientSupp{}: manage mounting @iso devices.
+to @procClientSupp{}: manage mounting @iso{} devices.
 
 @end table
 @item Input data

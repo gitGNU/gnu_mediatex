@@ -1,4 +1,4 @@
-@cindex cache
+@cindex Cache
 
 @process{Cache} process manage the local server cache's directory.
 

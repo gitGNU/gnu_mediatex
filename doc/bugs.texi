@@ -1,6 +1,6 @@
-@cindex bug reporting
-@cindex problems
-@cindex reporting bugs
+@cindex Bug
+@cindex Problems
+@cindex Bugs
 
 To report bugs or suggest enhancements for Mediatex, please
 send electronic mail to @email{nroche@@narval.tk}.
@@ -24,8 +24,8 @@ to reproduce the problem.  Generally speaking, that means:
 When in doubt whether something is needed or not, include it.  It's
 better to include too much than to leave out something important.
 
-@cindex patches
-@cindex contributing
+@cindex Patches
+@cindex Contributing
 Patches are welcome; if possible, please make them with @samp{@w{diff
 -c}}.  Please follow the existing coding style.
 
@@ -139,12 +139,12 @@ place cursor on a line and type C-c C-o
 @item 
 investigate memory leaks on setuid binary (valgring refusing)
 @example
-$ QUERY -A -sdebug 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | \
-   grep malloc | sort | uniq -c
-$ QUERY -A -sdebug 2>&1 | sed 's/:.*]/:/' | cut -d" " -f2,3 | \
-   grep free   | sort | uniq -c
+$ QUERY -A -sdebug:alloc 2>&1 | sed 's/:.*]/:/' \
+   | cut -d" " -f2,3 | grep malloc | sort | uniq -c
+$ QUERY -A -sdebug:alloc 2>&1 | sed 's/:.*]/:/' \
+   | cut -d" " -f2,3 | grep free   | sort | uniq -c
 @end example
-Otherwise, you needs to drop setuid bit on binary and to run it as root, as seen previously.
+Otherwise, you need to drop setuid bit on binary and to run it as root, as seen previously.
 
 @item 
 check memory in use

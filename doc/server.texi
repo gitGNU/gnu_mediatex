@@ -1,20 +1,20 @@
-@cindex server
+@cindex Server
 
-The @activity{Server} manage local cache integrity and 
+The @activity{Server} activity manage local cache integrity and 
 exchange files with other @sc{Mediatex}'s @activity{Server}s.
 @activityClient{} may ask it to updates the 
 @dataChecksum{} file
 that gives the local cache's status.
 
-The @activity{server} activity is diveded into 6 process:
+The @activity{server} activity is divided into 7 process:
 @menu
-* cache::       @process{cache}
-* extract::     @process{extract}
-* cgiServer::   @process{cgiServer}
-* have::        @process{have}
-* srvUpload::   @process{upload}
-* notify::      @process{notify}
-* delivering::  @process{delivering}
+* cache::        @process{cache}
+* extract::      @process{extract}
+* cgiServer::    @process{cgiServer}
+* have::         @process{have}
+* uploadServer:: @process{uploadServer}
+* notify::       @process{notify}
+* delivering::   @process{delivering}
 @end menu
 
 Flood diagram:
@@ -60,18 +60,17 @@ Serialise cache index into @dataChecksum{}, on @eventServerExtractReg
 query. 
 Remote supplies and demands are now readable by @activityClientO{}, or on next @activityServer{} start-up.
 
-@item Re-index the cache when reciving HUP signal:
+@item Re-index the cache when receiving HUP signal:
 @itemize @bullet
 @item wait until all threads end,
 @item lock concurent threads setup
 @item serialise cache index into @dataChecksum{},
 @item free all memory used,
-@item parse @dataConf file configuration,
+@item parse @dataConf{} file configuration,
 @item parse @dataChecksum{},
-@item scan the cache dirrectory
+@item scan the cache directory
 @item unlock concurent threads setup
 @end itemize
-@item 
 @end itemize
 
 @item Events out
@@ -80,7 +79,7 @@ Remote supplies and demands are now readable by @activityClientO{}, or on next @
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
 @itemx @eventClientMiscGet
-to @procClientMisc{}: tel client to make operation that needs privileges, like binding directories into the chroot jail and using collection account to retrieve archives remotely.
+to @procClientMisc{}: tells client to make operations that needs privileges, like binding directories into the chroot jail or using collection account to retrieve archives remotely.
 
 @item @eventClientSuppMount
 @itemx @eventClientSuppUMount
@@ -97,10 +96,10 @@ from @procServerDeliver{} to @procScriptsDeliver{} or @procScriptsAudit{}: respe
 
 @item Data in
 @table @code
-@item @dataConf
+@item  @dataConf
+@itemx @dataSupp
 @itemx @dataServers
 @itemx @dataExtract
-@itemx @dataSupp
 @end table
 
 @item Data in/out
@@ -172,24 +171,37 @@ Code:
 @itemx src/mediatexd.c
 @end table
 
+@page
 @node cache
 @subsection cache
 @include cache.texi
+
+@page
 @node extract
 @subsection extract
 @include extract.texi
+
+@page
 @node cgiServer
 @subsection cgiServer
 @include cgiServer.texi
+
+@page
 @node have
 @subsection have
 @include have.texi
-@node srvUpload
-@subsection srvUpload
+
+@page
+@node uploadServer
+@subsection uploadServer
 @include srvUpload.texi
+
+@page
 @node notify
 @subsection notify
 @include notify.texi
+
+@page
 @node delivering
 @subsection delivering
 @include delivering.texi

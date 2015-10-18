@@ -1,5 +1,5 @@
-@cindex howto
-@cindex tests
+@cindex How-to
+@cindex Tests
 
 The goal of this section is to help to install @sc{mediatex} software 
 and to test it by setting an ``hello world'' collection example. 
@@ -18,7 +18,7 @@ and to test it by setting an ``hello world'' collection example.
 
 @node Install
 @section Install
-@cindex install
+@cindex Install
 
 Get the sources:
 @example
@@ -101,7 +101,7 @@ Next, a test script automate the 6 following scenarios:
 
 @node Scenario 1
 @section Scenario 1: manage supports
-@cindex supports
+@cindex Support
 First of all, initialise the default @code{mdtx} server.
 @note{} this is already done by the @acronym{DEBIAN} package.
 @example
@@ -161,7 +161,7 @@ $ mediatex ls supp
 
 @node Scenario 2
 @section Scenario 2: manage collections
-@cindex collection
+@cindex Collection
 Collections are using support's contents, exposing them to the
 rest of the world.
 
@@ -222,7 +222,7 @@ $ mediatex make coll hello
 
 @node Scenario 3
 @section Scenario 3: extract an archive
-@cindex extraction rules
+@cindex Rules
 First share supports with the collection
 @example
 $ mediatex add supp ex-cd1 to coll hello
@@ -250,8 +250,8 @@ is now be available.
 
 @node Scenario 4
 @section Scenario 4: adding new archives
-@cindex archive
-@cindex upload
+@cindex Archive
+@cindex Upload
 
 Add a new container to the catalogue using its @sc{md5} hash sum and its size:
 @example
@@ -304,7 +304,7 @@ $ mediatex make coll hello
 
 @node Scenario 5
 @section Scenario 5: add a second server
-@cindex servers list file
+@cindex Consistencyers list file
 On another (second) host, initialise the server. 
 As we seen before (@ref{Scenario 1}), @var{username1} is an already 
 existing user login (on this server).
@@ -395,7 +395,7 @@ Once second server notify, first server will copy back the provided file it need
 
 @node Scenario 6
 @section Scenario 6: add a @sc{nat} server
-@cindex nat
+@cindex NAT
 
 @note{} By @sc{nat} we mean this third server should be located 
 on a private network.

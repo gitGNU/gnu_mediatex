@@ -1,4 +1,4 @@
-@cindex configuration file
+@cindex Configuration
 
 The @process{Conf} process handle queries about collections.
 

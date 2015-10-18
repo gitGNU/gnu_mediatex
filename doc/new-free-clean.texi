@@ -1,6 +1,6 @@
-@cindex collection
+@cindex Collection
 
-Theses 2 scripts manage collection subscribing/unsubscribing.
+Theses 2 scripts manage collection subscribing or unsubscribing.
 @note{} if local host is the collection master host, theses scripts also manage the creation/destruction of the collection.
 The third script clean the @acronym{HTML} catalogue.
 
@@ -43,17 +43,17 @@ to @procScriptsBind{}: make collection repository accessible from the chrooted j
 to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
 
 @end table
-@item Data in/out
-@itemize @bullet
-@item @dataConf
-@end itemize
-
-@item Data out
+@item Data creation
 @itemize @bullet
 @item @dataServers
 @item @dataCatalog
 @item @dataExtract
 @end itemize
+
+@item Data out
+@table @file
+@item ~mdtx-COLL/
+@end table
 
 @item Other files involved:
 @example
@@ -98,7 +98,7 @@ to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
 @end example
 @end itemize
 
-Exemples:
+Examples:
 @itemize @bullet
 @item Create a new collection: @pxref{Scenario 2}.
 @item Join an already existing collection: @pxref{Scenario 5}.
@@ -106,11 +106,8 @@ Exemples:
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/new.sh
-@itemx /usr/share/mediatex/scripts/free.sh
-@itemx /usr/share/mediatex/scripts/clean.sh
-@itemx /usr/share/mediatex/scripts/lib/cvs.sh
-@itemx /usr/share/mediatex/scripts/lib/htdocs.sh
-@itemx /usr/share/mediatex/scripts/lib/ssh.sh
-@itemx /usr/share/mediatex/scripts/lib/users.sh
+@item scripts/lib/users.sh
+@itemx scripts/new.sh
+@itemx scripts/free.sh
+@itemx scripts/clean.sh
 @end table

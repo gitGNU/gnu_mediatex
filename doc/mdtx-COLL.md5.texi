@@ -1,4 +1,4 @@
-@cindex checksums file
+@cindex Checksums
 
 @activityServer{} backup its collection's status into the @dataChecksumO{} file.
 When @actorPublisherO{} or @activityClientO{} want to read the lastest status, they need to ask @activityServerO{} the refresh this file.

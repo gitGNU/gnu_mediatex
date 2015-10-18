@@ -1,12 +1,11 @@
-@cindex init
-@cindex remove
-@cindex purge
+@cindex Init
+@cindex Remove
+@cindex Purge
 
-These 3 scripts deal with installation and may only be call by 
-@actorAdmin{} so as to install/upgrade/purge the @sc{Mediatex}
-software. Indeed, @code{remove.sh} only uninstall the software but 
+These 3 scripts manage @sc{Mediatex}'s installation (install, remove and purge).
+``@code{remove.sh}'' only uninstall the software but 
 do not touch to the collection's meta-data so as to ease an upgrade 
-by installing a new software version 
+by installing a new software version
 (called by @acronym{DEBIAN}'s @code{postrm} script for instance).
 
 Process conceptual model:
@@ -57,11 +56,18 @@ to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
 to @procToolsApache{}: make @acronym{APACHE} aware of potential new module and system users this script has configured.
 
 @end table
-@item Data out
+@item Data creation
 @itemize @bullet
 @item @dataConf
 @item @dataSupp
 @end itemize
+
+@item Data out
+@table @file
+@item /var/cache/mediatex/mdtx/jail/etc/group
+@itemx /var/cache/mediatex/mdtx/jail/etc/password
+@itemx ~mdtx/
+@end table
 
 @item Other files involved:
 @example
@@ -107,7 +113,8 @@ to @procToolsApache{}: make @acronym{APACHE} aware of potential new module and s
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/init.sh
-@itemx /usr/share/mediatex/scripts/remove.sh
-@itemx /usr/share/mediatex/scripts/purge.sh
+@item  scripts/lib/users.sh
+@itemx scripts/init.sh
+@itemx scripts/remove.sh
+@itemx scripts/purge.sh
 @end table

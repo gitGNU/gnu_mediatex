@@ -1,4 +1,4 @@
-@cindex cron
+@cindex Cron
 
 @process{Cron} periodicaly run queries. 
 It implement the @actorDateO{} actor.
@@ -55,7 +55,6 @@ XX XX   X   *   * root /usr/share/mediatex/scripts/cron_monthly.sh
 @end itemize
 
 Code:
-
 @table @file
 @item misc/mediatex_cron
 @end table

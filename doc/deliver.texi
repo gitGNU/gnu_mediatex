@@ -1,7 +1,9 @@
-@cindex deliver
+@cindex Mail
 
-This script finalize the delivering process, by sending a mail to the 
+This script finalise the delivering process, by sending a mail to the 
 @actorUser{}.
+
+@todo{} this script should check if a replacement hook is available for the related collection and use it.
 
 Process conceptual model:
 
@@ -17,8 +19,7 @@ from @procServerDeliver
 
 @end table
 @item Processing
-
-@todo this script should check if a replacement hook is available for the related collection and use it.
+Use a template to write a notification mail.
 
 @item Events out
 @table @code

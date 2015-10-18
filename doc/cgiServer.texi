@@ -1,4 +1,4 @@
-@cindex cgi
+@cindex CGI
 
 This process handle queries from the cgi script.
 
@@ -25,7 +25,7 @@ This process handle 2 kind of queries:
 @end itemize
 @item When a email address is provided:
 @itemize @bullet
-@item returns @code{221} and remind a @actorUser{} is looking for the related archive and want to be notified when it becomes available using this email address.
+@item returns @code{221} and reminds that a @actorUser{} is looking for the related archive and want to be notified when it becomes available using this email address.
 @end itemize
 @end itemize
 

@@ -1,11 +1,11 @@
-@cindex motd
+@cindex Motd
 
-The @process{Upload} process provide a single @api{} to upload new incoming archives. This query can take 4 parameters:
+The @process{Upload} process provides a single @api{} to upload new incoming archives. This query can take 4 parameters:
 @itemize @bullet
-@item some descriptive meta-data (to concatenate into the @dataCatalog{} file)
-@item extraction rules (to concatenate into the @dataExtract{} file) when the the file provided is an archive container (@acronym{TGZ}@dots{}).
-@item an archive file
-@item a target path where to store the archive into the cache.
+@item descriptive meta-data to concatenate into the @dataCatalog{} file.
+@item extraction rules to concatenate into the @dataExtract{} file, when the new incoming archive provided is a file container (@acronym{TGZ}@dots{}).
+@item a new incoming archive file
+@item a target path where to upload the file into the cache.
 @end itemize
 
 Checks are made to optimise the meta-data consistency so the provided meta-data files are first parsed into memory, using the same parsers as usual.
@@ -13,26 +13,32 @@ Because we always assert that an archive description should be linked to an exis
 
 Process conceptual model:
 
-@image{mediatex-figures/motd,,,,}
+@image{mediatex-figures/upload,,,,}
 
 @itemize @bullet
 @item Events in
 @table @code
 
 @item @eventClientUpload
-from @actorPublisher{}, @procToolsSyslog{}, @procScriptsCron{}, @procScriptsAudit{}: upload an incoming archive into the cache.
+from @actorPublisher{}, @procToolsSyslog{}, @procScriptsCron{} or @procScriptsAudit{}: upload an incoming archive into the cache.
 
 @end table
 @item Processing
 
 @itemize @bullet
-@item parse the provided meta-data,
-@item check archive is not already into the current extraction rules,
 @item 
-concatenate new extraction rules to @dataExtract{} file,
+parse the provided meta-data,
+@item 
+check archive is not already into the current extraction rules,
+@item 
+Add an entry to @dataExtract{} file,
 into the dedicated @code{INC} container and associated with current date,
-@item ask daemon to reload,
-@item ask daemon to upload the incoming archive file.
+@item 
+concatenate new meta-data into both @dataCatalog{} and @dataExtract{} files,
+@item 
+ask daemon to reload,
+@item 
+ask daemon to upload the incoming archive file.
 @end itemize
 
 @item Events out

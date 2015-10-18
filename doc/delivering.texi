@@ -1,9 +1,9 @@
-@cindex mail
+@cindex Mail
 
 @process{Delivering} process call a script in order 
 to warm-up an @actorUser{} that an archive he ask for is now available.
 
-However, when this process was hit for an audit, it will call a dedicated 
+However, when this process is hit for an audit, it will call a dedicated 
 script that will summarise results.
 
 Process conceptual model:

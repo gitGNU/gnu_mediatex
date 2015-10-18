@@ -1,16 +1,15 @@
-@cindex motd
+@cindex Motd
 
 The @process{Motd} process display the list of supports
-the @activity{Mediatex} system wants to check or extract for,
+the @mediatexO{} system wants to check or extract for,
 and the archives that needs to be put on external supports to be safe.
 
 Process conceptual model:
 
-@process{Motd} use 2 options defined into the 
-@dataConf{}
+@process{Motd} use 2 options defined into the  @dataConf{} file:
 @table @code
 @item checkTTL 
-The time interval we have to re-check supports before @mediatexO{} consider them obsolete (scores are impacted now ; you ever can provide the support after and recover your previous scores).
+The time interval we have to re-check supports before @mediatexO{} considers them obsolete (In this case, scores are impacted now ; but you ever can provide the support after and recover your previous scores).
 @item fileTTL
 Twice the time interval @mediatexO{} will automatically re-check support's files.
 @end table
@@ -31,7 +30,7 @@ Ask @actorPublisherO{} for:
 @itemize @bullet
 @item supports not seen for a while (and so having no score computed),
 @item supports needed to extract local or remote remands,
-@item and cache content to put on external supports.
+@item cache content to put on external supports.
 @end itemize
 
 @item Events out

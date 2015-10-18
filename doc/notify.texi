@@ -1,10 +1,10 @@
-@cindex notify
-@cindex nat
+@cindex Notify
+@cindex NAT
 
-@process{Notify} process exchanges information on cache supplies and demand with other @activity{Mediatex} servers.
+@process{Notify} process exchanges information on cache supplies and demands with other @activity{Mediatex} servers.
 
 @note{} messages only contains records related to the original sender servers.
-When receiving a message, server forgives and replace all records previously sends by the related server. Consequently, empty message are used too.
+When receiving a message, server forgives and replace all records previously sends by the related server. Consequently, empty message may be sent too.
 
 Process conceptual model:
 
@@ -27,22 +27,28 @@ from a remote @process{notify} process: receive a socket query providing remote 
 @item 
 The policy is, sender servers tells each others:
 @itemize @bullet
-@item final demands they have to extract,
-@item local supplies (presently into theire cache) that may be useful to others or are unsafe.
+@item 
+final demands they have to extract,
+@item 
+local supplies (presently into theire cache) that may be useful to others or are unsafe.
+@item
+Receiver server returns @code{240}.
 @end itemize
 @item
 However:
 @itemize @bullet
-@item servers do not try to send messages to unreachable @acronym{NAT}'s client servers,
-@item @acronym{NAT} client servers do not send messages to servers that cannot reach them.
+@item 
+servers do not try to send messages to unreachable @acronym{NAT}'s client servers,
+@item 
+@acronym{NAT} client servers do not send messages to servers that cannot reach them.
 @end itemize
 @item
 So, @acronym{NAT} gateway servers do:
 @itemize @bullet
-@item forward messages unchanged to its @acronym{NAT}'s client servers,
-@item relay (doing masquerade) final demands of its @acronym{NAT}'s client servers.
-@item
-Receiver server returns @code{240}.
+@item 
+forward messages unchanged to its @acronym{NAT}'s client servers,
+@item 
+relay (doing masquerade) final demands from its @acronym{NAT}'s client servers.
 @end itemize
 
 @end itemize

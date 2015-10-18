@@ -1,4 +1,4 @@
-@cindex cron
+@cindex Cron
 
 Theses 3 scripts are run fron @procToolsCron{}.
 
@@ -51,12 +51,13 @@ to @actorPublisher{}: store the message of the day into @file{/etc/motd}.
 @item /etc/motd
 @end table
 
+@end itemize
+
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/cron_hourly.sh
-@itemx /usr/share/mediatex/scripts/cron_daily.sh
-@itemx /usr/share/mediatex/scripts/cron_monthly.sh
+@item scripts/cron_hourly.src
+@itemx scripts/cron_daily.src
+@itemx scripts/cron_monthly.src
 @end table
 
-@end itemize
 

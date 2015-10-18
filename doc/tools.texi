@@ -1,4 +1,4 @@
-@cindex tools
+@cindex Tools
 
 The @activity{Tools} activity gather external @acronym{GNU} system tools @mediatexO{} is using. 
 This activity is divided into 6 process:
@@ -86,6 +86,36 @@ from @procToolsCron{} to @procScriptsCron{}: scheduled tasks.
 from @procToolsSyslog{} to @procClientUpload{}: upload collection's @acronym{APACHE} access logs to the cache so as to backup them.
 @end table
 
+@item Data in
+@table @file
+@item /etc/apache2/conf-available/mediatex.conf
+@itemx /etc/apache2/conf-available/mediatex-mdtx.conf
+@itemx /etc/ssh/sshd_config
+@itemx /etc/cron.d/mediatex
+@itemx ~mdtx/jail/etc/group
+@itemx ~mdtx/jail/etc/password
+@itemx ~mdtx-COLL/.ssh/authorized_keys
+@itemx ~mdtx-COLL/.ssh/known_hosts
+@itemx ~mdtx-COLL/.ssh/id_dsa
+@itemx ~mdtx-COLL/.ssh/id_dsa.pub
+@itemx ~mdtx-COLL/.ssh/config
+@itemx ~mdtx-COLL/public_html/.htaccess
+@itemx ~mdtx-COLL/public_html/score/.htaccess
+@itemx ~mdtx-COLL/public_html/cgi/.htaccess
+@itemx ~mdtx-COLL/public_html/cache/.htaccess
+@end table
+
+@item Data in/out
+@table @file
+@item /etc/mediatex/mdtx-COLL/apache2/htgroup
+@itemx /etc/mediatex/mdtx-COLL/apache2/htpasswd
+@itemx /var/lib/mediatex/mdtx/CVSROOT
+@itemx /var/lib/mediatex/mdtx/mdtx
+@itemx /var/lib/mediatex/mdtx/mdtx-COLL
+@itemx ~/mdtx/cvs/mdtx
+@itemx ~/mdtx/cvs/mdtx-COLL
+@itemx ~/mdtx/cvs/mdtx-COLL/CVS/Root
+@end table
 @end itemize
 
 @node Syslog

@@ -1,6 +1,6 @@
-@cindex log
-@cindex parser
-@cindex lexer
+@cindex Logs
+@cindex Parser
+@cindex Lexer
 
 @process{syslog} (actually @sc{rsyslog}: see @code{man rsyslogd (8)} and @sc{logrorate}: see @code{man logrotate (8)})
 is used by all @activity{mediatex}'s binaries and scripts.

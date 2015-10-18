@@ -1,6 +1,6 @@
-@cindex upload
+@cindex Upload
 
-@process{Upload} server's process manage finalise the upload process into the server's cache.
+@process{uploadServer} process manage finalise the upload process into the server's cache.
 
 Process conceptual model:
 
@@ -11,7 +11,7 @@ Process conceptual model:
 @table @code
 
 @item @eventServerUploadQuery
-from @procClientUpload{}: receive a socket query providing an archive and asking to handle it into the cache.
+from @procClientUpload{}: receives a socket query providing an archive and asking to handle it into the cache.
 
 @end table
 @item Processing
@@ -20,7 +20,7 @@ from @procClientUpload{}: receive a socket query providing an archive and asking
 @item if archive is already indexed into the cache returns @code{313},
 @item add the archive to upload as a remote supply into the cache index,
 @item extract demands from the archive, and consequently copy it into the cache directory,
-@item add the upload archive's remote supply from the cache index,
+@item remove the upload archive's remote supply from the cache index,
 @item returns @code{210}.
 @end itemize
 
@@ -31,7 +31,7 @@ from @procClientUpload{}: receive a socket query providing an archive and asking
 to @procServerExtract{}: internally ask to start extraction.
 
 @end table
-@item Data
+@item Data in
 @itemize @bullet
 @item in: @dataConf
 @item in: @dataChecksum

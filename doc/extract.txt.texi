@@ -1,4 +1,4 @@
-@cindex extraction rules file
+@cindex Rules file
 
 The @dataExtractO{} files handle the extraction rules for a collection.
 

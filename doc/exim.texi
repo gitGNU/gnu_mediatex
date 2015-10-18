@@ -1,5 +1,5 @@
-@cindex exim
-@cindex sendmail
+@cindex Exim
+@cindex Sendmail
 
 @sc{Mediatex} uses @sc{Exim4} 
 (@pxref{Top,,, spec, Specification of the Exim Mail Transfer Agent})

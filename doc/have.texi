@@ -1,6 +1,6 @@
-@cindex supports
+@cindex Support
 
-@process{Have} process is call when @actorPublisher{} provide a support. 
+@process{Have} process is call when @actorPublisher{} provides a support. 
 
 Process conceptual model:
 
@@ -11,7 +11,7 @@ Process conceptual model:
 @table @code
 
 @item @eventServerHaveQuery
-from @procClientSupp{}: receive socket query providing archives from a support.
+from @procClientSupp{}: receives socket query providing archives from a support.
 
 @end table
 @item Processing

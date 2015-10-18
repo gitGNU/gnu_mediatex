@@ -1,4 +1,4 @@
-@cindex apache
+@cindex Apache
 
 @actorUser{} use @sc{Apache} to browse the @acronym{HTML} catalogue and access archives.
 @sc{Apache} is configured to query the @activityServer{} via the @procScriptsCgi{} @acronym{CGI} script.
@@ -211,5 +211,5 @@ printf "@var{username1}:mdtx-COLL:yourPassword" | md5sum
 
 Code:
 @table @file
-@item /usr/share/mediatex/scripts/libs/htdocs.sh
+@item scripts/libs/htdocs.sh
 @end table
