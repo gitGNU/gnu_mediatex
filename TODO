@@ -6,7 +6,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- add key words index into paragraph of the documentation
 - manage new group without reloading server (using setfacl)
 - speed-up cache scanning process (use an hash table on records)
 - speed-up audit building process (maybe handle report in C)
