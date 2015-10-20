@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.9 2015/08/23 23:39:15 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.10 2015/10/20 15:41:17 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -171,10 +171,9 @@ server_sources = \
 	server/notify.c \
 	server/threads.c
 
-lib_LTLIBRARIES = \
-	libmediatex.la
-libmediatex_la_SOURCES = \
-	$(mediatex_sources)
+lib_LTLIBRARIES = libmediatex.la
+libmediatex_la_SOURCES = $(mediatex_sources)
+libmediatex_la_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
 
 noinst_LIBRARIES = \
 	client/libclient.a \
