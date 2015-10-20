@@ -292,9 +292,16 @@ Involved licences:
 @item libavl @tab     LGPLv2+ @tab http://adtinfo.org/
 @item libtool @tab    GPLv2+ @tab  http://www.gnu.org/software/libtool/
 @item make @tab       GPLv3+ @tab  http://www.gnu.org/software/make/
+@item libssl-dev @tab BSD @tab     http://www.openssl.org/
+@end multitable
+
+@sp 1
+@item Documentation
+@multitable @columnfractions .15 .15 .5
+@headitem name @tab licence @tab website
 @item texinfo @tab    GPLv3+ @tab  http://www.gnu.org/software/texinfo/
 @item transfig @tab   MIT @tab     http://www.xfig.org/ ?
-@item libssl-dev @tab BSD @tab     http://www.openssl.org/
+@item ghostscript @tab AGPL-3+ @tab http://www.ghostscript.com
 @end multitable
 
 @sp 1
