@@ -291,18 +291,20 @@ Involved licences:
 @item help2man @tab   GPLv3+ @tab  http://www.gnu.org/software/help2man/
 @item libavl @tab     LGPLv2+ @tab http://adtinfo.org/
 @item libtool @tab    GPLv2+ @tab  http://www.gnu.org/software/libtool/
-@item make @tab       GPLv3+ @tab  http://www.gnu.org/software/make/
 @item libssl-dev @tab BSD @tab     http://www.openssl.org/
-@end multitable
-
-@sp 1
-@item Documentation
-@multitable @columnfractions .15 .15 .5
-@headitem name @tab licence @tab website
+@item make @tab       GPLv3+ @tab  http://www.gnu.org/software/make/
 @item texinfo @tab    GPLv3+ @tab  http://www.gnu.org/software/texinfo/
 @item transfig @tab   MIT @tab     http://www.xfig.org/ ?
-@item ghostscript @tab AGPL-3+ @tab http://www.ghostscript.com
 @end multitable
+
+@c @sp 1
+@c @item Documentation
+@c @multitable @columnfractions .15 .15 .5
+@c @headitem name @tab licence @tab website
+@c @item texinfo @tab    GPLv3+ @tab  http://www.gnu.org/software/texinfo/
+@c @item transfig @tab   MIT @tab     http://www.xfig.org/ ?
+@c @item ghostscript @tab AGPL-3+ @tab http://www.ghostscript.com
+@c @end multitable
 
 @sp 1
 @item Documentation (others format than texinfo and man)

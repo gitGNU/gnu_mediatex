@@ -30,9 +30,9 @@ $ cvs -z3 \
 Software requirements.
 @itemize @bullet
 @item Compilation:
-automake gettext libtool make flex bison help2man libssl-dev libavl-dev
-@item Info documentation:
-texinfo transfig ghostscript
+automake gettext libtool make flex bison help2man texinfo transfig libssl-dev libavl-dev
+@c @item Info documentation:
+@c ghostscript
 @item Documentation in others format than texinfo and man (optional):
 imagemagick texlive
 @item Installation:

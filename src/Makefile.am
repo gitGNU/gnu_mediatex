@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.10 2015/10/20 15:41:17 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.11 2015/10/20 16:44:22 nroche Exp $
 #  * Project: MediaTex
 #  * Module: sources
 #  *
@@ -242,15 +242,15 @@ bin_PROGRAMS = \
 
 cgi_SOURCE = cgi.c
 cgi_LDADD = libmediatex.la
-cgi_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
+cgi_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
 
 mediatex_SOURCE = mediatex.c
 mediatex_LDADD = libmediatex.la client/libclient.a
-mediatex_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
+mediatex_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
 
 mediatexd_SOURCE = mediatexd.c
 mediatexd_LDADD = libmediatex.la server/libserver.a
-mediatexd_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
+mediatexd_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
 
 %.tab.h %.tab.c: %.y
 	$(YACC) $<

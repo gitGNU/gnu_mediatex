@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/09/22 11:42:40 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.5 2015/10/20 16:44:22 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts libraries (called by scripts)
 #  *
@@ -23,8 +23,10 @@
 include $(top_srcdir)/Make-rules
 
 scriptsdir = $(datarootdir)@mdtx_mediatexdir@/scripts/lib
+dist_scripts_DATA = \
+	include.sh
+
 dist_scripts_SCRIPTS = \
-	include.sh \
 	log.sh \
 	users.sh \
 	ssh.sh \
@@ -56,16 +58,6 @@ dist_check_DATA = \
 	cvs.exp \
 	jail.exp \
 	htdocs.exp
-
-do_subst = sed \
- -e "s!CONF_MEDIATEXDIR!$(mdtx_mediatexdir)!" \
- -e "s!CONF_BINDIR!$(bindir)!" \
- -e "s!CONF_DATAROOTDIR!$(datarootdir)!" \
- -e "s!CONF_EXEC_PREFIX!$(exec_prefix)!" \
- -e "s!CONF_LIBDIR!$(libdir)!" \
- -e "s!CONF_LOCALSTATEDIR!$(localstatedir)!" \
- -e "s!CONF_PREFIX!$(prefix)!" \
- -e "s!CONF_SYSCONFDIR!$(sysconfdir)!"
 
 include.sh: include.src $(top_srcdir)/mediatex-config.h
 	$(do_subst) < $< > $@
