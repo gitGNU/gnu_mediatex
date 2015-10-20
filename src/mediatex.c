@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.9 2015/10/11 01:03:54 nroche Exp $
+ * Version: $Id: mediatex.c,v 1.10 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *
@@ -25,8 +25,6 @@
 #include "mediatex-config.h"
 #include "client/mediatex-client.h"
 #include <locale.h>
-
-GLOBAL_STRUCT_DEF_BIN;
 
 /*=======================================================================
  * Function   : usage
@@ -126,16 +124,6 @@ main(int argc, char** argv)
   textdomain (PACKAGE);
 
   // import mdtx environment
-  /*
-  env.logFile = 0;
-  env.logFacility = "file";
-  env.logSeverity = "info";
-  env.confFile = CONF_ETCDIR "/mediatex.conf";
-  env.dryRun = FALSE;
-  env.debugLexer = FALSE;
-  env.debugParser = FALSE;
-  env.noRegression = FALSE;
-  */
   env.noCollCvs = FALSE; // enable cvs
   env.allocLimit *= 2;
   env.allocDiseaseCallBack = clientDiseaseAll;

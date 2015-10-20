@@ -1,4 +1,4 @@
-#  * Version: $Id: Makefile.am,v 1.6 2015/09/22 11:42:39 nroche Exp $
+#  * Version: $Id: Makefile.am,v 1.7 2015/10/20 19:41:50 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts files
 #  *
@@ -61,12 +61,11 @@ CLEANFILES = \
 	cron_daily.sh \
 	cron_monthly.sh
 
-mediatexd: mediatexd.src $(top_srcdir)/config.h
+lib/include.sh: lib/include.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-lib/include.sh: lib/include.src
+mediatexd: mediatexd.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
-	chmod +x $@
 
 cron_hourly.sh: cron_hourly.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@

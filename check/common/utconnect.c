@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconnect.c,v 1.5 2015/09/17 18:53:44 nroche Exp $
+ * Version: $Id: utconnect.c,v 1.6 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *
@@ -23,7 +23,6 @@
 =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -75,6 +74,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

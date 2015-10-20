@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatexd.c,v 1.13 2015/10/11 01:03:54 nroche Exp $
+ * Version: $Id: mediatexd.c,v 1.14 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : server software
  *
@@ -33,7 +33,6 @@
 
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
-GLOBAL_STRUCT_DEF_BIN;
 
 extern int taskSocketNumber;
 extern int taskSignalNumber;

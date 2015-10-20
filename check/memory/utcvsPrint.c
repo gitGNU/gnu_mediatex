@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcvsPrint.c,v 1.4 2015/09/04 15:30:18 nroche Exp $
+ * Version: $Id: utcvsPrint.c,v 1.5 2015/10/20 19:41:44 nroche Exp $
  * Project: MediaTeX
  * Module : cvs print
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -66,6 +65,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

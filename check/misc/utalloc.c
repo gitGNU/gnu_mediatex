@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utalloc.c,v 1.5 2015/09/04 15:30:19 nroche Exp $
+ * Version: $Id: utalloc.c,v 1.6 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex-config.h"
-GLOBAL_STRUCT_DEF;
 
 #define BLOCK_SIZE 100
 #define BLOCK_MAX  10
@@ -107,6 +106,8 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
+  env = envUnitTest;
   env.allocLimit = .002; // 2 Ko
   env.allocDiseaseCallBack = disease;
   getEnv(&env);

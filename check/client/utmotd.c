@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmotd.c,v 1.2 2015/09/04 15:30:16 nroche Exp $
+ * Version: $Id: utmotd.c,v 1.3 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : motd
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -72,6 +71,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

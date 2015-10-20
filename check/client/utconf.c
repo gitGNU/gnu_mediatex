@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utconf.c,v 1.5 2015/09/22 11:42:38 nroche Exp $
+ * Version: $Id: utconf.c,v 1.6 2015/10/20 19:41:41 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -25,7 +25,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -71,6 +70,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

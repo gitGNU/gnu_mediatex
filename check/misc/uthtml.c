@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: uthtml.c,v 1.4 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: uthtml.c,v 1.5 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : htmlLeftPage
@@ -208,6 +207,7 @@ main(int argc, char** argv)
   };
   
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

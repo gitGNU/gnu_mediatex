@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: recordFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
+# * Version: $Id: recordFile.sh,v 1.3 2015/10/20 19:41:46 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-#set -x
+set -x
 set -e
 
 # retrieve environment

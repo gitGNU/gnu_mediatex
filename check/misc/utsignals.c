@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsignals.c,v 1.4 2015/09/04 15:30:21 nroche Exp $
+ * Version: $Id: utsignals.c,v 1.5 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include <pthread.h>
-GLOBAL_STRUCT_DEF;
 
 int running = TRUE;
 
@@ -178,6 +177,7 @@ main(int argc, char** argv)
   };
   
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

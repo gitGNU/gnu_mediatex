@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsetuid.c,v 1.3 2015/08/07 17:50:27 nroche Exp $
+ * Version: $Id: utsetuid.c,v 1.4 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -82,7 +82,8 @@ main (int argc, char** argv)
     {0, 0, 0, 0}
   };
 
-  // import misc environment
+  // import mdtx environment
+  env = envUnitTest;
   env.noRegression = FALSE;
   getEnv (&env);
 

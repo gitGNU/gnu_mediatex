@@ -2,7 +2,7 @@ Source: mediatex
 Section: misc
 Priority: extra
 Maintainer: Nicolas Roche <nroche@prologue.fr>
-Build-Depends: debhelper (>= 8), libssl-dev, libavl-dev, flex, bison, help2man, texinfo, transfig, gettext, libtool
+Build-Depends: debhelper (>= 8), libssl-dev, libavl-dev, flex, bison, help2man, texinfo, transfig, gettext, libtool, libfile-fcntllock-perl
 Standards-Version: 3.9.1
 Homepage: http://narval.tk/mediatexi
 

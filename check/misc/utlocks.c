@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlocks.c,v 1.5 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utlocks.c,v 1.6 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 int running = TRUE;
 
@@ -114,6 +113,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

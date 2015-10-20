@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.tab.c,v 1.4 2015/09/22 11:42:38 nroche Exp $
+ * Version: $Id: utcatalogFile.tab.c,v 1.5 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -74,6 +73,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

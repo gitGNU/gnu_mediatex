@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utsupportFile.tab.c,v 1.2 2015/09/04 15:30:23 nroche Exp $
+ * Version: $Id: utsupportFile.tab.c,v 1.3 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -69,6 +68,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

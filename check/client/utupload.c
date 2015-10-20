@@ -1,6 +1,6 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.9 2015/09/22 11:42:38 nroche Exp $
+ * Version: $Id: utupload.c,v 1.10 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -25,7 +25,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 extern int isCatalogRefbyExtract(Collection *upload);
 extern int isFileRefbyExtract(Collection *upload, Archive* archive);
@@ -94,6 +93,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

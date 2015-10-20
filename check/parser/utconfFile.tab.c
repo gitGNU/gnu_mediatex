@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.tab.c,v 1.2 2015/09/04 15:30:21 nroche Exp $
+ * Version: $Id: utconfFile.tab.c,v 1.3 2015/10/20 19:41:47 nroche Exp $
  * Project: Mediatex
  * Module : confifuration parser
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -70,6 +69,7 @@ main(int argc, char** argv)
   };
        
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

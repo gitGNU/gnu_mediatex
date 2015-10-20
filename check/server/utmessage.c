@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmessage.c,v 1.4 2015/09/04 15:30:24 nroche Exp $
+ * Version: $Id: utmessage.c,v 1.5 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : have
  *
@@ -25,7 +25,6 @@
 #include "mediatex.h"
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
-GLOBAL_STRUCT_DEF;
 
 // callback functions requiered (not used here)
 int hupManager(){return 0;};
@@ -81,6 +80,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

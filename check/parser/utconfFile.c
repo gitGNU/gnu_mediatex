@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.7 2015/10/04 22:15:48 nroche Exp $
+ * Version: $Id: utconfFile.c,v 1.8 2015/10/20 19:41:46 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 
@@ -25,7 +25,6 @@
 #include "mediatex.h"
 #include "parser/confFile.tab.h"
 #include "parser/confFile.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -76,6 +75,7 @@ main(int argc, char** argv)
   };
        
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

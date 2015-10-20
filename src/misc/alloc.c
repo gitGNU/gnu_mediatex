@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: alloc.c,v 1.10 2015/08/13 21:14:34 nroche Exp $
+ * Version: $Id: alloc.c,v 1.11 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *
@@ -24,6 +24,10 @@
 
 #include "mediatex.h"
 #include "alloc.h"
+
+// should be on any other place
+MdtxEnv env = GLOBAL_MDTX_ENV_BIN;
+MdtxEnv envUnitTest = GLOBAL_MDTX_ENV_UT;
 
 /* Note:
    - logOpen take 16 (logHandler) + strlen(programName) bytes

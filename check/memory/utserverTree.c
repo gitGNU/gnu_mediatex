@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverTree.c,v 1.6 2015/09/04 15:30:18 nroche Exp $
+ * Version: $Id: utserverTree.c,v 1.7 2015/10/20 19:41:44 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mediatex.h"
 #include "memory/utFunc.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : isReachable
@@ -169,6 +168,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

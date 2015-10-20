@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utthreads.c,v 1.6 2015/09/23 19:10:18 nroche Exp $
+ * Version: $Id: utthreads.c,v 1.7 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 
@@ -29,7 +29,6 @@
 extern int taskSocketNumber;
 extern int taskSignalNumber;
 
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : termManager
@@ -173,6 +172,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

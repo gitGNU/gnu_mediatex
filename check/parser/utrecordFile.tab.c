@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utrecordFile.tab.c,v 1.4 2015/09/04 15:30:22 nroche Exp $
+ * Version: $Id: utrecordFile.tab.c,v 1.5 2015/10/20 19:41:47 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -74,11 +73,13 @@ main(int argc, char** argv)
     {0, 0, 0, 0}
   };
 
+  // import mdtx environment
+  env = envUnitTest;
+
   // disable stdout by default because we need no ending cariage
   // return for the diff
   env.dryRun = FALSE;
 
-  // import mdtx environment
   getEnv(&env);
 
   // parse the command line

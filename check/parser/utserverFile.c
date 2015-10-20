@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utserverFile.c,v 1.6 2015/09/04 15:30:22 nroche Exp $
+ * Version: $Id: utserverFile.c,v 1.7 2015/10/20 19:41:47 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -25,7 +25,6 @@
 #include "mediatex.h"
 #include "parser/serverFile.tab.h"
 #include "parser/serverFile.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -77,6 +76,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

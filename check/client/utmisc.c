@@ -1,5 +1,5 @@
  /*=======================================================================
- * Version: $Id: utmisc.c,v 1.7 2015/09/21 01:01:49 nroche Exp $
+ * Version: $Id: utmisc.c,v 1.8 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : misc
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -66,6 +65,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   //env.dryRun = FALSE;
   getEnv(&env);
 

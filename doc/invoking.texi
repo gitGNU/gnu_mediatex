@@ -37,6 +37,8 @@ automake gettext libtool make flex bison help2man texinfo transfig libssl-dev li
 imagemagick texlive
 @item Installation:
 ssh apache2 cvs viewvc libavl1 tar cpio gzip bzip2 unzip bc findutils
+@item Debian package generation
+libfile-fcntllock-perl
 @end itemize
 @c initramfs-tools 
 
@@ -76,8 +78,8 @@ $ make html pdf
 Someone may also prefers to build and install a @acronym{DEBIAN} package:
 @example
 $ make dist
-$ cp mediatex-0.4.tar.gz mediatex_0.4.orig.tar.gz
 $ tar -zxf mediatex-0.4.tar.gz
+$ mv mediatex-0.4.tar.gz mediatex_0.4.orig.tar.gz
 $ cd mediatex-0.4
 $ cp -fr ../debian .
 $ dpkg-buildpackage -us -uc

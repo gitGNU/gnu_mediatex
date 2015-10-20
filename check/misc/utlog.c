@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utlog.c,v 1.5 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utlog.c,v 1.6 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -60,6 +59,9 @@ main(int argc, char** argv)
     MISC_LONG_OPTIONS,
     {0, 0, 0, 0}
   };
+
+  // import mdtx environment
+  env = envUnitTest;
 
   // parse the command line
   while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 

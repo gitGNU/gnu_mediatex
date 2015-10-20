@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.tab.c,v 1.3 2015/09/04 15:30:22 nroche Exp $
+ * Version: $Id: utshellQuery.tab.c,v 1.4 2015/10/20 19:41:47 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -68,7 +67,8 @@ main(int argc, char** argv)
     {0, 0, 0, 0}
   };
        
-  // import mediatex environment
+  // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   env.logSeverity[LOG_MEMORY] = LOG_NOTICE;

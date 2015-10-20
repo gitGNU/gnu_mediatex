@@ -302,14 +302,11 @@ It convert all the collection's meta-data to an @acronym{SQL} script:
 
 #include <locale.h>
 
-GLOBAL_STRUCT_DEF_BIN;
-
 /*==================================================================
  * Function   : usage
  * Description: Print the usage.
  * Synopsis   : static void usage(char* programName)
- * Input      : programName = the name of the program; usually
- *                                  argv[0].
+ * Input      : programName = the name of the program
  * Output     : N/A
  ==================================================================*/
 static void 
@@ -324,12 +321,10 @@ usage(char* programName)
 
 /*==================================================================
  * Function   : main 
- * Author     : Nicolas ROCHE
- * modif      : 2010/12/10
- * Description: Entry point for mdtx wrapper
- * Synopsis   : ./mdtx
+ * Description: Example using libmediatex
+ * Synopsis   : ./text2sql
  * Input      : stdin
- * Output     : rtfm
+ * Output     : stdout
  ==================================================================*/
 int 
 main(int argc, char** argv)
@@ -379,11 +374,10 @@ main(int argc, char** argv)
   if (!releaseCollection(coll, SERV|CTLG|EXTR)) goto error;
   /*******************************************************************/
 
-  freeConfiguration();
   rc = TRUE;
  error:
-  logEmit(LOG_INFO, "** exit on %s **", rc?"success":"error");
-  DefaultLog = logClose(DefaultLog);
+  freeConfiguration();
+  ENDINGS;
   rc=!rc;
  optError:
   exit(rc);

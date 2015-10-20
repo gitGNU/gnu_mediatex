@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.11 2015/10/11 01:03:54 nroche Exp $
+ * Version: $Id: cgi.c,v 1.12 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex-config.h"
 #include <regex.h>
-GLOBAL_STRUCT_DEF_BIN;
 
 static char* confLabel = 0;
 

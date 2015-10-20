@@ -1,6 +1,6 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.14 2015/10/04 22:15:50 nroche Exp $
+# * Version: $Id: tests.sh,v 1.15 2015/10/20 19:41:49 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -769,7 +769,7 @@ function test16()
 function test17()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "Server 3 provides second support and tell it to others"
+	topo "Server 1 provides second support and tell it to others"
 
 	mdtxP "motd" serv1
 	mdtxP "add supp iso1 to coll hello" serv1

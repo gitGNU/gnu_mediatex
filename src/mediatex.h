@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: mediatex.h,v 1.8 2015/08/10 12:24:27 nroche Exp $
+ * Version: $Id: mediatex.h,v 1.9 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -113,10 +113,12 @@ typedef struct MdtxEnv {
 } MdtxEnv;
 
 // Global variable mediatex need you provides (using GLOBAL_STRUCT_DEF)
+// Global variable
 extern MdtxEnv env;
+extern MdtxEnv envUnitTest; // only used for copy 
 
 // Global variable definition having its default values for unit tests
-#define GLOBAL_MDTX_STRUCT_UT						\
+#define GLOBAL_MDTX_ENV_UT						\
   {									\
     /* logging */							\
     99,	0,								\
@@ -135,7 +137,7 @@ extern MdtxEnv env;
 
 // Global variable definition having its default values for binaries
 // file -> local2 for mdtxd (set by /etc/init.d/mediatexd)
-#define GLOBAL_MDTX_STRUCT_BIN						\
+#define GLOBAL_MDTX_ENV_BIN						\
   {									\
     /* logging */							\
     99, 0,								\
@@ -152,8 +154,8 @@ extern MdtxEnv env;
 	0, TRUE								\
 	}
 
-#define GLOBAL_STRUCT_DEF MdtxEnv env =	GLOBAL_MDTX_STRUCT_UT
-#define GLOBAL_STRUCT_DEF_BIN MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN
+/* #define GLOBAL_STRUCT_DEF MdtxEnv env =	GLOBAL_MDTX_STRUCT_UT */
+/* #define GLOBAL_STRUCT_DEF_BIN MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN */
 
 #endif /* MDTX_H */
 

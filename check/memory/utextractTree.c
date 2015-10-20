@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractTree.c,v 1.7 2015/09/04 15:30:18 nroche Exp $
+ * Version: $Id: utextractTree.c,v 1.8 2015/10/20 19:41:44 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include "memory/utFunc.h"
-GLOBAL_STRUCT_DEF;
 
 
 /*=======================================================================
@@ -73,6 +72,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

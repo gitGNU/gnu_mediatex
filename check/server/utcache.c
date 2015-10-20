@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcache.c,v 1.9 2015/09/04 15:30:23 nroche Exp $
+ * Version: $Id: utcache.c,v 1.10 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *
@@ -26,7 +26,6 @@
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
 
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -79,6 +78,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.dryRun = FALSE;
   getEnv(&env);
 

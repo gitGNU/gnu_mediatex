@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utextractHtml.c,v 1.2 2015/09/04 15:30:15 nroche Exp $
+ * Version: $Id: utextractHtml.c,v 1.3 2015/10/20 19:41:41 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -24,7 +24,6 @@
 
 #include "mediatex.h"
 #include "client/mediatex-client.h"
-GLOBAL_STRUCT_DEF;
 
 
 /*=======================================================================
@@ -68,6 +67,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

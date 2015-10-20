@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utperm.c,v 1.7 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utperm.c,v 1.8 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -90,6 +89,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   env.noRegression = FALSE;
   getEnv(&env);
 

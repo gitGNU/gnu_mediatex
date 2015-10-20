@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utprogbar.c,v 1.4 2015/09/04 15:30:20 nroche Exp $
+ * Version: $Id: utprogbar.c,v 1.5 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTex
  * Module : unit tests
  *
@@ -23,7 +23,6 @@
 =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 void 
 e2fsck_progress(struct ProgBar* progbar, const char *label, 
@@ -117,6 +116,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

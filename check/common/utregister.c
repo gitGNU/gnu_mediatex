@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utregister.c,v 1.5 2015/09/27 01:00:38 nroche Exp $
+ * Version: $Id: utregister.c,v 1.6 2015/10/20 19:41:43 nroche Exp $
  * Project: MediaTeX
  * Module : register
  
@@ -23,7 +23,6 @@
 =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 #define UNDEF -1
 #define INIT  10
@@ -92,6 +91,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.c,v 1.5 2015/09/22 11:42:39 nroche Exp $
+ * Version: $Id: utshellQuery.c,v 1.6 2015/10/20 19:41:47 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 
@@ -26,7 +26,6 @@
 #include "client/mediatex-client.h"
 #include "parser/shellQuery.tab.h"
 #include "parser/shellQuery.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -75,6 +74,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

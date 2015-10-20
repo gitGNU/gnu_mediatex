@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utmd5sum.c,v 1.5 2015/09/17 18:53:45 nroche Exp $
+ * Version: $Id: utmd5sum.c,v 1.6 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *
@@ -23,7 +23,6 @@
  =======================================================================*/
 
 #include "mediatex.h"
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -74,6 +73,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
   env.noRegression = FALSE; // show the progbar 
 

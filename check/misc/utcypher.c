@@ -1,5 +1,5 @@
 /*=======================================================================
- * Version: $Id: utcypher.c,v 1.7 2015/09/17 18:53:45 nroche Exp $
+ * Version: $Id: utcypher.c,v 1.8 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *
@@ -26,7 +26,6 @@
 
 extern int doCypher(AESData* data);
 
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : usage
@@ -74,6 +73,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line

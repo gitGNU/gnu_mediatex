@@ -1,5 +1,5 @@
 /* ======================================================================= 
- * Version: $Id: uttcp.c,v 1.5 2015/09/04 15:30:21 nroche Exp $
+ * Version: $Id: uttcp.c,v 1.6 2015/10/20 19:41:46 nroche Exp $
  * Project: 
  * Module : tcp socket
 
@@ -27,7 +27,6 @@
 //#include <sys/socket.h>
 //#include <netinet/in.h>
 //#include <arpa/inet.h>
-GLOBAL_STRUCT_DEF;
 
 /*=======================================================================
  * Function   : tcpServerExemple
@@ -169,6 +168,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
+  env = envUnitTest;
   getEnv(&env);
 
   // parse the command line
