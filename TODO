@@ -1,31 +1,4 @@
 
-
-cf script/lib/include.sh avec les bonnes valeurs
-
-lpthread (pthread_rwlock_rdlock not found) vs pthread (pthread_create not found)
-
-lcrypto vs lssl ?
-
-ghostscript ?
-
-dh_shlibdeps -a
-dpkg-shlibdeps: warning: symbol EVP_MD_CTX_cleanup used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol powf used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol EVP_MD_CTX_init used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol pthread_rwlock_destroy used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol pthread_rwlock_wrlock used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol AES_set_encrypt_key used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol MD5_Init used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol SHA1_Update used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol AES_encrypt used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: symbol pthread_rwlock_rdlock used by debian/mediatex/usr/lib/libmediatex.so.0.0.0 found in none of the libraries
-dpkg-shlibdeps: warning: 24 other similar warnings have been skipped (use -v to see them all)
-dpkg-shlibdeps: warning: package could avoid a useless dependency if debian/mediatex/usr/bin/mediatex debian/mediatex/usr/bin/mediatexd debian/mediatex/usr/share/mediatex/cgi-dir/cgi were not linked against libm.so.6 (they use none of the library's symbols)
-dpkg-shlibdeps: warning: package could avoid a useless dependency if debian/mediatex/usr/bin/mediatex debian/mediatex/usr/bin/mediatexd debian/mediatex/usr/share/mediatex/cgi-dir/cgi were not linked against libcrypto.so.1.0.0 (they use none of the library's symbols)
-dh_gencontrol -a
-dpkg-gencontrol: warning: File::FcntlLock not available; using flock which is not NFS-safe
-
-
 *** TO TEST
 
 - pgrof: test with more than 100k entries
