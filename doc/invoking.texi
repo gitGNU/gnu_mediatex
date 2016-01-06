@@ -66,6 +66,7 @@ $ ./configure \
   --libexecdir=/usr/lib/mediatex
 $ make CFLAGS="-Wall -O0 -g" V=0
 # make install
+# mediatex adm init
 @end example
 
 Other formats than @acronym{GNU INFO} of this documentation are also available from the sources (optional):

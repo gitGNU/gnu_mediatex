@@ -30,6 +30,12 @@ config.status
 libtool
 stamp-h1
 
+# make
+*.o
+*.a
+
 # make dist
 mediatex-*
 
+# emacs
+*~

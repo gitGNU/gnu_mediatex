@@ -18,10 +18,12 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection ( SX )
@@ -103,10 +105,12 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection ( SX )
@@ -188,10 +192,12 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
@@ -278,36 +284,42 @@
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logo.png
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logo.tgz to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logo.tgz
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP1.cat to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP2.cat to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP2.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP1.iso to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP1.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP2.iso to the coll3 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/cp execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5 X )
@@ -546,18 +558,22 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
@@ -566,10 +582,12 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
+[info command.c] close stdout from child (use '-sinfo:debug' to undo)
 [info command.c] /bin/bash execution returns 0
 [info confTree.c] free configuration
 [info utcache.c] exit on success

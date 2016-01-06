@@ -32,18 +32,19 @@
 ############################################
 
 ## demo
-SEVERITY_CLIENT="-s notice"
-SEVERITY_SERVER="-s notice"
-DEBUG_CLIENT_SCRIPT=""
 DEBUG_SERVER=0
+DEBUG_CLIENT_SCRIPT=""
+DEBUG_SERVER_SCRIPT="" # it mean the client's script calls made by server 
+SEVERITY_CLIENT="-s notice"
+SEVERITY_SERVER="$DEBUG_SERVER_SCRIPT -s notice"
 
 ## debug
-#SEVERITY_CLIENT="-s debug"
-#SEVERITY_SERVER="-s notice -s debug"
-#DEBUG_CLIENT_SCRIPT="-S"
 #DEBUG_SERVER=1          # need to run "$ xhost +" first
-#ADDON_SERVER="valgrind --leak-check=full"
-#ADDON_SERVER="valgrind"
+#DEBUG_CLIENT_SCRIPT="-S"
+#DEBUG_SERVER_SCRIPT="-S" # need DEBUG_SERVER=1 as stdout is not logged
+#SEVERITY_CLIENT="-s debug"
+#SEVERITY_SERVER="$DEBUG_SERVER_SCRIPT -s notice -s debug"
+#SEVERITY_SERVER="$DEBUG_SERVER_SCRIPT -s notice -s debug:main "
 
 ### not done
 ## ADDON_SERVER=gdb

@@ -28,7 +28,7 @@
 #include "mediatex-types.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hvf:s:l:nm:S"
+#define MISC_SHORT_OPTIONS "hvf:s:l:nm:"
 #define MISC_LONG_OPTIONS				\
   {"help", no_argument, 0, 'h'},			\
   {"version", no_argument, 0, 'v'},			\
@@ -36,8 +36,7 @@
   {"severity", required_argument, 0, 's'},		\
   {"log-file", required_argument, 0, 'l'},		\
   {"dry-run", no_argument, 0, 'n'},			\
-  {"memory-limit", required_argument, 0, 'm'},		\
-  {"script-out", required_argument, 0, 'S'}
+  {"memory-limit", required_argument, 0, 'm'}
 
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
 #define MEMORY_LONG_OPTIONS				\
@@ -84,6 +83,8 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  * Note       : EXIT_SUCCESS = 0
  *              EINVAL = 22
  *              ENOMEM = 12
+ * TODO       : Try make an alway done action to summurise options 
+ *              effectively read.
  =======================================================================*/
 #define GET_MISC_OPTIONS						\
   case 'h':								\
@@ -149,10 +150,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.allocLimit = atoi(optarg);					\
     break;								\
 									\
-  case 'S':								\
-    env.debugScript = 1;						\
-    break;								\
-									\
   default:								\
     rc = EINVAL;							\
     usage(programName);
@@ -204,6 +201,23 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     break;								\
 									\
   GET_PARSER_OPTIONS;
+
+/*=======================================================================
+ * Macro      : mdtxSetEnv
+ * Author(s)  : Nicolas Roche
+ * Description: Wraper for setenv
+ * Synopsis   : void mdtxSetEnv(envVar, tmpVar)
+ * Input      : char* envVar: env variable name
+ * Output     : char* value: value
+ =======================================================================*/
+#define mdtxSetEnv(envVar, value) {					\
+    if (setenv(envVar, value, 1) == -1) {				\
+      logMisc(LOG_ERR, "setenv fails %s <- %s : %s",			\
+	      envVar, value, strerror(errno));				\
+      goto error2;							\
+    }									\
+    logMisc(LOG_DEBUG, "setenv %s <- %s", envVar, value);		\
+  }
 
 /*=======================================================================
  * Macro      : ENDINGS

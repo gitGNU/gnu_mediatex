@@ -1,10 +1,11 @@
+[debug command.c] --- exec system call begin ---
 ** This script show the MediaTex environment variables:
 * Parameters:
 MDTX_MDTXUSER            = mdtx1
 MDTX_LOG_FACILITY        = file
 MDTX_LOG_FILE            = 
 MDTX_LOG_SEVERITY_ALLOC  = err
-MDTX_LOG_SEVERITY_SCRIPT = err
+MDTX_LOG_SEVERITY_SCRIPT = debug
 MDTX_LOG_SEVERITY_MISC   = err
 MDTX_LOG_SEVERITY_MEMORY = err
 MDTX_LOG_SEVERITY_PARSER = err
@@ -12,3 +13,4 @@ MDTX_LOG_SEVERITY_COMMON = err
 MDTX_LOG_SEVERITY_MAIN   = err
 MDTX_DRY_RUN             = 1
 PARAMETER_1              = parameter1
+[debug command.c] --- exec system call end ---

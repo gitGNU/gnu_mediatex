@@ -459,6 +459,7 @@ mdtxSu(char* label)
   char* argv[] = {"/bin/bash", 0, 0};
   char* home = 0;
   char* user = 0;
+  int tmpLogCode =  env.logHandler->severity[LOG_SCRIPT]->code;
 
   logMain(LOG_DEBUG, "mdtxSu %s", label?label:"");
 
@@ -485,13 +486,14 @@ mdtxSu(char* label)
     if (!allowedUser(user)) goto error;
     
     // do not close stdout !
-    env.debugScript = TRUE;
+    env.logHandler->severity[LOG_SCRIPT]->code = LOG_INFO;
     
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
   rc = TRUE;
- error:  
+ error:
+  env.logHandler->severity[LOG_SCRIPT]->code = tmpLogCode;
   if (!rc) {
     logMain(LOG_ERR, "mdtx su has failed");
   }
