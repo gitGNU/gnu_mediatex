@@ -123,23 +123,18 @@ stanzas: stanzas stanza
 {
   logParser(LOG_DEBUG, "line %i: stanzas: stanza", LINENO);
 }
-       ;
+;
 
 stanza: extrOPEN container extrIMPLIES childs extrCLOSE
 {
   logParser(LOG_DEBUG, "line %i: %s", LINENO, 
 	    "stanza: (container => childs)");
+
 }
 ;
 
 container: incContainer
-{
-  logParser(LOG_DEBUG, "line %i: incContainer", LINENO);
-}
          | stdContainer
-{
-  logParser(LOG_DEBUG, "line %i: stdContainer", LINENO);
-}
          | stdContainer parents
 {
   logParser(LOG_DEBUG, "line %i: stdContainer parents", LINENO);
@@ -151,6 +146,11 @@ incContainer: extrTYPE
 {
   logParser(LOG_DEBUG, "line %i: incContainer: %s", 
 	    LINENO, strEType($1));
+  if ($1 != INC) {
+    logParser(LOG_ERR, "line %i: %s", LINENO, 
+	      "only the 'INC' container do not provide parent");
+    YYERROR;
+  }
   container = coll->extractTree->incoming;
 }
 
@@ -158,6 +158,11 @@ stdContainer: extrTYPE archive
 {
   logParser(LOG_DEBUG, "line %i: stdContainer: %s archive",
 	    LINENO, strEType($1));
+  if ($1 == INC) {
+    logParser(LOG_ERR, "line %i: %s (%s)", LINENO, 
+	      "the 'INC' container cannot have parent");
+    YYERROR;
+  }
   if (!(container = addContainer(coll, $1, $2))) YYERROR;
 }
 ;
@@ -172,7 +177,18 @@ parents: parents parent
 }
 ;
 
-childs: childs child
+childs: childs2
+      | /*empty*/
+{
+  if (container->type != INC) {
+    logParser(LOG_ERR, "line %i: %s", LINENO, 
+	      "only the 'INC' container may do not provide childs");
+    YYERROR;
+  }
+}
+;
+
+childs2: childs2 child
 {
   logParser(LOG_DEBUG, "line %i: childs: childs child", LINENO);
 }

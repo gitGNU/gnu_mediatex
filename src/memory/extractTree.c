@@ -220,6 +220,20 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
     goto error;
   }
 
+  if (avl_count(self->childs) < 1) {
+    if (self->type != INC) {
+      fd->print(fd, "\n#(%s\n", strEType(self->type));
+      fd->print(fd, "#=>\n");
+      fd->print(fd, "#)\n");
+      goto end;
+    }
+    else {
+      /* not blocking but prefer to stop now */
+      logMemory(LOG_CRIT, "empty container to serialize !");
+      goto error;
+    }
+  }
+
   fd->print(fd, "\n(%s\n", strEType(self->type));
   fd->doCut = FALSE;
  
@@ -246,10 +260,14 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
   }
 
   fd->print(fd, ")\n");
+ end:
   fd->doCut = TRUE;
   ++env.progBar.cur;
   rc = TRUE;
  error:
+  if (!rc) {
+    logMemory(LOG_ERR, "serializeContainer fails");
+  }
   return(rc);
 }
 
@@ -604,7 +622,8 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   case INC:
     // having 1 inc asso and 1 normal asso => remove the inc asso
     if (archive->fromContainers->nbItems > 0) {
-      logMemory(LOG_NOTICE, "remove %s:%lli archive from incomings", 
+      logMemory(LOG_NOTICE, 
+		"%s:%lli file is now archived (no more an incoming)",
 		archive->hash, (long long int)archive->size);
       asso = archive->fromContainers->head->it;
       goto end;
@@ -614,7 +633,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
 	       &date.tm_year, &date.tm_mon, &date.tm_mday,
 	       &date.tm_hour, &date.tm_min, &date.tm_sec)
 	!= 6) {
-      logCommon(LOG_ERR, "sscanf: error parsing date %s", path);
+      logCommon(LOG_ERR, "sscanf: error parsing date '%s'", path);
       goto error;
     }
 
@@ -632,7 +651,8 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   default:
     // having 1 inc asso and 1 normal asso => remove the inc asso
     if (archive->uploadTime) {
-      logMemory(LOG_NOTICE, "remove %s:%lli archive from incomings", 
+      logMemory(LOG_NOTICE, 
+		"%s:%lli file is now archived (no more an incoming)", 
 		archive->hash, (long long int)archive->size);
       archive->uploadTime = 0;
     }
@@ -650,8 +670,11 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   if (container->type != INC) {
     if (!rgInsert(archive->fromContainers, asso)) goto error;
   }
-  if (!avl_insert(container->childs, asso)) goto error;
-
+  if (!avl_insert(container->childs, asso)) {
+    logMemory(LOG_ERR, "cannot add %s:%lli (already there?)",
+	      archive->hash, (long long int)archive->size);
+    goto error;
+  }
  end:
   rc = asso;
  error:

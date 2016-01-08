@@ -532,8 +532,8 @@ char* getIndexLabel()
 
 
 /*=======================================================================
- * Function   : usage
- * Description: Print the usage.
+ * Function   : usageHtml
+ * Description: Send the usage.
  * Synopsis   : static void usage(char* programName)
  * Input      : char* programName = the name of the program; usually
  *                                  argv[0].
@@ -562,9 +562,36 @@ static void usageHtml(Collection* coll, char* programName)
 	  "\t\tSIZE   : the size of the requested file\r\n<br></h5></i>");
   
   sendTemplate(coll, "footer.html");
-  
   return;
 }
+
+
+/*=======================================================================
+ * Function   : iamAloneHtml
+ * Description: Send a specific error message
+ * Synopsis   : static void usage(char* programName)
+ * Input      : char* programName = the name of the program; usually
+ *                                  argv[0].
+ * Output     : N/A
+ =======================================================================*/
+static void iamAloneHtml(Collection* coll, char* programName)
+{
+  logMain(LOG_INFO, "sending no server awake message");
+
+  fprintf(stdout, "Content-Type: text/html\r\n");
+  fprintf(stdout, "\r\n");
+
+  sendTemplate(coll, "cgiHeader.shtml");
+ 
+  fprintf(stdout, "<br>Server has gone, sorry\r\n<br>");
+  
+  fprintf(stdout, "<br>To launch server do:\r\n<br>");
+  fprintf(stdout, "<h5><i>/etc/init.d/mediatexd start</h5></i>");
+  
+  sendTemplate(coll, "footer.html");
+  return;
+}
+
 
 /*=======================================================================
  * Function   : usage
@@ -695,7 +722,7 @@ main(int argc, char** argv)
   if (isEmptyString(record->extra) || record->extra[0]=='!') {
     // first call: ask if servers have the record in cache
     if (!loadCollection(coll, SERV)) goto error;
-    if (!mdtxFind(tree)) goto error;
+    if (!mdtxFind(tree)) goto iamAloneHtmlError;
     if (!releaseCollection(coll, SERV)) goto error;
   }
   else {
@@ -706,6 +733,9 @@ main(int argc, char** argv)
   rc = TRUE;
   /************************************************************************/
 
+ iamAloneHtmlError:
+  if (!rc) iamAloneHtml(coll, programName);
+  goto error;
  htmlError:
   if (!rc) usageHtml(coll, programName);
  error:

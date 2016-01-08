@@ -106,7 +106,8 @@ Next, a test script automate the 6 following scenarios:
 @node Scenario 1
 @section Scenario 1: manage supports
 @cindex Support
-First of all, initialise the default @code{mdtx} server.
+First of all, initialise the default @code{mdtx} server 
+(@procScriptsInitRemovePurge{}).
 @note{} this is already done by the @acronym{DEBIAN} package.
 @example
 # mediatex adm init
@@ -122,31 +123,50 @@ Then, reload the Xsession or use @command{su} to re-login in order
 the 
 @actor{Publisher} belongs effectively to his new @code{mdtx} group.
 @example
+$ id
+uid=1000(@var{username1})@dots{}
 # mediatex adm add user @var{username1}
 # su @var{username1}
 $ id
+@dots{}groupes=@dots{},122(mdtx),
 @end example
 
-When initialising, @command{mediatex} 
-has added an out-dated example support.
-As @sc{Publisher}, please check the ``message of the day'' 
-and provide the wanted support. @*
+When initialising, an out-dated @command{mediatex}'s example support
+was added.
 @example
-$ mediatex motd
-$ mediatex check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso
-@end example
-
-This is what @mediatexO{} is mainly designed for: 
-to provide a simple @sc{api} to load supports on demand.
-
-Now @sc{motd} will not complain any more about this support 
-as it was seen recently and own a good score.
-@example
-$ mediatex motd
 $ mediatex ls supp
 @end example
 
+As @sc{Publisher}, please check the ``message of the day'' 
+and provide this wanted support. @*
+@example
+$ mediatex motd
+Please provide theses local supports:
+@dots{}
+$ mediatex check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso
+@end example
+
+@sc{motd} will not complain any more about this support 
+as it was seen recently and own a good score.
+
+@cindex Support
 Add a new support. @*
+@note{} So as not to wast a @sc{cd}, we are using an @sc{iso} files
+intead of real supports (CD, USB key, @dots{} 
+from such @code{/dev/sd[bc@dots{}]} peripheral files) 
+as it does the same result.
+@example
+$ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
+@end example
+
+Add a new File. @*
+Moreover, your final archive may simply be a file on your filesystem.
+In this case @mediatexO{} can automatically acces it without asking for,
+using the message of the day.
+@example
+$ mediatex add file /usr/share/mediatex/misc/logoP1.iso
+@end example
+
 @note{} There is a 10 chars string you can use to put what you want in order to record a state for each support.
 @example
 $ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
@@ -154,24 +174,15 @@ $ mediatex note supp ex-cd2 as what_you_want
 $ mediatex ls supp
 @end example
 
-@note{} here we use @sc{iso} files (so as not to wast a @sc{cd}),
-but real supports also works instead.
-Adding a file as a support should be in fact done as following so as
-@mediatexO{} will automatically acces it:
-@example
-$ mediatex add file /usr/share/mediatex/misc/logoP1.iso
-$ mediatex ls supp
-@end example
-
 @node Scenario 2
 @section Scenario 2: manage collections
 @cindex Collection
-Collections are using support's contents, exposing them to the
+Collections are managing shared support's contents, exposing them to the
 rest of the world.
 
 Add the new ``hello'' collection. 
 You will be asked for the ``mdtx'' password that will gives you 
-full access next, on the @acronym{Html} catalogue.
+full access next, on the @acronym{HTML} catalogue.
 Once again you will need to re-login so as 
 the 
 @actorPublisher{} belongs to the new @code{mdtx-hello} group.

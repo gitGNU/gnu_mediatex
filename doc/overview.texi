@@ -57,14 +57,15 @@ Correspondance with system users is detailed next: @pxref{System users}.
 @cindex Time-stamps
 @cindex Claim-based authentication 
 
-@mediatexO{} 
-is a distributed system. 
-It allows several servers to share data and meta-data
-related to a collection of archives.
-Instead of dealing with remote @acronym{WEB} based @acronym{API},
-@mediatexO{}
-handle the remote connections and should be installed locally on 
-applications servers.
+@mediatexO{} is mainly designed 
+to provides an @sc{api} to manage supports (to drive jux boxes).
+
+As a distributed system, 
+it allows several servers to share data and meta-data
+related to collections of archives.
+
+@mediatexO{} handle the @acronym{TCP} connections between remote servers.
+It is designed to be installed directly on the archive producer's application servers.
 
 @image{mediatex-figures/what,,,,}
 
@@ -133,7 +134,7 @@ Moreover, the collection concept is used to classify document as
 @mediatexO{} 
 does not handle dedicated life cycle on archives.
 
-What it is not
+What it is not. @*
 @cindex SGBD
 @cindex Dynamic search
 @cindex SEDA
@@ -141,34 +142,38 @@ What it is not
 @cindex Time-stamps
 @cindex Claim-based authentication
 @cindex Single sign on
+
+@mediatexO{} focalize first on redondancy natively done by software.
+To do so, 
 @itemize @bullet
 @item 
-Doing mirroring replication.
+it isn't using @acronym{SGBD} to handle metadata but text files.
 @item 
-A dynamic @acronym{WEB} programming application.
+it doesn't do mirroring replication (@acronym{rsync}), but share @acronym{WEB} caches locally and acces them remotely (read only).
 @item 
-Based on a centralised or replicated @acronym{SGBD}.
-@item
-Providing dynamic search. To do it you will have to export the metadata into a database and search into.
+is not a @acronym{PHP} application but a @acronym{CGI} @acronym{WEB} application based on a @acronym{C} library.
 @item 
-Doing removal into data.
+is not based on a replicated @acronym{SGBD} but a @acronym{CVS} repository.
 @item 
-@acronym{SEDA} or any @acronym{XML} exchange protocol compliant 
+it dosn't provide dynamic search. To do it you first have to export the metadata into a database usign the @acronym{C} library.
+@item 
+it dosn't handle removal into data. As the goal is not to remove data from CDs.
+@item 
+it isn't @acronym{SEDA} or any @acronym{XML} exchange protocol compliant 
 (@url{http://www.archivesdefrance.culture.gouv.fr/seda/index.html}).
-But if you need it, you still can interface @mediatexO{}
-with an upper layer managing transactions and doing translations on metadata.
+But can ever be interfaced with an upper layer server that will manage @acronym{XML} transactions and translations of metadatas for him.
 @item
-Self managing time-stamps.
+it dosn't manage time-stamps.
 (@url{https://www.openssl.org/docs/manmaster/apps/ts.html}).
-Provided time-stamps or whatever meta-data files may still be stored bellow the related data files.
-@item
-Self managing claim-based authentication or any single sign on mechanism
+But time-stamps or whatever additional meta-data files may still be provided and stored as data files.
+@item 
+it dsn't self manage claim-based authentication or any ``single sign on'' mechanism
 (@url{https://en.wikipedia.org/wiki/OpenID}),
-but it should support to be configured to be used with.
+but any @acronym{APACHE2}'s @file{.htaccess} file directives
+may be added to the related metadata file to do so.
 @end itemize
 
-In fact @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.
-Time-stamps and claim-based authentication servers which need static certificates and a static @acronym{IP} address are monolithic servers and so, resides out of this scope.
+Time-stamps and claim-based authentication servers which need static certificates and a static @acronym{IP} address are monolithic servers and so, resides out of this scope. @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.
 
 @node Where
 @section Where

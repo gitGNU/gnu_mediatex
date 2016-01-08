@@ -153,7 +153,6 @@ htmlContainer(Container* self, FILE* fd)
   if(self == 0) goto error;
   logMain(LOG_DEBUG, "htmlContainer");
 
-  //many = (self->childs->nbItems > 1);
   many = (avl_count(self->childs) > 1);
   htmlLiOpen(fd);
 

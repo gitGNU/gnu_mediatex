@@ -1137,7 +1137,8 @@ Support* mdtxGetSupport(char* label)
   rc = supp;
  error:
   if (!rc) {
-    logCommon(LOG_ERR, "fails to get support");
+    logCommon(LOG_ERR, "support '%s' not found (into '%s')", 
+	      label, getConfiguration()->supportDB);
   }
   return rc;
 }
