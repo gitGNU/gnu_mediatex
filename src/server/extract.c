@@ -278,7 +278,7 @@ extractIso(Collection* coll, FromAsso* asso, char* targetPath)
 
   // mount the iso
   if (!(iso = getAbsoluteArchivePath(coll, archive))) goto error2;
-  if (!mdtxCall(6, "adm", "mount", iso, "on", tmpDir, "-S")) 
+  if (!mdtxCall(5, "adm", "mount", iso, "on", tmpDir)) 
     goto error2;
 
   // copy the asso file

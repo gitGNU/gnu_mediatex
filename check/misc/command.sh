@@ -33,7 +33,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-misc/ut$TEST -s err -S -i $PWD/$srcdir/misc/env.sh \
+misc/ut$TEST -s err -sdebug:script -i $PWD/$srcdir/misc/env.sh \
     >misc/$TEST.out 2>&1
 
 # compare with the expected output

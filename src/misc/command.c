@@ -80,7 +80,7 @@ miscUsage(char* programName)
 	  "-h | -v |"
 	  " [ -f facility ] [ -l logFile ]"
 	  " [ -s severity[:module(,module)*] ]"
-	  " [ -m memoryLimit ] [ -S ] [ -n ]");
+	  " [ -m memoryLimit ] [ -n ]");
 }
 
 /*=======================================================================
@@ -147,9 +147,8 @@ miscOptions()
 	  "\t\t\tamongs 'err', 'warning', 'notice', 'info', 'debug';\n"
 	  "\t\t\tmodules amongs 'alloc', 'script', 'misc', 'memory', "
 	  "'parser', 'common', 'main'\n"
-	  "  -m, --memory-limit\tnice limit for malloc in Mo\n"
-	  "  -S, --script-out\tenable stdout for scripts\n"
-	  "  -n, --dry-run\t\tdo a dry run\n");
+	  "  -n, --dry-run\t\tdo a dry run\n"
+	  "  -m, --memory-limit\tnice limit for malloc in Mo\n");
 }
 
 /*=======================================================================
@@ -259,8 +258,7 @@ setEnv(char* programName, MdtxEnv *self)
     "MDTX_LOG_SEVERITY_ALLOC",
     "MDTX_LOG_SEVERITY_SCRIPT",
     "MDTX_LOG_SEVERITY_MISC",
-    "MDTX_LOG_SEVERITY_MEMORY",
-    "MDTX_LOG_SEVERITY_PARSER",
+    "MDTX_LOG_SEVERITY_MEMORY",    "MDTX_LOG_SEVERITY_PARSER",
     "MDTX_LOG_SEVERITY_COMMON",
     "MDTX_LOG_SEVERITY_MAIN"
   };
@@ -281,37 +279,31 @@ setEnv(char* programName, MdtxEnv *self)
   logMisc(LOG_DEBUG, "set the environment variables");
 
   // export the environment (used by executed binaries or scripts)
-  ko=ko| setenv("MDTX_LOG_FACILITY", self->logHandler->facility->name, 1);
-  ko=ko| setenv("MDTX_LOG_FILE", self->logFile?self->logFile:"", 1);
+  mdtxSetEnv("MDTX_LOG_FACILITY", self->logHandler->facility->name);
+  mdtxSetEnv("MDTX_LOG_FILE", self->logFile?self->logFile:"");
 
   for (i=0; !ko && i<LOG_MAX_MODULE; ++i) {
-    ko=ko| setenv(logModuleVar[i], self->logHandler->severity[i]->name, 1);
+    mdtxSetEnv(logModuleVar[i], self->logHandler->severity[i]->name);
   }
 
-  ko=ko| setenv("MDTX_MDTXUSER", self->confLabel, 1);
-  ko=ko| setenv("MDTX_DRY_RUN", self->dryRun?"1":"0", 1);
-  ko=ko| setenv("LD_LIBRARY_PATH", "", 1);
-  ko=ko| setenv("IFS", "", 1);
-
-  if (ko) {
-    logMisc(LOG_ERR, "setenv variables failed: ", strerror(errno));
-    goto error2;
-  }
+  mdtxSetEnv("MDTX_MDTXUSER", self->confLabel);
+  mdtxSetEnv("MDTX_DRY_RUN", self->dryRun?"1":"0");
+  mdtxSetEnv("LD_LIBRARY_PATH", "");
+  mdtxSetEnv("IFS", "");
 
   // Because of "make distcheck", scripts use $srcdir to source each
   // others. Here, we reuse this automake variable so as scripts will
   // still be able to source each others after installation.
-  if (setenv("srcdir", CONF_SCRIPTS , 1) == -1)
-    goto error2;
+  mdtxSetEnv("srcdir", CONF_SCRIPTS);
 
-  // custumize malloc, record a callback to free memory if malloc fails
+  // customize malloc, record a callback to free memory if malloc fails
   if (!initMalloc(self->allocLimit*MEGA, self->allocDiseaseCallBack))
-    goto error;
+    goto error2;
 
   rc = TRUE;
  error2:
   if (!rc) {
-    logMisc(LOG_ERR, "fails to set the environment variables");
+    logMisc(LOG_ERR, "fails to set the environment");
   }
  error:
   return rc;
@@ -324,6 +316,7 @@ setEnv(char* programName, MdtxEnv *self)
  * Input      : argv = the command line to run
  *              doHideStderr = close stderr before exec
  * Output     : Never returns on success
+ * Note       : fork keeps file descriptors
  =======================================================================*/
 void 
 execChild(char** argv, int doHideStderr)
@@ -331,20 +324,35 @@ execChild(char** argv, int doHideStderr)
   int rc = 0;
   int fd;
 
+  logMisc(LOG_DEBUG, "execChild: %s (do%s hide stderr)",
+	  argv[0], doHideStderr?"":"not");
+
   if (argv[0][0] != '/') {
     logMisc(LOG_ERR, "refuse to exec from a relative path");
     goto error;
   }
-
-  // be quiet: close stdout
-  if (!env.debugScript) {
-    if ((fd = open("/dev/null", O_WRONLY)) != -1) {
-      dup2(fd, 1);
-      if (doHideStderr) dup2(fd, 2); // close stderr
-      close(fd);
-    }
+  
+  // be quiet
+  if ((fd = open("/dev/null", O_WRONLY)) == -1) {
+    logMisc(LOG_ERR, "open fails on /dev/null: %s", strerror(errno));
+    goto error;
   }
 
+  // - close stdout by default
+  if (env.logHandler->severity[LOG_SCRIPT]->code <= LOG_INFO) {
+    logMisc(LOG_INFO, "close stdout from child (use '-sinfo:script' to undo)");
+    dup2(fd, 1);
+  }
+
+  // - close stderr only when we want to hide stdout-like informations
+  if (doHideStderr &&
+      env.logHandler->severity[LOG_SCRIPT]->code <= LOG_NOTICE) {
+    logMisc(LOG_INFO, "exceptionally close stderr from child "
+	    "(use '-sinfo:script' to undo)");
+    dup2(fd, 2);
+  }
+      
+  close(fd);
   rc = execve(argv[0], argv, environ);
  error:
   if (rc == -1) {
@@ -379,15 +387,16 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
     goto error;
   }
 
-  logMisc(LOG_INFO, "execScript%s%s%s%s: %s", 
+  logMisc(LOG_INFO, "execScript%s%s%s%s%s: %s", 
 	  user?" as ":"", user?user:"", 
 	  pwd?" PWD=":"", pwd?pwd:"",
+	  doHideStderr?" (no-stderr)":"",
 	  argv[0]);
-
+  
   while (argv[++i] && *argv[i] != (char)0) {
     logMisc(LOG_INFO, " arg%i: %s", i, argv[i]);
   }
-
+  
   // fork: new process
   if ((childId = fork()) == -1) {
       logMisc(LOG_ERR, "fork failed: ", strerror(errno));
@@ -407,6 +416,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
       goto error;
     }
 
+    logMisc(LOG_INFO, "--- exec system call begin ---");
     execChild(argv, doHideStderr);
     logMisc(LOG_ERR, "failed to exec %s", argv[0]);
     exit(EXIT_FAILURE);
@@ -426,6 +436,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
     }
   }
 
+  logMisc(LOG_INFO, "--- exec system call end ---");
   if (WIFEXITED(status)) rcChild = WEXITSTATUS(status);
   logMisc(LOG_INFO, "%s execution returns %i", argv[0], rcChild);
   if (rcChild == -1) {

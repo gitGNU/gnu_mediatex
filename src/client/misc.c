@@ -459,7 +459,8 @@ mdtxSu(char* label)
   char* argv[] = {"/bin/bash", 0, 0};
   char* home = 0;
   char* user = 0;
-
+  LogSeverity* tmpSev =  env.logHandler->severity[LOG_SCRIPT];
+  
   logMain(LOG_DEBUG, "mdtxSu %s", label?label:"");
 
   // set the HOME directory environment variable
@@ -484,14 +485,15 @@ mdtxSu(char* label)
     if (setenv("HOME", home, 1) == -1) goto error;
     if (!allowedUser(user)) goto error;
     
-    // do not close stdout !
-    env.debugScript = TRUE;
+    // do not close stdout! else we loose id and groups.
+    env.logHandler->severity[LOG_SCRIPT] = LogSeverities+7;
     
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
+  env.logHandler->severity[LOG_SCRIPT] = tmpSev;
   rc = TRUE;
- error:  
+ error:
   if (!rc) {
     logMain(LOG_ERR, "mdtx su has failed");
   }

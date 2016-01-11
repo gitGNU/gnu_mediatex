@@ -32,18 +32,15 @@
 ############################################
 
 ## demo
+DEBUG_SERVER=0
 SEVERITY_CLIENT="-s notice"
 SEVERITY_SERVER="-s notice"
-DEBUG_CLIENT_SCRIPT=""
-DEBUG_SERVER=0
 
 ## debug
-#SEVERITY_CLIENT="-s debug"
-#SEVERITY_SERVER="-s notice -s debug"
-#DEBUG_CLIENT_SCRIPT="-S"
 #DEBUG_SERVER=1          # need to run "$ xhost +" first
-#ADDON_SERVER="valgrind --leak-check=full"
-#ADDON_SERVER="valgrind"
+#SEVERITY_CLIENT="-s debug"
+#SEVERITY_SERVER="-s info -sdebug:main"
+
 
 ### not done
 ## ADDON_SERVER=gdb
@@ -81,7 +78,7 @@ function mdtxA()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -c $SERVER $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT $QUERY 
+    mediatex -c $SERVER $SEVERITY_CLIENT $QUERY 
 }
 
 # $1: publisher query
@@ -91,7 +88,7 @@ function mdtxP()
     QUERY=$1
     SERVER=${2-serv1}
     query "$QUERY" $SERVER
-    mediatex -c $SERVER $SEVERITY_CLIENT $DEBUG_CLIENT_SCRIPT su <<EOF
+    mediatex -c $SERVER $SEVERITY_CLIENT su <<EOF
 mediatex $QUERY
 EOF
 }
@@ -197,7 +194,7 @@ EOF
 	su $SERVER -c \
 	    "env -u SESSION_MANAGER xterm -e \
               /tmp/doNotClose.sh $ADDON_SERVER mediatexd \
-               -c $SERVER $SEVERITY_SERVER -ffile -S &"	    
+               -c $SERVER $SEVERITY_SERVER -ffile &"   
 
 	read -p "Please tel me when server is started..."
 

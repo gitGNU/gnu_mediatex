@@ -169,10 +169,6 @@ If you provide no module, all except the @code{alloc} module will be selected.
 @itemx --memory-limit @var{number}
 Set a nice limit for malloc in Mo. When @activityServerO{} overcome this limit, it will try to release objects not used.  
 
-@item -S
-@item --script-out	
-Enable the standard output for scripts (that is hidden by default).
-
 @item -n
 @itemx --dry-run
 Do a dry run: do not write anything.

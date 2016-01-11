@@ -130,6 +130,9 @@ function UNIT_TEST_mrProper()
 
     # hide group number
     sed $1 -i -e "s,:x:[[:digit:]]*:,:x:XXX:,"
+
+    # hide i386/amd64 defferences
+    sed $1 -i -e "/^lib64$/ d"
 }
 
 # this function switch on into the unit test mode

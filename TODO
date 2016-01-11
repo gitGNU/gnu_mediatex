@@ -1,18 +1,19 @@
 
 *** BUGS
 
+- add a switch to cvs backups and apache logs into servers.txt
 - sort files on message of the day
- - apache_20160107_fred.narval.tk.log.gz ( 0.00)
- - apache_20160106_fred.narval.tk.log.gz ( 0.00)
-
+   apache_20160107_fred.narval.tk.log.gz ( 0.00)
+   apache_20160106_fred.narval.tk.log.gz ( 0.00)
 - manage accents into cache filenames (cgi should rewrite URLs)
-- manage moving path into the cache (as now, archive renamed is removed)
+- manage moving path into the cache (as now, archives renamed are removed)
 - force http for "Version", "Cache hosts" and cgi replyed URL urls as https is forced by htaccess when needed
-- remove '~internal' from documents cathegories on IHM
 - add an apache alias for '~' as it is not on mac keyboard
 - change logo.png to logo
-- ajouter les logs d'un serveur dans un unique document et transférer les informations sur l'archive.
-- prévoir de désactiver les sauvegardes et le logs d'apache dans servers.txt 
+- add server's log into a uniq document and move information on archive description
+- add coll and then HUP daemon (that need to be restarted) :
+  try to parse servers.txt but serv1 still do no belongs to serv1-hello.
+  (todo: try to use ACL to resolve it)
 
 *** TO TEST
 
@@ -46,3 +47,7 @@
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log
+
+*** DONE
+
+- remove -S option for script output (use script log module instead)

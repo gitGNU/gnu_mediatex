@@ -47,7 +47,7 @@ adduser \
 addgroup ut-mdtx-user1 ut-mdtx-user2 >/dev/null
 
 su ut-mdtx-user1 -c \
-    "misc/utsetuid -S -s notice -u ut-mdtx-user2 \
+    "misc/utsetuid -s notice -sdebug:script -u ut-mdtx-user2 \
 -i $PWD/$srcdir/misc/user.sh" \
     >misc/setuid.out 2>&1
 

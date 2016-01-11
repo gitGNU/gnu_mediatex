@@ -101,7 +101,6 @@ typedef struct MdtxEnv {
   int cvsprintMax;   // maximum size for files handle by CVS
 
   // debug options
-  int debugScript;
   int debugLexer;
 
   // global data structures:
@@ -130,7 +129,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 	/* configuration */						\
 	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,		\
 	/* debug */							\
-	FALSE, FALSE,							\
+	FALSE,							\
 	/* global data structure */					\
 	0, TRUE								\
 	}
@@ -148,14 +147,11 @@ extern MdtxEnv envUnitTest; // only used for copy
 	128, (int (*)(long))0, 0,					\
 	/* configration */						\
 	DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
-	/* debug and tests */						\
-	FALSE, FALSE,							\
+	/* debug */						\
+	FALSE,							\
 	/* global data structure */					\
 	0, TRUE								\
 	}
-
-/* #define GLOBAL_STRUCT_DEF MdtxEnv env =	GLOBAL_MDTX_STRUCT_UT */
-/* #define GLOBAL_STRUCT_DEF_BIN MdtxEnv env = GLOBAL_MDTX_STRUCT_BIN */
 
 #endif /* MDTX_H */
 
