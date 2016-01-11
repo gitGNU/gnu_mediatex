@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2015-09-23 21:15+0200\n"
+"POT-Creation-Date: 2016-01-11 21:33+0100\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
 "Last-Translator: nroche <nroche@narval.tk>\n"
 "Language-Team: French\n"
@@ -162,143 +162,143 @@ msgstr ""
 msgid "part %i "
 msgstr ""
 
-#: src/client/extractHtml.c:357
+#: src/client/extractHtml.c:356
 msgid "Record:"
 msgstr ""
 
-#: src/client/extractHtml.c:380
+#: src/client/extractHtml.c:379
 #, c-format
 msgid ""
 "\n"
 "Catalog reference as documents:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:396
+#: src/client/extractHtml.c:395
 #, c-format
 msgid "Not in catalog\n"
 msgstr ""
 
-#: src/client/extractHtml.c:404
+#: src/client/extractHtml.c:403
 #, c-format
 msgid ""
 "\n"
 "Provided by servers:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:420
+#: src/client/extractHtml.c:419
 #, c-format
 msgid "Is not an image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:428
+#: src/client/extractHtml.c:427
 #, c-format
 msgid ""
 "\n"
 "Comes from:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:445
+#: src/client/extractHtml.c:444
 #, c-format
 msgid "Cache: uploaded on "
 msgstr ""
 
-#: src/client/extractHtml.c:453
+#: src/client/extractHtml.c:452
 #, c-format
 msgid "External source"
 msgstr ""
 
-#: src/client/extractHtml.c:462
+#: src/client/extractHtml.c:461
 #, c-format
 msgid ""
 "\n"
 "Content: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:489
+#: src/client/extractHtml.c:488
 #, c-format
 msgid "No content\n"
 msgstr ""
 
-#: src/client/extractHtml.c:554
+#: src/client/extractHtml.c:553
 #, c-format
 msgid "Server%s "
 msgstr ""
 
-#: src/client/extractHtml.c:556
+#: src/client/extractHtml.c:555
 msgid " master"
 msgstr ""
 
-#: src/client/extractHtml.c:574
+#: src/client/extractHtml.c:573
 #, c-format
 msgid "fingerprint: "
 msgstr ""
 
-#: src/client/extractHtml.c:578
+#: src/client/extractHtml.c:577
 #, c-format
 msgid "last commit: "
 msgstr ""
 
-#: src/client/extractHtml.c:585
+#: src/client/extractHtml.c:584
 #, c-format
 msgid "mdtx port: "
 msgstr ""
 
-#: src/client/extractHtml.c:591
+#: src/client/extractHtml.c:590
 #, c-format
 msgid "ssh port: "
 msgstr ""
 
-#: src/client/extractHtml.c:601
+#: src/client/extractHtml.c:600
 #, c-format
 msgid "On networks:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:618
+#: src/client/extractHtml.c:617
 #, c-format
 msgid "Gateway for:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:635
+#: src/client/extractHtml.c:634
 #, c-format
 msgid "Provide images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:793 src/client/extractHtml.c:1166
+#: src/client/extractHtml.c:792 src/client/extractHtml.c:1165
 msgid "All archives"
 msgstr ""
 
-#: src/client/extractHtml.c:964 src/client/extractHtml.c:1171
+#: src/client/extractHtml.c:963 src/client/extractHtml.c:1170
 msgid "Bad archives"
 msgstr ""
 
-#: src/client/extractHtml.c:974
+#: src/client/extractHtml.c:973
 msgid "should be burned into supports:"
 msgstr ""
 
-#: src/client/extractHtml.c:1048 src/client/extractHtml.c:1158
+#: src/client/extractHtml.c:1047 src/client/extractHtml.c:1157
 msgid "score"
 msgstr ""
 
-#: src/client/extractHtml.c:1052
+#: src/client/extractHtml.c:1051
 #, c-format
 msgid ""
 "\n"
 "Score parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1086
+#: src/client/extractHtml.c:1085
 #, c-format
 msgid ""
 "\n"
 "All images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1106
+#: src/client/extractHtml.c:1105
 #, c-format
 msgid "No image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1157
+#: src/client/extractHtml.c:1156
 msgid "Score"
 msgstr ""
 
