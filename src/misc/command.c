@@ -6,7 +6,7 @@
  * system API
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014 2015 Nicolas Roche
+ Copyright (C) 2014 2015 2016 Nicolas Roche
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -40,12 +40,11 @@ version()
 {
   fprintf(stderr, 
 	  PACKAGE_STRING "\n"
-	  "\nCopyright (C) 2014 2015 <Nicolas Roche>.\n"
+	  "\nCopyright (C) 2014 2015 2016 Nicolas Roche.\n"
 	  "License GPLv3+: GNU GPL version 3 or later"
 	  " <http://www.gnu.org/licenses/gpl.html>\n"
 	  "This is free software, and you are welcome to redistribute it.\n"
-	  "There is NO WARRANTY, to the extent permitted by law.\n"
-	  "\nWritten by Nicolas Roche.\n");
+	  "There is NO WARRANTY, to the extent permitted by law.\n");
 }
 
 /*=======================================================================

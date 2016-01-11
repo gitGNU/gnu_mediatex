@@ -18,7 +18,7 @@
 (@acronym{ERMS}),
 focusing on the archival storage entity define by the @sc{Oais} draft,
 and on the @sc{NF Z 42-013} requirements.
-Copyright @copyright{} 2014 2015 Free Software Foundation, Inc.
+Copyright @copyright{} 2014 2015 2016 Nicolas Roche.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document

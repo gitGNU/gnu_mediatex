@@ -6,7 +6,7 @@
  * Send cache index to other servers 
 
  MediaTex is an Electronic Records Management System
- Copyright (C) 2014 2015 Nicolas Roche
+ Copyright (C) 2014 2015 2016 Nicolas Roche
  
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
