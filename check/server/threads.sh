@@ -73,6 +73,7 @@ kill -s TERM $PID
 
 # waiting for the end of the daemon
 while [ "$(ps -ef | grep [u]t$TEST)" ]; do :; done
+rm -f $PIDFILE
 
 # compare with the expected output
 mrProperOutputs server/$TEST.out

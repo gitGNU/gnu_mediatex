@@ -63,6 +63,7 @@ wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
 echo "* Free shm" >>common/$TEST.out
 #sleep 1
 common/ut$TEST -F >>common/$TEST.out 2>&1
+rm -f $PIDFILE
 
 # compare with the expected output
 sed common/$TEST.out -i \

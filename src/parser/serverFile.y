@@ -392,7 +392,8 @@ int parseServerFile(Collection* coll, const char* path)
 
   if (path != 0) {
     if (!(inputStream = fopen(path, "r"))) {
-      logParser(LOG_ERR, "cannot open input stream: %s", path); 
+      logParser(LOG_ERR, "cannot open input stream %s: %s",
+		path, strerror(errno)); 
       goto error;
     }
     if (!lock(fileno(inputStream), F_RDLCK)) goto error2;

@@ -7,10 +7,16 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection ( SX )
@@ -92,10 +98,16 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection ( SX )
@@ -177,10 +189,16 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
@@ -274,18 +292,27 @@
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP1.cat
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logo.tgz to the coll1 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logo.tgz
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/cp execution returns 0
 [notice utFunc.c] copy logoP2.iso to the coll1 cache
 [info command.c] execScript: /bin/cp
 [info command.c]  arg1: -f
 [info command.c]  arg2: ./../misc/logoP2.iso
 [info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/cp execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
@@ -387,26 +414,44 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [notice utnotify.c] -------------------------------------------------------
 [notice utnotify.c] *** test receiving message:
@@ -472,26 +517,44 @@
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll1/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll2/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info command.c] execScript: /bin/bash
 [info command.c]  arg1: -c
 [info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx2/tmp/mdtx2-coll3/*
+[info command.c] --- exec system call begin ---
+[info command.c] close stdout from child (use '-sinfo:script' to undo)
+[info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info confTree.c] free configuration
 [info utnotify.c] exit on success

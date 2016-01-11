@@ -1,10 +1,9 @@
 
 *** BUG
 
-- utnotify:
-< [err address.c] gethostbyname_r mediatex.org: Unknown host
----
-> [err address.c] gethostbyname_r mediatex.org: Host name lookup failure
+- add coll and then HUP daemon (that need to be restarted) :
+  try to parse servers.txt but serv1 still do no belongs to serv1-hello.
+  (todo: try to use ACL to resolve it)
 
 *** TO TEST
 

@@ -340,7 +340,7 @@ execChild(char** argv, int doHideStderr)
 
   // - close stdout by default
   if (env.logHandler->severity[LOG_SCRIPT]->code <= LOG_INFO) {
-    logMisc(LOG_INFO, "close stdout from child (use '-sinfo:debug' to undo)");
+    logMisc(LOG_INFO, "close stdout from child (use '-sinfo:script' to undo)");
     dup2(fd, 1);
   }
 
@@ -416,7 +416,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
       goto error;
     }
 
-    logScript(LOG_DEBUG, "--- exec system call begin ---");
+    logMisc(LOG_INFO, "--- exec system call begin ---");
     execChild(argv, doHideStderr);
     logMisc(LOG_ERR, "failed to exec %s", argv[0]);
     exit(EXIT_FAILURE);
@@ -436,7 +436,7 @@ execScript(char** argv, char* user, char* pwd, int doHideStderr)
     }
   }
 
-  logScript(LOG_DEBUG, "--- exec system call end ---");
+  logMisc(LOG_INFO, "--- exec system call end ---");
   if (WIFEXITED(status)) rcChild = WEXITSTATUS(status);
   logMisc(LOG_INFO, "%s execution returns %i", argv[0], rcChild);
   if (rcChild == -1) {

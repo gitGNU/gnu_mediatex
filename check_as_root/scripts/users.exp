@@ -77,8 +77,6 @@ Fait.
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
 * files : *
           root           root drwxr-xr-x /var/ut/ut1-mdtx
-          root           root drwxr-xr-x /var/ut/ut1-mdtx/usr
-          root           root drwxr-xr-x EXEC_PREFIX
           root           root drwxr-xr-x SYSCONFDIR
           root           root drwxr-xr-x SYSCONFDIR/apache2
           root           root drwxr-xr-x SYSCONFDIR/apache2/conf-available
@@ -86,6 +84,7 @@ Fait.
           root           root -rw-r----- SYSCONFDIR/cron.d/mediatex_cron
           root           root drwxr-xr-x SYSCONFDIR/mediatex
           root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut1-mdtx.conf
+          root           root drwxr-xr-x EXEC_PREFIX
           root           root drwxr-xr-x DATAROOTDIR
           root           root drwxr-xr-x DATAROOTDIR/mediatex
           root           root drwxr-xr-x DATAROOTDIR/mediatex/misc
@@ -184,13 +183,12 @@ Fait.
 [debug users.sh] USERS_mdtx_disease
 * cleanup : *
 drwxr-xr-x /var/ut/ut1-mdtx
-drwxr-xr-x /var/ut/ut1-mdtx/usr
-drwxr-xr-x EXEC_PREFIX
 drwxr-xr-x SYSCONFDIR
 drwxr-xr-x SYSCONFDIR/apache2
 drwxr-xr-x SYSCONFDIR/apache2/conf-available
 drwxr-xr-x SYSCONFDIR/cron.d
 drwxr-xr-x SYSCONFDIR/mediatex
+drwxr-xr-x EXEC_PREFIX
 drwxr-xr-x DATAROOTDIR
 drwxr-xr-x DATAROOTDIR/mediatex
 drwxr-xr-x DATAROOTDIR/mediatex/misc
