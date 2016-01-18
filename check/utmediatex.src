@@ -158,6 +158,9 @@ function mrProperOutputs()
 
     # make distcheck on server
     sed $1 -i -e "s,../../check/,./,"
+
+    # with or without network
+    sed $1 -i -e "s,Host name lookup failure,Unknown host,"
 }
 
 # set MDTXUSER values to "mdtx1"

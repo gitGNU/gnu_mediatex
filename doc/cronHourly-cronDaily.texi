@@ -36,7 +36,7 @@ to @activityClient{}: ask server to perform extractions or to communicate its st
 to @procClientMisc{}: build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
 
 @item @eventClientUpload
-to @procClientUpload{}: upload collection's @acronym{CVSROOT} modules into the cache so as to backup them.
+to @procClientUpload{}: upload collection's @acronym{CVSROOT} modules into the cache so as to backup them, if enabled into @dataServers{}.
 
 @item @eventClientMotd
 to @procClientMotd{}: build the message of the day (actions @actorPublisherO{} have to perform).

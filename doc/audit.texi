@@ -30,10 +30,10 @@ uploads the report to the collection and send a mail to the @actorPublisher{}.
 @table @code
 
 @item @eventClientUpload{} 
-to @procClientUpload{}: upload the audit report.
+to @procClientUpload{}: upload the audit report, if enabled into @dataServers{}.
 
 @item @eventToolsEximSendMail
-to @procToolsExim{}: notify @actorPublisherO{} the audit report was uploaded.
+to @procToolsExim{}: notify @actorPublisherO{} the audit report was competed.
 @end table
 
 @item Data in/out

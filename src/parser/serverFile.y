@@ -63,6 +63,7 @@
   off_t  size;
   time_t time;
   float  score;
+  int    boolean;
   char   string[(MAX_SIZE_STRING+1)*2]; // keys needs more place
   char   hash[MAX_SIZE_MD5+1];
 }
@@ -93,6 +94,9 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servMASTER
 %token            servSERVER
 %token            servCOMMENT
+%token            servLOGAPACHE
+%token            servLOGCVS
+%token            servLOGAUDIT
 %token            servLABEL
 %token            servHOST
 %token            servLASTCOMMIT
@@ -130,6 +134,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token <size>     servSIZE
 %token <time>     servTIME
 %token <time>     servDATE
+%token <boolean>  servBOOLEAN
 
 %%
  /* grammar rules: =====================================================*/
@@ -168,6 +173,36 @@ header: servMASTER servHASH
   strncpy(coll->serverTree->aesKey,
 	  "01234567890abcdef", MAX_SIZE_AES);
   strncpy(coll->serverTree->aesKey, $2, MAX_SIZE_AES);
+}
+      | servLOGAPACHE servBOOLEAN
+{
+  logParser(LOG_DEBUG, "line %-3i logApache %s", LINENO, $2?"yes":"no");
+  if ($2) {
+    coll->serverTree->log |= APACHE;
+  }
+  else {
+    coll->serverTree->log &= ~APACHE;
+  }
+}
+      | servLOGCVS servBOOLEAN
+{
+  logParser(LOG_DEBUG, "line %-3i logCvs %s", LINENO, $2?"yes":"no");
+  if ($2) {
+    coll->serverTree->log |= CVS;
+  }
+  else {
+    coll->serverTree->log &= ~CVS;
+  }
+}
+      | servLOGAUDIT servBOOLEAN
+{
+  logParser(LOG_DEBUG, "line %-3i logAudit %s", LINENO, $2?"yes":"no");
+  if ($2) {
+    coll->serverTree->log |= AUDIT;
+  }
+  else {
+    coll->serverTree->log &= ~AUDIT;
+  }
 }
       | servSERVERTTL servNUMBER servTIME
 {
@@ -217,7 +252,7 @@ stanzas: stanzas stanza
 }
 ;
 
-stanza: servSERVER server lines servENDBLOCK
+stanza: servSERVER server lines2 servENDBLOCK
 {
   logParser(LOG_DEBUG, "line %3-i: servSERVER server lines servENDBLOCK", 
 	    LINENO);
@@ -240,6 +275,9 @@ server: servHASH
   if (!(server = addServer(coll, $1))) YYABORT;
 }
 ;
+
+lines2: lines
+      | /* empty */
 
 lines: lines line
      | line

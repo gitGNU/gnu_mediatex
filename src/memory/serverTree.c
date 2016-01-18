@@ -251,31 +251,33 @@ serializeServer(Server* self, FILE* fd)
   
   fprintf(fd, "\nServer %s\n", self->fingerPrint);
   if (!isEmptyString(self->comment)) {
-    fprintf(fd, "\t%-9s \"%s\"\n", "comment", self->comment);
+    fprintf(fd, "\t%-10s \"%s\"\n", "comment", self->comment);
   }
   if (!isEmptyString(self->label)) {
-    fprintf(fd, "\t%-9s %s\n", "label", self->label);
+    fprintf(fd, "\t%-10s %s\n", "label", self->label);
   }
   if (!isEmptyString(self->host)) {
-    fprintf(fd, "\t%-9s %s\n", "host", self->host);
+    fprintf(fd, "\t%-10s %s\n", "host", self->host);
   }
-  
-  fprintf(fd, "\t%-9s %04i-%02i-%02i,%02i:%02i:%02i \n", "lastCommit",
-	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
-	  date.tm_hour, date.tm_min, date.tm_sec);
+
+  if (self->lastCommit) {
+    fprintf(fd, "\t%-10s %04i-%02i-%02i,%02i:%02i:%02i \n", "lastCommit",
+	    date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
+	    date.tm_hour, date.tm_min, date.tm_sec);
+  }
   
   if (self->mdtxPort) {
-    fprintf(fd, "\t%-9s %i\n", "mdtxPort", self->mdtxPort);
+    fprintf(fd, "\t%-10s %i\n", "mdtxPort", self->mdtxPort);
   }
   if (self->sshPort) {
-    fprintf(fd, "\t%-9s %i\n", "sshPort", self->sshPort);
+    fprintf(fd, "\t%-10s %i\n", "sshPort", self->sshPort);
   }
   if (self->wwwPort) {
-    fprintf(fd, "\t%-9s %i\n", "wwwPort", self->wwwPort);
+    fprintf(fd, "\t%-10s %i\n", "wwwPort", self->wwwPort);
   }
 
   if (!isEmptyRing(self->networks)) {
-    fprintf(fd, "\t%-9s ", "networks");
+    fprintf(fd, "\t%-10s ", "networks");
     if (!rgSort(self->networks, cmpString)) goto error;
     curr = 0;
     if (!(string = rgNext_r(self->networks, &curr))) goto error;
@@ -287,7 +289,7 @@ serializeServer(Server* self, FILE* fd)
   }
   
   if (!isEmptyRing(self->gateways)) {
-    fprintf(fd, "\t%-9s ", "gateways");
+    fprintf(fd, "\t%-10s ", "gateways");
     if (!rgSort(self->gateways, cmpString)) goto error;
     curr = 0;
     if (!(string = rgNext_r(self->gateways, &curr))) goto error;
@@ -300,13 +302,13 @@ serializeServer(Server* self, FILE* fd)
 
   /* cache parameters (take care, this use macro) */
   if (self->cacheSize) {
-    printCacheSize(fd, "\t%-9s", "cacheSize", self->cacheSize);
+    printCacheSize(fd, "\t%-10s", "cacheSize", self->cacheSize);
   }
   if (self->cacheTTL) {
-    printLapsTime(fd, "\t%-9s", "cacheTTL", self->cacheTTL);
+    printLapsTime(fd, "\t%-10s", "cacheTTL", self->cacheTTL);
   }
   if (self->queryTTL) {
-    printLapsTime(fd, "\t%-9s", "queryTTL", self->queryTTL);
+    printLapsTime(fd, "\t%-10s", "queryTTL", self->queryTTL);
   }
 
   // list of images
@@ -325,10 +327,13 @@ serializeServer(Server* self, FILE* fd)
   } 
 
   fprintf(fd, "%s", "#\tkeys:\n");
-  fprintf(fd, "\t%-9s \"%s\"\n", "userKey", self->userKey);
-  if (!isEmptyString(self->hostKey))
-    fprintf(fd, "\t%-9s \"%s\"\n", "hostKey", self->hostKey);
-
+  if (!isEmptyString(self->hostKey)) {
+    fprintf(fd, "\t%-10s \"%s\"\n", "userKey", self->userKey);
+  }
+  if (!isEmptyString(self->hostKey)) {
+    fprintf(fd, "\t%-10s \"%s\"\n", "hostKey", self->hostKey);
+  }
+  
   fprintf (fd, "end\n");
   rc = TRUE;
  error:
@@ -379,7 +384,7 @@ createServerTree(void)
     
   memset(rc, 0, sizeof(ServerTree));
   strncpy(rc->aesKey, "01234567890abcdef", MAX_SIZE_AES);
-
+  rc->log = NO_LOG;
   rc->uploadTTL = DEFAULT_TTL_UPLOAD;
   rc->serverTTL = DEFAULT_TTL_SERVER;
   rc->scoreParam = defaultScoreParam;
@@ -474,9 +479,14 @@ serializeServerTree(Collection* coll)
   fprintf(fd, "# MediaTeX %s@%s:%i servers list:\n\n", 
 	  self->master->user, self->master->host, 
 	  self->master->sshPort);
-  fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
   
+  fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
+
+  fprintf(fd, "\n# self-ingestion parameters\n");
+  fprintf(fd, "%-10s %s\n", "logApache", self->log & APACHE?"yes":"no");
+  fprintf(fd, "%-10s %s\n", "logCvs", self->log & CVS?"yes":"no");
+  fprintf(fd, "%-10s %s\n", "logAudit", self->log & AUDIT?"yes":"no");
 
   fprintf(fd, "\n# score parameters\n");
   printLapsTime(fd, "%-10s", "uploadTTL", self->uploadTTL);
@@ -814,8 +824,10 @@ diseaseServer(Collection* coll, Server* server)
   server->label = destroyString(server->label);
   server->user = destroyString(server->user);
   server->comment = destroyString(server->comment);
+  server->lastCommit = 0;
   server->mdtxPort = 0;
   server->sshPort = 0;
+  server->wwwPort = 0;
   server->userKey = destroyString(server->userKey);
   server->hostKey = destroyString(server->hostKey);
   server->host[0] = (char)0;

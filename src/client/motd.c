@@ -55,7 +55,7 @@ typedef struct MotdSearch {
   
 } MotdSearch;
 
-int motdArchive(MotdSearch* data, Archive* archive);
+int motdArchive(MotdSearch* data, Archive* archive, int depth);
 
 /*=======================================================================
  * Function   : destroyMotdSupport
@@ -309,20 +309,23 @@ updateMotdFromSupportDB(Motd* motd)
 /*=======================================================================
  * Function   : motdContainer
  * Description: Find image related to a container
- * Synopsis   : int motdContainer
+ * Synopsis   : int motdContainer(MotdSearch* data, 
+ *                                Container* container, int depth)
  * Input      : Collection* coll = context
  *              Container* container = what to motd
+ *              int depth: use to indent logs
  * Output     : int *isAvailable = TRUE when image is already available
  *              FALSE on error
  =======================================================================*/
-int motdContainer(MotdSearch* data, Container* container)
+int motdContainer(MotdSearch* data, Container* container, int depth)
 {
   int rc = FALSE;
   Archive* archive = 0;
   RGIT* curr = 0;
 
-  logMain(LOG_DEBUG, "motd a container %s/%s:%lli", 
-	  strEType(container->type), container->parent->hash,
+  logMain(LOG_DEBUG, "%*slook for container %s/%s:%lli", 
+	  depth, "", strEType(container->type),
+	  container->parent->hash,
 	  (long long int)container->parent->size);
 
   data->isAvailable = FALSE;
@@ -332,14 +335,14 @@ int motdContainer(MotdSearch* data, Container* container)
 
   // we motd all parents (only one for TGZ, several for CAT...)
   while ((archive = rgNext_r(container->parents, &curr))) {
-    if (!motdArchive(data, archive)) goto error;
+    if (!motdArchive(data, archive, depth+1)) goto error;
   }
 
  end:
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "motdContainer fails");
+    logMain(LOG_ERR, "%*smotdContainer fails", depth, "");
   }
   return rc;
 } 
@@ -347,46 +350,50 @@ int motdContainer(MotdSearch* data, Container* container)
 /*=======================================================================
  * Function   : motdArchive
  * Description: Find image related to an archive
- * Synopsis   : int motdArchive
+ * Synopsis   : int motdArchive(MotdSearch* data, Archive* archive, 
+ *                              int depth)
  * Input      : Collection* coll = context
  *              Archive* archive = what to motd
+ *              int depth: use to indent logs
  * Output     : int *isAvailable = TRUE image is already available
  *              FALSE on error
  =======================================================================*/
-int motdArchive(MotdSearch* data, Archive* archive)
+int motdArchive(MotdSearch* data, Archive* archive, int depth)
 {
   int rc = FALSE;
   FromAsso* asso = 0;
   RGIT* curr = 0;
 
-  logMain(LOG_DEBUG, "motd an archive: %s:%lli", 
-	  archive->hash, archive->size);
+  logMain(LOG_DEBUG, "%*slook for archive: %s:%lli", 
+	  depth, "", archive->hash, archive->size);
 
   data->isAvailable = FALSE;
   checkCollection(data->coll);
 
-  if (archive->state == AVAILABLE) {
+  if (archive->state >= AVAILABLE) {
+    logMain(LOG_DEBUG, "%*savailable from cache", depth, "");
     data->isAvailable = TRUE;
     goto end;
   }
 
   // look for a matching image 
   if (archive->images->nbItems > 0) {
-    logMain(LOG_DEBUG, "archive match %i images", archive->images->nbItems);
+    logMain(LOG_DEBUG, "%*s%i images matched", depth, "",
+	    archive->images->nbItems);
     if (!rgInsert(data->imagesWanted, archive)) goto error;
   }
 
   // continue searching ; we stop at the first container already there
   while (!data->isAvailable && 
 	(asso = rgNext_r(archive->fromContainers, &curr))) {
-    if (!motdContainer(data, asso->container)) goto error;
+    if (!motdContainer(data, asso->container, depth+1)) goto error;
   }
 
  end:
   rc = TRUE;
  error:
   if (!rc) {
-    logMain(LOG_ERR, "motdArchive fails");
+    logMain(LOG_ERR, "%*smotdArchive fails", depth, "");
   }
   return rc;
 } 
@@ -419,13 +426,15 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!(data.imagesWanted = createRing())) goto error2;
   data.coll = coll;
+
+  logRecordTree(LOG_MAIN, LOG_DEBUG, coll->cacheTree->recordTree, 0);  
   
   // 1) for each cache entry
   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
 
     // scan wanted archives not available
     if (archive->state != WANTED) continue;
-    if (!motdArchive(&data, archive)) goto error2;
+    if (!motdArchive(&data, archive, 0)) goto error2;
   }
   
   // for images, match supports
@@ -511,8 +520,6 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
   rgRewind(conf->collections);
   while ((coll = rgNext(conf->collections))) {
 
-    logRecordTree(LOG_MAIN, LOG_DEBUG, coll->cacheTree->recordTree, 0);
-    
     // assert we have the localhost server object
     if (!getLocalHost(coll)) goto error;
     

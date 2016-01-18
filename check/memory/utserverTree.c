@@ -221,11 +221,12 @@ main(int argc, char** argv)
   if (!isReachable(coll, server3, server1)) goto error;
   if (!isReachable(coll, server3, server2)) goto error;
 
-  // test disease
+  // test disease and log parameters
   if (!diseaseServer(coll, server1)) goto error;
   if (!diseaseServer(coll, server2)) goto error;
   if (!diseaseServer(coll, server3)) goto error;
   env.dryRun = TRUE;
+  coll->serverTree->log = APACHE | AUDIT;
   if (!serializeServerTree(coll)) goto error;
   /************************************************************************/
 

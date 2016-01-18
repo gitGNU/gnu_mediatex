@@ -28,8 +28,6 @@ set -e
 [ -z $srcdir ] && srcdir=.
 [ -z $libdir ] && libdir=$srcdir/lib
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
-
-Debug "audit"
 [ ! -z "$MDTX_MDTXUSER" ] || 
 Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $1 ] || Error "expect a label as first parameter"
@@ -37,6 +35,8 @@ Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $3 ] || Error "expect a hash as third parameter"
 [ ! -z $4 ] || Error "expect a size as fourth parameter"
 [ ! -z $5 ] || Error "expect a status as fifth parameter"
+
+Notice "audit: archive $3:$4 for coll $1 (status = $5)"
 
 COLL=$1
 EXTRA=$2
@@ -57,6 +57,28 @@ FILEPATH_KO=$EXTRACT/$USER/$FILENAME_KO
 NAME=$(echo $ADDRESS | cut -d "@" -f1)
 SUBJECT="$USER audit"
 
+# # check audit report is still available
+# # (many many mails will be sent!!)
+# if [ ! -f $FILEPATH ]; then
+
+#     # send mail
+#     /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
+# Dear $NAME,
+
+# The audit you requested on $COLL collection fails.
+# - $EXTRA
+
+# This do not implies your collection leaks,
+# but only that the audit process itself do not complete.
+
+# Sorry about that.
+
+# $([ ! -f /usr/games/cowsay ] || /usr/games/cowsay mheu)
+# EOF
+#      Warning "audit for $ADDRESS uncompleted"
+#      exit 0;
+# fi
+     
 # retrieve actual values from audit file
 MAX=$(head -n4 $FILEPATH | tail -n +4 | cut -d' ' -f2)
 CUR=$(head -n5 $FILEPATH | tail -n +5 | cut -d' ' -f2)
@@ -64,7 +86,7 @@ OK=$(head -n6 $FILEPATH | tail -n +6 | cut -d' ' -f3)
 KO=$(head -n7 $FILEPATH | tail -n +7 | cut -d' ' -f3)
 
 # assert archive was not already checked
-if [ $(grep -c "$HASH:$SIZE" $FILEPATH) -ne 1 ]; then
+if [ "$(grep -c $HASH:$SIZE $FILEPATH)" -ne 1 ]; then
     Info "archive $HASH:$SIZE already audited for $EXTRA"
 else
     # if check on archive was successful
@@ -105,15 +127,18 @@ fi
 
 # upload the audit report and send a mail
 if [ $CUR -eq $MAX ]; then
-    
-    SIGN1=$(md5sum $FILEPATH | cut -d' ' -f 1)
-    SIGN1=$SIGN1:$(ls $FILEPATH -l | cut -d' ' -f 5)
-  
-    gzip -c $FILEPATH > $FILEPATH.gz
-    SIGN2=$(md5sum $FILEPATH.gz | cut -d' ' -f 1)
-    SIGN2=$SIGN2:$(ls $FILEPATH.gz -l | cut -d' ' -f 5)
-  
-    cat >/tmp/$AUDIT.cat <<EOF
+    DO_LOG=$(grep -i logAudit $CVSCLT/$USER/servers.txt | \
+		    awk '{ print $2 }')
+    case $DO_LOG in
+	yes|Yes|YES|y|Y|true|True|TRUE|t|T)
+	    SIGN1=$(md5sum $FILEPATH | cut -d' ' -f 1)
+	    SIGN1=$SIGN1:$(ls $FILEPATH -l | cut -d' ' -f 5)
+	    
+	    gzip -c $FILEPATH > $FILEPATH.gz
+	    SIGN2=$(md5sum $FILEPATH.gz | cut -d' ' -f 1)
+	    SIGN2=$SIGN2:$(ls $FILEPATH.gz -l | cut -d' ' -f 5)
+	
+	    cat >/tmp/$AUDIT.cat <<EOF
 Top Category "~mediatex"
 Category "audits": "~mediatex"
 Document "$AUDIT": "audits"
@@ -130,8 +155,8 @@ Archive $SIGN2
  "format" = "gz"
 EOF
     
-    TARGETDIR="mediatex/audits"
-    cat >/tmp/$AUDIT.ext <<EOF
+	    TARGETDIR="mediatex/audits"
+	    cat >/tmp/$AUDIT.ext <<EOF
 (GZIP
 $SIGN2
 =>
@@ -139,19 +164,25 @@ $SIGN1 $TARGETDIR/$FILENAME
 )
 EOF
 
-    mediatex -c $MDTX upload++ file $FILEPATH.gz as $TARGETDIR/ \
-	catalog /tmp/$AUDIT.cat rules /tmp/$AUDIT.ext \
-	to coll $COLL
+	    mediatex -c $MDTX upload++ file $FILEPATH.gz as $TARGETDIR/ \
+		     catalog /tmp/$AUDIT.cat rules /tmp/$AUDIT.ext \
+		     to coll $COLL
+	    rm -f /tmp/$AUDIT.cat /tmp/$AUDIT.ext $FILEPATH.gz
+	    ;;
+    esac
+    mv $FILEPATH /tmp/$FILENAME
 
-    rm -f /tmp/$AUDIT.cat /tmp/$AUDIT.ext $FILEPATH $FILEPATH.gz
-
+    # send mail
     /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
 Dear $NAME,
 
-The audit you requested on $COLL collection is uploaded.
+The audit you requested on $COLL collection is completed.
+- /tmp/$FILENAME
+- upload: $DO_LOG
 
 $([ ! -f /usr/games/cowsay ] || /usr/games/cowsay mheu)
 EOF
+     Notice "audit for $ADDRESS completed"
 fi
 
 Info "done"

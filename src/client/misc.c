@@ -522,7 +522,8 @@ mdtxScp(char* label, char* fingerPrint, char* source, char* target)
   checkLabel(fingerPrint);
   checkLabel(source);
   checkLabel(target);
-  logMain(LOG_DEBUG, "mdtxScp %s@%s on %s", source, fingerPrint, target);
+  logMain(LOG_DEBUG, "mdtxScp %s from %s on %s",
+	  source, fingerPrint, target);
 
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV)) goto error;
@@ -587,14 +588,14 @@ mdtxAudit(char* label, char* mail)
   checkLabel(mail);
 
   if (!(conf = getConfiguration())) goto error;
-  if (!env.noRegression) {
-    // check if daemon is awake
-    if (access(conf->pidFile, R_OK) == -1) {
-      logMain(LOG_INFO, "cannot read daemon's pid file: %s", 
-	      strerror(errno));
-      goto end;
-    }
-  }
+  /* if (!env.noRegression) { */
+  /*   // check if daemon is awake */
+  /*   if (access(conf->pidFile, R_OK) == -1) { */
+  /*     logMain(LOG_INFO, "cannot read daemon's pid file: %s",  */
+  /* 	      strerror(errno)); */
+  /*     goto end; */
+  /*   } */
+  /* } */
 
   if (!becomeUser(env.confLabel, TRUE)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
