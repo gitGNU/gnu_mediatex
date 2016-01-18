@@ -1,4 +1,8 @@
 
+*** CORRECTED (to commit)
+
+- sshd config no more undo by remove.sh (no more init.sh do redo)
+
 *** BUGS
 
 - add a switch to cvs backups and apache logs into servers.txt

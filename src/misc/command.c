@@ -324,7 +324,7 @@ execChild(char** argv, int doHideStderr)
   int fd;
 
   logMisc(LOG_DEBUG, "execChild: %s (do%s hide stderr)",
-	  argv[0], doHideStderr?"":"not");
+	  argv[0], doHideStderr?"":"nt");
 
   if (argv[0][0] != '/') {
     logMisc(LOG_ERR, "refuse to exec from a relative path");
