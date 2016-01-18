@@ -264,6 +264,7 @@ socketJob(void* arg)
   //if (!cleanCacheTree(con->message->collection)) rc = FALSE;
   if (!rc) {
     logMain(LOG_ERR, "%s", con->status);
+    logMain(LOG_NOTICE, "still alive");
   }
 
   // send-back status code into the socket

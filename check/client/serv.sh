@@ -39,12 +39,12 @@ cp ${srcdir}/memory/user3Key_dsa.pub client/
 
 # run the unit test
 client/ut$TEST -k >client/$TEST.out 2>&1 &
-while [ -z "$(ps -ef | grep [u]t$TEST)" ]; do :; done
+while [ -z "$(ps -ef | grep ut${TEST}[[:space:]])" ]; do :; done
 
 # second run should fails
 client/ut$TEST -k >client/$TEST.out2 2>&1 || /bin/true
 killall -s SIGHUP ut$TEST 2>/dev/null || /bin/true
-while [ "$(ps -ef | grep [u]t$TEST)" ]; do :; done
+while [ "$(ps -ef | grep ut${TEST}[[:space:]])" ]; do :; done
 
 # compare with the expected output
 echo "=================================" >> client/$TEST.out

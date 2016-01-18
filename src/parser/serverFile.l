@@ -189,6 +189,18 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
     return(servCOLLKEY);
   }
 
+  logApache {
+    return(servLOGAPACHE);
+  }
+
+  logCvs {
+    return(servLOGCVS);
+  }
+    
+  logAudit {
+    return(servLOGAUDIT);
+  }
+
   userKey {
     BEGIN(USERVALUE);
     return(servUSERKEY);
@@ -336,6 +348,16 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
   s(econd)? {
     yylval->time = 1;
     return(servTIME);
+  }
+
+  yes|true {
+    yylval->boolean = TRUE;
+    return(servBOOLEAN);
+  }
+  
+  no|false {
+    yylval->boolean = FALSE;
+    return(servBOOLEAN);
   }
  }
 

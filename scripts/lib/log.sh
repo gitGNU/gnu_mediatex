@@ -79,6 +79,18 @@ Warning()
     Log "warn" "$1" ${2-1}
 }
 
+# print a notification on the standard error stream:
+# $1: message
+# $2: optional indirection number
+Notice()
+{
+    case ${LOG_SEVERITY-info} in
+	error|warning) return 0;;
+    esac
+
+    Log "notice" "$1" ${2-1}
+}
+
 # print an information message on the standard error stream:
 # $1: message
 # $2: optional indirection number

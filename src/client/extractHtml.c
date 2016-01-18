@@ -1080,6 +1080,23 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlUlClose(fd);
   htmlPClose(fd);
 
+    // score parameter of the collection
+  htmlPOpen(fd);
+  if (!fprintf(fd, _("\nSelf-ingestion parameters:\n"))) goto error;
+  htmlUlOpen(fd);
+  htmlLiOpen(fd);
+  fprintf(fd, "%-10s: %s", "logApache",
+	  serverTree->log & APACHE?"yes":"no");
+  htmlLiClose(fd);
+  htmlLiOpen(fd);
+  fprintf(fd, "%-10s: %s", "logCvs", serverTree->log & CVS?"yes":"no");
+  htmlLiClose(fd);
+  htmlLiOpen(fd);
+  fprintf(fd, "%-10s: %s", "logAudit", serverTree->log & AUDIT?"yes":"no");
+  htmlLiClose(fd);
+  htmlUlClose(fd);
+  htmlPClose(fd);
+
   // images
   htmlPOpen(fd);
   if (!fprintf(fd, _("\nAll images: %i\n"), 

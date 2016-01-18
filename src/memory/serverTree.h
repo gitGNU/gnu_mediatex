@@ -28,6 +28,9 @@
 #include "mediatex-types.h"
 //#include <netinet/in.h>
 
+// log type
+typedef enum {NO_LOG=0, APACHE=1, CVS=2, AUDIT=4} LogType;
+
 /* 
    There is maximum 1 ISO image by archive and server.
    Images are listed by servers and archives.
@@ -74,7 +77,8 @@ struct Server {
 struct ServerTree {
   char aesKey[MAX_SIZE_AES+1];
   Server* master;
-
+  LogType log;
+  
   RG* servers;
   RG* archives; // only archives that match an image
   // note: there is only one image per archive in the server context,

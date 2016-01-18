@@ -26,18 +26,25 @@
 
 STATEDIR=CONF_LOCALSTATEDIR/libCONF_MEDIATEXDIR
 BINDIR=CONF_BINDIR
+CACHEDIR=CONF_LOCALSTATEDIR/cacheCONF_MEDIATEXDIR
+MDTX=${MDTX-mdtx}
+CVSCLT=$CACHEDIR/$MDTX/cvs
 
 # backup cvs module
-for COLL in $($BINDIR/mediatex ls master coll); do
-    DATE=$(date +'%Y%m%d')
-    NAME=/tmp/cvs_$COLL_$DATE
+for COLL in $($BINDIR/mediatex -c $MDTX ls master coll); do
+    DO_LOG=$(grep -i logCvs $CVSCLT/$MDTX-$COLL/servers.txt | \
+		    awk '{ print $2 }')
+    case $DO_LOG in
+	yes|Yes|YES|y|Y|true|True|TRUE|t|T)
+	    DATE=$(date +'%Y%m%d')
+	    NAME=/tmp/cvs_$COLL_$DATE
 
-    tar -zcf $NAME.tgz $STATEDIR/mdtx/mdtx-$COLL 2>/dev/null
-    SIGN=$(md5sum $NAME.tgz | cut -d' ' -f 1)
-    SIGN=$SIGN:$(ls $NAME.tgz -l | cut -d' ' -f 5)
+	    tar -zcf $NAME.tgz $STATEDIR/$MDTX/$MDTX-$COLL 2>/dev/null
+	    SIGN=$(md5sum $NAME.tgz | cut -d' ' -f 1)
+	    SIGN=$SIGN:$(ls $NAME.tgz -l | cut -d' ' -f 5)
 
-    cat >$NAME.cat <<EOF
-Top Category "~internal"
+	    cat >$NAME.cat <<EOF
+Top Category "~mediatex"
 Category "backups": "~mediatex"
 
 Document "cvs_$DATE": "backups"
@@ -45,11 +52,13 @@ Document "cvs_$DATE": "backups"
  $SIGN
 EOF
 
-    $BINDIR/mediatex upload++ \
-	file $NAME.tgz as mediatex/backups/ \
-	catalog $NAME.cat \
-	to coll $COLL
-
-    rm -f $NAME.tgz $NAME.cat
+	    $BINDIR/mediatex -c $MDTX upload++ \
+		file $NAME.tgz as mediatex/backups/ \
+		catalog $NAME.cat \
+		to coll $COLL
+	    
+	    rm -f $NAME.tgz $NAME.cat
+	    ;;
+    esac
 done
 

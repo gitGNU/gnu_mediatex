@@ -28,7 +28,7 @@
 #include "mediatex.h"
 #include <openssl/aes.h>
 
-typedef enum {NONE, ENCRYPT, DECRYPT} MDTX_AES_WAY;
+typedef enum {NO_WAY, ENCRYPT, DECRYPT} MDTX_AES_WAY;
 
 typedef struct AESData {
   AES_KEY aesKey;

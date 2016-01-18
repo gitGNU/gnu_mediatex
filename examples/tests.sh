@@ -543,8 +543,14 @@ function test10()
     if [ "x$1" != "xclean" ]; then
 	topo "server 2 provides first support and tell it to server 1"
 	mdtxP "add supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv2
+	mdtxP "motd" serv2
 	mdtxP "add supp iso1 to coll hello" serv2
+	mdtxP "motd" serv2
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv2
+
+	mdtxP "motd" serv2
+	question "motd do not ask for 'iso1' anymore" ""
+
 	mdtxP "srv notify" serv2
 
 	# check server 1 was notified
@@ -666,7 +672,9 @@ function test14()
 	topo "Server 3 provides second support and tell it to others"
  
 	mdtxP "add file /usr/share/mediatex/misc/logoP2.iso" serv3
+	mdtxP "motd" serv2
 	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello" serv3
+	mdtxP "motd" serv2
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 get part2 ?" \
@@ -730,7 +738,8 @@ function test16()
 	for SERV in serv1 serv2 serv3; do
 	    stopInitdScript $SERV
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
-	    rm -f /var/cache/mediatex/${SERV}/md5sums/${SERV}-hello.md5
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports
+	    rm -f /var/cache/mediatex/$SERV/md5sums/$SERV-hello.md5
 	    startInitdScript $SERV
 	done
 
@@ -740,6 +749,7 @@ function test16()
 
 	# same as test4
 	mdtxP "make" serv3
+	echo "!! please switch to server3 web site !!"
 	yourMail serv3
 	mdtxP "srv save" serv3
 	question "do the 3rd server get it ?" \
@@ -808,8 +818,49 @@ function test17()
     fi	    
 }
 
-# Move CVS repository from serv1 to serv2
+
+# CVS backup on server 1
 function test18()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "CVS backup on server 1"
+
+	sed ~serv1-hello/cvs/servers.txt -i -e "s/\(logCvs\) *\(.*\)/\1 yes/"
+	QUERY="/usr/share/mediatex/scripts/cron_monthly.sh"
+	query $QUERY serv1
+	export MDTX=serv1 
+	$QUERY
+	mdtxP "make" serv1
+
+	finalQuestion "does CVSROOT is backuped ?"
+	[ $TEST_OK -eq 0 ] && return
+    else
+	topo "Cleanup"
+    fi
+}
+
+# Apache's logs backup on server 1
+function test19()
+{
+    if [ "x$1" != "xclean" ]; then
+	topo "Apache's logs backup on server 1"
+
+	sed ~serv1-hello/cvs/servers.txt -i -e "s/\(logApache\) *\(.*\)/\1 yes/"
+	QUERY="/etc/logrotate.d/httpd-prerotate/mediatex_logrotate"
+	query $QUERY serv1
+	export MDTX=serv1 
+	$QUERY
+	mdtxP "make" serv1
+
+	finalQuestion "does Apache's logs are backuped ?"
+	[ $TEST_OK -eq 0 ] && return
+    else
+	topo "Cleanup"
+    fi
+}
+
+# Move CVS repository from serv1 to serv2
+function test20()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Move CVS repository from serv1 to serv2"
@@ -849,28 +900,45 @@ function test18()
 }
 
 # Audit on server 1
-function test19()
+function test21()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "Audit on server"
- 
+	topo "Audit on server 1"
+
+	sed ~serv1-hello/cvs/servers.txt -i -e "s/\(logAudit\) *\(.*\)/\1 yes/"	
 	read -p "Please enter your mail: " MAIL
 	mdtxP "audit coll hello for $MAIL" serv1
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
+	mdtxP "serv save" serv1
+	cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5
+	read -p "!! support1 déjà en cache..."
+	mdtxP "motd" serv1
+	read -p "!! ne devrais pas demander iso1..."
+	mdtxP "serv notify" serv1
+	mdtxP "serv extract" serv3
+	mdtxP "serv notify" serv3
+	mdtxP "serv extract" serv2
+	mdtxP "serv notify" serv2
 	mdtxP "srv extract" serv1
+	mdtxP "make" serv1
 
 	finalQuestion "do you receive the audit repport ?"
 	[ $TEST_OK -eq 0 ] && return
     else
 	topo "Cleanup"
-	stopInitdScript
-	rm -f /var/cache/mediatex/serv1/md5sums/serv1-hello.md5
-	startInitdScript
+	for SERV in serv1 serv2 serv3; do
+	    stopInitdScript $SERV
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports*
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -f /var/cache/mediatex/$SERV/md5sums/$SERV-hello.md5
+	    startInitdScript $SERV
+	done
+	
     fi
 }
 
 # Make all functionnal for manuals tests
-function test20()
+function test22()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Make all functionnal for manuals tests"
@@ -898,7 +966,7 @@ function test20()
 }
 
 # check no hello users are logged
-ps -ef | grep h[e]llo
+ps -ef | grep h[e]llo | grep -v http
 [ $? -ne 1 ] && {
     echo "** Please logout hello users"
     who | grep hello

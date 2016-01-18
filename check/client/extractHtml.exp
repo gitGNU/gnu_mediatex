@@ -1253,6 +1253,17 @@ Score parameters:
 
 <P>
 
+Self-ingestion parameters:
+<UL>
+<LI>logApache : no</LI>
+<LI>logCvs    : no</LI>
+<LI>logAudit  : no</LI>
+</UL>
+
+</P>
+
+<P>
+
 All images: 3
 <UL>
 <LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="archives/0000/000.shtml">( 8.25)</A></LI>

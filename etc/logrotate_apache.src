@@ -26,50 +26,62 @@ set -e
 #=======================================================================
 
 BINDIR=CONF_BINDIR
+CACHEDIR=CONF_LOCALSTATEDIR/cacheCONF_MEDIATEXDIR
+MDTX=${MDTX-mdtx}
+CVSCLT=$CACHEDIR/$MDTX/cvs
 
 # backup apache access logs
-for COLL in $($BINDIR/mediatex ls coll); do
-    DATE=$(/bin/date +'%Y%m%d')
-    HOST=$(/bin/hostname -f)
-    NAME=apache_${DATE}_${HOST}
-
-    /bin/grep "mdtx-$COLL" /var/log/apache2/access.log >/tmp/$NAME.log || \
-	/bin/true
-    SIGN1=$(/usr/bin/md5sum /tmp/$NAME.log | cut -d' ' -f 1)
-    SIGN1=$SIGN1:$(ls /tmp/$NAME.log -l | cut -d' ' -f 5)
-
-    /bin/gzip -f /tmp/$NAME.log
-    SIGN2=$(/usr/bin/md5sum /tmp/$NAME.log.gz | cut -d' ' -f 1)
-    SIGN2=$SIGN2:$(/bin/ls /tmp/$NAME.log.gz -l | cut -d' ' -f 5)
-
-    /bin/cat >/tmp/$NAME.cat <<EOF
+for COLL in $($BINDIR/mediatex -c $MDTX ls coll); do
+    DO_LOG=$(grep -i logApache $CVSCLT/$MDTX-$COLL/servers.txt | \
+		    awk '{ print $2 }')
+    case $DO_LOG in
+	yes|Yes|YES|y|Y|true|True|TRUE|t|T)
+	    DATE=$(/bin/date +'%Y%m%d')
+	    HOST=$(/bin/hostname -f)
+	    NAME=apache_${DATE}_${HOST}
+	    
+	    /bin/grep "$MDTX-$COLL" /var/log/apache2/access.log \
+		      >/tmp/$NAME.log || /bin/true
+	    SIGN1=$(/usr/bin/md5sum /tmp/$NAME.log | cut -d' ' -f 1)
+	    SIZE1=$(ls /tmp/$NAME.log -l | cut -d' ' -f 5)
+	    
+	    # cannot archive empty file
+	    [ $SIZE1 -gt 0 ] || continue 
+	    
+	    /bin/gzip -f /tmp/$NAME.log
+	    SIGN2=$(/usr/bin/md5sum /tmp/$NAME.log.gz | cut -d' ' -f 1)
+	    SIZE2=$(/bin/ls /tmp/$NAME.log.gz -l | cut -d' ' -f 5)
+	    
+	    /bin/cat >/tmp/$NAME.cat <<EOF
 Top Category "~mediatex"
 Category "access": "~mediatex"
 Document "$NAME": "access"
  "date" = "$(/bin/date)"
  "extracted from" = "$HOST"
- $SIGN1
- $SIGN2
+ $SIGN1:$SIZE1
+ $SIGN2:$SIZE2
 
-Archive $SIGN1
+Archive $SIGN1:$SIZE1
  "format" = "text"
-Archive $SIGN2
+Archive $SIGN2:$SIZE2
  "format" = "gz"
 EOF
 
-    TARGETDIR="mediatex/audits"
-    /bin/cat >/tmp/$NAME.ext <<EOF
+	    TARGETDIR="mediatex/access"
+	    /bin/cat >/tmp/$NAME.ext <<EOF
 (GZIP
-$SIGN2
+$SIGN2:$SIZE2
 =>
-$SIGN1 $TARGETDIR/$NAME.log
+$SIGN1:$SIZE1 $TARGETDIR/$NAME.log
 )
 EOF
-
-    $BINDIR/mediatex upload++ \
-        file /tmp/$NAME.log.gz as mediatex/backups/ \
-        catalog /tmp/$NAME.cat rules /tmp/$NAME.ext \
-        to coll $COLL
-
-    /bin/rm -f /tmp/$NAME.log.gz /tmp/$NAME.cat /tmp/$NAME.ext
+	    
+	    $BINDIR/mediatex -c $MDTX upload++ \
+			     file /tmp/$NAME.log.gz as mediatex/backups/ \
+			     catalog /tmp/$NAME.cat rules /tmp/$NAME.ext \
+			     to coll $COLL
+	    
+	    /bin/rm -f /tmp/$NAME.log.gz /tmp/$NAME.cat /tmp/$NAME.ext
+	    ;;
+	esac
 done

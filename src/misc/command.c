@@ -339,7 +339,7 @@ execChild(char** argv, int doHideStderr)
 
   // - close stdout by default
   if (env.logHandler->severity[LOG_SCRIPT]->code <= LOG_INFO) {
-    logMisc(LOG_INFO, "close stdout from child (use '-sinfo:script' to undo)");
+    logMisc(LOG_INFO, "close stdout from child (use '-sdebug:script' to undo)");
     dup2(fd, 1);
   }
 
