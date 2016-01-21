@@ -120,6 +120,7 @@ N ut4-mdtx-hello/extract000.txt
 N ut4-mdtx-hello/icons/floppy-icon.png
 N ut4-mdtx-hello/logo
 N ut4-mdtx-hello/mediatex.css
+N ut4-mdtx-hello/readme.html
 N ut4-mdtx-hello/servers.txt
 [debug utcvs.sh] SSH_build_key: ut4-mdtx-hello
 [debug utcvs.sh] SSH_bootstrapKeys ut4-mdtx-hello 
@@ -145,6 +146,7 @@ U ut4-mdtx-hello/extract000.txt
 U ut4-mdtx-hello/icons/floppy-icon.png
 U ut4-mdtx-hello/logo
 U ut4-mdtx-hello/mediatex.css
+U ut4-mdtx-hello/readme.html
 U ut4-mdtx-hello/servers.txt
 cvs commit: Examining .
 cvs commit: Examining apache2

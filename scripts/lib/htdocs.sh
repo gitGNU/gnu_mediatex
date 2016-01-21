@@ -99,9 +99,10 @@ function HTDOCS_configure_coll_apache2()
     rm -f $COLL_HTML/cache
     ln -sf $CACHES/$1 $COLL_HTML/cache
 
-    # logo
+    # custumize web site
     ln -sf $COLL_CVS/logo $COLL_HTML/
     ln -sf $COLL_CVS/mediatex.css $COLL_HTML/
+    ln -sf $COLL_CVS/readme.html $COLL_HTML/
     ln -sf $COLL_CVS/icons $COLL_HTML/
 
     # html repositories and links

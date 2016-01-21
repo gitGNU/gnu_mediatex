@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mediatex 0.5\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2016-01-21 02:49+0100\n"
+"POT-Creation-Date: 2016-01-21 20:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,18 +131,18 @@ msgstr ""
 msgid " server)"
 msgstr ""
 
-#: src/client/catalogHtml.c:1320
+#: src/client/catalogHtml.c:1322
 msgid "All documents"
 msgstr ""
 
-#: src/client/catalogHtml.c:1326
+#: src/client/catalogHtml.c:1328
 #, c-format
 msgid ""
 "\n"
 "Classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:1345
+#: src/client/catalogHtml.c:1347
 msgid "Parteners:"
 msgstr ""
 

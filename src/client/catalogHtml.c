@@ -1222,8 +1222,10 @@ serializeHtmlMainIndex(Collection* coll)
   htmlBr(fd);
   htmlPClose(fd);
   
-  /* TODO: include user's text here */
-   
+  /* collection's readme page */
+  if (!fprintf(fd, "\n<!--#include virtual='../readme.html' -->\n"))
+    goto error;
+
   htmlSSIFooter(fd, "..");
 
   rc = TRUE;

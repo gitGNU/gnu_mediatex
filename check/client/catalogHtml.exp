@@ -422,6 +422,8 @@ HREF='https://127.0.0.1:80/~mdtx2-coll1/cgi/viewvc.cgi'>Version</A></TD>
 <BR>
 </P>
 
+<!--#include virtual='../readme.html' -->
+
 <!--#include virtual='../footer.html' -->
 [info confTree.c] free configuration
 [info utcatalogHtml.c] exit on success

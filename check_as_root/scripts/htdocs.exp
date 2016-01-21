@@ -114,6 +114,7 @@ ut2-mdtx-hello       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
       ut2-mdtx ut2-mdtx-hello -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/readme.html
       ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
 ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/.ssh

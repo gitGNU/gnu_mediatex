@@ -114,6 +114,7 @@ function CVS_coll_import()
 	do
 	    install -o $USER -g $USER -m 660 $MISC/$f .
 	done
+	install -o $USER -g $USER -m 660 /dev/null readme.html
 
 	for t in home index cache score cgi; do
 	    install -o $USER -g $USER -m 660 $MISC/$t.htaccess apache2

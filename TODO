@@ -22,12 +22,12 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - mediatex log|top|start|stop|hup/reload|scan
 - manage new group without reloading server (using setfacl)
-- speed-up cache scanning process (use an hash table on records)
-- speed-up audit building process (maybe handle report in C)
+- speed-up cache scanning process (btree on archives)
+- speed-up audit building process (I hope btree on archive already do it)
 - serialise b-tree using another order and use add-if-not-there function
 - replace cvs+viewvc by git+cgit
 - replace gethostby*_r by getaddrinfo and co
-- optimise cache.c::freeCache (ex: sort on dates)
+- optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
 - i10n for french
 
 *** TODO MAYBE
@@ -38,12 +38,13 @@
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
-- hook for ~mdtx-hello/cvs/scripts/deliver.sh
+- hook for ~mdtx-hello/cvs/scripts/deliver.sh and cgi templates
 - monitor cache sizes: all/used/allocated/free
 - test an apache configuration using claim-based authentication (openId)
-- move dirname into extract rule header to reduce extract.txt file size
+- move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
 - manage accents into cache filenames (cgi should rewrite URLs)
+   Content-Type: text/html; charset=UTF-8 ?
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log
