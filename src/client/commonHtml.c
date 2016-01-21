@@ -418,44 +418,6 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
 
 
 /*=======================================================================
- * Function   : getServerUrl
- * Description: get base url for a server
- * Synopsis   : int serializeHtmlCacheTop(Collection* coll)
- * Input      : Server* server
- *              char* url: an allocated string
- *              char* txt: text to cat at the end of the url
- * Output     : TRUE on success
- =======================================================================*/
-int getServerUrl(Server* server, char* txt, char* url)
-{
-  int rc = FALSE;
-
-  checkServer(server);
-  if (!server->wwwPort) {
-    logMain(LOG_WARNING, "no www port define for this server");
-    server->wwwPort = WWW_PORT;
-  }
-  
-  if (server->wwwPort == 443) {
-    if (sprintf(url, "https://%s/~%s%s", 
-		 server->host, server->user, txt) <= 0) goto error;
-  }
-  else {
-    if (sprintf(url, "https://%s:%i/~%s%s",
-  		 server->host, server->wwwPort, server->user, txt) <= 0)
-      goto error;
-  }
-  
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "getServerUrl fails");
-  }
-  return rc;
-}
-
-
-/*=======================================================================
  * Function   : serializeHtmlCacheTop
  * Description: This template will be used by apache SSI
  * Synopsis   : int serializeHtmlCacheTop(Collection* coll)
@@ -470,9 +432,8 @@ serializeHtmlCacheHeader(Collection* coll)
   Server *server = 0;
   RGIT* curr = 0;
   char* path = 0;
-  char url[512];
   FILE* fd = stdout; 
-
+  char url[512];
 
   if (!(self = coll->serverTree)) goto error;
   if (!(path = createString(coll->htmlDir))) goto error;
@@ -492,8 +453,8 @@ serializeHtmlCacheHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr))) {
-      if (!getServerUrl(server, "/cache", url)) goto error;
-      
+      strcpy(url, server->url);
+      strcpy(url + strlen(url), "/cache"); 
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);      
@@ -502,10 +463,8 @@ serializeHtmlCacheHeader(Collection* coll)
   }
   
   // master url (other are relatives ones)
-  if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
-  
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, url)) goto error;
+  if (!htmlRightHead(fd, coll->serverTree->master->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);
@@ -538,24 +497,25 @@ serializeHtmlCgiHeader(Collection* coll)
   Server *server = 0;
   RGIT* curr = 0;
   char* path = 0;
-  char url1[512];
-  char url2[512];
+  char url[512];
   FILE* fd = stdout; 
 
-  if (!(conf = getConfiguration())) goto error;
-
-  if (!(self = coll->serverTree)) goto error;
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cgiHeader.shtml"))) goto error;
   logMain(LOG_DEBUG, "serialize %s", path);
+  if (!(conf = getConfiguration())) goto error;
+  if (!(self = coll->serverTree)) goto error;
+  if (!getLocalHost(coll)) goto error;
+  
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
-  if (!getServerUrl(getLocalHost(coll), "", url1)) goto error;
-  if (!htmlMainHeadBasic(fd, _("Cache"), url1)) goto error;
-  if (!htmlLeftPageHeadBasic(fd, _("cache"), url1)) goto error;
+  if (!htmlMainHeadBasic(fd, _("Cache"), coll->localhost->url))
+    goto error;
+  if (!htmlLeftPageHeadBasic(fd, _("cache"), coll->localhost->url))
+    goto error;
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
@@ -563,18 +523,18 @@ serializeHtmlCgiHeader(Collection* coll)
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr))) {
-      if (!getServerUrl(server, "/cache", url2)) goto error;
-      
+      strcpy(url, server->url);
+      strcpy(url + strlen(url), "/cache"); 
       htmlLiOpen(fd);
-      htmlLink(fd, 0, url2, server->host);
+      htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);      
     }
     htmlUlClose(fd);
   }
   
-  if (!getServerUrl(coll->serverTree->master, "", url2)) goto error;
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHeadBasic(fd, url2, url1)) goto error;
+  if (!htmlRightHeadBasic(fd, coll->serverTree->master->url,
+			  coll->localhost->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);

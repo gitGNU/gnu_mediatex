@@ -38,7 +38,6 @@ int getArchiveUri(char* buf, char* path, Archive* archive);
 int getDocumentUri(char* buf, char* path, int id);
 int serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N);
 int htmlAssoCarac(FILE* fd, AssoCarac* self);
-int getServerUrl(Server* server, char* txt, char* url);
 int serializeHtmlCache(Collection* coll);
 
 #endif /* MDTX_CLIENT_ADMSERVER_H */

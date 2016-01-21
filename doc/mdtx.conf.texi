@@ -71,8 +71,9 @@ mdtxPort   6001
 # port: listening port for SSHd
 sshPort    22
 
-# port: listening port for Apache
-wwwPort    443
+# port: listening ports for Apache
+httpPort   80
+httpsPort  443
 
 # networks: networks the host belongs to
 networks   www
@@ -138,7 +139,8 @@ confLine: HOST string
        | COMMENT string
        | MDTXPORT number
        | SSHPORT number
-       | WWWPORT number
+       | HTTPPORT number
+       | HTTPSPORT number
        | CACHESIZE number SIZE
        | CACHETTL number TIME
        | QUERYTTL number TIME

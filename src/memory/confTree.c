@@ -182,7 +182,7 @@ expandCollection(Collection* self)
 {
   int rc = FALSE;
   Configuration* conf = 0;
-  char urlPart[128];
+  //char urlPart[128];
   int i,j;
   char* dataV[] = {CONF_CATHFILE, CONF_SERVFILE, CONF_EXTRFILE, "/cgi"};
   char** dataP[] = {
@@ -297,27 +297,27 @@ expandCollection(Collection* self)
 	   catString(self->sshDsaPublicKey, CONF_DSAUSERKEY)))
     goto error;
 
-  // urls
-  if (conf->wwwPort == 443) {
-    if (sprintf(urlPart, "/~%s", self->user) <= 0)
-      goto error;
-  }
-  else {
-    if (sprintf(urlPart, ":%i/~%s", conf->wwwPort, self->user) <= 0)
-      goto error;
-  }
+  /* // urls */
+  /* if (conf->wwwPort == 443) { */
+  /*   if (sprintf(urlPart, "/~%s", self->user) <= 0) */
+  /*     goto error; */
+  /* } */
+  /* else { */
+  /*   if (sprintf(urlPart, ":%i/~%s", conf->wwwPort, self->user) <= 0) */
+  /*     goto error; */
+  /* } */
 
-  if (!(self->cacheUrl = createString("https://")) 
-      || !(self->cacheUrl = catString(self->cacheUrl, conf->host))
-      || !(self->cacheUrl = catString(self->cacheUrl, urlPart))
-      || !(self->cacheUrl = catString(self->cacheUrl, "/cache")))
-      goto error;
+  /* if (!(self->cacheUrl = createString("https://"))  */
+  /*     || !(self->cacheUrl = catString(self->cacheUrl, conf->host)) */
+  /*     || !(self->cacheUrl = catString(self->cacheUrl, urlPart)) */
+  /*     || !(self->cacheUrl = catString(self->cacheUrl, "/cache"))) */
+  /*     goto error; */
 
-  if (!(self->cgiUrl = createString("https://")) 
-      || !(self->cgiUrl = catString(self->cgiUrl, conf->host))
-      || !(self->cgiUrl = catString(self->cgiUrl, urlPart))
-      || !(self->cgiUrl = catString(self->cgiUrl, "/cgi/get.cgi")))
-    goto error;
+  /* if (!(self->cgiUrl = createString("https://"))  */
+  /*     || !(self->cgiUrl = catString(self->cgiUrl, conf->host)) */
+  /*     || !(self->cgiUrl = catString(self->cgiUrl, urlPart)) */
+  /*     || !(self->cgiUrl = catString(self->cgiUrl, "/cgi/get.cgi"))) */
+  /*   goto error; */
 
   // default values if not set
   if (!self->cacheSize) self->cacheSize = conf->cacheSize;
@@ -612,7 +612,8 @@ createConfiguration(void)
   conf->scoreParam = defaultScoreParam;
   strncpy(conf->host, DEFAULT_HOST, MAX_SIZE_HOST);
   conf->sshPort = SSH_PORT;
-  conf->wwwPort = WWW_PORT;
+  conf->httpPort = HTTP_PORT;
+  conf->httpsPort = HTTPS_PORT;
   conf->mdtxPort = env.noRegression?TESTING_PORT:CONF_PORT;
 
   rc = conf;
@@ -665,7 +666,8 @@ destroyConfiguration(Configuration* self)
     self->host[0] = (char)0;
     self->mdtxPort = 0;
     self->sshPort = 0;
-    self->wwwPort = 0;
+    self->httpPort = 0;
+    self->httpsPort = 0;
     self->cacheTTL = 0;
     self->queryTTL = 0;
     self->checkTTL = 0;
@@ -861,9 +863,10 @@ serializeConfiguration(Configuration* self)
   fprintf(fd, "\n# port: listening port for SSHd\n");
   fprintf(fd, "%-10s %i\n", "sshPort", self->sshPort);
 
-  fprintf(fd, "\n# port: listening port for Apache\n");
-  fprintf(fd, "%-10s %i\n", "wwwPort", self->wwwPort);
-  
+  fprintf(fd, "\n# port: listening ports for Apache\n");
+  fprintf(fd, "%-10s %i\n", "httpPort", self->httpPort);
+  fprintf(fd, "%-10s %i\n", "httpsPort", self->httpsPort);
+
   fprintf(fd, "\n# networks: networks the host belongs to\n");
   fprintf(fd, "%-10s ", "networks");
   if (isEmptyRing(self->networks)) {

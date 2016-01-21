@@ -46,7 +46,8 @@ struct Server {
   char  fingerPrint[MAX_SIZE_MD5+1]; // destruction id
   char* label; // ie "MDTX2"
   char* user;  // ie "MDTX2-COLL"
-
+  char* url;   // set by computeUrls()
+  
   char* comment;
   char  host[MAX_SIZE_HOST+1];
   int   mdtxPort;
@@ -77,6 +78,7 @@ struct Server {
 struct ServerTree {
   char aesKey[MAX_SIZE_AES+1];
   Server* master;
+  int doHttps;
   LogType log;
   
   RG* servers;

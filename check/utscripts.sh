@@ -35,7 +35,7 @@ function UNIT_TEST_populate_datadir()
 {
     mkdir -p $MISC
 
-    for f in mediatex_cron mediatex.conf supports.txt logo.png \
+    for f in mediatex_cron mediatex.conf supports.txt logo \
 	catalog000.txt extract000.txt servers.txt htgroup \
 	mediatex.css floppy-icon.png \
 	viewvc.conf apache-mdtx.conf header.ezt \

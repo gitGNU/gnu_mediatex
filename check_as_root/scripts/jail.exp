@@ -104,7 +104,7 @@ N ut5-mdtx-hello/catalog000.txt
 N ut5-mdtx-hello/.cvsignore
 N ut5-mdtx-hello/extract000.txt
 N ut5-mdtx-hello/icons/floppy-icon.png
-N ut5-mdtx-hello/logo.png
+N ut5-mdtx-hello/logo
 N ut5-mdtx-hello/mediatex.css
 N ut5-mdtx-hello/servers.txt
 [debug utjail.sh] SSH_build_key: ut5-mdtx-hello
@@ -129,7 +129,7 @@ cvs checkout: Updating ut5-mdtx-hello
 U ut5-mdtx-hello/.cvsignore
 U ut5-mdtx-hello/catalog000.txt
 U ut5-mdtx-hello/extract000.txt
-U ut5-mdtx-hello/logo.png
+U ut5-mdtx-hello/logo
 U ut5-mdtx-hello/mediatex.css
 U ut5-mdtx-hello/servers.txt
 cvs checkout: Updating ut5-mdtx-hello/apache2

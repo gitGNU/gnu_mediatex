@@ -94,6 +94,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servMASTER
 %token            servSERVER
 %token            servCOMMENT
+%token            servHTTPS
 %token            servLOGAPACHE
 %token            servLOGCVS
 %token            servLOGAUDIT
@@ -173,6 +174,11 @@ header: servMASTER servHASH
   strncpy(coll->serverTree->aesKey,
 	  "01234567890abcdef", MAX_SIZE_AES);
   strncpy(coll->serverTree->aesKey, $2, MAX_SIZE_AES);
+}
+      | servHTTPS servBOOLEAN
+{
+  logParser(LOG_DEBUG, "line %-3i https %s", LINENO, $2?"yes":"no");
+  coll->serverTree->doHttps = $2;
 }
       | servLOGAPACHE servBOOLEAN
 {

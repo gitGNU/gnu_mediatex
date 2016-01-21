@@ -94,7 +94,7 @@ function CVS_coll_import()
     # create CVSROOT dir (or re-use it)
     install -o $1 -g $1 -m 2750 -d $CVSROOT/$1
 
-    if [ -f $CVSROOT/$1/logo.png,v ]; then
+    if [ -f $CVSROOT/$1/logo,v ]; then
 	Warning "re-use already imported collection module"
 	chown -R $1.$1 $CVSROOT/$1
     else 
@@ -109,7 +109,7 @@ function CVS_coll_import()
 
 	sed apache2/htgroup -i -e "s!MDTX!$MDTX!"
 
-	for f in logo.png mediatex.css ${CONF_CATHFILE}000.txt \
+	for f in logo mediatex.css ${CONF_CATHFILE}000.txt \
 	    ${CONF_EXTRFILE}000.txt ${CONF_SERVFILE}.txt 
 	do
 	    install -o $USER -g $USER -m 660 $MISC/$f .

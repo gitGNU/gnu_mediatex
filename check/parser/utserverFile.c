@@ -126,6 +126,15 @@ main(int argc, char** argv)
     case servMASTER:
       strcpy(token, "MASTER");
       break;
+    case servSERVER:
+      strcpy(token, "SERVER");
+      break;
+    case servCOMMENT:
+      strcpy(token, "COMMENT");
+      break;
+    case servHTTPS:
+      strcpy(token, "HTTPS");
+      break;
     case servLOGAPACHE:
       strcpy(token, "LOGAPACHE");
       break;
@@ -134,12 +143,6 @@ main(int argc, char** argv)
       break;
     case servLOGAUDIT:
       strcpy(token, "LOGAUDIT");
-      break;
-    case servSERVER:
-      strcpy(token, "SERVER");
-      break;
-    case servCOMMENT:
-      strcpy(token, "COMMENT");
       break;
     case servLABEL:
       strcpy(token, "LABEL");

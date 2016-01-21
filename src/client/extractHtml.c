@@ -1206,10 +1206,8 @@ serializeHtmlScoreHeader(Collection* coll)
   }
 
   // master url (other are relatives ones)
-  if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
-
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, url)) goto error;
+  if (!htmlRightHead(fd, coll->serverTree->master->url)) goto error;
 
   if (!env.dryRun) {
     fclose(fd);

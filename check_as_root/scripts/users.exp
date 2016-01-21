@@ -98,7 +98,7 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
@@ -209,7 +209,7 @@ drwxr-xr-x LOCALSTATEDIR/run/mediatex
 -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
 -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
--r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+-r--r--r-- DATAROOTDIR/mediatex/misc/logo
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css

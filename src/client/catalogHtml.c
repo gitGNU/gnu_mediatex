@@ -1300,7 +1300,7 @@ serializeHtmlIndexHeader(Collection* coll)
   Role* role = 0;
   FILE* fd = stdout;
   char* path = 0;
-  char url[512];
+  char url[128];
 
   if (!(self = coll->catalogTree)) goto error;
 
@@ -1357,10 +1357,8 @@ serializeHtmlIndexHeader(Collection* coll)
   }
 
   // master url (other are relatives ones)
-  if (!getServerUrl(coll->serverTree->master, "", url)) goto error;
-
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, url)) goto error;
+  if (!htmlRightHead(fd, coll->serverTree->master->url)) goto error;
   if (!env.dryRun) {
     fclose(fd);
   } else {

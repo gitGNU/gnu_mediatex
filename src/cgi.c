@@ -255,14 +255,15 @@ int mdtxFind(RecordTree *tree)
     
     fprintf(stdout, 
 	    "<br>Please provide a mail to process exctraction.\r\n<br>");
-    fprintf(stdout, "<FORM method=post action=\"%s\">\r\n", coll->cgiUrl);
-    fprintf(stdout, "<INPUT TYPE=HIDDEN NAME=hash VALUE=%s>", 
+    fprintf(stdout, "<FORM method=post action=\"%s/cgi/get.cgi\">\r\n",
+	    coll->localhost->url);
+    fprintf(stdout, "<INPUT TYPE=HIDDEN NAME=hash VALUE=%s>\n", 
 	    record->archive->hash);
-    fprintf(stdout, "<INPUT TYPE=HIDDEN NAME=size VALUE=%lli>", 
+    fprintf(stdout, "<INPUT TYPE=HIDDEN NAME=size VALUE=%lli>\n", 
 	    (long long int)record->archive->size);
 
-    fprintf(stdout, "Mail <INPUT type=text name=mail>");
-    fprintf(stdout, "<INPUT type=submit value=submit>");
+    fprintf(stdout, "Mail <INPUT type=text name=mail>\n");
+    fprintf(stdout, "<INPUT type=submit value=submit>\n");
     fprintf(stdout, "</FORM>\n");
 
     sendTemplate(coll, "footer.html");

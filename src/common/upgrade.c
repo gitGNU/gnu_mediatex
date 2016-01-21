@@ -490,7 +490,9 @@ scanCvsClientDirectory(Collection* coll, char* path)
  * Output     : TRUE on success 
 
  * Note       : Must only be call by client (nor server or cgi).
- *              This function do almost all the consistency job:
+ *              And should only be called by  openClose.c::loadColl().
+ *
+ *              Do almost all the consistency job:
  *              - re-compute the local image's score
  *              - update own configuration values into servers.txt
  *              - update ssh configuration files (config, key and auth)
@@ -526,7 +528,7 @@ upgradeCollection(Collection* coll)
   strncpy(localhost->host, conf->host, MAX_SIZE_HOST);
   localhost->mdtxPort = conf->mdtxPort;
   localhost->sshPort = conf->sshPort;
-  localhost->wwwPort = conf->wwwPort;
+  //localhost->wwwPort = conf->wwwPort;
   if (!(localhost->comment = createString(conf->comment))) goto error;
   if (!(localhost->userKey = createString(coll->userKey))) goto error;
   if (!(localhost->hostKey = createString(conf->hostKey))) goto error;
@@ -557,7 +559,6 @@ upgradeCollection(Collection* coll)
   }
 
   coll->localhost = localhost;
-  localhost = 0;
 
   // add local images to serverTree
   if (!scoreLocalImages(coll)) goto error;
@@ -571,7 +572,7 @@ upgradeCollection(Collection* coll)
   // if master change his collection key, we need
   // to look first to the master prefix into mdtx.conf file
   if (isMaster) {
-    coll->serverTree->master = coll->localhost;
+    coll->serverTree->master = localhost;
   }
 
   // else we trust the servers.txt file
@@ -581,6 +582,10 @@ upgradeCollection(Collection* coll)
     goto error;
   }
 
+  // uprgade www port on servers.txt
+  localhost->wwwPort =
+    coll->serverTree->doHttps ? conf->httpsPort : conf->httpPort;
+  
   // upgrade master ids on collection stanza into configuration
   // note: this is also valuable for master server
   // conf.coll := server.master
@@ -620,6 +625,54 @@ error:
   }
   return rc;
 }
+
+/*=======================================================================
+ * Function   : computeUrls
+ * Description: Update all server's url
+ * Synopsis   : int computeUrls(Collection* coll)
+ * Input      : Collection* coll = collection to update              
+ * Output     : TRUE on success 
+ * Note       : this is done out from upgrade() as cgi and server only
+ *              read servers.txt but do not upgrade
+ =======================================================================*/
+int 
+computeUrls(Collection* coll)
+{
+  int rc = FALSE;
+  Server* server = 0;
+  RGIT* curr = 0;
+  char url[512];
+
+  checkCollection(coll);
+  logCommon(LOG_DEBUG, "computeUrls %s", coll->label);
+
+  while ((server = rgNext_r(coll->serverTree->servers, &curr))) {
+    
+    // add port into the url if not the default one
+    if ((coll->serverTree->doHttps && server->wwwPort == 443) ||
+	(!coll->serverTree->doHttps && server->wwwPort == 80)) {
+      if (sprintf(url, "http%s://%s/~%s",
+		  coll->serverTree->doHttps?"s":"",
+		  server->host, server->user) <= 0) goto error;
+    }
+    else {
+      if (sprintf(url, "http%s://%s:%i/~%s",
+		  coll->serverTree->doHttps?"s":"",
+		  server->host, server->wwwPort, server->user) <= 0)
+	goto error;
+      
+    }
+    if (!(server->url = createString(url))) goto error;
+  }
+  
+  rc = TRUE;
+error:
+  if (!rc) {
+    logCommon(LOG_ERR, "computeUrls fails");
+  }
+  return rc;
+}
+
 
 /* Local Variables: */
 /* mode: c */

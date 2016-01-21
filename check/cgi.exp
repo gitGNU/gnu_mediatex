@@ -46,7 +46,11 @@ Content-Type: text/html
 </i><br><i>size=12
 </i><br></h5><br>Please provide a mail to process exctraction.
 <br><FORM method=post action="https://localhost/~mdtx1-coll1/cgi/get.cgi">
-<INPUT TYPE=HIDDEN NAME=hash VALUE=40485334450b64014fd7a4810b5698b3><INPUT TYPE=HIDDEN NAME=size VALUE=12>Mail <INPUT type=text name=mail><INPUT type=submit value=submit></FORM>
+<INPUT TYPE=HIDDEN NAME=hash VALUE=40485334450b64014fd7a4810b5698b3>
+<INPUT TYPE=HIDDEN NAME=size VALUE=12>
+Mail <INPUT type=text name=mail>
+<INPUT type=submit value=submit>
+</FORM>
 {bottom template}
 ** second query: register a mail address
 [info cgi.c] * mediatex cgi script *

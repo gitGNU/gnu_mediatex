@@ -83,7 +83,7 @@ cgiServer(Connexion* connexion)
 
   static char status[][32] = {
     "120 not found %s:%lli",
-    "220 ok %s/%s",
+    "220 ok %s/cache/%s",
     "221 ok",
     "320 empty message",
   };
@@ -112,7 +112,7 @@ cgiServer(Connexion* connexion)
     }
     else {
       sprintf(connexion->status, status[1],
-	      coll->cacheUrl, archive->localSupply->extra);
+	      coll->localhost->url, archive->localSupply->extra);
     }
   }
   else {

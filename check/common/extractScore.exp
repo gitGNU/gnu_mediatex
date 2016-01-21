@@ -9,6 +9,7 @@
 [debug openClose.c] file loop on coll1 collection ( SX )
 [debug openClose.c] do load coll1 collection ( S  )
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[debug upgrade.c] computeUrls coll1
 [debug openClose.c] do load coll1 collection (  X )
 [debug openClose.c] load   X  files
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt

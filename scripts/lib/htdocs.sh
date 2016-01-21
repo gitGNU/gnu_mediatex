@@ -100,7 +100,7 @@ function HTDOCS_configure_coll_apache2()
     ln -sf $CACHES/$1 $COLL_HTML/cache
 
     # logo
-    ln -sf $COLL_CVS/logo.png $COLL_HTML/
+    ln -sf $COLL_CVS/logo $COLL_HTML/
     ln -sf $COLL_CVS/mediatex.css $COLL_HTML/
     ln -sf $COLL_CVS/icons $COLL_HTML/
 

@@ -137,8 +137,11 @@ main(int argc, char** argv)
     case confSSHPORT:
       strcpy(token, "SSHPORT");
       break;
-    case confWWWPORT:
-      strcpy(token, "WWWPORT");
+    case confHTTPPORT:
+      strcpy(token, "HTTPPORT");
+      break;
+    case confHTTPSPORT:
+      strcpy(token, "HTTPSPORT");
       break;
     case confCACHESIZE:
       strcpy(token, "CACHESIZE");

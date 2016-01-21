@@ -50,6 +50,7 @@ usage(char* programName)
  * Synopsis   : ./utupgrade
  * Input      : -i mediatex.conf
  * Output     : stdout
+ * TODO       : test server->url after upgrade
  =======================================================================*/
 int 
 main(int argc, char** argv)

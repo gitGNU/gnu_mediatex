@@ -95,7 +95,8 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 %token          confGATEWAYS
 %token          confMDTXPORT
 %token          confSSHPORT
-%token          confWWWPORT
+%token          confHTTPPORT
+%token          confHTTPSPORT
 %token          confCACHESIZE
 %token          confCACHETTL
 %token          confQUERYTTL
@@ -224,10 +225,15 @@ confLine: confHOST confSTRING
   logParser(LOG_DEBUG, "line %-3i sshPort = %i", LINENO, $2);
   getConfiguration()->sshPort = $2;
 }
-       | confWWWPORT confNUMBER
+       | confHTTPPORT confNUMBER
 {
-  logParser(LOG_DEBUG, "line %-3i wwwPort = %i", LINENO, $2);
-  getConfiguration()->wwwPort = $2;
+  logParser(LOG_DEBUG, "line %-3i httpPort = %i", LINENO, $2);
+  getConfiguration()->httpPort = $2;
+}
+       | confHTTPSPORT confNUMBER
+{
+  logParser(LOG_DEBUG, "line %-3i httpsPort = %i", LINENO, $2);
+  getConfiguration()->httpsPort = $2;
 }
        | confCACHESIZE confNUMBER confSIZE
 {

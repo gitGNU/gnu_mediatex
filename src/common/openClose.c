@@ -367,6 +367,7 @@ loadColl(Collection* coll, int fileIdx)
 	if (!upgradeCollection(coll)) goto error2;
 	coll->fileState[iSERV] = MODIFIED;
       }
+      if (!computeUrls(coll)) goto error2;
 
       break;
     case iCACH:

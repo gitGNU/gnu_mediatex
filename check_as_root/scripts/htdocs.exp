@@ -79,7 +79,7 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
@@ -112,7 +112,7 @@ ut2-mdtx-hello       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
       ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/.htaccess
       ut2-mdtx ut2-mdtx-hello -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo.png
+          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
       ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
           root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
@@ -224,7 +224,7 @@ drwxr-xr-x LOCALSTATEDIR/run/mediatex
 -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
 -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
--r--r--r-- DATAROOTDIR/mediatex/misc/logo.png
+-r--r--r-- DATAROOTDIR/mediatex/misc/logo
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css

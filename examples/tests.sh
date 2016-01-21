@@ -911,9 +911,7 @@ function test21()
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "serv save" serv1
 	cat /var/cache/mediatex/serv1/md5sums/serv1-hello.md5
-	read -p "!! support1 déjà en cache..."
 	mdtxP "motd" serv1
-	read -p "!! ne devrais pas demander iso1..."
 	mdtxP "serv notify" serv1
 	mdtxP "serv extract" serv3
 	mdtxP "serv notify" serv3

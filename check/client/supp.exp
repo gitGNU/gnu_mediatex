@@ -203,8 +203,9 @@ mdtxPort   6560
 # port: listening port for SSHd
 sshPort    22
 
-# port: listening port for Apache
-wwwPort    443
+# port: listening ports for Apache
+httpPort   80
+httpsPort  443
 
 # networks: networks the host belongs to
 networks   www

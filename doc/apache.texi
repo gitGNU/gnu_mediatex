@@ -108,10 +108,9 @@ The following files are shared into each collection by servers:
 @item ~mdtx-COLL/public_html/.htaccess
 @end table
 @example
-# force https
-RewriteEngine On 
-RewriteCond %@{SERVER_PORT@} !^443$
-RewriteRule .* https://%@{HTTP_HOST@}%@{REQUEST_URI@} [QSA,R=301,L]
+# uncomment to force https (no more http available)
+#SSLOptions +StrictRequire
+#SSLRequireSSL
 
 # Server side includes
 Options +Includes

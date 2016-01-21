@@ -145,9 +145,14 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
     return(confSSHPORT);
   }
 
-  wwwport {
+  httpport {
     BEGIN(USERVALUE);
-    return(confWWWPORT);
+    return(confHTTPPORT);
+  }
+
+  httpsport {
+    BEGIN(USERVALUE);
+    return(confHTTPSPORT);
   }
 
   cachesize {

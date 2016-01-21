@@ -104,7 +104,8 @@
 #define TESTING_PORT  6560
 #define CONF_PORT     6561 // (as default)
 #define SSH_PORT      22
-#define WWW_PORT      443
+#define HTTP_PORT     80
+#define HTTPS_PORT    443
 
 #endif /* MDTX_CONFIG_H */
 

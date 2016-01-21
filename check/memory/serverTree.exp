@@ -3,6 +3,7 @@
 
 master     6b18ed0194b0fbadd08e0a13cccda00e
 collKey    1234567890abcdef
+https      yes
 
 # self-ingestion parameters
 logApache  no
@@ -27,7 +28,7 @@ Server 6b18ed0194b0fbadd08e0a13cccda00e
 	lastCommit 2010-01-01,01:00:00 
 	mdtxPort   6560
 	sshPort    22
-	wwwPort    443
+	wwwPort    80
 	networks   private, www
 	gateways   private
 	cacheSize  200 Mo

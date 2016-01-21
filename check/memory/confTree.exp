@@ -12,8 +12,9 @@ mdtxPort   6560
 # port: listening port for SSHd
 sshPort    22
 
-# port: listening port for Apache
-wwwPort    443
+# port: listening ports for Apache
+httpPort   80
+httpsPort  443
 
 # networks: networks the host belongs to
 networks   private1, www
@@ -42,7 +43,7 @@ factSupp   2.00
 Collection mdtx1-coll1@host2.mediatex.org:22
 	# --
 	localhost 6b18ed0194b0fbadd08e0a13cccda00e
-	share	  /home/nroche/cvs/mediatex/misc/logoP1.iso,
+	share	  /home/nroche/git/mediatex/misc/logoP1.iso,
 		  SUPP12_logo.png,
 		  SUPP32_logo.part2
 end

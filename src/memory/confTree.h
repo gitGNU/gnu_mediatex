@@ -132,7 +132,8 @@ struct Configuration {
   char  host[MAX_SIZE_HOST+1]; // hostname
   int   mdtxPort;  // listening port for incoming requests (daemon)
   int   sshPort;   // listening port for incoming ssh queries
-  int   wwwPort;   // listening port for incoming web queries
+  int   httpPort;   // listening port for incoming http web queries
+  int   httpsPort;   // listening port for incoming https web queries
   off_t uploadRate; // average upload rate
 
   /* default values for collections */

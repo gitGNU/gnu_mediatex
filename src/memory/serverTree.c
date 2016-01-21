@@ -202,6 +202,7 @@ destroyServer(Server* self)
   self->label = destroyString(self->label);
   self->user = destroyString(self->user);
   self->comment = destroyString(self->comment);
+  self->url = destroyString(self->url);
   self->mdtxPort = 0;
   self->sshPort = 0;
   self->wwwPort = 0;
@@ -384,6 +385,7 @@ createServerTree(void)
     
   memset(rc, 0, sizeof(ServerTree));
   strncpy(rc->aesKey, "01234567890abcdef", MAX_SIZE_AES);
+  rc->doHttps = TRUE;
   rc->log = NO_LOG;
   rc->uploadTTL = DEFAULT_TTL_UPLOAD;
   rc->serverTTL = DEFAULT_TTL_SERVER;
@@ -482,7 +484,8 @@ serializeServerTree(Collection* coll)
   
   fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
-
+  fprintf(fd, "%-10s %s\n", "https", self->doHttps?"yes":"no");
+  
   fprintf(fd, "\n# self-ingestion parameters\n");
   fprintf(fd, "%-10s %s\n", "logApache", self->log & APACHE?"yes":"no");
   fprintf(fd, "%-10s %s\n", "logCvs", self->log & CVS?"yes":"no");

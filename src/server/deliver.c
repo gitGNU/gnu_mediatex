@@ -28,12 +28,12 @@
 /*=======================================================================
  * Function   : callMail
  * Description: call mail
- * Synopsis   : callMail(Collection* coll, char* mail, char* path)
+ * Synopsis   : callMail(Collection* coll, Record* record, char* address)
  * Input      : Collection* coll
- *              char* mail = mail address to use
- *              char* path = path to the file to send as mail content
+ *              char* Record* record = archive we deliver
+ *              char* address = mail address to use
  * Output     : TRUE on success
-* Note       : we need to load bash in order to do the '<' redirection
+ * Note       : we need to load bash in order to do the '<' redirection
  =======================================================================*/
 int 
 callMail(Collection* coll, Record* record, char* address)
@@ -41,15 +41,18 @@ callMail(Collection* coll, Record* record, char* address)
   int rc = FALSE;
   char *argv[] = {0, 0, 0, 0, 0, 0, 0};
   char available[16];
-  char url[256];
+  char url[512];
   
   logMain(LOG_DEBUG, "send a mail to %s", address);
 
-  sprintf(available, "%i", (int)(coll->cacheTTL / DAY));
-  sprintf(url, "%s?hash=%s&size=%lli", coll->cgiUrl, 
-	 record->archive->hash, 
-	 (long long int)record->archive->size);
-
+  if (sprintf(available, "%i", (int)(coll->cacheTTL / DAY)) <= 0)
+    goto error;
+  
+  if (sprintf(url, "%s/cgi/get.cgi?hash=%s&size=%lli",
+	      coll->localhost->url,
+	      record->archive->hash, 
+	      (long long int)record->archive->size)<= 0) goto error;
+      
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/deliver.sh"))) 
     goto error;

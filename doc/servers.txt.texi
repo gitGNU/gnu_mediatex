@@ -1,6 +1,6 @@
 @cindex Consistencyers list file
 
-The @dataServersO{} file is used to share the latest information between servers including connectivity keys.
+The @dataServersO{} file is used to share the latest information between servers including collection's configuration and connectivity keys.
 
 Relational schema:
 
@@ -42,6 +42,7 @@ Exemple:
 
 master     a3219b5a0512d08a291aa73b85d81674
 collKey    01234567890abcde
+https      yes
 
 # self-ingestion parameters
 logApache  no
@@ -106,6 +107,7 @@ headers: headers header
        | header
 
 header: COLLKEY string
+      | HTTPS boolean
       | LOGAPACHE boolean
       | LOGCVS boolean
       | LOGAUDIT boolean

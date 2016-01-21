@@ -27,7 +27,7 @@ dist_misc_DATA = \
 	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
 	apache-mdtx.conf htgroup viewvc.conf header.ezt \
 	mediatex.css floppy-icon.png home.htaccess \
-	logo.png logoP1.iso logoP2.iso logoP1.cat logoP2.cat\
+	logo logoP1.iso logoP2.iso logoP1.cat logoP2.cat\
 	logo.tgz logo.tar.bz2 logo.afio \
 	logo.tar logo.cpio.gz logo.cpio logo.cpio.bz2 \
 	logo.zip logo.part1.rar logo.part2.rar

@@ -31,6 +31,7 @@ int doCheckSupport(Support *supp, char* path);
 int scoreSupport(Support* supp, ScoreParam *p);
 int scoreLocalImages(Collection* coll);
 int upgradeCollection(Collection* collection);
+int computeUrls(Collection* collection);
 
 #endif /* MDTX_COMMON_UPGRADE_H */
 

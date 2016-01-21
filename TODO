@@ -1,29 +1,17 @@
 
-*** TODO
-
-- update : check if bind available (daemon is up)
-  ex: make audit works ...mdtxScp fails...
+*** BUGS
 
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
 
-- manage http port into mdtx.conf's collection stanza
--- mdtx.conf: httpPort, httpsPort
--- servers.txt: doHttps yes/no
--- htaccess: sslDoCypherSsl
-
-- change logo.png to logo
 - add an apache alias for '~' as it is not on mac keyboard
 
-*** BUGS
-
-- manage moving path into the cache (as now, archives renamed are removed)
-- server scan (done at startup, but not on reload)
-- add uploaded server's log into a uniq document and move information on archive description
 - add coll and then HUP daemon (that need to be restarted) :
   try to parse servers.txt but serv1 still do no belongs to serv1-hello.
   (todo: try to use ACL to resolve it)
+- manage moving path into the cache (as now, archives renamed are removed)
+- server scan (done at startup, but not on reload)
 
 *** TO TEST
 

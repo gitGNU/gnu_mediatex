@@ -232,7 +232,7 @@ Browses the remotely available collection's catalog via this @sc{url}: @*
 
 Change the logo:
 @example
-$ cp yourLogo.png /etc/mediatex/mdtx-hello/logo.png
+$ cp yourLogo.@{png|jpg|gif@} /etc/mediatex/mdtx-hello/logo
 $ mediatex make coll hello
 @end example
 

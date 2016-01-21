@@ -674,7 +674,7 @@ createExempleServerTree(Collection* coll)
     "localhost", "127.0.0.1", "mediatex.org"};
   int mdtxPorts[] = {11111, 6560, 33333};
   int sshPorts[] = {22, 22, 2222};
-  int wwwPorts[] = {443, 443, 4443};
+  int wwwPorts[] = {443, 80, 4443};
 
   // fingerprints related to confTree
   char serverId[][MAX_SIZE_MD5+1] = {

@@ -100,6 +100,7 @@ localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+
 
 master     746d6ceeb76e05cfa2dea92a1c5753cd
 collKey    1234567890abcdef
+https      yes
 
 # self-ingestion parameters
 logApache  no
@@ -124,7 +125,7 @@ Server 6b18ed0194b0fbadd08e0a13cccda00e
 	lastCommit 2010-01-01,01:00:00 
 	mdtxPort   6560
 	sshPort    22
-	wwwPort    443
+	wwwPort    80
 	networks   private, www
 	gateways   private
 	cacheSize  200 Mo

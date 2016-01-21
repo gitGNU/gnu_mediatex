@@ -91,6 +91,7 @@ static char * blarg_xpm[] = {
 
 * logo.png:
 $ convert -resize 200x200 logo.xpm logo.png
+$ cp logo.png logo 
 
 * logo.tgz:
 $ mkdir logo

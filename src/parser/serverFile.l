@@ -189,6 +189,10 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
     return(servCOLLKEY);
   }
 
+  https {
+    return(servHTTPS);
+  }
+
   logApache {
     return(servLOGAPACHE);
   }
