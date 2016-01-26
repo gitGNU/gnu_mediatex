@@ -509,6 +509,8 @@ mdtxSu(char* label)
  *              char* source: relative path to remote source
  *              char* target: relative path to local destination
  * Output     : TRUE on success
+ * Note       : scp will fails it jail/etc/passwd do not provides
+ *              collection user.
  =======================================================================*/
 int 
 mdtxScp(char* label, char* fingerPrint, char* source, char* target)

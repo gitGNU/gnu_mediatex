@@ -1,15 +1,16 @@
 
 *** BUGS
 
+- remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
+- add DNS roundrobbin hostname into logo (servers.txt)
+
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
 
-- add an apache alias for '~' as it is not on mac keyboard
-
 - add coll and then HUP daemon (that need to be restarted) :
   try to parse servers.txt but serv1 still do no belongs to serv1-hello.
-  (todo: try to use ACL to resolve it)
+  (todo: try to use ACL to resolve it -> libacl1-dev)
 - manage moving path into the cache (as now, archives renamed are removed)
 - server scan (done at startup, but not on reload)
 
@@ -34,6 +35,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
 - src/misc/md5sums.c -> checksums.c
+- add an apache alias for '~' as it is not on mac keyboard
 - move date parser/serialiser code into perm.c
 - refuse "^../" as content extraction rule
 - manage ECDSA keys

@@ -25,8 +25,9 @@
 #set -x
 set -e
 
-### very helpfull !
-# tail /var/log/auth.log
+### helpfull !
+# - tail /var/log/auth.log
+# - strace -f -p $SSHD_PID
 ###
 
 # includes
@@ -35,42 +36,56 @@ MDTX_SH_JAIL=1
 [ -z $libdir ] && libdir=$srcdir/scripts/lib
 [ ! -z $MDTX_SH_LOG ] || source $libdir/log.sh
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
-#[ ! -e /usr/share/initramfs-tools/hook-functions ] || 
-#source /usr/share/initramfs-tools/hook-functions
 
-# add a binary and its dependencies into the jail
+# copy a file into the jail
+function JAIL_cp()
+{
+    #Debug "$FUNCNAME: $1" 2
+    [ $# -eq 1 ] || Error "expect 1 parameter"
+
+    DIR="$(dirname $1)"
+    [ $UNIT_TEST_RUNNING -eq 1 ] || Debug "copying: $1"
+    [ -d $JAIL$DIR ] || mkdir -p $JAIL$DIR
+    [ -f $JAIL$1 ] || /bin/cp $1 $JAIL$DIR
+}
+
+# add a binary and its lib's dependencies into the jail
 # $1: binary to add 
 function JAIL_add_binary()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
 
-    #if [ -e /usr/share/initramfs-tools/hook-functions ]; then
-	#copy_exec $i
-    #else
-        # iggy ld-linux* file as it is not shared one
-	FILES="$(ldd $1 | awk '{ print $3 }' |egrep -v ^'\(')"
-	for i in $1 $FILES; do
-	    d="$(dirname $i)"
-	    [ $UNIT_TEST_RUNNING -eq 1 ] || Debug "copying: $i"
-	    [ -d $JAIL$d ] || mkdir -p $JAIL$d
-	    [ -f $JAIL$i ] || /bin/cp $i $JAIL$d
-	done
-	
-        # copy /lib/ld-linux* or /lib64/ld-linux* to $BASE/$sldlsubdir
-        # get ld-linux full file location 
-	sldl="$(ldd $1 | grep 'ld-linux' | awk '{ print $1}')"
-	d="$(dirname $sldl)"
-	[ $UNIT_TEST_RUNNING -eq 1 ] || Debug "copying: $sldl"
-	[ -d $JAIL$sldl ] || mkdir -p $JAIL$d
-	[ -f $JAIL$sldl ] || /bin/cp $sldl $JAIL$d
-    #fi
+    FILES="$(ldd $1 | awk '{ print $3 }' | egrep -v ^'\(')"
+    for FILE in $1 $FILES; do
+	JAIL_cp $FILE
+    done
+}
+
+# add a library into the jail
+# $1: library to add
+function JAIL_add_library()
+{
+    Debug "$FUNCNAME: $1" 2
+    [ $# -eq 1 ] || Error "expect 1 parameter"
+
+    # get all related so files and symlinks
+    FILES=$(find /lib \( -type f -or -type l \) -name ${1}*)
+    if [ -d /lib64 ]; then
+	FILES=$FILES $(find /lib64 \( -type f -or -type l \)  -name ${1}*)
+    fi
+
+    for FILE in $FILES; do
+	JAIL_cp $FILE
+    done
 }
 
 ## API
 
 # build the chroot jail
 # Note: the chroot jail MUST be owned and only be readable by root
+#  reference code should be here :
+#  /usr/share/initramfs-tools/hook-functions::copy_exec()
 function JAIL_build()
 {
     Debug "$FUNCNAME:" 2
@@ -80,32 +95,36 @@ function JAIL_build()
     JAIL=$MDTXHOME/jail
     DESTDIR=$JAIL # used by copy_exec
     BINARIES="/bin/ls /bin/bash /usr/bin/id /usr/bin/scp /usr/bin/cvs"
+    FILES="/etc/ld.so.cache /etc/ld.so.conf"
 
-    mkdir -p $JAIL/{bin,dev,etc,tmp,usr/bin}
-    mkdir -p $JAIL/lib/i386-linux-gnu/i686/cmo
+    # librairies not automatically detected,
+    #  found using `strace -f -p $SSHD_PID`
+    LIBRARIES="ld-linux libnss_files" # libnss_compat libnsl libnss_nis"
+
+    mkdir -p $JAIL/{bin,dev,etc,tmp,usr/bin} #,proc,sys,dev/pts}
+    #mkdir -p $JAIL/lib/i386-linux-gnu/i686/cmo
     mkdir -p $JAIL/{var/cache,var/lib/cvsroot,var/tmp}
 
-    for i in $BINARIES; do JAIL_add_binary $i; done
-    cp /etc/ld.so.cache $JAIL/etc
-    cp /etc/ld.so.conf $JAIL/etc
- 
-    # must be (not added yet): libnss_file.so
-    FILES=$(find /lib -name "libnss_files.so*")
-    for i in $FILES; do
-    	d="$(dirname $i)"
-    	[ $UNIT_TEST_RUNNING -eq 1 ] || Debug "copying: $i"
-    	[ -d $JAIL$d ] || mkdir -p $JAIL$d
-    	[ -f $JAIL$i ] || /bin/cp $i $JAIL$d
+    for i in $BINARIES; do
+	JAIL_add_binary $i;
     done
-    
+    for i in $LIBRARIES; do
+	JAIL_add_library $i
+    done
+    for i in $FILES; do
+	JAIL_cp $i;
+    done
+
     # needed by scp
     [ -e $JAIL/dev/null ] || mknod -m 666 $JAIL/dev/null c 1 3
 
-    # users and groups
+    # users and groups: merge files if they already exist
     for FILE in /etc/passwd /etc/group; do
-	rm -f ${JAIL}${FILE}
+	touch $JAIL$FILE
 	for MEMBER in root www-data $MDTX ${MDTX}_md; do
-	    grep "^$MEMBER:" $FILE | cat >> ${JAIL}${FILE}
+	    if ! grep -q "^$MEMBER:" $JAIL$FILE; then
+		grep "^$MEMBER:" $FILE | cat >> ${JAIL}${FILE}
+	    fi
 	done
     done
 
@@ -114,17 +133,9 @@ function JAIL_build()
     chmod 777 $JAIL/tmp
     chmod 777 $JAIL/var/tmp
 
-    # remove "Could not chdir to home directory" warning
-    mkdir -p $JAIL$HOMES
-    rm -f $JAIL$HOMES/$USER
-    ln -s /var/cache $JAIL$HOMES/$USER
-
-    # still not needed
+    # not needed (but maybe later)
     #cp /etc/nsswitch.conf $JAIL/etc
     #cp /etc/hosts $JAIL/etc
-    #mount -t proc proc jail/proc
-    #mount -t sysfs sysfs jail/sys
-    #mount -t devpts devpts jail/dev/pts
 }
 
 # del a user from the jail
@@ -168,15 +179,39 @@ function JAIL_bind()
     [ $(id -u) -eq 0 ] || Error "need to be root"
     JAIL=$MDTXHOME/jail
 
-    grep -q $JAIL/var/cache /etc/mtab || 
-    mount --bind $MDTXHOME/cache $JAIL/var/cache
-    grep -q $JAIL/var/cache /etc/mtab || 
-    Error "Cannot bind $JAIL/var/cache"
+    grep -q $JAIL/var/cache /etc/mtab ||
+	mount --bind $MDTXHOME/cache $JAIL/var/cache
+    grep -q $JAIL/var/cache /etc/mtab ||
+	Error "Cannot bind $JAIL/var/cache"
 
-    grep -q $JAIL/var/lib/cvsroot /etc/mtab || 
-    mount --bind $CVSROOT $JAIL/var/lib/cvsroot
-    grep -q $JAIL/var/lib/cvsroot /etc/mtab || 
-    Error "Cannot bind $JAIL/var/lib/cvsroot"
+    grep -q $JAIL/var/lib/cvsroot /etc/mtab ||
+	mount --bind $CVSROOT $JAIL/var/lib/cvsroot
+    grep -q $JAIL/var/lib/cvsroot /etc/mtab ||
+	Error "Cannot bind $JAIL/var/lib/cvsroot"
+
+    # remove "Could not chdir to home directory" warning.
+    #  Theses files are not backuped because they are written into
+    #  a binded directory.
+    mkdir -p $JAIL$MDTXHOME
+    rm -f $JAIL$HOMES
+    ln -s /var/cache $JAIL$HOMES
+    
+    # not needed (but maybe later)
+
+    # grep -q $JAIL/proc /etc/mtab ||
+    # 	mount -t proc proc $JAIL/proc
+    # grep -q $JAIL/proc /etc/mtab ||
+    # 	Error "Cannot bind $JAIL/proc"
+
+    # grep -q $JAIL/sys /etc/mtab ||
+    # 	mount -t sysfs sysfs $JAIL/sys
+    # grep -q $JAIL/sys /etc/mtab ||
+    # 	Error "Cannot bind $JAIL/sys"
+
+    # grep -q $JAIL/dev/pts /etc/mtab ||
+    # 	mount -t devpts devpts $JAIL/dev/pts
+    # grep -q $JAIL/dev/pts /etc/mtab ||
+    # 	Error "Cannot bind $JAIL/dev/pts"
 }
 
 # $1: user to unbind
@@ -187,12 +222,29 @@ function JAIL_unbind()
     JAIL=$MDTXHOME/jail
 
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
-    umount $JAIL/var/cache
+	umount $JAIL/var/cache
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
-    Error "Cannot unbind $JAIL/var/cache"
+	Error "Cannot unbind $JAIL/var/cache"
 
     [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] ||
-    umount $JAIL/var/lib/cvsroot
+	umount $JAIL/var/lib/cvsroot
     [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] || 
-    Error "Cannot unbind $JAIL/var/lib/cvsroot"
+	Error "Cannot unbind $JAIL/var/lib/cvsroot"
+
+    # not needed (but maybe later)
+
+    # [ $(grep -c $JAIL/proc /etc/mtab) -eq 0 ] ||
+    # 	umount $JAIL/proc
+    # [ $(grep -c $JAIL/proc /etc/mtab) -eq 0 ] ||
+    # 	Error "Cannot unbind $JAIL/proc"
+
+    # [ $(grep -c $JAIL/sys /etc/mtab) -eq 0 ] ||
+    # 	umount $JAIL/sys
+    # [ $(grep -c $JAIL/sys /etc/mtab) -eq 0 ] ||
+    # 	Error "Cannot unbind $JAIL/sys"
+
+    # [ $(grep -c $JAIL/dev/pts /etc/mtab) -eq 0 ] ||
+    # 	umount $JAIL/dev/pts
+    # [ $(grep -c $JAIL/dev/pts /etc/mtab) -eq 0 ] ||
+    # 	Error "Cannot unbind $JAIL/dev/pts"
 }

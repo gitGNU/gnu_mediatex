@@ -672,9 +672,9 @@ function test14()
 	topo "Server 3 provides second support and tell it to others"
  
 	mdtxP "add file /usr/share/mediatex/misc/logoP2.iso" serv3
-	mdtxP "motd" serv2
+	mdtxP "motd" serv3
 	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello" serv3
-	mdtxP "motd" serv2
+	mdtxP "motd" serv3
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 get part2 ?" \

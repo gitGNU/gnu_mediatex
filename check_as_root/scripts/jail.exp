@@ -64,6 +64,8 @@ cvs commit: Examining .
 [debug jail.sh] JAIL_add_binary: /usr/bin/id
 [debug jail.sh] JAIL_add_binary: /usr/bin/scp
 [debug jail.sh] JAIL_add_binary: /usr/bin/cvs
+[debug jail.sh] JAIL_add_library: ld-linux
+[debug jail.sh] JAIL_add_library: libnss_files
 [info utjail.sh] chroot LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail ls
 bin
 dev
@@ -115,6 +117,7 @@ Original contents retained as known_hosts.old
 [debug utjail.sh] SSH_configure_client ut5-mdtx-hello localhost 22
 [debug utjail.sh] JAIL_add_user: ut5-mdtx-hello
 [info utjail.sh] su LABEL -c "ssh -o PasswordAuthentication=no ut5-mdtx-hello@localhost ls /"
+Could not chdir to home directory LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello: No such file or directory
 bin
 dev
 etc

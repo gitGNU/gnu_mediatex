@@ -66,4 +66,7 @@ if [ $MDTX = mdtx ]; then
     /usr/sbin/update-rc.d ${MEDIATEX#/}d defaults
     /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
 fi
+
+JAIL_bind # not needed by more confortable
 Info "done"
+
