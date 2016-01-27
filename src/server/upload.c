@@ -53,7 +53,7 @@ cacheUpload(Collection* coll, Record* record)
   memset(&data, 0, sizeof(ExtractData)); 
   if (!(data.toKeeps = createRing())) goto error;
   data.target = record->archive;
-  data.context = X_STEP;
+  data.context = X_NO_REMOTE_COPY;
   data.coll = coll;
 
   // (double) check we get a final supplies

@@ -1098,6 +1098,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   RGIT* curr = 0;
   RG* toKeepsBck = 0;
   RG* toKeepsTmp = 0;
+  static int nbRemoteCopying = 0;
 
   logMain(LOG_DEBUG, "extract an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -1139,22 +1140,36 @@ int extractArchive(ExtractData* data, Archive* archive)
     goto end;
   }
 
-  // prefix: scp. Else (postfix) we will scp containers first.
-  if (data->context != X_CGI) {
-    curr = 0;
-    while (!data->found && 
-	  (record = rgNext_r(archive->remoteSupplies, &curr))) {
-      if (record->type & REMOVE) continue;
+  // remote supply
+  if (data->context != X_NO_REMOTE_COPY) {
+    if (nbRemoteCopying > MAX_REMOTE_COPIES) {
+      logMain(LOG_WARNING,
+	      "skip remote extraction as %i already running",
+	      nbRemoteCopying);
+    }
+    else {
+      curr = 0;
+      while (!data->found &&
+	     (record = rgNext_r(archive->remoteSupplies, &curr))) {
+	if (record->type & REMOVE) continue;
 
-      // scp supply from nat clients on remote demand (may be optimized)
-      if (data->context == X_STEP &&
-	  !rgShareItems(data->coll->localhost->gateways,
-			record->server->networks)) 
-	continue;
+	// scp only from nat clients on remote demand
+	if (data->context == X_GW_REMOTE_COPY &&
+	    !rgShareItems(data->coll->localhost->gateways,
+			  record->server->networks))
+	  continue;
 
-      if (!extractRecord(data, record)) goto error;
-      data->found = TRUE;
-      goto end; 
+	// remote copy
+	++nbRemoteCopying;
+	if (!extractRecord(data, record)) {
+	  --nbRemoteCopying;
+	  goto error;
+	}
+
+	--nbRemoteCopying;
+	data->found = TRUE;
+	goto end; 
+      }
     }
   }
 
@@ -1279,23 +1294,24 @@ int extractArchives(Collection* coll)
   if (!(archives = getWantedArchives(coll))) goto error3;
   while ((archive = rgNext_r(archives, &curr))) {
     
-    // define extraction context : X_MAIN or X_STEP (ie: scp or not)
-    data.context = X_STEP;
+    // define default extraction context (ie: scp or not)
+    data.context = X_GW_REMOTE_COPY;
 
-    // we scp only when archive is or locally wanted...
+    // do scp when archive is locally wanted...
     curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) == FINAL_DEMAND) {
-	data.context = X_MAIN;
+	data.context = X_DO_REMOTE_COPY;
 	break;
       }
     }
     
-    // ...or if bad score but already a final supply (store locally)
+    // ...or if top container having bad score not already burned locally
     if ((archive->extractScore <= 
 	coll->serverTree->scoreParam.maxScore /2) &&
+	archive->fromContainers->nbItems == 0 &&
 	!haveRecords(archive->finalSupplies))
-      data.context = X_MAIN;
+      data.context = X_DO_REMOTE_COPY;
     
     data.target = archive;
     if (!(data.toKeeps = createRing())) goto error3;

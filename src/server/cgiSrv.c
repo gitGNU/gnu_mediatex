@@ -43,7 +43,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   logMain(LOG_DEBUG, "extractCgiArchive");
   *found = FALSE;
   data.coll = coll;
-  data.context = X_CGI;
+  data.context = X_NO_REMOTE_COPY;
   if (!(data.toKeeps = createRing())) goto error;
 
   if (!(conf = getConfiguration())) goto error;

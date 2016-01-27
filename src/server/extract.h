@@ -29,10 +29,20 @@
 
 /* API */
 
+#define MAX_REMOTE_COPIES 1
+
+/*
 typedef enum {
   X_MAIN, // do scp extraction if locally needed
   X_CGI,  // no scp extraction
-  X_STEP  // force scp extraction on gateway if remotely needed
+  X_STEP  // only do scp extraction on gateway if remotely needed
+} ExtractType;
+*/
+
+typedef enum {
+  X_NO_REMOTE_COPY, // no scp extraction 
+  X_DO_REMOTE_COPY, // do scp extraction (if locally needed)
+  X_GW_REMOTE_COPY  // only do scp extraction from gateway (default)
 } ExtractType;
 
 typedef struct ExtractData {

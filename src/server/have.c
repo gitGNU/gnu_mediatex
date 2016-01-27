@@ -147,7 +147,7 @@ extractFinaleArchives(Connexion* connexion)
   data.coll = connexion->message->collection;
   checkCollection(data.coll);
   if (!(data.toKeeps = createRing())) goto error;
-  data.context = X_STEP;
+  data.context = X_NO_REMOTE_COPY;
   
   // check we get a final supplies
   if (isEmptyRing(connexion->message->records)) {

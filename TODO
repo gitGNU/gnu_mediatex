@@ -1,6 +1,25 @@
 
 *** BUGS
 
+- extract do not block himself :
+  - add a mutex like on scp -> data.context = available?X_MAIN:X_STEP
+  - maybe allow more than 3 connected sockets
+  - sleep(20) -> #define
+
+Jan 25 23:13:46 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
+Jan 25 23:13:46 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 1: EXTRACT
+Jan 25 23:13:46 www mediatexd[6628]: [notice extract.c:231] do scp
+Jan 25 23:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
+Jan 25 23:36:01 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 2: EXTRACT
+Jan 25 23:36:01 www mediatexd[6628]: [notice extract.c:231] do scp
+Jan 26 00:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
+Jan 26 00:36:01 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 3: EXTRACT
+Jan 26 00:36:01 www mediatexd[6628]: [notice extract.c:231] do scp
+Jan 26 01:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
+Jan 26 01:36:01 www mediatexd[6628]: [warning threads.c:215] pending USR1 signal
+...
+
+
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add DNS roundrobbin hostname into logo (servers.txt)
 

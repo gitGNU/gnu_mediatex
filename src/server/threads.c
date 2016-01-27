@@ -295,7 +295,7 @@ serverManager(int sock, struct sockaddr_in* address_accepted)
     logMain(LOG_WARNING, "pending connexion from %s:%u (%s)",
 	    inet_ntoa(address_accepted->sin_addr),
 	    port, connexion->host);
-    sleep(2);
+    sleep(20);
   };
 
   // manage concurency with ourself, SIGHUP and SIGTERM
