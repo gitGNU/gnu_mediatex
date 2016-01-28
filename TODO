@@ -1,24 +1,17 @@
 
 *** BUGS
 
-- extract do not block himself :
-  - add a mutex like on scp -> data.context = available?X_MAIN:X_STEP
-  - maybe allow more than 3 connected sockets
-  - sleep(20) -> #define
+- manage scp max thread number
 
-Jan 25 23:13:46 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
-Jan 25 23:13:46 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 1: EXTRACT
-Jan 25 23:13:46 www mediatexd[6628]: [notice extract.c:231] do scp
-Jan 25 23:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
-Jan 25 23:36:01 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 2: EXTRACT
-Jan 25 23:36:01 www mediatexd[6628]: [notice extract.c:231] do scp
-Jan 26 00:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
-Jan 26 00:36:01 www mediatexd[6628]: [notice mediatexd.c:78] signalJob 3: EXTRACT
-Jan 26 00:36:01 www mediatexd[6628]: [notice extract.c:231] do scp
-Jan 26 01:36:01 www mediatexd[6628]: [notice threads.c:204] accepting signal USR1
-Jan 26 01:36:01 www mediatexd[6628]: [warning threads.c:215] pending USR1 signal
-...
+- -b to manage pidfile into mediatexd (help debug and simplify init.d)
+- -v option (alias for -sdebug)
 
+- ACL: add coll and then HUP daemon (that need to be restarted) :
+  try to parse servers.txt but serv1 still do no belongs to serv1-hello.
+  (todo: try to use ACL to resolve it -> libacl1-dev)
+
+- manage full server scan (done at startup, but not on reload)
+   test renaming file into the cache (as now, they where lost)
 
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add DNS roundrobbin hostname into logo (servers.txt)
@@ -26,12 +19,6 @@ Jan 26 01:36:01 www mediatexd[6628]: [warning threads.c:215] pending USR1 signal
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
-
-- add coll and then HUP daemon (that need to be restarted) :
-  try to parse servers.txt but serv1 still do no belongs to serv1-hello.
-  (todo: try to use ACL to resolve it -> libacl1-dev)
-- manage moving path into the cache (as now, archives renamed are removed)
-- server scan (done at startup, but not on reload)
 
 *** TO TEST
 
