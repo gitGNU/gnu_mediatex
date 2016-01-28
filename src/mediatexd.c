@@ -50,10 +50,12 @@ signalJob(void* arg)
 {
   int me = taskSignalNumber;
   Configuration* conf = 0;
+  Collection* coll = 0;
   long int rc = FALSE;
   int loop = FALSE;
   ShmParam param;
   int rc3 = MDTX_DONE;
+  RGIT* curr = 0;
 
   (void) arg;
   logMain(LOG_DEBUG, "signalJob: %i", me);
@@ -68,6 +70,11 @@ signalJob(void* arg)
     
     if (param.buf[MDTX_SAVEMD5] == MDTX_QUERY) {
       logMain(LOG_NOTICE, "signalJob %i: SAVEMD5", me);
+
+      // force writing
+      while ((coll = rgNext_r(conf->collections, &curr))) {
+	coll->fileState[iCACH] = MODIFIED;
+      }
       if (!serverSaveAll()) rc2 = MDTX_ERROR;
       param.flag = MDTX_SAVEMD5;
       loop = TRUE;

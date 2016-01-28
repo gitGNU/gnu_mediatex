@@ -1142,7 +1142,7 @@ int extractArchive(ExtractData* data, Archive* archive)
 
   // remote supply
   if (data->context != X_NO_REMOTE_COPY) {
-    if (nbRemoteCopying > MAX_REMOTE_COPIES) {
+    if (nbRemoteCopying >= MAX_REMOTE_COPIES) {
       logMain(LOG_WARNING,
 	      "skip remote extraction as %i already running",
 	      nbRemoteCopying);

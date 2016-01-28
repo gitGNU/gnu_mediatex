@@ -41,8 +41,7 @@ SEVERITY_SERVER="-s notice"
 #SEVERITY_CLIENT="-s debug"
 #SEVERITY_SERVER="-s info -sdebug:main"
 
-
-### not done
+### todo
 ## ADDON_SERVER=gdb
 ## cf: gdb -ex "set args -c serv1" -ex "r" mediatexd
 
@@ -460,6 +459,7 @@ function test7()
 	finalQuestion "is 2nd server running ?" "statusInitdScript serv2"
     else
 	topo "Cleanup"
+	restartInitdScript
 	stopInitdScript serv2
 	mdtxA "adm purge" serv2
     fi
@@ -506,6 +506,7 @@ function test8()
 	done
 	
 	mdtxA "adm del coll hello" serv2
+	restartInitdScript serv1
     fi
 }
 

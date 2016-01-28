@@ -133,18 +133,18 @@ typedef struct UploadParams {
 #define DEFAULT_MDTXUSER "mdtx"
 #define DEFAULT_HOST "localhost"
 #define DEFAULT_CACHE_SIZE 100*MEGA // cache size
-#define DEFAULT_TTL_CACHE 15*DAY    // local-supply TTL on cache
-#define DEFAULT_TTL_QUERY 7*DAY     // final-query  TTL 
-#define DEFAULT_TTL_CHECK 6*MONTH   // support check TTL
+#define DEFAULT_TTL_CACHE  15*DAY    // local-supply TTL on cache
+#define DEFAULT_TTL_QUERY  7*DAY     // final-query  TTL 
+#define DEFAULT_TTL_CHECK  6*MONTH   // support check TTL
 #define DEFAULT_TTL_UPLOAD 1*MONTH  // upload time (no score implication)
-#define DEFAULT_TTL_FILE  2*MONTH   // file support check TTL
-#define DEFAULT_TTL_SUPP  5*YEAR    // support TTL
+#define DEFAULT_TTL_FILE   2*MONTH   // file support check TTL
+#define DEFAULT_TTL_SUPP   5*YEAR    // support TTL
 #define DEFAULT_TTL_SERVER 2*WEEK   // server (last commit) TTL
-#define DEFAULT_MAX_SCORE 10 // cf above
-#define DEFAULT_BAD_SCORE 1  // cf above
-#define DEFAULT_POW_SUPP  2  // cf above
-#define DEFAULT_FACT_SUPP 2  // cf above
-#define DEFAULT_MIN_GEO   2  // number of distantes copies expected
+#define DEFAULT_MAX_SCORE  10 // cf above
+#define DEFAULT_BAD_SCORE  1  // cf above
+#define DEFAULT_POW_SUPP   2  // cf above
+#define DEFAULT_FACT_SUPP  2  // cf above
+#define DEFAULT_MIN_GEO    2  // number of distantes copies expected
 #define DEFAULT_FILE_SCORE DEFAULT_MAX_SCORE // support file score
 
 // log defaults
