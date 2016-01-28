@@ -115,7 +115,6 @@ signalJob(void* arg)
     if (rc2 == MDTX_ERROR) rc3 = MDTX_ERROR;
   } while (loop);
 
-  if (!serverLoop(cleanCacheTree)) goto error;
   rc = TRUE;
  error:
   if (rc) {
@@ -268,7 +267,6 @@ socketJob(void* arg)
   logMain(LOG_NOTICE, "%s", con->status);
   rc = TRUE;
  error:
-  //if (!cleanCacheTree(con->message->collection)) rc = FALSE;
   if (!rc) {
     logMain(LOG_ERR, "%s", con->status);
     logMain(LOG_NOTICE, "still alive");

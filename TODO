@@ -1,8 +1,6 @@
 
 *** BUGS
 
-- manage scp max thread number
-
 - -b to manage pidfile into mediatexd (help debug and simplify init.d)
 - -v option (alias for -sdebug)
 
