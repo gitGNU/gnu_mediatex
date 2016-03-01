@@ -137,9 +137,9 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
 }
 
 /*=======================================================================
- * Function   : undo_seteuid
+ * Function   : undoSeteuid
  * Description: Set the effective UID to the real UID :
- * Synopsis   : int undo_seteuid (void)
+ * Synopsis   : int undoSeteuid (void)
  * Input      : N/A
  * Output     : TRUE on success
  * Note       :
@@ -147,7 +147,7 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
  * in order to forgives the setuid bit priviledge.
  =======================================================================*/
 int
-undo_seteuid (void)
+undoSeteuid (void)
 {
   int rc = FALSE;
   int uid = getuid();
@@ -157,7 +157,7 @@ undo_seteuid (void)
   // we do not return on error for unit tests
   if (geteuid()) {
     logMisc (LOG_ERR, 
-	     "binary not owned by root or setuid bit not set");
+	     "Was expecting root or setuid bit set");
     goto error;
   } 
 
@@ -208,18 +208,18 @@ allowedUser (char* label)
 
   // get current user name
   if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
-  logMisc (LOG_INFO, "you are %s", pw.pw_name);
+  logMisc (LOG_DEBUG, "you are %s", pw.pw_name);
 
   // if current user is already label
   if (strlen(label) == strlen(pw.pw_name) &&
-      !strcmp(label, pw.pw_name)) goto nothingToDo;
+      !strcmp(label, pw.pw_name)) goto ok;
 
   // if current user is root
-  if (pw.pw_uid == 0) goto nothingToDo;
+  if (pw.pw_uid == 0) goto ok;
 
   // if current user is mdtx 
   if (strlen(env.confLabel) == strlen(pw.pw_name) &&
-      !strcmp(env.confLabel, pw.pw_name)) goto nothingToDo;
+      !strcmp(env.confLabel, pw.pw_name)) goto ok;
 
   // check if current user belongs to the mdtx group
   if (!getGroupLine (env.confLabel, -1, &gr, &buf2)) goto error;
@@ -230,11 +230,19 @@ allowedUser (char* label)
     }
     ++(gr.gr_mem);
   }
-  logMisc (LOG_INFO, "you do%s belongs to the %s group", 
-	   belongs?"":" NOT", env.confLabel);
-  if (!belongs) goto error; 
 
- nothingToDo:
+  logMisc (LOG_DEBUG, "you do%s belongs to the %s group", 
+	   belongs?"":" NOT", env.confLabel);
+
+  if (!belongs) {
+    logMisc (LOG_ERR, "%s user not alowed do switch to user %s",
+	     pw.pw_name, label);
+    goto error; 
+  }
+    
+ ok:
+  logMisc (LOG_INFO, "%s user allowed to switch to user %s",
+	   pw.pw_name, label);
   rc = TRUE;
  error:
   if (buf1) free (buf1);
@@ -273,7 +281,7 @@ becomeUser (char* label, int doCheck)
 
   // get current user name
   if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
-  if (!strcmp(label, pw.pw_name)) goto nothingToDo;
+  if (!strcmp(label, pw.pw_name)) goto ok;
   free (buf1);
   buf1 = 0;
 
@@ -314,8 +322,8 @@ becomeUser (char* label, int doCheck)
     goto error;
   }
 
-  logMisc (LOG_INFO, "current user is %s", label);
- nothingToDo:
+  logMisc (LOG_INFO, "have switch to %s user", label);
+ ok:
   rc = TRUE;
  error:
   if (buf1) free (buf1);
@@ -328,12 +336,11 @@ becomeUser (char* label, int doCheck)
 
 /*=======================================================================
  * Function   : logoutUser
- * Description: int logoutUser (void)
- * Synopsis   : Change back normal user
- * Input      : N/A
+ * Description: Change back to previous user (wrapper for becomeUser)
+ * Synopsis   : int logoutUser (int uid)
+ * Input      : int uid : uid before last user context switch
  * Output     : TRUE on success
- * Note       : It seems to me that this function may be call twice.
- *              I mean, no mather if we de not change user before.
+ * Note       : This function trust on iud provided as parameter.
  =======================================================================*/
 int
 logoutUser (int uid)
@@ -346,13 +353,15 @@ logoutUser (int uid)
   logMisc (LOG_DEBUG, "logoutUser %i", uid);
 
   if (env.noRegression) return TRUE;
-  if (uid == getuid()) goto nothingToDo;
+
+  // nothing to do, maybe already done
+  if (uid == getuid()) goto ok;
 
   // get current user name
   if (!getPasswdLine (0, uid, &pw, &buf)) goto error;
   if (!becomeUser (pw.pw_name, FALSE)) goto error;
 
- nothingToDo:
+ ok:
   rc = TRUE;
  error:
   if (!rc) {

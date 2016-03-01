@@ -803,8 +803,11 @@ parseShellQuery(int argc, char** argv, int optind)
   UploadParams upParam = {0, 0, 0};
 
   logParser(LOG_DEBUG, "parseShellQuery");
-  if (!getCommandLine(argc, argv, optind)) goto error;
-
+  if (!getCommandLine(argc, argv, optind)) {
+    rc = TRUE; // no query
+    goto error;
+  }
+    
   // initialise parser
   if (shell_lex_init(&scanner)) {
     logParser(LOG_ERR, "shell_lex_init fails");

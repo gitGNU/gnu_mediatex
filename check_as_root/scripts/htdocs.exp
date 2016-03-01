@@ -164,7 +164,7 @@ ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
       ut2-mdtx    ut2-mdtx_md drwxrws--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
       ut2-mdtx       ut2-mdtx drwxr-s--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx
           root           root drwxr-xr-x LOCALSTATEDIR/run
-          root           root drwxr-xr-x LOCALSTATEDIR/run/mediatex
+          root           root drwxrwxrwx LOCALSTATEDIR/run/mediatex
 [debug uthtdocs.sh] HTDOCS_unconfigure_mdtx_apache2:
 [debug uthtdocs.sh] USERS_coll_remove_user: ut2-mdtx-hello
 [debug users.sh] USERS_del_from_group: ut2-mdtx-hello
@@ -198,6 +198,7 @@ Attention ! Le groupe « ut2-mdtx » ne contient plus aucun membre.
 Fait.
 [debug users.sh] USERS_mdtx_disease
 * cleanup : *
+drwxrwxrwx LOCALSTATEDIR/run/mediatex
 drwxr-xr-x /var/ut/ut2-mdtx
 drwxr-xr-x SYSCONFDIR
 drwxr-xr-x SYSCONFDIR/apache2
@@ -214,7 +215,6 @@ drwxr-xr-x LOCALSTATEDIR/cache/mediatex
 drwxr-xr-x LOCALSTATEDIR/lib
 drwxr-xr-x LOCALSTATEDIR/lib/mediatex
 drwxr-xr-x LOCALSTATEDIR/run
-drwxr-xr-x LOCALSTATEDIR/run/mediatex
 -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt

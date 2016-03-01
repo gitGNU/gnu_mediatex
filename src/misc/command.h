@@ -28,16 +28,16 @@
 #include "mediatex-types.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hvf:s:l:nm:"
+#define MISC_SHORT_OPTIONS "hVvf:s:l:nm:"
 #define MISC_LONG_OPTIONS				\
   {"help", no_argument, 0, 'h'},			\
-  {"version", no_argument, 0, 'v'},			\
+  {"version", no_argument, 0, 'V'},			\
+  {"verbose", no_argument, 0, 'v'},			\
   {"facility", required_argument, 0, 'f'},		\
   {"severity", required_argument, 0, 's'},		\
   {"log-file", required_argument, 0, 'l'},		\
   {"dry-run", no_argument, 0, 'n'},			\
   {"memory-limit", required_argument, 0, 'm'}
-
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
 #define MEMORY_LONG_OPTIONS				\
   MISC_LONG_OPTIONS
@@ -88,15 +88,35 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
  =======================================================================*/
 #define GET_MISC_OPTIONS						\
   case 'h':								\
-  usage(programName);							\
+    usage(programName);							\
+    rc = EXIT_SUCCESS;							\
+    goto optError;							\
+    break;								\
+									\
+  case 'V':								\
+    version();								\
     rc = EXIT_SUCCESS;							\
     goto optError;							\
     break;								\
 									\
   case 'v':								\
-    version();								\
-    rc = EXIT_SUCCESS;							\
-    goto optError;							\
+    switch (env.nbVerbose++) {						\
+      case 0:								\
+	if (!parseLogSeverityOption(env.v, env.logSeverity)) {		\
+	  rc = EINVAL;							\
+	}								\
+	break;								\
+      case 1:								\
+	if (!parseLogSeverityOption(env.vv, env.logSeverity)) {		\
+	  rc = EINVAL;							\
+	}								\
+	break;								\
+      case 2:								\
+	if (!parseLogSeverityOption(env.vvv, env.logSeverity)) {	\
+	  rc = EINVAL;							\
+	}								\
+	break;								\
+    }									\
     break;								\
 									\
   case 'f':								\

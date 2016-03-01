@@ -83,6 +83,8 @@ extern RecordTree* parseRecords(int fd);
 typedef struct MdtxEnv {
 
   // loggin
+  int nbVerbose;
+  char v[32], vv[32], vvv[32];
   int logFacility;
   char *logFile;
   int logSeverity[LOG_MAX_MODULE];
@@ -108,6 +110,7 @@ typedef struct MdtxEnv {
   int running;
   char commandLine[512];
   MdtxProgBar progBar;
+  int background;
 
 } MdtxEnv;
 
@@ -120,7 +123,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 #define GLOBAL_MDTX_ENV_UT						\
   {									\
     /* logging */							\
-    99,	0,								\
+    0, "info", "debug:main,script", "debug:memory,misc", 99, 0,		\
       {LOG_INFO, LOG_INFO, LOG_INFO, LOG_INFO,				\
 	  LOG_INFO, LOG_INFO, LOG_INFO},				\
       0,								\
@@ -129,7 +132,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 	/* configuration */						\
 	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, 500*KILO,		\
 	/* debug */							\
-	FALSE,							\
+	FALSE,								\
 	/* global data structure */					\
 	0, TRUE								\
 	}
@@ -139,7 +142,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 #define GLOBAL_MDTX_ENV_BIN						\
   {									\
     /* logging */							\
-    99, 0,								\
+    0, "info", "debug:main,script", "debug:memory,misc", 99, 0,		\
       {	LOG_NOTICE, LOG_NOTICE, LOG_NOTICE, LOG_NOTICE,			\
 	  LOG_NOTICE, LOG_NOTICE, LOG_NOTICE},				\
       0,								\
@@ -147,8 +150,8 @@ extern MdtxEnv envUnitTest; // only used for copy
 	128, (int (*)(long))0, 0,					\
 	/* configration */						\
 	DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, 500*KILO,			\
-	/* debug */						\
-	FALSE,							\
+	/* debug */							\
+	FALSE,								\
 	/* global data structure */					\
 	0, TRUE								\
 	}

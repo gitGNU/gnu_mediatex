@@ -172,13 +172,13 @@ mdtxAsyncSignal(int signal)
   // retrieve daemon's pid
   if (!(conf = getConfiguration())) goto error;
   if ((fd = fopen(conf->pidFile, "r")) == 0) {
-    logCommon(LOG_INFO, "open %s failed: %s", 
+    logCommon(LOG_INFO, "fails to open %s: %s", 
 	    conf->pidFile, strerror(errno));
     goto error;
   }
 
   if (fscanf(fd, "%i", &pid) != 1) {
-    logCommon(LOG_INFO, "cannot retrieve pid from %s", conf->pidFile);
+    logCommon(LOG_INFO, "fails to read pid from %s", conf->pidFile);
     goto error;
   }
   if (fclose(fd)) {

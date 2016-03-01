@@ -80,24 +80,22 @@ RC=$?
 set -e
 if [ $RC -ne 0 ]; then
     if [ $MDTX_KEY_HAVE_CHANGE -eq 1 ]; then
-	Warning "New public key."
+	Warning "new public key"
     fi
-    Warning "You have to send your public key to the $HOST administrator"
-    Warning " $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub:"
-    cat $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub >&2
+    Warning "public key: $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub"
     exit 0
 fi
 
 # checkout the collection
 CVS_coll_checkout $USER $SERV $COLL $HOST
 
+# BUG too ?
 # reload daemons as there configuration have changed
 /usr/sbin/invoke-rc.d apache2 reload
 
-# only the init script for mdtx server is manage here
-# (because they are different using wheezy or jessie)
+# BUG (to remove when ACL will be implemented)
 if [ $MDTX = mdtx ]; then
-    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
+    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart
 fi
 
 Info "done"

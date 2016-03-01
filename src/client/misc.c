@@ -584,6 +584,7 @@ mdtxAudit(char* label, char* mail)
   int n = 0;
   char reply[255] = "100 nobody";
   int status = 0;
+  int uid = getuid();
 
   logMain(LOG_DEBUG, "audit %s collection for %s", label, mail);
   checkLabel(label);
@@ -600,17 +601,17 @@ mdtxAudit(char* label, char* mail)
   /* } */
 
   if (!becomeUser(env.confLabel, TRUE)) goto error;
-  if (!(coll = mdtxGetCollection(label))) goto error;
-  if (!(tree = createRecordTree())) goto error;
-  if (!getLocalHost(coll)) goto error;
+  if (!(coll = mdtxGetCollection(label))) goto error2;
+  if (!(tree = createRecordTree())) goto error2;
+  if (!getLocalHost(coll)) goto error2;
   tree->collection = coll;
   tree->messageType = CGI;
 
   // open audit file
-  if ((now = currentTime()) == -1) goto error;
+  if ((now = currentTime()) == -1) goto error2;
   if (localtime_r(&now, &date) == (struct tm*)0) {
     logMemory(LOG_ERR, "localtime_r returns on error");
-    goto error;
+    goto error2;
   }
  
   sprintf(path, "%s/%s%04i%02i%02i-%02i%02i%02i_%s.txt",
@@ -626,15 +627,15 @@ mdtxAudit(char* label, char* mail)
     if ((fd = fopen(path, "w")) == 0) {
       logMemory(LOG_ERR, "fopen %s fails: %s", path, strerror(errno));
       fd = stdout;
-      goto error;
+      goto error2;
     }
-    if (!lock(fileno(fd), F_WRLCK)) goto error;
+    if (!lock(fileno(fd), F_WRLCK)) goto error2;
   }
 
   logMemory(LOG_INFO, "Serializing audit into: %s", 
 	    env.dryRun?"stdout":path);
 
-  if (!loadCollection(coll, EXTR)) goto error;
+  if (!loadCollection(coll, EXTR)) goto error2;
 
   fprintf(fd, "Audit on %s collection\n", coll->label);
   fprintf(fd, " requested on %04i-%02i-%02i %02i:%02i:%02i\n",
@@ -655,11 +656,11 @@ mdtxAudit(char* label, char* mail)
       
       // add a final demand
       strcpy(ptrMail, mail);
-      if (!(tmp = createString(extra))) goto error2; 
+      if (!(tmp = createString(extra))) goto error3; 
       if (!(record = newRecord(coll->localhost, archive, DEMAND, tmp))) 
-	goto error;
+	goto error3;
       tmp = 0;
-      if (!rgInsert(tree->records, record)) goto error2;
+      if (!rgInsert(tree->records, record)) goto error3;
       record = 0;
     }
   }
@@ -667,8 +668,8 @@ mdtxAudit(char* label, char* mail)
 
   // connect server and write query
   if (env.noRegression) goto end;
-  if ((socket = connectServer(coll->localhost)) == -1) goto error2;
-  if (!upgradeServer(socket, tree, 0)) goto error2;
+  if ((socket = connectServer(coll->localhost)) == -1) goto error3;
+  if (!upgradeServer(socket, tree, 0)) goto error3;
   
   // read reply
   if (env.dryRun) goto end;
@@ -685,8 +686,10 @@ mdtxAudit(char* label, char* mail)
   logMain(LOG_NOTICE, "please check motd and performe extraction", reply);
  end:
   rc = (env.noRegression || env.dryRun || status == 221);
+ error3:
+  if (!releaseCollection(coll, EXTR)) rc = FALSE;
  error2:
-  if (!releaseCollection(coll, EXTR)) goto error;
+  if (!logoutUser(uid)) rc = FALSE;
  error:
   if (fd != stdout) {
     if (!unLock(fileno(fd))) rc = FALSE;

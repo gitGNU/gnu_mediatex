@@ -452,9 +452,10 @@ logClose(LogHandler* logHandler)
 /*=======================================================================
  * Function   : parseLogSeverityOption
  * Description: parse the --severity option value
- * Synopsis   : int parseLogOption(char* parameter)
+ * Synopsis   : int parseLogOption(char* parameter, int* logSeverity)
  * Input      : char* parameter: the option value
- * Output     : TRUE on success
+ * Output     : int* logSeverity
+ *              TRUE on success
  =======================================================================*/
 int parseLogSeverityOption(char* parameter, int* logSeverity)
 {

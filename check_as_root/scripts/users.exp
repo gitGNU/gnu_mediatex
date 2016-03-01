@@ -133,7 +133,7 @@ ut1-mdtx-hello ut1-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut1-mdtx/h
       ut1-mdtx    ut1-mdtx_md drwxrws--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/CVSROOT
       ut1-mdtx       ut1-mdtx drwxr-s--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx
           root           root drwxr-xr-x LOCALSTATEDIR/run
-          root           root drwxr-xr-x LOCALSTATEDIR/run/mediatex
+          root           root drwxrwxrwx LOCALSTATEDIR/run/mediatex
 [debug utusers.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug utusers.sh] USERS_coll_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_del_from_group: ut1-mdtx-hello
@@ -182,6 +182,7 @@ Fait.
 [info users.sh] ut1-mdtx user already removed
 [debug users.sh] USERS_mdtx_disease
 * cleanup : *
+drwxrwxrwx LOCALSTATEDIR/run/mediatex
 drwxr-xr-x /var/ut/ut1-mdtx
 drwxr-xr-x SYSCONFDIR
 drwxr-xr-x SYSCONFDIR/apache2
@@ -198,7 +199,6 @@ drwxr-xr-x LOCALSTATEDIR/cache/mediatex
 drwxr-xr-x LOCALSTATEDIR/lib
 drwxr-xr-x LOCALSTATEDIR/lib/mediatex
 drwxr-xr-x LOCALSTATEDIR/run
-drwxr-xr-x LOCALSTATEDIR/run/mediatex
 -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt

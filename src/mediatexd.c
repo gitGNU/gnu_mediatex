@@ -34,6 +34,8 @@
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
 
+#define OPEN_MAX 4096
+
 extern int taskSocketNumber;
 extern int taskSignalNumber;
 
@@ -300,7 +302,11 @@ usage(char* programName)
 	  "draft and on the `NF Z 42-013' requirements.\n");
 
   mdtxUsage(programName);
+  fprintf(stderr, " [ -b ]");
+  
   mdtxOptions();
+  fprintf(stderr, "  -b, --background\trun background as a daemon\n");
+
   mdtxHelp();
   return;
 }
@@ -318,17 +324,26 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
+  Configuration* conf = 0;
+  struct passwd pw;
+  char *buf1 = 0;
+  FILE* fd = 0;
+  int pid;
+  int i;
+  int isThere = FALSE;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MDTX_SHORT_OPTIONS "b";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
+    {"background", no_argument, 0, 'b'},
     {0, 0, 0, 0}
   };
 
   // import mdtx environment
+  env.background = FALSE;
   env.allocDiseaseCallBack = serverDiseaseAll;
   getEnv(&env);
 
@@ -336,7 +351,11 @@ main(int argc, char** argv)
   while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
-      
+
+    case 'b':
+      env.background = TRUE;
+      break;
+
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -346,18 +365,89 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
+  // if we are root, switch to mdtx user 
   if (getuid() == 0) {
-    logMain(LOG_ERR,  "do not lunch me as root");
+    if (!becomeUser(env.confLabel, FALSE)) {
+      goto error;
+    }
+  }
+  
+  // assert we are mdtx user 
+  if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
+  if (strcmp(env.confLabel, pw.pw_name)) {
+    logMain(LOG_ERR,  "Please, lanch me as %s user (or root)",
+	    env.confLabel);
     goto error;
   }
-  if (!hupManager()) goto error;
-  if (!mdtxCall(2, "adm", "bind")) goto error;
-  if (!mainLoop()) goto error;
+
+  // become a daemon
+  if (env.background) {
+    if (env.logFacility == getLogFacility("file")) {
+      logMain(LOG_NOTICE, "switch logs to local2 facility");
+    }
+    logMain(LOG_INFO, "becoming a daemon...");
+    if (chdir("/")) goto error;
+    if (fork() != 0) {
+      exit(EXIT_SUCCESS);
+    }
+    if (setsid() == -1) goto error;
+    if (fork() != 0) {
+      exit(EXIT_SUCCESS);
+    }
+
+    // close file descriptors and re-open the log handler
+    env.logHandler = logClose(env.logHandler);
+    for (i=0; i<OPEN_MAX; ++i) close(i);
+    if (env.logFacility == getLogFacility("file")) {
+      env.logFacility = getLogFacility("local2");
+    }
+    if (!setEnv(programName, &env)) goto error;    
+    logMain(LOG_INFO, "...I'm a daemon");
+  }
+    
+  // write daemon's pid file
+  if (!(conf = getConfiguration())) goto error;
+  if ((fd = fopen(conf->pidFile, "w")) == 0) {
+    logMain(LOG_ERR, "fails to open %s: %s", 
+	    conf->pidFile, strerror(errno));
+    goto error;
+  }
+  pid = getpid();
+  logMain(LOG_INFO, "write pid: %i", pid);
+  if (fprintf(fd, "%i", pid) < 0) {
+    logMain(LOG_ERR, "fails write pid to %s", conf->pidFile);
+    goto error2;
+  }
+  if (fclose(fd)) {
+    logMain(LOG_ERR, "fclose fails: %s", strerror(errno));
+    goto error2;
+  }
+   
+  // start mediatex stuffs
+  logMain(LOG_INFO, "start mediatex stuffs");
+  if (!hupManager()) goto error2;
+  if (!mdtxCall(2, "adm", "bind")) goto error2;
+  if (!mainLoop()) goto error3;  
   /************************************************************************/
   
-  if (!mdtxCall(2, "adm", "unbind")) goto error;
   rc = TRUE;
+ error3:
+  if (!mdtxCall(2, "adm", "unbind")) rc = FALSE;
+ error2:
+  // delete pid file
+  if (!(conf = getConfiguration())) goto error; // HUP may have free conf
+  if (!callAccess(conf->pidFile, &isThere)) rc = FALSE;
+  if (!isThere) {
+    logMain(LOG_WARNING, "no pid file to remove. Expect: %s",
+	    conf->pidFile);
+  } else {
+    if (unlink(conf->pidFile) == -1) {
+      logMain(LOG_ERR, "fails to delete pid file: %s:", strerror(errno));
+      rc = FALSE;
+    }
+  }
  error:
+  free (buf1);
   freeConfiguration();
   ENDINGS;
   sleep(1);

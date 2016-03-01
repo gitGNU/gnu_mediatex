@@ -47,7 +47,7 @@ usage(char* programName)
   fprintf(stderr, " [ -a ] query");
 
   mdtxOptions();
-  fprintf(stderr, "  -a, --alone\tdo not make cvs remote queries\n");
+  fprintf(stderr, "  -a, --alone\t\tdo not make cvs remote queries\n");
   
   fprintf(stderr, "\nExamples:\n"	  
 	  "\nAdmin queries:\n"
@@ -148,7 +148,7 @@ main(int argc, char** argv)
  
   /************************************************************************/
   logMain(LOG_INFO, "** mdtx-wrapper **");
-  if (!undo_seteuid()) goto error;
+  if (!undoSeteuid()) goto error;
 
   // become mdtx user if we are not root
   if (uid && !becomeUser(env.confLabel, TRUE)) goto error;

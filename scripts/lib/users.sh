@@ -51,7 +51,7 @@ function USERS_root_populate()
     install -o root -g root -m 755 -d $STATEDIR
     install -o root -g root -m 755 -d $CACHEDIR
     install -o root -g root -m 755 -d $ETCDIR
-    install -o root -g root -m 755 -d $PIDDIR
+    install -o root -g root -m 777 -d $PIDDIR
 
     # configure cron
     install -o root -g root -m 640 $MISC/mediatex_cron $SYSCONFDIR/cron.d

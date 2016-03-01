@@ -31,6 +31,14 @@ Patches are welcome; if possible, please make them with @samp{@w{diff
 
 @unnumberedsec Tips to debug
 @itemize @bullet
+@item run scripts alone : just change directory to @file{/usr/share/mediatex/scripts} or for instance :
+@example
+srcdir=/usr/share/mediatex/scripts MDTX_MDTXUSER=serv1 \
+/usr/share/mediatex/scripts/audit.sh hello \
+  audit_20160204-002128_395972467d4e582287143a094dd14c10:nroche \
+  022a34b2f9b893fba5774237e1aa80ea 24075 0
+@end example
+
 @item configure @code{rsyslog} so as not to drop messages
 @example
 $ cat /etc/rsyslog.conf

@@ -72,7 +72,8 @@ function JAIL_add_library()
     # get all related so files and symlinks
     FILES=$(find /lib \( -type f -or -type l \) -name ${1}*)
     if [ -d /lib64 ]; then
-	FILES=$FILES $(find /lib64 \( -type f -or -type l \)  -name ${1}*)
+	FILES64=$(find /lib64 \( -type f -or -type l \)  -name ${1}*)
+	FILES="$FILES $FILES64"
     fi
 
     for FILE in $FILES; do
