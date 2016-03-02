@@ -60,10 +60,7 @@
      --libexecdir=/usr/lib/mediatex
 */
 
-// Scripts are finalised by putting the above definition into too.
-// However, the folowing values are hard-coded into the scripts.
-// If you change them here, you have to reproduces changes into the
-// 2 scripts's headers utmediatex.src and include.src.
+// Scripts are greping from and here too the above and below definitions.
 
 // absolute paths
 #define CONF_ETCDIR   CONF_SYSCONFDIR CONF_MEDIATEXDIR
@@ -106,6 +103,82 @@
 #define SSH_PORT      22
 #define HTTP_PORT     80
 #define HTTPS_PORT    443
+
+// owner user
+#define U_VAR_CACHE_MEDIATEX_MDTX_JAIL    "root"
+#define U_VAR_LIB_MEDIATEX_MDTX           "mdtx"
+#define U_VAR_CACHE_MEDIATEX_MDTX_HOME    "root"
+#define U_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "mdtx"
+#define U_VAR_CACHE_MEDIATEX_MDTX_CACHE   "mdtx"
+
+// owner group
+#define G_VAR_CACHE_MEDIATEX_MDTX_JAIL    "root"
+#define G_VAR_LIB_MEDIATEX_MDTX           "meta"
+#define G_VAR_CACHE_MEDIATEX_MDTX_HOME    "root"
+#define G_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "mdtx"
+#define G_VAR_CACHE_MEDIATEX_MDTX_CACHE   "meta"
+
+// acl
+#define A_VAR_CACHE_MEDIATEX_MDTX_JAIL    "u::rwx g::r-x o::r-x"
+#define A_VAR_LIB_MEDIATEX_MDTX           "u::rwx g::r-x o::r-x"
+#define A_VAR_CACHE_MEDIATEX_MDTX_HOME    "u::rwx g::r-x o::r-x"
+#define A_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "u::rwx g::r-x o::r-x"
+#define A_VAR_CACHE_MEDIATEX_MDTX_CACHE   "u::rwx g::r-x o::r-x"
+
+// default acl
+#define D_VAR_CACHE_MEDIATEX_MDTX_TMP     "u::rwx g::r-x o::r-x"
+
+enum {
+  VAR_LIB_M = 0,
+  VAR_LIB_M_MDTX,
+  VAR_LIB_M_MDTX_MDTX,
+  VAR_LIB_M_MDTX_CVSROOT,
+  VAR_LIB_M_MDTX_COLL,
+  VAR_CACHE_M,
+  VAR_CACHE_M_MDTX,
+  VAR_CACHE_M_MDTX_CACHE,
+  VAR_CACHE_M_MDTX_CACHE_M,
+  VAR_CACHE_M_MDTX_CACHE_COLL,
+  VAR_CACHE_M_MDTX_SSH,
+  VAR_CACHE_M_MDTX_HTML,
+  VAR_CACHE_M_MDTX_CVS,
+  VAR_CACHE_M_MDTX_CVS_MDTX,
+  VAR_CACHE_M_MDTX_CVS_COLL,
+  VAR_CACHE_M_MDTX_TMP,
+  VAR_CACHE_M_MDTX_TMP_COLL,
+  VAR_CACHE_M_MDTX_HOME,
+  VAR_CACHE_M_MDTX_HOME_COLL,
+  VAR_CACHE_M_MDTX_HOME_COLL_SSH,
+  VAR_CACHE_M_MDTX_HOME_COLL_HTML,
+  VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC,
+  VAR_CACHE_M_MDTX_MD5SUMS,
+  VAR_CACHE_M_MDTX_JAIL
+};
+  
+#define _VAR_LIB_M                         {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_LIB_M_MDTX                    {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_LIB_M_MDTX_COLL               {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M                       {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX                  {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CACHE            {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_SSH              {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HTML             {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_TMP              {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HOME             {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL        {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_SSH    {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_HTML   {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_MD5SUMS          {"root", "root", "u::rwx g::r-x o::r-x", ""}
+#define _VAR_CACHE_M_MDTX_JAIL             {"root", "root", "u::rwx g::r-x o::r-x", ""}
 
 #endif /* MDTX_CONFIG_H */
 

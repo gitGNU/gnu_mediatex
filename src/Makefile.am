@@ -173,7 +173,7 @@ server_sources = \
 
 lib_LTLIBRARIES = libmediatex.la
 libmediatex_la_SOURCES = $(mediatex_sources)
-libmediatex_la_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto
+libmediatex_la_LDFLAGS = @LIBINTL@ -pthread -lm -lavl -lcrypto -lacl
 
 noinst_LIBRARIES = \
 	client/libclient.a \
@@ -242,15 +242,15 @@ bin_PROGRAMS = \
 
 cgi_SOURCE = cgi.c
 cgi_LDADD = libmediatex.la
-cgi_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
+cgi_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 mediatex_SOURCE = mediatex.c
 mediatex_LDADD = libmediatex.la client/libclient.a
-mediatex_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
+mediatex_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 mediatexd_SOURCE = mediatexd.c
 mediatexd_LDADD = libmediatex.la server/libserver.a
-mediatexd_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto
+mediatexd_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 %.tab.h %.tab.c: %.y
 	$(YACC) $<

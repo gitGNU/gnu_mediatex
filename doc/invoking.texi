@@ -30,13 +30,13 @@ $ cvs -z3 \
 Software requirements.
 @itemize @bullet
 @item Compilation:
-automake gettext libtool make flex bison help2man texinfo transfig libssl-dev libavl-dev
+automake gettext libtool make flex bison help2man texinfo transfig libssl-dev libavl-dev libacl1-dev
 @c @item Info documentation:
 @c ghostscript
 @item Documentation in others format than texinfo and man (optional):
 imagemagick texlive
 @item Installation:
-ssh apache2 cvs viewvc libavl1 tar cpio gzip bzip2 unzip bc findutils
+ssh apache2 cvs viewvc libavl1 libacl1 acl tar cpio gzip bzip2 unzip bc findutils
 @item Debian package generation
 libfile-fcntllock-perl
 @end itemize

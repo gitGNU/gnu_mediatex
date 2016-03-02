@@ -43,26 +43,17 @@ misc/ut$TEST -d $PWD/$srcdir -w $PWD \
     >misc/$TEST.out 2>&1
 
 # tests using parameters
-misc/ut$TEST -d /usr/bin -u foo -g root -p 755 \
-    >>misc/$TEST.out 2>&1 || /bin/true
+misc/ut$TEST -d /usr/bin -u foo -g root -a "u::rwx g::r-x o::r-x" \
+	     >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d /usr/bin -u root -g bar -p 755 \
-    >>misc/$TEST.out 2>&1 || /bin/true
+misc/ut$TEST -d /usr/bin -u root -g bar -a "u::rwx g::r-x o::r-x" \
+	     >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d /usr/bin -u root -g root -p 777 \
-    >>misc/$TEST.out 2>&1 || /bin/true
+misc/ut$TEST -d /usr/bin -u root -g root -a "u::rwx g::rwx o::rwx" \
+	     >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d /usr/bin -u root -g root -p 755 \
-    >>misc/$TEST.out 2>&1
-
-# test other test will not fails using no regression mode
-MDTX_NO_REGRESSION=1 \
-    misc/ut$TEST -d /usr/bin -u root -g root -p 777 \
-    >>misc/$TEST.out 2>&1 || /bin/true
-
-MDTX_NO_REGRESSION=1 \
-    misc/ut$TEST -d /usr/bin -u foo -g bar -p 755 \
-    >>misc/$TEST.out 2>&1
+misc/ut$TEST -d /usr/bin -u root -g root -a "u::rwx g::r-x o::r-x" \
+	     >>misc/$TEST.out 2>&1
 
 # suppress the current date
 sed -i -e "s/\(current date: \).*/\1 XXX/" misc/$TEST.out

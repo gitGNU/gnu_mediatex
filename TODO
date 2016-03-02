@@ -1,4 +1,6 @@
 
+*** DONE
+
 *** BUGS
 
 - test21: audit fails (rc=4 ?)
@@ -60,7 +62,4 @@
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log
-
-*** DONE
-
-- remove -S option for script output (use script log module instead)
+- change ring to linear list to free some memory (if reverse link not used)

@@ -35,10 +35,31 @@ MDTX_SH_USERS=1
 # get a random number from 0 to $1 on 2 digits
 # $1: maximum
 # $rand (out): result
-function USERS_root_random
+function USERS_root_random()
 {
     rand=$(echo "$RANDOM*($1+1)/32768" | bc)
     rand=$(printf "%02i\n" $rand)
+}
+
+# install a directory
+# $1: directory
+# $2: user
+# $3: group
+# $4: acl
+# $5: default acl
+function USERS_install()
+{
+    Debug "$FUNCNAME" 2
+
+    install -o $2 -g $3 -d $1
+    for VAL in $4; do
+	setfacl -m $VAL $1
+    done
+    if [ ! -z $5 ]; then
+	for VAL in $5; do
+	    setfacl -d -m $VAL $1
+	done
+    fi
 }
 
 # this function create the root directories
@@ -95,7 +116,10 @@ function USERS_mdtx_populate()
 
     # /var/cache/mediatex/mdtx
     install -o root  -g root        -m 755  -d $MDTXHOME
-    install -o root  -g root        -m 755  -d $MDTXHOME/jail
+    
+    #install -o root  -g root        -m 755  -d $MDTXHOME/jail
+    USERS_install $MDTXHOME/jail "${_VAR_CACHE_M_MDTX_JAIL[@]}"
+
     install -o $MDTX -g $MDTX       -m 700  -d $MDTXHOME$CONF_SSHDIR
     install -o $MDTX -g $MDTX       -m 750  -d $MDTXHOME$CONF_HTMLDIR
     install -o $MDTX -g $MDTX       -m 750  -d $MD5SUMS

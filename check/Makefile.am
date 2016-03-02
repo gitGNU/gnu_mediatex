@@ -249,7 +249,7 @@ utmediatex.sh: utmediatex.src Makefile
 # Note: 2 choices for LDADD
 # - ../src/libmediatex.la : should be better
 # - ../src/.libs/libmediatex.a : easier to debug and no ps's hangup
-AM_LDFLAGS = -pthread -lcrypto -lavl -lm
+AM_LDFLAGS = -pthread -lcrypto -lavl -lm -lacl
 LDADD = ../src/.libs/libmediatex.a
 memory_ldadd = \
 	../src/.libs/libmediatex.a \
