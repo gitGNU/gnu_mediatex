@@ -1,8 +1,15 @@
 
+*** DONE
+
 *** BUGS
 
-- -b to manage pidfile into mediatexd (help debug and simplify init.d)
-- -v option (alias for -sdebug)
+- test21: audit fails (rc=4 ?)
+  never fails with SERVER=1 ?
+  not alway reproductible with SERVER=0
+- md5sum computed but not checked (audit will alway success !)
+
+- /var/run/mediatex disapear at purge if empty (no good)
+--> no more /var/run/(mediatex) directory
 
 - ACL: add coll and then HUP daemon (that need to be restarted) :
   try to parse servers.txt but serv1 still do no belongs to serv1-hello.
@@ -17,6 +24,7 @@
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
+- test14 : motd ask for file support
 
 *** TO TEST
 
@@ -54,7 +62,4 @@
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace ardsm by mqueue
 - add thread ID to the log
-
-*** DONE
-
-- remove -S option for script output (use script log module instead)
+- change ring to linear list to free some memory (if reverse link not used)

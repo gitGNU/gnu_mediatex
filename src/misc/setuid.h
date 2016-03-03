@@ -37,7 +37,7 @@ int getPasswdLine (char* label, uid_t uid,
 int getGroupLine (char* label, gid_t gid, 
 		  struct group* gr, char** buffer);
 
-int undo_seteuid (void);
+int undoSeteuid (void);
 int allowedUser (char* label);
 int becomeUser (char* label, int doCheck);
 int logoutUser (int uid);

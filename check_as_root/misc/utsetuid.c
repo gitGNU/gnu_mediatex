@@ -133,7 +133,7 @@ main (int argc, char** argv)
   argvExec[0] = inputFile;
 
   // must be done first
-  if (!undo_seteuid ()) goto error;
+  if (!undoSeteuid ()) goto error;
 
   // first layer
   logMain (LOG_NOTICE, "** first layer");

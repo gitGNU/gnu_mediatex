@@ -2,7 +2,7 @@
 
 This script manage the build of a collection's audit report.
 
-@todo{} maybe rewrite this code in C to seed-up audit process.
+@todo{} still in development.
 
 Process conceptual model:
 

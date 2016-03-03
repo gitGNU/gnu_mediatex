@@ -76,7 +76,7 @@ miscUsage(char* programName)
 {
   fprintf(stderr, "\nUsage: %s", basename(programName));
   fprintf(stderr, 
-	  "-h | -v |"
+	  "-h | -V | -v |"
 	  " [ -f facility ] [ -l logFile ]"
 	  " [ -s severity[:module(,module)*] ]"
 	  " [ -m memoryLimit ] [ -n ]");
@@ -136,8 +136,8 @@ miscOptions()
   fprintf(stderr, 
 	  "\n\nOptions:\n"
 	  "  -h, --help\t\tdisplay this message\n"
-	  "  -v, --version\t\tdisplay the " PACKAGE_NAME 
-	  " software version\n"
+	  "  -V, --version\tdisplay the version number\n"
+	  "  -v, --verebosity\tincrease verbosity (wrapper for -s)\n"
 	  "  -f, --facility\tset facility to use for logging\n"
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"
 	  "  -l, --log-file\tlog into a file\n"
@@ -257,7 +257,8 @@ setEnv(char* programName, MdtxEnv *self)
     "MDTX_LOG_SEVERITY_ALLOC",
     "MDTX_LOG_SEVERITY_SCRIPT",
     "MDTX_LOG_SEVERITY_MISC",
-    "MDTX_LOG_SEVERITY_MEMORY",    "MDTX_LOG_SEVERITY_PARSER",
+    "MDTX_LOG_SEVERITY_MEMORY",
+    "MDTX_LOG_SEVERITY_PARSER",
     "MDTX_LOG_SEVERITY_COMMON",
     "MDTX_LOG_SEVERITY_MAIN"
   };
@@ -316,6 +317,8 @@ setEnv(char* programName, MdtxEnv *self)
  *              doHideStderr = close stderr before exec
  * Output     : Never returns on success
  * Note       : fork keeps file descriptors
+ *              Daemon running background have to close stderr when
+ *              executing a call, I don't know why.
  =======================================================================*/
 void 
 execChild(char** argv, int doHideStderr)
@@ -338,16 +341,23 @@ execChild(char** argv, int doHideStderr)
   }
 
   // - close stdout by default
+  if (env.background) {
+    dup2(fd, 1);
+  }
   if (env.logHandler->severity[LOG_SCRIPT]->code <= LOG_INFO) {
-    logMisc(LOG_INFO, "close stdout from child (use '-sdebug:script' to undo)");
+    logMisc(LOG_INFO,
+	    "hide stdout from child (use '-sdebug:script' to show)");
     dup2(fd, 1);
   }
 
-  // - close stderr only when we want to hide stdout-like informations
+  // - close stderr when it introduce noise
+  if (env.background) {
+    dup2(fd, 2);
+  }
   if (doHideStderr &&
       env.logHandler->severity[LOG_SCRIPT]->code <= LOG_NOTICE) {
-    logMisc(LOG_INFO, "exceptionally close stderr from child "
-	    "(use '-sinfo:script' to undo)");
+    logMisc(LOG_INFO, "hide stderr from child "
+	    "(use '-sinfo:script' to show)");
     dup2(fd, 2);
   }
       

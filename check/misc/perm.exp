@@ -37,34 +37,26 @@
 [info perm.c] keep not empty directory: /HERE/check/tmp
 [info utperm.c] exit on success
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin foo root 755 (noRegression=0)
+[notice utperm.c] * Perm: /usr/bin foo root u::rwx g::r-x o::r-x 0 (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] /usr/bin should be owne by foo user, not root
 [err perm.c] checkDirectoryPerm fails
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin root bar 755 (noRegression=0)
+[notice utperm.c] * Perm: /usr/bin root bar u::rwx g::r-x o::r-x 0 (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] /usr/bin should be owne by bar group, not root
 [err perm.c] checkDirectoryPerm fails
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin root root 777 (noRegression=0)
+[notice utperm.c] * Perm: /usr/bin root root u::rwx g::rwx o::rwx 0 (noRegression=0)
 [notice utperm.c] ***********************************************
-[err perm.c] /usr/bin should be share as 777, not 755
+[err perm.c] acl differ
+[notice perm.c] expected:  u::rwx g::rwx o::rwx 
+[notice perm.c] directory: u::rwx g::r-x o::r-x 
 [err perm.c] checkDirectoryPerm fails
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin root root 755 (noRegression=0)
-[notice utperm.c] ***********************************************
-[info utperm.c] exit on success
-[notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin root root 777 (noRegression=1)
-[notice utperm.c] ***********************************************
-[err perm.c] /usr/bin should be share as 777, not 755
-[err perm.c] checkDirectoryPerm fails
-[info utperm.c] exit on error
-[notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /usr/bin foo bar 755 (noRegression=1)
+[notice utperm.c] * Perm: /usr/bin root root u::rwx g::r-x o::r-x 0 (noRegression=0)
 [notice utperm.c] ***********************************************
 [info utperm.c] exit on success

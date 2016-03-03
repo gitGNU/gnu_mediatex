@@ -85,10 +85,9 @@ mdtxAddCollection(Collection* coll)
       || !(cvsFile =  catString(cvsFile, "/servers.txt")))
     goto error;
   if (stat(cvsFile, &sb) == -1) {
-    logMain(LOG_INFO, "stat: %s", strerror(errno));
-    logMain(LOG_DEBUG, "(stat was looking for %s)", cvsFile);
+    logMain(LOG_INFO, "stat fails on %s: %s", cvsFile, strerror(errno));
     logMain(LOG_NOTICE,
-	    "Please send your collection key to %s server admin",
+	    "Please send your collection's public key to %s server admin",
 	    coll->masterHost);
     goto end;
   }

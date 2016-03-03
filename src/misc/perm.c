@@ -23,6 +23,34 @@
  =======================================================================*/
 
 #include "mediatex-config.h"
+#include <acl/libacl.h>
+
+Perm perm[] = {
+  _VAR_LIB_M,
+  _VAR_LIB_M_MDTX,
+  _VAR_LIB_M_MDTX_MDTX,
+  _VAR_LIB_M_MDTX_CVSROOT,
+  _VAR_LIB_M_MDTX_COLL,
+  _VAR_CACHE_M,
+  _VAR_CACHE_M_MDTX,
+  _VAR_CACHE_M_MDTX_CACHE,
+  _VAR_CACHE_M_MDTX_CACHE_M,
+  _VAR_CACHE_M_MDTX_CACHE_COLL,
+  _VAR_CACHE_M_MDTX_SSH,
+  _VAR_CACHE_M_MDTX_HTML,
+  _VAR_CACHE_M_MDTX_CVS,
+  _VAR_CACHE_M_MDTX_CVS_MDTX,
+  _VAR_CACHE_M_MDTX_CVS_COLL,
+  _VAR_CACHE_M_MDTX_TMP,
+  _VAR_CACHE_M_MDTX_TMP_COLL,
+  _VAR_CACHE_M_MDTX_HOME,
+  _VAR_CACHE_M_MDTX_HOME_COLL,
+  _VAR_CACHE_M_MDTX_HOME_COLL_SSH,
+  _VAR_CACHE_M_MDTX_HOME_COLL_HTML,
+  _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC,
+  _VAR_CACHE_M_MDTX_MD5SUMS,
+  _VAR_CACHE_M_MDTX_JAIL 
+};
 
 /*=======================================================================
  * Function   : callAccess
@@ -379,19 +407,248 @@ buildAbsoluteTargetPath(char** newAbsolutePath, char* prefix, char* postfix)
 }
 
 /*=======================================================================
+ * Function   : logAcl
+ * Description: Print an acl
+ * Synopsis   : static int logAcl(acl_t acl)
+ * Input      : char* text: text to log
+ *              acl_t acl: the acl to log
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+logAcl(char* text, acl_t acl) 
+{
+  int rc = FALSE;
+
+  acl_entry_t entry;
+  acl_tag_t tag;
+  void *idp;
+  acl_permset_t permset;
+  int entryId, permValR, permValW, permValX;
+  char buffer[255] = "";
+  int len = 0;
+ 
+  if (acl == NULL) goto error;
+ 
+  // Walk through each entry in this ACL
+  for (entryId = ACL_FIRST_ENTRY; ; entryId = ACL_NEXT_ENTRY) {
+
+    // Exit on error or no more entries
+    if (acl_get_entry(acl, entryId, &entry) != 1) break;
+     
+    // Retrieve and display tag type
+    if (acl_get_tag_type(entry, &tag) == -1) goto error;
+    len += sprintf(buffer+len, "%s", 
+		   (tag == ACL_USER_OBJ) ?  "u::" :
+		   (tag == ACL_USER) ?      "u:" :
+		   (tag == ACL_GROUP_OBJ) ? "g::" :
+		   (tag == ACL_GROUP) ?     "g:" :
+		   (tag == ACL_MASK) ?      "m::" :
+		   (tag == ACL_OTHER) ?     "o::" : "???");
+ 
+    // Retrieve and display optional tag qualifier
+    if (tag == ACL_USER || tag == ACL_GROUP) {
+      idp = acl_get_qualifier(entry);
+      if (idp == NULL) goto error;
+      len += sprintf(buffer+len, "%d:", *(int*)idp);
+      if (acl_free(idp) == -1) goto error;
+    }
+
+    // Retrieve and display permissions
+    if (acl_get_permset(entry, &permset) == -1) goto error;
+    permValR = acl_get_perm(permset, ACL_READ);
+    if (permValR == -1) goto error;
+    permValW = acl_get_perm(permset, ACL_WRITE);
+    if (permValW == -1) goto error;
+    permValX = acl_get_perm(permset, ACL_EXECUTE);
+    if (permValX == -1) goto error;
+    len += sprintf(buffer+len, "%c%c%c", 
+		   (permValR == 1) ? 'r' : '-',
+		   (permValW == 1) ? 'w' : '-',
+		   (permValX == 1) ? 'x' : '-');
+    len += sprintf(buffer+len, " ");
+  }
+
+  logMisc(LOG_NOTICE, "%s%s", text, buffer);
+  rc = TRUE;
+ error:
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cmpAcl
+ * Description: compare an acl
+ * Synopsis   : static int cmpDirectoryAcl(char* path, char* aclValue, 
+ *                                      char* checkDefaultAcl, int *res)
+ * Input      : char* path: directory to check
+ *              char* aclValue: acl string to compare
+ *              char* checkDefaultAcl: check default acl too (same value)
+ *              int *res: TRUE if equal
+ * Output     : TRUE on success
+ =======================================================================*/
+static int
+cmpDirectoryAcl(char* path, char* aclVal, char* checkDefaultAcl, int *res)
+{
+  int rc = FALSE;
+  acl_t acl1=0, acl2=0;
+
+  // build acl to compare
+  if (!(acl1 = acl_from_text(aclVal))) {
+    logMisc(LOG_ERR, "fails to build '%s' acl: %s",
+	    aclVal, strerror(errno));
+    goto error;
+  }
+
+  // valid acl to compare
+  if (acl_valid(acl1) != 0) {
+    logMisc(LOG_ERR, "invalid/incomplete '%s' acl: %s",
+	    aclVal, strerror(errno));
+    goto error;
+  }
+
+  // retrieve existing acl
+  if (!(acl2 = acl_get_file(path, ACL_TYPE_ACCESS))) {
+    logMisc(LOG_ERR, "fails getting acl of %s: %s",
+	    path, strerror(errno));
+    goto error;
+  }
+
+  if ((rc =  acl_cmp(acl1, acl2)) == -1) {
+    logMisc(LOG_ERR, "cmp_acl fails: %s", strerror(errno));
+    goto error;
+  }
+  
+  // result
+  *res = (rc == 0)? TRUE : FALSE;
+  if (!*res) {
+    logMisc(LOG_ERR, "acl differ");
+    goto end;
+  }
+
+  // retrieve existing default acl (only on directories)
+  if (!checkDefaultAcl) goto end;
+  if (!(acl2 = acl_get_file(path, ACL_TYPE_DEFAULT))) {
+    logMisc(LOG_ERR, "fails getting default acl of %s: %s",
+	    path, strerror(errno));
+    goto error;
+  }
+
+  if ((rc =  acl_cmp(acl1, acl2)) == -1) {
+    logMisc(LOG_ERR, "cmp_acl fails: %s", strerror(errno));
+    goto error;
+  }
+
+  // result
+  *res = (rc == 0)? TRUE : FALSE;
+  if (!*res) {
+    logMisc(LOG_ERR, "default acl differ");
+  }
+
+ end:
+  if (!*res) {
+    if (!logAcl("expected:  ", acl1)) goto error;
+    if (!logAcl("directory: ", acl2)) goto error;
+  }
+  rc = TRUE;
+ error:
+  if (acl1) acl_free(acl1);
+  if (acl2) acl_free(acl2);
+  return rc;
+} 
+
+/*=======================================================================
  * Function   : checkDirectoryPerm
+ * Description: check existence, owner and permission of a directory.
+ * Synopsis   : static int checkDirectory(char* path, int index)
+ * Input      : const char* path: the path of the directory
+ *              int index: the index of the permission to check
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+checkDirectoryPerm(char* path, int index)
+{
+  int rc = FALSE;
+  char* user = perm[index].user;
+  char* group = perm[index].group;
+  char* aclVal = perm[index].acl;
+  struct stat statBuffer;
+  struct passwd pw;
+  struct group gr;
+  char *buf = 0;
+  int res;
+
+  if (path == 0 || *path == (char)0) {
+    logMisc(LOG_ERR, "cannot check empty directory path");
+    goto error;
+  }
+
+  logMisc(LOG_DEBUG, "checkDirectoryPerm %s %s %s '%s'", 
+	  path, user, group, aclVal);
+
+  if (stat(path, &statBuffer) == -1) {
+    logMisc(LOG_ERR, "stat fails on path %s", path);
+    logMisc(LOG_ERR, "stat: %s", strerror(errno));
+    goto error;
+  }
+  
+  // check directory
+  if (!S_ISDIR(statBuffer.st_mode)) {
+    logMisc(LOG_ERR, "%s is not adirectory\n", path)
+    goto error;
+  }
+
+  // we bypass owner checks if we are running a unit test
+  if (env.noRegression) {
+    goto noRegression;
+  }
+  
+  // check user
+  if (!getPasswdLine (0, statBuffer.st_uid, &pw, &buf)) goto error;
+  if (strcmp(user, pw.pw_name)) {
+    logMisc(LOG_ERR, "%s should be owne by %s user, not %s",
+	    path, user, pw.pw_name);
+    goto error;
+  }
+  
+  // check group  
+  if (buf) free (buf);
+  if (!getGroupLine (0, statBuffer.st_gid, &gr, &buf)) goto error;
+  if (strcmp(group, gr.gr_name)) {
+    logMisc(LOG_ERR, "%s should be owne by %s group, not %s",
+	    path, group, gr.gr_name);
+    goto error;
+  }
+
+  // check rights
+  if (!cmpDirectoryAcl(path, aclVal, 0, &res) || !res)
+    goto error;
+
+ noRegression:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMisc(LOG_ERR, "checkDirectoryPerm fails");
+  } 
+
+  if (buf) free (buf);
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : checkDirectoryPermDeprecated
  * Description: check existence, owner and permission of a directory.
  * Synopsis   : static int checkDirectory(char* path, 
  *                         char* user, char* group, mode_t mode)
  * Input      : const char* path : the path of the directory
  *              char* user:  expected user
  *              char* group: expected group
- *              mode_t mode  expected mode
+ *              mode_t mode:  expected mode
  * Output     : TRUE on success
+ * Note       : TO REMOVE ASAP
  =======================================================================*/
 int 
-checkDirectoryPerm(char* path, char* user, char* group, mode_t mode)
+checkDirectoryPermDeprecated(char* path, char* user, char* group, mode_t mode)
 {
+#warning To remove asap
   int rc = FALSE;
   struct stat statBuffer;
   struct passwd pw;
@@ -426,7 +683,7 @@ checkDirectoryPerm(char* path, char* user, char* group, mode_t mode)
 	    path, mode & mask, statBuffer.st_mode & mask);
     goto error;
   }
-
+  
   // we bypass owner checks if we are running a unit test
   if (env.noRegression) {
     rc = TRUE;

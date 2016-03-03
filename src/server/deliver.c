@@ -104,7 +104,7 @@ int auditArchive(Collection* coll, Record* demand)
   // get file attributes (size)
   if (!(path = getAbsoluteRecordPath(coll, supply))) goto error;
   if (stat(path, &statBuffer)) {
-    logMain(LOG_ERR, "status error on %s: %s", supply->extra, 
+    logMain(LOG_ERR, "stat fails on %s: %s", supply->extra, 
 	    strerror(errno));
     goto error;
   }

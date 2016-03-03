@@ -58,6 +58,8 @@ $ tar -jxf OpenIconsLibrary.tbz
 # /etc/init.d/mediatexd start
 @end example
 
+@todo{} still in development.
+
 The server will take too long time to scan the cache directory (I guess because of records managed into a list instead of a hash-table).
 
 Audit the collection:

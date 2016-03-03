@@ -340,16 +340,16 @@ expandCollection(Collection* self)
   mdtx = env.confLabel;
   user = self->user;
 
-  if (!checkDirectoryPerm(   self->homeDir,    user, mdtx, 0750)
-      || !checkDirectoryPerm(self->cacheDir,   mdtx, user, 02750)
-      || !checkDirectoryPerm(self->extractDir, mdtx, user, 02770)
-      || !checkDirectoryPerm(self->cvsDir,     mdtx, user, 02770)
+  if (!checkDirectoryPermDeprecated(   self->homeDir,    user, mdtx, 0750)
+      || !checkDirectoryPermDeprecated(self->cacheDir,   mdtx, user, 02750)
+      || !checkDirectoryPermDeprecated(self->extractDir, mdtx, user, 02770)
+      || !checkDirectoryPermDeprecated(self->cvsDir,     mdtx, user, 02770)
 
       /* mdtx was just been added to user group,
   	 so it need to reload its groups to check the above
   	 diretories */
-      || !checkDirectoryPerm(self->sshDir,     user, user, 0700)
-      || !checkDirectoryPerm(self->htmlDir,    mdtx, user, 02750)
+      || !checkDirectoryPermDeprecated(self->sshDir,     user, user, 0700)
+      || !checkDirectoryPermDeprecated(self->htmlDir,    mdtx, user, 02750)
       )
     goto error;
 
@@ -723,15 +723,15 @@ expandConfiguration()
     goto error;
 
   // check directories
-  if (!checkDirectoryPerm(jail,                "root", "root", 0755)
-      || !checkDirectoryPerm(conf->cvsRootDir,  mdtx,   meta,  0750)
-      || !checkDirectoryPerm(conf->homeDir,    "root", "root", 0755)
-      || !checkDirectoryPerm(conf->md5sumDir,   mdtx,   mdtx,  0750)
-      || !checkDirectoryPerm(conf->cacheDir,    mdtx,   meta,  0750)
-      || !checkDirectoryPerm(conf->extractDir,  mdtx,   meta,  0750)
-      || !checkDirectoryPerm(conf->cvsDir,      mdtx,   meta,  0750)
-      || !checkDirectoryPerm(conf->mdtxCvsDir,  mdtx,   mdtx,  02770)
-      || !checkDirectoryPerm(conf->hostSshDir, "root", "root", 0755)
+  if (!checkDirectoryPerm(jail, VAR_CACHE_M_MDTX_JAIL)
+      || !checkDirectoryPermDeprecated(conf->cvsRootDir,  mdtx,   meta,  0750)
+      || !checkDirectoryPermDeprecated(conf->homeDir,    "root", "root", 0755)
+      || !checkDirectoryPermDeprecated(conf->md5sumDir,   mdtx,   mdtx,  0750)
+      || !checkDirectoryPermDeprecated(conf->cacheDir,    mdtx,   meta,  0750)
+      || !checkDirectoryPermDeprecated(conf->extractDir,  mdtx,   meta,  0750)
+      || !checkDirectoryPermDeprecated(conf->cvsDir,      mdtx,   meta,  0750)
+      || !checkDirectoryPermDeprecated(conf->mdtxCvsDir,  mdtx,   mdtx,  02770)
+      || !checkDirectoryPermDeprecated(conf->hostSshDir, "root", "root", 0755)
       )
     goto error;
 

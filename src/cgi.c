@@ -233,7 +233,6 @@ int mdtxFind(RecordTree *tree)
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "Refresh: 0; url=%s\r\n", url);
     fprintf(stdout, "\r\n");
-
     sendTemplate(coll, "cgiHeader.shtml");
     fprintf(stdout, "Please follow <a href=\"%s\"> link</a>!", url);
     sendTemplate(coll, "footer.html");
@@ -244,15 +243,12 @@ int mdtxFind(RecordTree *tree)
     
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "\r\n");
-    
     sendTemplate(coll, "cgiHeader.shtml");
-
     fprintf(stdout, 
 	    "<br>Sorry, this document is not available yet.\r\n<br>");
     fprintf(stdout, "<h5><i>hash=%s\r\n</i><br>", record->archive->hash);
     fprintf(stdout, "<i>size=%llu\r\n</i><br></h5>",
 	    (unsigned long long int)record->archive->size);
-    
     fprintf(stdout, 
 	    "<br>Please provide a mail to process exctraction.\r\n<br>");
     fprintf(stdout, "<FORM method=post action=\"%s/cgi/get.cgi\">\r\n",
@@ -261,11 +257,9 @@ int mdtxFind(RecordTree *tree)
 	    record->archive->hash);
     fprintf(stdout, "<INPUT TYPE=HIDDEN NAME=size VALUE=%lli>\n", 
 	    (long long int)record->archive->size);
-
     fprintf(stdout, "Mail <INPUT type=text name=mail>\n");
     fprintf(stdout, "<INPUT type=submit value=submit>\n");
     fprintf(stdout, "</FORM>\n");
-
     sendTemplate(coll, "footer.html");
   }
 
@@ -321,16 +315,12 @@ int mdtxRegister(RecordTree *tree)
     fprintf(stdout, "%s", "Content-Type: text/html\r\n");
     fprintf(stdout, "%s", "Refresh: 3; url=../index/\r\n");
     fprintf(stdout, "%s", "\r\n");
-
     sendTemplate(coll, "cgiHeader.shtml");
-
     fprintf(stdout, "%s",
 	    "You will be notified by mail as soon as the file become "
 	    "available\n"
 	    "Please follow this <a href=\"../index\"> link</a>!");
-
     sendTemplate(coll, "footer.html");
-    
     break;
 
   default:
@@ -338,9 +328,7 @@ int mdtxRegister(RecordTree *tree)
     
     fprintf(stdout, "Content-Type: text/html\r\n");
     fprintf(stdout, "\r\n");
-    
     sendTemplate(coll, "cgiHeader.shtml");
-
     fprintf(stdout, 
 	    "<br>Sorry, localhost cannot register it (errno %i).\r\n<br>",
 	    status);
@@ -348,7 +336,6 @@ int mdtxRegister(RecordTree *tree)
     fprintf(stdout, "<i>size=%llu\r\n</i><br>",
 	    (unsigned long long int)record->archive->size);
     fprintf(stdout, "<i>mail=%s</i><br></h5>", record->extra);
-
     sendTemplate(coll, "footer.html");
   }
 
@@ -548,7 +535,7 @@ static void usageHtml(Collection* coll, char* programName)
   fprintf(stdout, "\r\n");
 
   sendTemplate(coll, "cgiHeader.shtml");
- 
+  
   fprintf(stdout, "<br>Internal error, sorry\r\n<br>");
   fprintf(stdout, "<h5><i>methode = %s\r\n<br>", getenv("REQUEST_METHOD"));
   fprintf(stdout, "query = %s\r\n<br>", getenv("QUERY_STRING"));
@@ -577,7 +564,7 @@ static void usageHtml(Collection* coll, char* programName)
  =======================================================================*/
 static void iamAloneHtml(Collection* coll, char* programName)
 {
-  logMain(LOG_INFO, "sending no server awake message");
+  logMain(LOG_INFO, "no server is running");
 
   fprintf(stdout, "Content-Type: text/html\r\n");
   fprintf(stdout, "\r\n");
@@ -728,7 +715,7 @@ main(int argc, char** argv)
   }
   else {
     // second call: ask local server remind the provided mail
-    if (!mdtxRegister(tree)) goto error;
+    if (!mdtxRegister(tree)) goto iamAloneHtmlError;
   }
 
   rc = TRUE;

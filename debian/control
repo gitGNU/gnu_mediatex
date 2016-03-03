@@ -2,12 +2,12 @@ Source: mediatex
 Section: misc
 Priority: extra
 Maintainer: Nicolas Roche <nroche@prologue.fr>
-Build-Depends: debhelper (>= 8), libssl-dev, libavl-dev, flex, bison, help2man, texinfo, transfig, gettext, libtool, libfile-fcntllock-perl
+Build-Depends: debhelper (>= 8), libssl-dev, libavl-dev, libacl1-dev, flex, bison, help2man, texinfo, transfig, gettext, libtool, libfile-fcntllock-perl
 Standards-Version: 3.9.1
 Homepage: http://narval.tk/mediatexi
 
 Package: mediatex
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, cvs, viewvc, initramfs-tools, libavl1, tar, cpio, gzip, bzip2, unzip
+Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, cvs, viewvc, initramfs-tools, libavl1, libacl1, acl, tar, cpio, gzip, bzip2, unzip
 Description: MediaTeX archivage software
  MediaTeX is an light ERMS providing perenial archivage on CD.

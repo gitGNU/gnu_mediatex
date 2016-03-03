@@ -28,10 +28,21 @@
 #include "mediatex.h"
 #include <time.h>
 
+typedef struct Perm {
+  char user[32];
+  char group[32];
+  char acl[128];
+  char defaultAcl[128];
+} Perm;
+  
 time_t currentTime();
-int checkDirectoryPerm(char* path, char* user, char* group, mode_t mode);
+int checkDirectoryPerm(char* path, int index);
 
-// seems only used by server (mainly extract.c)
+int 
+checkDirectoryPermDeprecated(char* path, char* user, char* group,
+			     mode_t mode);
+
+// only used by server (mainly extract.c)
 int callAccess(char* path, int* isThere);
 int checkDirectory(char* path, int *isDirectory);
 int makeDir(char* base, char* path, mode_t mode);
@@ -39,7 +50,6 @@ int removeDir(char* base, char* path);
 int getUnusedPath(char* path, int lenFilename) ;
 int buildAbsoluteTargetPath(char** newAbsolutePath, 
 			    char* prefix, char* postfix);
-
 
 #endif /* MDTX_MISC_PERM_H */
 

@@ -56,7 +56,9 @@ done
 USERS_mdtx_remove_user
 USERS_root_disease
 
-/usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
+if [ -f /etc/apache2/conf-enabled/${MEDIATEX#/}-$MDTX.conf ]; then
+    /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
+fi
 HTDOCS_unconfigure_mdtx_apache2
 
 Info "Please check if these apache modules we were using are still needed:"
