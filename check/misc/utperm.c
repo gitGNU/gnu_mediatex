@@ -44,8 +44,8 @@ void usage(char* programName)
 	  "  -w, --pwd\tpath to the current directory (for make distcheck)\n"
 	  "  -u, --user\texpected owner user of the directory\n"
 	  "  -g, --group\texpected owner group of the directory\n"
-	  "  -a, --acl\texpected permissions on the directory\n"
-  	  "  -D, --default\tdefault acl\n");
+	  "  -p, --perm\texpected permissions on the directory (777)\n"
+	  "  -a, --acl\texpected permissions on the directory\n");
   return;
 }
 
@@ -66,8 +66,8 @@ main(int argc, char** argv)
   char* pwdPath = ".";
   char* user = 0;
   char* group = 0;
-  char* acl = 0;
-  int checkDefaultAcl = 0;
+  mode_t mode = 0111;
+  char acl[128] = "NO ACL";
   char file[MAX_SIZE_STRING+1];
   char dir[MAX_SIZE_STRING+1];
   char post[MAX_SIZE_STRING+1];
@@ -80,16 +80,15 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"d:u:g:p:w:a:D";
+  char* options = MISC_SHORT_OPTIONS"d:w:u:g:p:a:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
     {"dir", required_argument, 0, 'd'},
+    {"pwd", required_argument, 0, 'w'},
     {"user", required_argument, 0, 'u'},
     {"group", required_argument, 0, 'g'},
     {"perm", required_argument, 0, 'p'},
-    {"pwd", required_argument, 0, 'w'},
     {"acl", required_argument, 0, 'a'},
-    {"default", no_argument, 0, 'D'},
     {0, 0, 0, 0}
   };
 
@@ -117,6 +116,24 @@ main(int argc, char** argv)
 	break;
       }
       strncpy(inputPath, optarg, strlen(optarg)+1);
+      break;
+
+    case 'w':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, "%s: nil or empty argument for directory\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      if (strcmp(optarg, ".")) {
+	if ((pwdPath = malloc(strlen(optarg) + 1)) == 0) {
+	  fprintf(stderr, "cannot malloc the directory path: %s", 
+		  strerror(errno));
+	  rc = ENOMEM;
+	  break;
+	}
+	strncpy(pwdPath, optarg, strlen(optarg)+1);
+      }
       break;
       
     case 'u':
@@ -151,24 +168,20 @@ main(int argc, char** argv)
       strncpy(group, optarg, strlen(optarg)+1);
       break;
 
-    case 'w':
+    case 'p':
       if(optarg == 0 || *optarg == (char)0) {
-	fprintf(stderr, "%s: nil or empty argument for directory\n",
+	fprintf(stderr, "%s: nil or empty argument for the permission\n",
 		programName);
 	rc = EINVAL;
 	break;
       }
-      if (strcmp(optarg, ".")) {
-	if ((pwdPath = malloc(strlen(optarg) + 1)) == 0) {
-	  fprintf(stderr, "cannot malloc the directory path: %s", 
-		  strerror(errno));
-	  rc = ENOMEM;
-	  break;
-	}
-	strncpy(pwdPath, optarg, strlen(optarg)+1);
+      if (sscanf(optarg, "%o", (unsigned int *)&mode) != 1) {
+	fprintf(stderr, "sscanf: %s\n", strerror(errno));
+	rc = EINVAL;
+	break;
       }
       break;
-
+      
     case 'a':
       if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for acl string\n",
@@ -176,17 +189,7 @@ main(int argc, char** argv)
 	rc = EINVAL;
 	break;
       }
-      if ((acl = malloc(strlen(optarg) + 1)) == 0) {
-	fprintf(stderr, "cannot malloc the acl string: %s", 
-		strerror(errno));
-	rc = ENOMEM;
-	break;
-      }
       strncpy(acl, optarg, strlen(optarg)+1);
-      break;
-
-    case 'D':
-      checkDefaultAcl = 1;
       break;
 
       GET_MISC_OPTIONS; // generic options
@@ -335,9 +338,9 @@ main(int argc, char** argv)
     if (!removeDir(pwdPath, dir)) goto error;
   }
   else {
-     // Tests using more arguments 
-    logMain(LOG_NOTICE, "* Perm: %s %s %s %s %i (noRegression=%i)", 
-	    inputPath, user, group , acl, checkDefaultAcl,
+     // Tests using more arguments
+    logMain(LOG_NOTICE, "* Perm: %s %s %s %o '%s' (noRegression=%i)",
+	    inputPath, user, group , mode, acl,
 	    env.noRegression);
     logMain(LOG_NOTICE, "***********************************************"); 
     if (user == 0) {
@@ -352,17 +355,12 @@ main(int argc, char** argv)
       goto error;
     }
 
-    if (acl == 0) {
-      usage(programName);
-      logMain(LOG_ERR, "Please provide an acl string");
-      goto error;
-    }
-
     // replace the permission at index 0 for this test
     strcpy(perm[0].user, user);
     strcpy(perm[0].group, group);
-    strcpy(perm[0].acl, acl);
-    if (!checkDirectoryPerm(inputPath, 0)) goto error;
+    perm[0].mode = mode;
+    strcpy(perm[0].defaultAcl, acl);
+    if (!checkDirectoryPerm(NULL, inputPath, 0)) goto error;
   }
   /************************************************************************/
 
@@ -372,7 +370,6 @@ main(int argc, char** argv)
   if (strcmp(pwdPath, ".")) free(pwdPath);
   if (user) free(user);
   if (group) free(group);
-  if (acl) free(acl);
   env.noRegression = TRUE;
   ENDINGS;
   rc=!rc;

@@ -1,12 +1,11 @@
 
 *** DONE
+- acl / html
+** TODO
+- acl / cvs
+- acl / server
 
 *** BUGS
-
-- test21: audit fails (rc=4 ?)
-  never fails with SERVER=1 ?
-  not alway reproductible with SERVER=0
-- md5sum computed but not checked (audit will alway success !)
 
 - /var/run/mediatex disapear at purge if empty (no good)
 --> no more /var/run/(mediatex) directory
@@ -24,7 +23,13 @@
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
+
 - test14 : motd ask for file support
+
+- test21: audit fails (rc=4 ?)
+  never fails with SERVER=1 ?
+  not alway reproductible with SERVER=0
+- md5sum computed but not checked (audit will alway success !)
 
 *** TO TEST
 

@@ -66,24 +66,19 @@ lib/include.sh: \
 	$(top_srcdir)/config.h \
 	$(top_srcdir)/src/mediatex-config.h
 	$(do_subst) < lib/include.src > $@
-	@echo "USR=0" >> $@; \
-	echo "GRP=1" >> $@; \
-	echo "ACL=2" >> $@; \
-	echo "DEF=3" >> $@; \
-	grep "#define _" $(top_srcdir)/src/mediatex-config.h | \
+	@BASE=$$(grep "#define BASE_ACL" \
+		$(top_srcdir)/src/mediatex-config.h | \
+		cut -d\" -f2) ; \
+	echo -e "BASE_ACL=\"$$BASE\"\n" >> $@;
+	@grep "#define _" $(top_srcdir)/src/mediatex-config.h | \
 	  while read LINE; do \
 		DIR=$${LINE#\#define}; \
 		DIR=$$(echo $$DIR | cut -d' ' -f1); \
 		V_USR=$$(echo $$LINE | cut -d\" -f2); \
 		V_GRP=$$(echo $$LINE | cut -d\" -f4); \
+		V_RWX=$$(echo $$LINE | cut -d, -f3); \
 		V_ACL=$$(echo $$LINE | cut -d\" -f6); \
-		V_DEF=$$(echo $$LINE | cut -d\" -f8); \
-		echo -ne "\n"; \
-		echo "declare -a $$DIR"; \
-		echo "$$DIR[0]=\"$$V_USR\""; \
-		echo "$$DIR[1]=\"$$V_GRP\""; \
-		echo "$$DIR[2]=\"$$V_ACL\""; \
-		echo "$$DIR[3]=\"$$V_DEF\""; \
+		echo "$$DIR=(\"$$V_USR\" \"$$V_GRP\" $$V_RWX \"$$V_ACL\")";\
 	done >> $@
 
 mediatexd: mediatexd.src $(top_srcdir)/config.h

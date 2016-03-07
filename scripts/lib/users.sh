@@ -45,20 +45,30 @@ function USERS_root_random()
 # $1: directory
 # $2: user
 # $3: group
-# $4: acl
+# $4: perm
 # $5: default acl
 function USERS_install()
 {
     Debug "$FUNCNAME" 2
+    ACL=$5
 
-    install -o $2 -g $3 -d $1
-    for VAL in $4; do
-	setfacl -m $VAL $1
-    done
-    if [ ! -z $5 ]; then
-	for VAL in $5; do
-	    setfacl -d -m $VAL $1
+    #Notice "install -o $2 -g $3 -m $4 -d $1"
+    install -o $2 -g $3 -m $4 -d $1
+    if [ "$ACL" != "NO ACL" ]; then
+	if [ ! -z "$ACL" ]; then
+	    # default ACL: "u:%s:rwx g:%s:rwx [u:%s:r-x]"
+	    ACL=$(echo $ACL | sed -e "s/%s/$MDTX/")
+	    ACL=$(echo $ACL | sed -e "s/%s/$MDTX/")
+	    ACL=$(echo $ACL | sed -e "s/%s/$MDTX-$COLL/")
+	fi
+	STR=""
+	for VAL in $BASE_ACL $ACL; do
+	    STR="$STR -m $VAL"
 	done
+	#Notice "setfacl $STR $1"
+	setfacl $STR $1
+	#Notice "setfacl -d $STR $1"
+	setfacl -d $STR $1
     fi
 }
 
@@ -121,7 +131,11 @@ function USERS_mdtx_populate()
     USERS_install $MDTXHOME/jail "${_VAR_CACHE_M_MDTX_JAIL[@]}"
 
     install -o $MDTX -g $MDTX       -m 700  -d $MDTXHOME$CONF_SSHDIR
-    install -o $MDTX -g $MDTX       -m 750  -d $MDTXHOME$CONF_HTMLDIR
+
+    #install -o $MDTX -g $MDTX       -m 750  -d $MDTXHOME$CONF_HTMLDIR
+    USERS_install ${MDTXHOME}${CONF_HTMLDIR} \
+	"${_VAR_CACHE_M_MDTX_HTML[@]}"
+
     install -o $MDTX -g $MDTX       -m 750  -d $MD5SUMS
     install -o $MDTX -g ${MDTX}_md  -m 750  -d $CACHES
     install -o $MDTX -g ${MDTX}_md  -m 750  -d $EXTRACT
@@ -169,8 +183,11 @@ function USERS_coll_populate()
     install -o $MDTX -g $1    -m 2770 -d $COLL_EXTRACT
     install -o $MDTX -g $1    -m 2770 -d $COLL_CVS
     install -o $1    -g $MDTX -m 750  -d $COLL_HOME
-    install -o $1    -g $1    -m 700  -d $COLL_HOME/$CONF_SSHDIR
-    install -o $MDTX -g $1    -m 2750 -d $COLL_HOME/$CONF_HTMLDIR
+    install -o $1    -g $1    -m 700  -d $COLL_HOME$CONF_SSHDIR
+
+    #install -o $MDTX -g $1    -m 2750 -d $COLL_HOME$CONF_HTMLDIR
+    USERS_install ${COLL_HOME}${CONF_HTMLDIR} \
+	"${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
 
     # link facilities
     for f in cvs cache; do

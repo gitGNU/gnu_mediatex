@@ -70,13 +70,13 @@ function HTDOCS_configure_mdtx_viewvc()
 {
     Debug "$FUNCNAME:" 2
 
-    install -o $MDTX -g www-data -m 750 \
+    install -o $MDTX -g $MDTX -m 750 \
 	/usr/lib/viewvc/cgi-bin/viewvc.cgi $MDTXHOME/public_html
     sed $MDTXHOME/public_html/viewvc.cgi -i \
 	-e "s!/etc/viewvc/!$MDTXHOME/!"
 
     # viewvc conf
-    install -o $MDTX -g www-data -m 640 $MISC/viewvc.conf $MDTXHOME
+    install -o $MDTX -g $MDTX -m 640 $MISC/viewvc.conf $MDTXHOME
     sed $MDTXHOME/viewvc.conf -i \
 	-e "s!CVSROOT!$CVSROOT!" \
 	-e "s!HOMES/USER!/etc!" \
@@ -107,8 +107,8 @@ function HTDOCS_configure_coll_apache2()
 
     # html repositories and links
     for t in cgi index cache score; do
-        if [ $t != cache ]; then 
-	    install -o $MDTX -g $1 -m 750 -d $COLL_HTML/$t
+        if [ $t != cache ]; then 	    
+	    install -o $MDTX -g $MDTX -m 750 -d $COLL_HTML/$t
 	fi
 	ln -sf $COLL_CVS/apache2/$t.htaccess $COLL_HTML/$t/.htaccess
     done
@@ -143,15 +143,15 @@ function HTDOCS_configure_coll_viewvc()
 
     # viewvc
     COLL_HOME=$HOMES/$1
-    install -o $1 -g www-data -m 750 \
+    install -o $MDTX -g $MDTX -m 750 \
 	/usr/lib/viewvc/cgi-bin/viewvc.cgi \
 	$COLL_HOME/public_html/cgi/viewvc.cgi
     sed $COLL_HOME/public_html/cgi/viewvc.cgi -i \
 	-e "s!/etc/!$COLL_HOME/!"
     
     # viewvc template and conf
-    install -m 750 -o $1 -g www-data -d $COLL_HOME/viewvc
-    install -o $1 -g www-data -m 640 $MISC/viewvc.conf \
+    install -o $MDTX -g $MDTX -m 750 -d $COLL_HOME/viewvc
+    install -o $MDTX -g $MDTX -m 640 $MISC/viewvc.conf \
 	$COLL_HOME/viewvc
     sed $COLL_HOME/viewvc/viewvc.conf -i \
 	-e "s!CVSROOT!$CVSROOT!" \
@@ -160,7 +160,7 @@ function HTDOCS_configure_coll_viewvc()
 
     # modify localy header.ezt
     cp -fr /etc/viewvc/templates $COLL_HOME/viewvc
-    install -m 640 -o $1 -g www-data \
+    install -o $MDTX -g $MDTX -m 640 \
 	$MISC/header.ezt $COLL_HOME/viewvc/templates/include
     sed $COLL_HOME/viewvc/templates/include/header.ezt -i \
 	-e "s!PATH!/~$1!"

@@ -35,6 +35,8 @@ Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx_md »...
 Ajout de l'utilisateur www-data au groupe ut2-mdtx_md
 Fait.
 [debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_install
+[debug users.sh] USERS_install
 [debug uthtdocs.sh] HTDOCS_configure_mdtx_apache2:
 [debug uthtdocs.sh] HTDOCS_configure_mdtx_viewvc:
 [debug uthtdocs.sh] USERS_coll_create_user: ut2-mdtx-hello
@@ -52,6 +54,7 @@ Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx-hello »...
 Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut2-mdtx-hello
+[debug users.sh] USERS_install
 [debug uthtdocs.sh] HTDOCS_configure_coll_apache2: ut2-mdtx-hello
 [debug uthtdocs.sh] HTDOCS_configure_coll_viewvc: ut2-mdtx-hello
 * files : *
@@ -101,24 +104,24 @@ Fait.
 ut2-mdtx-hello       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cache
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cvs
-      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cache
-      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/get.cgi
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/.htaccess
-ut2-mdtx-hello       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/viewvc.cgi
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/.htaccess
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/icons
-      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/.htaccess
-      ut2-mdtx ut2-mdtx-hello -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/readme.html
-      ut2-mdtx ut2-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
-          root ut2-mdtx-hello lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cache
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/get.cgi
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/.htaccess
+      ut2-mdtx       ut2-mdtx -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/viewvc.cgi
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/.htaccess
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/icons
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/.htaccess
+      ut2-mdtx ut2-mdtx-hello -rw-rw-r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/readme.html
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
 ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/.ssh
-ut2-mdtx-hello       www-data drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc
+      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/diff.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/directory.ezt
@@ -133,7 +136,7 @@ ut2-mdtx-hello       www-data drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/dir_header.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/file_header.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/footer.ezt
-ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/header.ezt
+      ut2-mdtx       ut2-mdtx -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/header.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/log_footer.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/log_header.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/include/paging.ezt
@@ -148,16 +151,16 @@ ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/revision.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/roots.ezt
           root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/templates/rss.ezt
-ut2-mdtx-hello       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/viewvc.conf
+      ut2-mdtx       ut2-mdtx -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/viewvc/viewvc.conf
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums
-      ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html
-          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/index.html
-      ut2-mdtx       www-data -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/viewvc.cgi
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html
+          root           root -rw-rw-r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/index.html
+      ut2-mdtx       ut2-mdtx -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/viewvc.cgi
       ut2-mdtx       ut2-mdtx drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/.ssh
       ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp
       ut2-mdtx ut2-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp/ut2-mdtx-hello
-      ut2-mdtx       www-data -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/viewvc.conf
+      ut2-mdtx       ut2-mdtx -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/viewvc.conf
           root           root drwxr-xr-x LOCALSTATEDIR/lib
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
       ut2-mdtx    ut2-mdtx_md drwxr-x--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx

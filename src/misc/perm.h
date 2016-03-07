@@ -31,12 +31,12 @@
 typedef struct Perm {
   char user[32];
   char group[32];
-  char acl[128];
+  mode_t mode;
   char defaultAcl[128];
 } Perm;
   
 time_t currentTime();
-int checkDirectoryPerm(char* path, int index);
+int checkDirectoryPerm(char* coll, char* path, int index);
 
 int 
 checkDirectoryPermDeprecated(char* path, char* user, char* group,

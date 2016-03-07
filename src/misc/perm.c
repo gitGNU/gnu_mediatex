@@ -477,37 +477,57 @@ logAcl(char* text, acl_t acl)
 /*=======================================================================
  * Function   : cmpAcl
  * Description: compare an acl
- * Synopsis   : static int cmpDirectoryAcl(char* path, char* aclValue, 
- *                                      char* checkDefaultAcl, int *res)
+ * Synopsis   : static int cmpDirectoryAcl(char* path, char* aclValue,
+ *                                         char* coll, int *res)
  * Input      : char* path: directory to check
- *              char* aclValue: acl string to compare
- *              char* checkDefaultAcl: check default acl too (same value)
+ *              char* aclValue: default acl string to compare
+ *              char* collUser: collection' user label
  *              int *res: TRUE if equal
  * Output     : TRUE on success
  =======================================================================*/
 static int
-cmpDirectoryAcl(char* path, char* aclVal, char* checkDefaultAcl, int *res)
+cmpDirectoryAcl(char* path, char* aclVal, char* collUser, int *res)
 {
   int rc = FALSE;
+  char noAccessAcl[] = "u::rwx g::r-x o::r-x";
+  char noDefaultAcl[] = "";
+  char string1[128] = "";
+  char string2[128] = "";
   acl_t acl1=0, acl2=0;
+  *res = 0;
 
-  // build acl to compare
-  if (!(acl1 = acl_from_text(aclVal))) {
-    logMisc(LOG_ERR, "fails to build '%s' acl: %s",
-	    aclVal, strerror(errno));
-    goto error;
+  logMisc(LOG_DEBUG, "cmpDirectoryAcl %s acl='%s' coll=%s", 
+	  path, aclVal, collUser);
+
+  // add common acl part
+  if (strcmp(aclVal, "NO ACL")) {
+    // same access and default acls
+    sprintf(string1, "%s %s", BASE_ACL, aclVal);
+    sprintf(string2, string1, env.confLabel, env.confLabel, 
+	    collUser?collUser:"");
+  }
+  else {
+    // access acl is not empty, default acl is empty
+    strcpy(string2, noAccessAcl);
   }
 
+  // build acl to compare
+  if (!(acl1 = acl_from_text(string2))) {
+    logMisc(LOG_ERR, "fails to build '%s' acl: %s",
+	    string2, strerror(errno));
+    goto error;
+  }
+   
   // valid acl to compare
   if (acl_valid(acl1) != 0) {
     logMisc(LOG_ERR, "invalid/incomplete '%s' acl: %s",
-	    aclVal, strerror(errno));
+	    string2, strerror(errno));
     goto error;
   }
 
-  // retrieve existing acl
+  // retrieve existing access acl
   if (!(acl2 = acl_get_file(path, ACL_TYPE_ACCESS))) {
-    logMisc(LOG_ERR, "fails getting acl of %s: %s",
+    logMisc(LOG_ERR, "fails getting default acl of %s: %s",
 	    path, strerror(errno));
     goto error;
   }
@@ -516,16 +536,28 @@ cmpDirectoryAcl(char* path, char* aclVal, char* checkDefaultAcl, int *res)
     logMisc(LOG_ERR, "cmp_acl fails: %s", strerror(errno));
     goto error;
   }
-  
+
   // result
   *res = (rc == 0)? TRUE : FALSE;
   if (!*res) {
-    logMisc(LOG_ERR, "acl differ");
+    logMisc(LOG_ERR, "access acl differ");
+    //logMisc(LOG_NOTICE, "-> %s", string2);
+    if (!logAcl("expected: ", acl1)) goto error;
+    if (!logAcl("get:      ", acl2)) goto error;
     goto end;
   }
 
+  // build acl to compare
+  if (!strcmp(aclVal, "NO ACL")) {
+    acl_free(acl1);
+    if (!(acl1 = acl_from_text(noDefaultAcl))) {
+      logMisc(LOG_ERR, "fails to build empty default acl: %s",
+	      strerror(errno));
+      goto error;
+    }
+  }
+
   // retrieve existing default acl (only on directories)
-  if (!checkDefaultAcl) goto end;
   if (!(acl2 = acl_get_file(path, ACL_TYPE_DEFAULT))) {
     logMisc(LOG_ERR, "fails getting default acl of %s: %s",
 	    path, strerror(errno));
@@ -541,13 +573,13 @@ cmpDirectoryAcl(char* path, char* aclVal, char* checkDefaultAcl, int *res)
   *res = (rc == 0)? TRUE : FALSE;
   if (!*res) {
     logMisc(LOG_ERR, "default acl differ");
+    //logMisc(LOG_NOTICE, "-> %s", string2);
+    if (!logAcl("expected: ", acl1)) goto error;
+    if (!logAcl("get:      ", acl2)) goto error;
+    goto error;
   }
 
  end:
-  if (!*res) {
-    if (!logAcl("expected:  ", acl1)) goto error;
-    if (!logAcl("directory: ", acl2)) goto error;
-  }
   rc = TRUE;
  error:
   if (acl1) acl_free(acl1);
@@ -559,30 +591,33 @@ cmpDirectoryAcl(char* path, char* aclVal, char* checkDefaultAcl, int *res)
  * Function   : checkDirectoryPerm
  * Description: check existence, owner and permission of a directory.
  * Synopsis   : static int checkDirectory(char* path, int index)
- * Input      : const char* path: the path of the directory
+ * Input      : char* collUser: collection user's label
+ *              char* path: the path of the directory
  *              int index: the index of the permission to check
  * Output     : TRUE on success
  =======================================================================*/
 int 
-checkDirectoryPerm(char* path, int index)
+checkDirectoryPerm(char* collUser, char* path, int index)
 {
   int rc = FALSE;
   char* user = perm[index].user;
   char* group = perm[index].group;
-  char* aclVal = perm[index].acl;
+  mode_t mode = perm[index].mode;
+  char* aclVal = perm[index].defaultAcl;
   struct stat statBuffer;
   struct passwd pw;
   struct group gr;
   char *buf = 0;
+  mode_t mask = 07777;
   int res;
+
+  logMisc(LOG_DEBUG, "checkDirectoryPerm %s %s %s %o '%s'", 
+	  path, user, group, mode, aclVal);
 
   if (path == 0 || *path == (char)0) {
     logMisc(LOG_ERR, "cannot check empty directory path");
     goto error;
   }
-
-  logMisc(LOG_DEBUG, "checkDirectoryPerm %s %s %s '%s'", 
-	  path, user, group, aclVal);
 
   if (stat(path, &statBuffer) == -1) {
     logMisc(LOG_ERR, "stat fails on path %s", path);
@@ -596,7 +631,7 @@ checkDirectoryPerm(char* path, int index)
     goto error;
   }
 
-  // we bypass owner checks if we are running a unit test
+  // we bypass checks if we are running a unit test
   if (env.noRegression) {
     goto noRegression;
   }
@@ -604,7 +639,7 @@ checkDirectoryPerm(char* path, int index)
   // check user
   if (!getPasswdLine (0, statBuffer.st_uid, &pw, &buf)) goto error;
   if (strcmp(user, pw.pw_name)) {
-    logMisc(LOG_ERR, "%s should be owne by %s user, not %s",
+    logMisc(LOG_ERR, "%s should be owned by %s user, not %s",
 	    path, user, pw.pw_name);
     goto error;
   }
@@ -613,20 +648,29 @@ checkDirectoryPerm(char* path, int index)
   if (buf) free (buf);
   if (!getGroupLine (0, statBuffer.st_gid, &gr, &buf)) goto error;
   if (strcmp(group, gr.gr_name)) {
-    logMisc(LOG_ERR, "%s should be owne by %s group, not %s",
+    logMisc(LOG_ERR, "%s should be owned by %s group, not %s",
 	    path, group, gr.gr_name);
     goto error;
   }
 
-  // check rights
-  if (!cmpDirectoryAcl(path, aclVal, 0, &res) || !res)
+  // check permissions
+  if ((statBuffer.st_mode & mask) != (mode & mask)) {
+    logMisc(LOG_ERR, "%s should be share as %o, not %o",
+	    path, mode & mask, statBuffer.st_mode & mask);
     goto error;
+  }
+
+  // check default acl if provided
+  if (aclVal) {
+    if (!cmpDirectoryAcl(path, aclVal, collUser, &res) || !res)
+      goto error;
+  }
 
  noRegression:
   rc = TRUE;
  error:
   if (!rc) {
-    logMisc(LOG_ERR, "checkDirectoryPerm fails");
+    logMisc(LOG_ERR, "checkDirectoryPerm fails on %s", path);
   } 
 
   if (buf) free (buf);
@@ -646,7 +690,8 @@ checkDirectoryPerm(char* path, int index)
  * Note       : TO REMOVE ASAP
  =======================================================================*/
 int 
-checkDirectoryPermDeprecated(char* path, char* user, char* group, mode_t mode)
+checkDirectoryPermDeprecated(char* path, char* user, char* group, 
+			     mode_t mode)
 {
 #warning To remove asap
   int rc = FALSE;

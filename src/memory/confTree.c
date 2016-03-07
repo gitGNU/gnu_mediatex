@@ -297,28 +297,6 @@ expandCollection(Collection* self)
 	   catString(self->sshDsaPublicKey, CONF_DSAUSERKEY)))
     goto error;
 
-  /* // urls */
-  /* if (conf->wwwPort == 443) { */
-  /*   if (sprintf(urlPart, "/~%s", self->user) <= 0) */
-  /*     goto error; */
-  /* } */
-  /* else { */
-  /*   if (sprintf(urlPart, ":%i/~%s", conf->wwwPort, self->user) <= 0) */
-  /*     goto error; */
-  /* } */
-
-  /* if (!(self->cacheUrl = createString("https://"))  */
-  /*     || !(self->cacheUrl = catString(self->cacheUrl, conf->host)) */
-  /*     || !(self->cacheUrl = catString(self->cacheUrl, urlPart)) */
-  /*     || !(self->cacheUrl = catString(self->cacheUrl, "/cache"))) */
-  /*     goto error; */
-
-  /* if (!(self->cgiUrl = createString("https://"))  */
-  /*     || !(self->cgiUrl = catString(self->cgiUrl, conf->host)) */
-  /*     || !(self->cgiUrl = catString(self->cgiUrl, urlPart)) */
-  /*     || !(self->cgiUrl = catString(self->cgiUrl, "/cgi/get.cgi"))) */
-  /*   goto error; */
-
   // default values if not set
   if (!self->cacheSize) self->cacheSize = conf->cacheSize;
   if (!self->cacheTTL) self->cacheTTL = conf->cacheTTL;
@@ -349,7 +327,8 @@ expandCollection(Collection* self)
   	 so it need to reload its groups to check the above
   	 diretories */
       || !checkDirectoryPermDeprecated(self->sshDir,     user, user, 0700)
-      || !checkDirectoryPermDeprecated(self->htmlDir,    mdtx, user, 02750)
+      || !checkDirectoryPerm(self->user, self->htmlDir, 
+			     VAR_CACHE_M_MDTX_HOME_COLL_HTML)
       )
     goto error;
 
@@ -723,7 +702,7 @@ expandConfiguration()
     goto error;
 
   // check directories
-  if (!checkDirectoryPerm(jail, VAR_CACHE_M_MDTX_JAIL)
+  if (!checkDirectoryPerm(0, jail, VAR_CACHE_M_MDTX_JAIL)
       || !checkDirectoryPermDeprecated(conf->cvsRootDir,  mdtx,   meta,  0750)
       || !checkDirectoryPermDeprecated(conf->homeDir,    "root", "root", 0755)
       || !checkDirectoryPermDeprecated(conf->md5sumDir,   mdtx,   mdtx,  0750)

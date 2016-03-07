@@ -37,6 +37,8 @@ Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx_md »...
 Ajout de l'utilisateur www-data au groupe ut5-mdtx_md
 Fait.
 [debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_install
+[debug users.sh] USERS_install
 [debug utjail.sh] CVS_mdtx_setup:
 [debug cvs.sh] CVS_init_cvsroot
 [debug cvs.sh] CVS_mdtx_import 
@@ -89,6 +91,7 @@ Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx-hello »...
 Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut5-mdtx-hello
+[debug users.sh] USERS_install
 [debug utjail.sh] CVS_coll_import: ut5-mdtx-hello
 [info cvs.sh] CVSUMASK=007 cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx import -m 'Mediatex exemple files' ut5-mdtx-hello ut5-mdtx-hello v1
 

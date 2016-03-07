@@ -29,7 +29,7 @@ set -e
 [ -z $srcdir ] && srcdir=.
 . utmediatex.sh
 
-# unit test's sand box
+# unit test's sand box (for distcheck)
 mkdir -p $TMP
 touch $TMP/sand-box.txt
 
@@ -43,17 +43,28 @@ misc/ut$TEST -d $PWD/$srcdir -w $PWD \
     >misc/$TEST.out 2>&1
 
 # tests using parameters
-misc/ut$TEST -d /usr/bin -u foo -g root -a "u::rwx g::r-x o::r-x" \
-	     >>misc/$TEST.out 2>&1 || /bin/true
+BASE_ACL="-m u::rwx -m g::rwx -m o::--- -m m:rwx"
+DIR=$TMP/acl
+install -o $USER -g $USER -m 770 -d $DIR
+setfacl $BASE_ACL -m "u:www-data:r-x" $DIR
+setfacl -d $BASE_ACL -m "u:www-data:r-x" $DIR
 
-misc/ut$TEST -d /usr/bin -u root -g bar -a "u::rwx g::r-x o::r-x" \
-	     >>misc/$TEST.out 2>&1 || /bin/true
+misc/ut$TEST -d $DIR -u foo -g $USER -p 770 -a "u:www-data:r-x" \
+    >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d /usr/bin -u root -g root -a "u::rwx g::rwx o::rwx" \
-	     >>misc/$TEST.out 2>&1 || /bin/true
+misc/ut$TEST -d $DIR -u $USER -g bar -p 770 -a "u:www-data:r-x" \
+    >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d /usr/bin -u root -g root -a "u::rwx g::r-x o::r-x" \
-	     >>misc/$TEST.out 2>&1
+misc/ut$TEST -d $DIR -u $USER -g $USER -p 755 -a "u:www-data:r-x" \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g $USER -p 770 -a "u:www-data:r--" \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g $USER -p 770 -a "u:www-data:r-x" \
+    >>misc/$TEST.out 2>&1
+
+rmdir $DIR
 
 # suppress the current date
 sed -i -e "s/\(current date: \).*/\1 XXX/" misc/$TEST.out

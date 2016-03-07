@@ -104,29 +104,8 @@
 #define HTTP_PORT     80
 #define HTTPS_PORT    443
 
-// owner user
-#define U_VAR_CACHE_MEDIATEX_MDTX_JAIL    "root"
-#define U_VAR_LIB_MEDIATEX_MDTX           "mdtx"
-#define U_VAR_CACHE_MEDIATEX_MDTX_HOME    "root"
-#define U_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "mdtx"
-#define U_VAR_CACHE_MEDIATEX_MDTX_CACHE   "mdtx"
-
-// owner group
-#define G_VAR_CACHE_MEDIATEX_MDTX_JAIL    "root"
-#define G_VAR_LIB_MEDIATEX_MDTX           "meta"
-#define G_VAR_CACHE_MEDIATEX_MDTX_HOME    "root"
-#define G_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "mdtx"
-#define G_VAR_CACHE_MEDIATEX_MDTX_CACHE   "meta"
-
-// acl
-#define A_VAR_CACHE_MEDIATEX_MDTX_JAIL    "u::rwx g::r-x o::r-x"
-#define A_VAR_LIB_MEDIATEX_MDTX           "u::rwx g::r-x o::r-x"
-#define A_VAR_CACHE_MEDIATEX_MDTX_HOME    "u::rwx g::r-x o::r-x"
-#define A_VAR_CACHE_MEDIATEX_MDTX_MD5SUMS "u::rwx g::r-x o::r-x"
-#define A_VAR_CACHE_MEDIATEX_MDTX_CACHE   "u::rwx g::r-x o::r-x"
-
-// default acl
-#define D_VAR_CACHE_MEDIATEX_MDTX_TMP     "u::rwx g::r-x o::r-x"
+// base acl
+#define BASE_ACL "u::rwx g::rwx o::--- m:rwx"
 
 enum {
   VAR_LIB_M = 0,
@@ -154,31 +133,33 @@ enum {
   VAR_CACHE_M_MDTX_MD5SUMS,
   VAR_CACHE_M_MDTX_JAIL
 };
-  
-#define _VAR_LIB_M                         {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_LIB_M_MDTX                    {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_LIB_M_MDTX_COLL               {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M                       {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX                  {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CACHE            {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_SSH              {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HTML             {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_TMP              {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HOME             {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL        {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_SSH    {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_HTML   {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_MD5SUMS          {"root", "root", "u::rwx g::r-x o::r-x", ""}
-#define _VAR_CACHE_M_MDTX_JAIL             {"root", "root", "u::rwx g::r-x o::r-x", ""}
+
+// default ACL: "u:%s:rwx g:%s:rwx [u:%s:r-x]"
+// rwx for mdtx user and group ; and eventually permissions for mdtx-coll
+#define _VAR_LIB_M                         {"root", "root", 0755, ""}
+#define _VAR_LIB_M_MDTX                    {"root", "root", 0755, ""}
+#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0755, ""}
+#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", 0755, ""}
+#define _VAR_LIB_M_MDTX_COLL               {"root", "root", 0755, ""}
+#define _VAR_CACHE_M                       {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX                  {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_CACHE            {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_SSH              {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_HTML             {"root", "root", 0770, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_TMP              {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_HOME             {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL        {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_SSH    {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_HTML   {"root", "root", 0770, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_MD5SUMS          {"root", "root", 0755, ""}
+#define _VAR_CACHE_M_MDTX_JAIL             {"root", "root", 0755, "NO ACL"}
 
 #endif /* MDTX_CONFIG_H */
 

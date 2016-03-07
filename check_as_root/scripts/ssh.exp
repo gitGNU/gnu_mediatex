@@ -36,6 +36,8 @@ Ajout de l'utilisateur « www-data » au groupe « ut3-mdtx_md »...
 Ajout de l'utilisateur www-data au groupe ut3-mdtx_md
 Fait.
 [debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_install
+[debug users.sh] USERS_install
 [debug utssh.sh] USERS_coll_create_user: ut3-mdtx-hello
 [debug users.sh] USERS_create_user: ut3-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello
 [debug users.sh] USERS_add_to_group: ut3-mdtx-hello ut3-mdtx_md
@@ -51,6 +53,7 @@ Ajout de l'utilisateur « ut3-mdtx » au groupe « ut3-mdtx-hello »...
 Ajout de l'utilisateur ut3-mdtx au groupe ut3-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut3-mdtx-hello
+[debug users.sh] USERS_install
 [debug utssh.sh] SSH_build_key: ut3-mdtx-hello
 [debug utssh.sh] SSH_bootstrapKeys ut3-mdtx-hello 
 known_hosts updated.

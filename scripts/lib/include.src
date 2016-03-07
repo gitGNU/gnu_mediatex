@@ -64,7 +64,7 @@ HOSTSSH="${SYSCONFDIR}/ssh"
 DRY_RUN=${MDTX_DRY_RUN-0}
 MDTX=${MDTX_MDTXUSER}
 
-## NOT USED BY SHOULD BE
+## copy/paste from src/mediatex-config.h
 
 # relative paths
 CONF_MD5SUMS="/md5sums"

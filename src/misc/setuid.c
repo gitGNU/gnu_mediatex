@@ -322,7 +322,7 @@ becomeUser (char* label, int doCheck)
     goto error;
   }
 
-  logMisc (LOG_INFO, "have switch to %s user", label);
+  logMisc (LOG_INFO, "have switched to %s user", label);
  ok:
   rc = TRUE;
  error:
