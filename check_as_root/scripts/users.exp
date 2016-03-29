@@ -1,21 +1,24 @@
 [debug utusers.sh] test for users.sh
 [debug utusers.sh] USERS_mdtx_remove_user: 
-[debug users.sh] USERS_remove_group: ut1-mdtx_md
-[debug users.sh] USERS_disease_group: ut1-mdtx_md
-[info users.sh] ut1-mdtx_md group already removed
 [debug users.sh] USERS_remove_user: ut1-mdtx
 [debug users.sh] USERS_disease_group: ut1-mdtx
 [info users.sh] ut1-mdtx user already removed
 [debug users.sh] USERS_mdtx_disease
 [debug utusers.sh] USERS_coll_remove_user: ut1-mdtx-hello
-[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
-[info users.sh] ut1-mdtx-hello user already removed from ut1-mdtx_md group
 [debug users.sh] USERS_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_disease_group: ut1-mdtx-hello
 [info users.sh] ut1-mdtx-hello user already removed
 [debug users.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug utusers.sh] USERS_root_populate
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: SYSCONFDIR/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/run/mediatex root root 0777 NO ACL
 [debug utusers.sh] USERS_root_populate
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: SYSCONFDIR/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/run/mediatex root root 0777 NO ACL
 [debug utusers.sh] USERS_mdtx_create_user: 
 [debug users.sh] USERS_create_user: ut1-mdtx LOCALSTATEDIR/cache/mediatex/ut1-mdtx
 [debug users.sh] USERS_add_to_group: ut1-mdtx cdrom
@@ -26,18 +29,18 @@ Fait.
 Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx »...
 Ajout de l'utilisateur www-data au groupe ut1-mdtx
 Fait.
-[debug users.sh] USERS_create_group: ut1-mdtx_md
-[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx_md
-Ajout de l'utilisateur « ut1-mdtx » au groupe « ut1-mdtx_md »...
-Ajout de l'utilisateur ut1-mdtx au groupe ut1-mdtx_md
-Fait.
-[debug users.sh] USERS_add_to_group: www-data ut1-mdtx_md
-Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx_md »...
-Ajout de l'utilisateur www-data au groupe ut1-mdtx_md
-Fait.
 [debug users.sh] USERS_mdtx_populate
-[debug users.sh] USERS_install
-[debug users.sh] USERS_install
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/jail root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx root root 0750 u:%s:rwx g:%s:rwx
 [debug utusers.sh] USERS_mdtx_create_user: 
 [debug users.sh] USERS_create_user: ut1-mdtx LOCALSTATEDIR/cache/mediatex/ut1-mdtx
 [info users.sh] ut1-mdtx user already exists
@@ -45,21 +48,20 @@ Fait.
 [info users.sh] ut1-mdtx user already beyong to cdrom group
 [debug users.sh] USERS_add_to_group: www-data ut1-mdtx
 [info users.sh] www-data user already beyong to ut1-mdtx group
-[debug users.sh] USERS_create_group: ut1-mdtx_md
-[info users.sh] ut1-mdtx_md group already exists
-[debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx_md
-[info users.sh] ut1-mdtx user already beyong to ut1-mdtx_md group
-[debug users.sh] USERS_add_to_group: www-data ut1-mdtx_md
-[info users.sh] www-data user already beyong to ut1-mdtx_md group
 [debug users.sh] USERS_mdtx_populate
-[debug users.sh] USERS_install
-[debug users.sh] USERS_install
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/jail root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx root root 0750 u:%s:rwx g:%s:rwx
 [debug utusers.sh] USERS_coll_create_user: ut1-mdtx-hello
 [debug users.sh] USERS_create_user: ut1-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
-[debug users.sh] USERS_add_to_group: ut1-mdtx-hello ut1-mdtx_md
-Ajout de l'utilisateur « ut1-mdtx-hello » au groupe « ut1-mdtx_md »...
-Ajout de l'utilisateur ut1-mdtx-hello au groupe ut1-mdtx_md
-Fait.
 [debug users.sh] USERS_add_to_group: www-data ut1-mdtx-hello
 Ajout de l'utilisateur « www-data » au groupe « ut1-mdtx-hello »...
 Ajout de l'utilisateur www-data au groupe ut1-mdtx-hello
@@ -69,18 +71,26 @@ Ajout de l'utilisateur « ut1-mdtx » au groupe « ut1-mdtx-hello »...
 Ajout de l'utilisateur ut1-mdtx au groupe ut1-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
-[debug users.sh] USERS_install
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/.ssh %s %s 0700 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug utusers.sh] USERS_coll_create_user: ut1-mdtx-hello
 [debug users.sh] USERS_create_user: ut1-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
 [info users.sh] ut1-mdtx-hello user already exists
-[debug users.sh] USERS_add_to_group: ut1-mdtx-hello ut1-mdtx_md
-[info users.sh] ut1-mdtx-hello user already beyong to ut1-mdtx_md group
 [debug users.sh] USERS_add_to_group: www-data ut1-mdtx-hello
 [info users.sh] www-data user already beyong to ut1-mdtx-hello group
 [debug users.sh] USERS_add_to_group: ut1-mdtx ut1-mdtx-hello
 [info users.sh] ut1-mdtx user already beyong to ut1-mdtx-hello group
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
-[debug users.sh] USERS_install
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/.ssh %s %s 0700 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 * files : *
           root           root drwxr-xr-x /var/ut/ut1-mdtx
           root           root drwxr-xr-x SYSCONFDIR
@@ -116,35 +126,31 @@ Fait.
           root           root drwxr-xr-x LOCALSTATEDIR/cache
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx
-      ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache
-      ut1-mdtx ut1-mdtx-hello drwxr-s--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello
-      ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs
-      ut1-mdtx       ut1-mdtx drwxrws--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx
-      ut1-mdtx ut1-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cvs/ut1-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home
-ut1-mdtx-hello       ut1-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/cache
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/cvs
-          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/public_html
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/public_html
 ut1-mdtx-hello ut1-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello/.ssh
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/jail
-      ut1-mdtx       ut1-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/md5sums
-          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/public_html
-      ut1-mdtx       ut1-mdtx drwx------ LOCALSTATEDIR/cache/mediatex/ut1-mdtx/.ssh
-      ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp
-      ut1-mdtx ut1-mdtx-hello drwxrws--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/md5sums
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/public_html
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/lib
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
-      ut1-mdtx    ut1-mdtx_md drwxr-x--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx
-      ut1-mdtx    ut1-mdtx_md drwxrws--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/CVSROOT
-      ut1-mdtx       ut1-mdtx drwxr-s--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx
+          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut1-mdtx
+          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut1-mdtx/CVSROOT
+          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx
           root           root drwxr-xr-x LOCALSTATEDIR/run
           root           root drwxrwxrwx LOCALSTATEDIR/run/mediatex
 [debug utusers.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug utusers.sh] USERS_coll_remove_user: ut1-mdtx-hello
-[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
-Suppression de l'utilisateur « ut1-mdtx-hello » du groupe « ut1-mdtx_md »...
-Fait.
 [debug users.sh] USERS_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_disease_group: ut1-mdtx-hello
 Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx-hello »...
@@ -156,21 +162,11 @@ Attention ! Le groupe « ut1-mdtx-hello » ne contient plus aucun membre.
 Fait.
 [debug users.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug utusers.sh] USERS_coll_remove_user: ut1-mdtx-hello
-[debug users.sh] USERS_del_from_group: ut1-mdtx-hello
-[info users.sh] ut1-mdtx-hello user already removed from ut1-mdtx_md group
 [debug users.sh] USERS_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_disease_group: ut1-mdtx-hello
 [info users.sh] ut1-mdtx-hello user already removed
 [debug users.sh] USERS_coll_disease: ut1-mdtx-hello
 [debug utusers.sh] USERS_mdtx_remove_user: 
-[debug users.sh] USERS_remove_group: ut1-mdtx_md
-[debug users.sh] USERS_disease_group: ut1-mdtx_md
-Suppression de l'utilisateur « ut1-mdtx » du groupe « ut1-mdtx_md »...
-Fait.
-Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx_md »...
-Fait.
-Suppression du groupe « ut1-mdtx_md »...
-Fait.
 [debug users.sh] USERS_remove_user: ut1-mdtx
 [debug users.sh] USERS_disease_group: ut1-mdtx
 Suppression de l'utilisateur « www-data » du groupe « ut1-mdtx »...
@@ -180,9 +176,6 @@ Attention ! Le groupe « ut1-mdtx » ne contient plus aucun membre.
 Fait.
 [debug users.sh] USERS_mdtx_disease
 [debug utusers.sh] USERS_mdtx_remove_user: 
-[debug users.sh] USERS_remove_group: ut1-mdtx_md
-[debug users.sh] USERS_disease_group: ut1-mdtx_md
-[info users.sh] ut1-mdtx_md group already removed
 [debug users.sh] USERS_remove_user: ut1-mdtx
 [debug users.sh] USERS_disease_group: ut1-mdtx
 [info users.sh] ut1-mdtx user already removed

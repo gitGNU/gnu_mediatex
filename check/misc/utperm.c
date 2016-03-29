@@ -41,7 +41,7 @@ void usage(char* programName)
   miscOptions();
   fprintf(stderr, "  ---\n"
 	  "  -d, --dir\tpath to the directory to check\n"
-	  "  -w, --pwd\tpath to the current directory (for make distcheck)\n"
+	  "  -w, --pwd\tpath to the current directory (make distcheck)\n"
 	  "  -u, --user\texpected owner user of the directory\n"
 	  "  -g, --group\texpected owner group of the directory\n"
 	  "  -p, --perm\texpected permissions on the directory (777)\n"
@@ -340,15 +340,14 @@ main(int argc, char** argv)
   else {
      // Tests using more arguments
     logMain(LOG_NOTICE, "* Perm: %s %s %s %o '%s' (noRegression=%i)",
-	    inputPath, user, group , mode, acl,
+	    inputPath, user, group, mode, acl,
 	    env.noRegression);
     logMain(LOG_NOTICE, "***********************************************"); 
     if (user == 0) {
       usage(programName);
       logMain(LOG_ERR, "Please provide a user");
       goto error;
-    }
-    
+    }    
     if (group == 0) {
       usage(programName);
       logMain(LOG_ERR, "Please provide a group");
@@ -359,7 +358,7 @@ main(int argc, char** argv)
     strcpy(perm[0].user, user);
     strcpy(perm[0].group, group);
     perm[0].mode = mode;
-    strcpy(perm[0].defaultAcl, acl);
+    strcpy(perm[0].acl, acl);
     if (!checkDirectoryPerm(NULL, inputPath, 0)) goto error;
   }
   /************************************************************************/

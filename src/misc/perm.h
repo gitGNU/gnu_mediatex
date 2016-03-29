@@ -32,7 +32,7 @@ typedef struct Perm {
   char user[32];
   char group[32];
   mode_t mode;
-  char defaultAcl[128];
+  char acl[128];
 } Perm;
   
 time_t currentTime();

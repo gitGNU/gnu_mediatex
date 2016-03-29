@@ -92,7 +92,8 @@ function CVS_coll_import()
     CVS=$CVSCLT/$1
 
     # create CVSROOT dir (or re-use it)
-    install -o $1 -g $1 -m 2750 -d $CVSROOT/$1
+    #install -o $1 -g $1 -m 2750 -d $CVSROOT/$1
+    USERS_install $CVSROOT/$1 "${_VAR_LIB_M_MDTX_COLL[@]}"
 
     if [ -f $CVSROOT/$1/logo,v ]; then
 	Warning "re-use already imported collection module"
@@ -226,10 +227,10 @@ function CVS_update()
     Error "cannot update cvs working directory: $CVS"
 
     # fix buggy cvs remote update
-    chmod -R g+w *
-    if [ "$1" == "$MDTX" ]; then
-	chmod g-w supports.txt
-    fi
+    #chmod -R g+w *
+    #if [ "$1" == "$MDTX" ]; then
+	#chmod g-w supports.txt
+    #fi
 
     eval $UMASK
     cd - > /dev/null 2>&1 || true

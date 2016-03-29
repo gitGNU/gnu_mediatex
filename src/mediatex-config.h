@@ -107,8 +107,11 @@
 // base acl
 #define BASE_ACL "u::rwx g::rwx o::--- m:rwx"
 
+// take care to update perm.c too
 enum {
-  VAR_LIB_M = 0,
+  ETC_M = 0,
+  VAR_RUN_M,
+  VAR_LIB_M,
   VAR_LIB_M_MDTX,
   VAR_LIB_M_MDTX_MDTX,
   VAR_LIB_M_MDTX_CVSROOT,
@@ -118,7 +121,6 @@ enum {
   VAR_CACHE_M_MDTX_CACHE,
   VAR_CACHE_M_MDTX_CACHE_M,
   VAR_CACHE_M_MDTX_CACHE_COLL,
-  VAR_CACHE_M_MDTX_SSH,
   VAR_CACHE_M_MDTX_HTML,
   VAR_CACHE_M_MDTX_CVS,
   VAR_CACHE_M_MDTX_CVS_MDTX,
@@ -134,31 +136,32 @@ enum {
   VAR_CACHE_M_MDTX_JAIL
 };
 
-// default ACL: "u:%s:rwx g:%s:rwx [u:%s:r-x]"
+// ACL: "u:%s:rwx g:%s:rwx [u:%s:r-x]"
 // rwx for mdtx user and group ; and eventually permissions for mdtx-coll
-#define _VAR_LIB_M                         {"root", "root", 0755, ""}
-#define _VAR_LIB_M_MDTX                    {"root", "root", 0755, ""}
-#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0755, ""}
-#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", 0755, ""}
-#define _VAR_LIB_M_MDTX_COLL               {"root", "root", 0755, ""}
-#define _VAR_CACHE_M                       {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX                  {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_CACHE            {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_SSH              {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_HTML             {"root", "root", 0770, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
-#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_TMP              {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_HOME             {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL        {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_SSH    {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_HTML   {"root", "root", 0770, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
-#define _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC {"root", "root", 0755, ""}
-#define _VAR_CACHE_M_MDTX_MD5SUMS          {"root", "root", 0755, ""}
+#define _ETC_M                             {"root", "root", 0755, "NO ACL"}
+#define _VAR_RUN_M                         {"root", "root", 0777, "NO ACL"}
+#define _VAR_LIB_M                         {"root", "root", 0755, "NO ACL"}
+#define _VAR_LIB_M_MDTX                    {"root", "root", 0755, "NO ACL"}
+#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0777, "NO ACL"}
+#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", 0777, "NO ACL"}
+#define _VAR_LIB_M_MDTX_COLL               {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x"}
+#define _VAR_CACHE_M                       {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX                  {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_CACHE            {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_HTML             {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", 0750, "u:%s:rwx g:%s:rwx"}
+#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx"}
+#define _VAR_CACHE_M_MDTX_TMP              {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx"}
+#define _VAR_CACHE_M_MDTX_HOME             {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_HOME_COLL        {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_SSH    {"%s",   "%s",   0700, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_HTML   {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_HOME_COLL_VIEWVC {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_MD5SUMS          {"root", "root", 0750, "u:%s:rwx g:%s:rwx"}
 #define _VAR_CACHE_M_MDTX_JAIL             {"root", "root", 0755, "NO ACL"}
 
 #endif /* MDTX_CONFIG_H */

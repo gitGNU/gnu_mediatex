@@ -37,25 +37,25 @@
 [info perm.c] keep not empty directory: /HERE/check/tmp
 [info utperm.c] exit on success
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /HERE/check/tmp/acl foo nroche 770 'u:www-data:r-x' (noRegression=0)
+[notice utperm.c] * Perm: /HERE/check/tmp/acl foo nroche 111 'NO ACL' (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] /HERE/check/tmp/acl should be owned by foo user, not nroche
 [err perm.c] checkDirectoryPerm fails on /HERE/check/tmp/acl
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche bar 770 'u:www-data:r-x' (noRegression=0)
+[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche bar 111 'NO ACL' (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] /HERE/check/tmp/acl should be owned by bar group, not nroche
 [err perm.c] checkDirectoryPerm fails on /HERE/check/tmp/acl
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 755 'u:www-data:r-x' (noRegression=0)
+[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 755 'NO ACL' (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] /HERE/check/tmp/acl should be share as 755, not 770
 [err perm.c] checkDirectoryPerm fails on /HERE/check/tmp/acl
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 770 'u:www-data:r--' (noRegression=0)
+[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 111 'u:www-data:r--' (noRegression=0)
 [notice utperm.c] ***********************************************
 [err perm.c] access acl differ
 [notice perm.c] expected: u::rwx u:33:r-- g::rwx m::rwx o::--- 
@@ -63,6 +63,14 @@
 [err perm.c] checkDirectoryPerm fails on /HERE/check/tmp/acl
 [info utperm.c] exit on error
 [notice utperm.c] ***********************************************
-[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 770 'u:www-data:r-x' (noRegression=0)
+[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 111 'u:www-data:r-x' (noRegression=0)
+[notice utperm.c] ***********************************************
+[err perm.c] default acl differ
+[notice perm.c] expected: u::rwx u:33:r-x g::rwx m::rwx o::--- 
+[notice perm.c] get:      
+[err perm.c] checkDirectoryPerm fails on /HERE/check/tmp/acl
+[info utperm.c] exit on error
+[notice utperm.c] ***********************************************
+[notice utperm.c] * Perm: /HERE/check/tmp/acl nroche nroche 111 'u:www-data:r-x' (noRegression=0)
 [notice utperm.c] ***********************************************
 [info utperm.c] exit on success

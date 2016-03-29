@@ -4,7 +4,7 @@
 # * Project: MediaTex
 # * Module : script libs
 # *
-# * This module manage the mdtx users and related home directory
+# * This module manage the mdtx users and related home directories
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 2016 Nicolas Roche
@@ -49,11 +49,19 @@ function USERS_root_random()
 # $5: default acl
 function USERS_install()
 {
-    Debug "$FUNCNAME" 2
+    Debug "$FUNCNAME: $*" 2
+    USR=$2
+    GRP=$3
     ACL=$5
 
-    #Notice "install -o $2 -g $3 -m $4 -d $1"
-    install -o $2 -g $3 -m $4 -d $1
+    if [ "$USR" == "%s" ]; then
+	USR=$MDTX-$COLL
+    fi
+    if [ "$GRP" == "%s" ]; then
+	GRP=$MDTX-$COLL
+    fi
+    install -o $USR -g $GRP -m $4 -d $1
+
     if [ "$ACL" != "NO ACL" ]; then
 	if [ ! -z "$ACL" ]; then
 	    # default ACL: "u:%s:rwx g:%s:rwx [u:%s:r-x]"
@@ -65,9 +73,7 @@ function USERS_install()
 	for VAL in $BASE_ACL $ACL; do
 	    STR="$STR -m $VAL"
 	done
-	#Notice "setfacl $STR $1"
 	setfacl $STR $1
-	#Notice "setfacl -d $STR $1"
 	setfacl -d $STR $1
     fi
 }
@@ -79,10 +85,10 @@ function USERS_root_populate()
     [ $(id -u) -eq 0 ] || Error "need to be root"
     CRON_FILE=$SYSCONFDIR/cron.d/mediatex_cron
 
-    install -o root -g root -m 755 -d $STATEDIR
-    install -o root -g root -m 755 -d $CACHEDIR
-    install -o root -g root -m 755 -d $ETCDIR
-    install -o root -g root -m 777 -d $PIDDIR
+    USERS_install $STATEDIR "${_VAR_LIB_M[@]}"
+    USERS_install $CACHEDIR "${_VAR_CACHE_M[@]}"
+    USERS_install $ETCDIR "${_ETC_M[@]}"
+    USERS_install $PIDDIR "${_VAR_RUN_M[@]}"
 
     # configure cron
     install -o root -g root -m 640 $MISC/mediatex_cron $SYSCONFDIR/cron.d
@@ -120,27 +126,21 @@ function USERS_mdtx_populate()
     Debug "$FUNCNAME" 2
 
     # /var/lib/mediatex/mdtx
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $CVSROOT
-    install -o $MDTX -g ${MDTX}_md  -m 2770 -d $CVSROOT/CVSROOT
-    install -o $MDTX -g $MDTX       -m 2750 -d $CVSROOT/$MDTX
+    USERS_install $CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
+    USERS_install $CVSROOT/CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
+    USERS_install $CVSROOT/$MDTX "${_VAR_LIB_M_MDTX_MDTX[@]}"
 
     # /var/cache/mediatex/mdtx
-    install -o root  -g root        -m 755  -d $MDTXHOME
-    
-    #install -o root  -g root        -m 755  -d $MDTXHOME/jail
+    USERS_install $MDTXHOME "${_VAR_CACHE_M_MDTX_HOME[@]}"
     USERS_install $MDTXHOME/jail "${_VAR_CACHE_M_MDTX_JAIL[@]}"
+    USERS_install ${MDTXHOME}${CONF_HTMLDIR} "${_VAR_CACHE_M_MDTX_HTML[@]}"
 
-    install -o $MDTX -g $MDTX       -m 700  -d $MDTXHOME$CONF_SSHDIR
+    USERS_install $MD5SUMS "${_VAR_CACHE_M_MDTX_MD5SUMS[@]}"
+    USERS_install $CACHES  "${_VAR_CACHE_M_MDTX_CACHE[@]}"
+    USERS_install $EXTRACT "${_VAR_CACHE_M_MDTX_TMP[@]}"
 
-    #install -o $MDTX -g $MDTX       -m 750  -d $MDTXHOME$CONF_HTMLDIR
-    USERS_install ${MDTXHOME}${CONF_HTMLDIR} \
-	"${_VAR_CACHE_M_MDTX_HTML[@]}"
-
-    install -o $MDTX -g $MDTX       -m 750  -d $MD5SUMS
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $CACHES
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $EXTRACT
-    install -o $MDTX -g ${MDTX}_md  -m 750  -d $CVSCLT
-    install -o $MDTX -g $MDTX       -m 2770 -d $MDTXCVS
+    USERS_install $CVSCLT "${_VAR_CACHE_M_MDTX_CVS[@]}"
+    USERS_install $MDTXCVS "${_VAR_CACHE_M_MDTX_CVS_MDTX[@]}"
 
     # /etc/mediatex/mdtx.conf
     ln -sf $MDTXCVS/$MDTX$CONF_CONFFILE $ETCDIR/$MDTX$CONF_CONFFILE
@@ -178,16 +178,17 @@ function USERS_coll_populate()
     COLL_EXTRACT=$EXTRACT/$1
     COLL_CVS=$CVSCLT/$1
     COLL_HOME=$HOMES/$1
+    COLL_SSH=$COLL_HOME$CONF_SSHDIR
 
-    install -o $MDTX -g $1    -m 2750 -d $COLL_CACHE
-    install -o $MDTX -g $1    -m 2770 -d $COLL_EXTRACT
-    install -o $MDTX -g $1    -m 2770 -d $COLL_CVS
-    install -o $1    -g $MDTX -m 750  -d $COLL_HOME
-    install -o $1    -g $1    -m 700  -d $COLL_HOME$CONF_SSHDIR
+    USERS_install $COLL_CACHE   "${_VAR_CACHE_M_MDTX_CACHE_COLL[@]}"
+    USERS_install $COLL_EXTRACT "${_VAR_CACHE_M_MDTX_TMP_COLL[@]}"
 
-    #install -o $MDTX -g $1    -m 2750 -d $COLL_HOME$CONF_HTMLDIR
+    USERS_install $COLL_CVS  "${_VAR_CACHE_M_MDTX_CVS_COLL[@]}"
+    USERS_install $COLL_HOME "${_VAR_CACHE_M_MDTX_HOME_COLL[@]}"
+    USERS_install $COLL_SSH  "${_VAR_CACHE_M_MDTX_HOME_COLL_SSH[@]}"
+
     USERS_install ${COLL_HOME}${CONF_HTMLDIR} \
-	"${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
+    	"${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
 
     # link facilities
     for f in cvs cache; do
@@ -220,24 +221,6 @@ function USERS_coll_disease()
     rm -f $ETCDIR/$1
 }
 
-# Create a group 
-# $1: the group name
-function USERS_create_group()
-{
-    Debug "$FUNCNAME: $1" 2
-    [ $(id -u) -eq 0 ] || Error "need to be root"
-    [ $# -eq 1 ] || Error "expect 1 parameter"
-
-    if [ -z "$(grep "^$1:" /etc/group)" ]; then
-	/usr/sbin/addgroup \
-	    --system \
-	    --quiet $1 || 
-	Error "addgroup $1 failed"
-    else
-	Info "$1 group already exists"
-    fi
-}
-
 # this function disease a group
 # $1: the group name
 function USERS_disease_group()
@@ -255,25 +238,6 @@ function USERS_disease_group()
 		/usr/sbin/deluser $_USERS $1
 	    fi
 	done
-    fi
-}
-
-# Remove a group
-# $1: the group name
-function USERS_remove_group()
-{
-    Debug "$FUNCNAME: $1" 2
-    [ $(id -u) -eq 0 ] || Error "need to be root"
-    [ $# -eq 1 ] || Error "expect 1 parameter"
-
-    # remove users from the user group
-    USERS_disease_group $1
-
-    # remove group
-    if [ -z "$(grep ^$1: /etc/group)" ]; then
-	Info "$1 group already removed"
-    else
-	/usr/sbin/delgroup $1 || Error "delgroup $1 failed"
     fi
 }
 
@@ -366,9 +330,6 @@ function USERS_mdtx_create_user()
     USERS_create_user $MDTX $MDTXHOME
     USERS_add_to_group $MDTX cdrom
     USERS_add_to_group "www-data" $MDTX
-    USERS_create_group ${MDTX}_md
-    USERS_add_to_group $MDTX ${MDTX}_md
-    USERS_add_to_group "www-data" ${MDTX}_md
     USERS_mdtx_populate
 }
 
@@ -377,7 +338,6 @@ function USERS_mdtx_remove_user()
 {
     Debug "$FUNCNAME: $1" 2
 
-    USERS_remove_group ${MDTX}_md
     USERS_remove_user $MDTX
     USERS_mdtx_disease
 }
@@ -393,7 +353,6 @@ function USERS_coll_create_user()
     COLL_HOME=$HOMES/$1
 
     USERS_create_user $1 $COLL_HOME
-    USERS_add_to_group $1 ${MDTX}_md
     USERS_add_to_group "www-data" $1
     USERS_add_to_group $MDTX $1
     USERS_coll_populate $1
@@ -413,7 +372,7 @@ function USERS_coll_remove_user()
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
 
-    USERS_del_from_group $1 ${MDTX}_md
+    #USERS_del_from_group $1 ${MDTX}_md
     USERS_remove_user $1
     USERS_coll_disease $1
 }

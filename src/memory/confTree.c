@@ -182,7 +182,6 @@ expandCollection(Collection* self)
 {
   int rc = FALSE;
   Configuration* conf = 0;
-  //char urlPart[128];
   int i,j;
   char* dataV[] = {CONF_CATHFILE, CONF_SERVFILE, CONF_EXTRFILE, "/cgi"};
   char** dataP[] = {
@@ -192,8 +191,6 @@ expandCollection(Collection* self)
     &self->htmlIndexDir, &self->htmlCacheDir, 
     &self->htmlScoreDir, &self->htmlCgiDir};
   char* label = 0;
-  char* mdtx = 0;
-  char* user = 0;
 
   // defensive code
   checkCollection(self);
@@ -315,18 +312,16 @@ expandCollection(Collection* self)
   self->cacheTree->recordTree->collection = self;
 
   // check directories
-  mdtx = env.confLabel;
-  user = self->user;
-
-  if (!checkDirectoryPermDeprecated(   self->homeDir,    user, mdtx, 0750)
-      || !checkDirectoryPermDeprecated(self->cacheDir,   mdtx, user, 02750)
-      || !checkDirectoryPermDeprecated(self->extractDir, mdtx, user, 02770)
-      || !checkDirectoryPermDeprecated(self->cvsDir,     mdtx, user, 02770)
-
-      /* mdtx was just been added to user group,
-  	 so it need to reload its groups to check the above
-  	 diretories */
-      || !checkDirectoryPermDeprecated(self->sshDir,     user, user, 0700)
+  if (!checkDirectoryPerm(self->user, self->homeDir, 
+			  VAR_CACHE_M_MDTX_HOME_COLL)
+      || !checkDirectoryPerm(self->user, self->cacheDir,
+			     VAR_CACHE_M_MDTX_CACHE_COLL)
+      || !checkDirectoryPerm(self->user, self->extractDir,
+			     VAR_CACHE_M_MDTX_TMP_COLL)
+      || !checkDirectoryPerm(self->user, self->cvsDir, 
+			     VAR_CACHE_M_MDTX_CVS_COLL)
+      || !checkDirectoryPerm(self->user, self->sshDir, 
+			     VAR_CACHE_M_MDTX_HOME_COLL_SSH)
       || !checkDirectoryPerm(self->user, self->htmlDir, 
 			     VAR_CACHE_M_MDTX_HOME_COLL_HTML)
       )
@@ -684,8 +679,6 @@ expandConfiguration()
   Collection* coll = 0;
   RGIT* curr = 0;
   char* jail = 0;
-  char* meta = 0;
-  char* mdtx = env.confLabel;
 
   // defensive code
   if (!(conf = getConfiguration())) goto error;
@@ -696,21 +689,18 @@ expandConfiguration()
   }
 
   if (!(jail = createString(conf->homeDir))
-      || !(jail = catString(jail, "/jail"))
-      || !(meta = createString(env.confLabel))
-      || !(meta = catString(meta, "_md")))
+      || !(jail = catString(jail, "/jail")))
     goto error;
 
   // check directories
   if (!checkDirectoryPerm(0, jail, VAR_CACHE_M_MDTX_JAIL)
-      || !checkDirectoryPermDeprecated(conf->cvsRootDir,  mdtx,   meta,  0750)
-      || !checkDirectoryPermDeprecated(conf->homeDir,    "root", "root", 0755)
-      || !checkDirectoryPermDeprecated(conf->md5sumDir,   mdtx,   mdtx,  0750)
-      || !checkDirectoryPermDeprecated(conf->cacheDir,    mdtx,   meta,  0750)
-      || !checkDirectoryPermDeprecated(conf->extractDir,  mdtx,   meta,  0750)
-      || !checkDirectoryPermDeprecated(conf->cvsDir,      mdtx,   meta,  0750)
-      || !checkDirectoryPermDeprecated(conf->mdtxCvsDir,  mdtx,   mdtx,  02770)
-      || !checkDirectoryPermDeprecated(conf->hostSshDir, "root", "root", 0755)
+      || !checkDirectoryPerm(0, conf->cvsRootDir, VAR_LIB_M_MDTX_CVSROOT)
+      || !checkDirectoryPerm(0, conf->homeDir, VAR_CACHE_M_MDTX_HOME)
+      || !checkDirectoryPerm(0, conf->md5sumDir, VAR_CACHE_M_MDTX_MD5SUMS)
+      || !checkDirectoryPerm(0, conf->cacheDir, VAR_CACHE_M_MDTX_CACHE)
+      || !checkDirectoryPerm(0, conf->extractDir, VAR_CACHE_M_MDTX_TMP)
+      || !checkDirectoryPerm(0, conf->cvsDir, VAR_CACHE_M_MDTX_CVS)
+      || !checkDirectoryPerm(0, conf->mdtxCvsDir, VAR_CACHE_M_MDTX_CVS_MDTX)
       )
     goto error;
 
@@ -729,7 +719,6 @@ expandConfiguration()
     logMemory(LOG_ERR, "fails to expand configuration");
   }
   jail = destroyString(jail);
-  meta = destroyString(meta);
   return rc;
 }
 

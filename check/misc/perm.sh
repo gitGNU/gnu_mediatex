@@ -47,21 +47,24 @@ BASE_ACL="-m u::rwx -m g::rwx -m o::--- -m m:rwx"
 DIR=$TMP/acl
 install -o $USER -g $USER -m 770 -d $DIR
 setfacl $BASE_ACL -m "u:www-data:r-x" $DIR
+
+misc/ut$TEST -d $DIR -u foo -g $USER \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g bar \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g $USER -p 755 \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g $USER -a "u:www-data:r--" \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
+misc/ut$TEST -d $DIR -u $USER -g $USER -a "u:www-data:r-x" \
+    >>misc/$TEST.out 2>&1 || /bin/true
+
 setfacl -d $BASE_ACL -m "u:www-data:r-x" $DIR
-
-misc/ut$TEST -d $DIR -u foo -g $USER -p 770 -a "u:www-data:r-x" \
-    >>misc/$TEST.out 2>&1 || /bin/true
-
-misc/ut$TEST -d $DIR -u $USER -g bar -p 770 -a "u:www-data:r-x" \
-    >>misc/$TEST.out 2>&1 || /bin/true
-
-misc/ut$TEST -d $DIR -u $USER -g $USER -p 755 -a "u:www-data:r-x" \
-    >>misc/$TEST.out 2>&1 || /bin/true
-
-misc/ut$TEST -d $DIR -u $USER -g $USER -p 770 -a "u:www-data:r--" \
-    >>misc/$TEST.out 2>&1 || /bin/true
-
-misc/ut$TEST -d $DIR -u $USER -g $USER -p 770 -a "u:www-data:r-x" \
+misc/ut$TEST -d $DIR -u $USER -g $USER -a "u:www-data:r-x" \
     >>misc/$TEST.out 2>&1
 
 rmdir $DIR

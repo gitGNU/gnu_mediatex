@@ -1,18 +1,15 @@
 
 *** DONE
-- acl / html
+
+*** TO TEST
+
 ** TODO
-- acl / cvs
-- acl / server
+- update documentation about acl
 
 *** BUGS
 
 - /var/run/mediatex disapear at purge if empty (no good)
 --> no more /var/run/(mediatex) directory
-
-- ACL: add coll and then HUP daemon (that need to be restarted) :
-  try to parse servers.txt but serv1 still do no belongs to serv1-hello.
-  (todo: try to use ACL to resolve it -> libacl1-dev)
 
 - manage full server scan (done at startup, but not on reload)
    test renaming file into the cache (as now, they where lost)
@@ -29,7 +26,7 @@
 - test21: audit fails (rc=4 ?)
   never fails with SERVER=1 ?
   not alway reproductible with SERVER=0
-- md5sum computed but not checked (audit will alway success !)
+  md5sum computed but not checked (audit will alway success !)
 
 *** TO TEST
 
@@ -38,13 +35,11 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
+- replace cvs+viewvc by git+cgit
 - mediatex log|top|start|stop|hup/reload|scan
-- manage new group without reloading server (using setfacl)
 - speed-up cache scanning process (btree on archives)
 - speed-up audit building process (I hope btree on archive already do it)
 - serialise b-tree using another order and use add-if-not-there function
-- replace cvs+viewvc by git+cgit
-- replace gethostby*_r by getaddrinfo and co
 - optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
 - i10n for french
 
@@ -65,6 +60,7 @@
 - manage accents into cache filenames (cgi should rewrite URLs)
    Content-Type: text/html; charset=UTF-8 ?
 - ease several servers conf: manage /etc/init.d, cron... from adm init
+- replace gethostby*_r by getaddrinfo and co
 - replace ardsm by mqueue
 - add thread ID to the log
 - change ring to linear list to free some memory (if reverse link not used)

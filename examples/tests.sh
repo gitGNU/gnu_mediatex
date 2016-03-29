@@ -339,9 +339,6 @@ function test3()
 	startInitdScriptIfNeeded
 	mdtxA "adm add coll hello@localhost"
 
-	# BUG (to remove when ACL will be implemented)
-	startInitdScript
-	
 	mdtxP "make coll hello"
 	finalQuestion \
 	    "is https://127.0.0.1/~serv1-hello/ correct ? (login is serv1)"
@@ -485,9 +482,6 @@ function test8()
 	# server 2 register for collection hello on server 1
 	mdtxA "adm add coll serv1-hello" serv2
 
-	# BUG (to remove when ACL will be implemented)
-	restartInitdScript serv2
-	
 	question "connected to serv1 cvsroot ?" \
 		 "cat ~serv2/cvs/serv2-hello/CVS/Root"
 	[ $TEST_OK -eq 0 ] && return
@@ -623,9 +617,6 @@ function test12()
 	# server 3 register for collection hello on server 1
 	mdtxA "adm add coll serv1-hello" serv3
 
-	# BUG (to remove when ACL will be implemented)
-	restartInitdScript serv3
-	
 	question "connected to serv1 cvsroot ?" \
 		 "cat ~serv3/cvs/serv3-hello/CVS/Root"
 	[ $TEST_OK -eq 0 ] && return

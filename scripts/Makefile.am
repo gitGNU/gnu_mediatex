@@ -66,11 +66,11 @@ lib/include.sh: \
 	$(top_srcdir)/config.h \
 	$(top_srcdir)/src/mediatex-config.h
 	$(do_subst) < lib/include.src > $@
-	@BASE=$$(grep "#define BASE_ACL" \
+	@BASE=$$(grep "^#define BASE_ACL" \
 		$(top_srcdir)/src/mediatex-config.h | \
 		cut -d\" -f2) ; \
 	echo -e "BASE_ACL=\"$$BASE\"\n" >> $@;
-	@grep "#define _" $(top_srcdir)/src/mediatex-config.h | \
+	@grep "^#define _" $(top_srcdir)/src/mediatex-config.h | \
 	  while read LINE; do \
 		DIR=$${LINE#\#define}; \
 		DIR=$$(echo $$DIR | cut -d' ' -f1); \

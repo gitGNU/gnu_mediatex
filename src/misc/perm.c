@@ -25,7 +25,10 @@
 #include "mediatex-config.h"
 #include <acl/libacl.h>
 
+// directories managed by mediatex client
 Perm perm[] = {
+  _ETC_M,
+  _VAR_RUN_M,
   _VAR_LIB_M,
   _VAR_LIB_M_MDTX,
   _VAR_LIB_M_MDTX_MDTX,
@@ -36,7 +39,6 @@ Perm perm[] = {
   _VAR_CACHE_M_MDTX_CACHE,
   _VAR_CACHE_M_MDTX_CACHE_M,
   _VAR_CACHE_M_MDTX_CACHE_COLL,
-  _VAR_CACHE_M_MDTX_SSH,
   _VAR_CACHE_M_MDTX_HTML,
   _VAR_CACHE_M_MDTX_CVS,
   _VAR_CACHE_M_MDTX_CVS_MDTX,
@@ -603,7 +605,7 @@ checkDirectoryPerm(char* collUser, char* path, int index)
   char* user = perm[index].user;
   char* group = perm[index].group;
   mode_t mode = perm[index].mode;
-  char* aclVal = perm[index].defaultAcl;
+  char* aclVal = perm[index].acl;
   struct stat statBuffer;
   struct passwd pw;
   struct group gr;
@@ -637,6 +639,7 @@ checkDirectoryPerm(char* collUser, char* path, int index)
   }
   
   // check user
+  if (!strcmp(user, "%s")) user=collUser;
   if (!getPasswdLine (0, statBuffer.st_uid, &pw, &buf)) goto error;
   if (strcmp(user, pw.pw_name)) {
     logMisc(LOG_ERR, "%s should be owned by %s user, not %s",
@@ -646,6 +649,7 @@ checkDirectoryPerm(char* collUser, char* path, int index)
   
   // check group  
   if (buf) free (buf);
+  if (!strcmp(group, "%s")) group=collUser;
   if (!getGroupLine (0, statBuffer.st_gid, &gr, &buf)) goto error;
   if (strcmp(group, gr.gr_name)) {
     logMisc(LOG_ERR, "%s should be owned by %s group, not %s",
@@ -653,15 +657,16 @@ checkDirectoryPerm(char* collUser, char* path, int index)
     goto error;
   }
 
-  // check permissions
-  if ((statBuffer.st_mode & mask) != (mode & mask)) {
-    logMisc(LOG_ERR, "%s should be share as %o, not %o",
-	    path, mode & mask, statBuffer.st_mode & mask);
-    goto error;
+  if (!strcmp(aclVal, "NO ACL")) {
+    // check permissions if no acl is provided
+    if ((statBuffer.st_mode & mask) != (mode & mask)) {
+      logMisc(LOG_ERR, "%s should be share as %o, not %o",
+	      path, mode & mask, statBuffer.st_mode & mask);
+      goto error;
+    }
   }
-
-  // check default acl if provided
-  if (aclVal) {
+  else {
+    // check acl if provided
     if (!cmpDirectoryAcl(path, aclVal, collUser, &res) || !res)
       goto error;
   }

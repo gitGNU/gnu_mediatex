@@ -82,7 +82,8 @@ if [ $RC -ne 0 ]; then
     if [ $MDTX_KEY_HAVE_CHANGE -eq 1 ]; then
 	Warning "new public key"
     fi
-    Warning "public key: $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub"
+    #Warning "public key: $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub"
+    Warning "public key: $HOME/$USER$CONF_SSHDIR/id_dsa.pub"
     exit 0
 fi
 
