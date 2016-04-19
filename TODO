@@ -1,10 +1,18 @@
 
 *** DONE
 
+- update mail
+- JAIL variable
+
 *** TO TEST
 
-** TODO
+*** TODO
+
 - update documentation about acl
+
+*** MAYBE
+
+- install/checkDirectoryPerm expending MDTX/COLL macros
 
 *** BUGS
 

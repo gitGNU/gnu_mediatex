@@ -49,15 +49,14 @@ HTDOCS_configure_mdtx_viewvc
 HTDOCS_configure_mdtx_apache2
 
 # only needed once
-if [ $MDTX = mdtx ]; then
-    /usr/sbin/a2enmod \
-	auth_digest authz_groupfile autoindex cgi env include rewrite \
-	userdir ssl
-    /usr/sbin/a2ensite default-ssl
-    /usr/sbin/invoke-rc.d rsyslog restart
-    /sbin/ldconfig
-fi
+/usr/sbin/a2enmod \
+    auth_digest authz_groupfile autoindex cgi env include rewrite \
+    userdir ssl
+/usr/sbin/a2ensite default-ssl
+/usr/sbin/invoke-rc.d rsyslog restart
+/sbin/ldconfig
 
+# mdtx config for apache
 /usr/sbin/a2enconf mediatex ${MEDIATEX#/}-$MDTX.conf >/dev/null
 /usr/sbin/invoke-rc.d apache2 restart
 
@@ -67,6 +66,6 @@ if [ $MDTX = mdtx ]; then
     /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX
 fi
 
-JAIL_bind # not needed by more confortable
+JAIL_bind # not needed but more confortable
 Info "done"
 

@@ -19,6 +19,19 @@ SCRIPTS=DATAROOTDIR/mediatex/scripts
 MISC=DATAROOTDIR/mediatex/misc
 HOSTSSH=SYSCONFDIR/ssh
 
+* recurent variables:
+CVSROOT=LOCALSTATEDIR/lib/mediatex/mdtx
+MDTXHOME=LOCALSTATEDIR/cache/mediatex/mdtx
+MD5SUMS=LOCALSTATEDIR/cache/mediatex/mdtx/md5sums
+CACHES=LOCALSTATEDIR/cache/mediatex/mdtx/cache
+EXTRACTLOCALSTATEDIR/cache/mediatex/mdtx/tmp
+CVSCLT=LOCALSTATEDIR/cache/mediatex/mdtx/cvs
+JAIL=LOCALSTATEDIR/cache/mediatex/mdtx/jail
+HOMES=LOCALSTATEDIR/cache/mediatex/mdtx/home
+MDTXCVS=LOCALSTATEDIR/cache/mediatex/mdtx/cvs/mdtx
+CONFFILE=LOCALSTATEDIR/cache/mediatex/mdtx/cvs/mdtx/mdtx.conf
+PIDFILE=LOCALSTATEDIR/run/mediatex/mdtxd.pid
+
 * Command line inputs:
 LOG_FILE=
 LOG_FACILITY=file

@@ -35,7 +35,8 @@ MDTX_SH_HTDOCS=1
 function HTDOCS_configure_mdtx_apache2()
 {
     Debug "$FUNCNAME:" 2
-
+    MDTX_HTML=$MDTXHOME$CONF_HTMLDIR
+    
     # adapt apache2 configuration 
     HTCONF=$SYSCONFDIR/apache2/conf-available$MEDIATEX-$MDTX.conf
     cp $MISC/apache-mdtx.conf $HTCONF
@@ -45,7 +46,7 @@ function HTDOCS_configure_mdtx_apache2()
 	-e "s!MDTX!$MDTX!g"
 
     # html redirection
-    cat > $MDTXHOME$CONF_HTMLDIR/index.html <<EOF
+    cat > $MDTX_HTML/index.html <<EOF
 <html>
 <head>
 <meta http-equiv="refresh" content="0; URL=viewvc.cgi">
@@ -94,7 +95,7 @@ function HTDOCS_configure_coll_apache2()
     COLL_HOME=$HOMES/$1
     COLL_SSH=$COLL_HOME$CONF_SSHDIR
     COLL_CVS=$CVSCLT/$1
-    COLL_HTML=$COLL_HOME/public_html
+    COLL_HTML=$COLL_HOME/$CONF_HTMLDIR
 
     rm -f $COLL_HTML/cache
     ln -sf $CACHES/$1 $COLL_HTML/cache

@@ -124,23 +124,22 @@ function USERS_root_disease()
 function USERS_mdtx_populate()
 {
     Debug "$FUNCNAME" 2
+    MDTX_HTML=$MDTXHOME$CONF_HTMLDIR
 
     # /var/lib/mediatex/mdtx
-    USERS_install $CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
+    USERS_install $CVSROOT         "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
     USERS_install $CVSROOT/CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
-    USERS_install $CVSROOT/$MDTX "${_VAR_LIB_M_MDTX_MDTX[@]}"
+    USERS_install $CVSROOT/$MDTX   "${_VAR_LIB_M_MDTX_MDTX[@]}"
 
     # /var/cache/mediatex/mdtx
-    USERS_install $MDTXHOME "${_VAR_CACHE_M_MDTX_HOME[@]}"
-    USERS_install $MDTXHOME/jail "${_VAR_CACHE_M_MDTX_JAIL[@]}"
-    USERS_install ${MDTXHOME}${CONF_HTMLDIR} "${_VAR_CACHE_M_MDTX_HTML[@]}"
-
-    USERS_install $MD5SUMS "${_VAR_CACHE_M_MDTX_MD5SUMS[@]}"
-    USERS_install $CACHES  "${_VAR_CACHE_M_MDTX_CACHE[@]}"
-    USERS_install $EXTRACT "${_VAR_CACHE_M_MDTX_TMP[@]}"
-
-    USERS_install $CVSCLT "${_VAR_CACHE_M_MDTX_CVS[@]}"
-    USERS_install $MDTXCVS "${_VAR_CACHE_M_MDTX_CVS_MDTX[@]}"
+    USERS_install $MDTXHOME  "${_VAR_CACHE_M_MDTX_HOME[@]}"
+    USERS_install $JAIL      "${_VAR_CACHE_M_MDTX_JAIL[@]}"
+    USERS_install $MDTX_HTML "${_VAR_CACHE_M_MDTX_HTML[@]}"
+    USERS_install $MD5SUMS   "${_VAR_CACHE_M_MDTX_MD5SUMS[@]}"
+    USERS_install $CACHES    "${_VAR_CACHE_M_MDTX_CACHE[@]}"
+    USERS_install $EXTRACT   "${_VAR_CACHE_M_MDTX_TMP[@]}"
+    USERS_install $CVSCLT    "${_VAR_CACHE_M_MDTX_CVS[@]}"
+    USERS_install $MDTXCVS   "${_VAR_CACHE_M_MDTX_CVS_MDTX[@]}"
 
     # /etc/mediatex/mdtx.conf
     ln -sf $MDTXCVS/$MDTX$CONF_CONFFILE $ETCDIR/$MDTX$CONF_CONFFILE
@@ -179,16 +178,14 @@ function USERS_coll_populate()
     COLL_CVS=$CVSCLT/$1
     COLL_HOME=$HOMES/$1
     COLL_SSH=$COLL_HOME$CONF_SSHDIR
+    COLL_HTML=$COLL_HOME$CONF_HTMLDIR
 
     USERS_install $COLL_CACHE   "${_VAR_CACHE_M_MDTX_CACHE_COLL[@]}"
     USERS_install $COLL_EXTRACT "${_VAR_CACHE_M_MDTX_TMP_COLL[@]}"
-
-    USERS_install $COLL_CVS  "${_VAR_CACHE_M_MDTX_CVS_COLL[@]}"
-    USERS_install $COLL_HOME "${_VAR_CACHE_M_MDTX_HOME_COLL[@]}"
-    USERS_install $COLL_SSH  "${_VAR_CACHE_M_MDTX_HOME_COLL_SSH[@]}"
-
-    USERS_install ${COLL_HOME}${CONF_HTMLDIR} \
-    	"${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
+    USERS_install $COLL_CVS     "${_VAR_CACHE_M_MDTX_CVS_COLL[@]}"
+    USERS_install $COLL_HOME    "${_VAR_CACHE_M_MDTX_HOME_COLL[@]}"
+    USERS_install $COLL_SSH     "${_VAR_CACHE_M_MDTX_HOME_COLL_SSH[@]}"
+    USERS_install $COLL_HTML    "${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
 
     # link facilities
     for f in cvs cache; do

@@ -38,10 +38,6 @@ typedef struct Perm {
 time_t currentTime();
 int checkDirectoryPerm(char* coll, char* path, int index);
 
-int 
-checkDirectoryPermDeprecated(char* path, char* user, char* group,
-			     mode_t mode);
-
 // only used by server (mainly extract.c)
 int callAccess(char* path, int* isThere);
 int checkDirectory(char* path, int *isDirectory);

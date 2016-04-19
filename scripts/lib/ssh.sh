@@ -126,11 +126,8 @@ function SSH_chroot_login()
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error $0 $LINENO "need to be root"
 
-    # /var/cache/mediatex/mdtx/home
-    JAIL=$MDTXHOME/jail
-    PATTERN="$MDTX-*"
-
     # protect stars from shell expension
+    PATTERN="$MDTX-*"
     TMP_STRING="/# <<<$PATTERN/,/# $PATTERN>>>/ d"
     SED_STRING=$(echo $TMP_STRING | sed -e 's/*/\\\*/g')
     sed -i -e "$SED_STRING" /etc/ssh/sshd_config

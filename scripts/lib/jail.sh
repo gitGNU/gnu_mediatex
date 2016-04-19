@@ -93,7 +93,6 @@ function JAIL_build()
     [ $(id -u) -eq 0 ] || Error $0 $LINENO "need to be root"
 
     # /var/cache/mediatex/mdtx/jail
-    JAIL=$MDTXHOME/jail
     DESTDIR=$JAIL # used by copy_exec
     BINARIES="/bin/ls /bin/bash /usr/bin/id /usr/bin/scp /usr/bin/cvs"
     FILES="/etc/ld.so.cache /etc/ld.so.conf"
@@ -146,7 +145,6 @@ function JAIL_del_user()
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    JAIL=$MDTXHOME/jail
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
@@ -163,7 +161,6 @@ function JAIL_add_user()
     Debug "$FUNCNAME: $1" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    JAIL=$MDTXHOME/jail
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
@@ -178,7 +175,6 @@ function JAIL_bind()
 {
     Debug $FUNCNAME 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    JAIL=$MDTXHOME/jail
 
     grep -q $JAIL/var/cache /etc/mtab ||
 	mount --bind $MDTXHOME/cache $JAIL/var/cache
@@ -220,7 +216,6 @@ function JAIL_unbind()
 {
     Debug $FUNCNAME 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    JAIL=$MDTXHOME/jail
 
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
 	umount $JAIL/var/cache

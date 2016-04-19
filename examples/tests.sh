@@ -363,7 +363,7 @@ function test4()
 	yourMail
 	mdtxP "srv save"
 	finalQuestion "does the server get it ?" \
-		      "cat ~serv1/md5sums/serv1-hello.md5"
+		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	stopInitdScript
@@ -388,13 +388,13 @@ function test5()
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "srv save"
 	question "check your mailbox" \
-		 "cat ~serv1/md5sums/serv1-hello.md5"*
+		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "srv extract"
 	mdtxP "srv save"
 	finalQuestion "Does explicit extraction provides support iso2 ?" \
-	"cat ~serv1/md5sums/serv1-hello.md5"
+	"cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso1 from coll hello"
@@ -519,14 +519,14 @@ function test9()
 	yourMail
 	mdtxP "srv save" serv1
 	question "do the 1st server get it ?" \
-	     "cat ~serv1/md5sums/serv1-hello.md5"
+	     "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	# tell serv2 we need to extract a record
 	mdtxP "srv notify" serv1
 	mdtxP "srv save" serv2
 	finalQuestion "does 2nd server get your demand ?" \
-		      "cat ~serv2/md5sums/serv2-hello.md5"
+		      "cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	for SERV in serv1 serv2; do
@@ -556,14 +556,14 @@ function test10()
 	# check server 1 was notified
 	mdtxP "srv save" serv1
 	question "do the 2nd server notify it gets materials ?" \
-		 "cat ~serv1/md5sums/serv1-hello.md5"
+		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 	
 	# serv1 scp the remote content
 	mdtxP "srv extract" serv1
 	mdtxP "srv save" serv1
 	finalQuestion "part1 remotely copied by serv1 ?" \
-		      "cat ~serv1/md5sums/serv1-hello.md5"
+		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso1" serv2
@@ -654,7 +654,7 @@ function test13()
 	
 	mdtxP "srv save" serv3
 	finalQuestion "does 3rd server get your demand ?" \
-		      "cat ~serv3/md5sums/serv3-hello.md5"
+		      "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	stopInitdScript serv3
@@ -678,14 +678,14 @@ function test14()
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 get part2 ?" \
-		 "cat ~serv3/md5sums/serv3-hello.md5"
+		 "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 	
 	mdtxP "srv notify" serv3
 	mdtxP "srv extract" serv2
 	mdtxP "srv save" serv2
 	finalQuestion "part2 remotely copied by serv2 (mediatex.css too)?" \
-		      "cat ~serv2/md5sums/serv2-hello.md5"
+		      "cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso" serv3
@@ -711,15 +711,15 @@ function test15()
 	mdtxP "srv extract" serv1
 	mdtxP "srv save" serv1
 	question "does serv1 deliver logo.png (mail sent) ?" \
-		 "cat ~serv1/md5sums/serv1-hello.md5"
+		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 	
 	mdtxP "srv notify" serv1
 	mdtxP "srv save" serv2
 	mdtxP "srv save" serv3
 	finalQuestion "does serv 2 and 3 no more looking for logo.png ?" \
-		 "cat ~serv2/md5sums/serv2-hello.md5 \
-                      ~serv3/md5sums/serv3-hello.md5"
+		 "cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n' \
+                  && cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'" 
 	[ $TEST_OK -eq 0 ] && return
     else
 	topo "Cleanup"
@@ -753,19 +753,19 @@ function test16()
 	yourMail serv3
 	mdtxP "srv save" serv3
 	question "do the 3rd server get it ?" \
-	     "cat ~serv3/md5sums/serv3-hello.md5"
+	     "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "srv notify" serv3	
 	mdtxP "srv save" serv2
 	question "does 2nd server get your demand ?" \
-		      "cat ~serv2/md5sums/serv2-hello.md5"
+		      "cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "srv notify" serv2	
 	mdtxP "srv save" serv1
 	finalQuestion "does 1st server get your demand ?" \
-		      "cat ~serv1/md5sums/serv1-hello.md5"
+		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
     fi
@@ -785,13 +785,13 @@ function test17()
 
 	mdtxP "srv save" serv3
 	question "does 3rd server see iso1 on 1st server ?" \
-	    "cat ~serv3/md5sums/serv3-hello.md5"
+	    "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
 	question "does serv3 deliver logo.png (mail sent) ?" \
-		 "cat ~serv3/md5sums/serv3-hello.md5"
+		 "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "srv notify" serv3
@@ -800,9 +800,9 @@ function test17()
 	mdtxP "srv save" serv2
 	mdtxP "srv save" serv3
 	finalQuestion "does serv 1 and 2 no more looking for logo.png ?" \
-	    "cat ~serv1/md5sums/serv1-hello.md5 \
-                 ~serv2/md5sums/serv2-hello.md5 \
-                 ~serv3/md5sums/serv3-hello.md5"
+	    "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n' \
+             && cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n' \
+             && cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso1 from coll hello" serv1
@@ -913,7 +913,7 @@ function test21()
 	mdtxP "audit coll hello for $MAIL" serv1
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "serv save" serv1
-	cat ~serv1/md5sums/serv1-hello.md5
+	cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'
 	mdtxP "motd" serv1
 	mdtxP "serv notify" serv1
 	mdtxP "serv extract" serv3
