@@ -28,8 +28,9 @@ Ajout de l'utilisateur www-data au groupe ut5-mdtx
 Fait.
 [debug users.sh] USERS_mdtx_populate
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx root root 0777 NO ACL
+[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut5-mdtx/CVSROOT
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/CVSROOT root root 0777 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
@@ -86,6 +87,7 @@ Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx-hello »...
 Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut5-mdtx-hello
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cache/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/tmp/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cvs/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx

@@ -29,6 +29,7 @@ TESTS = \
 	scripts/uthtdocs.sh \
 	scripts/utssh.sh \
 	scripts/utcvs.sh \
+	scripts/utgit.sh \
 	scripts/utjail.sh
 
 dist_check_SCRIPTS = \
@@ -41,6 +42,7 @@ dist_check_DATA = \
 	scripts/htdocs.exp \
 	scripts/ssh.exp \
 	scripts/cvs.exp \
+	scripts/git.exp \
 	scripts/jail.exp
 
 AM_CFLAGS = -DutMAIN -I $(top_srcdir)/src

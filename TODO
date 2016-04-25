@@ -1,18 +1,23 @@
 
 *** DONE
 
-- update mail
-- JAIL variable
+- git.sh / utgit.sh
 
 *** TO TEST
 
+- # make test (to backup via ssh before ^^)
+
 *** TODO
 
+- check JAIL permissions (confTree.c)
+- last commit using cvs
+- change variables names: CVSCLT -> GITCLT
+- change directory name: mdtx/cvs -> mdtx/git
 - update documentation about acl
 
 *** MAYBE
 
-- install/checkDirectoryPerm expending MDTX/COLL macros
+- install/checkDirectoryPerm expending MDTX/COLL macros (redondant)
 
 *** BUGS
 

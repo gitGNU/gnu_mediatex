@@ -43,5 +43,6 @@ HOST=$4
 [ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
  
 CVS_commit $MODULE "$COMMENT" || 
-Error $0 "cannot commit $MODULE cvs directory"
+    Error $0 "cannot commit $MODULE cvs directory"
+
 Info "done"

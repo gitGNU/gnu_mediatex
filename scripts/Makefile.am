@@ -46,6 +46,7 @@ dist_scriptslib_SCRIPTS = \
 	lib/htdocs.sh \
 	lib/ssh.sh \
 	lib/cvs.sh \
+	lib/git.sh \
 	lib/jail.sh
 
 EXTRA_DIST = \

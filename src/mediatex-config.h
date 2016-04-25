@@ -142,7 +142,7 @@ enum {
 #define _VAR_RUN_M                         {"root", "root", 0777, "NO ACL"}
 #define _VAR_LIB_M                         {"root", "root", 0755, "NO ACL"}
 #define _VAR_LIB_M_MDTX                    {"root", "root", 0755, "NO ACL"}
-#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0777, "NO ACL"}
+#define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
 #define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", 0777, "NO ACL"}
 #define _VAR_LIB_M_MDTX_COLL               {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x"}
 #define _VAR_CACHE_M                       {"root", "root", 0755, "NO ACL"}

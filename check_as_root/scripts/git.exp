@@ -1,0 +1,221 @@
+[debug utgit.sh] test for git.sh
+[debug utgit.sh] USERS_coll_remove_user: ut4-mdtx-hello
+[debug users.sh] USERS_remove_user: ut4-mdtx-hello
+[debug users.sh] USERS_disease_group: ut4-mdtx-hello
+[info users.sh] ut4-mdtx-hello user already removed
+[debug users.sh] USERS_coll_disease: ut4-mdtx-hello
+[debug utgit.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_user: ut4-mdtx
+[debug users.sh] USERS_disease_group: ut4-mdtx
+[info users.sh] ut4-mdtx user already removed
+[debug users.sh] USERS_mdtx_disease
+[debug utgit.sh] USERS_root_populate
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: SYSCONFDIR/mediatex root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/run/mediatex root root 0777 NO ACL
+[debug utgit.sh] USERS_mdtx_create_user: 
+[debug users.sh] USERS_create_user: ut4-mdtx LOCALSTATEDIR/cache/mediatex/ut4-mdtx
+[debug users.sh] USERS_add_to_group: ut4-mdtx cdrom
+Ajout de l'utilisateur « ut4-mdtx » au groupe « cdrom »...
+Ajout de l'utilisateur ut4-mdtx au groupe cdrom
+Fait.
+[debug users.sh] USERS_add_to_group: www-data ut4-mdtx
+Ajout de l'utilisateur « www-data » au groupe « ut4-mdtx »...
+Ajout de l'utilisateur www-data au groupe ut4-mdtx
+Fait.
+[debug users.sh] USERS_mdtx_populate
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx root root 0777 NO ACL
+[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut4-mdtx/CVSROOT
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/jail root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cache root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/tmp root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx root root 0750 u:%s:rwx g:%s:rwx
+[debug utgit.sh] GIT_mdtx_import
+[debug git.sh] GIT_init_gitbare: ut4-mdtx
+[info git.sh] su ut4-mdtx -c "git init --bare LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx"
+Dépôt Git vide initialisé dans LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx/
+[info git.sh] su ut4-mdtx -c "git clone LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx'...
+warning: Vous semblez avoir cloné un dépôt vide.
+fait.
+[info git.sh] su ut4-mdtx -c "git add -A"
+[debug git.sh] GIT_upgrade: ut4-mdtx
+[info git.sh] su ut4-mdtx -c 'git config color.diff auto'
+[info git.sh] su ut4-mdtx -c 'git config color.status auto'
+[info git.sh] su ut4-mdtx -c 'git config color.branch auto'
+[info git.sh] su ut4-mdtx -c 'git config user.name 'nroche''
+[info git.sh] su ut4-mdtx -c 'git config user.email 'nroche@narval.tk''
+[info git.sh] su ut4-mdtx -c 'git config push.default simple'
+[debug git.sh] GIT_commit: ut4-mdtx Initial mdtx setup
+[info git.sh] su ut4-mdtx -c 'git commit -a -m "Initial mdtx setup"'
+[master  XXX] Initial mdtx setup
+ 2 files changed, 37 insertions(+)
+ create mode 100644 supports.txt
+ create mode 100644 ut4-mdtx.conf
+[info git.sh] su ut4-mdtx -c 'git push'
+To LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx
+ * [new branch]      master -> master
+[debug utgit.sh] GIT_update: ut4-mdtx
+[info git.sh] su ut4-mdtx -c "git commit -a -m 'manual user edition'"
+[master  XXX] manual user edition
+ 1 file changed, 3 insertions(+)
+[info git.sh] su ut4-mdtx -c "git pull --no-edit"
+Already up-to-date.
+[debug utgit.sh] GIT_commit: ut4-mdtx unit test
+[info git.sh] su ut4-mdtx -c 'git commit -a -m "unit test"'
+[master  XXX] unit test
+ 1 file changed, 3 insertions(+)
+[info git.sh] su ut4-mdtx -c 'git push'
+To LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx
+   XXX..XXX  master -> master
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    unit test
+
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    manual user edition
+
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    Initial mdtx setup
+[debug utgit.sh] USERS_coll_create_user: ut4-mdtx-hello
+[debug users.sh] USERS_create_user: ut4-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello
+[debug users.sh] USERS_add_to_group: www-data ut4-mdtx-hello
+Ajout de l'utilisateur « www-data » au groupe « ut4-mdtx-hello »...
+Ajout de l'utilisateur www-data au groupe ut4-mdtx-hello
+Fait.
+[debug users.sh] USERS_add_to_group: ut4-mdtx ut4-mdtx-hello
+Ajout de l'utilisateur « ut4-mdtx » au groupe « ut4-mdtx-hello »...
+Ajout de l'utilisateur ut4-mdtx au groupe ut4-mdtx-hello
+Fait.
+[debug users.sh] USERS_coll_populate: ut4-mdtx-hello
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cache/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/tmp/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello/.ssh %s %s 0700 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
+[debug utgit.sh] GIT_coll_import: ut4-mdtx-hello
+[debug git.sh] GIT_init_gitbare: ut4-mdtx-hello
+[info git.sh] su ut4-mdtx-hello -c "git init --bare LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello"
+Dépôt Git vide initialisé dans LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/
+[info git.sh] su ut4-mdtx-hello -c "git clone LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello'...
+warning: Vous semblez avoir cloné un dépôt vide.
+fait.
+[info git.sh] su ut4-mdtx-hello -c "git add -A"
+[debug git.sh] GIT_upgrade: ut4-mdtx-hello
+[info git.sh] su ut4-mdtx-hello -c 'git config color.diff auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config color.status auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config color.branch auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config user.name 'nroche''
+[info git.sh] su ut4-mdtx-hello -c 'git config user.email 'nroche@narval.tk''
+[info git.sh] su ut4-mdtx-hello -c 'git config push.default simple'
+[debug git.sh] GIT_commit: ut4-mdtx-hello Initial collection setup
+[info git.sh].txt icons/*.*'
+[info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "Initial collection setup"'
+[master  XXX] Initial collection setup
+ 14 files changed, 148 insertions(+)
+ create mode 100644 .cvsignore
+ create mode 100644 apache2/cache.htaccess
+ create mode 100644 apache2/cgi.htaccess
+ create mode 100644 apache2/home.htaccess
+ create mode 100644 apache2/htgroup
+ create mode 100644 apache2/index.htaccess
+ create mode 100644 apache2/score.htaccess
+ create mode 100644 catalog000.txt
+ create mode 100644 extract000.txt
+ create mode 100644 icons/floppy-icon.png
+ create mode 100644 logo
+ create mode 100644 mediatex.css
+ create mode 100644 readme.html
+ create mode 100644 servers.txt
+[info git.sh] su ut4-mdtx-hello -c 'git push'
+To LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello
+ * [new branch]      master -> master
+[debug utgit.sh] SSH_build_key: ut4-mdtx-hello
+[debug utgit.sh] SSH_bootstrapKeys ut4-mdtx-hello 
+known_hosts updated.
+Original contents retained as known_hosts.old
+[debug utgit.sh] SSH_configure_client ut4-mdtx-hello localhost 22
+[info utgit.sh] su ut4-mdtx-hello -c "ssh -o PasswordAuthentication=no ut4-mdtx-hello@localhost ls"
+cache
+cvs
+public_html
+[debug utgit.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
+[info utgit.sh] su ut4-mdtx-hello -c "git clone ssh://ut4-mdtx-hello@localhost:LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cvs/ut4-mdtx-hello'...
+[debug utgit.sh] GIT_upgrade: ut4-mdtx-hello
+[info git.sh] su ut4-mdtx-hello -c 'git config color.diff auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config color.status auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config color.branch auto'
+[info git.sh] su ut4-mdtx-hello -c 'git config user.name 'nroche''
+[info git.sh] su ut4-mdtx-hello -c 'git config user.email 'nroche@narval.tk''
+[info git.sh] su ut4-mdtx-hello -c 'git config push.default simple'
+[debug utgit.sh] GIT_update: ut4-mdtx-hello
+[info git.sh] su ut4-mdtx-hello -c "git commit -a -m 'manual user edition'"
+[master  XXX] manual user edition
+ 1 file changed, 3 insertions(+)
+[info git.sh] su ut4-mdtx-hello -c "git pull --no-edit"
+Already up-to-date.
+[debug utgit.sh] GIT_commit: ut4-mdtx-hello unit test
+[info git.sh].txt icons/*.*'
+[info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "unit test"'
+[master  XXX] unit test
+ 1 file changed, 3 insertions(+)
+[info git.sh] su ut4-mdtx-hello -c 'git push'
+To ssh://ut4-mdtx-hello@localhost:LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello
+   XXX..XXX  master -> master
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    unit test
+
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    manual user edition
+
+commit XXX
+Author: nroche <nroche@narval.tk>
+Date:   XXX
+
+    Initial collection setup
+[debug utgit.sh] USERS_coll_remove_user: ut4-mdtx-hello
+[debug users.sh] USERS_remove_user: ut4-mdtx-hello
+[debug users.sh] USERS_disease_group: ut4-mdtx-hello
+Suppression de l'utilisateur « www-data » du groupe « ut4-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut4-mdtx » du groupe « ut4-mdtx-hello »...
+Fait.
+Suppression de l'utilisateur « ut4-mdtx-hello »...
+Attention ! Le groupe « ut4-mdtx-hello » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_coll_disease: ut4-mdtx-hello
+[debug utgit.sh] USERS_mdtx_remove_user: 
+[debug users.sh] USERS_remove_user: ut4-mdtx
+[debug users.sh] USERS_disease_group: ut4-mdtx
+Suppression de l'utilisateur « www-data » du groupe « ut4-mdtx »...
+Fait.
+Suppression de l'utilisateur « ut4-mdtx »...
+Attention ! Le groupe « ut4-mdtx » ne contient plus aucun membre.
+Fait.
+[debug users.sh] USERS_mdtx_disease
+[info utgit.sh] success

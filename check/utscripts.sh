@@ -125,14 +125,28 @@ function UNIT_TEST_mrProper()
     # hide user and group numbers
     sed $1 -i -e "s,^\(.*:x:\).*:,\1XXX:,"
 
-    # hide commit date and id
-    sed $1 -i \
-	-e "s,\(date:\) .*;  a,\1 XXX;  a," \
-	-e "s,\(commitid:\) .*;,\1 XXX;,"
-
     # hide group number
     sed $1 -i -e "s,:x:[[:digit:]]*:,:x:XXX:,"
 
+    # hide cvs commit date and id
+    sed $1 -i \
+	-e "s,\(date:\) .*;  a,\1 XXX;  a," \
+	-e "s,\(commitid:\) .*;,\1 XXX;,"
+    
+    # hide git commit date and id
+    sed $1 -i \
+	-e "s,^\(Date:  \).*,\1 XXX," \
+	-e "s,^   [^ ]* \( master -> master\),   XXX..XXX \1," \
+	-e "s,^\(commit\).*,\1 XXX," \
+	-e "s,^\(\[master (commit racine) \)[^]]*,\1 XXX," \
+	-e "s,^\(\[master \)[^]]*,\1 XXX," \
+	
+    # [master (commit racine) 1d93f9d]
+    # [master 637f68c]
+    # 1d93f9d..df4c07b  master -> master
+    # commit df4c07b96124d2ddd73f6fd19edd7d42aa64e013
+    # Date:   Sat Apr 23 23:47:39 2016 +0200
+    
     # hide i386/amd64 defferences
     sed $1 -i -e "/^lib64$/ d"
 }

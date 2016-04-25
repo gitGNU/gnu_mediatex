@@ -128,6 +128,8 @@ function USERS_mdtx_populate()
 
     # /var/lib/mediatex/mdtx
     USERS_install $CVSROOT         "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
+
+    Warning "To Remove (cvs only): USERS_install $CVSROOT/CVSROOT" 2
     USERS_install $CVSROOT/CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
     USERS_install $CVSROOT/$MDTX   "${_VAR_LIB_M_MDTX_MDTX[@]}"
 
@@ -180,6 +182,7 @@ function USERS_coll_populate()
     COLL_SSH=$COLL_HOME$CONF_SSHDIR
     COLL_HTML=$COLL_HOME$CONF_HTMLDIR
 
+    USERS_install $CVSROOT/$1   "${_VAR_LIB_M_MDTX_COLL[@]}"
     USERS_install $COLL_CACHE   "${_VAR_CACHE_M_MDTX_CACHE_COLL[@]}"
     USERS_install $COLL_EXTRACT "${_VAR_CACHE_M_MDTX_TMP_COLL[@]}"
     USERS_install $COLL_CVS     "${_VAR_CACHE_M_MDTX_CVS_COLL[@]}"

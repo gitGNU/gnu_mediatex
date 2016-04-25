@@ -36,5 +36,7 @@ MODULE=$1
 [ -z $1 ] && Error "please provide a module"
 [ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
 
-CVS_update $MODULE || Error $0 "cannot update $MODULE cvs directory"
+CVS_update $MODULE ||
+    Error $0 "cannot update $MODULE cvs directory"
+
 Info "done"

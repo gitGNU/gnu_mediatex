@@ -26,8 +26,9 @@ Ajout de l'utilisateur www-data au groupe ut2-mdtx
 Fait.
 [debug users.sh] USERS_mdtx_populate
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx root root 0777 NO ACL
+[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT root root 0777 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
@@ -49,6 +50,7 @@ Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx-hello »...
 Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx-hello
 Fait.
 [debug users.sh] USERS_coll_populate: ut2-mdtx-hello
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
@@ -164,7 +166,8 @@ ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
           root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut2-mdtx
           root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
-          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx
+          root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx
+          root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/run
           root           root drwxrwxrwx LOCALSTATEDIR/run/mediatex
 [debug uthtdocs.sh] HTDOCS_unconfigure_mdtx_apache2:
