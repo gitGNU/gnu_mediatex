@@ -1,41 +1,6 @@
 
 *** DONE
 
-- init with git:
-$ ln -s /usr/lib/cgit/cgit.cgi cgit.cgi
-$ man cgitrc -> CGIT_CONFIG
-SetEnv CGIT_CONFIG /var/cache/mediatex/mdtx/cgitrc
-mdtx/cgitrc:
-css=/cgit-css/cgit.css
-logo=/~mdtx/logo (URL)
-scan-path=/var/cache/mediatex/mdtx/git
-
-- GIT_commit()
- - git diff --exit-code
- - git commit ...
-
-- open_close...
- - GIT_pull
- - GIT_push
-
-- cgi fails (mdtx.conf not readable by www-data) as install do not honor acl
-- cgit header
-- install bug like into the cache due to rename (or mv)
-- add key do not write the key into servers.txt -> bug in serialiser
-- new remote collection fails
-- remove cvs $Id$
-- add/change variable name: CVSCLT -> GITCLT
-- add/change directory name: mdtx/cvs -> mdtx/git
-- regression on apache log backup (test 19)
-- upgrade.c -> upgrade.sh -> GIT_upgrade (rewrite git base url)
-- openclose.c -> commit.sh -> GIT_commit (noCvs variable)
-- use author and email fields to display the host id into cgit
-- upgrade git remote origin url
-- user.sh jail.sh (acl replace groups)
-- htdocs.sh (cgit replace viewvc)
-- tag last commit using cvs
-- remove cvs.sh, utcvs.sh header.ezt viewvc.conf ...
-
 *** TO TEST
 
 - cgit links
@@ -44,7 +9,7 @@ scan-path=/var/cache/mediatex/mdtx/git
 
 *** TO CLEAN
 
-- update documentation about acl, cvs
+- update documentation about acl, git
 
 *** MAYBE
 
@@ -61,7 +26,6 @@ scan-path=/var/cache/mediatex/mdtx/git
    test renaming file into the cache (as now, they where lost)
 
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
-- add DNS roundrobbin hostname into logo (servers.txt)
 
 - sort files on message of the day
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
@@ -93,6 +57,7 @@ scan-path=/var/cache/mediatex/mdtx/git
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- add DNS roundrobbin hostname into logo (servers.txt)
 - src/misc/md5sums.c -> checksums.c
 - add an apache alias for '~' as it is not on mac keyboard
 - move date parser/serialiser code into perm.c
