@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utcatalogTree.c,v 1.8 2015/10/20 19:41:43 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *

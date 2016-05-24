@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: catalogHtml.sh,v 1.1 2015/07/01 10:49:23 nroche Exp $
 # * Project: MediaTex
 # * Module:  catalogHtml
 # *

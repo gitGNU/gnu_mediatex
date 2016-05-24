@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: keys.h,v 1.5 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

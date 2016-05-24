@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: archive.c,v 1.14 2015/09/23 19:10:20 nroche Exp $
  * Project: MediaTeX
  * Module : archive
  *

@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: confTree.sh,v 1.3 2015/08/30 17:07:57 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -57,11 +56,11 @@ function populateConfiguration()
     install -m 750 -d $MD5SUMS
     install -m 750 -d $CACHES
     install -m 750 -d $EXTRACT
-    install -m 750 -d $CVSROOT
-    install -m 770 -d $CVSROOT/CVSROOT
-    install -m 750 -d $CVSROOT/$MDTXUSER
-    install -m 750 -d $CVSCLT
-    install -m 770 -d $MDTXCVS
+    install -m 750 -d $GITBARE
+    install -m 770 -d $GITBARE/GITBARE
+    install -m 750 -d $GITBARE/$MDTXUSER
+    install -m 750 -d $GITCLT
+    install -m 770 -d $MDTXGIT
     install -m 755 -d $HOSTSSH
 
     for COLL in $(seq 1 3); do
@@ -93,6 +92,6 @@ memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 # compare with the expected output
 loadPaths "mdtx2"
 diff -I '# Version: $Id' -I '/.*,$' \
-    $srcdir/memory/$TEST.exp ${MDTXCVS}/${MDTXUSER}.conf
+    $srcdir/memory/$TEST.exp ${MDTXGIT}/${MDTXUSER}.conf
 mrProperOutputs memory/$TEST.out
 diff $srcdir/memory/$TEST.exp2 memory/$TEST.out

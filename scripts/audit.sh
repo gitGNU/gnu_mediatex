@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: audit.sh,v 1.3 2015/09/22 23:05:55 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -127,7 +126,7 @@ fi
 
 # upload the audit report and send a mail
 if [ $CUR -eq $MAX ]; then
-    DO_LOG=$(grep -i logAudit $CVSCLT/$USER/servers.txt | \
+    DO_LOG=$(grep -i logAudit $GITCLT/$USER/servers.txt | \
 		    awk '{ print $2 }')
     case $DO_LOG in
 	yes|Yes|YES|y|Y|true|True|TRUE|t|T)

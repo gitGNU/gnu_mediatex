@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.tab.c,v 1.5 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *

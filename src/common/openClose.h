@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: openClose.h,v 1.4 2015/06/30 17:37:27 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -27,8 +26,10 @@
 
 #include "mediatex-types.h"
 
-int callUpdate(char* user);
-int callCommit(char* user, char* signature1, char* signature2);
+int callUpgrade(char* user, char* fingerprint, char* url);
+int callCommit(char* user, char* comment);
+int callPull(char* user);
+int callPush(char* user);
 
 int loadConfiguration(int confFiles); // logical OR on confFiles
 int loadRecords(Collection* coll);

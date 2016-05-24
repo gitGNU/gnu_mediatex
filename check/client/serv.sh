@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: serv.sh,v 1.1 2015/07/01 10:49:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *
@@ -32,8 +31,8 @@ set -e
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 
-cp $CVSCLT/$MDTXUSER-coll1$SERVFILE $CVSCLT/$MDTXUSER-coll2$SERVFILE
-cp $CVSCLT/$MDTXUSER-coll1$SERVFILE $CVSCLT/$MDTXUSER-coll3$SERVFILE
+cp $GITCLT/$MDTXUSER-coll1$SERVFILE $GITCLT/$MDTXUSER-coll2$SERVFILE
+cp $GITCLT/$MDTXUSER-coll1$SERVFILE $GITCLT/$MDTXUSER-coll3$SERVFILE
 cp ${srcdir}/memory/user1Key_rsa.pub client/
 cp ${srcdir}/memory/user3Key_dsa.pub client/
 

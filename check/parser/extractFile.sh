@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: extractFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -33,7 +32,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-IN=${CVSCLT}/${MDTXUSER}-coll1${EXTRFILE}
+IN=${GITCLT}/${MDTXUSER}-coll1${EXTRFILE}
 parser/ut$TEST.tab -i $IN >parser/$TEST.out 2>parser/$TEST.txt
 
 # compare with the expected output

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: upload.h,v 1.6 2015/08/14 01:53:42 nroche Exp $
  * Project: MediaTeX
  * Module : upload
  *

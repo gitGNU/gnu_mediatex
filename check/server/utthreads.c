@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utthreads.c,v 1.7 2015/10/20 19:41:48 nroche Exp $
  * Project: MediaTeX
  * Module : threads
 

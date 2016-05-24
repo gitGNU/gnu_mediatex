@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: extractTree.c,v 1.14 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : extraction tree
  *

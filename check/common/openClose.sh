@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: openClose.sh,v 1.1 2015/07/01 10:49:31 nroche Exp $
 # * Project: MediaTex
 # * Module:  common modules (both used by clients and server)
 # *

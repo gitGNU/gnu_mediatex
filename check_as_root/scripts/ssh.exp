@@ -21,14 +21,8 @@
 Ajout de l'utilisateur « ut3-mdtx » au groupe « cdrom »...
 Ajout de l'utilisateur ut3-mdtx au groupe cdrom
 Fait.
-[debug users.sh] USERS_add_to_group: www-data ut3-mdtx
-Ajout de l'utilisateur « www-data » au groupe « ut3-mdtx »...
-Ajout de l'utilisateur www-data au groupe ut3-mdtx
-Fait.
 [debug users.sh] USERS_mdtx_populate
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx root root 0777 NO ACL
-[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut3-mdtx/CVSROOT
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx/ut3-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/jail root root 0755 NO ACL
@@ -36,43 +30,31 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cache root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/tmp root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cvs root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cvs/ut3-mdtx root root 0750 u:%s:rwx g:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/git root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/git/ut3-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug utssh.sh] USERS_coll_create_user: ut3-mdtx-hello
 [debug users.sh] USERS_create_user: ut3-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello
-[debug users.sh] USERS_add_to_group: www-data ut3-mdtx-hello
-Ajout de l'utilisateur « www-data » au groupe « ut3-mdtx-hello »...
-Ajout de l'utilisateur www-data au groupe ut3-mdtx-hello
-Fait.
-[debug users.sh] USERS_add_to_group: ut3-mdtx ut3-mdtx-hello
-Ajout de l'utilisateur « ut3-mdtx » au groupe « ut3-mdtx-hello »...
-Ajout de l'utilisateur ut3-mdtx au groupe ut3-mdtx-hello
-Fait.
 [debug users.sh] USERS_coll_populate: ut3-mdtx-hello
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cache/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/tmp/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cvs/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/git/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello/.ssh %s %s 0700 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug utssh.sh] SSH_build_key: ut3-mdtx-hello
 [debug utssh.sh] SSH_bootstrapKeys ut3-mdtx-hello 
-known_hosts updated.
-Original contents retained as known_hosts.old
+LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello/.ssh/known_hosts updated.
+Original contents retained as LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello/.ssh/known_hosts.old
 [debug utssh.sh] SSH_configure_client ut3-mdtx-hello localhost 22
 [info utssh.sh] su USER -c "ssh -o PasswordAuthentication=no ut3-mdtx-hello@localhost ls"
 cache
-cvs
+git
 public_html
 [debug utssh.sh] USERS_coll_disease: ut3-mdtx-hello
 [debug utssh.sh] USERS_coll_remove_user: ut3-mdtx-hello
 [debug users.sh] USERS_remove_user: ut3-mdtx-hello
 [debug users.sh] USERS_disease_group: ut3-mdtx-hello
-Suppression de l'utilisateur « www-data » du groupe « ut3-mdtx-hello »...
-Fait.
-Suppression de l'utilisateur « ut3-mdtx » du groupe « ut3-mdtx-hello »...
-Fait.
 Suppression de l'utilisateur « ut3-mdtx-hello »...
 Attention ! Le groupe « ut3-mdtx-hello » ne contient plus aucun membre.
 Fait.
@@ -80,8 +62,6 @@ Fait.
 [debug utssh.sh] USERS_mdtx_remove_user: 
 [debug users.sh] USERS_remove_user: ut3-mdtx
 [debug users.sh] USERS_disease_group: ut3-mdtx
-Suppression de l'utilisateur « www-data » du groupe « ut3-mdtx »...
-Fait.
 Suppression de l'utilisateur « ut3-mdtx »...
 Attention ! Le groupe « ut3-mdtx » ne contient plus aucun membre.
 Fait.

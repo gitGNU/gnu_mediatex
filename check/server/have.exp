@@ -1,4 +1,4 @@
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] Clean the cache and add part1:
 [notice uthave.c] .......................................................
@@ -20,8 +20,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection ( SX )
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
-[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/extract000.txt
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
@@ -111,8 +111,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection ( SX )
-[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/servers.txt
-[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/extract000.txt
+[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/servers.txt
+[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
@@ -202,8 +202,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
-[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
-[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/extract000.txt
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/servers.txt
+[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
@@ -339,6 +339,15 @@
 [info command.c] /bin/cp execution returns 0
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports/logoP1.cat
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/supports/logoP1.cat
+[info command.c] --- exec system call begin ---
+[info command.c] hide stdout from child (use '-sdebug:script' to show)
+[info command.c] --- exec system call end ---
+[info command.c] /bin/cp execution returns 0
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : ALLOCATED -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 extracted
 [info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
@@ -413,6 +422,15 @@
 [info command.c] --- exec system call end ---
 [info command.c] /bin/bash execution returns 0
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo.tgz
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo.tgz
+[info command.c] --- exec system call begin ---
+[info command.c] hide stdout from child (use '-sdebug:script' to show)
+[info command.c] --- exec system call end ---
+[info command.c] /bin/cp execution returns 0
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : ALLOCATED -> TOKEEP
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 extracted
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
@@ -445,6 +463,15 @@
 [info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo
 [info extract.c] move LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png to LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[notice extract.c] do cp
+[info command.c] execScript: /bin/cp
+[info command.c]  arg1: -f
+[info command.c]  arg2: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo/logo.png
+[info command.c]  arg3: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logo/logo.png
+[info command.c] --- exec system call begin ---
+[info command.c] hide stdout from child (use '-sdebug:script' to show)
+[info command.c] --- exec system call end ---
+[info command.c] /bin/cp execution returns 0
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 extracted
 [info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo

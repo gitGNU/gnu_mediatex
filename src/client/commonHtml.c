@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: commonHtml.c,v 1.10 2015/08/13 21:14:32 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 
@@ -418,9 +417,9 @@ htmlAssoCarac(FILE* fd, AssoCarac* self)
 
 
 /*=======================================================================
- * Function   : serializeHtmlCacheTop
+ * Function   : serializeHtmlCacheHeader
  * Description: This template will be used by apache SSI
- * Synopsis   : int serializeHtmlCacheTop(Collection* coll)
+ * Synopsis   : int serializeHtmlCacheHeader(Collection* coll)
  * Input      : Collection* coll: input collection
  * Output     : TRUE on success
  =======================================================================*/
@@ -445,7 +444,7 @@ serializeHtmlCacheHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, _("Cache"))) goto error;
-  if (!htmlLeftPageHead(fd, _("cache"))) goto error;
+  if (!htmlLeftPageHead(fd, "cache")) goto error;
 
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
@@ -482,9 +481,9 @@ serializeHtmlCacheHeader(Collection* coll)
 
 
 /*=======================================================================
- * Function   : serializeHtmlCgiTop
+ * Function   : serializeHtmlCgiHeader
  * Description: This template will be used by apache SSI
- * Synopsis   : int serializeHtmlCgiTop(Collection* coll)
+ * Synopsis   : int serializeHtmlCgiHeader(Collection* coll)
  * Input      : Collection* coll: input collection
  * Output     : TRUE on success
  =======================================================================*/
@@ -514,7 +513,7 @@ serializeHtmlCgiHeader(Collection* coll)
 
   if (!htmlMainHeadBasic(fd, _("Cache"), coll->localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, _("cache"), coll->localhost->url))
+  if (!htmlLeftPageHeadBasic(fd, "cache", coll->localhost->url))
     goto error;
 
   if (!isEmptyRing(self->servers)) {
@@ -545,6 +544,83 @@ serializeHtmlCgiHeader(Collection* coll)
  error:
   if (!rc) {
     logMain(LOG_ERR, "serializeHtmlCgiHeader fails");
+  }
+  path = destroyString(path);
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : serializeHtmlGitHeader
+ * Description: This template will be used by cgit
+ * Synopsis   : int serializeHtmlGitHeader(Collection* coll)
+ * Input      : Collection* coll: input collection
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+serializeHtmlGitHeader(Collection* coll)
+{ 
+  int rc = TRUE;
+  Configuration* conf = 0;
+  ServerTree* self = 0;
+  //Server *server = 0;
+  //RGIT* curr = 0;
+  char* path = 0;
+  //char url[512];
+  FILE* fd = stdout; 
+
+  if (!(path = createString(coll->htmlDir))) goto error;
+  if (!(path = catString(path, "/gitHeader.html"))) goto error;
+  logMain(LOG_DEBUG, "serialize %s", path);
+  if (!(conf = getConfiguration())) goto error;
+  if (!(self = coll->serverTree)) goto error;
+  if (!getLocalHost(coll)) goto error;
+  
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    goto error;
+  }  
+
+  if (!htmlMainHeadBasic(fd, _("Version"), coll->localhost->url))
+    goto error;
+  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/",
+			     coll->localhost->url))
+    goto error;
+
+  /*
+  if (!isEmptyRing(self->servers)) {
+    if (!rgSort(self->servers, cmpServer)) goto error;
+    htmlUlOpen(fd);
+
+    rgRewind(self->servers);
+    while ((server = rgNext_r(self->servers, &curr))) {
+      strcpy(url, server->url);
+      strcpy(url + strlen(url), "/cgi/cgit.cgi/.git/"); 
+      htmlLiOpen(fd);
+      htmlLink(fd, 0, url, server->host);
+      htmlLiClose(fd);      
+    }
+    htmlUlClose(fd);
+  }
+  */
+  
+  if (!htmlLeftPageTail(fd)) goto error;
+  /*
+  if (!htmlRightHeadBasic(fd, coll->serverTree->master->url,
+			  coll->localhost->url)) goto error;
+  */
+  if (!htmlRightHeadBasic(fd, coll->localhost->url,
+			  coll->localhost->url)) goto error;
+  
+  if (!env.dryRun) {
+    fclose(fd);
+  } else {
+    fflush(stdout);
+  }
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "serializeHtmlGitHeader fails");
   }
   path = destroyString(path);
   return rc;
@@ -621,6 +697,7 @@ serializeHtmlCache(Collection* coll)
 
   if (!serializeHtmlCacheHeader(coll)) goto error;
   if (!serializeHtmlCgiHeader(coll)) goto error;
+  if (!serializeHtmlGitHeader(coll)) goto error;
   if (!serializeHtmlFooter(coll)) goto error;
 
   rc = TRUE;

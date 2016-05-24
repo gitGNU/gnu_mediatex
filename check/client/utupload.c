@@ -1,6 +1,5 @@
 
 /*=======================================================================
- * Version: $Id: utupload.c,v 1.10 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *

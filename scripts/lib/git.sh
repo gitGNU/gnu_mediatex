@@ -1,10 +1,9 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cvs.sh,v 1.8 2015/10/02 18:02:21 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
-# * This module manage the mdtx cvsroot and working copy cvs 
+# * This module manage the mdtx gitbare and git working copy
 # * repositories.
 #
 # MediaTex is an Electronic Records Management System
@@ -35,19 +34,23 @@ MDTX_SH_GIT=1
 
 # this function set the git configuration into its repository
 # $1: git module to upgrade (MDTX or MDTX-COLL)
+# $2: author (hostname)
+# $3: email  (fingerprint)
+# $4: remote origin url (if provided)
 function GIT_upgrade()
 {
-    Debug "$FUNCNAME: $1" 2
-    [ $# -eq 1 ] || Error "expect 1 parameter"
-    GIT=$CVSCLT/$1
+    Debug "$FUNCNAME: $*" 2
+    [ $# -ge 3 ] || Error "expect at less 3 parameters"
+    GIT=$GITCLT/$1
 
-    QUERIES=(\
+    local QUERIES=(\
 	"git config color.diff auto"
 	"git config color.status auto"
 	"git config color.branch auto"
-	"git config user.name 'nroche'"
-	"git config user.email 'nroche@narval.tk'"
+	"git config user.name '$2'"
+	"git config user.email '$3'"
 	"git config push.default simple"
+	"git config remote.origin.url $4"
     )
 
     # su to module user if (should not) call from init.sh
@@ -65,28 +68,107 @@ function GIT_upgrade()
  
     for I in $(seq 0 5); do
 	Info "${QUERIES[$I]}"
+	#if [ -f $GIT/.git/config.lock ]; then Warning "Présent"; fi
+	#rm -f $GIT/.git/config.lock
+	eval ${QUERIES[$I]} ||
+	    Error "cannot upgrade ($[$I+1]/6) git working directory: $GIT"
+    done
+
+    # update bare location
+    if [ -n "$4" ]; then
+	I=$[I+1]
+	Info "${QUERIES[$I]}"
+	#if [ -f $GIT/.git/config.lock ]; then Warning "Présent"; fi
+	#rm -f $GIT/.git/config.lock
 	eval ${QUERIES[$I]} ||
 	    Error "cannot upgrade ($[$I+1]/6) git working directory: $GIT" 
-    done
+    fi
+    
+    cat >.git/description <<EOF
+mediatex's $1 module
+EOF
     
     cd - > /dev/null 2>&1 || true
 }
     
+# this function locally commit change into a module
+# $1: git module to commit (MDTX or MDTX-COLL)
+# $2: message for this commit
+function GIT_commit()
+{
+    Debug "$FUNCNAME: $1 $2" 2
+    [ $# -eq 2 ] || Error "expect 2 parameters"
+    GIT=$GITCLT/$1
+
+    local QUERIES=(\
+	"git add *[0-9][0-9].txt icons/*.*"
+	"[ -z \"\$(git branch)\" ]"
+	"git update-index --refresh"
+	"git diff-index --exit-code HEAD 2>&1"
+	"git commit -a -m \"$2\" 2>&1"
+    )
+    
+    # su to module user if (should not) call from init.sh
+    if [ $(id -u) -eq 0 ]; then
+	for I in $(seq 0 4); do
+	    QUERIES[$I]="su $1 -c '${QUERIES[$I]}'"
+	done
+    else
+	[ "$(whoami)" == $1 ] ||
+	    Error "module $1 has to be commited by $1 user"	
+    fi
+    
+    # /var/cache/mediatex/mdtx/git/mdtx-coll
+    cd $GIT || Error "cannot cd to git working directory: $GITCLT/$1"
+
+    # add meta-data parts to collections modules
+    if [ "$1" != "$MDTX" ]; then
+	Info "${QUERIES[0]}"
+	eval ${QUERIES[0]} ||
+	    Error "cannot commit (1/2) git module: $GITCLT/$1"
+    fi
+
+    # check if there is something to commit
+    DO_COMMIT=0
+    
+    # - is it a new module (still no branch) ?
+    Info "${QUERIES[1]}"
+    if eval ${QUERIES[1]}; then
+	DO_COMMIT=1
+    else
+	# - is there some changes ?
+	Info "${QUERIES[2]}"
+	eval ${QUERIES[2]} || /bin/true
+	Info "${QUERIES[3]}"
+	if ! eval ${QUERIES[3]}; then
+	    DO_COMMIT=1
+	fi
+    fi
+    
+    if [ $DO_COMMIT -eq 0 ]; then
+       	Info "nothing to commit into git module $1"
+    else
+	Info "${QUERIES[4]}"
+	eval ${QUERIES[4]} ||
+	    Error "cannot commit (2/2) git module: $GITCLT/$1"
+    fi
+    
+    cd - > /dev/null 2>&1 || true
+}
 
 # this function update a module
 # $1: git module to update (MDTX or MDTX-COLL)
-function GIT_update()
+function GIT_pull()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    GIT=$CVSCLT/$1
-    QUERY1="git commit -a -m 'manual user edition'"
-    QUERY2="git pull --no-edit"
+
+    GIT=$GITCLT/$1
+    local QUERY="git pull --no-edit 2>&1"
 
     # su to module user if (should not) call from init.sh
     if [ $(id -u) -eq 0 ]; then
-	QUERY1="su $1 -c \"$QUERY1\""
-	QUERY2="su $1 -c \"$QUERY2\""
+	QUERY="su $1 -c \"$QUERY\""
     else
 	[ "$(whoami)" == $1 ] ||
 	    Error "module $1 has to be updated by $1 user"	
@@ -94,70 +176,51 @@ function GIT_update()
     
     # /var/cache/mediatex/mdtx/git/$1
     cd $GIT || Error "cannot cd to git working directory: $GIT"
-
-    if [ -n "$(git diff)" ]; then 
-	Info "$QUERY1"
-	eval $QUERY1 ||
-	    Error "cannot update (1/2) git working directory: $GIT"    
-    fi
 	
-    Info "$QUERY2"
-    eval $QUERY2 ||
-	Error "cannot update (2/2) git working directory: $GIT"    
+    Info "$QUERY"
+    eval $QUERY ||
+	Error "cannot update git working directory: $GIT"    
     
     cd - > /dev/null 2>&1 || true
 }
 
-# this function commit change into a module
+# this function remotely commit change into a module
 # $1: git module to commit (MDTX or MDTX-COLL)
-# $2: message for this commit
-function GIT_commit()
+function GIT_push()
 {
-    Debug "$FUNCNAME: $1 $2" 2
-    [ $# -eq 2 ] || Error "expect 2 parameters"
-    GIT=$CVSCLT/$1
-    QUERY1="git add *[0-9][0-9].txt icons/*.*"
-    QUERY2="git commit -a -m \"$2\""
-    QUERY3="git push"
+    Debug "$FUNCNAME: $1" 2
+    [ $# -eq 1 ] || Error "expect 2 parameters"
 
-    # /var/cache/mediatex/mdtx/cvs/mdtx-coll
-    cd $GIT || Error "cannot cd to cvs working directory: $CVSCLT/$1"
+    GIT=$GITCLT/$1
+    local QUERY="git push 2>&1"
+
+    # /var/cache/mediatex/mdtx/git/mdtx-coll
+    cd $GIT || Error "cannot cd to git working directory: $GITCLT/$1"
 
     # su to module user when call from init.sh
     if [ $(id -u) -eq 0 ]; then
-	QUERY1="su $1 -c '$QUERY1'"
-	QUERY2="su $1 -c '$QUERY2'"
-	QUERY3="su $1 -c '$QUERY3'"
+	QUERY="su $1 -c '$QUERY'"
     else
 	[ "$(whoami)" == $1 ] ||
-	    Error "module $1 has to be commited by $1 user"	
+	    Error "module $1 has to be push by $1 user"	
     fi
-    
-    # add meta-data parts to collections modules
-    if [ "$1" != "$MDTX" ]; then
-	Info "$QUERY1"
-	eval $QUERY1 || Error "cannot commit (1/3) git module: $CVSCLT/$1"
-    fi
+   
+    Info "$QUERY"
+    eval $QUERY || Error "cannot push git module: $GITCLT/$1"
 
-    Info "$QUERY2"
-    eval $QUERY2 || Error "cannot commit (2/3) git module: $CVSCLT/$1"
-
-    Info "$QUERY3"
-    eval $QUERY3 || Error "cannot commit (3/3) git module: $CVSCLT/$1"
-    
     cd - > /dev/null 2>&1 || true
 }
 
 # this function initialise a GIT bare repository
-# $1: git module initialise
+# $1: git module to initialise
 function GIT_init_gitbare()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    QUERY="git init --bare $CVSROOT/$1"
-
+    local QUERY="git init --bare $GITBARE/$1 2>&1"
+    
     # /var/lib/mediatex/mdtx/$1/HEAD
-    if [ -f $CVSROOT/$1/HEAD ]; then
+    if [ -f $GITBARE/$1/HEAD ]; then
 	Warning "re-use already existing $1's gitbare"
     else
 	Info "su $1 -c \"$QUERY\""
@@ -169,9 +232,9 @@ function GIT_init_gitbare()
 function GIT_mdtx_import()
 {
     Debug "$FUNCNAME" 2
-    GIT=$CVSCLT/$MDTX
-    QUERY1="git clone $CVSROOT/$MDTX $CVSCLT/$MDTX"
-    QUERY2="git add -A"
+    GIT=$GITCLT/$MDTX
+    local QUERY1="git clone $GITBARE/$MDTX $GITCLT/$MDTX 2>&1"
+    local QUERY2="git add -A"
 
     GIT_init_gitbare $MDTX
     
@@ -186,7 +249,7 @@ function GIT_mdtx_import()
     # /var/cache/mediatex/mdtx/git/mdtx/mdtx.conf
     if [ -f $GIT/$MDTX$CONF_CONFFILE ]; then
 	Warning "re-use already imported $MDTX module"
-	chown -R $1.$1 $CVSROOT/$MDTX
+	chown -R $1.$1 $GITBARE/$MDTX
     else
 	# add files from /usr/share/mediatex/misc/
 	install -o $MDTX -g $MDTX -m 660 \
@@ -201,8 +264,17 @@ function GIT_mdtx_import()
 	su $MDTX -c "$QUERY2" || Error "cannot add files to $MDTX module"
 	cd - > /dev/null || true
 
-	GIT_upgrade $MDTX
+	if [ $UNIT_TEST_RUNNING -eq 1 ]; then
+            SIGN1="HOSTNAME"
+	    SIGN2="FINGERPRINT"
+	else
+	    SIGN1=$(hostname)
+	    SIGN2=$(ssh-keygen -lf /etc/ssh/ssh_host_rsa_key.pub | \
+			   cut -d' ' -f2 | sed -e 's/://g')
+	fi
+	GIT_upgrade $MDTX "$(hostname)" $SIGN2
 	GIT_commit $MDTX "Initial mdtx setup"
+	GIT_push $MDTX
     fi
 }
 
@@ -212,10 +284,11 @@ function GIT_coll_import()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-    GIT=$CVSCLT/$1
-    QUERY1="git clone $CVSROOT/$1 $CVSCLT/$1"
-    QUERY2="git add -A"
+    GIT=$GITCLT/$1
+    local QUERY1="git clone $GITBARE/$1 $GITCLT/$1 2>&1"
+    local QUERY2="git add -A"
 
+    USERS_install $GITBARE/$1 "${_VAR_LIB_M_MDTX_COLL[@]}"
     GIT_init_gitbare $1
     
     # /var/cache/mediatex/mdtx/git/coll/logo
@@ -226,9 +299,9 @@ function GIT_coll_import()
 	su $1 -c "$QUERY1" || Error "cannot checkout $1 module"
     fi
     
-    if [ -d $CVSROOT/$1/logo ]; then
+    if [ -f $GIT/logo ]; then
 	Warning "re-use already imported collection module"
-	chown -R $1.$1 $CVSROOT/$1
+	chown -R $1.$1 $GITBARE/$1
     else 
 	cd $GIT || Error "cannot cd to git working directory: $GIT"
 	
@@ -249,21 +322,21 @@ function GIT_coll_import()
 	install -o $1 -g $1 -m 660 /dev/null readme.html
 
 	for t in home index cache score cgi; do
-	    install -o $1 -g $1 -m 660 $MISC/$t.htaccess apache2
+	    install -o $1 -g $1 -m 660 \
+			 $MISC/$t.htaccess apache2/
 
 	    # adapt them
-	    if [ $t == cgi ]; then continue; fi
 	    sed apache2/$t.htaccess -i \
-		-e "s!MEDIATEX!$MEDIATEX!" \
+		-e "s!MEDIATEX/!$MEDIATEX/!" \
 		-e "s!MDTX-COLL!$1!" \
-		-e "s!MDTX!$MDTX!" \
-		-e "s!ETCDIR!$ETCDIR!"
+		-e "s!/MDTX/!/$MDTX/!" \
+		-e "s!HOMES!$HOMES!"
 	done
 
-	cat > .cvsignore <<EOF
+	cat > .gitignore <<EOF
 *NNN.txt
 EOF
-	chown $1:$1 .cvsignore
+	chown $1:$1 .gitignore
 
 	# create mdtx password (bypass by unit tests)
 	[ $UNIT_TEST_RUNNING -eq 1 ] ||
@@ -273,13 +346,25 @@ EOF
        	Info "su $1 -c \"$QUERY2\""
 	su $1 -c "$QUERY2" ||
 	    Error "cannot add files to $1 module"
+	
 	cd - >/dev/null || true
-	GIT_upgrade $1
+
+	if [ $UNIT_TEST_RUNNING -eq 1 ]; then
+            SIGN1="HOSTNAME"
+	    SIGN2="FINGERPRINT"
+	else
+	    SIGN1=$(grep 'host  ' $GITCLT/$MDTX/${MDTX}${CONF_CONFFILE} \
+			   | awk '{print $2}')
+	    SIGN2=$(ssh-keygen -lf $HOMES/$1$CONF_SSHDIR/id_dsa.pub | \
+			   cut -d' ' -f2 | sed -e 's/://g')
+	fi
+	GIT_upgrade $1 "$SIGN1" $SIGN2
 	GIT_commit $1 "Initial collection setup"
+	GIT_push $1
     fi
 }
 
-# checkout a collection module
+# checkout a (potentially remote) collection module
 # $1: user
 # $2: remote mdtx user
 # $3: collection label
@@ -289,21 +374,14 @@ function GIT_coll_checkout()
     Debug "$FUNCNAME: $1 $2-$3@$4" 2
     [ $# -eq 4 ] || Error "expect 4 parameter"
 
-    GIT=$CVSCLT/$1
-    EXT_MODULE="$2-$3"
-    QUERY="git clone ssh://$EXT_MODULE@$4:/var/lib/cvsroot/$1 $GIT"
+    GIT=$GITCLT/$1
+    MODULE="$2-$3"
+    QUERY="git clone ssh://$MODULE@$4:/var/lib/gitbare/$MODULE $GIT 2>&1"
        
-    #EXT_CVSROOT=":ext:${2}-${3}@${4}:/var/lib/cvsroot"
-    
     # force checkout using ssh
-    rm -fr $CVSCLT/$EXT_MODULE $GIT
+    rm -fr $GITCLT/$MODULE $GIT
     USERS_install $GIT "${_VAR_LIB_M_MDTX_COLL[@]}"
     
     Info "su $1 -c \"$QUERY\""
-    su $1 -c "$QUERY" || Error "cannot clone $EXT_MODULE module"
- 
-    [ "$EXT_MODULE" = "$1" ] || mv $CVSCLT/$EXT_MODULE $GIT
-    cd - > /dev/null || true
-    
-    GIT_upgrade $1
+    su $1 -c "$QUERY" || Error "cannot clone $MODULE module"
 }

@@ -1,4 +1,4 @@
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2/mdtx2.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2/mdtx2.conf
 [notice utnotify.c] -------------------------------------------------------
 [notice utnotify.c] Clean the cache:
 [notice utnotify.c] .......................................................
@@ -20,8 +20,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection ( SX )
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll1/servers.txt
-[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll1/extract000.txt
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll1/servers.txt
+[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll1/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
@@ -111,8 +111,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection ( SX )
-[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll2/servers.txt
-[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll2/extract000.txt
+[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll2/servers.txt
+[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll2/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
@@ -202,8 +202,8 @@
 [info command.c] /bin/bash execution returns 0
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection ( SX )
-[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll3/servers.txt
-[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/cvs/mdtx2-coll3/extract000.txt
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll3/servers.txt
+[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx2/git/mdtx2-coll3/extract000.txt
 [info openClose.c] steps: 93 / 93
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50

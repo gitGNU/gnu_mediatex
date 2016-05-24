@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: confFile.sh,v 1.2 2015/08/10 12:24:26 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *
@@ -36,7 +35,7 @@ TEST=${TEST%.sh}
 for SRV in $(seq 1 3); do
     loadPaths "mdtx$SRV"
 
-    IN=${MDTXCVS}/${MDTXUSER}.conf
+    IN=${MDTXGIT}/${MDTXUSER}.conf
     parser/utconfFile.tab -i $IN \
 	>parser/$TEST$SRV.out 2>parser/$TEST$SRV.txt
 

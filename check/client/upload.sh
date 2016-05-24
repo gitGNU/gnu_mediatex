@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: upload.sh,v 1.8 2015/09/22 11:42:38 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *

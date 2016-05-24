@@ -1,4 +1,4 @@
-[info serverTree.c] Serializing the server tree file: LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info serverTree.c] Serializing the server tree file: LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info utserverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
 [info utserverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
 [info utserverTree.c] 6b18ed0194b0fbadd08e0a13cccda00e may reach 746d6ceeb76e05cfa2dea92a1c5753cd
@@ -15,7 +15,7 @@ https      yes
 
 # self-ingestion parameters
 logApache  yes
-logCvs     no
+logGit     no
 logAudit   yes
 
 # score parameters

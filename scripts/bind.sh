@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: bind.sh,v 1.4 2015/06/30 17:37:18 nroche Exp $
 # * Project: MediaTex
 # * Module : bind script
 # *

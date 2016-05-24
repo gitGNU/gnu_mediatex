@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: include.src,v 1.5 2015/07/01 11:33:50 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -35,6 +34,32 @@ MDTX_SH_INCLUDE=1
 UNIT_TEST_RUNNING=0
 DRY_RUN=${MDTX_DRY_RUN-0}
 MDTX=${MDTX_MDTXUSER-mdtx}
+
+# /usr/bin/install do not honor default acl
+# expect parameters likes :
+#  -o OWNER -g GROUP -m MODE -d DIR
+#  -o OWNER -g GROUP -m MODE SRC DEST
+# $2 : OWNER
+# $4 : GROUP
+# $6 : MODE
+# $7 : SRC or -d
+# $8 : DST or DIR
+function install()
+{
+    #Debug "$FUNCNAME: $*" 2
+
+    DST=$8
+    if [ $7 == "-d" ]; then
+	mkdir -p $DST
+    else
+	if [ -d $8 ]; then
+	    DST=$8/$(basename $7)
+	fi
+	cp $7 $DST
+    fi
+    chmod $6 $DST
+    chown $2.$4 $DST
+}
 
 Debug "load $MDTX's paths"
 
@@ -71,7 +96,7 @@ CONF_MD5SUMS="/md5sums"
 CONF_CACHES="/cache"
 CONF_EXTRACT="/tmp"
 CONF_HOME="/home"
-CONF_CVSCLT="/cvs"
+CONF_GITCLT="/git"
 CONF_SSHDIR="/.ssh"
 CONF_JAIL="/jail"
 CONF_HTMLDIR="/public_html"
@@ -96,16 +121,16 @@ CONF_PORT=6561
 SSH_PORT=22
 
 # recurent variables
-CVSROOT="${STATEDIR}/$MDTX"
+GITBARE="${STATEDIR}/$MDTX"
 MDTXHOME="${CACHEDIR}/$MDTX"
 MD5SUMS="${MDTXHOME}${CONF_MD5SUMS}"
 CACHES="${MDTXHOME}${CONF_CACHES}"
 EXTRACT="${MDTXHOME}${CONF_EXTRACT}"
-CVSCLT="${MDTXHOME}${CONF_CVSCLT}"
+GITCLT="${MDTXHOME}${CONF_GITCLT}"
 JAIL="${MDTXHOME}${CONF_JAIL}"
 HOMES="${MDTXHOME}${CONF_HOME}"
-MDTXCVS="${CVSCLT}/$MDTX"
-CONFFILE="${MDTXCVS}/$MDTX${CONF_CONFFILE}"
+MDTXGIT="${GITCLT}/$MDTX"
+CONFFILE="${MDTXGIT}/$MDTX${CONF_CONFFILE}"
 PIDFILE="${PIDDIR}/$MDTX${CONF_PIDFILE}"
 
 FALSE=1

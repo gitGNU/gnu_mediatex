@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: extract.h,v 1.5 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTeX
  * Module : extract
  *

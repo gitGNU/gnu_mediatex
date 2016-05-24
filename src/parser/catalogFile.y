@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: catalogFile.y,v 1.10 2015/10/05 21:46:29 nroche Exp $
  * Project: MediaTeX
  * Module : catalog parser
  *

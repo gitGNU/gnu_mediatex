@@ -1,22 +1,55 @@
 
 *** DONE
 
-- git.sh / utgit.sh
+- init with git:
+$ ln -s /usr/lib/cgit/cgit.cgi cgit.cgi
+$ man cgitrc -> CGIT_CONFIG
+SetEnv CGIT_CONFIG /var/cache/mediatex/mdtx/cgitrc
+mdtx/cgitrc:
+css=/cgit-css/cgit.css
+logo=/~mdtx/logo (URL)
+scan-path=/var/cache/mediatex/mdtx/git
+
+- GIT_commit()
+ - git diff --exit-code
+ - git commit ...
+
+- open_close...
+ - GIT_pull
+ - GIT_push
+
+- cgi fails (mdtx.conf not readable by www-data) as install do not honor acl
+- cgit header
+- install bug like into the cache due to rename (or mv)
+- add key do not write the key into servers.txt -> bug in serialiser
+- new remote collection fails
+- remove cvs $Id$
+- add/change variable name: CVSCLT -> GITCLT
+- add/change directory name: mdtx/cvs -> mdtx/git
+- regression on apache log backup (test 19)
+- upgrade.c -> upgrade.sh -> GIT_upgrade (rewrite git base url)
+- openclose.c -> commit.sh -> GIT_commit (noCvs variable)
+- use author and email fields to display the host id into cgit
+- upgrade git remote origin url
+- user.sh jail.sh (acl replace groups)
+- htdocs.sh (cgit replace viewvc)
+- tag last commit using cvs
+- remove cvs.sh, utcvs.sh header.ezt viewvc.conf ...
 
 *** TO TEST
 
-- # make test (to backup via ssh before ^^)
+- cgit links
 
 *** TODO
 
-- check JAIL permissions (confTree.c)
-- last commit using cvs
-- change variables names: CVSCLT -> GITCLT
-- change directory name: mdtx/cvs -> mdtx/git
-- update documentation about acl
+*** TO CLEAN
+
+- update documentation about acl, cvs
 
 *** MAYBE
 
+- remove.sh+purge.sh: remove /etc/cron.d/mediatex_cron (set by init) 
+- do we display the bare repo with cgit ? (master host url on html.c)
 - install/checkDirectoryPerm expending MDTX/COLL macros (redondant)
 
 *** BUGS
@@ -49,6 +82,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - replace cvs+viewvc by git+cgit
+- repair audit process 
 - mediatex log|top|start|stop|hup/reload|scan
 - speed-up cache scanning process (btree on archives)
 - speed-up audit building process (I hope btree on archive already do it)

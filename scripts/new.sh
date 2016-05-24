@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: new.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -30,7 +29,7 @@ set -e
 [ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
 [ ! -z $MDTX_SH_USERS ]    || source $libdir/users.sh
 [ ! -z $MDTX_SH_SSH ]      || source $libdir/ssh.sh
-[ ! -z $MDTX_SH_CVS ]      || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_GIT ]      || source $libdir/git.sh
 [ ! -z $MDTX_SH_JAIL ]     || source $libdir/jail.sh
 [ ! -z $MDTX_SH_HTDOCS ]   || source $libdir/htdocs.sh
 
@@ -60,9 +59,8 @@ HTDOCS_configure_coll_apache2 $USER
 
 # setup a new repository if hosted localy (master host)
 if [ \( "$SERV" = "$MDTX" \) -a \( "$HOST" = "localhost" \) ]; then
-    CVS_coll_import $USER
     SSH_bootstrapKeys $USER
-    HTDOCS_configure_coll_viewvc $USER
+    GIT_coll_import $USER
     JAIL_bind
 fi
 
@@ -82,21 +80,21 @@ if [ $RC -ne 0 ]; then
     if [ $MDTX_KEY_HAVE_CHANGE -eq 1 ]; then
 	Warning "new public key"
     fi
-    #Warning "public key: $CACHEDIR/$MDTX/home/$USER/.ssh/id_dsa.pub"
-    Warning "public key: $HOME/$USER$CONF_SSHDIR/id_dsa.pub"
+    Warning "public key: $HOMES/$USER$CONF_SSHDIR/id_dsa.pub"
     exit 0
 fi
 
 # checkout the collection
-CVS_coll_checkout $USER $SERV $COLL $HOST
+GIT_coll_checkout $USER $SERV $COLL $HOST
+HTDOCS_configure_coll_cgit $USER
 
 # BUG too ?
 # reload daemons as there configuration have changed
 /usr/sbin/invoke-rc.d apache2 reload
 
 # BUG (to remove when ACL will be implemented)
-if [ $MDTX = mdtx ]; then
-    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart
-fi
+#if [ $MDTX = mdtx ]; then
+#    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart
+#fi
 
 Info "done"

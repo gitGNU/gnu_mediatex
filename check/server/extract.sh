@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: extract.sh,v 1.1 2015/07/01 10:50:06 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

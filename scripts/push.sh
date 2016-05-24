@@ -1,9 +1,11 @@
 #!/bin/bash
+#set -x
+set -e
 #=======================================================================
 # * Project: MediaTex
-# * Module:  miscellaneous modules
+# * Module : script libs
 # *
-# * script called by command.c within its unit test context
+# * This script push a MediaTex module
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 2016 Nicolas Roche
@@ -22,19 +24,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
 
-echo "** This script show the MediaTex environment variables:"
+[ -z $srcdir ] && srcdir=.
+[ -z $libdir ] && libdir=$srcdir/lib
+[ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
+[ ! -z $MDTX_SH_GIT ]      || source $libdir/git.sh
 
-echo "* Parameters:"
-echo "MDTX_MDTXUSER            = $MDTX_MDTXUSER"
-echo "MDTX_LOG_FACILITY        = $MDTX_LOG_FACILITY"
-echo "MDTX_LOG_FILE            = $MDTX_LOG_FILE"
-echo "MDTX_LOG_SEVERITY_ALLOC  = $MDTX_LOG_SEVERITY_ALLOC"
-echo "MDTX_LOG_SEVERITY_SCRIPT = $MDTX_LOG_SEVERITY_SCRIPT"
-echo "MDTX_LOG_SEVERITY_MISC   = $MDTX_LOG_SEVERITY_MISC"
-echo "MDTX_LOG_SEVERITY_MEMORY = $MDTX_LOG_SEVERITY_MEMORY"
-echo "MDTX_LOG_SEVERITY_PARSER = $MDTX_LOG_SEVERITY_PARSER"
-echo "MDTX_LOG_SEVERITY_COMMON = $MDTX_LOG_SEVERITY_COMMON"
-echo "MDTX_LOG_SEVERITY_MAIN   = $MDTX_LOG_SEVERITY_MAIN"
-echo "MDTX_DRY_RUN             = $MDTX_DRY_RUN"
-echo "PARAMETER_1              = $1"
+Debug "push $1"
 
+MODULE=$1
+
+[ -z $1 ] && Error "please provide a module"
+[ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
+ 
+GIT_push $MODULE || 
+    Error $0 "cannot push $MODULE git module"
+
+Info "done"

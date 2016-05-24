@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utrecordFile.tab.c,v 1.5 2015/10/20 19:41:47 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *

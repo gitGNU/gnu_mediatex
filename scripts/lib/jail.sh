@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: jail.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -94,7 +93,9 @@ function JAIL_build()
 
     # /var/cache/mediatex/mdtx/jail
     DESTDIR=$JAIL # used by copy_exec
-    BINARIES="/bin/ls /bin/bash /usr/bin/id /usr/bin/scp /usr/bin/cvs"
+    BINARIES="/bin/ls /bin/bash /usr/bin/id /usr/bin/scp"
+    BINARIES="$BINARIES /usr/bin/git"
+    BINARIES="$BINARIES /usr/bin/git-upload-pack /usr/bin/git-receive-pack"
     FILES="/etc/ld.so.cache /etc/ld.so.conf"
 
     # librairies not automatically detected,
@@ -103,7 +104,7 @@ function JAIL_build()
 
     mkdir -p $JAIL/{bin,dev,etc,tmp,usr/bin} #,proc,sys,dev/pts}
     #mkdir -p $JAIL/lib/i386-linux-gnu/i686/cmo
-    mkdir -p $JAIL/{var/cache,var/lib/cvsroot,var/tmp}
+    mkdir -p $JAIL/{var/cache,var/lib/gitbare,var/tmp}
 
     for i in $BINARIES; do
 	JAIL_add_binary $i;
@@ -128,7 +129,7 @@ function JAIL_build()
 	done
     done
 
-    # needed by cvs
+    # needed by git
     chmod 755 $JAIL/var/lib
     chmod 777 $JAIL/tmp
     chmod 777 $JAIL/var/tmp
@@ -148,9 +149,7 @@ function JAIL_del_user()
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
-	for MEMBER in $1 ${MDTX}_md; do
 	    sed -i -e "/^$1:/ d" ${JAIL}${FILE}
-	done
     done
 }
 
@@ -164,10 +163,8 @@ function JAIL_add_user()
 
     # users and groups
     for FILE in /etc/passwd /etc/group; do
-	for MEMBER in $1 ${MDTX}_md; do
-	    sed -i -e "/^$1:/ d" ${JAIL}${FILE}
-	    grep "^$1:" $FILE | cat >> ${JAIL}${FILE}
-	done
+	sed -i -e "/^$1:/ d" ${JAIL}${FILE}
+	grep "^$1:" $FILE | cat >> ${JAIL}${FILE}
     done
 }
 
@@ -181,10 +178,10 @@ function JAIL_bind()
     grep -q $JAIL/var/cache /etc/mtab ||
 	Error "Cannot bind $JAIL/var/cache"
 
-    grep -q $JAIL/var/lib/cvsroot /etc/mtab ||
-	mount --bind $CVSROOT $JAIL/var/lib/cvsroot
-    grep -q $JAIL/var/lib/cvsroot /etc/mtab ||
-	Error "Cannot bind $JAIL/var/lib/cvsroot"
+    grep -q $JAIL/var/lib/gitbare /etc/mtab ||
+	mount --bind $GITBARE $JAIL/var/lib/gitbare
+    grep -q $JAIL/var/lib/gitbare /etc/mtab ||
+	Error "Cannot bind $JAIL/var/lib/gitbare"
 
     # remove "Could not chdir to home directory" warning.
     #  Theses files are not backuped because they are written into
@@ -222,10 +219,10 @@ function JAIL_unbind()
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
 	Error "Cannot unbind $JAIL/var/cache"
 
-    [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] ||
-	umount $JAIL/var/lib/cvsroot
-    [ $(grep -c $JAIL/var/lib/cvsroot /etc/mtab) -eq 0 ] || 
-	Error "Cannot unbind $JAIL/var/lib/cvsroot"
+    [ $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ] ||
+	umount $JAIL/var/lib/gitbare
+    [ $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ] || 
+	Error "Cannot unbind $JAIL/var/lib/gitbare"
 
     # not needed (but maybe later)
 

@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: uthtdocs.sh,v 1.1 2015/07/01 10:50:15 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -56,6 +55,7 @@ USERS_root_populate
 USERS_mdtx_create_user
 HTDOCS_configure_mdtx_apache2
 HTDOCS_configure_mdtx_viewvc
+HTDOCS_configure_mdtx_cgit
 
 # new.sh
 USERS_coll_create_user $USER

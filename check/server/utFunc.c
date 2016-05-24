@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utFunc.c,v 1.9 2015/09/17 18:53:45 nroche Exp $
  * Project: MediaTeX
  * Module : utfunc
  *

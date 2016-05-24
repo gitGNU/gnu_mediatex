@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: log.sh,v 1.5 2015/08/09 13:20:34 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

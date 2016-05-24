@@ -1,5 +1,5 @@
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info ssh.c] Serializing the authorized_keys file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/authorized_keys
 [info ssh.c] Serializing the ssh's config file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/config
 [info ssh.c] Serializing the known_host file: LOCALSTATEDIR/cache/mediatex/mdtx1/home/mdtx1-coll1/.ssh/known_hosts

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: upgrade.h,v 1.5 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *

@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: message.sh,v 1.1 2015/08/19 01:09:06 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

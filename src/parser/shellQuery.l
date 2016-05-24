@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: shellQuery.l,v 1.9 2015/09/27 21:32:52 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 

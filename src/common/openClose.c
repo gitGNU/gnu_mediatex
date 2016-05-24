@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: openClose.c,v 1.18 2015/10/12 23:28:51 nroche Exp $
  * Project: MediaTeX
  * Module : openClose
  
@@ -30,27 +29,34 @@ static char* CollFiles[] = {
 };
 
 /*=======================================================================
- * Function   : callUpdate
- * Description: call update.sh
- * Synopsis   : int callUpdate(char* user)
- * Input      : char* user: the collection module to update
+ * Function   : callUpgrade
+ * Description: call upgrade.sh
+ * Synopsis   : int callUpgrade(char* user, 
+ *                              char* signature1, char* signature2)
+ * Input      : char* label: the collection module to commit
+ *              char* fingerprint: the commit's author fingerprint
+ *              char* url: remote origin url (if provided)
  * Output     : TRUE on success
  =======================================================================*/
 int 
-callUpdate(char* user)
+callUpgrade(char* user, char* fingerprint, char* url)
 { 
-  int rc = FALSE;
+  int rc = FALSE;  
   Configuration* conf = 0;
-  char *argv[] = {0, 0, 0};
+  char *argv[] = {0, 0, 0, 0, 0, 0};
 
   checkLabel(user);
-  logCommon(LOG_INFO, "callUpdate %s", user);
+  logCommon(LOG_INFO, "callUpgrade %s: fp=%s url=%s",
+	    user, fingerprint?fingerprint:"?", url?url:"");
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
-  if (!(argv[0] = catString(argv[0], "/update.sh"))) goto error;
+  if (!(argv[0] = catString(argv[0], "/upgrade.sh"))) goto error;
   argv[1] = user;
-
+  argv[2] = conf->host;
+  argv[3] = *fingerprint?fingerprint:"?";
+  argv[4] = url;
+  
   if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
@@ -58,7 +64,7 @@ callUpdate(char* user)
   rc = TRUE;
  error:  
   if (!rc) {
-    logCommon(LOG_WARNING, "callUpdate fails");
+    logCommon(LOG_WARNING, "callUpgrade fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -67,29 +73,28 @@ callUpdate(char* user)
 /*=======================================================================
  * Function   : callCommit
  * Description: call commit.sh
- * Synopsis   : int callCommit(char* user, char* signature)
+ * Synopsis   : int callCommit(char* user, char* comment)
  * Input      : char* label: the collection module to commit
- *              char* signature1: the commit's author fingerprint
- *              char* signature2: the commit's author hostname
+ *              char* comment: to overhide command line as comment
  * Output     : TRUE on success
  =======================================================================*/
 int 
-callCommit(char* user, char* signature1, char* signature2)
+callCommit(char* user, char* comment)
 { 
   int rc = FALSE;  
   Configuration* conf = 0;
-  char *argv[] = {0, 0, 0, 0, 0, 0};
+  char *argv[] = {0, 0, 0, 0};
 
   checkLabel(user);
-  logCommon(LOG_INFO, "callCommit %s: %s", user, env.commandLine);
+  env.commandLine[strlen(env.commandLine)-1] = 0; // \n -> \0
+  logCommon(LOG_INFO, "callCommit %s: %s", user,
+	    comment?comment:env.commandLine);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(argv[0] = createString(conf->scriptsDir))) goto error;
   if (!(argv[0] = catString(argv[0], "/commit.sh"))) goto error;
   argv[1] = user;
-  argv[2] = env.commandLine;
-  argv[3] = signature1;
-  argv[4] = signature2;
+  argv[2] = comment?comment:env.commandLine;
   
   if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
@@ -99,6 +104,77 @@ callCommit(char* user, char* signature1, char* signature2)
  error:  
   if (!rc) {
     logCommon(LOG_WARNING, "callCommit fails");
+  }
+  argv[0] = destroyString(argv[0]);
+  env.commandLine[strlen(env.commandLine)] = '\n';
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : callPull
+ * Description: call pull.sh
+ * Synopsis   : int callPull(char* user)
+ * Input      : char* user: the collection module to pull
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+callPull(char* user)
+{ 
+  int rc = FALSE;
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0};
+
+  checkLabel(user);
+  logCommon(LOG_INFO, "callPull %s", user);
+
+  if (!(conf = getConfiguration())) goto error;
+  if (!(argv[0] = createString(conf->scriptsDir))) goto error;
+  if (!(argv[0] = catString(argv[0], "/pull.sh"))) goto error;
+  argv[1] = user;
+
+  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+    if (!execScript(argv, user, 0, FALSE)) goto error;
+  }
+
+  rc = TRUE;
+ error:  
+  if (!rc) {
+    logCommon(LOG_WARNING, "callPull fails");
+  }
+  argv[0] = destroyString(argv[0]);
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : callPush
+ * Description: call push.sh
+ * Synopsis   : int callPush(char* user)
+ * Input      : char* label: the collection module to commit
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+callPush(char* user)
+{ 
+  int rc = FALSE;  
+  Configuration* conf = 0;
+  char *argv[] = {0, 0, 0};
+
+  checkLabel(user);
+  logCommon(LOG_INFO, "callPush %s", user);
+
+  if (!(conf = getConfiguration())) goto error;
+  if (!(argv[0] = createString(conf->scriptsDir))) goto error;
+  if (!(argv[0] = catString(argv[0], "/push.sh"))) goto error;
+  argv[1] = user;
+  
+  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+    if (!execScript(argv, user, 0, FALSE)) goto error;
+  }
+
+  rc = TRUE;
+ error:  
+  if (!rc) {
+    logCommon(LOG_WARNING, "callPush fails");
   }
   argv[0] = destroyString(argv[0]);
   return(rc);
@@ -123,6 +199,9 @@ int loadConfiguration(int confFiles)
   }
   if (!(conf = getConfiguration())) goto error;
 
+  if (!callCommit(env.confLabel, "manual user edition")) goto error;
+  if (!env.noCollCvs) callPull(env.confLabel);
+  
   if ((confFiles & CFG) && conf->fileState[iCFG] == DISEASED) {
     if (!parseConfiguration(conf->confFile)) goto error;
     conf->fileState[iCFG] = LOADED;
@@ -492,9 +571,10 @@ loadCollection(Collection* coll, int collFiles)
 
   if (!expandCollection(coll)) goto error;
 
+  if (!callCommit(coll->user, "manual user edition")) goto error;
   if (!env.noCollCvs) {
     if (coll->toUpdate && collFiles & (CTLG | EXTR | SERV)) {
-      if (callUpdate(coll->user)) coll->toUpdate = FALSE;
+      if (callPull(coll->user)) coll->toUpdate = FALSE;
     }
   }
 
@@ -693,8 +773,12 @@ saveConfiguration()
   }
 
   // commit changes
-  if (change && !env.noCollCvs) {
-    callCommit(env.confLabel, conf->hostFingerPrint, conf->host);
+  if (change) {
+    if (!callUpgrade(env.confLabel, conf->hostFingerPrint, 0)) goto error;
+    if (!callCommit(env.confLabel, 0)) goto error;
+    if (!env.noCollCvs) {
+      callPush(env.confLabel);
+    }
   }
 
   rc = TRUE;
@@ -858,11 +942,14 @@ saveCollection(Collection* coll, int collFiles)
 	    env.progBar.cur, env.progBar.max);
 
   // commit changes
-  if (coll->toCommit && !env.noCollCvs) {
-    if (callCommit(coll->user, coll->userFingerPrint, conf->host)) {
-      conf->toHup = TRUE;
-      coll->toCommit = FALSE;
-      coll->toUpdate = TRUE;
+  if (coll->toCommit) {
+    if (!callCommit(coll->user, 0)) goto error;
+    if (!env.noCollCvs) {
+      if (callPush(coll->user)) {
+	conf->toHup = TRUE;
+	coll->toCommit = FALSE;
+	coll->toUpdate = TRUE;
+      }
     }
   }
 
@@ -896,7 +983,7 @@ clientSaveAll()
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
   }
 
-  if (!saveConfiguration(env.commandLine)) goto error;
+  if (!saveConfiguration()) goto error;
 
   // tell the server we have upgrade files
   if (!env.noRegression && !env.dryRun && conf->toHup) {
@@ -1107,7 +1194,7 @@ Collection* mdtxGetCollection(char* label)
   if (!loadConfiguration(CFG)) goto error;
   if (!(coll = getCollection(label))) goto error;
   if (!expandCollection(coll)) goto error;
-
+    
   rc = coll;
  error:
   if (!rc) {

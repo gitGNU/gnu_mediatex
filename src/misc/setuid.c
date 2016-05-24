@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: setuid.c,v 1.7 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *
@@ -121,7 +120,12 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   }
   if (result == 0) {
     if (s == 0) {
-      logMisc (LOG_WARNING, "group not found: %s", label);
+      logMisc (LOG_WARNING, "group not found: %s.");
+
+      if (!strcmp(label, env.confLabel)) {
+	logMisc (LOG_INFO, "Try to (re-)initialize mediatex:");
+	logMisc (LOG_INFO, "-> # mediatex adm init [-c %s]", label);
+      }
     }
     else {
       logMisc (LOG_ERR, "getgrnam_r error: %s", strerror (s));

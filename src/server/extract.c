@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: extract.c,v 1.25 2015/10/12 23:28:52 nroche Exp $
  * Project: MediaTeX
  * Module : mdtx-extract
  *
@@ -768,11 +767,18 @@ cacheSet(ExtractData* data, Record* record,
     goto error;
 
   // move from extract dir into the cache dir
-  // (rename do not remove source due to bind mount)
+  // (rename do not honor default target acl)
   logMain(LOG_INFO, "move %s to %s", 
-	  absoluteExtractPath, absoluteCachePath);  
+	  absoluteExtractPath, absoluteCachePath);
+  /*
   if (rename(absoluteExtractPath, absoluteCachePath)) {
     logMain(LOG_ERR, "rename fails: %s", strerror(errno));
+    goto error;
+  }
+  */
+  if (!extractCp(absoluteExtractPath, absoluteCachePath)) goto error;
+  if (unlink(absoluteExtractPath)) {
+    logMain(LOG_ERR, "unlink fails: %s", strerror(errno));
     goto error;
   }
 

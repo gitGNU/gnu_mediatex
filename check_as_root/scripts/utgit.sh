@@ -1,10 +1,9 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utcvs.sh,v 1.2 2015/07/03 16:02:13 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
-# * unit test for cvs manager
+# * unit test for git manager
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 2016 Nicolas Roche
@@ -59,18 +58,20 @@ USERS_mdtx_create_user
 GIT_mdtx_import
     
 # test mdtx module
-echo -e "\n# test mdtx update\n" >> $CVSCLT/$MDTX/$MDTX.conf
-GIT_update $MDTX
-echo -e "\n# test mdtx commit\n" >> $CVSCLT/$MDTX/$MDTX.conf
-GIT_commit $MDTX "unit test"
-cd $CVSCLT/$MDTX
+echo -e "\n# test mdtx pull\n" >> $GITCLT/$MDTX/$MDTX.conf
+GIT_commit $MDTX "Manual user edition"
+GIT_pull $MDTX
+echo -e "\n# test mdtx push\n" >> $GITCLT/$MDTX/$MDTX.conf
+GIT_commit $MDTX "Unit test"
+GIT_push $MDTX
+cd $GITCLT/$MDTX
 su $MDTX -c "git log $MDTX.conf"
 cd - >/dev/null
     
 # cf new.sh
 USERS_coll_create_user $USER
-GIT_coll_import $USER
 SSH_build_key $USER
+GIT_coll_import $USER
 SSH_bootstrapKeys $USER
 SSH_configure_client $USER "localhost" 22
 
@@ -80,23 +81,25 @@ Info "su $USER -c \"$QUERY\""
 su $USER -c "$QUERY" || Error "Cannot connect via ssh"
 
 # emulate collection checkout (as not using a jail)
-QUERY="git clone ssh://$USER@localhost:$CVSROOT/$USER $CVSCLT/$USER"
-rm -fr $CVSCLT/$USER
+QUERY="git clone ssh://$USER@localhost:$GITBARE/$USER $GITCLT/$USER"
+rm -fr $GITCLT/$USER
 USERS_install $GIT "${_VAR_LIB_M_MDTX_COLL[@]}"
 Info "su $USER -c \"$QUERY\""
 su $USER -c "$QUERY" || Error "Cannot checkout via ssh"
-GIT_upgrade $USER
+GIT_upgrade $USER "HOSTNAME" "FINGERPRINT"
 
 # test collection module
-echo -e "\n# test coll update\n" >> $CVSCLT/$USER/catalog000.txt
-GIT_update $USER
-echo -e "\n# test coll commit\n" >> $CVSCLT/$USER/catalog000.txt
-GIT_commit $USER "unit test"
-cd $CVSCLT/$USER
+echo -e "\n# test coll pull\n" >> $GITCLT/$USER/catalog000.txt
+GIT_commit $USER "Manual user edition"
+GIT_pull $USER
+echo -e "\n# test coll push\n" >> $GITCLT/$USER/catalog000.txt
+GIT_commit $USER "coll unit test"
+GIT_push $USER
+cd $GITCLT/$USER
 su $MDTX -c "git log catalog000.txt"
 cd - >/dev/null
    
-# # cf free.sh & remove.sh
+# cf free.sh & remove.sh
 USERS_coll_remove_user $USER
 USERS_mdtx_remove_user
 

@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: init.sh,v 1.6 2015/10/11 21:11:13 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -30,7 +29,7 @@ set -e
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 [ ! -z $MDTX_SH_USERS ]   || source $libdir/users.sh
 [ ! -z $MDTX_SH_SSH ]     || source $libdir/ssh.sh
-[ ! -z $MDTX_SH_CVS ]     || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_GIT ]     || source $libdir/git.sh
 [ ! -z $MDTX_SH_JAIL ]    || source $libdir/jail.sh
 [ ! -z $MDTX_SH_HTDOCS ]  || source $libdir/htdocs.sh
 
@@ -41,11 +40,11 @@ Error "expect MDTX_MDTXUSER variable to be set by the environment"
 
 USERS_root_populate
 USERS_mdtx_create_user
-CVS_mdtx_setup
+GIT_mdtx_import
 SSH_chroot_login yes
 JAIL_unbind
 JAIL_build $MDTX
-HTDOCS_configure_mdtx_viewvc
+HTDOCS_configure_mdtx_cgit
 HTDOCS_configure_mdtx_apache2
 
 # only needed once

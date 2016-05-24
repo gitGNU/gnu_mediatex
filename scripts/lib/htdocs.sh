@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: htdocs.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -35,10 +34,10 @@ MDTX_SH_HTDOCS=1
 function HTDOCS_configure_mdtx_apache2()
 {
     Debug "$FUNCNAME:" 2
+    HTCONF=$SYSCONFDIR/apache2/conf-available$MEDIATEX-$MDTX.conf
     MDTX_HTML=$MDTXHOME$CONF_HTMLDIR
     
     # adapt apache2 configuration 
-    HTCONF=$SYSCONFDIR/apache2/conf-available$MEDIATEX-$MDTX.conf
     cp $MISC/apache-mdtx.conf $HTCONF
     sed $HTCONF -i \
 	-e "s!MEDIATEX!$MEDIATEX!" \
@@ -49,7 +48,7 @@ function HTDOCS_configure_mdtx_apache2()
     cat > $MDTX_HTML/index.html <<EOF
 <html>
 <head>
-<meta http-equiv="refresh" content="0; URL=viewvc.cgi">
+<meta http-equiv="refresh" content="0; URL=cgit.cgi">
 </head>
 <body>
 </html>
@@ -66,23 +65,18 @@ function HTDOCS_unconfigure_mdtx_apache2()
     rm -f $HTCONF
 }
 
-# Configure viewvc for mdtx 
-function HTDOCS_configure_mdtx_viewvc()
+# Configure cgit for mdtx 
+function HTDOCS_configure_mdtx_cgit()
 {
     Debug "$FUNCNAME:" 2
 
-    install -o $MDTX -g $MDTX -m 750 \
-	/usr/lib/viewvc/cgi-bin/viewvc.cgi $MDTXHOME/public_html
-    sed $MDTXHOME/public_html/viewvc.cgi -i \
-	-e "s!/etc/viewvc/!$MDTXHOME/!"
-
-    # viewvc conf
-    install -o $MDTX -g $MDTX -m 640 $MISC/viewvc.conf $MDTXHOME
-    sed $MDTXHOME/viewvc.conf -i \
-	-e "s!CVSROOT!$CVSROOT!" \
-	-e "s!HOMES/USER!/etc!" \
-	-e "s!MDTX!$MDTX!" \
-	-e "/forbidden =/ d"
+    ln -sf /usr/lib/cgit/cgit.cgi $MDTXHOME/public_html
+    ln -sf /usr/share/mediatex/misc/logo $MDTXHOME/public_html
+    cat >$MDTXHOME/cgitrc <<EOF
+css=/cgit-css/cgit.css
+logo=/~$MDTX/logo
+scan-path=$GITCLT
+EOF
 }
 
 # Configure apache2 for a collection 
@@ -94,30 +88,30 @@ function HTDOCS_configure_coll_apache2()
 
     COLL_HOME=$HOMES/$1
     COLL_SSH=$COLL_HOME$CONF_SSHDIR
-    COLL_CVS=$CVSCLT/$1
+    COLL_GIT=$GITCLT/$1
     COLL_HTML=$COLL_HOME/$CONF_HTMLDIR
 
     rm -f $COLL_HTML/cache
     ln -sf $CACHES/$1 $COLL_HTML/cache
 
     # custumize web site
-    ln -sf $COLL_CVS/logo $COLL_HTML/
-    ln -sf $COLL_CVS/mediatex.css $COLL_HTML/
-    ln -sf $COLL_CVS/readme.html $COLL_HTML/
-    ln -sf $COLL_CVS/icons $COLL_HTML/
+    ln -sf $COLL_GIT/logo $COLL_HTML/
+    ln -sf $COLL_GIT/mediatex.css $COLL_HTML/
+    ln -sf $COLL_GIT/readme.html $COLL_HTML/
+    ln -sf $COLL_GIT/icons $COLL_HTML/
 
     # html repositories and links
     for t in cgi index cache score; do
         if [ $t != cache ]; then 	    
 	    install -o $MDTX -g $MDTX -m 750 -d $COLL_HTML/$t
 	fi
-	ln -sf $COLL_CVS/apache2/$t.htaccess $COLL_HTML/$t/.htaccess
+	ln -sf $COLL_GIT/apache2/$t.htaccess $COLL_HTML/$t/.htaccess
     done
-    ln -sf $COLL_CVS/apache2/home.htaccess $COLL_HTML/.htaccess
+    ln -sf $COLL_GIT/apache2/home.htaccess $COLL_HTML/.htaccess
 
-    # /etc links in order to access .htpasswd from .htaccess
+    # /etc links in order to access htpasswd from .htaccess
     rm -f $ETCDIR/$1
-    ln -sf $COLL_CVS $ETCDIR/$1
+    ln -sf $COLL_GIT $ETCDIR/$1
 
     # cgi scripts
     ln -sf $DATADIR/cgi-dir/cgi $COLL_HTML/cgi/get.cgi
@@ -135,34 +129,21 @@ EOF
     chown $MDTX:$1 $COLL_HTML/index.shtml
 }
 
-# Configure viewvc for a collection
+# Configure cgit for collection
 # $1: collection user
-function HTDOCS_configure_coll_viewvc()
+function HTDOCS_configure_coll_cgit()
 {
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
-
-    # viewvc
     COLL_HOME=$HOMES/$1
-    install -o $MDTX -g $MDTX -m 750 \
-	/usr/lib/viewvc/cgi-bin/viewvc.cgi \
-	$COLL_HOME/public_html/cgi/viewvc.cgi
-    sed $COLL_HOME/public_html/cgi/viewvc.cgi -i \
-	-e "s!/etc/!$COLL_HOME/!"
     
-    # viewvc template and conf
-    install -o $MDTX -g $MDTX -m 750 -d $COLL_HOME/viewvc
-    install -o $MDTX -g $MDTX -m 640 $MISC/viewvc.conf \
-	$COLL_HOME/viewvc
-    sed $COLL_HOME/viewvc/viewvc.conf -i \
-	-e "s!CVSROOT!$CVSROOT!" \
-	-e "s!HOMES!$HOMES!" \
-	-e "s!USER!$1!"
-
-    # modify localy header.ezt
-    cp -fr /etc/viewvc/templates $COLL_HOME/viewvc
-    install -o $MDTX -g $MDTX -m 640 \
-	$MISC/header.ezt $COLL_HOME/viewvc/templates/include
-    sed $COLL_HOME/viewvc/templates/include/header.ezt -i \
-	-e "s!PATH!/~$1!"
+    ln -sf /usr/lib/cgit/cgit.cgi $COLL_HOME/public_html/cgi
+    ln -sf ..${CONF_GITCLT}/logo $COLL_HOME/public_html
+    cat >$COLL_HOME/cgitrc <<EOF
+css=/cgit-css/cgit.css
+logo=/~$1/logo
+scan-path=$GITCLT/$1
+header=${COLL_HOME}${CONF_HTMLDIR}/gitHeader.html
+noheader=1
+EOF
 }

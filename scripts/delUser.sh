@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: delUser.sh,v 1.4 2015/06/30 17:37:20 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -38,11 +37,11 @@ Error "expect MDTX_MDTXUSER variable to be set by the environment"
 USER=$1
 
 USERS_del_from_group $USER $MDTX
-USERS_del_from_group $USER ${MDTX}_md
+#USERS_del_from_group $USER ${MDTX}_md
 
-_GROUPS=$(grep "^$MDTX-" /etc/group | cut -d':' -f1)
-for GROUP in $_GROUPS; do
-    USERS_del_from_group $USER $GROUP
-done
+#_GROUPS=$(grep "^$MDTX-" /etc/group | cut -d':' -f1)
+#for GROUP in $_GROUPS; do
+#    USERS_del_from_group $USER $GROUP
+#done
 
 Info "done"

@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: commit.sh,v 1.4 2015/06/30 17:37:19 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -28,21 +27,18 @@ set -e
 [ -z $srcdir ] && srcdir=.
 [ -z $libdir ] && libdir=$srcdir/lib
 [ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
-[ ! -z $MDTX_SH_CVS ]      || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_GIT ]      || source $libdir/git.sh
 
-Debug "commit"
+Debug "commit $1 $2"
 
 MODULE=$1
 COMMENT=$2
-FINGERPRINT=$3
-HOST=$4
 
-[ -z $3 ] || COMMENT="$COMMENT by $FINGERPRINT"
-[ -z $4 ] || COMMENT="$COMMENT ($HOST)"
-[ -z $1 ] && Error "please provide a module"
+[ -z "$1" ] && Error "please provide a module"
+[ -z "$2" ] && Error "please provide a comment"
 [ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
  
-CVS_commit $MODULE "$COMMENT" || 
-    Error $0 "cannot commit $MODULE cvs directory"
+GIT_commit $MODULE "$COMMENT" || 
+    Error $0 "cannot commit $MODULE git module"
 
 Info "done"

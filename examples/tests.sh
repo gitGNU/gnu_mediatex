@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: tests.sh,v 1.15 2015/10/20 19:41:49 nroche Exp $
 # * Project: MediaTex
 # * Module : post installation tests
 # *
@@ -322,7 +321,7 @@ function test2()
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "ls supp"
 	finalQuestion "is support db updated ?" \
-		      "cat ~serv1/cvs/serv1/supports.txt"
+		      "cat ~serv1/git/serv1/supports.txt"
     else
 	topo "Cleanup"
 	mdtxP "del supp iso2"
@@ -345,7 +344,7 @@ function test3()
     else
 	topo "Cleanup"
 	mdtxA "adm del coll hello"
-	# here we may want to remove the CVS content too (or not)
+	# here we may want to remove the GIT content too (or not)
 	# rm -fr /var/lib/mediatex/serv1/serv1-hello
     fi
 }
@@ -436,7 +435,7 @@ EOF
     else
 	topo "Cleanup"
 	rm -fr ~serv1/cache/serv1-hello/incoming
-	sedInPlace "/(INC/, /)/ d" ~serv1-hello/cvs/extract000.txt
+	sedInPlace "/(INC/, /)/ d" ~serv1-hello/git/extract000.txt
 	reloadInitdScript
     fi
 }
@@ -470,7 +469,7 @@ function test8()
 	done
 	
 	# create serv2-hello key
-	notice "you will be ask for this fingerprint" \
+	notice "you will be ask twice for this fingerprint" \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv1-hello" serv2
 
@@ -482,19 +481,19 @@ function test8()
 	# server 2 register for collection hello on server 1
 	mdtxA "adm add coll serv1-hello" serv2
 
-	question "connected to serv1 cvsroot ?" \
-		 "cat ~serv2/cvs/serv2-hello/CVS/Root"
+	question "connected to serv1 gitbare ?" \
+		 "grep url ~serv2/git/serv2-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
 	
 	# seen by first server
 	mdtxP "upgrade" serv1
 	finalQuestion "does 1st server see 2nd server ?" \
-	    "grep -A2 Server ~serv1/cvs/serv1-hello/servers.txt"
+	    "grep -A2 Server ~serv1/git/serv1-hello/servers.txt"
     else
 	topo "Cleanup"
 
 	# remove serv2-hello keys from serv1
-	SRV="~serv1/cvs/serv1-hello/servers.txt"
+	SRV="~serv1/git/serv1-hello/servers.txt"
 	FPS=$(grep Server $SRV | awk '{ print $2 }')
 	for FP in $FPS; do 
 	    mdtxP "del key $FP from coll hello" serv1
@@ -605,7 +604,7 @@ function test12()
 	done
 	
 	# create serv3-hello key
-	notice "you will be ask for this fingerprint" \
+	notice "you will be ask twice for this fingerprint" \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv1-hello" serv3
 
@@ -617,19 +616,19 @@ function test12()
 	# server 3 register for collection hello on server 1
 	mdtxA "adm add coll serv1-hello" serv3
 
-	question "connected to serv1 cvsroot ?" \
-		 "cat ~serv3/cvs/serv3-hello/CVS/Root"
+	question "connected to serv1 gitbare ?" \
+		 "grep url ~serv3/git/serv3-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
 	
 	# seen by first servers
 	mdtxP "upgrade" serv1
 	finalQuestion "does 1st server see 3rd server ?" \
-		      "grep -A2 Server ~serv1/cvs/serv1-hello/servers.txt"
+		      "grep -A2 Server ~serv1/git/serv1-hello/servers.txt"
     else
 	topo "Cleanup"
 
 	# remove serv3-hello keys from serv1 (but not serv2 key!)
-	SRV="~serv1/cvs/serv1-hello/servers.txt"
+	SRV="~serv1/git/serv1-hello/servers.txt"
 	FPS1=$(grep -B3 end $SRV | grep Server | awk '{ print $2 }')
 	FPS2=$(grep -B4 6003 $SRV | grep Server | awk '{ print $2 }')
 	for FP in $FPS1 $FPS2; do 
@@ -819,21 +818,21 @@ function test17()
 }
 
 
-# CVS backup on server 1
+# GIT backup on server 1
 function test18()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "CVS backup on server 1"
+	topo "GIT backup on server 1"
 
-	sedInPlace  "s/\(logCvs\) *\(.*\)/\1 yes/" \
-		    ~serv1-hello/cvs/servers.txt
+	sedInPlace  "s/\(logGit\) *\(.*\)/\1 yes/" \
+		    ~serv1-hello/git/servers.txt
 	QUERY="/usr/share/mediatex/scripts/cron_monthly.sh"
 	query $QUERY serv1
 	export MDTX=serv1 
 	$QUERY
 	mdtxP "make" serv1
 
-	finalQuestion "does CVSROOT is backuped ?"
+	finalQuestion "does GITBARE is backuped ?"
 	[ $TEST_OK -eq 0 ] && return
     else
 	topo "Cleanup"
@@ -847,7 +846,7 @@ function test19()
 	topo "Apache's logs backup on server 1"
 
 	sedInPlace "s/\(logApache\) *\(.*\)/\1 yes/" \
-		   ~serv1-hello/cvs/servers.txt
+		   ~serv1-hello/git/servers.txt
 	QUERY="/etc/logrotate.d/httpd-prerotate/mediatex_logrotate"
 	query $QUERY serv1
 	export MDTX=serv1 
@@ -861,11 +860,11 @@ function test19()
     fi
 }
 
-# Move CVS repository from serv1 to serv2
+# Move GIT repository from serv1 to serv2
 function test20()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "Move CVS repository from serv1 to serv2"
+	topo "Move GIT repository from serv1 to serv2"
 	if [ -d /var/lib/mediatex/serv1/serv1-hello ]; then
 	    cp -fr /var/lib/mediatex/serv1/serv1-hello /tmp/test15
 	    mv /var/lib/mediatex/serv1/serv1-hello \
@@ -873,22 +872,22 @@ function test20()
 	fi
 	
 	mdtxA "adm add coll hello" serv2
-	question "connected to serv2 cvsroot ?" \
-		 "cat ~serv2/cvs/serv2-hello/CVS/Root"
+	question "connected to serv2 gitbare ?" \
+		 "grep url ~serv2/git/serv2-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
 
 	notice "you will be ask for localhost fingerprint..." \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv2-hello" serv1
-	question "connected to serv2 cvsroot ?" \
-		 "cat ~serv1/cvs/serv1-hello/CVS/Root"
+	question "connected to serv2 gitbare ?" \
+		 "grep url ~serv1/git/serv1-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
 
 	notice "you will be ask for localhost fingerprint..." \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv2-hello" serv3
-	finalQuestion "connected to serv2 cvsroot ?" \
-		      "cat ~serv3/cvs/serv3-hello/CVS/Root"
+	finalQuestion "connected to serv2 gitbare ?" \
+		      "grep url ~serv3/git/serv3-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
 	
 	rm -fr /var/lib/mediatex/serv1/serv1-hello
@@ -908,7 +907,7 @@ function test21()
 	topo "Audit on server 1"
 
 	sedInPlace "s/\(logAudit\) *\(.*\)/\1 yes/" \
-		   ~serv1-hello/cvs/servers.txt
+		   ~serv1-hello/git/servers.txt
 	read -p "Please enter your mail: " MAIL
 	mdtxP "audit coll hello for $MAIL" serv1
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"

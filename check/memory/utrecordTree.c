@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utrecordTree.c,v 1.7 2015/10/20 19:41:44 nroche Exp $
  * Project: MediaTeX
  * Module : recordTree
  *

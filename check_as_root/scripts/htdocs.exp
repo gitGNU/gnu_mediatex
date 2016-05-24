@@ -20,14 +20,8 @@
 Ajout de l'utilisateur « ut2-mdtx » au groupe « cdrom »...
 Ajout de l'utilisateur ut2-mdtx au groupe cdrom
 Fait.
-[debug users.sh] USERS_add_to_group: www-data ut2-mdtx
-Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx »...
-Ajout de l'utilisateur www-data au groupe ut2-mdtx
-Fait.
 [debug users.sh] USERS_mdtx_populate
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx root root 0777 NO ACL
-[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail root root 0755 NO ACL
@@ -35,25 +29,18 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx root root 0750 u:%s:rwx g:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git/ut2-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug uthtdocs.sh] HTDOCS_configure_mdtx_apache2:
 [debug uthtdocs.sh] HTDOCS_configure_mdtx_viewvc:
+[debug uthtdocs.sh] HTDOCS_configure_mdtx_cgit:
 [debug uthtdocs.sh] USERS_coll_create_user: ut2-mdtx-hello
 [debug users.sh] USERS_create_user: ut2-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
-[debug users.sh] USERS_add_to_group: www-data ut2-mdtx-hello
-Ajout de l'utilisateur « www-data » au groupe « ut2-mdtx-hello »...
-Ajout de l'utilisateur www-data au groupe ut2-mdtx-hello
-Fait.
-[debug users.sh] USERS_add_to_group: ut2-mdtx ut2-mdtx-hello
-Ajout de l'utilisateur « ut2-mdtx » au groupe « ut2-mdtx-hello »...
-Ajout de l'utilisateur ut2-mdtx au groupe ut2-mdtx-hello
-Fait.
 [debug users.sh] USERS_coll_populate: ut2-mdtx-hello
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git/ut2-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/.ssh %s %s 0700 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
@@ -99,13 +86,14 @@ Fait.
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache/ut2-mdtx-hello/.htaccess
-          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs
-          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx
-          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cvs/ut2-mdtx-hello
+          root           root -rw-r--r-- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cgitrc
+          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git/ut2-mdtx
+          root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/git/ut2-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cache
-          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/cvs
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/git
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cache
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi
@@ -157,15 +145,16 @@ ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/cgit.cgi
           root           root -rw-rw---- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/index.html
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/logo
       ut2-mdtx       ut2-mdtx -rwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/viewvc.cgi
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/tmp/ut2-mdtx-hello
       ut2-mdtx       ut2-mdtx -rw-r----- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/viewvc.conf
           root           root drwxr-xr-x LOCALSTATEDIR/lib
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
-          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut2-mdtx
-          root           root drwxrwxrwx LOCALSTATEDIR/lib/mediatex/ut2-mdtx/CVSROOT
+          root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex/ut2-mdtx
           root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx
           root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/run
@@ -174,10 +163,6 @@ ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/h
 [debug uthtdocs.sh] USERS_coll_remove_user: ut2-mdtx-hello
 [debug users.sh] USERS_remove_user: ut2-mdtx-hello
 [debug users.sh] USERS_disease_group: ut2-mdtx-hello
-Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx-hello »...
-Fait.
-Suppression de l'utilisateur « ut2-mdtx » du groupe « ut2-mdtx-hello »...
-Fait.
 Suppression de l'utilisateur « ut2-mdtx-hello »...
 Attention ! Le groupe « ut2-mdtx-hello » ne contient plus aucun membre.
 Fait.
@@ -185,8 +170,6 @@ Fait.
 [debug uthtdocs.sh] USERS_mdtx_remove_user: 
 [debug users.sh] USERS_remove_user: ut2-mdtx
 [debug users.sh] USERS_disease_group: ut2-mdtx
-Suppression de l'utilisateur « www-data » du groupe « ut2-mdtx »...
-Fait.
 Suppression de l'utilisateur « ut2-mdtx »...
 Attention ! Le groupe « ut2-mdtx » ne contient plus aucun membre.
 Fait.

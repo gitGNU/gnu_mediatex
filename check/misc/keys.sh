@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: keys.sh,v 1.1 2015/07/01 10:49:50 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

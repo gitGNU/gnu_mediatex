@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utregister.c,v 1.6 2015/10/20 19:41:43 nroche Exp $
  * Project: MediaTeX
  * Module : register
  

@@ -22,9 +22,10 @@ and to test it by setting an ``hello world'' collection example.
 
 Get the sources:
 @example
-$ cvs -z3 \
-   -d:pserver:anonymous@@cvs.savannah.nongnu.org:/sources/mediatex \
-   co mediatex
+@c $ cvs -z3 \
+@c    -d:pserver:anonymous@@cvs.savannah.nongnu.org:/sources/mediatex \
+@c    co mediatex
+$ git clone git://git.savannah.nongnu.org/mediatex.git
 @end example
 
 Software requirements.
@@ -36,7 +37,7 @@ automake gettext libtool make flex bison help2man texinfo transfig libssl-dev li
 @item Documentation in others format than texinfo and man (optional):
 imagemagick texlive
 @item Installation:
-ssh apache2 cvs viewvc libavl1 libacl1 acl tar cpio gzip bzip2 unzip bc findutils
+ssh apache2 cvs viewvc git cgit libavl1 libacl1 acl tar cpio gzip bzip2 unzip bc findutils
 @item Debian package generation
 libfile-fcntllock-perl
 @end itemize

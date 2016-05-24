@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utsignals.c,v 1.5 2015/10/20 19:41:46 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *

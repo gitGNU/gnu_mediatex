@@ -1,8 +1,8 @@
 ** first query: asking for content
 [info cgi.c] * mediatex cgi script *
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [warning cgi.c] localhost: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
 [warning cgi.c] server: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
 [info address.c] build socket address 127.0.0.1:6560
@@ -54,7 +54,7 @@ Mail <INPUT type=text name=mail>
 {bottom template}
 ** second query: register a mail address
 [info cgi.c] * mediatex cgi script *
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)

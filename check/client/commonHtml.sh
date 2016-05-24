@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: commonHtml.sh,v 1.1 2015/07/01 10:49:24 nroche Exp $
 # * Project: MediaTex
 # * Module:  commonHtml
 # *

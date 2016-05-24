@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: cypher.c,v 1.7 2015/08/13 21:14:35 nroche Exp $
  * Project: MediaTeX
  * Module : cypher
  *

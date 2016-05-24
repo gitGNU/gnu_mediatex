@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: md5sum.h,v 1.6 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: notify.sh,v 1.4 2015/09/13 23:47:34 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *
@@ -33,10 +32,10 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-SRC=$CVSCLT/$MDTXUSER-coll1
+SRC=$GITCLT/$MDTXUSER-coll1
 loadPaths "mdtx2"
 for I in $(seq 1 3); do
-    DST=$CVSCLT/$MDTXUSER-coll$I
+    DST=$GITCLT/$MDTXUSER-coll$I
     cp $SRC$SERVFILE $DST$SERVFILE
     cp $SRC$EXTRFILE $DST$EXTRFILE
 done

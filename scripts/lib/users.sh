@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: users.sh,v 1.7 2015/09/22 23:05:55 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -127,11 +126,8 @@ function USERS_mdtx_populate()
     MDTX_HTML=$MDTXHOME$CONF_HTMLDIR
 
     # /var/lib/mediatex/mdtx
-    USERS_install $CVSROOT         "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
-
-    Warning "To Remove (cvs only): USERS_install $CVSROOT/CVSROOT" 2
-    USERS_install $CVSROOT/CVSROOT "${_VAR_LIB_M_MDTX_CVSROOT[@]}"
-    USERS_install $CVSROOT/$MDTX   "${_VAR_LIB_M_MDTX_MDTX[@]}"
+    USERS_install $GITBARE         "${_VAR_LIB_M_MDTX[@]}"
+    USERS_install $GITBARE/$MDTX   "${_VAR_LIB_M_MDTX_MDTX[@]}"
 
     # /var/cache/mediatex/mdtx
     USERS_install $MDTXHOME  "${_VAR_CACHE_M_MDTX_HOME[@]}"
@@ -140,11 +136,11 @@ function USERS_mdtx_populate()
     USERS_install $MD5SUMS   "${_VAR_CACHE_M_MDTX_MD5SUMS[@]}"
     USERS_install $CACHES    "${_VAR_CACHE_M_MDTX_CACHE[@]}"
     USERS_install $EXTRACT   "${_VAR_CACHE_M_MDTX_TMP[@]}"
-    USERS_install $CVSCLT    "${_VAR_CACHE_M_MDTX_CVS[@]}"
-    USERS_install $MDTXCVS   "${_VAR_CACHE_M_MDTX_CVS_MDTX[@]}"
+    USERS_install $GITCLT    "${_VAR_CACHE_M_MDTX_GIT[@]}"
+    USERS_install $MDTXGIT   "${_VAR_CACHE_M_MDTX_GIT_MDTX[@]}"
 
     # /etc/mediatex/mdtx.conf
-    ln -sf $MDTXCVS/$MDTX$CONF_CONFFILE $ETCDIR/$MDTX$CONF_CONFFILE
+    ln -sf $MDTXGIT/$MDTX$CONF_CONFFILE $ETCDIR/$MDTX$CONF_CONFFILE
 }
 
 # this function remove the server directories
@@ -164,7 +160,7 @@ function USERS_mdtx_disease()
 
     # /var/lib/mediatex/mdtx
     # purge was asked, so we destroy all data sources
-    rm -fr $CVSROOT
+    rm -fr $GITBARE
 }
 
 # this function populate a collection
@@ -177,28 +173,27 @@ function USERS_coll_populate()
     # /var/cache/mediatex/mdtx/*/mdtx-coll
     COLL_CACHE=$CACHES/$1
     COLL_EXTRACT=$EXTRACT/$1
-    COLL_CVS=$CVSCLT/$1
+    COLL_GIT=$GITCLT/$1
     COLL_HOME=$HOMES/$1
     COLL_SSH=$COLL_HOME$CONF_SSHDIR
     COLL_HTML=$COLL_HOME$CONF_HTMLDIR
 
-    USERS_install $CVSROOT/$1   "${_VAR_LIB_M_MDTX_COLL[@]}"
     USERS_install $COLL_CACHE   "${_VAR_CACHE_M_MDTX_CACHE_COLL[@]}"
     USERS_install $COLL_EXTRACT "${_VAR_CACHE_M_MDTX_TMP_COLL[@]}"
-    USERS_install $COLL_CVS     "${_VAR_CACHE_M_MDTX_CVS_COLL[@]}"
+    USERS_install $COLL_GIT     "${_VAR_CACHE_M_MDTX_GIT_COLL[@]}"
     USERS_install $COLL_HOME    "${_VAR_CACHE_M_MDTX_HOME_COLL[@]}"
     USERS_install $COLL_SSH     "${_VAR_CACHE_M_MDTX_HOME_COLL_SSH[@]}"
     USERS_install $COLL_HTML    "${_VAR_CACHE_M_MDTX_HOME_COLL_HTML[@]}"
 
     # link facilities
-    for f in cvs cache; do
+    for f in git cache; do
 	rm -f $COLL_HOME/$f
 	ln -sf ../../$f/$1 $COLL_HOME/$f 
     done
 }
 
 # this function remove a collection,
-# but the collection may still recover from cvsroot
+# but the collection may still recover from gitbare
 # $1: collection user
 function USERS_coll_disease()
 {
@@ -208,12 +203,12 @@ function USERS_coll_disease()
     # /var/cache/mediatex/mdtx/*/mdtx-coll
     COLL_CACHE=$CACHES/$1
     COLL_EXTRACT=$EXTRACT/$1
-    COLL_CVS=$CVSCLT/$1
+    COLL_GIT=$GITCLT/$1
     COLL_HOME=$HOMES/$1
 
     rm -fr $COLL_CACHE
     rm -fr $COLL_EXTRACT
-    rm -fr $COLL_CVS
+    rm -fr $COLL_GIT
     rm -fr $COLL_HOME
     rm -f  $MD5SUMS/$1.md5
 
@@ -329,7 +324,6 @@ function USERS_mdtx_create_user()
     # home directory is /var/cache/mediatex/mdtx
     USERS_create_user $MDTX $MDTXHOME
     USERS_add_to_group $MDTX cdrom
-    USERS_add_to_group "www-data" $MDTX
     USERS_mdtx_populate
 }
 
@@ -353,16 +347,7 @@ function USERS_coll_create_user()
     COLL_HOME=$HOMES/$1
 
     USERS_create_user $1 $COLL_HOME
-    USERS_add_to_group "www-data" $1
-    USERS_add_to_group $MDTX $1
     USERS_coll_populate $1
-
-    # add users from the mdtx group
-    MEMBERS=$(grep "^$MDTX:" /etc/group | cut -d : -f 4- | tr "," " ")
-    for MEMBER in $MEMBERS; do
-    	[ "$MEMBER" != "www-data" ] || continue
-    	USERS_add_to_group $MEMBER $1
-    done
 }
 
 # this function remove a coll user

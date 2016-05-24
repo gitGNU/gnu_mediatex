@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utcatalogHtml.c,v 1.4 2015/10/20 19:41:41 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *

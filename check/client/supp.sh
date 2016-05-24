@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: supp.sh,v 1.1 2015/07/01 10:49:27 nroche Exp $
 # * Project: MediaTex
 # * Module:  supp
 # *
@@ -33,7 +32,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-cp $CVSCLT/$MDTXUSER-coll1$EXTRFILE $CVSCLT/$MDTXUSER-coll2$EXTRFILE
+cp $GITCLT/$MDTXUSER-coll1$EXTRFILE $GITCLT/$MDTXUSER-coll2$EXTRFILE
 client/ut$TEST -d $srcdir/../misc >client/$TEST.out 2>&1
 
 # compare with the expected output

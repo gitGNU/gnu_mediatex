@@ -2,11 +2,10 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: update.sh,v 1.4 2015/06/30 17:37:22 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
-# * This script update a MediaTex module
+# * This script pull a MediaTex module
 #
 # MediaTex is an Electronic Records Management System
 # Copyright (C) 2014 2015 2016 Nicolas Roche
@@ -28,15 +27,15 @@ set -e
 [ -z $srcdir ] && srcdir=.
 [ -z $libdir ] && libdir=$srcdir/lib
 [ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
-[ ! -z $MDTX_SH_CVS ]      || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_GIT ]      || source $libdir/git.sh
 
-Debug "update"
+Debug "pull $1"
 
 MODULE=$1
 [ -z $1 ] && Error "please provide a module"
 [ "$(whoami)" == "$MODULE" ] || Error "need to be $MODULE user"
 
-CVS_update $MODULE ||
-    Error $0 "cannot update $MODULE cvs directory"
+GIT_pull $MODULE ||
+    Error $0 "cannot pull $MODULE git module"
 
 Info "done"

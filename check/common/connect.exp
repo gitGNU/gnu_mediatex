@@ -1,5 +1,5 @@
 *** no server:
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info address.c] build socket address 127.0.0.1:12345
 [info tcp.c] connecting to 127.0.0.1:12345
 [info tcp.c] connect fails: Connection refused
@@ -13,7 +13,7 @@
 [info confTree.c] free configuration
 [info utconnect.c] exit on success
 *** with server:
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info address.c] build socket address 127.0.0.1:12345
 [info tcp.c] connecting to 127.0.0.1:12345
 [info connect.c] connected to localhost (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)

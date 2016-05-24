@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: deliver.sh,v 1.5 2015/09/21 01:01:50 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *

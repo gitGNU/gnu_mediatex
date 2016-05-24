@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: shellQuery.y,v 1.14 2015/10/11 21:11:14 nroche Exp $
  * Project: Mediatex
  * Module : shell parser
  *
@@ -781,8 +780,10 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 {
   logParser(LOG_ERR, "%s on token '%s'",
 	  message, shell_get_text(yyscanner));
-  logParser(LOG_NOTICE, 
-	  "bad invocation of mdtx's shell (try completion)");
+  logParser(LOG_NOTICE,
+	    "bad invocation of mdtx's shell. Try auto-completion:");
+  logParser(LOG_NOTICE,
+	    "-> $ . /etc/bash_completion.d/mediatex_comp");
 }
 
 

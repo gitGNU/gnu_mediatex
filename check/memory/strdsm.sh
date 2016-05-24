@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: strdsm.sh,v 1.2 2015/08/23 23:39:10 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *

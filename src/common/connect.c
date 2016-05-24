@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: connect.c,v 1.7 2015/08/17 01:31:52 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *

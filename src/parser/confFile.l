@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: confFile.l,v 1.9 2015/10/05 21:46:30 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 

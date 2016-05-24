@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: perm.c,v 1.9 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : perm
  *
@@ -32,7 +31,6 @@ Perm perm[] = {
   _VAR_LIB_M,
   _VAR_LIB_M_MDTX,
   _VAR_LIB_M_MDTX_MDTX,
-  _VAR_LIB_M_MDTX_CVSROOT,
   _VAR_LIB_M_MDTX_COLL,
   _VAR_CACHE_M,
   _VAR_CACHE_M_MDTX,
@@ -40,9 +38,9 @@ Perm perm[] = {
   _VAR_CACHE_M_MDTX_CACHE_M,
   _VAR_CACHE_M_MDTX_CACHE_COLL,
   _VAR_CACHE_M_MDTX_HTML,
-  _VAR_CACHE_M_MDTX_CVS,
-  _VAR_CACHE_M_MDTX_CVS_MDTX,
-  _VAR_CACHE_M_MDTX_CVS_COLL,
+  _VAR_CACHE_M_MDTX_GIT,
+  _VAR_CACHE_M_MDTX_GIT_MDTX,
+  _VAR_CACHE_M_MDTX_GIT_COLL,
   _VAR_CACHE_M_MDTX_TMP,
   _VAR_CACHE_M_MDTX_TMP_COLL,
   _VAR_CACHE_M_MDTX_HOME,

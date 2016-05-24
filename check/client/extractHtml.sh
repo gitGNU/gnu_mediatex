@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: extractHtml.sh,v 1.1 2015/07/01 10:49:25 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *

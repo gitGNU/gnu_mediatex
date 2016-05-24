@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: serverTree.h,v 1.10 2015/10/05 21:46:29 nroche Exp $
  * Project: MediaTeX
  * Module : server tree
  *
@@ -29,7 +28,7 @@
 //#include <netinet/in.h>
 
 // log type
-typedef enum {NO_LOG=0, APACHE=1, CVS=2, AUDIT=4} LogType;
+typedef enum {NO_LOG=0, APACHE=1, GIT=2, AUDIT=4} LogType;
 
 /* 
    There is maximum 1 ISO image by archive and server.

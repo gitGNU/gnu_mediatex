@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: have.sh,v 1.3 2015/08/30 17:07:59 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

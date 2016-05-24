@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: mediatex-server.h,v 1.2 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *

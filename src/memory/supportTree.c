@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: supportTree.c,v 1.12 2015/10/02 18:02:21 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *
@@ -195,7 +194,6 @@ serializeSupports()
   }
 
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
-  fprintf(fd, "# Version: $" "Id" "$\n");
   fprintf(fd, "# Local Supports:\n\n");
 
   fprintf(fd, "# %17s %19s %19s "

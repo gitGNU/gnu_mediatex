@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cgiSrv.sh,v 1.1 2015/07/01 10:50:05 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

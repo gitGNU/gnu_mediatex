@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utextractScore.c,v 1.5 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : extractScore
  *

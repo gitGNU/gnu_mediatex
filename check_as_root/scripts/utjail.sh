@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utjail.sh,v 1.1 2015/07/01 10:50:15 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -39,7 +38,7 @@ MDTX_MDTXUSER="ut5-mdtx"
 [ ! -z $MDTX_SH_INCLUDE ] || source $libdir/include.sh
 [ ! -z $MDTX_SH_USERS ] || source $libdir/users.sh
 [ ! -z $MDTX_SH_SSH ] || source $libdir/ssh.sh
-[ ! -z $MDTX_SH_CVS ] || source $libdir/cvs.sh
+[ ! -z $MDTX_SH_GIT ] || source $libdir/git.sh
 [ ! -z $MDTX_SH_JAIL ] || source $libdir/jail.sh
 source $srcdir/../check/utscripts.sh
 
@@ -58,7 +57,7 @@ USERS_mdtx_disease
 # cf init.sh
 USERS_root_populate
 USERS_mdtx_create_user
-CVS_mdtx_setup
+GIT_mdtx_import
 SSH_chroot_login yes
 JAIL_build
 
@@ -68,8 +67,8 @@ chroot $JAIL ls
 
 # cf new.sh
 USERS_coll_create_user $USER
-CVS_coll_import $USER
 SSH_build_key $USER
+GIT_coll_import $USER
 SSH_bootstrapKeys $USER
 SSH_configure_client $USER "localhost" "22"
 JAIL_add_user $USER	
@@ -82,7 +81,7 @@ su $USER -c "$QUERY" || Error "Cannot connect via ssh"
 ## cf init.d 
 JAIL_bind
     
-## scp and cvs checks
+## scp and git checks
 touch $CACHEDIR/$MDTX/cache/$USER/hello.txt
 chown $USER.$USER $CACHEDIR/$MDTX/cache/$USER/hello.txt
 
@@ -91,7 +90,7 @@ QUERY="scp ${USER}@localhost:/var/cache/$USER/hello.txt $CACHE"
 
 Info "su USER -c \"$QUERY\""
 su $USER -c "$QUERY" || Error "Cannot copy via ssh"
-CVS_coll_checkout $USER $MDTX $COLL "localhost"
+GIT_coll_checkout $USER $MDTX $COLL "localhost"
     
 #echo "results :"
 #find $UNIT_TEST_ROOTDIR -ls |

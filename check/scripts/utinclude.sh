@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utinclude.sh,v 1.1 2015/07/01 10:50:04 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -57,15 +56,15 @@ echo "MISC=$MISC"
 echo "HOSTSSH=$HOSTSSH"
 
 echo -e "\n* recurent variables:"
-echo "CVSROOT=$CVSROOT"
+echo "GITBARE=$GITBARE"
 echo "MDTXHOME=$MDTXHOME"
 echo "MD5SUMS=$MD5SUMS"
 echo "CACHES=$CACHES"
 echo "EXTRACT$EXTRACT"
-echo "CVSCLT=$CVSCLT"
+echo "GITCLT=$GITCLT"
 echo "JAIL=$JAIL"
 echo "HOMES=$HOMES"
-echo "MDTXCVS=$MDTXCVS"
+echo "MDTXGIT=$MDTXGIT"
 echo "CONFFILE=$CONFFILE"
 echo "PIDFILE=$PIDFILE"
 

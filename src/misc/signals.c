@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: signals.c,v 1.7 2015/08/13 21:14:36 nroche Exp $
  * Project: MediaTeX
  * Module : signal
  *

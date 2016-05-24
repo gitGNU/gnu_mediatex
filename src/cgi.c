@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: cgi.c,v 1.12 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : cgi script software
  *

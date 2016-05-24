@@ -1,7 +1,6 @@
 #!/bin/sh
 #set -x
 #=======================================================================
-# * Version: $Id: cron_monthly.src,v 1.1 2015/09/22 11:42:40 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -28,16 +27,16 @@ STATEDIR=CONF_LOCALSTATEDIR/libCONF_MEDIATEXDIR
 BINDIR=CONF_BINDIR
 CACHEDIR=CONF_LOCALSTATEDIR/cacheCONF_MEDIATEXDIR
 MDTX=${MDTX-mdtx}
-CVSCLT=$CACHEDIR/$MDTX/cvs
+GITCLT=$CACHEDIR/$MDTX/git
 
-# backup cvs module
+# backup git module
 for COLL in $($BINDIR/mediatex -c $MDTX ls master coll); do
-    DO_LOG=$(grep -i logCvs $CVSCLT/$MDTX-$COLL/servers.txt | \
+    DO_LOG=$(grep -i logGit $GITCLT/$MDTX-$COLL/servers.txt | \
 		    awk '{ print $2 }')
     case $DO_LOG in
 	yes|Yes|YES|y|Y|true|True|TRUE|t|T)
 	    DATE=$(date +'%Y%m%d')
-	    NAME=/tmp/cvs_$COLL_$DATE
+	    NAME=/tmp/git_$COLL_$DATE
 
 	    tar -zcf $NAME.tgz $STATEDIR/$MDTX/$MDTX-$COLL 2>/dev/null
 	    SIGN=$(md5sum $NAME.tgz | cut -d' ' -f 1)
@@ -47,7 +46,7 @@ for COLL in $($BINDIR/mediatex -c $MDTX ls master coll); do
 Top Category "~mediatex"
 Category "backups": "~mediatex"
 
-Document "cvs_$DATE": "backups"
+Document "git_$DATE": "backups"
  "uploaded from" = "$(hostname -f)"
  $SIGN
 EOF

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utshellQuery.c,v 1.6 2015/10/20 19:41:47 nroche Exp $
  * Project: Mediatex
  * Module : shell scanner
 

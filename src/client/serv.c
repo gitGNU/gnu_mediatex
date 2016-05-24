@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: serv.c,v 1.8 2015/09/17 18:53:46 nroche Exp $
  * Project: MediaTeX
  * Module : serv
  *
@@ -204,9 +203,9 @@ int clientWriteUnlock()
 
 /*=======================================================================
  * Function   : mdtxUpdate
- * Description: inderectely call update.sh
+ * Description: indirectely call pull.sh
  * Synopsis   : int mdtxUpdate(char* label)
- * Input      : char* label: the collection to update
+ * Input      : char* label: the collection to pull
  * Output     : TRUE on success
 
  * Note       : workaround as it should be implicitly done 
@@ -222,7 +221,8 @@ mdtxUpdate(char* label)
   logMain(LOG_DEBUG, "update collection");
 
   if (!(coll = mdtxGetCollection(label))) goto error;
-  if (!callUpdate(coll->user)) goto error;
+  if (!callCommit(coll->user, "Manual user edition")) goto error;
+  if (!callPull(coll->user)) goto error;
 
   rc = TRUE;
  error:
@@ -234,9 +234,9 @@ mdtxUpdate(char* label)
 
 /*=======================================================================
  * Function   : mdtxCommit
- * Description: inderectely call commit.sh
+ * Description: indirectely call push.sh
  * Synopsis   : int mdtxCommit(char* label)
- * Input      : char* label: the collection to commit
+ * Input      : char* label: the collection to push
  * Output     : TRUE on success
 
  * Note       : workaround as it should be implicitly done 
@@ -254,9 +254,8 @@ mdtxCommit(char* label)
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
-
-  if (!callCommit(coll->user, coll->userFingerPrint, conf->host)) 
-    goto error;
+  if (!callCommit(coll->user, 0)) goto error;
+  if (!callPush(coll->user)) goto error;
 
   rc = TRUE;
  error:
@@ -336,7 +335,7 @@ addKey(char* label, char* path)
   if (!(coll = mdtxGetCollection(label))) goto error;
   servers = coll->serverTree;
 
-  // look if key is ouself
+  // look if key is ourself
   if (!(key = readPublicKey(path))) goto error;
   if (!getFingerPrint(key, hash)) goto error;
   if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_MD5)) {

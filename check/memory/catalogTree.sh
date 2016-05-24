@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: catalogTree.sh,v 1.2 2015/08/30 17:07:56 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -37,6 +36,6 @@ memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected output
 diff -I '# Version: $Id' \
-    $srcdir/memory/$TEST.exp ${CVSCLT}/${MDTXUSER}-coll1${CATHFILE}
+    $srcdir/memory/$TEST.exp ${GITCLT}/${MDTXUSER}-coll1${CATHFILE}
 mrProperOutputs memory/$TEST.out
 diff $srcdir/memory/$TEST.exp2 memory/$TEST.out

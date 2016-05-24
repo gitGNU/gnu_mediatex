@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: misc.sh,v 1.4 2015/09/22 23:05:54 nroche Exp $
 # * Project: MediaTex
 # * Module:  client modules (User API)
 # *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: upload.h,v 1.1 2015/08/23 23:39:17 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *

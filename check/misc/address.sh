@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: address.sh,v 1.5 2015/08/23 23:39:10 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

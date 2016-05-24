@@ -1,10 +1,10 @@
 [notice utconf.c] *** List collections: 
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 coll1 coll2 coll3
 [notice utconf.c] *** List master collections: 
 coll1
 [notice utconf.c] *** Add a collection:
-[info serverFile.y] parse coll4 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll4/servers.txt
+[info serverFile.y] parse coll4 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll4/servers.txt
 [notice utconf.c] *** List collections:
 coll1 coll2 coll3 coll4
 [notice utconf.c] *** Del collection coll 4:
@@ -71,9 +71,11 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
+[info openClose.c] callUpgrade mdtx1: f3e8a2cfcf01e5779608583de63cdc42 
+[info openClose.c] callCommit mdtx1: 
 [notice utconf.c] *** Share a support:
-[info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
-[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll3/servers.txt
+[info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/supports.txt
+[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/servers.txt
 [info confTree.c] configuration already expanded
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
@@ -140,10 +142,12 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
+[info openClose.c] callUpgrade mdtx1: f3e8a2cfcf01e5779608583de63cdc42 
+[info openClose.c] callCommit mdtx1: 
 [notice utconf.c] *** Share a support second time:
 [notice utconf.c] *** Share support with all collections:
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
-[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll2/servers.txt
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
+[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/servers.txt
 [info confTree.c] configuration already expanded
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout
@@ -211,6 +215,8 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 	share	  SUPP21_logo.part1
 end
+[info openClose.c] callUpgrade mdtx1: f3e8a2cfcf01e5779608583de63cdc42 
+[info openClose.c] callCommit mdtx1: 
 [notice utconf.c] *** Withdraw a support:
 [info confTree.c] configuration already expanded
 [info confTree.c] configuration already populated
@@ -278,6 +284,8 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
+[info openClose.c] callUpgrade mdtx1: f3e8a2cfcf01e5779608583de63cdc42 
+[info openClose.c] callCommit mdtx1: 
 [notice utconf.c] *** Withdraw second time:
 [notice utconf.c] *** Withdraw support from all collections:
 [info confTree.c] configuration already expanded
@@ -344,5 +352,7 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	# --
 	localhost 746d6ceeb76e05cfa2dea92a1c5753cd
 end
+[info openClose.c] callUpgrade mdtx1: f3e8a2cfcf01e5779608583de63cdc42 
+[info openClose.c] callCommit mdtx1: 
 [info confTree.c] free configuration
 [info utconf.c] exit on success

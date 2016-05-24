@@ -74,7 +74,7 @@ HREF='<!--#echo var='HOME' -->/cache'>Cache</A></TD>
 <TD ALIGN='CENTER'><A NAME='tex2html9'
 HREF='<!--#echo var='HOME' -->/score'>Score</A></TD>
 <TD ALIGN='CENTER'><A NAME='tex2html10'
-HREF='https://localhost/~mdtx-hello//cgi/viewvc.cgi'>Version</A></TD>
+HREF='https://localhost/~mdtx-hello//cgi/cgit.cgi/.git/'>Version</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>

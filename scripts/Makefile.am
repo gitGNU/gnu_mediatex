@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.7 2015/10/20 19:41:50 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts files
 #  *
@@ -32,7 +31,7 @@ dist_init_d_SCRIPTS = \
 dist_scripts_SCRIPTS = \
 	init.sh remove.sh purge.sh \
 	new.sh free.sh clean.sh \
-	update.sh commit.sh \
+	upgrade.sh commit.sh push.sh pull.sh \
 	addUser.sh delUser.sh \
 	bind.sh unbind.sh \
 	mount.sh umount.sh \

@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.4 2015/06/30 17:37:00 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  use case exemples
 #  *

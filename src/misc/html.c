@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: html.c,v 1.7 2015/08/07 17:50:31 nroche Exp $
  * Project: MediaTeX
  * Module : html
  *
@@ -189,7 +188,7 @@ htmlLeftPageTail(FILE* fd)
  * Description: 
  * Synopsis   : 
  * Input      : FILE* fd
- *              char* masterUrl: viewvc only remains on master host
+ *              char* masterUrl: was used to reach master host
  * Output     : TRUE on success
  =======================================================================*/
 int
@@ -212,7 +211,7 @@ htmlRightHeadBasic(FILE* fd, char* masterUrl, char* url)
 	       "<TD ALIGN='CENTER'><A NAME='tex2html9'\n"
 	       "HREF='%s/score'>Score</A></TD>\n"
 	       "<TD ALIGN='CENTER'><A NAME='tex2html10'\n"
-	       "HREF='%s/cgi/viewvc.cgi'>Version</A></TD>\n"
+	       "HREF='%s/cgi/cgit.cgi/.git/'>Version</A></TD>\n"
 	       "</TR>\n"
 	       "</TABLE>\n"
 	       "<DIV ALIGN='CENTER'>\n"

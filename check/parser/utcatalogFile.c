@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utcatalogFile.c,v 1.6 2015/10/20 19:41:46 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 

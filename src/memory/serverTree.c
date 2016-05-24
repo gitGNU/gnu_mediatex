@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: serverTree.c,v 1.14 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : serverTree
 
@@ -328,7 +327,7 @@ serializeServer(Server* self, FILE* fd)
   } 
 
   fprintf(fd, "%s", "#\tkeys:\n");
-  if (!isEmptyString(self->hostKey)) {
+  if (!isEmptyString(self->userKey)) {
     fprintf(fd, "\t%-10s \"%s\"\n", "userKey", self->userKey);
   }
   if (!isEmptyString(self->hostKey)) {
@@ -444,7 +443,7 @@ serializeServerTree(Collection* coll)
   if(!(self = coll->serverTree)) goto error;
   logMemory(LOG_DEBUG, "serialize %s server tree", coll->label);
 
-  // we neeed to use the home cvs collection directory
+  // we neeed to use the home git collection directory
   if (!(coll->memoryState & EXPANDED)) {
     logMemory(LOG_ERR, "collection must be expanded first");
     goto error;
@@ -466,10 +465,6 @@ serializeServerTree(Collection* coll)
   }
 
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
-
-  // do not add the CVS version as it implies a commit evry time we
-  // rebuild the file (because we de not parse the version id)
-  //fprintf(fd, "# Version: $" "Id" "$\n");
   
   if (!self->master) {
     logMemory(LOG_ERR, "loose master server for %s collection", 
@@ -488,7 +483,7 @@ serializeServerTree(Collection* coll)
   
   fprintf(fd, "\n# self-ingestion parameters\n");
   fprintf(fd, "%-10s %s\n", "logApache", self->log & APACHE?"yes":"no");
-  fprintf(fd, "%-10s %s\n", "logCvs", self->log & CVS?"yes":"no");
+  fprintf(fd, "%-10s %s\n", "logGit", self->log & GIT?"yes":"no");
   fprintf(fd, "%-10s %s\n", "logAudit", self->log & AUDIT?"yes":"no");
 
   fprintf(fd, "\n# score parameters\n");

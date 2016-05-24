@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: threads.h,v 1.6 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : threads
  *

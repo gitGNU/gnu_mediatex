@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: register.c,v 1.6 2015/08/13 21:14:33 nroche Exp $
  * Project: MediaTeX
  * Module : bus/register
  

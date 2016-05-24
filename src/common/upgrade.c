@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: upgrade.c,v 1.15 2015/10/11 21:11:13 nroche Exp $
  * Project: MediaTeX
  * Module : upgrade
  *
@@ -353,135 +352,6 @@ scoreLocalImages(Collection* coll)
   return rc;
 }
 
-
-/*=======================================================================
- * Function   : serializeCvsRootClientFiles
- * Description: Serialize the CVS/Root files.
- * Synopsis   : static int serializeCvsRootClientFiles(Collection* coll)
- * Input      : Collection* coll = what to serialize
- *              char* dirpath = directory whe is the Root file
- * Output     : TRUE on success
- =======================================================================*/
-static int 
-serializeCvsRootClientFile(Collection* coll, char* dirpath)
-{ 
-  int rc = FALSE;
-  char* path = 0;
-  FILE* fd = stdout; 
-  ServerTree* self = 0;
-  mode_t mask;
-
-  mask = umask(0117);
-  checkCollection(coll);
-  if (!(self = coll->serverTree)) goto error;
-  checkServer(self->master);
-  logCommon(LOG_DEBUG, "serialize CVS/Root files");
-
-  if (!(path = createString(dirpath)) ||
-      !(path = catString(path, "/")) ||
-      !(path = catString(path, "Root"))) goto error;
-      
-  // output file
-  if (!env.dryRun) {
-    if ((fd = fopen(path, "w")) == 0) {
-      logCommon(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
-      goto error;
-    }
-  }
-      
-  fprintf(fd, ":ext:%s@%s:/var/lib/cvsroot\n",
-	  self->master->user, self->master->host);
-  fprintf(fd, "# This file is managed by MediaTeX software.\n");
-
-  fflush(fd);
-  rc = TRUE;  
- error:  
-  if (fd != stdout && fclose(fd)) {
-    logCommon(LOG_ERR, "fclose fails: %s", strerror(errno));
-    rc = FALSE;
-  }
-  if (!rc) {
-    logCommon(LOG_ERR, "serializeCvsRootClientFile fails");
-  }
-  umask(mask);
-  path = destroyString(path);
-  return rc;
-}
-
-
-/*=======================================================================
- * Function   : scanCvsClientDirectory
- * Description: Serialize the CVS/Root files.
- * Synopsis   : static int scanCvsClientDirectory(Collection* coll,
- *                                                char* path)
- * Input      : Collection* coll = context
- *              char* path = directory to scan
- * Output     : TRUE on success
- =======================================================================*/
-int 
-scanCvsClientDirectory(Collection* coll, char* path) 
-{
-  int rc = FALSE;
-  ServerTree* self = 0;
-  struct dirent** entries;
-  struct dirent* entry;
-  int nbEntries = 0;
-  int n = 0;
-  char* subdir = 0;
-
-  if (!(self = coll->serverTree)) goto error;
-  checkServer(self->master);
-  logCommon(LOG_DEBUG, "scaning CVS directory: %s", path);
-
-  entries = 0;
-  if ((nbEntries 
-       = scandir(path, &entries, 0, alphasort)) == -1) {
-    logCommon(LOG_ERR, "scandir fails on %s: %s", path, strerror(errno));
-    goto error;
-  }
-
-  for (n=0; n<nbEntries; ++n) {
-    entry = entries[n];
-    if (!strcmp(entry->d_name, ".")) continue;
-    if (!strcmp(entry->d_name, "..")) continue;
-    
-    switch (entry->d_type) {
-
-    case DT_DIR: 
-      if (!(subdir = createString(path)) ||
-	  !(subdir = catString(subdir, "/")) ||
-	  !(subdir = catString(subdir, entry->d_name)))	goto error;
-
-      if (!strcmp(entry->d_name, "CVS")) {
-	if (!serializeCvsRootClientFile(coll, subdir)) goto error;
-      }
-      else {
-	if (!scanCvsClientDirectory(coll, subdir)) goto error;
-      }
-
-      default: 
-	break;
-      }   
-      
-    subdir = destroyString(subdir);
-  }
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logCommon(LOG_ERR, "scanCvsClientDirectory fails");
-  }
-  if (entries) {
-    for (n=0; n<nbEntries; ++n) {
-      remind(entries[n]);
-      free(entries[n]);
-    }
-    remind(entries);
-    free(entries);
-  }
-  return rc;
-}
-
 /*=======================================================================
  * Function   : upgradeCollection
  * Description: Upgrade servers.txt
@@ -511,6 +381,7 @@ upgradeCollection(Collection* coll)
   RG* ring = 0;
   RGIT* curr = 0;
   int isMaster = FALSE;
+  char url[256];
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "upgradeCollection %s", coll->label);
@@ -612,10 +483,13 @@ upgradeCollection(Collection* coll)
   // upgrade SSH settings (using servers)
   if (!env.noRegression && !upgradeSshConfiguration(coll)) goto error;
 
-  // upgrade CVS/Root files (using conf.coll)
-  if (!env.noRegression && !scanCvsClientDirectory(coll, coll->cvsDir)) 
-    goto error;
-
+  // upgrade GIT settings
+  if (sprintf(url, "ssh://%s@%s:/var/lib/gitbare/%s",
+	      coll->serverTree->master->user,
+	      coll->serverTree->master->host,
+	      coll->serverTree->master->user) <= 0) goto error;
+  if (!callUpgrade(coll->user, coll->userFingerPrint, url)) goto error;
+  
   rc = TRUE;
 error:
   if (!rc) {

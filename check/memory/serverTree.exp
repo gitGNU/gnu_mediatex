@@ -7,7 +7,7 @@ https      yes
 
 # self-ingestion parameters
 logApache  no
-logCvs     no
+logGit     no
 logAudit   no
 
 # score parameters

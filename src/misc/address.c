@@ -1,5 +1,4 @@
 /* ======================================================================= 
- * Version: $Id: address.c,v 1.10 2015/08/07 17:50:31 nroche Exp $
  * Project: Mediatex
  * Module : socket address
  *

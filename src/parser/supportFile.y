@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: supportFile.y,v 1.8 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : support parser
  *

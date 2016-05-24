@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: supportFile.sh,v 1.2 2015/08/10 12:24:27 nroche Exp $
 # * Project: MediaTex
 # * Module:  supportFile
 # *
@@ -33,7 +32,7 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
-IN=${MDTXCVS}${SUPPFILE}
+IN=${MDTXGIT}${SUPPFILE}
 parser/ut$TEST.tab -i $IN >parser/$TEST.out 2>parser/$TEST.txt
 
 # compare with the expected output

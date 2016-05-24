@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: addUser.sh,v 1.4 2015/06/30 17:37:18 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *
@@ -33,16 +32,15 @@ set -e
 Debug "addUser"
 [ $(id -u) -eq 0 ] || Error "need to be root"
 [ ! -z "$MDTX_MDTXUSER" ] || 
-Error "expect MDTX_MDTXUSER variable to be set by the environment"
+    Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $1 ] || Error "expect a user as first parameter"
 USER=$1
 
 USERS_add_to_group $USER $MDTX
-USERS_add_to_group $USER ${MDTX}_md
 
-_GROUPS=$(grep "^$MDTX-" /etc/group | cut -d':' -f1)
-for GROUP in $_GROUPS; do
-    USERS_add_to_group $USER $GROUP
-done
+#_GROUPS=$(grep "^$MDTX-" /etc/group | cut -d':' -f1)
+#for GROUP in $_GROUPS; do
+#    USERS_add_to_group $USER $GROUP
+#done
 
 Info "done"

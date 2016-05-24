@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: extractHtml.c,v 1.14 2015/09/23 19:10:19 nroche Exp $
  * Project: MediaTeX
  * Module : extractHtml
  *
@@ -1089,7 +1088,7 @@ serializeHtmsScoreIndex(Collection* coll)
 	  serverTree->log & APACHE?"yes":"no");
   htmlLiClose(fd);
   htmlLiOpen(fd);
-  fprintf(fd, "%-10s: %s", "logCvs", serverTree->log & CVS?"yes":"no");
+  fprintf(fd, "%-10s: %s", "logCvs", serverTree->log & GIT?"yes":"no");
   htmlLiClose(fd);
   htmlLiOpen(fd);
   fprintf(fd, "%-10s: %s", "logAudit", serverTree->log & AUDIT?"yes":"no");

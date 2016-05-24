@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: notify.h,v 1.5 2015/08/19 01:09:10 nroche Exp $
  * Project: MediaTeX
  * Module : notify
  *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utconfTree.c,v 1.6 2015/10/20 19:41:44 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utconfFile.c,v 1.8 2015/10/20 19:41:46 nroche Exp $
  * Project: Mediatex
  * Module : conf scanner
 

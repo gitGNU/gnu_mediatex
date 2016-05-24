@@ -1,4 +1,4 @@
-[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/mdtx1.conf
+[info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [notice utmessage.c] -------------------------------------------------------
 [notice utmessage.c] no collection
 [notice utmessage.c] .......................................................
@@ -17,7 +17,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1-coll1/servers.txt
+[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [err threads.c] checkMessage fails
 [notice utmessage.c] reply : 303 message from server 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' not registered into coll1 collection
 [notice utmessage.c] -------------------------------------------------------

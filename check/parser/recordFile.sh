@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: recordFile.sh,v 1.3 2015/10/20 19:41:46 nroche Exp $
 # * Project: MediaTex
 # * Module:  parser modules
 # *

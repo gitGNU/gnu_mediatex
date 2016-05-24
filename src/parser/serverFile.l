@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: serverFile.l,v 1.11 2015/10/05 21:46:30 nroche Exp $
  * Project: Mediatex
  * Module : server scanner
 
@@ -197,8 +196,8 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
     return(servLOGAPACHE);
   }
 
-  logCvs {
-    return(servLOGCVS);
+  logGit {
+    return(servLOGGIT);
   }
     
   logAudit {

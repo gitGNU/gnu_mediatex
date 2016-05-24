@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: recordFile.y,v 1.5 2015/09/17 18:53:49 nroche Exp $
  * Project: MediaTeX
  * Module : record parser
  *

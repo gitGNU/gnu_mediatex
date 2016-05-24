@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: mediatex-config.h,v 1.5 2015/09/21 01:01:50 nroche Exp $
  * Project: MediaTex
  * Module : headers
  *
@@ -73,11 +72,12 @@
 #define CONF_HOSTSSH  CONF_SYSCONFDIR "/ssh"
 
 // relative paths
+#define CONF_JAIL     "/jail"
 #define CONF_MD5SUMS  "/md5sums"
 #define CONF_CACHES   "/cache"
 #define CONF_EXTRACT  "/tmp"
 #define CONF_HOME     "/home"
-#define CONF_CVSCLT   "/cvs"
+#define CONF_GITCLT   "/git"
 #define CONF_SSHDIR   "/.ssh"
 #define CONF_HTMLDIR  "/public_html"
 #define CONF_CONFFILE ".conf"
@@ -107,14 +107,13 @@
 // base acl
 #define BASE_ACL "u::rwx g::rwx o::--- m:rwx"
 
-// take care to update perm.c too
+// take care to update misc/perm.c too
 enum {
   ETC_M = 0,
   VAR_RUN_M,
   VAR_LIB_M,
   VAR_LIB_M_MDTX,
   VAR_LIB_M_MDTX_MDTX,
-  VAR_LIB_M_MDTX_CVSROOT,
   VAR_LIB_M_MDTX_COLL,
   VAR_CACHE_M,
   VAR_CACHE_M_MDTX,
@@ -122,9 +121,9 @@ enum {
   VAR_CACHE_M_MDTX_CACHE_M,
   VAR_CACHE_M_MDTX_CACHE_COLL,
   VAR_CACHE_M_MDTX_HTML,
-  VAR_CACHE_M_MDTX_CVS,
-  VAR_CACHE_M_MDTX_CVS_MDTX,
-  VAR_CACHE_M_MDTX_CVS_COLL,
+  VAR_CACHE_M_MDTX_GIT,
+  VAR_CACHE_M_MDTX_GIT_MDTX,
+  VAR_CACHE_M_MDTX_GIT_COLL,
   VAR_CACHE_M_MDTX_TMP,
   VAR_CACHE_M_MDTX_TMP_COLL,
   VAR_CACHE_M_MDTX_HOME,
@@ -143,7 +142,6 @@ enum {
 #define _VAR_LIB_M                         {"root", "root", 0755, "NO ACL"}
 #define _VAR_LIB_M_MDTX                    {"root", "root", 0755, "NO ACL"}
 #define _VAR_LIB_M_MDTX_MDTX               {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
-#define _VAR_LIB_M_MDTX_CVSROOT            {"root", "root", 0777, "NO ACL"}
 #define _VAR_LIB_M_MDTX_COLL               {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x"}
 #define _VAR_CACHE_M                       {"root", "root", 0755, "NO ACL"}
 #define _VAR_CACHE_M_MDTX                  {"root", "root", 0755, "NO ACL"}
@@ -151,9 +149,9 @@ enum {
 #define _VAR_CACHE_M_MDTX_CACHE_M          {"root", "root", 0755, "NO ACL"}
 #define _VAR_CACHE_M_MDTX_CACHE_COLL       {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x"}
 #define _VAR_CACHE_M_MDTX_HTML             {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
-#define _VAR_CACHE_M_MDTX_CVS              {"root", "root", 0755, "NO ACL"}
-#define _VAR_CACHE_M_MDTX_CVS_MDTX         {"root", "root", 0750, "u:%s:rwx g:%s:rwx"}
-#define _VAR_CACHE_M_MDTX_CVS_COLL         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx"}
+#define _VAR_CACHE_M_MDTX_GIT              {"root", "root", 0755, "NO ACL"}
+#define _VAR_CACHE_M_MDTX_GIT_MDTX         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:www-data:r-x"}
+#define _VAR_CACHE_M_MDTX_GIT_COLL         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x"}
 #define _VAR_CACHE_M_MDTX_TMP              {"root", "root", 0755, "NO ACL"}
 #define _VAR_CACHE_M_MDTX_TMP_COLL         {"root", "root", 0750, "u:%s:rwx g:%s:rwx u:%s:rwx"}
 #define _VAR_CACHE_M_MDTX_HOME             {"root", "root", 0755, "NO ACL"}

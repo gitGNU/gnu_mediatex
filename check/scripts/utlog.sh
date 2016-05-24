@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utlog.sh,v 1.1 2015/07/01 10:50:04 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

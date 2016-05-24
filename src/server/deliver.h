@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: deliver.h,v 1.5 2015/08/09 11:12:35 nroche Exp $
  * Project: MediaTeX
  * Module : deliver
  *

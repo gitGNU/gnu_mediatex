@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: catalogTree.h,v 1.5 2015/08/11 18:14:24 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *

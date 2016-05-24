@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utscripts.sh,v 1.2 2015/07/03 16:02:12 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -40,10 +39,10 @@ function UNIT_TEST_populate_datadir()
 	mediatex.css floppy-icon.png \
 	viewvc.conf apache-mdtx.conf header.ezt \
 	; do
-	install -m 444 $srcdir/../misc/$f $MISC
+	install -o root -g root -m 444 $srcdir/../misc/$f $MISC
     done
     for t in home index cache score cgi; do
-	install -m 444 $srcdir/../misc/$t.htaccess $MISC
+	install -o root -g root -m 444 $srcdir/../misc/$t.htaccess $MISC
     done
 
     # Note:
@@ -90,16 +89,16 @@ function UNIT_TEST_push_root_directory()
     HOSTSSH="${1}${HOSTSSH}"
 
     # overwrite recurent variables
-    CVSROOT="${1}${CVSROOT}"
+    GITBARE="${1}${GITBARE}"
     MDTXHOME="${1}${MDTXHOME}"
     MD5SUMS="${1}${MD5SUMS}"
     CACHES="${1}${CACHES}"
     EXTRACT="${1}${EXTRACT}"
-    CVSCLT="${1}${CVSCLT}"
+    GITCLT="${1}${GITCLT}"
     JAIL="${1}${JAIL}"
     HOMES="${1}${HOMES}"
     HTDOCS="${1}${HTDOCS}"
-    MDTXCVS="${1}${MDTXCVS}"
+    MDTXGIT="${1}${MDTXGIT}"
     CONFFILE="${1}${CONFFILE}"
     PIDFILE="${1}${PIDFILE}"
 
@@ -127,11 +126,6 @@ function UNIT_TEST_mrProper()
 
     # hide group number
     sed $1 -i -e "s,:x:[[:digit:]]*:,:x:XXX:,"
-
-    # hide cvs commit date and id
-    sed $1 -i \
-	-e "s,\(date:\) .*;  a,\1 XXX;  a," \
-	-e "s,\(commitid:\) .*;,\1 XXX;,"
     
     # hide git commit date and id
     sed $1 -i \

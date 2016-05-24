@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: getcgivars.c,v 1.4 2015/06/30 17:37:31 nroche Exp $
  * Project: Mediatex
  * Module : misc
  *

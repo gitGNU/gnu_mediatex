@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: clean.sh,v 1.4 2015/06/30 17:37:19 nroche Exp $
 # * Project: MediaTex
 # * Module : script clean
 # *
@@ -40,6 +39,6 @@ USER="$MDTX-$1"
 rm -fr $CACHEDIR/$MDTX/home/$USER/public_html
 USERS_coll_populate $USER
 HTDOCS_configure_coll_apache2 $USER
-HTDOCS_configure_coll_viewvc $USER
+HTDOCS_configure_coll_cgit $USER
 
 Info "done"

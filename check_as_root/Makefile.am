@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 11:53:59 nroche Exp $
 #  * Project: MediaTex
 #  * Module: unitary tests
 #  *
@@ -28,7 +27,6 @@ TESTS = \
 	scripts/utusers.sh \
 	scripts/uthtdocs.sh \
 	scripts/utssh.sh \
-	scripts/utcvs.sh \
 	scripts/utgit.sh \
 	scripts/utjail.sh
 
@@ -41,7 +39,6 @@ dist_check_DATA = \
 	scripts/users.exp \
 	scripts/htdocs.exp \
 	scripts/ssh.exp \
-	scripts/cvs.exp \
 	scripts/git.exp \
 	scripts/jail.exp
 

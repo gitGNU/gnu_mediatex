@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: archive.sh,v 1.2 2015/08/30 17:07:56 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *

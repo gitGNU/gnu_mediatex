@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: supportTree.sh,v 1.2 2015/08/30 17:07:57 nroche Exp $
 # * Project: MediaTex
 # * Module:  memory tree modules
 # *
@@ -37,7 +36,7 @@ memory/ut$TEST -d $srcdir > memory/$TEST.out 2>&1
 
 # compare with the expected outputs
 diff -I '# Version: $Id' -I '/.*$' \
-    $srcdir/memory/$TEST.exp ${MDTXCVS}${SUPPFILE}
+    $srcdir/memory/$TEST.exp ${MDTXGIT}${SUPPFILE}
 mrProperOutputs memory/$TEST.out
 diff $srcdir/memory/$TEST.exp2 memory/$TEST.out
 

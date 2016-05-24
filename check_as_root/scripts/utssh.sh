@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utssh.sh,v 1.1 2015/07/01 10:50:15 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

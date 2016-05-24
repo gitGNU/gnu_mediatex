@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utusers.sh,v 1.1 2015/07/01 10:50:16 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *

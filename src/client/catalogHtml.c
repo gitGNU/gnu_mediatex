@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: catalogHtml.c,v 1.10 2015/09/04 15:30:24 nroche Exp $
  * Project: MediaTeX
  * Module : catalogHtml
  *

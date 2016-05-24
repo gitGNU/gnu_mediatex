@@ -1,5 +1,5 @@
 [notice utsupportTree.c] off_t max value is: 18446744073709551615
 [notice utsupportTree.c] time_t max value is: 2147483647
-[info supportTree.c] Serializing the supports list file: LOCALSTATEDIR/cache/mediatex/mdtx1/cvs/mdtx1/supports.txt
+[info supportTree.c] Serializing the supports list file: LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/supports.txt
 [info confTree.c] free configuration
 [info utsupportTree.c] exit on success

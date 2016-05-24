@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shellQuery.sh,v 1.7 2015/09/22 11:42:38 nroche Exp $
 # * Project: MediaTex
 # * Module:  shellQuery
 # *

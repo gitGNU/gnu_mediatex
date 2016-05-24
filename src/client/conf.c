@@ -1,6 +1,5 @@
 
 /*=======================================================================
- * Version: $Id: conf.c,v 1.9 2015/09/22 11:42:40 nroche Exp $
  * Project: MediaTeX
  * Module : conf
  *
@@ -28,7 +27,7 @@
 
 
 /*=======================================================================
- * Function   : newCollection
+ * Function   : mdtxAddCollection
  * Description: add a collection to a configuration
  * Synopsis   : int addCollection(Collection* coll)
  * Input      : Collection* coll = the collection's labels
@@ -46,7 +45,7 @@ mdtxAddCollection(Collection* coll)
   Collection* self = 0;
   char buf[MAX_SIZE_COLL + MAX_SIZE_HOST + 8];
   char* argv[3] = {0, 0, 0};
-  char* cvsFile = 0;
+  char* gitFile = 0;
   struct stat sb;
 
   checkCollection(coll);
@@ -77,15 +76,15 @@ mdtxAddCollection(Collection* coll)
   }
 
   // check if script realy success
-  if (!(cvsFile = createString(conf->cvsDir)) 
-      || !(cvsFile =  catString(cvsFile, "/"))
-      || !(cvsFile =  catString(cvsFile, env.confLabel))
-      || !(cvsFile =  catString(cvsFile, "-"))
-      || !(cvsFile =  catString(cvsFile, coll->label))
-      || !(cvsFile =  catString(cvsFile, "/servers.txt")))
+  if (!(gitFile = createString(conf->gitDir)) 
+      || !(gitFile =  catString(gitFile, "/"))
+      || !(gitFile =  catString(gitFile, env.confLabel))
+      || !(gitFile =  catString(gitFile, "-"))
+      || !(gitFile =  catString(gitFile, coll->label))
+      || !(gitFile =  catString(gitFile, "/servers.txt")))
     goto error;
-  if (stat(cvsFile, &sb) == -1) {
-    logMain(LOG_INFO, "stat fails on %s: %s", cvsFile, strerror(errno));
+  if (stat(gitFile, &sb) == -1) {
+    logMain(LOG_INFO, "stat fails on %s: %s", gitFile, strerror(errno));
     logMain(LOG_NOTICE,
 	    "Please send your collection's public key to %s server admin",
 	    coll->masterHost);
@@ -117,7 +116,7 @@ mdtxAddCollection(Collection* coll)
     if (self) delCollection(self);
   }
   argv[0] = destroyString(argv[0]);
-  cvsFile = destroyString(cvsFile);
+  gitFile = destroyString(gitFile);
   // coll is free by parser
   return rc;
 }

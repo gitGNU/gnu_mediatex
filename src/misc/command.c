@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: command.c,v 1.18 2015/10/08 21:43:50 nroche Exp $
  * Project: MediaTeX
  * Module : command
  *

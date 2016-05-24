@@ -20,3 +20,11 @@ AddHandler cgi-script .cgi
        # login/password
        Require group history
 </Files>
+
+<Files cgit.cgi>
+       # cgit configuration
+       SetEnv CGIT_CONFIG ../../cgitrc
+
+       # login/password
+       Require group history
+</Files>

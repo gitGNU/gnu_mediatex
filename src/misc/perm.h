@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: perm.h,v 1.5 2015/08/23 23:39:16 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

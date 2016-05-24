@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utalloc.c,v 1.6 2015/10/20 19:41:45 nroche Exp $
  * Project: MediaTeX
  * Module : alloc
  *

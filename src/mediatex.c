@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: mediatex.c,v 1.10 2015/10/20 19:41:50 nroche Exp $
  * Project: MediaTeX
  * Module : wrapper client software
  *

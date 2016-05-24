@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utextractFile.tab.c,v 1.4 2015/10/20 19:41:47 nroche Exp $
  * Project: MediaTeX
  * Module : extract parser
  *

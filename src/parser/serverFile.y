@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: serverFile.y,v 1.12 2015/10/05 21:46:30 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *
@@ -96,7 +95,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servCOMMENT
 %token            servHTTPS
 %token            servLOGAPACHE
-%token            servLOGCVS
+%token            servLOGGIT
 %token            servLOGAUDIT
 %token            servLABEL
 %token            servHOST
@@ -190,14 +189,14 @@ header: servMASTER servHASH
     coll->serverTree->log &= ~APACHE;
   }
 }
-      | servLOGCVS servBOOLEAN
+      | servLOGGIT servBOOLEAN
 {
-  logParser(LOG_DEBUG, "line %-3i logCvs %s", LINENO, $2?"yes":"no");
+  logParser(LOG_DEBUG, "line %-3i logGit %s", LINENO, $2?"yes":"no");
   if ($2) {
-    coll->serverTree->log |= CVS;
+    coll->serverTree->log |= GIT;
   }
   else {
-    coll->serverTree->log &= ~CVS;
+    coll->serverTree->log &= ~GIT;
   }
 }
       | servLOGAUDIT servBOOLEAN

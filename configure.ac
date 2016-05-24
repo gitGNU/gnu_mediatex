@@ -1,4 +1,3 @@
-dnl  * Version: $Id: configure.ac,v 1.6 2015/09/27 01:00:38 nroche Exp $
 dnl  * Project: MediaTex
 dnl  * Module:  autotools
 dnl  *

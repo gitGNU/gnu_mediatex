@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: confTree.h,v 1.9 2015/09/21 01:01:51 nroche Exp $
  * Project: MediaTeX
  * Module: etcConf
  *
@@ -52,7 +51,7 @@ struct Collection {
   // note: getconf LOGIN_NAME_MAX gives 256... I prefer to use malloc
   char   label[MAX_SIZE_COLL+1]; // ie: "COLL"
   char  *masterLabel;            // ie: "MDTX2
-  char   masterHost[MAX_SIZE_HOST+1]; // CVS server host name
+  char   masterHost[MAX_SIZE_HOST+1]; // gitbare server host name
   int    masterPort; // SSH server port, also used by CVS
 
   /* cache parameters */
@@ -94,7 +93,7 @@ struct Collection {
   char *homeDir;    // home base directory for collection users
   char *cacheDir;   // where files are stored in filesystem
   char *extractDir; // use for extractions
-  char *cvsDir;     // cvs local copies's directory
+  char *gitDir;     // git local copies's directory
   char *sshDir;     // .ssh directory
   char *htmlDir;      // ~/public_html directory
   char *htmlIndexDir; // HTML access index
@@ -151,14 +150,15 @@ struct Configuration {
   char  hostFingerPrint[MAX_SIZE_MD5+1];
 
   /* computed paths */
-  char* cvsRootDir;
+  char* gitBareDir;
   char* scriptsDir;
   char* homeDir;
   char* md5sumDir;
+  char* jailDir;    // chroot jail
   char* cacheDir;
   char* extractDir;
-  char* cvsDir;
-  char* mdtxCvsDir;
+  char* gitDir;
+  char* mdtxGitDir;
   char* hostSshDir;
 
   /* -files */

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: supportTree.h,v 1.7 2015/09/17 18:53:48 nroche Exp $
  * Project: MediaTeX
  * Module : archive tree
  *

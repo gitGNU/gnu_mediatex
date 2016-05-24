@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: catalogTree.c,v 1.10 2015/09/04 15:30:26 nroche Exp $
  * Project: MediaTeX
  * Module : admCatalogTree
  *

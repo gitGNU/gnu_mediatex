@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: shm.sh,v 1.2 2015/08/23 23:39:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

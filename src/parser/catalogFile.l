@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: catalogFile.l,v 1.8 2015/09/17 18:53:48 nroche Exp $
  * Project: Mediatex
  * Module : catalog scanner
 

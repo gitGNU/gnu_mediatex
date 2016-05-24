@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utsupportTree.c,v 1.5 2015/10/20 19:41:44 nroche Exp $
  * Project: MediaTeX
  * Module : md5sumTree
  *

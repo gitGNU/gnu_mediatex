@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: ssh.sh,v 1.4 2015/06/30 17:37:23 nroche Exp $
 # * Project: MediaTex
 # * Module : script libs
 # *
@@ -30,11 +29,6 @@ set -e
 # # /usr/sbin/sshd -D -ddd
 # # ssh -vvv bibi
 ###
-
-if [ $(id -u) -ne 0 ]; then
-    echo -n "(root needed for this test) "
-    exit 77 # SKIP
-fi
 
 # includes
 MDTX_SH_SSH=1
@@ -83,20 +77,20 @@ function SSH_bootstrapKeys()
 
     # /var/cache/mediatex/mdtx/home/$1/.ssh
     COLL_SSHDIR=$HOMES/$1$CONF_SSHDIR
+    SSH_KNOWNHOSTS=$COLL_SSHDIR$CONF_SSHKNOWN
 
     cd $COLL_SSHDIR
 
     # add our public key to accept self login
-    install -m 644 id_dsa.pub authorized_keys
+    install -o $1 -g $1 -m 644 id_dsa.pub authorized_keys
 
     # add localhost public key to accept blind connection
-    echo -n "localhost " > known_hosts
-    cat /etc/ssh/ssh_host_rsa_key.pub >> known_hosts
-    ssh-keygen -H -f known_hosts 2>&1
+    echo -n "localhost " > $SSH_KNOWNHOSTS
+    cat /etc/ssh/ssh_host_rsa_key.pub >> $SSH_KNOWNHOSTS
+    ssh-keygen -H -f $SSH_KNOWNHOSTS 2>&1
     rm -f known_hosts.old
 
     chmod 644 known_hosts
-    chown $1:$1 authorized_keys
     chown $1:$1 known_hosts
     cd - >/dev/null
 }

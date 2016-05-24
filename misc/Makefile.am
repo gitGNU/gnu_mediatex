@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.2 2015/07/03 15:59:47 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  inital configuration files (and testing/exemple purpose)
 #  *
@@ -25,8 +24,8 @@ dist_misc_DATA = \
 	mediatex_cron mediatex.conf \
 	supports.txt catalog000.txt extract000.txt servers.txt \
 	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
-	apache-mdtx.conf htgroup viewvc.conf header.ezt \
-	mediatex.css floppy-icon.png home.htaccess \
+	home.htaccess apache-mdtx.conf htgroup \
+	mediatex.css floppy-icon.png \
 	logo logo.png logoP1.iso logoP2.iso logoP1.cat logoP2.cat\
 	logo.tgz logo.tar.bz2 logo.afio \
 	logo.tar logo.cpio.gz logo.cpio logo.cpio.bz2 \

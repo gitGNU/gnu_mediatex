@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: confTree.c,v 1.15 2015/10/12 23:28:51 nroche Exp $
  * Project: mediaTeX
  * Module : configuration
  *
@@ -118,7 +117,7 @@ destroyCollection(Collection* self)
 
   // directories
   self->homeDir = destroyString(self->homeDir);
-  self->cvsDir = destroyString(self->cvsDir);
+  self->gitDir = destroyString(self->gitDir);
   self->sshDir = destroyString(self->sshDir);
   self->cacheDir = destroyString(self->cacheDir);
   self->extractDir = destroyString(self->extractDir);
@@ -234,8 +233,8 @@ expandCollection(Collection* self)
       || !(self->cacheDir =  catString(self->cacheDir, label))
       || !(self->extractDir = createString(conf->extractDir)) 
       || !(self->extractDir = catString(self->extractDir, label))
-      || !(self->cvsDir = createString(conf->cvsDir)) 
-      || !(self->cvsDir = catString(self->cvsDir, label))
+      || !(self->gitDir = createString(conf->gitDir)) 
+      || !(self->gitDir = catString(self->gitDir, label))
       || !(self->homeDir = createString(conf->homeDir))
       || !(self->homeDir =  catString(self->homeDir, CONF_HOME))
       || !(self->homeDir =  catString(self->homeDir, label))
@@ -262,7 +261,7 @@ expandCollection(Collection* self)
 
   // metadata files
   for (j=0; j<3; ++j) {
-    if (!(*dataP[j] = createString(self->cvsDir)) 
+    if (!(*dataP[j] = createString(self->gitDir)) 
 	|| !(*dataP[j] = catString(*dataP[j], dataV[j]))) 
       goto error;
   }
@@ -318,8 +317,8 @@ expandCollection(Collection* self)
 			     VAR_CACHE_M_MDTX_CACHE_COLL)
       || !checkDirectoryPerm(self->user, self->extractDir,
 			     VAR_CACHE_M_MDTX_TMP_COLL)
-      || !checkDirectoryPerm(self->user, self->cvsDir, 
-			     VAR_CACHE_M_MDTX_CVS_COLL)
+      || !checkDirectoryPerm(self->user, self->gitDir, 
+			     VAR_CACHE_M_MDTX_GIT_COLL)
       || !checkDirectoryPerm(self->user, self->sshDir, 
 			     VAR_CACHE_M_MDTX_HOME_COLL_SSH)
       || !checkDirectoryPerm(self->user, self->htmlDir, 
@@ -532,37 +531,39 @@ createConfiguration(void)
 
     if (!(tmpDir = catString(tmpDir, "/tmp"))
 	|| !(pidDir = createString(tmpDir))
-	|| !(conf->cvsRootDir = createString(tmpDir))
-	|| !(conf->homeDir = createString(tmpDir))
+	|| !(conf->gitBareDir = createString(tmpDir))
 	|| !(conf->scriptsDir = createString(tmpDir))
+	|| !(conf->homeDir = createString(tmpDir))
 	|| !(conf->hostSshDir = createString(tmpDir)))
       goto error;
   }
 
   // directories
   if (!(pidDir = catString(pidDir, CONF_PIDDIR+i))
-      || !(conf->cvsRootDir = catString(conf->cvsRootDir, CONF_STATEDIR+i))
-      || !(conf->cvsRootDir = catString(conf->cvsRootDir, label))
+      || !(conf->gitBareDir = catString(conf->gitBareDir, CONF_STATEDIR+i))
+      || !(conf->gitBareDir = catString(conf->gitBareDir, label))
       || !(conf->scriptsDir = catString(conf->scriptsDir, CONF_SCRIPTS+i))
       || !(conf->homeDir = catString(conf->homeDir, CONF_CACHEDIR+i))
       || !(conf->homeDir = catString(conf->homeDir, label))
+      || !(conf->jailDir = createString(conf->homeDir))
+      || !(conf->jailDir = catString(conf->jailDir, CONF_JAIL))
       || !(conf->md5sumDir = createString(conf->homeDir))
       || !(conf->md5sumDir = catString(conf->md5sumDir, CONF_MD5SUMS))
       || !(conf->cacheDir = createString(conf->homeDir))
       || !(conf->cacheDir = catString(conf->cacheDir, CONF_CACHES))
       || !(conf->extractDir = createString(conf->homeDir))
       || !(conf->extractDir = catString(conf->extractDir, CONF_EXTRACT))
-      || !(conf->cvsDir = createString(conf->homeDir))
-      || !(conf->cvsDir = catString(conf->cvsDir, CONF_CVSCLT))
-      || !(conf->mdtxCvsDir = createString(conf->cvsDir))
-      || !(conf->mdtxCvsDir = catString(conf->mdtxCvsDir, label))
+      || !(conf->gitDir = createString(conf->homeDir))
+      || !(conf->gitDir = catString(conf->gitDir, CONF_GITCLT))
+      || !(conf->mdtxGitDir = createString(conf->gitDir))
+      || !(conf->mdtxGitDir = catString(conf->mdtxGitDir, label))
       || !(conf->hostSshDir = catString(conf->hostSshDir, CONF_HOSTSSH+i)))
     goto error;
 
   // files
-  if (!(conf->supportDB = createString(conf->mdtxCvsDir))
+  if (!(conf->supportDB = createString(conf->mdtxGitDir))
       || !(conf->supportDB = catString(conf->supportDB, CONF_SUPPFILE))
-      || !(conf->confFile = createString(conf->mdtxCvsDir))
+      || !(conf->confFile = createString(conf->mdtxGitDir))
       || !(conf->confFile = catString(conf->confFile, label))
       || !(conf->confFile = catString(conf->confFile, CONF_CONFFILE))
       || !(conf->pidFile = createString(pidDir))
@@ -619,14 +620,15 @@ destroyConfiguration(Configuration* self)
   if(self) {
 
     // directories
-    self->cvsRootDir = destroyString(self->cvsRootDir);
+    self->gitBareDir = destroyString(self->gitBareDir);
     self->scriptsDir = destroyString(self->scriptsDir);
     self->homeDir = destroyString(self->homeDir);
     self->md5sumDir = destroyString(self->md5sumDir);
+    self->jailDir = destroyString(self->jailDir);
     self->cacheDir = destroyString(self->cacheDir);
     self->extractDir = destroyString(self->extractDir);
-    self->cvsDir = destroyString(self->cvsDir);
-    self->mdtxCvsDir = destroyString(self->mdtxCvsDir);
+    self->gitDir = destroyString(self->gitDir);
+    self->mdtxGitDir = destroyString(self->mdtxGitDir);
     self->hostSshDir = destroyString(self->hostSshDir);
 
     // files
@@ -678,7 +680,6 @@ expandConfiguration()
   Configuration* conf = 0;
   Collection* coll = 0;
   RGIT* curr = 0;
-  char* jail = 0;
 
   // defensive code
   if (!(conf = getConfiguration())) goto error;
@@ -688,19 +689,15 @@ expandConfiguration()
     goto end;
   }
 
-  if (!(jail = createString(conf->homeDir))
-      || !(jail = catString(jail, "/jail")))
-    goto error;
-
   // check directories
-  if (!checkDirectoryPerm(0, jail, VAR_CACHE_M_MDTX_JAIL)
-      || !checkDirectoryPerm(0, conf->cvsRootDir, VAR_LIB_M_MDTX_CVSROOT)
+  if (FALSE
       || !checkDirectoryPerm(0, conf->homeDir, VAR_CACHE_M_MDTX_HOME)
+      || !checkDirectoryPerm(0, conf->jailDir, VAR_CACHE_M_MDTX_JAIL)
       || !checkDirectoryPerm(0, conf->md5sumDir, VAR_CACHE_M_MDTX_MD5SUMS)
       || !checkDirectoryPerm(0, conf->cacheDir, VAR_CACHE_M_MDTX_CACHE)
       || !checkDirectoryPerm(0, conf->extractDir, VAR_CACHE_M_MDTX_TMP)
-      || !checkDirectoryPerm(0, conf->cvsDir, VAR_CACHE_M_MDTX_CVS)
-      || !checkDirectoryPerm(0, conf->mdtxCvsDir, VAR_CACHE_M_MDTX_CVS_MDTX)
+      || !checkDirectoryPerm(0, conf->gitDir, VAR_CACHE_M_MDTX_GIT)
+      || !checkDirectoryPerm(0, conf->mdtxGitDir, VAR_CACHE_M_MDTX_GIT_MDTX)
       )
     goto error;
 
@@ -718,7 +715,6 @@ expandConfiguration()
   if (!rc) {
     logMemory(LOG_ERR, "fails to expand configuration");
   }
-  jail = destroyString(jail);
   return rc;
 }
 
@@ -814,10 +810,6 @@ serializeConfiguration(Configuration* self)
   }
 
   fprintf(fd, "# This is the MediaTeX software configuration file.\n");
-
-  // do not add the CVS version as it implies a commit evry time we
-  // rebuild the file (because we de not parse the version id)
-  //fprintf(fd, "# Version: $" "Id" "$\n");
 
   fprintf(fd, "\n# comment: greeter for this server\n");
   fprintf(fd, "%-10s \"%s\"\n", "comment", self->comment);

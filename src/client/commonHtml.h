@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: commonHtml.h,v 1.5 2015/07/07 09:33:35 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
  *

@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: utmediatex.src,v 1.4 2015/08/30 17:07:55 nroche Exp $
 # * Project: MediaTex
 # * Module : C codes
 # *
@@ -66,7 +65,7 @@ function loadPaths()
     CONF_CACHES="/cache"
     CONF_EXTRACT="/tmp"
     CONF_HOME="/home"
-    CONF_CVSCLT="/cvs"
+    CONF_GITCLT="/git"
     CONF_SSHDIR="/.ssh"
     CONF_HTMLDIR="/public_html"
     CONF_CONFFILE=".conf"
@@ -96,15 +95,15 @@ function loadPaths()
     EXTRFILE="${CONF_EXTRFILE}000.txt"
 
     # recurent variables
-    CVSROOT="${STATEDIR}/${MDTXUSER}"
+    GITBARE="${STATEDIR}/${MDTXUSER}"
     MDTXHOME="${CACHEDIR}/${MDTXUSER}"
     MD5SUMS="${MDTXHOME}${CONF_MD5SUMS}"
     CACHES="${MDTXHOME}${CONF_CACHES}"
     EXTRACT="${MDTXHOME}${CONF_EXTRACT}"
-    CVSCLT="${MDTXHOME}${CONF_CVSCLT}"
+    GITCLT="${MDTXHOME}${CONF_GITCLT}"
     HOME="${MDTXHOME}${CONF_HOME}"
-    MDTXCVS="${CVSCLT}/${MDTXUSER}"
-    CONFFILE="${MDTXCVS}/${MDTXUSER}${CONF_CONFFILE}"
+    MDTXGIT="${GITCLT}/${MDTXUSER}"
+    CONFFILE="${MDTXGIT}/${MDTXUSER}${CONF_CONFFILE}"
     PIDFILE="${PIDDIR}/${MDTXUSER}${CONF_PIDFILE}"
 }
 
@@ -115,7 +114,7 @@ function populateCollection()
 
     # simulate collection directory build during creation
     install -m 750 -d $TARGET
-    install -m 770 -d $TARGET/cvs
+    install -m 770 -d $TARGET/git
     install -m 700 -d $TARGET/.ssh
     install -m 750 -d $TARGET/public_html
     install -m 750 -d $TARGET/public_html/index
@@ -125,11 +124,11 @@ function populateCollection()
 
     install -m 750 -d $CACHES/$1
     install -m 770 -d $EXTRACT/$1
-    install -m 750 -d $CVSROOT/$1
-    install -m 770 -d $CVSCLT/$1
+    install -m 750 -d $GITBARE/$1
+    install -m 770 -d $GITCLT/$1
 
-    touch $CVSCLT/$1$CATHFILE
-    touch $CVSCLT/$1$EXTRFILE
+    touch $GITCLT/$1$CATHFILE
+    touch $GITCLT/$1$EXTRFILE
 }
 
 # so as to pass unit test easier
@@ -152,9 +151,6 @@ function mrProperOutputs()
 
     # hide uid
     sed $1 -i -e "s,\(logoutUser\).*,\1 XXX,"
-
-    # hide cvs versionning id
-    sed $1 -i -e "s,^\(# Version: \).*,\1 XXX,"
 
     # make distcheck on server
     sed $1 -i -e "s,../../check/,./,"
@@ -191,13 +187,13 @@ if [ "$0" == "./utmediatex.sh" ]; then
     echo -e "\n-- mediatex server paths:"
     echo "HOSTSSH = $HOSTSSH"
     echo "PIDDIR = $PIDDIR"
-    echo "CVSROOT = $CVSROOT"
+    echo "GITBARE = $GITBARE"
     echo "MD5SUMS = $MD5SUMS"
     echo "CACHES = $CACHES"
     echo "EXTRACT = $EXTRACT"
-    echo "CVSCLT = $CVSCLT"
+    echo "GITCLT = $GITCLT"
     echo "HOME = $HOME"
-    echo "MDTXCVS = $MDTXCVS"
+    echo "MDTXGIT = $MDTXGIT"
     echo "CONFFILE = $CONFFILE"
     echo "PIDFILE = $PIDFILE"
 

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: confFile.y,v 1.12 2015/10/04 14:22:27 nroche Exp $
  * Project: Mediatex
  * Module : conf parser
  *

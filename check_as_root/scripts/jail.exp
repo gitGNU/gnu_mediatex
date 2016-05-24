@@ -22,14 +22,8 @@
 Ajout de l'utilisateur « ut5-mdtx » au groupe « cdrom »...
 Ajout de l'utilisateur ut5-mdtx au groupe cdrom
 Fait.
-[debug users.sh] USERS_add_to_group: www-data ut5-mdtx
-Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx »...
-Ajout de l'utilisateur www-data au groupe ut5-mdtx
-Fait.
 [debug users.sh] USERS_mdtx_populate
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx root root 0777 NO ACL
-[warn users.sh] To Remove (cvs only): USERS_install LOCALSTATEDIR/lib/mediatex/ut5-mdtx/CVSROOT
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/CVSROOT root root 0777 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail root root 0755 NO ACL
@@ -37,35 +31,44 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cache root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/tmp root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cvs root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cvs/ut5-mdtx root root 0750 u:%s:rwx g:%s:rwx
-[debug utjail.sh] CVS_mdtx_setup:
-[debug cvs.sh] CVS_init_cvsroot
-[debug cvs.sh] CVS_mdtx_import 
-[info cvs.sh] CVSUMASK=027 cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx import -m 'Mediatex initial setup' ut5-mdtx ut5-mdtx v1
-
-
-No conflicts created by this import
-N ut5-mdtx/supports.txt
-N ut5-mdtx/ut5-mdtx.conf
-[debug cvs.sh] CVS_mdtx_checkout:
-[info cvs.sh] su MDTX -c "cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx co ut5-mdtx"
-cvs checkout: Updating ut5-mdtx
-U ut5-mdtx/supports.txt
-U ut5-mdtx/ut5-mdtx.conf
-[debug cvs.sh] CVS_update: ut5-mdtx
-[info cvs.sh] cvs update -d
-cvs update: Updating .
-[debug cvs.sh] CVS_commit: ut5-mdtx utjail.sh
-[info cvs.sh] su ut5-mdtx -c 'cvs commit -m "utjail.sh"'
-cvs commit: Examining .
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git root root 0755 NO ACL
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
+[debug utjail.sh] GIT_mdtx_import
+[debug git.sh] GIT_init_gitbare: ut5-mdtx
+[info git.sh] su ut5-mdtx -c "git init --bare LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx 2>&1"
+Dépôt Git vide initialisé dans LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx/
+[info git.sh] su ut5-mdtx -c "git clone LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx 2>&1"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx'...
+warning: Vous semblez avoir cloné un dépôt vide.
+fait.
+[info git.sh] su ut5-mdtx -c "git add -A"
+[debug git.sh] GIT_upgrade: ut5-mdtx latitude FINGERPRINT
+[info git.sh] su ut5-mdtx -c 'git config color.diff auto'
+[info git.sh] su ut5-mdtx -c 'git config color.status auto'
+[info git.sh] su ut5-mdtx -c 'git config color.branch auto'
+[info git.sh] su ut5-mdtx -c 'git config user.name 'latitude''
+[info git.sh] su ut5-mdtx -c 'git config user.email 'FINGERPRINT''
+[info git.sh] su ut5-mdtx -c 'git config push.default simple'
+[debug git.sh] GIT_commit: ut5-mdtx Initial mdtx setup
+[info git.sh]'
+[info git.sh] su ut5-mdtx -c 'git commit -a -m "Initial mdtx setup" 2>&1'
+[master  XXX] Initial mdtx setup
+ 2 files changed, 36 insertions(+)
+ create mode 100644 supports.txt
+ create mode 100644 ut5-mdtx.conf
+[debug git.sh] GIT_push: ut5-mdtx
+[info git.sh] su ut5-mdtx -c 'git push 2>&1'
+To LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx
+ * [new branch]      master -> master
 [debug utjail.sh] SSH_chroot_login: yes
 [debug utjail.sh] JAIL_build:
 [debug jail.sh] JAIL_add_binary: /bin/ls
 [debug jail.sh] JAIL_add_binary: /bin/bash
 [debug jail.sh] JAIL_add_binary: /usr/bin/id
 [debug jail.sh] JAIL_add_binary: /usr/bin/scp
-[debug jail.sh] JAIL_add_binary: /usr/bin/cvs
+[debug jail.sh] JAIL_add_binary: /usr/bin/git
+[debug jail.sh] JAIL_add_binary: /usr/bin/git-upload-pack
+[debug jail.sh] JAIL_add_binary: /usr/bin/git-receive-pack
 [debug jail.sh] JAIL_add_library: ld-linux
 [debug jail.sh] JAIL_add_library: libnss_files
 [info utjail.sh] chroot LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail ls
@@ -78,48 +81,58 @@ usr
 var
 [debug utjail.sh] USERS_coll_create_user: ut5-mdtx-hello
 [debug users.sh] USERS_create_user: ut5-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello
-[debug users.sh] USERS_add_to_group: www-data ut5-mdtx-hello
-Ajout de l'utilisateur « www-data » au groupe « ut5-mdtx-hello »...
-Ajout de l'utilisateur www-data au groupe ut5-mdtx-hello
-Fait.
-[debug users.sh] USERS_add_to_group: ut5-mdtx ut5-mdtx-hello
-Ajout de l'utilisateur « ut5-mdtx » au groupe « ut5-mdtx-hello »...
-Ajout de l'utilisateur ut5-mdtx au groupe ut5-mdtx-hello
-Fait.
 [debug users.sh] USERS_coll_populate: ut5-mdtx-hello
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cache/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/tmp/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cvs/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
+[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello/.ssh %s %s 0700 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
-[debug utjail.sh] CVS_coll_import: ut5-mdtx-hello
-[debug cvs.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
-[info cvs.sh] CVSUMASK=007 cvs -d LOCALSTATEDIR/lib/mediatex/ut5-mdtx import -m 'Mediatex exemple files' ut5-mdtx-hello ut5-mdtx-hello v1
-
-
-cvs import: Importing LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello/apache2
-cvs import: Importing LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello/icons
-No conflicts created by this import
-N ut5-mdtx-hello/apache2/cache.htaccess
-N ut5-mdtx-hello/apache2/cgi.htaccess
-N ut5-mdtx-hello/apache2/home.htaccess
-N ut5-mdtx-hello/apache2/htgroup
-N ut5-mdtx-hello/apache2/index.htaccess
-N ut5-mdtx-hello/apache2/score.htaccess
-N ut5-mdtx-hello/catalog000.txt
-N ut5-mdtx-hello/.cvsignore
-N ut5-mdtx-hello/extract000.txt
-N ut5-mdtx-hello/icons/floppy-icon.png
-N ut5-mdtx-hello/logo
-N ut5-mdtx-hello/mediatex.css
-N ut5-mdtx-hello/readme.html
-N ut5-mdtx-hello/servers.txt
 [debug utjail.sh] SSH_build_key: ut5-mdtx-hello
+[debug utjail.sh] GIT_coll_import: ut5-mdtx-hello
+[debug git.sh] GIT_init_gitbare: ut5-mdtx-hello
+[info git.sh] su ut5-mdtx-hello -c "git init --bare LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello 2>&1"
+Dépôt Git vide initialisé dans LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello/
+[info git.sh] su ut5-mdtx-hello -c "git clone LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello 2>&1"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello'...
+warning: Vous semblez avoir cloné un dépôt vide.
+fait.
+[info git.sh] su ut5-mdtx-hello -c "git add -A"
+[debug git.sh] GIT_upgrade: ut5-mdtx-hello HOSTNAME FINGERPRINT
+[info git.sh] su ut5-mdtx-hello -c 'git config color.diff auto'
+[info git.sh] su ut5-mdtx-hello -c 'git config color.status auto'
+[info git.sh] su ut5-mdtx-hello -c 'git config color.branch auto'
+[info git.sh] su ut5-mdtx-hello -c 'git config user.name 'HOSTNAME''
+[info git.sh] su ut5-mdtx-hello -c 'git config user.email 'FINGERPRINT''
+[info git.sh] su ut5-mdtx-hello -c 'git config push.default simple'
+[debug git.sh] GIT_commit: ut5-mdtx-hello Initial collection setup
+[info git.sh].txt icons/*.*'
+[info git.sh]'
+[info git.sh] su ut5-mdtx-hello -c 'git commit -a -m "Initial collection setup" 2>&1'
+[master  XXX] Initial collection setup
+ 14 files changed, 156 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 apache2/cache.htaccess
+ create mode 100644 apache2/cgi.htaccess
+ create mode 100644 apache2/home.htaccess
+ create mode 100644 apache2/htgroup
+ create mode 100644 apache2/index.htaccess
+ create mode 100644 apache2/score.htaccess
+ create mode 100644 catalog000.txt
+ create mode 100644 extract000.txt
+ create mode 100644 icons/floppy-icon.png
+ create mode 100644 logo
+ create mode 100644 mediatex.css
+ create mode 100644 readme.html
+ create mode 100644 servers.txt
+[debug git.sh] GIT_push: ut5-mdtx-hello
+[info git.sh] su ut5-mdtx-hello -c 'git push 2>&1'
+To LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx-hello
+ * [new branch]      master -> master
 [debug utjail.sh] SSH_bootstrapKeys ut5-mdtx-hello 
-known_hosts updated.
-Original contents retained as known_hosts.old
+LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello/.ssh/known_hosts updated.
+Original contents retained as LOCALSTATEDIR/cache/mediatex/ut5-mdtx/home/ut5-mdtx-hello/.ssh/known_hosts.old
 [debug utjail.sh] SSH_configure_client ut5-mdtx-hello localhost 22
 [debug utjail.sh] JAIL_add_user: ut5-mdtx-hello
 [info utjail.sh] su LABEL -c "ssh -o PasswordAuthentication=no ut5-mdtx-hello@localhost ls /"
@@ -133,25 +146,10 @@ usr
 var
 [debug utjail.sh] JAIL_bind
 [info utjail.sh] su USER -c "scp ut5-mdtx-hello@localhost:/var/cache/ut5-mdtx-hello/hello.txt LOCALSTATEDIR/cache/mediatex/ut5-mdtx/tmp/ut5-mdtx-hello"
-[debug utjail.sh] CVS_coll_checkout: ut5-mdtx-hello ut5-mdtx-hello@localhost
-[info cvs.sh] su USER -c "cvs -d :ext:ut5-mdtx-hello@localhost:/var/lib/cvsroot co ut5-mdtx-hello"
-cvs checkout: Updating ut5-mdtx-hello
-U ut5-mdtx-hello/.cvsignore
-U ut5-mdtx-hello/catalog000.txt
-U ut5-mdtx-hello/extract000.txt
-U ut5-mdtx-hello/logo
-U ut5-mdtx-hello/mediatex.css
-U ut5-mdtx-hello/readme.html
-U ut5-mdtx-hello/servers.txt
-cvs checkout: Updating ut5-mdtx-hello/apache2
-U ut5-mdtx-hello/apache2/cache.htaccess
-U ut5-mdtx-hello/apache2/cgi.htaccess
-U ut5-mdtx-hello/apache2/home.htaccess
-U ut5-mdtx-hello/apache2/htgroup
-U ut5-mdtx-hello/apache2/index.htaccess
-U ut5-mdtx-hello/apache2/score.htaccess
-cvs checkout: Updating ut5-mdtx-hello/icons
-U ut5-mdtx-hello/icons/floppy-icon.png
+[debug utjail.sh] GIT_coll_checkout: ut5-mdtx-hello ut5-mdtx-hello@localhost
+[debug git.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
+[info git.sh] su ut5-mdtx-hello -c "git clone ssh://ut5-mdtx-hello@localhost:/var/lib/gitbare/ut5-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello 2>&1"
+Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx-hello'...
 [debug utjail.sh] JAIL_unbind
 [debug utjail.sh] JAIL_del_user: ut5-mdtx-hello
 [debug utjail.sh] SSH_chroot_login: no
@@ -159,10 +157,6 @@ U ut5-mdtx-hello/icons/floppy-icon.png
 [debug utjail.sh] USERS_coll_remove_user: ut5-mdtx-hello
 [debug users.sh] USERS_remove_user: ut5-mdtx-hello
 [debug users.sh] USERS_disease_group: ut5-mdtx-hello
-Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx-hello »...
-Fait.
-Suppression de l'utilisateur « ut5-mdtx » du groupe « ut5-mdtx-hello »...
-Fait.
 Suppression de l'utilisateur « ut5-mdtx-hello »...
 Attention ! Le groupe « ut5-mdtx-hello » ne contient plus aucun membre.
 Fait.
@@ -170,8 +164,6 @@ Fait.
 [debug utjail.sh] USERS_mdtx_remove_user: 
 [debug users.sh] USERS_remove_user: ut5-mdtx
 [debug users.sh] USERS_disease_group: ut5-mdtx
-Suppression de l'utilisateur « www-data » du groupe « ut5-mdtx »...
-Fait.
 Suppression de l'utilisateur « ut5-mdtx »...
 Attention ! Le groupe « ut5-mdtx » ne contient plus aucun membre.
 Fait.

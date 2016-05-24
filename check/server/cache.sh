@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: cache.sh,v 1.3 2015/08/23 23:39:12 nroche Exp $
 # * Project: MediaTex
 # * Module:  cache
 # *

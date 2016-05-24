@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: html.sh,v 1.2 2015/08/23 23:39:11 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

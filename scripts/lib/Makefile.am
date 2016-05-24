@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.5 2015/10/20 16:44:22 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  scripts libraries (called by scripts)
 #  *

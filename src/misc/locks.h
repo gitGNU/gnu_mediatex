@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: locks.h,v 1.4 2015/06/30 17:37:33 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

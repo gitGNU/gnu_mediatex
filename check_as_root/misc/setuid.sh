@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: setuid.sh,v 1.1 2015/07/01 10:50:11 nroche Exp $
 # * Project: MediaTex
 # * Module:  miscellaneous modules
 # *

@@ -1,4 +1,3 @@
-#  * Version: $Id: Makefile.am,v 1.3 2015/06/03 14:03:37 nroche Exp $
 #  * Project: MediaTex
 #  * Module:  memory tree modules
 #  *

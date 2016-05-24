@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: device.c,v 1.10 2015/09/04 15:30:27 nroche Exp $
  * Project: MediaTeX
  * Module : checksums
  *

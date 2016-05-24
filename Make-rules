@@ -1,6 +1,5 @@
-#  * Version: $Id: Make-rules,v 1.4 2015/06/30 17:36:56 nroche Exp $
 #  * Project: MediaTex
-#  * Module:  Makefile's common varaibles
+#  * Module:  Makefile's common variables
 #  *
 #  * Process this file with configure to produce a Makefile.
 # 

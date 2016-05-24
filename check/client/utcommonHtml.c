@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utcommonHtml.c,v 1.3 2015/10/20 19:41:41 nroche Exp $
  * Project: MediaTeX
  * Module : commonHtml
 

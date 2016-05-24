@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: threads.sh,v 1.4 2015/07/03 17:36:39 nroche Exp $
 # * Project: MediaTex
 # * Module:  server modules
 # *

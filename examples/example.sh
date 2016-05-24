@@ -1,6 +1,5 @@
 #!/bin/bash
 #=======================================================================
-# * Version: $Id: example.sh,v 1.2 2015/10/12 23:28:51 nroche Exp $
 # * Project: MediaTex
 # * Module : exemple showing hox to build meta-data files
 # *

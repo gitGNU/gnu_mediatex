@@ -2,7 +2,6 @@
 #set -x
 set -e
 #=======================================================================
-# * Version: $Id: umount.sh,v 1.5 2015/08/23 23:39:15 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *

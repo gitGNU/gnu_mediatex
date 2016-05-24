@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: cacheTree.h,v 1.10 2015/10/04 22:15:50 nroche Exp $
  * Project: MediaTeX
  * Module : cache memory
  *

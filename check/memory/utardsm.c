@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utardsm.c,v 1.5 2015/10/20 19:41:43 nroche Exp $
  * Project: MediaTeX
  * Module : ardsm
  *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: cacheTree.c,v 1.15 2015/09/13 23:47:35 nroche Exp $
  * Project: MediaTeX
  * Module : cache
  *

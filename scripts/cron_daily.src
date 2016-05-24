@@ -1,7 +1,6 @@
 #!/bin/sh
 #set -x
 #=======================================================================
-# * Version: $Id: cron_daily.src,v 1.6 2015/10/08 21:43:50 nroche Exp $
 # * Project: MediaTex
 # * Module : scripts
 # *

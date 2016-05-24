@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utserverFile.tab.c,v 1.3 2015/10/20 19:41:47 nroche Exp $
  * Project: MediaTeX
  * Module : server parser
  *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: utconnect.c,v 1.6 2015/10/20 19:41:42 nroche Exp $
  * Project: MediaTeX
  * Module : connect
  *

@@ -1,5 +1,4 @@
 /*=======================================================================
- * Version: $Id: recordTree.h,v 1.7 2015/09/17 18:53:47 nroche Exp $
  * Project: MediaTeX
  * Module : record tree
  *
