@@ -35,7 +35,7 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
-
+  
   mdtxOptions();
   //fprintf(stderr, "  ---\n");
   return;
@@ -77,7 +77,7 @@ main(int argc, char** argv)
   while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
 	!= EOF) {
     switch(cOption) {
-      
+
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -87,20 +87,55 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
 
   /************************************************************************/
-  // force a demand for logo
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
+  
+  // add a demand for logo
   if (!loadCollection(coll, CACH)) goto error;
   if (!(string = createString("!wanted"))) goto error;
   if (!(archive = addArchive(coll,
 			     "b281449c229bcc4a3556cdcc0d3ebcec", 815)))
     goto error;
   if (!(server = getLocalHost(coll))) goto error;
-  if (!(record = addRecord(coll, server, archive, DEMAND, string))) goto error;
+  if (!(record = addRecord(coll, server, archive, DEMAND, string)))
+    goto error;
   archive = 0;
   string = 0;
   if (!addCacheEntry(coll, record)) goto error;
   record = 0;
-    
+
+  /*
+  // add more supports (to test alphabetic order that was correct)
+  //  (copy-paste from utsupp.c)
+  sprintf(path, "%s/logoP1.iso", inputRep);
+  if (!mdtxAddSupport("AAA", path)) goto error;
+  if (!mdtxAddSupport("ZZZ", path)) goto error;
+  if (!mdtxShareSupport("AAA", "coll1")) goto error; // set wrong order
+  if (!mdtxShareSupport("ZZZ", "coll1")) goto error;
+  if (!scoreLocalImages(coll)) goto error; // <- this perturb initial test!
+  */
+
+  // add a local supplies (to test alphabetic order)
+  if (!(string = createString("zzz"))) goto error;
+  if (!(archive = addArchive(coll,
+			     "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz", 42)))
+    goto error;
+  if (!(record = addRecord(coll, server, archive, SUPPLY, string)))
+    goto error;
+  archive = 0;
+  string = 0;
+  if (!addCacheEntry(coll, record)) goto error;
+  record = 0;
+  if (!(string = createString("aaa"))) goto error;
+  if (!(archive = addArchive(coll,
+			     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 42)))
+    goto error;
+  if (!(record = addRecord(coll, server, archive, SUPPLY, string)))
+    goto error;
+  archive = 0;
+  string = 0;
+  if (!addCacheEntry(coll, record)) goto error;
+  record = 0;
+
   // test
   if (!updateMotd()) goto error;
   if (!releaseCollection(coll, CACH)) goto error;

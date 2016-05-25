@@ -75,7 +75,7 @@ cmpRecord(const void *p1, const void *p2)
   if (!rc) rc = cmpArchive(&a1->archive, &a2->archive);
   if (!rc) rc = cmpServer(&a1->server, &a2->server);
 
-  // do sort en REMOVE flag!
+  // do sort on REMOVE flag!
   if (!rc) rc = a1->type - a2->type; 
 
   if (!rc) {
@@ -93,8 +93,8 @@ cmpRecord(const void *p1, const void *p2)
 
 /*=======================================================================
  * Function   : cmpRecordSize
- * Description: compare 2 records
- * Synopsis   : int cmpRecord(const void *p1, const void *p2)
+ * Description: compare 2 records on size
+ * Synopsis   : int cmpRecordSize(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
  * Output     : -1, 0 or 1 respectively for lower, equal or greater
  * Note       : sort by growing sizes 
@@ -114,7 +114,7 @@ cmpRecordSize(const void *p1, const void *p2)
   if (!rc) rc = cmpArchiveSize(&a1->archive, &a2->archive);
   if (!rc) rc = cmpServer(&a1->server, &a2->server);
 
-  // dont sort on REMOVE flag!
+  // don't sort on REMOVE flag!
   if (!rc) rc = (a1->type & 0x3) - (a2->type & 0x3); 
 
   if (!rc) {
@@ -128,6 +128,32 @@ cmpRecordSize(const void *p1, const void *p2)
 	rc = 1;
     }
   }
+ 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cmpRecordPath
+ * Description: compare 2 records on path
+ * Synopsis   : int cmpRecordPath(const void *p1, const void *p2)
+ * Input      : const void *p1, const void *p2 : the records
+ * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Note       : sort by growing sizes 
+ =======================================================================*/
+int 
+cmpRecordPath(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on &items
+   * and items are suposed to be Record* 
+   */
+  
+  Record* a1 = *((Record**)p1);
+  Record* a2 = *((Record**)p2);
+
+  if (!rc) rc = strcmp(a1->extra, a2->extra);
+  if (!rc) rc = cmpRecord(p1, p2);
  
   return rc;
 }

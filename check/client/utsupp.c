@@ -56,7 +56,7 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 {
-  char inputRep[255] = "../../examples";
+  char inputRep[255] = "../misc";
   char* supp = "SUPP21_logo.part1";
   char path[1024];
   Configuration* conf = 0;

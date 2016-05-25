@@ -458,7 +458,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   curr = 0;
   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
 
-    // looking for top containers as content cannot have worse score
+    // looking for top containers (as content cannot have worse score)
     if (!isEmptyRing(archive->fromContainers)) continue;
 
     // looking for archive having a bad score
@@ -604,6 +604,7 @@ updateMotd()
   printf("Please burn theses files:\n"); 
   while ((motdRec = rgNext(motd->motdRecords))) {
     if (isEmptyRing(motdRec->records)) continue;
+    rgSort(motdRec->records, cmpRecordPath);
     printf("- Collection %s:\n", motdRec->coll->label); 
     rgRewind(motdRec->records);
     while ((record = rgNext(motdRec->records))) {

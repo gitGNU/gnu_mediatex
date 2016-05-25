@@ -90,18 +90,22 @@ function USERS_root_populate()
     USERS_install $PIDDIR "${_VAR_RUN_M[@]}"
 
     # configure cron
-    install -o root -g root -m 640 $MISC/mediatex_cron $SYSCONFDIR/cron.d
-    sed $CRON_FILE -i -e "s!DATADIR!$DATADIR!"
-    USERS_root_random 59
-    sed $CRON_FILE -i -e "s!#M1!$rand!"
-    USERS_root_random 59
-    sed $CRON_FILE -i -e "s!#M2!$rand!"
-    USERS_root_random 59
-    sed $CRON_FILE -i -e "s!#M3!$rand!"
-    USERS_root_random 23
-    sed $CRON_FILE -i -e "s!H1!$rand!"
-    USERS_root_random 23
-    sed $CRON_FILE -i -e "s!H2!$rand!"
+    if [ "$MDTX" == "mdtx" ]; then
+	# presentely cron only run under default mdtx context
+	install -o root -g root -m 640 \
+		$MISC/mediatex_cron $SYSCONFDIR/cron.d
+	sed $CRON_FILE -i -e "s!DATADIR!$DATADIR!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M1!$rand!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M2!$rand!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M3!$rand!"
+	USERS_root_random 23
+	sed $CRON_FILE -i -e "s!H1!$rand!"
+	USERS_root_random 23
+	sed $CRON_FILE -i -e "s!H2!$rand!"
+    fi
 }
 
 # this function remove the root directories
@@ -110,6 +114,7 @@ function USERS_root_disease()
 {
     Debug "$FUNCNAME" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
+    CRON_FILE=$SYSCONFDIR/cron.d/mediatex_cron
     
     # clean base directories if no more used
     for DIR in $STATEDIR $CACHEDIR $ETCDIR $PIDDIR; do
@@ -117,6 +122,11 @@ function USERS_root_disease()
 	    [ $(ls $DIR | wc -l) -gt 0 ] || rmdir $DIR
 	fi
     done
+
+    # presentely cron only run under default mdtx context
+    if [ "$MDTX" == "mdtx" ]; then
+	rm -f $CRON_FILE
+    fi
 }
 
 # this function create the server directories

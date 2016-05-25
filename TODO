@@ -3,29 +3,12 @@
 
 *** TO TEST
 
+- purge.sh: remove /etc/cron.d/mediatex_cron (set by init)
+- sort files to burn on message of the day
+
 *** TODO
 
-*** TO CLEAN
-
-*** MAYBE
-
-- remove.sh+purge.sh: remove /etc/cron.d/mediatex_cron (set by init) 
-- do we display the bare repo with cgit ? (master host url on html.c)
-- install/checkDirectoryPerm expending MDTX/COLL macros (redondant)
-
 *** BUGS
-
-- /var/run/mediatex disapear at purge if empty (no good)
---> no more /var/run/(mediatex) directory
-
-- manage full server scan (done at startup, but not on reload)
-   test renaming file into the cache (as now, they where lost)
-
-- remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
-
-- sort files on message of the day
-   apache_20160107_fred.narval.tk.log.gz ( 0.00)
-   apache_20160106_fred.narval.tk.log.gz ( 0.00)
 
 - test14: motd ask for file support
 
@@ -34,6 +17,9 @@
   not alway reproductible with SERVER=0
   md5sum computed but not checked (audit will alway success !)
 
+- manage full server scan (done at startup, but not on reload)
+   test renaming file into the cache (as now, they where lost)
+
 *** TO TEST
 
 - pgrof: test with more than 100k entries
@@ -41,7 +27,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- replace cvs+viewvc by git+cgit
 - repair audit process 
 - mediatex log|top|start|stop|hup/reload|scan
 - speed-up cache scanning process (btree on archives)
@@ -53,6 +38,7 @@
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add DNS roundrobbin hostname into logo (servers.txt)
 - src/misc/md5sums.c -> checksums.c
 - add an apache alias for '~' as it is not on mac keyboard
