@@ -123,7 +123,8 @@ main(int argc, char** argv)
   textdomain (PACKAGE);
 
   // import mdtx environment
-  env.noCollCvs = FALSE; // enable cvs
+  env.noGit = FALSE;         // enable git
+  env.noGitPullPush = FALSE; // enable git to reach network
   env.allocLimit *= 2;
   env.allocDiseaseCallBack = clientDiseaseAll;
   getEnv(&env);
@@ -134,7 +135,7 @@ main(int argc, char** argv)
     switch(cOption) {
       
     case 'a':
-      env.noCollCvs = 1;
+      env.noGitPullPush = TRUE;
       break;
       
       GET_MDTX_OPTIONS; // generic options

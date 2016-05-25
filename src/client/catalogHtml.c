@@ -1357,9 +1357,8 @@ serializeHtmlIndexHeader(Collection* coll)
     htmlPClose(fd);
   }
 
-  // master url (other are relatives ones)
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, coll->serverTree->master->url)) goto error;
+  if (!htmlRightHead(fd)) goto error;
   if (!env.dryRun) {
     fclose(fd);
   } else {

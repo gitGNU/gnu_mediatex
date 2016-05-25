@@ -188,15 +188,15 @@ htmlLeftPageTail(FILE* fd)
  * Description: 
  * Synopsis   : 
  * Input      : FILE* fd
- *              char* masterUrl: was used to reach master host
+ *              char* url: site web root url
  * Output     : TRUE on success
  =======================================================================*/
 int
-htmlRightHeadBasic(FILE* fd, char* masterUrl, char* url)
+htmlRightHeadBasic(FILE* fd, char* url)
 {
   int rc = FALSE;
 
-  logMisc(LOG_DEBUG, "htmlRightHead");
+  logMisc(LOG_DEBUG, "htmlRightHeadBasic");
   
   //"<TD ALIGN='LEFT' VALIGN='TOP' WIDTH=504><TABLE  WIDTH='100%%'>\n"
 
@@ -218,7 +218,7 @@ htmlRightHeadBasic(FILE* fd, char* masterUrl, char* url)
 	       "\n"
 	       "</DIV>\n"
 	       "\n",
-	       url, url, url, masterUrl)) goto error;
+	       url, url, url, url)) goto error;
 
   rc = TRUE;
  error:

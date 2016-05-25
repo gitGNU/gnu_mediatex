@@ -410,7 +410,7 @@ admConfQuery: shellINIT shellEOL
 {
   logParser(LOG_INFO, "quickly make all");
   if (!env.noRegression) {
-    env.noCollCvs = TRUE; // disable update/commit
+    env.noGitPullPush = TRUE; // disable git to reach network
     if (!clientLoop(mdtxMake)) YYABORT;
   }
 }
@@ -418,7 +418,7 @@ admConfQuery: shellINIT shellEOL
 {
   logParser(LOG_INFO, "quickly make collection");
   if (!env.noRegression) {
-    env.noCollCvs = TRUE;
+    env.noGitPullPush = TRUE; // disable git to reach network
     if (!mdtxMake($2)) YYABORT;
   }
 }
@@ -460,7 +460,7 @@ admConfQuery: shellINIT shellEOL
   logParser(LOG_INFO, "get %s as %s on %s as %s", $2, $4, $6, $8);
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    env.noCollCvs = TRUE; // do not upgrade
+    env.noGit = TRUE; // do not use git at all (no commit)
     if (!mdtxScp($4, $6, $2, $8)) YYABORT;
   }
 }

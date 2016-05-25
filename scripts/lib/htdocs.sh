@@ -101,10 +101,8 @@ function HTDOCS_configure_coll_apache2()
     ln -sf $COLL_GIT/icons $COLL_HTML/
 
     # html repositories and links
-    for t in cgi index cache score; do
-        if [ $t != cache ]; then 	    
-	    install -o $MDTX -g $MDTX -m 750 -d $COLL_HTML/$t
-	fi
+    for t in cgi index score; do
+	install -o $MDTX -g $MDTX -m 750 -d $COLL_HTML/$t
 	ln -sf $COLL_GIT/apache2/$t.htaccess $COLL_HTML/$t/.htaccess
     done
     ln -sf $COLL_GIT/apache2/home.htaccess $COLL_HTML/.htaccess

@@ -450,6 +450,8 @@ function test7()
 	sedInPlace "s/networks   www/networks   www, private/" \
 	    /etc/mediatex/serv2.conf
 	echo "Gateways private" >> /etc/mediatex/serv2.conf
+	mdtxP "check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso" \
+	      serv2
 	startInitdScript serv2
 	finalQuestion "is 2nd server running ?" "statusInitdScript serv2"
     else
@@ -583,7 +585,9 @@ function test11()
 
 	mdtxA "adm init" serv3
 	sedInPlace "s/networks   www/networks   private/" \
-	    /etc/mediatex/serv3.conf
+		   /etc/mediatex/serv3.conf
+	mdtxP "check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso" \
+	      serv3
 	startInitdScript serv3
 	finalQuestion "is 3rd server running ?" "statusInitdScript serv3"
     else

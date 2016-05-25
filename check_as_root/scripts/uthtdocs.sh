@@ -54,13 +54,11 @@ USERS_coll_remove_user $USER
 USERS_root_populate
 USERS_mdtx_create_user
 HTDOCS_configure_mdtx_apache2
-HTDOCS_configure_mdtx_viewvc
 HTDOCS_configure_mdtx_cgit
 
 # new.sh
 USERS_coll_create_user $USER
 HTDOCS_configure_coll_apache2 $USER
-HTDOCS_configure_coll_viewvc $USER
 
 echo "* files : *"
 find $UNIT_TEST_ROOTDIR -ls |

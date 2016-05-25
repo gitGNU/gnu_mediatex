@@ -103,7 +103,6 @@ Date:   XXX
 [debug utgit.sh] USERS_coll_create_user: ut4-mdtx-hello
 [debug users.sh] USERS_create_user: ut4-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello
 [debug users.sh] USERS_coll_populate: ut4-mdtx-hello
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/cache/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/tmp/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/git/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
@@ -112,6 +111,7 @@ Date:   XXX
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut4-mdtx/home/ut4-mdtx-hello/public_html root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug utgit.sh] SSH_build_key: ut4-mdtx-hello
 [debug utgit.sh] GIT_coll_import: ut4-mdtx-hello
+[debug git.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug git.sh] GIT_init_gitbare: ut4-mdtx-hello
 [info git.sh] su ut4-mdtx-hello -c "git init --bare LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello 2>&1"
 Dépôt Git vide initialisé dans LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx-hello/
@@ -132,9 +132,8 @@ fait.
 [info git.sh]'
 [info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "Initial collection setup" 2>&1'
 [master  XXX] Initial collection setup
- 14 files changed, 156 insertions(+)
+ 13 files changed, 148 insertions(+)
  create mode 100644 .gitignore
- create mode 100644 apache2/cache.htaccess
  create mode 100644 apache2/cgi.htaccess
  create mode 100644 apache2/home.htaccess
  create mode 100644 apache2/htgroup

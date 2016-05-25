@@ -36,12 +36,10 @@ function UNIT_TEST_populate_datadir()
 
     for f in mediatex_cron mediatex.conf supports.txt logo \
 	catalog000.txt extract000.txt servers.txt htgroup \
-	mediatex.css floppy-icon.png \
-	viewvc.conf apache-mdtx.conf header.ezt \
-	; do
+	mediatex.css floppy-icon.png apache-mdtx.conf; do
 	install -o root -g root -m 444 $srcdir/../misc/$f $MISC
     done
-    for t in home index cache score cgi; do
+    for t in home index score cgi; do
 	install -o root -g root -m 444 $srcdir/../misc/$t.htaccess $MISC
     done
 

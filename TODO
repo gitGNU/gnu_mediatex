@@ -3,11 +3,7 @@
 
 *** TO TEST
 
-- cgit links
-
 *** TODO
-
-- rename noCvs variable
 
 *** TO CLEAN
 
@@ -31,7 +27,7 @@
    apache_20160107_fred.narval.tk.log.gz ( 0.00)
    apache_20160106_fred.narval.tk.log.gz ( 0.00)
 
-- test14 : motd ask for file support
+- test14: motd ask for file support
 
 - test21: audit fails (rc=4 ?)
   never fails with SERVER=1 ?

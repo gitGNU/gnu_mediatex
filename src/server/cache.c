@@ -368,7 +368,12 @@ scanRepository(Collection* coll, const char* path)
 	  !scanRepository(coll, relativePath)) goto error;
       break;
 	
-    case DT_REG: 
+    case DT_REG:
+      if (!strcmp(entry->d_name, ".htaccess")) {
+	  logMain(LOG_DEBUG, "ignore .htaccess files");
+	  break;
+	}
+	  
       if ((absolutePath2 = createString(absolutePath)) == 0 ||
 	  (absolutePath2 = catString(absolutePath2, entry->d_name)) 
 	  == 0) goto error;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2016-01-21 20:31+0100\n"
+"POT-Creation-Date: 2016-05-25 15:09+0200\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
 "Last-Translator: nroche <nroche@narval.tk>\n"
 "Language-Team: French\n"
@@ -18,42 +18,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/common/extractScore.c:387
+#: src/common/extractScore.c:386
 msgid "Perenniality lost"
 msgstr ""
 
-#: src/common/extractScore.c:391
+#: src/common/extractScore.c:390
 msgid "Serious risk to loose perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:395
+#: src/common/extractScore.c:394
 msgid "Bad perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:399
+#: src/common/extractScore.c:398
 msgid "Good perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:402
+#: src/common/extractScore.c:401
 msgid "Very good perenniality"
 msgstr ""
 
-#: src/client/catalogHtml.c:332
+#: src/client/catalogHtml.c:331
 #, fuzzy
 msgid "Role "
 msgstr ""
 "\n"
 "Rôles :\n"
 
-#: src/client/catalogHtml.c:413
+#: src/client/catalogHtml.c:412
 msgid "Person"
 msgstr "Collaborateur"
 
-#: src/client/catalogHtml.c:437 src/client/catalogHtml.c:556
+#: src/client/catalogHtml.c:436 src/client/catalogHtml.c:555
 msgid "Characteristics:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:450
+#: src/client/catalogHtml.c:449
 msgid ""
 "\n"
 "Roles :\n"
@@ -61,272 +61,272 @@ msgstr ""
 "\n"
 "Rôles :\n"
 
-#: src/client/catalogHtml.c:467
+#: src/client/catalogHtml.c:466
 msgid "for "
 msgstr ""
 
-#: src/client/catalogHtml.c:569 src/client/catalogHtml.c:808
+#: src/client/catalogHtml.c:568 src/client/catalogHtml.c:807
 #, c-format
 msgid ""
 "\n"
 "Parteners:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:592
+#: src/client/catalogHtml.c:591
 #, c-format
 msgid ""
 "\n"
 "Records:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:602
+#: src/client/catalogHtml.c:601
 #, c-format
 msgid "No record\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:753
+#: src/client/catalogHtml.c:752
 msgid "Class"
 msgstr ""
 
-#: src/client/catalogHtml.c:763
+#: src/client/catalogHtml.c:762
 msgid ""
 "\n"
 "Parent classes: "
 msgstr ""
 
-#: src/client/catalogHtml.c:779
+#: src/client/catalogHtml.c:778
 msgid ""
 "\n"
 "Sub-classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:795
+#: src/client/catalogHtml.c:794
 msgid ""
 "\n"
 "Characteristics:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:827
+#: src/client/catalogHtml.c:826
 #, c-format
 msgid ""
 "\n"
 "Documents: %i\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:987
+#: src/client/catalogHtml.c:986
 msgid "All documents "
 msgstr ""
 
-#: src/client/catalogHtml.c:1149
+#: src/client/catalogHtml.c:1148
 msgid "All parteners "
 msgstr ""
 
-#: src/client/catalogHtml.c:1215
+#: src/client/catalogHtml.c:1214
 msgid "Welcome!"
 msgstr ""
 
-#: src/client/catalogHtml.c:1216
+#: src/client/catalogHtml.c:1215
 msgid " on collection "
 msgstr ""
 
-#: src/client/catalogHtml.c:1219
+#: src/client/catalogHtml.c:1218
 msgid "(you are on "
 msgstr ""
 
-#: src/client/catalogHtml.c:1221
+#: src/client/catalogHtml.c:1220
 msgid " server)"
 msgstr ""
 
-#: src/client/catalogHtml.c:1322
+#: src/client/catalogHtml.c:1321
 msgid "All documents"
 msgstr ""
 
-#: src/client/catalogHtml.c:1328
+#: src/client/catalogHtml.c:1327
 #, c-format
 msgid ""
 "\n"
 "Classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:1347
+#: src/client/catalogHtml.c:1346
 msgid "Parteners:"
 msgstr ""
 
-#: src/client/extractHtml.c:97
+#: src/client/extractHtml.c:96
 #, c-format
 msgid " from %s "
 msgstr ""
 
-#: src/client/extractHtml.c:113
+#: src/client/extractHtml.c:112
 #, c-format
 msgid "part %i "
 msgstr ""
 
-#: src/client/extractHtml.c:356
+#: src/client/extractHtml.c:355
 msgid "Record:"
 msgstr ""
 
-#: src/client/extractHtml.c:379
+#: src/client/extractHtml.c:378
 #, c-format
 msgid ""
 "\n"
 "Catalog reference as documents:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:395
+#: src/client/extractHtml.c:394
 #, c-format
 msgid "Not in catalog\n"
 msgstr ""
 
-#: src/client/extractHtml.c:403
+#: src/client/extractHtml.c:402
 #, c-format
 msgid ""
 "\n"
 "Provided by servers:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:419
+#: src/client/extractHtml.c:418
 #, c-format
 msgid "Is not an image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:427
+#: src/client/extractHtml.c:426
 #, c-format
 msgid ""
 "\n"
 "Comes from:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:444
+#: src/client/extractHtml.c:443
 #, c-format
 msgid "Cache: uploaded on "
 msgstr ""
 
-#: src/client/extractHtml.c:452
+#: src/client/extractHtml.c:451
 #, c-format
 msgid "External source"
 msgstr ""
 
-#: src/client/extractHtml.c:461
+#: src/client/extractHtml.c:460
 #, c-format
 msgid ""
 "\n"
 "Content: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:488
+#: src/client/extractHtml.c:487
 #, c-format
 msgid "No content\n"
 msgstr ""
 
-#: src/client/extractHtml.c:553
+#: src/client/extractHtml.c:552
 #, c-format
 msgid "Server%s "
 msgstr ""
 
-#: src/client/extractHtml.c:555
+#: src/client/extractHtml.c:554
 msgid " master"
 msgstr ""
 
-#: src/client/extractHtml.c:573
+#: src/client/extractHtml.c:572
 #, c-format
 msgid "fingerprint: "
 msgstr ""
 
-#: src/client/extractHtml.c:577
+#: src/client/extractHtml.c:576
 #, c-format
 msgid "last commit: "
 msgstr ""
 
-#: src/client/extractHtml.c:584
+#: src/client/extractHtml.c:583
 #, c-format
 msgid "mdtx port: "
 msgstr ""
 
-#: src/client/extractHtml.c:590
+#: src/client/extractHtml.c:589
 #, c-format
 msgid "ssh port: "
 msgstr ""
 
-#: src/client/extractHtml.c:600
+#: src/client/extractHtml.c:599
 #, c-format
 msgid "On networks:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:617
+#: src/client/extractHtml.c:616
 #, c-format
 msgid "Gateway for:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:634
+#: src/client/extractHtml.c:633
 #, c-format
 msgid "Provide images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:792 src/client/extractHtml.c:1182
+#: src/client/extractHtml.c:791 src/client/extractHtml.c:1181
 msgid "All archives"
 msgstr ""
 
-#: src/client/extractHtml.c:963 src/client/extractHtml.c:1187
+#: src/client/extractHtml.c:962 src/client/extractHtml.c:1186
 msgid "Bad archives"
 msgstr ""
 
-#: src/client/extractHtml.c:973
+#: src/client/extractHtml.c:972
 msgid "should be burned into supports:"
 msgstr ""
 
-#: src/client/extractHtml.c:1047 src/client/extractHtml.c:1174
+#: src/client/extractHtml.c:1046 src/client/extractHtml.c:1173
 msgid "score"
 msgstr ""
 
-#: src/client/extractHtml.c:1051
+#: src/client/extractHtml.c:1050
 #, c-format
 msgid ""
 "\n"
 "Score parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1085
+#: src/client/extractHtml.c:1084
 #, c-format
 msgid ""
 "\n"
 "Self-ingestion parameters:\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1102
+#: src/client/extractHtml.c:1101
 #, c-format
 msgid ""
 "\n"
 "All images: %i\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1122
+#: src/client/extractHtml.c:1121
 #, c-format
 msgid "No image\n"
 msgstr ""
 
-#: src/client/extractHtml.c:1173
+#: src/client/extractHtml.c:1172
 msgid "Score"
 msgstr ""
 
-#: src/client/commonHtml.c:269
+#: src/client/commonHtml.c:268
 #, c-format
 msgid ""
 "\n"
 "Page %i/%i"
 msgstr ""
 
-#: src/client/commonHtml.c:333
+#: src/client/commonHtml.c:332
 #, c-format
 msgid ""
 "\n"
 "Deep %i/%i"
 msgstr ""
 
-#: src/client/commonHtml.c:447 src/client/commonHtml.c:515
+#: src/client/commonHtml.c:446 src/client/commonHtml.c:513
 msgid "Cache"
 msgstr ""
 
-#: src/client/commonHtml.c:448 src/client/commonHtml.c:517
-msgid "cache"
+#: src/client/commonHtml.c:582
+msgid "Version"
 msgstr ""

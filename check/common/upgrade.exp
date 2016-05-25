@@ -21,7 +21,7 @@
 [info upgrade.c]    0.33
 [info upgrade.c] -------
 [info upgrade.c] =  0.33
-[info openClose.c] callUpgrade mdtx1-coll1: 746d6ceeb76e05cfa2dea92a1c5753cd ssh://mdtx1-coll1@localhost:/var/lib/gitbare/mdtx1-coll1
+[info openClose.c] callUpgrade mdtx1-coll1: fp=746d6ceeb76e05cfa2dea92a1c5753cd url=ssh://mdtx1-coll1@localhost:/var/lib/gitbare/mdtx1-coll1
 [info confTree.c] free configuration
 [info utupgrade.c] exit on success
 

@@ -263,6 +263,9 @@ install-exec-hook:
 	/bin/chmod 4755 $(DESTDIR)$(bindir)/mediatex
 endif
 
+distclean-local:
+	-rm -f parser/*.[ch] parser/*.output
+
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
 ACLOCAL_AMFLAGS= -I m4

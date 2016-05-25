@@ -321,9 +321,8 @@ function GIT_coll_import()
 	done
 	install -o $1 -g $1 -m 660 /dev/null readme.html
 
-	for t in home index cache score cgi; do
-	    install -o $1 -g $1 -m 660 \
-			 $MISC/$t.htaccess apache2/
+	for t in home index score cgi; do
+	    install -o $1 -g $1 -m 660 $MISC/$t.htaccess apache2/
 
 	    # adapt them
 	    sed apache2/$t.htaccess -i \

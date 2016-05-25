@@ -57,7 +57,7 @@ callUpgrade(char* user, char* fingerprint, char* url)
   argv[3] = *fingerprint?fingerprint:"?";
   argv[4] = url;
   
-  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+  if (!env.noRegression && !env.dryRun && !env.noGit) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
@@ -96,7 +96,7 @@ callCommit(char* user, char* comment)
   argv[1] = user;
   argv[2] = comment?comment:env.commandLine;
   
-  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+  if (!env.noRegression && !env.dryRun && !env.noGit) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
@@ -132,7 +132,7 @@ callPull(char* user)
   if (!(argv[0] = catString(argv[0], "/pull.sh"))) goto error;
   argv[1] = user;
 
-  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+  if (!env.noRegression && !env.dryRun && !env.noGitPullPush) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
@@ -167,7 +167,7 @@ callPush(char* user)
   if (!(argv[0] = catString(argv[0], "/push.sh"))) goto error;
   argv[1] = user;
   
-  if (!env.noRegression && !env.dryRun && !env.noCollCvs) {
+  if (!env.noRegression && !env.dryRun && !env.noGitPullPush) {
     if (!execScript(argv, user, 0, FALSE)) goto error;
   }
 
@@ -199,8 +199,10 @@ int loadConfiguration(int confFiles)
   }
   if (!(conf = getConfiguration())) goto error;
 
-  if (!callCommit(env.confLabel, "manual user edition")) goto error;
-  if (!env.noCollCvs) callPull(env.confLabel);
+  if (!env.noGit) {
+    if (!callCommit(env.confLabel, "manual user edition")) goto error;
+    if (!env.noGitPullPush) callPull(env.confLabel);
+  }
   
   if ((confFiles & CFG) && conf->fileState[iCFG] == DISEASED) {
     if (!parseConfiguration(conf->confFile)) goto error;
@@ -386,7 +388,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
     i=1;
 
     // cgi and server only read the meta-data
-    if (!env.noCollCvs) {
+    if (!env.noGit) {
       // force re-serialize and commit to eat NNN.txt
       coll->fileState[fileIdx] = MODIFIED;
     }
@@ -442,7 +444,7 @@ loadColl(Collection* coll, int fileIdx)
       coll->fileState[iSERV] = LOADED;
 
       // cgi and server only read the meta-data
-      if (!env.noCollCvs) {
+      if (!env.noGit) {
 	if (!upgradeCollection(coll)) goto error2;
 	coll->fileState[iSERV] = MODIFIED;
       }
@@ -571,10 +573,12 @@ loadCollection(Collection* coll, int collFiles)
 
   if (!expandCollection(coll)) goto error;
 
-  if (!callCommit(coll->user, "manual user edition")) goto error;
-  if (!env.noCollCvs) {
-    if (coll->toUpdate && collFiles & (CTLG | EXTR | SERV)) {
-      if (callPull(coll->user)) coll->toUpdate = FALSE;
+  if (!env.noGit) {
+    if (!callCommit(coll->user, "manual user edition")) goto error;
+    if (!env.noGitPullPush) {
+      if (coll->toUpdate && collFiles & (CTLG | EXTR | SERV)) {
+	if (callPull(coll->user)) coll->toUpdate = FALSE;
+      }
     }
   }
 
@@ -773,11 +777,11 @@ saveConfiguration()
   }
 
   // commit changes
-  if (change) {
+  if (change && !env.noGit) {
     if (!callUpgrade(env.confLabel, conf->hostFingerPrint, 0)) goto error;
     if (!callCommit(env.confLabel, 0)) goto error;
-    if (!env.noCollCvs) {
-      callPush(env.confLabel);
+    if (!env.noGitPullPush) {
+	callPush(env.confLabel);
     }
   }
 
@@ -942,9 +946,9 @@ saveCollection(Collection* coll, int collFiles)
 	    env.progBar.cur, env.progBar.max);
 
   // commit changes
-  if (coll->toCommit) {
+  if (coll->toCommit && !env.noGit) {
     if (!callCommit(coll->user, 0)) goto error;
-    if (!env.noCollCvs) {
+    if (!env.noGitPullPush) {
       if (callPush(coll->user)) {
 	conf->toHup = TRUE;
 	coll->toCommit = FALSE;

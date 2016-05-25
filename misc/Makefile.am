@@ -23,7 +23,7 @@ miscdir = $(datarootdir)@mdtx_mediatexdir@/misc
 dist_misc_DATA = \
 	mediatex_cron mediatex.conf \
 	supports.txt catalog000.txt extract000.txt servers.txt \
-	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
+	index.htaccess score.htaccess cgi.htaccess \
 	home.htaccess apache-mdtx.conf htgroup \
 	mediatex.css floppy-icon.png \
 	logo logo.png logoP1.iso logoP2.iso logoP1.cat logoP2.cat\

@@ -55,7 +55,6 @@ Fait.
 [debug utusers.sh] USERS_coll_create_user: ut1-mdtx-hello
 [debug users.sh] USERS_create_user: ut1-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/git/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
@@ -66,7 +65,6 @@ Fait.
 [debug users.sh] USERS_create_user: ut1-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut1-mdtx/home/ut1-mdtx-hello
 [info users.sh] ut1-mdtx-hello user already exists
 [debug users.sh] USERS_coll_populate: ut1-mdtx-hello
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/cache/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/tmp/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut1-mdtx/git/ut1-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
@@ -87,12 +85,10 @@ Fait.
           root           root drwxr-xr-x DATAROOTDIR/mediatex
           root           root drwxr-xr-x DATAROOTDIR/mediatex/misc
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/extract000.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/header.ezt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
@@ -103,7 +99,6 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/viewvc.conf
           root           root drwxr-xr-x LOCALSTATEDIR
           root           root drwxr-xr-x LOCALSTATEDIR/cache
           root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex
@@ -128,7 +123,6 @@ ut1-mdtx-hello ut1-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut1-mdtx/h
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex
           root           root drwxr-xr-x LOCALSTATEDIR/lib/mediatex/ut1-mdtx
           root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx
-          root           root drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx-hello
           root           root drwxr-xr-x LOCALSTATEDIR/run
           root           root drwxrwxrwx LOCALSTATEDIR/run/mediatex
 [debug utusers.sh] USERS_coll_disease: ut1-mdtx-hello
@@ -175,12 +169,10 @@ drwxr-xr-x LOCALSTATEDIR/lib
 drwxr-xr-x LOCALSTATEDIR/lib/mediatex
 drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
--r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/extract000.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
--r--r--r-- DATAROOTDIR/mediatex/misc/header.ezt
 -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/htgroup
 -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
@@ -191,6 +183,5 @@ drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
--r--r--r-- DATAROOTDIR/mediatex/misc/viewvc.conf
 -rw-r----- SYSCONFDIR/cron.d/mediatex_cron
 [info utusers.sh] success

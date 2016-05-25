@@ -143,9 +143,11 @@ main(int argc, char** argv)
   if (!(coll = addCollection("coll1"))) goto error;
 
   logMain(LOG_NOTICE, "*** upgrade:");
-  env.noCollCvs = FALSE;
+  env.noGit = FALSE;
+  env.noGitPullPush = FALSE;
   if (!mdtxUpgrade("coll1")) goto error;
-
+  env.noGit = TRUE;
+  
   logMain(LOG_NOTICE, "*** refuse to del localhost key: ");
   if (delKey("coll1", "746d6ceeb76e05cfa2dea92a1c5753cd")) goto error;
     

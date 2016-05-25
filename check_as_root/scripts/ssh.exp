@@ -35,7 +35,6 @@ Fait.
 [debug utssh.sh] USERS_coll_create_user: ut3-mdtx-hello
 [debug users.sh] USERS_create_user: ut3-mdtx-hello LOCALSTATEDIR/cache/mediatex/ut3-mdtx/home/ut3-mdtx-hello
 [debug users.sh] USERS_coll_populate: ut3-mdtx-hello
-[debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cache/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:r-x u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/tmp/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/git/ut3-mdtx-hello root root 0750 u:%s:rwx g:%s:rwx u:%s:rwx u:www-data:r-x

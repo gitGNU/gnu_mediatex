@@ -461,9 +461,8 @@ serializeHtmlCacheHeader(Collection* coll)
     htmlUlClose(fd);
   }
   
-  // master url (other are relatives ones)
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, coll->serverTree->master->url)) goto error;
+  if (!htmlRightHead(fd)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);
@@ -532,8 +531,7 @@ serializeHtmlCgiHeader(Collection* coll)
   }
   
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHeadBasic(fd, coll->serverTree->master->url,
-			  coll->localhost->url)) goto error;
+  if (!htmlRightHeadBasic(fd, coll->localhost->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);
@@ -605,12 +603,7 @@ serializeHtmlGitHeader(Collection* coll)
   */
   
   if (!htmlLeftPageTail(fd)) goto error;
-  /*
-  if (!htmlRightHeadBasic(fd, coll->serverTree->master->url,
-			  coll->localhost->url)) goto error;
-  */
-  if (!htmlRightHeadBasic(fd, coll->localhost->url,
-			  coll->localhost->url)) goto error;
+  if (!htmlRightHeadBasic(fd, coll->localhost->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);
@@ -681,6 +674,61 @@ serializeHtmlFooter(Collection* coll)
 
 
 /*=======================================================================
+ * Function   : serializeHtmlCacheHtaccess
+ * Description: Set apache SSI variables
+ * Synopsis   : int serializeHtmlCacheHtaccess(Collection* coll)
+ * Input      : Collection* coll: input collection
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+serializeHtmlCacheHtaccess(Collection* coll)
+{ 
+  int rc = TRUE;
+  ServerTree* self = 0;
+  char* path = 0;
+  FILE* fd = stdout; 
+
+  if (!(self = coll->serverTree)) goto error;
+  if (!(path = createString(coll->cacheDir))) goto error;
+  if (!(path = catString(path, "/.htaccess"))) goto error;
+  logMain(LOG_DEBUG, "serialize %s", path);
+  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
+    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+    goto error;
+  }  
+
+  if (!fprintf(fd,
+	       "# fancy index for cache\n"
+	       "Options +Indexes\n"
+	       "SetEnv HOME /~%s\n"
+	       "HeaderName"
+	       " /mediatex/%s/home/%s/public_html/cacheHeader.shtml\n"
+	       "ReadmeName"
+	       " /mediatex/%s/home/%s/public_html/footer.html\n"
+	       "\n"
+	       "# login/password\n"
+	       "Require group cache\n",
+	       coll->user,
+	       env.confLabel, coll->user,
+	       env.confLabel, coll->user))
+      goto error;
+
+  if (!env.dryRun) {
+    fclose(fd);
+  } else {
+    fflush(stdout);
+  }
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "serializeHtmlCacheHtaccess fails");
+  }
+  path = destroyString(path);
+  return rc;
+}
+
+
+/*=======================================================================
  * Function   : serializeHtmlCache
  * Description: Generate HTML for cache directory
  * Synopsis   : int serializeHtmlCache(Collection* coll)
@@ -699,6 +747,7 @@ serializeHtmlCache(Collection* coll)
   if (!serializeHtmlCgiHeader(coll)) goto error;
   if (!serializeHtmlGitHeader(coll)) goto error;
   if (!serializeHtmlFooter(coll)) goto error;
+  if (!serializeHtmlCacheHtaccess(coll)) goto error;
 
   rc = TRUE;
  error:

@@ -233,8 +233,7 @@ main(int argc, char** argv)
     goto error;
   if (!htmlLeftPageMiddle(fd)) goto error;
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHead(fd, "https://localhost/~mdtx-hello/")) 
-    goto error;
+  if (!htmlRightHead(fd)) goto error;
   if (!htmlRightTail(fd)) goto error;
   if (!htmlMainTail(fd, "2013-12-17")) goto error;
 

@@ -1,8 +1,0 @@
-# fancy index for cache
-Options +Indexes
-SetEnv HOME /~MDTX-COLL
-HeaderName MEDIATEX/MDTX/home/MDTX-COLL/public_html/cacheHeader.shtml
-ReadmeName MEDIATEX/MDTX/home/MDTX-COLL/public_html/footer.html
-
-# login/password
-Require group cache
