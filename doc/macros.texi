@@ -95,7 +95,7 @@
 @end macro
 
 @macro dataSuppO
-@file{~mdtx/@/cvs/@/mdtx/@/supports.txt}
+@file{~mdtx/@/git/@/mdtx/@/supports.txt}
 @end macro
 @macro dataSupp
 @dataSuppO{} (@pxref{supports.txt})
@@ -186,8 +186,8 @@
 @macro procToolsSsh
 @process{Ssh} (@pxref{Ssh})
 @end macro
-@macro procToolsCvs
-@process{Cvs} (@pxref{Cvs})
+@macro procToolsGit
+@process{Git} (@pxref{Git})
 @end macro
 @macro procToolsCron
 @process{Cron} (@pxref{Cron})
@@ -212,8 +212,8 @@
 @macro procScriptsNewFreeClean
 @process{new-free-clean} (@pxref{new-free-clean})
 @end macro
-@macro procScriptsUpdateCommit
-@process{update-commit} (@pxref{update-commit})
+@macro procScriptsPullPush
+@process{upgrade-commit-pull-push} (@pxref{upgrade-commit-pull-push})
 @end macro
 @macro procScriptsBind
 @process{bind-unbind} (@pxref{bind-unbind})
@@ -294,21 +294,24 @@
 @macro eventToolsSshCopy
 @event{$ scp}
 @end macro
-@c   - cvs
-@macro eventToolsCvsInit
-@event{$ cvs init}
+@c   - git
+@macro eventToolsGitInit
+@event{$ git init --bare}
 @end macro
-@macro eventToolsCvsImport
-@event{$ cvs import}
+@macro eventToolsGitConfig
+@event{$ git config}
 @end macro
-@macro eventToolsCvsCheckout
-@event{$ cvs checkout}
+@macro eventToolsGitClone
+@event{$ git clone}
 @end macro
-@macro eventToolsCvsUpdate
-@event{$ cvs update}
+@macro eventToolsGitCommit
+@event{$ git commit}
 @end macro
-@macro eventToolsCvsCommit
-@event{$ cvs commit}
+@macro eventToolsGitPull
+@event{$ git pull}
+@end macro
+@macro eventToolsGitPush
+@event{$ git push}
 @end macro
 @c   - apache
 @macro eventToolsApacheReload
@@ -393,11 +396,17 @@
 @macro eventScriptsClean
 @event{# /usr/share/mediatex/scripts/clean.sh}
 @end macro
-@c   - updateCommit
-@macro eventScriptsUpdate
-@event{$ /usr/share/mediatex/scripts/update.sh}
+@c   - upgrade-commit-pull-push
+@macro eventScriptsUpgrade
+@event{$ /usr/share/mediatex/scripts/upgrade.sh}
 @end macro
 @macro eventScriptsCommit
+@event{$ /usr/share/mediatex/scripts/commit.sh}
+@end macro
+@macro eventScriptsPull
+@event{$ /usr/share/mediatex/scripts/commit.sh}
+@end macro
+@macro eventScriptsPush
 @event{$ /usr/share/mediatex/scripts/commit.sh}
 @end macro
 @c   - bind-unbind

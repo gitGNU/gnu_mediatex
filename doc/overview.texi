@@ -1,7 +1,7 @@
 The GNU @mediatexO{} 
 project intends to make easier as possible 
 archives management by spreading and accessing @acronym{WORM} supports 
-(as compact disks) and dedicated metadata.
+(as compact disks) and dedicated meta-data.
 It is named @mediatexO{} 
 because it aims to provide perennial
 @acronym{URL} on electronic documents.
@@ -47,7 +47,7 @@ browse collection and download archives: @procToolsApache{}.
 system's maintenance operations.
 @end itemize
 
-Correspondance with system users is detailed next: @pxref{System users}.
+Association with system users is detailed next: @pxref{System users}.
 
 @node What
 @section What
@@ -58,7 +58,7 @@ Correspondance with system users is detailed next: @pxref{System users}.
 @cindex Claim-based authentication 
 
 @mediatexO{} is mainly designed 
-to provides an @sc{api} to manage supports (to drive jux boxes).
+to provides an @sc{api} to manage supports (to drive jukeboxes).
 
 As a distributed system, 
 it allows several servers to share data and meta-data
@@ -75,13 +75,13 @@ External supports, are spreads geographically over all servers.
 Supports was first designed to be optical disks, 
 but may also be a file you manually mount from what ever device 
 and file systems, or any locally hosted files.
-Because on GNU/Linux there is a bug with last block on @acronym{CDROM}, 
-the @acronym{ISO} format image @mediatexO{} is used to retrieve the support size. 
+Because on GNU/Linux there is a bug with last block on @acronym{CD-ROM}, 
+@mediatexO{} use the @acronym{ISO} format image to retrieve the support size. 
 So, only the data disks are manage, not the audio ones for instance.
 
 @itemize @bullet
 @item
-For external supports, only information on the provided file (what it contains and which servers provide it) is shared by all servers around the related collections.
+Information on support's images (what they contain and which servers provide them) is shared by all servers around the related collections.
 @item 
 A single support may be used on several hosts, 
 for instance if we send it or if servers are located in the same place.
@@ -96,7 +96,7 @@ Servers are connected together via the internet public network and via
 @acronym{NAT} gateway to reach hosts located on private networks.
 @itemize @bullet
 @item 
-A server may participates to several collections.
+A server may participate to several collections.
 @item
 A server manages a local set of private supports including copies.
 @item 
@@ -122,15 +122,10 @@ A collection should be shared by several servers,
 at less 2 to prevent from a site crash. 
 All collection's access parameters are shared around all the hosts 
 belonging to the collection.
-@item
-The @mediatexO{} 
-system uses the collection concept to allow several 
-hosts to manage together their local supports in order to manage them 
-as -so called- perennial archives.
 @end itemize
 @end itemize
 
-Moreover, the collection concept is used to classify document as 
+Moreover, the collection concept is used to group document as 
 @mediatexO{} 
 does not handle dedicated life cycle on archives.
 
@@ -143,41 +138,41 @@ What it is not. @*
 @cindex Claim-based authentication
 @cindex Single sign on
 
-@mediatexO{} focalize first on redondancy natively done by software.
-To do so, 
+@mediatexO{} focus first on redundancy, done by software.
+To do so:
 @itemize @bullet
 @item 
-it isn't using @acronym{SGBD} to handle metadata but text files.
+it isn't using @acronym{SGBD} to handle meta-data but text files.
 @item 
-it doesn't do mirroring replication (@acronym{rsync}), but share @acronym{WEB} caches locally and acces them remotely (read only).
+it doesn't do mirroring replication (@acronym{rsync}), but share caches locally and acces them remotely (read only).
 @item 
-is not a @acronym{PHP} application but a @acronym{CGI} @acronym{WEB} application based on a @acronym{C} library.
+is not a @acronym{PHP} application but build a static @acronym{WEB} site and provides a @acronym{CGI} application based on a @acronym{C} library.
 @item 
-is not based on a replicated @acronym{SGBD} but a @acronym{CVS} repository.
+is not based on a replicated @acronym{SGBD} but a @acronym{GIT} repository.
 @item 
-it dosn't provide dynamic search. To do it you first have to export the metadata into a database usign the @acronym{C} library.
+it doesn't provide dynamic search. To do it you first have to export the meta-data into a database using the @acronym{C} library.
 @item 
-it dosn't handle removal into data. As the goal is not to remove data from CDs.
+it doesn't handle removal data from supports, which implies to re-burn CDs.
 @item 
 it isn't @acronym{SEDA} or any @acronym{XML} exchange protocol compliant 
 (@url{http://www.archivesdefrance.culture.gouv.fr/seda/index.html}).
-But can ever be interfaced with an upper layer server that will manage @acronym{XML} transactions and translations of metadatas for him.
+It can ever be interfaced with an upper layer server that will manage @acronym{XML} transactions and translations of meta-data.
 @item
-it dosn't manage time-stamps.
+it doesn't manage time-stamps.
 (@url{https://www.openssl.org/docs/manmaster/apps/ts.html}).
-But time-stamps or whatever additional meta-data files may still be provided and stored as data files.
+Time-stamps or whatever additional meta-data files may still be provided and stored as data files.
 @item 
-it dsn't self manage claim-based authentication or any ``single sign on'' mechanism
-(@url{https://en.wikipedia.org/wiki/OpenID}),
-but any @acronym{APACHE2}'s @file{.htaccess} file directives
-may be added to the related metadata file to do so.
+it doesn't manage claim-based authentication or any ``single sign on'' mechanism
+(@url{https://en.wikipedia.org/wiki/OpenID}).
+@acronym{APACHE2}'s @file{.htaccess} file directives
+may still be added to the related meta-data file to do so.
 @end itemize
 
-Time-stamps and claim-based authentication servers which need static certificates and a static @acronym{IP} address are monolithic servers and so, resides out of this scope. @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.
+Time-stamps and claim-based authentication servers which need a static certificate and a static domain name are monolithic servers and so, resides out of this scope. @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.
 
 @node Where
 @section Where
-@cindex CVS
+@cindex Git
 @cindex Meta-data
 @cindex Round-Robbin
 @cindex DNS
@@ -188,7 +183,7 @@ Information about supports (support name, status, number of copies)
 is locally hold by each server keeping it private.
 @item
 Collection's meta-data files are duplicated on all servers,
-but revisions are managed by a uniq @acronym{CVS} ``master'' server.
+but revisions are managed by a uniq @acronym{GIT} ``master'' server.
 
 @image{mediatex-figures/where1,,,,}
 
@@ -197,14 +192,14 @@ Archive's data files are stored in a cache for each collection by each server.
 @item
 A 
 @actorUser{} query is distributed to all servers. 
-If none of them can fulfill the query, the server receiving
-the initial query asks for the @actor{User}'s mail adresse and registers it. 
+If none of them can fulfil the query, the server receiving
+the initial query asks for the @actor{User}'s mail address and registers it. 
 The @actor{User} mail address is never sent to the other servers.
 
 @image{mediatex-figures/where2,,,,}
 
 @item
-As the catalog provide static @acronym{HTML} content, a @acronym{DNS}'s round robbin is usable to switch on server's @acronym{WEB} interface in order to prevent from a site crash.
+As the catalog provide static @acronym{HTML} content, a @acronym{DNS}'s round robbin is usable to switch between server's @acronym{WEB} interface in order to recover from a site crash.
 @end itemize
 
 @node When
@@ -216,10 +211,10 @@ As the catalog provide static @acronym{HTML} content, a @acronym{DNS}'s round ro
 When 
 @actorPublisher{} modifies the meta-data on a given server,
 the other servers update there own copies later using the centralised 
-@acronym{CVS} server.
+@acronym{GIT} server.
 @item 
 When 
-@actorUser{} queries for a file that no server has in their own cache, 
+@actorUser{} queries for a file that no server provides in their own cache, 
 the first requested server provides an @acronym{HTML} form 
 in order to recall the 
 @actor{User} latter, when the file becomes available.
@@ -231,14 +226,14 @@ in order to recall the
 @item 
 By reading the ``message of the day'', the 
 @actorPublisherO{} 
-is asked do some maintenance operations such as:
+is asked to do some maintenance operations such as:
 @itemize @bullet
 @item 
 to provide external supports needed for extraction 
-or needed to perform a periodic checkup.
+or needed to perform a periodic check.
 @item
 to backup files available from the cache on new supports 
-and to add them to the related collection.
+and to share them with the related collection.
 @end itemize
 @end itemize
 
@@ -255,15 +250,13 @@ and to add them to the related collection.
 @itemize @bullet
 @item 
 Trace-ability is done by @sc{Syslog} for programs 
-and by @sc{Cvs} for changes in the meta-data.
+and by @sc{GIT} for changes in the meta-data.
 @item 
 Access is granted by @sc{Apache}, but when archives need to be retrieved, the 
 @actorUser{} will be recall later using the default system mailer, that should
 probably use the @sc{Sendmail} interface.
 @item 
-Catalogue index and extraction rules have to be edited by hand by the 
-@actorPublisher{} using a text editor like @sc{emacs} or
-by concatenating them using @sc{cat}.
+Catalogue index and extraction rules have to be provided or edited by hand by the @actorPublisher{} using a text editor.
 @item 
 Servers tasks are driven by @sc{Cron}. 
 @item
@@ -283,7 +276,7 @@ Involved licences:
 @item e2fsck @tab GPLv2* @tab http://e2fsprogs.sourceforge.net/
 @end multitable
 
-(*) Author agree to relicense e2fsck's progress bar code under the LGPLv2
+(*) Author agree to re-license e2fsck's progress bar code under the LGPLv2
 
 @sp 1
 @item Compilation
@@ -323,17 +316,18 @@ Involved licences:
 @item Installation
 @multitable @columnfractions .15 .15 .5
 @headitem name @tab licence @tab website
-@item apache2 @tab        Apache2 @tab  http://httpd.apache.org/
+@item acl @tab             GPLv2+ @tab   http://savannah.nongnu.org/projects/acl/
+@item apache2 @tab        Apache2 @tab   http://httpd.apache.org/
 @item bc @tab              GPLv3+ @tab   http://www.gnu.org/software/bc/
 @item bzip2 @tab           GPLv3? @tab   http://www.bzip.org/
 @item cpio @tab            GPLv3+ @tab   http://www.gnu.org/software/cpio/
-@item cvs @tab             GPLv2+ @tab   http://cvs.nongnu.org/
 @item findutils @tab       GPLv3+ @tab   http://www.gnu.org/software/findutils/
+@item git @tab             GPLv2+ @tab   https://git-scm.com/
 @item gzip @tab            GPLv2+ @tab   http://www.gnu.org/software/gzip/
-@item ssh @tab             BSD @tab      http://www.openssh.com/
+@item ssh @tab             BSD    @tab   http://www.openssh.com/
 @item tar @tab             GPLv3+ @tab   http://www.gnu.org/software/tar/
-@item unzip @tab           BSD @tab      http://info-zip.org/
-@item viewvc @tab          BSD @tab      http://www.viewvc.org/
+@item unzip @tab           BSD    @tab   http://info-zip.org/
+@item viewvc @tab          BSD    @tab   http://www.viewvc.org/
 @end multitable
 @c @item initramfs-tools @tab GPLv2+ @tab   https://wiki.debian.org/initramfs-tools
 
@@ -355,7 +349,7 @@ Involved licences:
 
 In order to prevent from deny of services, 
 we do not use a centralise database but text files spread on all servers
-using @sc{Cvs}. 
+using @sc{GIT}. 
 
 Consequently parsers needs a proportional amount of @acronym{CPU} and 
 memory in regards to these files size (whereas database do not).
@@ -365,13 +359,13 @@ available inodes on the partition where the @acronym{HTML} catalogue is
 store).
 
 All in all, the @mediatexO{} system is not designed to handle collections 
-having more than half a million archives (whereas databases easily handle millions). However, it should handle numbers of such ``not so big'' collections.
+having more than half a million archives (whereas databases easily handle millions). It should handle several such ``not so big'' collections, but not toot much too.
 
 Following tests are based on the @acronym{HTML} catalogue generation, which
-is the longest query (and wich imply parsing the meta-data files).
+is the longest query (and which imply parsing most meta-data files). They gives an idea of resources (size on disk, amount of memory and @acronym{CPU} time) involved.
 
 @multitable @columnfractions .20 .14 .10 .10 .10 .10
-@headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
+@headitem archives @tab @acronym{GIT} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
 @item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
 @item 27k  @tab 12M  @tab 40M  @tab 377M @tab 90k  @tab 20''
 @item 55k  @tab 21M  @tab 67M  @tab 638M @tab 151k @tab 32''
@@ -385,7 +379,7 @@ is the longest query (and wich imply parsing the meta-data files).
 Roughly this should gives about:
 
 @multitable @columnfractions .20 .14 .10 .10 .10 .10
-@headitem archives @tab @acronym{CVS} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
+@headitem archives @tab @acronym{GIT} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
 @item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
 @item 50k  @tab 20M  @tab 65M  @tab 600M @tab 150k @tab 30''
 @item 100k @tab 35M  @tab 120M @tab 1.1G @tab 250k @tab 5'
@@ -395,15 +389,14 @@ Roughly this should gives about:
 @note{}
 @itemize @bullet
 @item
-Synchronisation times using @acronym{CVS} depends on the network connection, 
-but not only as they are sometime quite as long (update+commit) as the @acronym{HTML} catalogue generation. A further version should use @acronym{GIT} instead that is reputed to be faster.
+Synchronisation times using @acronym{GIT} depends on the network connection.
 @item 
 The 2 last lines in the above array are extrapolated (should be @math{O(n*log(n)}).
 The logarithmic factor is accented by the fact the files are serialised and 
-parsed (into b-tree) using the same order, which may be corrected in a 
+parsed (into a b-tree) using the same order, which may be corrected in a 
 further version.
 @item
-Other processes like scanning the cache and building the audit report are not yet optimised. So even if theoretically it should be possible to handle 500,000 archives by collection, in practice you should not manage more than 25 000 so easely. 
+Other processes like scanning the cache and building the audit report are not yet optimised too. So even if theoretically it should be possible to handle 500,000 archives by collection, in practice you should not manage more than 25 000 so easely. 
 @end itemize
 
 @node Why
@@ -430,7 +423,7 @@ It aims to provide a strong ``storage'' layer on which we should build a whole
 for preservation operations, in prevision of time when the actual storage technologies will become outdated.
 @item 
 It tries to provide a dedicated workaround for the CAP theorem, 
-using @acronym{CVS} merging.
+using @acronym{GIT} merges.
 (The also known as Brewer's theorem states that it is impossible 
 for a distributed computer system to simultaneously provide all three 
 of the following guarantees: Consistency, Availability and Partition 

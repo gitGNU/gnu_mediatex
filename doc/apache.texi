@@ -10,7 +10,7 @@ The followings @sc{Apache}'s modules @sc{Mediatex} are enabled:
 @item auth_digest
 to cypher password (even if using @acronym{HTTP}).
 @item authz_groupfile
-to filter access to the catalogue, cache, extraction rules and @acronym{CVS} history.
+to filter access to the catalogue, cache, extraction rules and @acronym{GIT} history.
 @item autoindex 
 to display the cache's content.
 @item env 

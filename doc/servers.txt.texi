@@ -46,7 +46,7 @@ https      yes
 
 # self-ingestion parameters
 logApache  no
-logCvs     no
+logGit     no
 logAudit   no
 
 # score parameters
@@ -109,7 +109,7 @@ headers: headers header
 header: COLLKEY string
       | HTTPS boolean
       | LOGAPACHE boolean
-      | LOGCVS boolean
+      | LOGGIT boolean
       | LOGAUDIT boolean
       | SERVERTTL number time
       | SUPPTTL number time

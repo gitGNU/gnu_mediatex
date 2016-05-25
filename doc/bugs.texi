@@ -139,7 +139,7 @@ $ gprof /usr/bin/mediatex > gprof.txt
 reload the info page into emacs
 @example
 in a new buffer use the M-x org-mode :
-info:/home/user/cvs/mediatex/doc/mediatex.info
+info:/home/user/git/mediatex/doc/mediatex.info
 info:/usr/share/info/mediatex.info
 place cursor on a line and type C-c C-o
 @end example
@@ -160,12 +160,12 @@ check memory in use
 $ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
 @end example
 
-@item 
-Diff between 2 @acronym{CVS}'s check out directories
-@example
-$ cd dir1
-$ find . -name "CVS" -prune -o \
-   \( -type f -exec diff -I '$Id:' @{@} ../dir2/@{@} \; \)
-@end example
+@c @item 
+@c Diff between 2 @acronym{CVS}'s check out directories
+@c @example
+@c $ cd dir1
+@c $ find . -name "CVS" -prune -o \
+@c    \( -type f -exec diff -I '$Id:' @{@} ../dir2/@{@} \; \)
+@c @end example
 
 @end itemize

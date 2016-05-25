@@ -46,10 +46,9 @@ to @procScriptsBind{}:
 @itemx @eventScriptsInitdStop
 to @procScriptsInitd{}: start/stop the @mediatexO{} daemon.
 
-@item @eventToolsCvsInit{} 
-@item @eventToolsCvsImport{} 
-@item @eventToolsCvsCheckout
-to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
+@item @eventToolsGitInit{}
+@itemx @eventToolsGitConfig{}
+to @procToolsGit{}: initialise the @acronym{GIT} repository dedicated to the local configuration.
 
 @item eventToolsApacheReload
 @itemx eventToolsApacheRestart
@@ -79,15 +78,14 @@ to @procToolsApache{}: make @acronym{APACHE} aware of potential new module and s
    +- lib/
     |  +- mediatex/
     |     +- mdtx/                       (1)
-    |       |- CVSROOT/
     |       +- mdtx/
-    |          |- mdtx.conf,v 
-    |          +- supports.txt,v
+    |          |- mdtx.conf
+    |          +- supports.txt
     +- cache/
        +- mediatex/
           +- mdtx/
              |- cache/                   (2)
-             |- cvs/
+             |- git/
              |  +- mdtx/
              |     |- mdtx.conf          (3)
              |     +- supports.txt
@@ -97,7 +95,7 @@ to @procToolsApache{}: make @acronym{APACHE} aware of potential new module and s
              |  |  +- passwd
              |  +- usr/
              |  |  +- bin/
-             |  |     |- cvs
+             |  |     |- git
              |  |     +- scp
              |  +- var/
              |     |- lib        (bind -> 1)

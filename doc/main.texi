@@ -117,10 +117,10 @@ Ask @activityServerO{} to deliver mails related to extracted archives (no more n
 
 @item @eventClientServUpdate
 @item @eventClientServCommit
-Manage @acronym{CVS} synchronisation (already managed by ``upgrade'' query)
+Manage @acronym{GIT} synchronisation (already managed by ``upgrade'' query)
 
 @item @eventClientMiscAdmMake
-Build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
+Build the local @acronym{HTML} catalogue without @acronym{GIT} synchronisation.
 
 @item @eventClientMiscBind
 @itemx @eventClientMiscUnBind
@@ -161,8 +161,8 @@ Log into a file. Needs the @code{file} facility (default).
 @item -s severity[:module(,module)*]
 @item --severity severity[:module(,module)*]
 Set severity to log, by modules.
-Choose severity amongs @code{err}, @code{warning}, @code{notice}, @code{info} and @code{debug}.
-You may provide modules amongs @code{alloc}, @code{script}, @code{misc}, @code{memory}, @code{parser}, @code{common} and @code{main}.
+Choose severity among @code{err}, @code{warning}, @code{notice}, @code{info} and @code{debug}.
+You may provide modules among @code{alloc}, @code{script}, @code{misc}, @code{memory}, @code{parser}, @code{common} and @code{main}.
 If you provide no module, all except the @code{alloc} module will be selected.
 
 @item -m @var{number}
@@ -183,8 +183,8 @@ Over hide 'mdtx.conf' configuration file and use @var{mdtxLabel} system user ins
 
 @item -a
 @itemx --alone
-Do not make @acronym{CVS} queries. This may be useful if you temporary loose your network connection, or if you want to be temporally isolated for tests.
-@note{} This option is only available on @activityClient{} as @activityServer{} and @procScriptsCgi{} never perform @acronym{CVS} queries.
+Do not make @acronym{GIT} queries. This may be useful if you temporary loose your network connection, or if you want to be temporally isolated for tests.
+@note{} This option is only available on @activityClient{} as @activityServer{} and @procScriptsCgi{} never perform @acronym{GIT} queries.
 
 @end table
 
@@ -312,7 +312,9 @@ This diagram describes what happen when a @actorUser{} access an archive:
 @node System users
 @section System users and groups
 
-Systems users:
+@mediatexO{} use @code{acl} to share files between system users.
+
+Systems users and groups:
 @table @code
 @item root
 @actorAdmin{}, @actorDate
@@ -326,36 +328,13 @@ Systems users:
 @actorPublisher{}s
 @end table
 
-Systems groups:
-@table @code
-@item www-data
-@acronym{HTML} content
-@item mdtx
-@mediatexO{} internal data
-@item mdtx_md
-@acronym{CVS} internal data
-@item mdtx-@var{col}
-Collection's data
-@end table
-
-System user and their group members:
-@table @code
-@item www-data
-@code{www-data}, @code{mdtx}, @code{mdtx_md}, @code{mdtx-@var{coll}}
-@item mdtx
-@code{mdtx}, @code{mdtx_md}, @code{mdtx-@var{coll}}
-@item @var{username}
-@code{mdtx}, @code{mdtx_md}, @code{mdtx-@var{coll}}
-@item mdtx-@var{col}
-@code{mdtx_md}, @code{mdtx-@var{coll}}
-@end table
-
-@todo @mediatexO{} should better use @code{setfacl} so as not to restart the @activityServerO{} when new groups are created.
+@actorPublisherO{}'s system users belongs to the @code{mdtx} group.
+@procScriptsAddDelUser{}
 
 @node Stack model
 @section Meta-data consistency
 
-Update and commit operation are done implicitly when loading and serialising files.
+@acronym{GIT} pull and push operations are done implicitly when loading and serialising files.
 This may be view like a stack model ensuring consistency on meta-data files (@pxref{Relational schema}).
 
 The so-called meta-data files are mentioned bellow using the followings numbers:
@@ -371,107 +350,99 @@ The so-called meta-data files are mentioned bellow using the followings numbers:
 All calls to @activityClientO{} follow the same operations:
 @multitable @columnfractions .1 .9
 @headitem Stage @tab Description
-@item A1 @tab Scripting, which do not need to load the metadata
-@item B1 @tab Parse local meta-data (1, 2)
-@item C1 @tab @acronym{CVS} update collection (remote) meta-data
-@item D1 @tab Parse collection meta-data files (3, 4, 5, 6)
-@item E1 @tab Generic upgrade works: @*
-      read keys so as to upgrade @acronym{SSH} and @acronym{CVS} settings @*
-      and re-compute the local image's score
-@item E2 @tab Working on meta-data
-@item D2 @tab Serialize meta-data files (3, 4, 5, 6)
-@item C2 @tab @acronym{CVS} commit collection meta-data 
-@item B2 @tab Serialize local meta-data (1, 2) @*
- and @acronym{CVS} commit local meta-data
-@item A2 @tab Send @code{HUP} message to @activityServer{}
+@item [A @tab Scripting, which do not need to load the meta-data
+@item [B @tab @acronym{GIT} pull and parse configuration meta-data (1, 2)
+@item [C @tab @acronym{GIT} pull and parse collection meta-data (3, 4, 5, 6)
+@item [D @tab Generic upgrade works: upgrade @acronym{SSH} and @acronym{GIT} settings and re-compute the local image's score
+@item D] @tab Working on meta-data
+@item C] @tab Serialise collection meta-data and @acronym{GIT} push (3, 4, 5, 6)
+@item B] @tab Serialise configuration meta-data and @acronym{GIT} push (1, 2) 
+@item A] @tab Send @code{HUP} message to @activityServer{}
 @end multitable
 
 @note
 @itemize
-@item Stage E1 (Generic upgrade works) 
+@item Stage [D (Generic upgrade works) 
 is only processed when (6) is loaded.
 This stage insure connection consistency between remote servers :
 @example
-MASTER         commun           SLAVES
------------------------------------------
-mdtx.conf <--> servers.txt <--> mdtx.conf
-                  |
-.ssh/     <-------+-----------> .ssh/
-CVS/Root  <-------+-----------> CVS/Root
+   MASTER          shared           SLAVES
+---------------------------------------------
+  mdtx.conf <--> servers.txt <--> mdtx.conf
+                     |
+.ssh/       <--------+----------> .ssh/
+.git/config <--------+----------> .git/config
 @end example
-Morevoer, as external supports's file are checked during this process,
-(2) may be serialize too (update last seen/check dates).
 
-@item On stage D2 (Serialise meta-data files), 
+@item On stage C] (Serialise meta-data files), 
 the default behaviour is to not serialise (4) and (5)
 unless they provide a new @file{NN.txt} post-fixed file.
-This intents to speed-up some queries ending (as @code{make}).
+This intents to speed-up some queries endings (as @code{make}).
 In order to force serialising theses files you have to use the @code{upgrade} query.
 @end itemize
-
 
 Bellow details how meta-data files are affected by @activityClientO{}'s queries.
 
 @itemize
 @item @actorAdmin{} queries:
-@multitable @columnfractions .50 .03     .05      .03     .07     .03     .03     .07     .03     .05      .03
-@headitem Query                  @tab A1 @tab B1  @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2  @tab A2
-@item @eventClientMiscInit{}       @tab y  @tab     @tab    @tab    @tab    @tab    @tab    @tab    @tab 1,2 @tab y
-@item @eventClientMiscRemove{}     @tab y  @tab     @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
-@item @eventClientMiscPurge{}      @tab y  @tab     @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
-@item @eventClientMiscAddUser{}    @tab y  @tab     @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
-@item @eventClientMiscDelUser{}    @tab y  @tab     @tab    @tab    @tab    @tab    @tab    @tab    @tab     @tab
-@item @eventClientConfAddColl{}    @tab y  @tab 1,2 @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientConfDelColl{}    @tab y  @tab 1   @tab    @tab    @tab    @tab y  @tab    @tab    @tab 1   @tab y
+@multitable @columnfractions .50   .03     .05      .07     .03     .03     .07     .05      .03
+@headitem Query                    @tab [A @tab [B  @tab [C @tab [D @tab D] @tab C] @tab B]  @tab A]
+@item @eventClientMiscInit{}       @tab y  @tab     @tab    @tab    @tab    @tab    @tab 1,2 @tab y
+@item @eventClientMiscRemove{}     @tab y  @tab     @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscPurge{}      @tab y  @tab     @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscAddUser{}    @tab y  @tab     @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientMiscDelUser{}    @tab y  @tab     @tab    @tab    @tab    @tab    @tab     @tab
+@item @eventClientConfAddColl{}    @tab y  @tab 1,2 @tab 6  @tab y  @tab y  @tab 6  @tab 1,2 @tab y
+@item @eventClientConfDelColl{}    @tab y  @tab 1   @tab    @tab    @tab y  @tab    @tab 1   @tab y
 @end multitable
 
 @item @activityClientO{} to himself queries (or debugging queries):
-@multitable @columnfractions .50 .03     .05      .03     .07        .03     .03     .07     .03     .05     .03
-@headitem Query                  @tab A1 @tab B1  @tab C1 @tab D1    @tab E1 @tab E2 @tab D2 @tab C2 @tab B2 @tab A1
-@item @eventClientServUpdate{}     @tab    @tab 1   @tab y  @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientServCommit{}     @tab    @tab 1   @tab y  @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientMiscAdmMake{}    @tab    @tab 1,2 @tab    @tab 4,5,6 @tab y  @tab y  @tab    @tab    @tab    @tab
-@item @eventClientMiscBind{}       @tab y  @tab     @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientMiscUnBind{}     @tab y  @tab     @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientSuppMount{}      @tab y  @tab     @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientSuppUMount{}     @tab y  @tab     @tab    @tab       @tab    @tab    @tab    @tab    @tab    @tab
-@item @eventClientMiscGet{}        @tab    @tab 1   @tab    @tab 6     @tab y  @tab y  @tab    @tab    @tab    @tab
+@multitable @columnfractions .50   .03     .05      .07     .03        .03     .07     .05     .03
+@headitem Query                    @tab [A @tab [B  @tab [C    @tab [D @tab D] @tab C] @tab B] @tab A]
+@item @eventClientServUpdate{}     @tab    @tab 1   @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientServCommit{}     @tab    @tab 1   @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscAdmMake{}    @tab    @tab 1,2 @tab 4,5,6 @tab y  @tab y  @tab    @tab    @tab
+@item @eventClientMiscBind{}       @tab y  @tab     @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscUnBind{}     @tab y  @tab     @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientSuppMount{}      @tab y  @tab     @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientSuppUMount{}     @tab y  @tab     @tab       @tab    @tab    @tab    @tab    @tab
+@item @eventClientMiscGet{}        @tab    @tab 1   @tab 6     @tab y  @tab y  @tab    @tab    @tab
 @end multitable
 
 @item Queries to operate on @activityServerO{}:
-@multitable @columnfractions .50 .03 .05 .03 .07 .03 .03 .07 .03 .05 .03
-@headitem Client query     @tab A1 @tab B1 @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2 @tab A2 
-@item @eventClientSave{}     @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
-@item @eventClientExtract{}  @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
-@item @eventClientNotify{}   @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
-@item @eventClientDeliver{}  @tab    @tab    @tab    @tab    @tab    @tab y  @tab    @tab    @tab    @tab   
+@multitable @columnfractions .50   .03     .05      .07     .03     .03     .07     .05     .03
+@headitem Client query             @tab [A @tab [B  @tab [C @tab [D @tab D] @tab C] @tab B] @tab A]
+@item @eventClientSave{}           @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
+@item @eventClientExtract{}        @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
+@item @eventClientNotify{}         @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
+@item @eventClientDeliver{}        @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
 @end multitable
 
 @item @actorPublisherO{} data management's queries:
-@multitable @columnfractions  .50  .03     .05       .03     .07     .03     .03     .07     .03     .05       .03 
-@headitem Client query             @tab A1 @tab B1   @tab C1 @tab D1 @tab E1 @tab E2 @tab D2 @tab C2 @tab B2  @tab A2
-@item @eventClientSuppAdd{}          @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientSuppFileAdd{}      @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientSuppDel{}          @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientSuppList{}         @tab    @tab 1,2  @tab    @tab    @tab    @tab y  @tab    @tab    @tab     @tab
-@item @eventClientSuppNote{}         @tab    @tab 1,2  @tab    @tab    @tab y  @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientSuppCheck{}        @tab    @tab 1,2  @tab y  @tab 5  @tab    @tab y  @tab    @tab    @tab 2   @tab
-@item @eventClientConfShareSupport{} @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientConfWithdrawSupp{} @tab    @tab 1,2  @tab y  @tab 6  @tab y  @tab y  @tab 6  @tab y  @tab 1,2 @tab y
-@item @eventClientUpload{}           @tab    @tab 1    @tab y  @tab 5  @tab    @tab y  @tab 5  @tab y  @tab     @tab y
+@multitable @columnfractions  .50   .03     .05      .07     .03     .03     .07     .05     .03
+@headitem Client query               @tab [A @tab [B  @tab [C @tab [D @tab D] @tab C] @tab B] @tab A]
+@item @eventClientSuppAdd{}          @tab    @tab 1,2 @tab    @tab    @tab y  @tab    @tab 2   @tab
+@item @eventClientSuppFileAdd{}      @tab    @tab 1,2 @tab    @tab    @tab y  @tab    @tab 2   @tab
+@item @eventClientSuppDel{}          @tab    @tab 1,2 @tab 6  @tab y  @tab y  @tab 6  @tab 1,2 @tab y
+@item @eventClientSuppList{}         @tab    @tab 1,2 @tab    @tab    @tab y  @tab    @tab     @tab
+@item @eventClientSuppNote{}         @tab    @tab 1,2 @tab    @tab y  @tab y  @tab    @tab 2   @tab
+@item @eventClientSuppCheck{}        @tab    @tab 1,2 @tab 5  @tab    @tab y  @tab    @tab 2   @tab
+@item @eventClientConfShareSupport{} @tab    @tab 1,2 @tab 6  @tab y  @tab y  @tab 6  @tab 1,2 @tab y
+@item @eventClientConfWithdrawSupp{} @tab    @tab 1,2 @tab 6  @tab y  @tab y  @tab 6  @tab 1,2 @tab y
+@item @eventClientUpload{}           @tab    @tab 1   @tab 5  @tab    @tab y  @tab 5  @tab     @tab y
 @end multitable
 
 @item @actorPublisherO{} meta-data management's queries:
-@multitable @columnfractions .50 .03     .05      .03     .07        .03     .03     .07        .03     .05      .03
-@headitem Client query           @tab A1 @tab B1  @tab C1 @tab D1    @tab E1 @tab E2 @tab D2    @tab C2 @tab B2  @tab A2
-@item @eventClientConfList{}       @tab    @tab 1   @tab    @tab       @tab    @tab y  @tab       @tab    @tab     @tab
-@item @eventClientMotd{}           @tab    @tab 1,2 @tab y  @tab 3,5,6 @tab y  @tab y  @tab 6     @tab y  @tab 2   @tab y
-@item @eventClientServAddKey{}     @tab    @tab 1   @tab y  @tab 6     @tab y  @tab y  @tab 6     @tab y  @tab 2   @tab y
-@item @eventClientServDelKey{}     @tab    @tab 1   @tab y  @tab 6     @tab y  @tab y  @tab 6     @tab y  @tab 2   @tab y
-@item @eventClientServUpgrade{}    @tab    @tab 1   @tab y  @tab 4,5,6 @tab y  @tab    @tab 4,5,6 @tab y  @tab 1,2 @tab y
-@item @eventClientMiscMake{}       @tab    @tab 1   @tab y  @tab 4,5,6 @tab y  @tab y  @tab 4,5,6 @tab y  @tab 1,2 @tab y
-@item @eventClientMiscClean{}      @tab y  @tab     @tab    @tab       @tab    @tab    @tab       @tab    @tab     @tab
-@item @eventClientMiscSu{}         @tab    @tab 1   @tab    @tab       @tab    @tab y  @tab       @tab    @tab     @tab
-@item @eventClientMiscAudit{}      @tab    @tab     @tab y  @tab 5     @tab    @tab    @tab       @tab    @tab     @tab
+@multitable @columnfractions .50   .03     .05      .07     .03     .03     .07     .05     .03
+@headitem Client query             @tab [A @tab [B  @tab [C @tab [D @tab D] @tab C] @tab B] @tab A]
+@item @eventClientConfList{}       @tab    @tab 1   @tab       @tab    @tab y  @tab       @tab     @tab
+@item @eventClientMotd{}           @tab    @tab 1,2 @tab 3,5,6 @tab y  @tab y  @tab 6     @tab 2   @tab y
+@item @eventClientServAddKey{}     @tab    @tab 1   @tab 6     @tab y  @tab y  @tab 6     @tab 2   @tab y
+@item @eventClientServDelKey{}     @tab    @tab 1   @tab 6     @tab y  @tab y  @tab 6     @tab 2   @tab y
+@item @eventClientServUpgrade{}    @tab    @tab 1   @tab 4,5,6 @tab y  @tab    @tab 4,5,6 @tab 1,2 @tab y
+@item @eventClientMiscMake{}       @tab    @tab 1   @tab 4,5,6 @tab y  @tab y  @tab 4,5,6 @tab 1,2 @tab y
+@item @eventClientMiscClean{}      @tab y  @tab     @tab       @tab    @tab    @tab       @tab     @tab
+@item @eventClientMiscSu{}         @tab    @tab 1   @tab       @tab    @tab y  @tab       @tab     @tab
+@item @eventClientMiscAudit{}      @tab    @tab     @tab 5     @tab    @tab    @tab       @tab     @tab
 @end multitable
 @end itemize

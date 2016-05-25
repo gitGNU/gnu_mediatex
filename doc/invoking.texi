@@ -22,9 +22,6 @@ and to test it by setting an ``hello world'' collection example.
 
 Get the sources:
 @example
-@c $ cvs -z3 \
-@c    -d:pserver:anonymous@@cvs.savannah.nongnu.org:/sources/mediatex \
-@c    co mediatex
 $ git clone git://git.savannah.nongnu.org/mediatex.git
 @end example
 
@@ -38,7 +35,7 @@ automake gettext libtool make flex bison help2man texinfo transfig libssl-dev li
 imagemagick texlive
 @item Installation:
 ssh apache2 git cgit libavl1 libacl1 acl tar cpio gzip bzip2 unzip bc findutils
-@item Debian package generation
+@item Debian package generation:
 libfile-fcntllock-perl
 @end itemize
 @c initramfs-tools 
@@ -55,7 +52,7 @@ $ make distcheck V=0
 
 However this have to be adapt to be really functional for installation 
 or to enable debuging: @*
-(from @file{/usr/share/perl5/Debian/Debhelper/Buildsystem/autoconf.pm}) 
+(see @file{/usr/share/perl5/Debian/Debhelper/Buildsystem/autoconf.pm} from debhelper) 
 @example
 $ ./configure \
   --prefix=/usr \
@@ -120,7 +117,7 @@ this @acronym{url}: @*
 @url{http://localhost/~mdtx}
 
 Add a new 
-@actorPublisher{} user using an already existing user login.
+@actorPublisher{} user using an already existing user login (@code{username1}).
 Then, reload the Xsession or use @command{su} to re-login in order 
 the 
 @actor{Publisher} belongs effectively to his new @code{mdtx} group.
@@ -153,25 +150,24 @@ as it was seen recently and own a good score.
 
 @cindex Support
 Add a new support. @*
-@note{} So as not to wast a @sc{cd}, we are using an @sc{iso} files
-intead of real supports (CD, USB key, @dots{} 
-from such @code{/dev/sd[bc@dots{}]} peripheral files) 
-as it does the same result.
 @example
 $ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
 @end example
+@note{} So as not to wast a @sc{cd}, we are using an @sc{iso} files
+instead of real supports (CD, USB key, @dots{} 
+from such @code{/dev/sd[bc@dots{}]} peripheral files) 
+as it works the same way.
 
 Add a new File. @*
-Moreover, your final archive may simply be a file on your filesystem.
-In this case @mediatexO{} can automatically acces it without asking for,
-using the message of the day.
 @example
 $ mediatex add file /usr/share/mediatex/misc/logoP1.iso
 @end example
+Moreover, your final archive may simply be a file on your filesystem.
+In this case @mediatexO{} can automatically acces it without asking for,
+using the message of the day.
 
 @note{} There is a 10 chars string you can use to put what you want in order to record a state for each support.
 @example
-$ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
 $ mediatex note supp ex-cd2 as what_you_want
 $ mediatex ls supp
 @end example

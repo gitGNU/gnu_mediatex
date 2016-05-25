@@ -28,8 +28,8 @@ Manage @code{mdtx-COLL} collection system user and group.
 @item
 Manage the collection's repositories.
 @item
-Setup the @acronym{CVSROOT} module for a new collection or connect to a 
-remote @acronym{CVSROOT} module to join an already existing collection.
+Setup the @acronym{GIT} bare module for a new collection or connect to a 
+remote @acronym{GIT} bare module to join an already existing collection.
 @end itemize
 
 @item Events out
@@ -38,9 +38,10 @@ remote @acronym{CVSROOT} module to join an already existing collection.
 @item @eventScriptsBindCall
 to @procScriptsBind{}: make collection repository accessible from the chrooted jail for @acronym{SSH} remote access.
 
-@item @eventToolsCvsImport
-@itemx @eventToolsCvsCheckout
-to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
+@item @eventToolsGitInit{}
+@itemx @eventToolsGitConfig{}
+@itemx @eventToolsGitClone{}
+to @procToolsGit{}: initialise and/or checkout a @acronym{GIT} collection module.
 
 @end table
 @item Data creation
@@ -65,18 +66,17 @@ to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
    +- lib/
    |  +- mediatex/
    |     +- mdtx/                       
-   |       |- CVSROOT/
    |       +- mdtx-COLL/                
    |          |- apache2/
-   |          |- catalog00.txt,v
-   |          |- extract00.txt,v
-   |          +- servers.txt,v
+   |          |- catalog00.txt
+   |          |- extract00.txt
+   |          +- servers.txt
    +- cache/
       +- mediatex/
          +- mdtx/
             |- cache/                   
             |  +- mdtx-COLL/
-            |- cvs/
+            |- git/
             |  +- mdtx-COLL/             (1)
             |     |- apache2/
             |     |- catalog00.txt

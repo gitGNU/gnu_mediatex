@@ -1,0 +1,66 @@
+@cindex GIT
+@cindex Meta-data
+
+@sc{Git} 
+(@code{man 1 git})
+is used to publish meta-data and to log operations 
+performed on these files.
+There is one @file{gitbare} repository for each server one each host.
+This repository handle one module for the local server's meta-data,
+and one for each collection on the ``master'' servers only.
+Remote servers access the ``master'' (or so called ``bare'') @acronym{GIT} collection's repository by using @procToolsSsh{}.
+The @procToolsApache{} configuration files and the @process{Ssh}'s 
+public keys are also distributed among servers using @acronym{GIT}.
+The @acronym{GIT} configuration and collection modules are setup respectively by @procScriptsInitRemovePurge{} and @procScriptsNewFreeClean{} scripts.
+
+Process conceptual model:
+
+@image{mediatex-figures/git,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+
+@item @eventToolsGitInit{}
+@itemx @eventToolsGitConfig{}
+from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{}: initialise a @acronym{GIT} repository.
+
+@item @eventToolsGitClone{}
+from @procScriptsNewFreeClean{}: checkout a @acronym{GIT} collection module.
+
+@item @eventToolsGitConfig{}
+@itemx @eventToolsGitCommit{} 
+@itemx @eventToolsGitPull{} 
+@itemx @eventToolsGitPush{} 
+from @procScriptsPullPush{}: synchronise a @acronym{GIT} module.
+
+@end table
+@item Processing
+
+Synchronise the meta-data files between servers.
+
+@item Events out
+@table @code
+
+@item @eventToolsSshConnect
+to @procToolsSsh{}: access the @acronym{GIT} bare repository.
+
+@end table
+@item Data
+@table @file
+@item /var/lib/mediatex/mdtx/mdtx
+@itemx /var/lib/mediatex/mdtx/mdtx-COLL
+The @acronym{GIT} bare repositories
+
+@item ~/mdtx/git/mdtx
+@itemx ~/mdtx/git/mdtx-COLL
+The @acronym{GIT} cloned modules. 
+@end table
+@end itemize
+
+The configuration of the client repository is manage by @mediatexO{} upgrade (@pxref{Scenario E}).
+
+Code:
+@table @file
+@item scripts/lib/git.sh
+@end table

@@ -1,0 +1,44 @@
+@cindex Git
+
+Theses 2 scripts manage collections update from remote @acronym{GIT}
+modules.
+They are also used by @activityClient{} to log changes in the local meta-data.
+
+Process conceptual model:
+
+@image{mediatex-figures/upgrade-commit-pull-push,,,,}
+
+@itemize @bullet
+@item Events in
+@table @code
+
+@item @eventScriptsUpgrade
+@item @eventScriptsCommit
+@item @eventScriptsPush
+@item @eventScriptsPull
+from @activityClient
+
+@item Processing
+
+The purpose of this script is to provide an @acronym{API} for @activityClientO{} in order to use the @activityScriptsO{}'s @acronym{BASH} library already used during initialisation of configuration and collections.
+
+@end table
+@item Events out
+@table @code
+
+@item @eventToolsGitConfig
+@item @eventToolsGitCommit
+@item @eventToolsGitPull
+@item @eventToolsGitPush
+to @procToolsGit{}: synchronise a @acronym{GIT} module.
+
+@end table
+@end itemize
+
+Code:
+@table @code
+@item  scripts/upgrade.sh
+@itemx scripts/commit.sh
+@itemx scripts/pull.sh
+@itemx scripts/push.sh
+@end table

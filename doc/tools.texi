@@ -7,7 +7,7 @@ This activity is divided into 6 process:
 * Apache::       @process{Apache}
 * Exim::         @process{Sendmail}
 * Ssh::          @process{Ssh}
-* Cvs::          @process{Cvs}
+* Git::          @process{Git}
 * Cron::         @process{Cron}
 @end menu
 
@@ -36,16 +36,18 @@ from @procScriptsDeliver{}, @procScriptsAudit{} or @procToolsCron{} to @procTool
 @item @eventToolsSshCopy{} 
 from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's cache.
 
-@item @eventToolsCvsInit{} 
-from @procScriptsInitRemovePurge{} to @procToolsCvs{}: initialise the local server's repository.
+@item @eventToolsGitInit{}
+@itemx @eventToolsGitConfig{}
+from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsGit{}: initialise a @acronym{GIT} repository.
 
-@item @eventToolsCvsImport
-@itemx @eventToolsCvsCheckout
-from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
+@item @eventToolsGitClone{}
+from @procScriptsNewFreeClean{} to @procToolsGit{}: checkout a @acronym{GIT} collection module.
 
-@item @eventToolsCvsUpdate{} 
-@itemx @eventToolsCvsCommit{} 
-from @procScriptsUpdateCommit{} to @procToolsCvs{}: synchronise a @acronym{CVS} module.
+@item @eventToolsGitConfig{}
+@itemx @eventToolsGitCommit{} 
+@itemx @eventToolsGitPull{} 
+@itemx @eventToolsGitPush{} 
+from @procScriptsPullPush{} to @procToolsGit{}: synchronise a @acronym{GIT} module.
 
 @item @eventToolsCronDate
 from @actorDate{} to @procToolsCron{}: scheduled tasks.
@@ -109,12 +111,10 @@ from @procToolsSyslog{} to @procClientUpload{}: upload collection's @acronym{APA
 @table @file
 @item /etc/mediatex/mdtx-COLL/apache2/htgroup
 @itemx /etc/mediatex/mdtx-COLL/apache2/htpasswd
-@itemx /var/lib/mediatex/mdtx/CVSROOT
 @itemx /var/lib/mediatex/mdtx/mdtx
 @itemx /var/lib/mediatex/mdtx/mdtx-COLL
-@itemx ~/mdtx/cvs/mdtx
-@itemx ~/mdtx/cvs/mdtx-COLL
-@itemx ~/mdtx/cvs/mdtx-COLL/CVS/Root
+@itemx ~/mdtx/git/mdtx
+@itemx ~/mdtx/git/mdtx-COLL
 @end table
 @end itemize
 
@@ -134,9 +134,9 @@ from @procToolsSyslog{} to @procClientUpload{}: upload collection's @acronym{APA
 @subsection Ssh
 @include ssh.texi
 
-@node Cvs
-@subsection Cvs
-@include cvs.texi
+@node Git
+@subsection Git
+@include git.texi
 
 @node Cron 
 @subsection Cron

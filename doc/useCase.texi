@@ -3,7 +3,7 @@
 @menu
 * Exemple::     Archiving icons
 * Firewall::    Configuration behind a firewall
-* CvsLogs::     Search the metadata history
+* GitLogs::     Search the metadata history
 * Portail::	Minimal Php inerface
 * Linking::	Library API
 @end menu
@@ -34,8 +34,8 @@ If not already done, please configure the @code{mdtx-hello} collection: @pxref{S
 
 Empty the catalog and extraction meta-data files:
 @example
-$ cat /dev/null > ~mdtx-hello/cvs/catalog000.txt
-$ cat /dev/null > ~mdtx-hello/cvs/extract000.txt
+$ cat /dev/null > ~mdtx-hello/git/catalog000.txt
+$ cat /dev/null > ~mdtx-hello/git/extract000.txt
 $ mediatex upgrade
 @end example
 
@@ -118,55 +118,11 @@ RewriteCond %@{SERVER_PORT@} !^443$
 RewriteRule .* https://%@{HTTP_HOST@}%@{REQUEST_URI@} [QSA,R=301,L]
 @end example
 
-@node CvsLogs
-@section Search the metadata history
+@node GitLogs
+@section Search the meta-data history
 
-Actually, this spend a lot of ressources :
+@acronym{GIT} allows to quickly search text into the meta-data whole history:
 @example
-#!/bin/bash
-#set -x
-set -e
-
-if [ $# -lt 1 ]; then
-    echo "usage: "
-    echo " $ mediates su coll COLLECTION"
-    echo " $ cd ~/cvs"
-    echo " $ PATH/$0 KEYWORD"
-    exit
-fi
-
-echo "looking for '$1' into cvs history"
-
-for DIR in $(find . -type d | grep -v '/CVS$'); do
-
- for LINE in $(cat $DIR/CVS/Entries | 
-     cut -d" " -f1 | grep -v "^D" | grep -v /1.1.1.1/); do
-  FILE=$(echo $LINE | cut -d"/" -f2)
-  VMAX=$(echo $LINE | cut -d"/" -f3 | cut -d"." -f2)
-  [ $VMAX -gt 1 ] || continue
-
-  for VER in $(seq 2 $VMAX); do
-   if [ $(cvs diff -r 1.$[$VER - 1] -r 1.$VER $FILE 2>/dev/null | 
-	       grep -c "$1") -gt 0 ]; then
-    echo "$FILE 1.$VER"
-   fi
-
-  done
- done
-done
-@end example
-
-Changelog on metadata files should be retrieve quicker from the @acronym{CVS} modules.
-@example
-$ awk -vRS= '/Document "13421830"/' catalog*.txt
-$ grep 13421830 catalog*,v.txt
-$ cvs diff -r1.1 catalog???.txt | grep '/Document "13421830"/'
-@end example
-
-Git do it very much more quickly, but we loose the revisions numbers:
-@example
-# apt-get install git-cvs
-$ git cvsimport -d /var/lib/mediatex/mdtx mdtx-hello
 $ git log -S 'panthere'
 commit <COMMIT_NUMBER>
 $ git diff <COMMIT_NUMBER>

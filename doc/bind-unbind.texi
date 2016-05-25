@@ -1,6 +1,6 @@
 @cindex Binding
 
-These 2 scripts mount and unmount both cvsroot and cache directories 
+These 2 scripts mount and unmount both gitbare and cache directories 
 into the chroot jail, using the bind option (see @code{man 8 mount}).
 They enable or disable remote meta-data upgrades and remote data copies when @activityServer{} respectively start or stop.
 
@@ -30,7 +30,7 @@ function JAIL_bind()
 @{
   @dots{}
   mount --bind $MDTXHOME/cache $JAIL/var/cache
-  mount --bind $CVSROOT $JAIL/var/lib/cvsroot
+  mount --bind $GITBARE $JAIL/var/lib/gitbare
   @dots{}
 @}
 @end example
@@ -43,7 +43,6 @@ function JAIL_bind()
    +- lib/
     |  +- mediatex/
     |     +- mdtx/                       (1)
-    |       |- CVSROOT/
     |       +- mdtx/
     |          |- mdtx.conf,v 
     |          +- supports.txt,v

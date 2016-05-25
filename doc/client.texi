@@ -5,7 +5,7 @@ It runs as @code{setuid root} so as to switch between the different
 collection contents, but also to do some administrative works such
 as mounting and binding directories, create new system accounts...
 Before performing any collection works, @activity{Client} update
-the meta-data using @procToolsCvs{}. And before leaving, it commit 
+the meta-data using @procToolsGit{}. And before leaving, it commit 
 modifications performed into the configuration and meta-data files.
 
 There is 2 ways @activity{Client} use to communicate with @activity{Server}:
@@ -136,9 +136,9 @@ from @procClientSupp{} to @procScriptsMount{}: manage mounting @iso{} devices.
 @itemx @eventScriptsDelUser
 from @procClientMisc{} to @procScriptsAddDelUser{}: manage @actorPublisherO{} users.
 
-@item @eventScriptsUpdate
-@item @eventScriptsCommit
-from @procClientServ{} to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
+@item @eventScriptsPull
+@item @eventScriptsPush
+from @procClientServ{} to @procScriptsPullPush{}: manage @acronym{GIT} synchronisation.
 
 @item @eventToolsSshCopy{} 
 from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's cache.

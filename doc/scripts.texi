@@ -9,7 +9,7 @@ This activity is divided into 11 process:
 * init-remove-purge::    @process{init-remove-purge}
 * addUser-delUser::      @process{addUser-delUser}
 * new-free-clean::       @process{new-free-clean}
-* update-commit::        @process{update-commit}
+* upgrade-commit-pull-push:: @process{upgrade-commit-pull-push}
 * bind-unbind::          @process{bind-unbind}
 * mount-umount::         @process{mount-umount}
 * deliver::              @process{deliver}
@@ -56,9 +56,11 @@ from @procClientConf{} to @procScriptsNewFreeClean{}: create/subscribe or destro
 @item @eventScriptsClean
 from @procClientMisc{} to @procScriptsNewFreeClean{}: clean the local @acronym{HTML} catalogue.
 
-@item @eventScriptsUpdate
+@item @eventScriptsUpgrade
 @itemx @eventScriptsCommit
-from @activityClient{} to @procScriptsUpdateCommit{}: manage @acronym{CVS} synchronisation.
+@itemx @eventScriptsPull
+@itemx @eventScriptsPush
+from @activityClient{} to @procScriptsPullPush{}: manage @acronym{GIT} synchronisation.
 
 @item @eventScriptsBind
 @itemx @eventScriptsUnBind
@@ -97,16 +99,18 @@ from @procScriptsNewFreeClean{} to @procToolsApache{}: make @acronym{APACHE} awa
 @item @eventServerCgiQuery
 from @procScriptsCgi{} to @procServerCgiSrv{}: socket query asking for an archive.
 
-@item @eventToolsCvsInit{} 
-from @procScriptsInitRemovePurge{} to @procToolsCvs{}: initialise the local server's @acronym{CVS} repository.
+@item @eventToolsGitInit{}
+@itemx @eventToolsGitConfig{}
+from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsGit{}: initialise a @acronym{GIT} repository.
 
-@item @eventToolsCvsImport
-@itemx @eventToolsCvsCheckout{} 
-from @procScriptsInitRemovePurge{} or @procScriptsNewFreeClean{} to @procToolsCvs{}: respectively create or join a new @acronym{CVS} module.
+@item @eventToolsGitClone{}
+from @procScriptsNewFreeClean{} to @procToolsGit{}: checkout a @acronym{GIT} collection module.
 
-@item @eventToolsCvsUpdate
-@itemx @eventToolsCvsCommit
-from @procScriptsUpdateCommit{} to @procToolsCvs{}: synchronise a @acronym{CVS} module.
+@item @eventToolsGitConfig{}
+@itemx @eventToolsGitCommit{} 
+@itemx @eventToolsGitPull{} 
+@itemx @eventToolsGitPush{} 
+from @procScriptsPullPush{} to @procToolsGit{}: synchronise a @acronym{GIT} module.
 
 @item @eventToolsEximSendMail{} 
 from @procScriptsDeliver{} or @procScriptsAudit{} to @procToolsExim{}: send a mail.
@@ -151,7 +155,7 @@ To debug a script, you have to launch it using at least the @var{MDTX} environme
 
 Codes:
 @table @file
-@item  scripts/lib/cvs.sh
+@item  scripts/lib/git.sh
 @itemx scripts/lib/htdocs.sh
 @itemx scripts/lib/include.sh
 @itemx scripts/lib/jails.sh
@@ -184,9 +188,9 @@ Codes:
 @subsection new-free-clean
 @include new-free-clean.texi
 
-@node update-commit
-@subsection update-commit
-@include update-commit.texi
+@node upgrade-commit-pull-push
+@subsection upgrade-commit-pull-push
+@include upgrade-commit-pull-push.texi
 
 @node bind-unbind
 @subsection bind-unbind

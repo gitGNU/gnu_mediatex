@@ -3,7 +3,7 @@
 
 @process{Ssh} (see @code{man ssh(1)}) 
 is used to exchange meta-data and archives files by using a ``chroot'' jail for each collection account,
-as @procScriptsBind{} script provides the cache and cvsroot directories into that jail.
+as @procScriptsBind{} script provides the cache and gitbare directories into that jail.
 
 Process conceptual model:
 
@@ -14,7 +14,7 @@ Process conceptual model:
 @table @code
 
 @item @eventToolsSshConnect
-from @procToolsCvs{}: access the @code{CVSROOT} repository.
+from @procToolsGit{}: access the @code{GIT} bare repository.
 
 @item @eventToolsSshCopy{} 
 from @procClientMisc{}: retrieve an archive from a remote @activityServer{}'s cache.

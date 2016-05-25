@@ -22,7 +22,7 @@ from @procToolsCron{}: scheduled tasks.
 @itemize @bullet
 @item Hourly: ask @activityServerO{} to extract and notify.
 @item Daily: ask @activityClientO{} to build the @acronym{HTML} catalog and the message of the day.
-@item Monthly: ask @activityClientO{} to backup the @acronym{CVSROOT} module.
+@item Monthly: ask @activityClientO{} to backup the @acronym{GIT} bare local repositories.
 @end itemize
 
 @item Events out
@@ -33,10 +33,10 @@ from @procToolsCron{}: scheduled tasks.
 to @activityClient{}: ask server to perform extractions or to communicate its state to other servers.
 
 @item eventClientMiscMake
-to @procClientMisc{}: build the local @acronym{HTML} catalogue without @acronym{CVS} synchronisation.
+to @procClientMisc{}: build the local @acronym{HTML} catalogue without @acronym{GIT} synchronisation.
 
 @item @eventClientUpload
-to @procClientUpload{}: upload collection's @acronym{CVSROOT} modules into the cache so as to backup them, if enabled into @dataServers{}.
+to @procClientUpload{}: upload @acronym{GIT} bare modules into the cache so as to backup them, if enabled into @dataServers{}.
 
 @item @eventClientMotd
 to @procClientMotd{}: build the message of the day (actions @actorPublisherO{} have to perform).

@@ -3,7 +3,7 @@
 @sc{Mediatex} should ease managing server changes.
 
 @menu
-* Scenario A::          CVS conflicts.
+* Scenario A::          GIT conflicts.
 * Scenario B::	        Address's change.
 * Scenario C::	        Socket key's change.
 * Scenario D::          Collection user key's change.
@@ -15,7 +15,7 @@ Some usual cases of typology modifications will follows.
 
 They should induce following connectivity errors:
 @itemize
-@item Test @acronym{SSH} and @acronym{CVS} connectivity:
+@item Test @acronym{SSH} and @acronym{GIT} connectivity:
 @example
 $ mediatex adm update
 [error message]
@@ -29,10 +29,10 @@ $ mediatex srv notify
 @end itemize
 
 @node Scenario A
-@section CVS conflicts
+@section GIT conflicts
 
 @todo{}
-Sorry, not documented, please refer to @sc{Cvs} (@pxref{Top,,, cvs, Concurrent Versions System}) documentation.
+Sorry, not yet documented, please refer to @acronym{GIT} manual (@code{man 1 git}).
 If you need specific permissions you can use ``@eventClientMiscSu{}'' to become the collection system user.
 
 @node Scenario B
@@ -56,7 +56,7 @@ $ mediatex upgrade
 Other hosts will get the new address as soon as when they will upgrade too.
 
 @item If we change @acronym{IP} on master server,
-we also lost @acronym{CVS} queries from all servers.
+we also lost @acronym{GIT} queries from all servers.
 The correction consists in the same as upper, plus re-subscribing to the collection on every slaves.
 @example
 slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW_IP}
@@ -97,7 +97,7 @@ In fact, we re-use the @acronym{ssh} connections keys that was first dedicated t
 
 @itemize
 @item 
-Changing the collection's keys on a slave server make the @acronym{cvs} connection no more available. The new keys need to be send via another media, in the same way we first connect a new server to the collection:
+Changing the collection's keys on a slave server make the @acronym{GIT} connection no more available. The new keys need to be send via another media, in the same way we first connect a new server to the collection:
 @example
 (s1)# scp ~/@var{MDTX}-@var{COLL}/.ssh/id_dsa.pub @var{MASTER}:@var{PATH}
 (s2)$ mediatex add key @var{PATH} to coll @var{COLL}
@@ -152,7 +152,7 @@ may be obtains using:
 @node Scenario F
 @section Server's change
 
-In this section we move the @acronym{CVS}'s root collection's repository from master host to one other. The same procedure may also be used to backup and restore a collection on the current master host.
+In this section we move the @acronym{GIT}'s bare collection's repository from master host to one other. The same procedure may also be used to backup and restore a collection on the current master host.
 
 First we backup the collection on master host:
 @example
