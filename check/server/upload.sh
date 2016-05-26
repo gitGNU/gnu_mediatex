@@ -32,7 +32,9 @@ TEST=$(basename $0)
 TEST=${TEST%.sh}
 
 # run the unit test
+cp $GITCLT/$MDTXUSER-coll1$SERVFILE $GITCLT/$MDTXUSER-coll3$SERVFILE
 server/ut$TEST -d $srcdir >server/$TEST.out 2>&1
+rm -f $GITCLT/$MDTXUSER-coll3$SERVFILE
 
 # compare with the expected output
 mrProperOutputs server/$TEST.out

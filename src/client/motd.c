@@ -432,6 +432,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
 
     // scan wanted archives not available
+    //  note: support files are loaded as final supplies by server
     if (archive->state != WANTED) continue;
     if (!motdArchive(&data, archive, 0)) goto error2;
   }
@@ -513,6 +514,7 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
     if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
       logMain(LOG_WARNING, "fail to update md5sumsDB file");
     }
+    sleep(1);
   }
 
   if (conf->collections == 0) goto error;

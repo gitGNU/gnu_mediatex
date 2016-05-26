@@ -550,8 +550,8 @@ serializeHtmlServer(Collection* coll, Server* server)
   }  
 
   if (!sprintf(text, _("Server%s "),  
-	       !strncmp(server->host, coll->masterHost, MAX_SIZE_HOST)?
-	       _(" master"):"")) goto error;
+	       (server == coll->serverTree->master)?_(" master"):""))
+    goto error;
 
   htmlSSIHeader(fd, "../..", "score");
 

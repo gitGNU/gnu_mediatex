@@ -3,14 +3,9 @@
 
 *** TO TEST
 
-- purge.sh: remove /etc/cron.d/mediatex_cron (set by init)
-- sort files to burn on message of the day
-
 *** TODO
 
 *** BUGS
-
-- test14: motd ask for file support
 
 - test21: audit fails (rc=4 ?)
   never fails with SERVER=1 ?
@@ -19,6 +14,9 @@
 
 - manage full server scan (done at startup, but not on reload)
    test renaming file into the cache (as now, they where lost)
+
+- actually there is no protection on unlinking file outside of
+  the cache, like supports files.
 
 *** TO TEST
 

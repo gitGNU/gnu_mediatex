@@ -35,9 +35,11 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
+  fprintf(stderr, " [ -d repository ]");
   
   mdtxOptions();
-  //fprintf(stderr, "  ---\n");
+  fprintf(stderr, "  ---\n"
+	  "  -d, --input-rep\tsrcdir directory for make distcheck\n");
   return;
 }
 
@@ -59,13 +61,16 @@ main(int argc, char** argv)
   Archive* archive = 0;
   char* string = 0;
   Record* record = 0;
+  char inputRep[255] = "../misc";
+  char path[1024];
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MDTX_SHORT_OPTIONS"d:";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
+    {"input-rep", required_argument, 0, 'd'},
     {0, 0, 0, 0}
   };
 
@@ -78,6 +83,17 @@ main(int argc, char** argv)
 	!= EOF) {
     switch(cOption) {
 
+    case 'd':
+      if(optarg == 0 || *optarg == (char)0) {
+	fprintf(stderr, 
+		"%s: nil or empty argument for the input repository\n",
+		programName);
+	rc = EINVAL;
+	break;
+      }
+      strncpy(inputRep, optarg, strlen(optarg)+1);
+      break;
+      
       GET_MDTX_OPTIONS; // generic options
     }
     if (rc) goto optError;
@@ -103,17 +119,6 @@ main(int argc, char** argv)
   if (!addCacheEntry(coll, record)) goto error;
   record = 0;
 
-  /*
-  // add more supports (to test alphabetic order that was correct)
-  //  (copy-paste from utsupp.c)
-  sprintf(path, "%s/logoP1.iso", inputRep);
-  if (!mdtxAddSupport("AAA", path)) goto error;
-  if (!mdtxAddSupport("ZZZ", path)) goto error;
-  if (!mdtxShareSupport("AAA", "coll1")) goto error; // set wrong order
-  if (!mdtxShareSupport("ZZZ", "coll1")) goto error;
-  if (!scoreLocalImages(coll)) goto error; // <- this perturb initial test!
-  */
-
   // add a local supplies (to test alphabetic order)
   if (!(string = createString("zzz"))) goto error;
   if (!(archive = addArchive(coll,
@@ -135,9 +140,21 @@ main(int argc, char** argv)
   string = 0;
   if (!addCacheEntry(coll, record)) goto error;
   record = 0;
-
-  // test
+ 
+  // test 1
+  logMain(LOG_INFO, "** Test 1");
   if (!updateMotd()) goto error;
+
+  // test 2: test alphabetic order on supports
+  logMain(LOG_INFO, "** Test 2");
+  sprintf(path, "%s/logoP1.iso", inputRep);
+  if (!mdtxAddSupport("AAA", path)) goto error;
+  if (!mdtxAddSupport("ZZZ", path)) goto error;
+  if (!mdtxShareSupport("AAA", "coll1")) goto error; // set wrong order
+  if (!mdtxShareSupport("ZZZ", "coll1")) goto error;
+  if (!scoreLocalImages(coll)) goto error; // <- this perturb first test!
+  if (!updateMotd()) goto error; 
+  
   if (!releaseCollection(coll, CACH)) goto error;
   /************************************************************************/
   

@@ -33,8 +33,10 @@ TEST=${TEST%.sh}
 
 # run the unit test
 cp $GITCLT/$MDTXUSER-coll1$SERVFILE $GITCLT/$MDTXUSER-coll3$SERVFILE
-#cp $MD5SUMS/$MDTXUSER-coll1.md5 $MD5SUMS/$MDTXUSER-coll3.md5
-client/ut$TEST >client/$TEST.out 2>&1
+cp $MD5SUMS/$MDTXUSER-coll1.md5 $MD5SUMS/$MDTXUSER-coll3.md5
+client/ut$TEST -d $srcdir/../misc >client/$TEST.out 2>&1
+rm -f $GITCLT/$MDTXUSER-coll3$SERVFILE
+rm -f $MD5SUMS/$MDTXUSER-coll3.md5
 
 # compare with the expected output
 mrProperOutputs client/$TEST.out

@@ -677,6 +677,7 @@ function test14()
 	mdtxP "motd" serv3
 	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello" \
 	      serv3
+	
 	mdtxP "motd" serv3
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3

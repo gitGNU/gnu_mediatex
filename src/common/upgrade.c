@@ -26,9 +26,9 @@
 #include <dirent.h>    // scandir
 
 /*=======================================================================
- * Function   : checkSupport 
+ * Function   : doCheckSupport 
  * Description: Do checksums on an available support
- * Synopsis   : int checkSupport(Support *supp, char* path)
+ * Synopsis   : int soCheckSupport(Support *supp, char* path)
  * Input      : Support *supp = the support object
  *              char* path = the device that host the support
  * Output     : TRUE on success
@@ -116,11 +116,13 @@ doCheckSupport(Support *supp, char* path)
     rc = FALSE;
   }
 
-  if (!rc && !isSupportFile(supp)) {
+  if (!rc) {
     logMain(LOG_WARNING, "please manualy check \"%s\" support", supp->name);
-    logMain(LOG_WARNING, "either this is not \"%s\" support at %s", 
-	    supp->name, path);
-    logMain(LOG_WARNING, "or maybe the \"%s\" support is obsolete", 
+    if (!isSupportFile(supp)) {
+      logMain(LOG_WARNING, "either this is not \"%s\" support at %s, or", 
+	      supp->name, path);
+    }
+    logMain(LOG_WARNING, "maybe the \"%s\" support is obsolete", 
 	    supp->name);
     goto error;
   }
@@ -259,9 +261,9 @@ scoreSupport(Support* supp, ScoreParam *p)
 
 
 /*=======================================================================
- * Function   : scoreLocaleImages
+ * Function   : scoreLocalImages
  * Description: Compute ISO score on local server
- * Synopsis   : int scoreLocaleImages(Collection* coll)
+ * Synopsis   : int scoreLocalImages(Collection* coll)
  * Input      : Collection* coll = collection to upgrade
  *              Server* server = the local server
  * Output     : TRUE on success 

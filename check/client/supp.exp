@@ -127,8 +127,8 @@ score      state label
 [warning md5sum.c] size doesn't match: 24075 vs 391168 expected
 [warning upgrade.c] wrong size on "SUPP21_logo.part1" support
 [warning upgrade.c] please manualy check "SUPP21_logo.part1" support
-[warning upgrade.c] either this is not "SUPP21_logo.part1" support at ./../misc/logo.png
-[warning upgrade.c] or maybe the "SUPP21_logo.part1" support is obsolete
+[warning upgrade.c] either this is not "SUPP21_logo.part1" support at ./../misc/logo.png, or
+[warning upgrade.c] maybe the "SUPP21_logo.part1" support is obsolete
 [err supp.c] mdtxHaveSupport fails
 [notice utsupp.c] *** Have a file:
 [err supp.c] have function do not handle support file

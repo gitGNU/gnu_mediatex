@@ -153,7 +153,7 @@ mdtxLsSupport()
 
   logMain(LOG_DEBUG, "mdtxLsSupport");
   if (!(conf = getConfiguration())) goto error;
-  if (!loadConfiguration(CFG | SUPP)) goto error;
+  if (!loadConfiguration(CFG|SUPP)) goto error;
   supports = conf->supports;
 
   rgRewind(supports);

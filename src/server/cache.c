@@ -188,6 +188,7 @@ getAbsoluteRecordPath(Collection* coll, Record* record)
  *              char* absolutePath
  *              char* relativePath
  * Output     : TRUE on success
+#warning DO NO unlink support files !
  =======================================================================*/
 static int 
 scanFile(Collection* coll, char* absolutePath, char* relativePath) 
