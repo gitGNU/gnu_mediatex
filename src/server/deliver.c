@@ -87,12 +87,12 @@ int auditArchive(Collection* coll, Record* demand)
 {
   int rc = FALSE;
   Record* supply = 0;
-  struct stat statBuffer;
   CheckData md5; 
   char* path = 0;
-  char *argv[] = {0, 0, 0, 0, 0, 0, 0};
+  struct stat statBuffer;
   char size[MAX_SIZE_SIZE+1];
-  char status[2];
+  char status[2]="0";
+  char *argv[] = {0, 0, 0, 0, 0, 0, 0};
   
   logMain(LOG_DEBUG, "auditArchive");
   checkCollection(coll);
@@ -100,21 +100,35 @@ int auditArchive(Collection* coll, Record* demand)
   supply = demand->archive->localSupply;
   checkRecord(supply);
 
-  // get file attributes (size)
+  logMain(LOG_INFO, "auditArchive %s", supply->extra);
   if (!(path = getAbsoluteRecordPath(coll, supply))) goto error;
+
+  // get file size
   if (stat(path, &statBuffer)) {
-    logMain(LOG_ERR, "stat fails on %s: %s", supply->extra, 
-	    strerror(errno));
+    logMain(LOG_ERR, "stat fails on %s: %s", path, strerror(errno));
     goto error;
   }
 
-  // check hash (result is given by md5.rc)
+  // compute checksum
   memset(&md5, 0, sizeof(CheckData));
   md5.path = path;
-  md5.size = statBuffer.st_size;
   md5.opp = CHECK_CACHE_ID;
   if (!doChecksum(&md5)) goto error;
 
+  // double check supply (should not comes here on wrong checksum)
+  argv[5] = "0"; // success
+  if (statBuffer.st_size != demand->archive->size) {
+    logMain(LOG_WARNING, "bad size auditing %s: %lli vs %lli expected",
+	    supply->extra, (long long int)statBuffer.st_size,
+	    (long long int)demand->archive->size);
+    status[0] = '1'; // failure
+  }
+  if (strncmp(md5.fullMd5sum, demand->archive->hash, MAX_SIZE_MD5)) {
+    logMain(LOG_WARNING, "bad md5sum auditing %s: %s vs %s expected",
+	    supply->extra, md5.fullMd5sum, demand->archive->hash);
+    status[0] = '1'; // failure
+  }
+  
   // call script to update report
   if (!(argv[0] = createString(getConfiguration()->scriptsDir))
       || !(argv[0] = catString(argv[0], "/audit.sh"))) 
@@ -125,7 +139,6 @@ int auditArchive(Collection* coll, Record* demand)
   argv[3] = demand->archive->hash;
   sprintf(size, "%lli", (long long int)demand->archive->size);
   argv[4] = size;
-  sprintf(status, "%i", md5.rc);
   argv[5] = status;
   
   if (!env.noRegression && !env.dryRun) {
@@ -159,6 +172,7 @@ int deliverArchive(Collection* coll, Archive* archive)
   Record* record = 0;
   time_t date = -1;
   RGIT* curr = 0;
+  int doSetToKeep = FALSE;
 
   logMain(LOG_DEBUG, "deliverArchive");
   if (!(conf = getConfiguration())) goto error;
@@ -176,7 +190,7 @@ int deliverArchive(Collection* coll, Archive* archive)
 	if (!auditArchive(coll, record)) goto error;
 	continue;
       }
-
+      
       date += coll->cacheTTL;
       date -= 1*DAY;
     case REMOTE_DEMAND: // scp (time between 2 cron)
@@ -185,12 +199,15 @@ int deliverArchive(Collection* coll, Archive* archive)
       date += archive->size / conf->uploadRate;
       break;
     default:
-      goto end;
+      logMain(LOG_ERR, "a demand record was expected");
+      goto error;
     }
+
+    doSetToKeep = TRUE;
   }
 
   // adjust to-keep date
-  if (archive->localSupply->date < date) {
+  if (doSetToKeep && archive->localSupply->date < date) {
     archive->localSupply->date = date;
     if (!computeArchiveStatus(coll, archive)) goto error;
   }

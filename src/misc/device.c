@@ -406,7 +406,7 @@ int isBlockDevice(char* path, int* isB) {
 int getIsoSize(int fd, off_t *size, 
 	       unsigned long int *count, unsigned short int *bs) 
 {
-  int rc = 0;
+  int rc = FALSE;
   off_t offset = 0;
   char invariant[8] = ".CD001.";
   char buffer[8]    = "       "; 

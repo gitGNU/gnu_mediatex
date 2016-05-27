@@ -682,7 +682,7 @@ mdtxAudit(char* label, char* mail)
   }
   
   logMain(LOG_INFO, "receive: %s", reply);
-  logMain(LOG_NOTICE, "please check motd and performe extraction", reply);
+  logMain(LOG_NOTICE, "please check motd and perform extraction", reply);
  end:
   rc = (env.noRegression || env.dryRun || status == 221);
  error3:

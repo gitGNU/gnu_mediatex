@@ -1150,7 +1150,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   if (data->context != X_NO_REMOTE_COPY) {
     if (nbRemoteCopying >= MAX_REMOTE_COPIES) {
       logMain(LOG_WARNING,
-	      "skip remote extraction as %i already running",
+	      "skip remote extraction as %i are already running",
 	      nbRemoteCopying);
     }
     else {
@@ -1328,7 +1328,7 @@ int extractArchives(Collection* coll)
       logMain(LOG_WARNING, "however continue...");
       continue;
     }
-
+    
     if (data.found) {
       if (!deliverArchive(coll, archive)) goto error3;
     }

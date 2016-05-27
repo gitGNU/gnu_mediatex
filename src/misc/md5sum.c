@@ -397,7 +397,8 @@ doChecksum(CheckData* data)
     goto error;
   }
 
-  // compute size
+  // compute size we use to compute checksum on supports
+  // (on GNU/Linux there is a bug with last block on CD-ROM)
   if (data->opp != CHECK_CACHE_ID) {
     if (!isBlockDevice(data->path, &isBlockDev)) goto error;
     if (isBlockDev) {

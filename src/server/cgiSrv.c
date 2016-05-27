@@ -40,10 +40,10 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   ExtractData data;
 
   logMain(LOG_DEBUG, "extractCgiArchive");
-  *found = FALSE;
+  if (!(data.toKeeps = createRing())) goto error;
   data.coll = coll;
   data.context = X_NO_REMOTE_COPY;
-  if (!(data.toKeeps = createRing())) goto error;
+  *found = FALSE;
 
   if (!(conf = getConfiguration())) goto error;
   if (!loadCollection(coll, SERV | EXTR | CACH)) goto error;

@@ -76,6 +76,7 @@ int haveContainer(ExtractData* data, Container* container)
 int haveArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
+  int doExtract = FALSE;
 
   logMain(LOG_DEBUG, "have an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -89,20 +90,21 @@ int haveArchive(ExtractData* data, Archive* archive)
     goto end;
   }
 
-  // perform extraction deeper first 
+  doExtract = (archive->state == WANTED ||
+	       // or top container having bad score
+	       (archive->state < WANTED &&
+		archive->fromContainers->nbItems == 0 &&
+		archive->extractScore <= 
+		data->coll->serverTree->scoreParam.maxScore /2));
+  
+  // perform deepest extraction first 
   if (archive->toContainer) {
     if (!haveContainer(data, archive->toContainer)) goto error;
   }
 
-  // extract wanted content
-  if (archive->state == WANTED ||
-      // or top container having bad score
-      (archive->state < WANTED &&
-       archive->fromContainers->nbItems == 0 &&
-       archive->extractScore <= 
-       data->coll->serverTree->scoreParam.maxScore /2)
-      ) {
-
+  // wanted archive may become available but we may want
+  // to copy it into the cache and/or to deliver it
+  if (doExtract) {
     logMain(LOG_NOTICE, "have content to extract: %s:%lli", 
 	    archive->hash, archive->size);
     data->target = archive;
@@ -142,10 +144,10 @@ extractFinaleArchives(Connexion* connexion)
   };
 
   logMain(LOG_DEBUG, "remote extraction");
+  checkCollection(connexion->message->collection);
   memset(&data, 0, sizeof(ExtractData));
-  data.coll = connexion->message->collection;
-  checkCollection(data.coll);
   if (!(data.toKeeps = createRing())) goto error;
+  data.coll = connexion->message->collection;
   data.context = X_NO_REMOTE_COPY;
   
   // check we get a final supplies

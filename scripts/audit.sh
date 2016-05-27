@@ -1,6 +1,4 @@
 #!/bin/bash
-#set -x
-set -e
 #=======================================================================
 # * Project: MediaTex
 # * Module : scripts
@@ -23,6 +21,8 @@ set -e
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
+#set -x
+set -e
 
 [ -z $srcdir ] && srcdir=.
 [ -z $libdir ] && libdir=$srcdir/lib
@@ -35,6 +35,11 @@ Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $4 ] || Error "expect a size as fourth parameter"
 [ ! -z $5 ] || Error "expect a status as fifth parameter"
 
+if [ $5 -eq $TRUE ]; then
+    STATUS="ok"
+else
+    STATUS="ko"
+fi
 Notice "audit: archive $3:$4 for coll $1 (status = $5)"
 
 COLL=$1
@@ -56,28 +61,11 @@ FILEPATH_KO=$EXTRACT/$USER/$FILENAME_KO
 NAME=$(echo $ADDRESS | cut -d "@" -f1)
 SUBJECT="$USER audit"
 
-# # check audit report is still available
-# # (many many mails will be sent!!)
-# if [ ! -f $FILEPATH ]; then
+if [ ! -f $FILEPATH ]; then
+    Warning "audit for $ADDRESS already completed"
+    exit 0
+fi
 
-#     # send mail
-#     /usr/bin/mail $ADDRESS -s "$SUBJECT" <<EOF
-# Dear $NAME,
-
-# The audit you requested on $COLL collection fails.
-# - $EXTRA
-
-# This do not implies your collection leaks,
-# but only that the audit process itself do not complete.
-
-# Sorry about that.
-
-# $([ ! -f /usr/games/cowsay ] || /usr/games/cowsay mheu)
-# EOF
-#      Warning "audit for $ADDRESS uncompleted"
-#      exit 0;
-# fi
-     
 # retrieve actual values from audit file
 MAX=$(head -n4 $FILEPATH | tail -n +4 | cut -d' ' -f2)
 CUR=$(head -n5 $FILEPATH | tail -n +5 | cut -d' ' -f2)
