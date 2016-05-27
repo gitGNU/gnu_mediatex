@@ -214,8 +214,9 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     goto error;
   }
 
-  if (!statBuffer.st_size) {
-    // remove empty file from cache
+  // remove empty file from cache
+  if (!statBuffer.st_size &&
+      *relativePath != '/') { // do not unlink final supplies
     logMain(LOG_WARNING, "remove %s from cache (empty file)", relativePath);
     if (!env.dryRun) {
       if (unlink(absolutePath) == -1) {

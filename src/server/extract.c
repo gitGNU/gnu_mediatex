@@ -1159,7 +1159,7 @@ int extractArchive(ExtractData* data, Archive* archive)
 	     (record = rgNext_r(archive->remoteSupplies, &curr))) {
 	if (record->type & REMOVE) continue;
 
-	// scp only from nat clients on remote demand
+	// nat server scp from nat clients on remote demand
 	if (data->context == X_GW_REMOTE_COPY &&
 	    !rgShareItems(data->coll->localhost->gateways,
 			  record->server->networks))

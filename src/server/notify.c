@@ -215,7 +215,8 @@ addFinalDemands(NotifyData* data)
 	logMain(LOG_INFO, "found a remote demand to manage: %s:%lli",
 		record->archive->hash, record->archive->size);
 	if (!(extra = createString("!wanted"))) goto error;
-	if (!(demand = newRecord(coll->localhost, record->archive, DEMAND, extra))) 
+	if (!(demand = newRecord(coll->localhost, record->archive,
+				 DEMAND, extra))) 
 	  goto error;
 	extra = 0;
 	if (!rgInsert(data->toNotify, demand)) goto error;

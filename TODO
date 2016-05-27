@@ -7,8 +7,6 @@
 
 *** BUGS
 
-- test 22: audit report not available from serv3
-
 - actually there is no protection on unlinking file outside of
   the cache, like supports files.
 

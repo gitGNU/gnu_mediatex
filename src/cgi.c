@@ -143,7 +143,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   if (!(coll = rTree->collection)) goto error;
   if (!(localhost = getLocalHost(coll))) goto error;
 
-  logMain(LOG_WARNING, "localhost: %s/%s", 
+  logMain(LOG_INFO, "cgi lunched on localhost: %s/%s", 
 	  localhost->host, localhost->fingerPrint);
 
   if ((sTree = coll->serverTree) == 0) goto error;
@@ -152,19 +152,20 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   /* loop on every server */
   rgRewind(sTree->servers);
   while ((server = rgNext(sTree->servers))) {
-
-    logMain(LOG_WARNING, "server: %s/%s", 
-	    server->host, server->fingerPrint);
-
+    if (!isReachable(coll, localhost, server)) continue;
+					   
+    /*
     // skip server not directly connected to us
     if (!rgShareItems(localhost->networks, server->networks)) {
       logMain(LOG_INFO, "do not connect unreachable server %s:%i",
 	      server->host, server->mdtxPort);
       continue;
     }
-
+    */
     // query server
-    if (!server) break;
+    //if (!server) break;
+    logMain(LOG_INFO, "ask  %s/%s server for file",
+	    server->host, server->fingerPrint);
     if (!queryServer(server, rTree, reply)) goto error;
      
     if (env.dryRun) {
@@ -289,10 +290,13 @@ int mdtxRegister(RecordTree *tree)
   
   logMain(LOG_DEBUG, "mdtxRegister");
 
-  /* querying the local server */
   if (!(coll = tree->collection)) goto error;
   if (!(record = (Record*)tree->records->head->it)) goto error;
   if (!(server = getLocalHost(coll))) goto error;
+
+  /* querying the local server */
+  logMain(LOG_INFO, "register final demand at %s/%s server",
+	  server->host, server->fingerPrint);
   if (!queryServer(server, tree, reply)) goto error;
   
   if (env.dryRun) {

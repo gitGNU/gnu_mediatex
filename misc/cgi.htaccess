@@ -5,7 +5,7 @@ AddHandler cgi-script .cgi
 <Files get.cgi>
        # set log severity
        SetEnv MDTX_LOG_FACILITY local2
-       SetEnv MDTX_LOG_SEVERITY info
+       SetEnv MDTX_LOG_SEVERITY_MAIN info
 
        # login/password
        Require group index

@@ -119,6 +119,8 @@ int delServer(Collection* coll, Server* Server);
 int diseaseServer(Collection* coll, Server* server);
 int diseaseServerTree(Collection* coll);
 
+int isReachable(Collection* coll, Server* from, Server* to);
+
 #endif /* MISC_MEMORY_SERVER_H */
 
 /* Local Variables: */
