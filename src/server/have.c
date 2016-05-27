@@ -76,7 +76,7 @@ int haveContainer(ExtractData* data, Container* container)
 int haveArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
-  int doExtract = FALSE;
+  int toDeliver = FALSE;
 
   logMain(LOG_DEBUG, "have an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -90,28 +90,25 @@ int haveArchive(ExtractData* data, Archive* archive)
     goto end;
   }
 
-  doExtract = (archive->state == WANTED ||
-	       // or top container having bad score
-	       (archive->state < WANTED &&
-		archive->fromContainers->nbItems == 0 &&
-		archive->extractScore <= 
-		data->coll->serverTree->scoreParam.maxScore /2));
+  // force delivering archive that recursively become available 
+  toDeliver = (archive->state == WANTED);
   
   // perform deepest extraction first 
   if (archive->toContainer) {
     if (!haveContainer(data, archive->toContainer)) goto error;
   }
 
-  // wanted archive may become available but we may want
-  // to copy it into the cache and/or to deliver it
-  if (doExtract) {
+  // perform extraction
+  if (archive->state == WANTED) {
     logMain(LOG_NOTICE, "have content to extract: %s:%lli", 
 	    archive->hash, archive->size);
     data->target = archive;
     if (!extractArchive(data, archive)) goto error;
-    if (data->found) {
-      if (!deliverArchive(data->coll, archive)) goto error;
-    }
+  }
+
+  // perform delivering
+  if (toDeliver && data->found) {
+    if (!deliverArchive(data->coll, archive)) goto error;
   }
 
  end:
@@ -170,6 +167,13 @@ extractFinaleArchives(Connexion* connexion)
 
   // up-down recursive match for wanted content from the final supply
   if (!haveArchive(&data, record->archive)) goto error4;
+
+  // copy bad top container having bad score into the cache
+  if (record->archive->state < WANTED &&
+      isBadTopContainer(data.coll, record->archive)) {
+    data.target = record->archive;
+    if (!extractArchive(&data, record->archive)) goto error;
+  }   
 
   sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;

@@ -76,6 +76,7 @@ KO=$(head -n7 $FILEPATH | tail -n +7 | cut -d' ' -f3)
 if [ "$(grep -c $HASH:$SIZE $FILEPATH)" -ne 1 ]; then
     Info "archive $HASH:$SIZE already audited for $EXTRA"
 else
+
     # if check on archive was successful
     if [ $STATUS -eq $TRUE ]; then
 	echo " $HASH:$SIZE $(date)" >> $FILEPATH_OK
@@ -88,20 +89,23 @@ else
     # archive now checked
     CUR=$[$CUR + 1]
 
+    # "|| true" need on server context (don't understand why)
     sed -i $FILEPATH \
-	-e "5 s/[0-9]\+/$CUR/" \
-	-e "6 s/[0-9]\+/$OK/" \
-	-e "7 s/[0-9]\+/$KO/" \
-	-e "/$HASH:$SIZE/ d"
-
+    	-e "5 s/[0-9]\+/$CUR/" \
+    	-e "6 s/[0-9]\+/$OK/" \
+    	-e "7 s/[0-9]\+/$KO/" \
+    	-e "/$HASH:$SIZE/ d" || true
+    
     # finalise the audit repport    
     if [ $CUR -eq $MAX ]; then
+
 	echo -e "\nArchive OK:" >> $FILEPATH
 	if [ -e $FILEPATH_OK ]; then
 	    cat $FILEPATH_OK >> $FILEPATH
 	else
 	    echo " none" >> $FILEPATH
 	fi
+
 	echo -e "\nArchive KO:" >> $FILEPATH
 	if [ -e $FILEPATH_KO ]; then
 	    cat $FILEPATH_KO >> $FILEPATH
@@ -114,17 +118,19 @@ fi
 
 # upload the audit report and send a mail
 if [ $CUR -eq $MAX ]; then
+
     DO_LOG=$(grep -i logAudit $GITCLT/$USER/servers.txt | \
 		    awk '{ print $2 }')
     case $DO_LOG in
 	yes|Yes|YES|y|Y|true|True|TRUE|t|T)
+
 	    SIGN1=$(md5sum $FILEPATH | cut -d' ' -f 1)
 	    SIGN1=$SIGN1:$(ls $FILEPATH -l | cut -d' ' -f 5)
-	    
+
 	    gzip -c $FILEPATH > $FILEPATH.gz
 	    SIGN2=$(md5sum $FILEPATH.gz | cut -d' ' -f 1)
 	    SIGN2=$SIGN2:$(ls $FILEPATH.gz -l | cut -d' ' -f 5)
-	
+
 	    cat >/tmp/$AUDIT.cat <<EOF
 Top Category "~mediatex"
 Category "audits": "~mediatex"
@@ -141,7 +147,7 @@ Archive $SIGN1
 Archive $SIGN2
  "format" = "gz"
 EOF
-    
+	    
 	    TARGETDIR="mediatex/audits"
 	    cat >/tmp/$AUDIT.ext <<EOF
 (GZIP
@@ -173,3 +179,4 @@ EOF
 fi
 
 Info "done"
+

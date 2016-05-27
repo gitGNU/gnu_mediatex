@@ -105,7 +105,7 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
   
-  // add a demand for logo
+  // add a demand for logo.xmp
   if (!loadCollection(coll, CACH)) goto error;
   if (!(string = createString("!wanted"))) goto error;
   if (!(archive = addArchive(coll,

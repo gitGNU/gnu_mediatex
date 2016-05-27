@@ -85,7 +85,7 @@
 
 <P>
 
-<SPAN  CLASS="textbf">Server </SPAN><SMALL>127.0.0.1</SMALL> (7.50)
+<SPAN  CLASS="textbf">Server master </SPAN><SMALL>127.0.0.1</SMALL> (7.50)
 
 <BR>
 <SPAN  CLASS="textit">this is server2</SPAN>
@@ -137,7 +137,7 @@ Provide images: 2
 
 <P>
 
-<SPAN  CLASS="textbf">Server master </SPAN><SMALL>LOCALHOST</SMALL> (2.00)
+<SPAN  CLASS="textbf">Server </SPAN><SMALL>LOCALHOST</SMALL> (2.00)
 
 <BR>
 <SPAN  CLASS="textit">this is server1</SPAN>

@@ -1215,60 +1215,67 @@ int extractArchive(ExtractData* data, Archive* archive)
 } 
 
 /*=======================================================================
- * Function   : getWantedArchives
- * Description: copy all wanted archives into a ring
- * Synopsis   : RG* getWantedArchives(Collection* coll)
+ * Function   : isBadTopContainer
+ * Description: check if archive is a top container having bad score
+ *              and that is not already into the cache
+ * Synopsis   : isBadTopContainer(Collection* coll, Archive* archive)
  * Input      : Collection* coll
- * Output     : a ring of arhives, 0 o error
- *
- * Warning    : there is still no unit test for this function !
+ *              Archive* archive
+ * Output     : TRUE if container need to be copied into the cache
+ * Note       : maybe check minGeoDup and nb REMOTE_SUPPLY too in future
  =======================================================================*/
-RG* 
-getWantedArchives(Collection* coll)
+int isBadTopContainer(Collection* coll, Archive* archive)
 {
-  RG* rc = 0;
-  RG* ring = 0;
-  Archive* archive = 0;
-  RGIT* curr = 0;
-  int isBadTop = 0;
+  return (archive->fromContainers->nbItems == 0 &&
+	  archive->extractScore<=coll->serverTree->scoreParam.maxScore/2);
+}
 
-  checkCollection(coll);
-  logMain(LOG_DEBUG, "getWantedArchives");
+/* /\*======================================================================= */
+/*  * Function   : getWantedArchives */
+/*  * Description: copy all wanted archives into a ring */
+/*  * Synopsis   : RG* getWantedArchives(Collection* coll) */
+/*  * Input      : Collection* coll */
+/*  * Output     : a ring of arhives, 0 o error */
+/*  * */
+/*  * Warning    : there is still no unit test for this function ! */
+/*  =======================================================================*\/ */
+/* RG*  */
+/* getWantedArchives(Collection* coll) */
+/* { */
+/*   RG* rc = 0; */
+/*   RG* ring = 0; */
+/*   Archive* archive = 0; */
+/*   RGIT* curr = 0; */
 
-  if (!(ring = createRing())) goto error;
-  if (!computeExtractScore(coll)) goto error;
+/*   checkCollection(coll); */
+/*   logMain(LOG_DEBUG, "getWantedArchives"); */
 
-  // look for archives we will try to extract
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+/*   if (!(ring = createRing())) goto error; */
+/*   if (!computeExtractScore(coll)) goto error; */
 
-    // check if it is a top containers having bad score
-    isBadTop =
-      (archive->state <= WANTED &&
-       archive->fromContainers->nbItems == 0 &&
-       archive->extractScore <= coll->serverTree->scoreParam.maxScore /2);
+/*   // look for archives we will try to extract */
+/*   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) { */
 
-    // add all local demands...
-    if (haveRecords(archive->demands) ||
+/*     // add all local demands (may be ... */
+/*     if (archive->state == WANTED || */
+/* 	// ...and candidates for (local or remote) final supplies */
+/* 	(archive->state < WANTED && */
+/* 	 isBadTopContainer(coll, archive))) { */
 
-	// ...and available candidates for (local or remote) final supplies
-	isBadTop) {
-
-      /* maybe check minGeoDup and nb REMOTE_SUPPLY too in future */
-
-      logMain(LOG_INFO, "looking for %s%lli",
-	      archive->hash, (long long int)archive->size);
-      if (!rgInsert(ring, archive)) goto error;
-    }
-  }
+/*       logMain(LOG_INFO, "looking for %s%lli", */
+/* 	      archive->hash, (long long int)archive->size); */
+/*       if (!rgInsert(ring, archive)) goto error; */
+/*     } */
+/*   } */
   
-  rc = ring;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "getWantedArchives fails");
-    destroyOnlyRing(ring);
-  }
-  return rc;
-} 
+/*   rc = ring; */
+/*  error: */
+/*   if (!rc) { */
+/*     logMain(LOG_ERR, "getWantedArchives fails"); */
+/*     destroyOnlyRing(ring); */
+/*   } */
+/*   return rc; */
+/* }  */
 
 /*=======================================================================
  * Function   : extractArchives
@@ -1281,7 +1288,6 @@ int extractArchives(Collection* coll)
 {
   int rc = FALSE;
   int rc2 = FALSE;
-  RG* archives = 0;
   Archive* archive = 0;
   Record* record = 0;
   RGIT* curr = 0;
@@ -1296,15 +1302,20 @@ int extractArchives(Collection* coll)
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
 
-  // for each archives we are looking for
-  if (!(archives = getWantedArchives(coll))) goto error3;
-  while ((archive = rgNext_r(archives, &curr))) {
+  // look for archives we will try to extract
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+    if (!(archive->state == WANTED ||
+	  // candidates for (local or remote) final supplies
+	  (archive->state < WANTED && isBadTopContainer(coll, archive))))
+      continue;
+    logMain(LOG_INFO, "looking for %s%lli",
+	    archive->hash, (long long int)archive->size);
     
     // define default extraction context (ie: scp or not)
     data.context = X_GW_REMOTE_COPY;
 
     // do scp when archive is locally wanted...
-    curr2 = 0;
+	    curr2 = 0;
     while ((record = rgNext_r(archive->demands, &curr2))) {
       if (getRecordType(record) == FINAL_DEMAND) {
 	data.context = X_DO_REMOTE_COPY;
@@ -1312,10 +1323,9 @@ int extractArchives(Collection* coll)
       }
     }
     
-    // ...or if top container having bad score not already burned locally
-    if ((archive->extractScore <= 
-	coll->serverTree->scoreParam.maxScore /2) &&
-	archive->fromContainers->nbItems == 0 &&
+    // ...or if top container having bad score not already burned
+    // locally
+    if (isBadTopContainer(coll, archive) &&
 	!haveRecords(archive->finalSupplies))
       data.context = X_DO_REMOTE_COPY;
     
@@ -1328,10 +1338,14 @@ int extractArchives(Collection* coll)
       logMain(LOG_WARNING, "however continue...");
       continue;
     }
-    
-    if (data.found) {
-      if (!deliverArchive(coll, archive)) goto error3;
-    }
+  }
+
+  // look for archives we will try to deliver
+  curr=0;
+  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+    if (archive->state < AVAILABLE) continue;
+    if (archive->demands->nbItems == 0) continue;
+    if (!deliverArchive(coll, archive)) goto error3;
   }
   
   rc = TRUE;
@@ -1343,7 +1357,6 @@ int extractArchives(Collection* coll)
   if (!rc) {
     logMain(LOG_ERR, "extraction fails (internal error)");
   }
-  destroyOnlyRing(archives);
   destroyOnlyRing(data.toKeeps);
   return rc;
 } 

@@ -112,6 +112,7 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info motd.c]       3 images matched
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (5SX )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll2.md5
@@ -274,17 +275,8 @@
 [info extractScore.c]  archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
 [info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info recordFile.y] parse records
-[notice cacheTree.c] we only record one local supply by archive
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
-[notice cacheTree.c] we only record one local supply by archive
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
-[notice cacheTree.c] we only record one local supply by archive
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
+[info openClose.c] steps: 93 / 93
 [info utmotd.c] ** Test 2
 [info device.c] not a symlink: /HERE/misc/logoP1.iso
 [info device.c] do not match a block device: /HERE/misc/logoP1.iso
@@ -349,6 +341,7 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info motd.c]       3 images matched
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll2 collection (5SX )
 [info openClose.c] steps: 0 / 93
@@ -369,8 +362,7 @@ Please burn theses files:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/logoP2.iso ( 3.75)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
-- Collection coll3:
- - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.iso ( 3.75)
+
 
 *****************************
 Mediatex's message of the day
@@ -384,5 +376,4 @@ Please burn theses files:
 - Collection coll1:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
-- Collection coll3:
- - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/logoP2.iso ( 3.75)
+

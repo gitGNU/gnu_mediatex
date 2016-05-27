@@ -384,6 +384,8 @@ function test5()
 	[ $TEST_OK -eq 0 ] && return
     
 	mdtxP "motd"
+	question "only asked to provide iso1 ?"
+	[ $TEST_OK -eq 0 ] && return
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "srv save"
 	question "check your mailbox" \
@@ -681,7 +683,7 @@ function test14()
 	mdtxP "motd" serv3
 	mdtxP "srv extract" serv3
 	mdtxP "srv save" serv3
-	question "does serv3 get part2 ?" \
+	question "does serv3 provides part2 ?" \
 		 "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 	
@@ -700,7 +702,7 @@ function test14()
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo
 	    reloadInitdScript $SERV
 	done
-	rm -fr ~serv3/cache/serv3-hello/logo*
+	rm -fr ~serv3/cache/serv3-hello/*
 	reloadInitdScript serv3
     fi
 }
@@ -788,7 +790,7 @@ function test17()
 	mdtxP "srv notify" serv1
 
 	mdtxP "srv save" serv3
-	question "does 3rd server see iso1 on 1st server ?" \
+	question "does 3rd server see part1 on 1st server ?" \
 	    "cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
 	[ $TEST_OK -eq 0 ] && return
 
@@ -918,7 +920,6 @@ function test21()
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "serv save" serv1
 	cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'
-	mdtxP "motd" serv1
 	mdtxP "serv notify" serv1
 	mdtxP "serv extract" serv3
 	mdtxP "serv notify" serv3
@@ -938,7 +939,7 @@ function test21()
 	    rm -f /var/cache/mediatex/$SERV/md5sums/$SERV-hello.md5
 	    startInitdScript $SERV
 	done
-	
+	rm -f /var/cache/mediatex/serv1/tmp/serv1-hello/audit*.txt
     fi
 }
 
@@ -951,6 +952,7 @@ function test22()
 	for SERV in serv1 serv2 serv3; do
 	    mdtxP "upgrade+" $SERV
 	done
+	mdtxP "serv notify" serv1
 	finalQuestion "All tests done ! Do you want to clean all ?"
 	[ $TEST_OK -eq 0 ] && return
 	cleanAll

@@ -38,15 +38,16 @@ typedef struct ExtractData {
 
   Collection* coll;
   ExtractType context; // manage scp rule
+  Archive* target;     // archive to scp if available
   RG* toKeeps;         // Archive*
   int found;
-  Archive* target;
 
 } ExtractData;
 
 /* API */
 
 int mdtxCall(int nbArgs, ...);
+int isBadTopContainer(Collection* coll, Archive* archive);
 int extractArchive(ExtractData* data, Archive* archive);
 int extractArchives(Collection* coll);
 

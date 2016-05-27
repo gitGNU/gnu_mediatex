@@ -225,7 +225,6 @@ int deliverArchive(Collection* coll, Archive* archive)
     if (!delCacheEntry(coll, record)) goto error;
   }
 
- end:
   rc = TRUE;
  error:
   if (!rc) {

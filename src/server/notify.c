@@ -254,11 +254,7 @@ addBadTopLocalSupplies(NotifyData* data)
   // add local top containers having a bad score
   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
     if (archive->state < AVAILABLE) continue;
-    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2) 
-      continue;
-    if (archive->fromContainers->nbItems > 0) continue;
-
-    /* maybe check minGeoDup and nb REMOTE_SUPPLY too in future */
+    if (!isBadTopContainer(coll, archive)) continue;
 
     logMain(LOG_INFO, 
 	    "found a bad score's local top container to notify: %s:%lli",

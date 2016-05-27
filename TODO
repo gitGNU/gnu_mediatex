@@ -5,21 +5,15 @@
 
 *** TODO
 
-- motd more friendly (no empty chapters and message when all ok)
-- add \n at the end of motd
-- motd wait for md5sum file update (read share memory...)
-
 *** BUGS
 
-- test21: audit fails (rc=4 ?)
-  never fails with SERVER=1 ?
-  not alway reproductible with SERVER=0
-
-- manage full server scan (done at startup, but not on reload)
-   test renaming file into the cache (as now, they where lost)
+- test 22: audit report not available from serv3
 
 - actually there is no protection on unlinking file outside of
   the cache, like supports files.
+
+- manage full server scan (done at startup, but not on reload)
+   test renaming file into the cache (as now, they where lost)
 
 *** TO TEST
 

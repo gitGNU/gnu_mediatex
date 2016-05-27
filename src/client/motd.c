@@ -295,7 +295,7 @@ updateMotdFromSupportDB(Motd* motd)
       if (!addMotdSupport(motd, support, 0)) goto error;
     }
   }
-  
+
   rc = TRUE;
  error:
   if (!rc) {
@@ -360,14 +360,15 @@ int motdContainer(MotdSearch* data, Container* container, int depth)
 int motdArchive(MotdSearch* data, Archive* archive, int depth)
 {
   int rc = FALSE;
+  Support *supp = 0;
   FromAsso* asso = 0;
   RGIT* curr = 0;
+  int nbSupportFiles = 0;
 
   logMain(LOG_DEBUG, "%*slook for archive: %s:%lli", 
 	  depth, "", archive->hash, archive->size);
-
-  data->isAvailable = FALSE;
   checkCollection(data->coll);
+  data->isAvailable = FALSE;
 
   if (archive->state >= AVAILABLE) {
     logMain(LOG_DEBUG, "%*savailable from cache", depth, "");
@@ -377,9 +378,24 @@ int motdArchive(MotdSearch* data, Archive* archive, int depth)
 
   // look for a matching image 
   if (archive->images->nbItems > 0) {
-    logMain(LOG_DEBUG, "%*s%i images matched", depth, "",
+    logMain(LOG_INFO, "%*s%i images matched", depth, "",
 	    archive->images->nbItems);
-    if (!rgInsert(data->imagesWanted, archive)) goto error;
+
+    // look for a matching support file without any matching support file
+    rgRewind(data->coll->supports);
+    while ((supp = rgNext(data->coll->supports))) {
+      if (supp->size != archive->size) continue;
+      if (strcmp(supp->fullMd5sum, archive->hash)) continue;
+      if (*supp->name != '/') continue;
+      ++nbSupportFiles;
+    }
+    if (nbSupportFiles) {
+      logMain(LOG_INFO, "%*s%i support files matched", depth, "",
+	      nbSupportFiles);
+    }
+    else {
+      if (!rgInsert(data->imagesWanted, archive)) goto error;	
+    }
   }
 
   // continue searching ; we stop at the first container already there
@@ -514,7 +530,6 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
     if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
       logMain(LOG_WARNING, "fail to update md5sumsDB file");
     }
-    sleep(1);
   }
 
   if (conf->collections == 0) goto error;
@@ -559,6 +574,7 @@ updateMotd()
   MotdRecord* motdRec = 0;
   Record* record = 0;
   char car = ':';
+  int isFileToBurn = 0;
 
   logMain(LOG_DEBUG, "updateMotd");
 
@@ -583,38 +599,53 @@ updateMotd()
   printf("%s\n", "*****************************");
 
   // supports to ask for
-  if (!rgSort(motd->motdSupports, cmpMotdSupport)) goto error2;
-  printf("Please provide theses local supports:\n");
-  while ((motdSupp = rgNext(motd->motdSupports))) {
-    printf("- %s", motdSupp->support->name);
-    car = ':';
-    if (motdSupp->ask4periodicCheck) {
-      printf("%c %s", car, "periodic check");
-      car = ',';
-    }
-    if (motdSupp->collections) {
-      rgRewind(motdSupp->collections);
-      while ((coll = rgNext(motdSupp->collections))) {
-	printf("%c %s", car, coll->label);
+  if (!isEmptyRing(motd->motdSupports)) {
+    printf("Please provide theses local supports:\n");
+    if (!rgSort(motd->motdSupports, cmpMotdSupport)) goto error2;
+    while ((motdSupp = rgNext(motd->motdSupports))) {
+      printf("- %s", motdSupp->support->name);
+      car = ':';
+      if (motdSupp->ask4periodicCheck) {
+	printf("%c %s", car, "periodic check");
 	car = ',';
       }
+      if (motdSupp->collections) {
+	rgRewind(motdSupp->collections);
+	while ((coll = rgNext(motdSupp->collections))) {
+	  printf("%c %s", car, coll->label);
+	  car = ',';
+	}
+      }
+      printf("%s", "\n");
     }
-    printf("%s", "\n");
   }
-
+  
   // records to burn
-  printf("Please burn theses files:\n"); 
   while ((motdRec = rgNext(motd->motdRecords))) {
-    if (isEmptyRing(motdRec->records)) continue;
-    rgSort(motdRec->records, cmpRecordPath);
-    printf("- Collection %s:\n", motdRec->coll->label); 
-    rgRewind(motdRec->records);
-    while ((record = rgNext(motdRec->records))) {
-      printf(" - %s/%s (%5.2f)\n", motdRec->coll->cacheDir,
-	     record->extra, record->archive->extractScore); 
+      if (isEmptyRing(motdRec->records)) continue;
+      isFileToBurn++;
+  }
+  rgRewind(motd->motdRecords);
+  if (isFileToBurn) {
+    printf("Please burn theses files:\n"); 
+    while ((motdRec = rgNext(motd->motdRecords))) {
+      if (isEmptyRing(motdRec->records)) continue;
+      rgSort(motdRec->records, cmpRecordPath);
+      printf("- Collection %s:\n", motdRec->coll->label); 
+      rgRewind(motdRec->records);
+      while ((record = rgNext(motdRec->records))) {
+	printf(" - %s/%s (%5.2f)\n", motdRec->coll->cacheDir,
+	       record->extra, record->archive->extractScore); 
+      }
     }
   }
 
+  // nothing to do
+  if (isEmptyRing(motd->motdSupports) && !isFileToBurn) {
+    printf("nothing to do\n");
+  }
+
+  printf("\n");
   rc = TRUE;
  error2:
   if (!loadConfiguration(CFG|SUPP)) rc = FALSE;
