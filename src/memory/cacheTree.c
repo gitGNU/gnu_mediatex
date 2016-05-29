@@ -575,7 +575,7 @@ keepArchive(Collection* coll, Archive* archive)
   }
   
   // temporary record during extraction
-  if ((date = currentTime()) == -1) goto error; 
+  if ((date = currentTime()) == -1) goto error2;
   date += 5*MINUTE;
 
   if (record->date < date) {

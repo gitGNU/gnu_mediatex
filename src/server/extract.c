@@ -668,7 +668,8 @@ extractRar(Collection* coll, FromAsso* asso, char* targetPath)
 
 /*=======================================================================
  * Function   : extractAddToKeep
- * Description: lock archive as it may be used for extraction too
+ * Description: lock just extracted archive as it may be used for 
+ *              depper extraction too
  * Synopsis   : int extractAddToKeep(ExtractData* data, Archive* archive)
  * Input      : ExtractData* data
  *              Archive* archive
@@ -699,7 +700,7 @@ extractAddToKeep(ExtractData* data, Archive* archive)
 
 /*=======================================================================
  * Function   : extractDelToKeeps
- * Description: unlock archive
+ * Description: unlock archive (no more extraction using it)
  * Synopsis   : int extractDelToKeeps(Collection* coll, RG* toKeeps)
  * Input      : Collection* coll
  *              RG* toKeeps
@@ -804,7 +805,9 @@ cacheSet(ExtractData* data, Record* record,
 
 /*=======================================================================
  * Function   : extractRecord
- * Description: extract a record (cp and scp)
+ * Description: extract a record 
+ *               - cp from final supplies (ie supports)
+ *               - scp from remote cache's contents
  * Synopsis   : int extractRecord(Collection* coll, Record* sourceRecord)
  * Input      : Collection* coll
  *              Record* sourceRecord
@@ -912,7 +915,8 @@ extractRecord(ExtractData* data, Record* sourceRecord)
 
 /*=======================================================================
  * Function   : extractFromAsso
- * Description: extract a FromAsso (iso, cat and tgz)
+ * Description: extract a FromAss (iso, cat, tgz...)
+ *              (extract from container available into the local cache)
  * Synopsis   : int extractFromAsso(Collection* coll, Record* record)
  * Input      : Collection* coll
  *              Record* record
@@ -1179,7 +1183,7 @@ int extractArchive(ExtractData* data, Archive* archive)
     }
   }
 
-  // Recursive call: we stop on the first container we have extract
+  // Recursive call: we stop on the first extraction
 
   // backup toKeeps
   toKeepsBck = data->toKeeps;

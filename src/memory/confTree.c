@@ -1143,6 +1143,7 @@ addNetworkToRing(RG* ring, char *label)
 int addSupportToCollection(Support* support, Collection* coll)
 {
   int rc = FALSE;
+  int alreadyThere = FALSE;
 
   checkCollection(coll);
   checkSupport(support);
@@ -1150,13 +1151,25 @@ int addSupportToCollection(Support* support, Collection* coll)
 	  support->name, coll->label);
 
   // add collection to the support ring
-  if (!rgHaveItem(support->collections, coll) &&
-      !rgInsert(support->collections, coll)) goto error;
+  if (rgHaveItem(support->collections, coll)) {
+    alreadyThere = TRUE;
+  }
+  else {
+    if (!rgInsert(support->collections, coll)) goto error;
+  }
 
   // add support to collection ring
-  if (!rgHaveItem(coll->supports, support) &&
-      !rgInsert(coll->supports, support)) goto error;
+  if (rgHaveItem(coll->supports, support)) {
+    alreadyThere = TRUE;
+  }
+  else {
+    if (!rgInsert(coll->supports, support)) goto error;
+  }
 
+  if (alreadyThere) {
+    logMemory(LOG_NOTICE, "support %s already added to collection %s",
+	      support->name, coll->label);
+  }
   rc = TRUE;
  error:
   if (!rc) {

@@ -785,7 +785,6 @@ function test17()
 	topo "Server 1 provides second support and tell it to others"
 
 	mdtxP "motd" serv1
-	mdtxP "add supp iso1 to coll hello" serv1
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv1
 	mdtxP "srv notify" serv1
 
@@ -811,16 +810,12 @@ function test17()
              && cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
-	mdtxP "del supp iso1 from coll hello" serv1
-	rm -fr ~serv1/cache/serv1-hello/supports
-	reloadInitdScript serv1
-	stopInitdScript serv3
-	rm -f ~serv3/cache/serv3-hello/logoP1.iso
-	rm -f ~serv3/cache/serv3-hello/logoP1.cat
-	rm -f ~serv3/cache/serv3-hello/logo.tgz
-	rm -fr ~serv3/cache/serv3-hello/logo
-	rm -f ~serv3/md5sums/serv3-hello.md5
-	startInitdScript serv3
+	for SERV in serv1 serv2 serv3; do
+	    stopInitdScript $SERV
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports
+	    startInitdScript $SERV
+	done
     fi	    
 }
 

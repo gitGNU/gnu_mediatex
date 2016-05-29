@@ -49,7 +49,8 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   if (!loadCollection(coll, SERV | EXTR | CACH)) goto error;
   data.target = archive;
   if (!extractArchive(&data, archive)) goto error2;
-
+#warning How to deliver archive ? (set toKeep date)
+  
   *found = data.found;
   rc = TRUE;
  error2:

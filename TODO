@@ -7,6 +7,8 @@
 
 - manage [full] server scan (done at startup, but not on reload)
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
+- mdtx srv strip (clean files available from containers into cache)
+- mdtx srv clean (clean files availables from supports)
 - document audit process
 
 *** BUGS

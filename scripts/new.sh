@@ -78,9 +78,9 @@ RC=$?
 set -e
 if [ $RC -ne 0 ]; then
     if [ $MDTX_KEY_HAVE_CHANGE -eq 1 ]; then
-	Warning "new public key"
+	Notice "new public key"
     fi
-    Warning "public key: $HOMES/$USER$CONF_SSHDIR/id_dsa.pub"
+    Notice "public key: $HOMES/$USER$CONF_SSHDIR/id_dsa.pub"
     exit 0
 fi
 
