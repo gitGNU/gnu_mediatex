@@ -5,24 +5,26 @@
 
 *** TODO
 
+- manage [full] server scan (done at startup, but not on reload)
+- remove MDTX_DELIVER code?: register.h ... mediatexd.c
+- document audit process
+
 *** BUGS
 
-- manage full server scan (done at startup, but not on reload)
-   test renaming file into the cache (as now, they where lost)
+- test renaming file into the cache (as now, they where lost)
 
 *** TO TEST
 
+- optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
 - pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- repair audit process 
-- mediatex log|top|start|stop|hup/reload|scan
-- optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
-- speed-up audit building process (maybe not possible using scripts)
+- mediatex [quick] scan
 - use add-if-not-there function (EEXIST cf notify.c)
-- serialise b-tree using another
+- monitor cache sizes: all/used/allocated/free (mediatex srv status -> log)
+- serialise b-tree using another order
 - i10n for french
 
 *** TODO MAYBE
@@ -30,14 +32,13 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add DNS roundrobbin hostname into logo (servers.txt)
-- src/misc/md5sums.c -> checksums.c
+- rename src/misc/md5sums.c -> checksums.c
+- rename src/memory/cvsprint.c -> gitprint.c
 - add an apache alias for '~' as it is not on mac keyboard
 - move date parser/serialiser code into perm.c
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
-- remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh and cgi templates
-- monitor cache sizes: all/used/allocated/free
 - test an apache configuration using claim-based authentication (openId)
 - move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
@@ -45,6 +46,6 @@
    Content-Type: text/html; charset=UTF-8 ?
 - ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace gethostby*_r by getaddrinfo and co
-- replace ardsm by mqueue
+- replace ardsm by mqueue (linear list if reverse link not used)
 - add thread ID to the log
-- change ring to linear list to free some memory (if reverse link not used)
+

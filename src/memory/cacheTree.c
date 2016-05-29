@@ -683,7 +683,10 @@ int cleanCacheTree(Collection* coll)
     archive = record->archive;
     next = node->next;
     
-    if (!(record->type & REMOVE)) continue; 
+    if (!(record->type & REMOVE)) {
+      node = next;
+      continue;
+    }
 
     switch (getRecordType(record)) {
     case MALLOC_SUPPLY:
