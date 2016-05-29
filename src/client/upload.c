@@ -321,7 +321,10 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
   extra = 0;
-  if (!rgInsert(tree->records, record)) goto error;
+  if (!avl_insert(tree->records, record)) {
+    logMain(LOG_ERR, "cannot add record to tree (already there?)");
+    goto error;
+  }
   record = 0;
   
   // ask daemon to upload the file into the cache

@@ -7,9 +7,6 @@
 
 *** BUGS
 
-- actually there is no protection on unlinking file outside of
-  the cache, like supports files.
-
 - manage full server scan (done at startup, but not on reload)
    test renaming file into the cache (as now, they where lost)
 
@@ -22,10 +19,10 @@
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - repair audit process 
 - mediatex log|top|start|stop|hup/reload|scan
-- speed-up cache scanning process (btree on archives)
-- speed-up audit building process (I hope btree on archive already do it)
-- serialise b-tree using another order and use add-if-not-there function
 - optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
+- speed-up audit building process (maybe not possible using scripts)
+- use add-if-not-there function (EEXIST cf notify.c)
+- serialise b-tree using another
 - i10n for french
 
 *** TODO MAYBE

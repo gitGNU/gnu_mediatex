@@ -25,7 +25,7 @@ are already taken into account for many features.
 Testing @mediatex{} with about 50000 archives. 
 @note{} this example last very long time and consequently shows actual limits of @mediatexO{}.
 
-Download the Open Icons Library and build the related catalog and extraction rules files.
+Download the Open Icons Library and build the related catalog and extraction rules files. This last about 15 minutes.
 @example
 $ /usr/share/mediatex/examples/example.sh
 @end example
@@ -37,6 +37,16 @@ Empty the catalog and extraction meta-data files:
 $ cat /dev/null > ~mdtx-hello/git/catalog000.txt
 $ cat /dev/null > ~mdtx-hello/git/extract000.txt
 $ mediatex upgrade
+@end example
+
+Grow the cache size by modifying @file{/etc/mediatex/mdtx.conf}
+@example
+# default cache parameters
+cacheSize  1 Go
+@end example
+And reload the server:
+@example
+# /etc/init.d/mediatexd reload
 @end example
 
 Uploading the icons and build the @acronym{HTML} catalog:

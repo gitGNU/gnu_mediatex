@@ -58,7 +58,7 @@ struct RecordTree
   char        fingerPrint[MAX_SIZE_MD5+1]; /* server id */
   AESData     aes;
   int         doCypher;   // do AES cypher the body when serializing
-  RG*         records;
+  AVLTree*    records;
 };
 
 int cmpRecordQuick(const void *p1, const void *p2);
@@ -75,7 +75,7 @@ void logRecordTree(int logModule, int logPriority,
 RecordTree* createRecordTree(void);
 RecordTree* destroyRecordTree(RecordTree* self);
 int serializeRecord(RecordTree* tree, Record* self);
-int logRecord(int logModule, int logPriority, RecordTree* tree, Record* self);
+int logRecord(int logModule, int logPriority, Record* self);
 
 /* API */
 char* strMessageType(MessageType self);

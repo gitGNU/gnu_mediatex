@@ -436,6 +436,7 @@ int checkMessage(Connexion* con)
   Server* server = 0;
   Record* record = 0;
   RGIT* curr = 0;
+  AVLNode* node = 0;
 
   static char status[][64] = {
    "302 message without collection",
@@ -482,9 +483,9 @@ int checkMessage(Connexion* con)
   }
 
   // check all records are related to the message's author
-  if (!isEmptyRing(con->message->records)) {
-    curr = 0;
-    while ((record = rgNext_r(con->message->records, &curr))) {
+  if (avl_count(con->message->records)) {
+    for (node = con->message->records->head; node; node = node->next) {
+      record = node->item;
       if (server != record->server) {
 	sprintf(con->status, status[2], 
 		con->message->fingerPrint, record->server->fingerPrint);

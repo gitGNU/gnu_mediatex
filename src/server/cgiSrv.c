@@ -77,6 +77,7 @@ cgiServer(Connexion* connexion)
   Record* record = 0;
   Record* record2 = 0;
   Archive* archive = 0;
+  AVLNode* node = 0;
   int found = FALSE;
   char* extra = 0;
 
@@ -91,13 +92,13 @@ cgiServer(Connexion* connexion)
   coll = connexion->message->collection;
   checkCollection(coll);
 
-  if (isEmptyRing(connexion->message->records)) {
+  if (!avl_count(connexion->message->records)) {
     sprintf(connexion->status, "%s", status[3]);
     goto error;
   }
 
   // only process the first archive
-  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(record = connexion->message->records->head->item)) goto error;
   if (!(archive = record->archive)) goto error;
   if (!lockCacheRead(coll)) goto error;
 
@@ -117,8 +118,9 @@ cgiServer(Connexion* connexion)
   else {
     // case2: query providing a mail => register the query
     //  we may handle several records here (at least for audit)
-    rgRewind(connexion->message->records);
-    while ((record = rgNext(connexion->message->records))) {
+    for (node = connexion->message->records->head; node;
+	 node = node->next) {
+      record = node->item;
       if (!(archive = record->archive)) goto error2;
       if (!(extra = createString(record->extra))) goto error2;
       if (!(record2 = addRecord(coll, coll->localhost, archive, 

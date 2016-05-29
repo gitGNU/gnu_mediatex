@@ -21,4 +21,4 @@
 
 examplesdir = $(datarootdir)@mdtx_mediatexdir@/examples
 dist_examples_DATA = cake.tgz txt2sql.tgz
-dist_examples_SCRIPTS = tests.sh
+dist_examples_SCRIPTS = tests.sh example.sh

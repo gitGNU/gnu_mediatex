@@ -178,7 +178,10 @@ main(int argc, char** argv)
   if (!(extra = createString("!wanted"))) goto error;
   if (!(record = addRecord(coll, server1, archive, DEMAND, extra)))
     goto error;
-  if (!rgInsert(connexion->message->records, record)) goto error;
+  if (!avl_insert(connexion->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
 
   utLog("%s", "message we receive :", 0);
   logRecordTree(LOG_MAIN, LOG_NOTICE, connexion->message, 0);

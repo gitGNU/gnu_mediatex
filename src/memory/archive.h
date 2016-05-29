@@ -72,7 +72,8 @@ struct Archive
 /* API */
 char* strAState(AState state);
 int cmpArchive(const void *p1, const void *p2);
-int cmpArchive2(const void *p1, const void *p2);
+int cmpArchiveAvl(const void *p1, const void *p2);
+int cmpArchiveCacheAvl(const void *p1, const void *p2);
 int cmpArchiveSize(const void *p1, const void *p2);
 int cmpArchiveScore(const void *p1, const void *p2);
 Archive* getArchive(Collection* coll, char* hash, off_t size);
@@ -85,6 +86,7 @@ Archive* destroyArchive(Archive* self);
 int diseaseArchive(Collection* coll, Archive* arch);
 int diseaseArchives(Collection* coll);
 int isIncoming(Collection* coll, Archive* self);
+int isBadTopContainer(Collection* coll, Archive* archive);
 int hasExtractRule(Archive* self);
 
 #endif /* MDTX_MEMORY_ARCHIVE_H */

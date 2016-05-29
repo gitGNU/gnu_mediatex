@@ -136,7 +136,7 @@ cmpFromAssoAvl(const void *p1, const void *p2)
   FromAsso* v1 = (FromAsso*)p1;
   FromAsso* v2 = (FromAsso*)p2;
 
-  rc = cmpArchive2(v1->archive, v2->archive);
+  rc = cmpArchiveAvl(v1->archive, v2->archive);
   if (!rc) rc = cmpContainerAvl(v1->container, v2->container);
   return rc;
 }
@@ -250,7 +250,7 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
   if (avl_count(self->childs) > 0) {
     fd->print(fd, "=>\n");
 
-    for(node = self->childs->head; node; node = node->next) {
+    for (node = self->childs->head; node; node = node->next) {
       asso = node->item;
       if (self->type == INC && !isIncoming(coll, asso->archive)) continue;
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
@@ -797,7 +797,10 @@ addContainer(Collection* coll, EType type, Archive* parent)
   container->type = type;
   container->parent = parent;
   if (!addFromArchive(coll, container, parent)) goto error;
-  if (!avl_insert(coll->extractTree->containers, container)) goto error;
+  if (!avl_insert(coll->extractTree->containers, container)) {
+    logMemory(LOG_ERR, "cannot add container (already there?)");
+    goto error;
+  }
 
   rc = container;
  error:

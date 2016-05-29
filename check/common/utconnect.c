@@ -111,13 +111,19 @@ main(int argc, char** argv)
   if (!(archive = addArchive(coll, "hash1", 123))) goto error;
   if (!(extra = createString("path1"))) goto error;
   if (!(record = newRecord(server, archive, DEMAND, extra))) goto error;
-  if (!rgInsert(tree->records, record)) goto error;
+  if (!avl_insert(tree->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
 
   // record 2
   if (!(archive = addArchive(coll, "hash2", 456))) goto error;
   if (!(extra = createString("path2"))) goto error;
-  if (!(record = newRecord(server, archive, DEMAND, extra))) goto error;   
-  if (!rgInsert(tree->records, record)) goto error;
+  if (!(record = newRecord(server, archive, DEMAND, extra))) goto error;
+  if (!avl_insert(tree->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
 
   // check alarm signal do not break the stack
   if ((socket = connectServer(server)) == -1) {

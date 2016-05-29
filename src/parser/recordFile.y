@@ -134,7 +134,7 @@ hLine: recordCOLL recordSTRING
   Collection* coll = 0;
   if (!(coll = getCollection($2))) {
     logParser(LOG_WARNING, "unknown collection: %s", $2);
-    YYABORT;
+    YYERROR;
   }
   recordTree->collection = coll;
 
@@ -165,7 +165,7 @@ newLine: line
   struct tm date;
   if (localtime_r(&$1->date, &date) == (struct tm*)0) {
     logParser(LOG_ERR, "%s", "localtime_r returns on error");
-    YYABORT;
+    YYERROR;
   }
 
   logParser(LOG_DEBUG, "line %i: %c "
@@ -180,9 +180,13 @@ newLine: line
 	    MAX_SIZE_MD5, $1->archive->hash, 
 	    MAX_SIZE_SIZE, (long long int)$1->archive->size, 
 	    $1->extra?$1->extra:"");
- 
-  if (!rgInsert(recordTree->records, $1)) YYERROR;
-  // RQ: YYABORT will close the socket, do YYERROR close it ?
+
+   if (!avl_insert(recordTree->records, $1)) {
+     logParser(LOG_ERR, "cannot add record (already there?)");
+     // RQ: YYABORT will close the socket, do YYERROR close it ?
+     YYERROR;
+  }
+
   $1 = 0;
 
 }
@@ -212,7 +216,7 @@ line: recordTYPE recordDATE recordHASH recordHASH recordSIZE recordPATH
   if (!(extra = createString($6))) YYERROR;
   if (!($$ = 
 	addRecord(recordTree->collection, server, archive, $1, extra)))
-    YYABORT;
+    YYERROR;
   $$->date = $2;
 }
 

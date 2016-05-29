@@ -91,9 +91,15 @@ notifyArchive(NotifyData* data, Archive* archive)
   // look for a matching local supply
   if (archive->state >= AVAILABLE) {
     data->found = TRUE;
-    logMain(LOG_INFO, "found a local supply to notify: %s:%lli", 
-	    archive->hash, archive->size);
-    if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
+    
+    logMain(LOG_INFO, "found a local supply to notify:");
+    logRecord(LOG_MAIN, LOG_INFO, archive->localSupply);
+    if (!avl_insert(data->toNotify, archive->localSupply)) {
+      if (errno != EEXIST) {
+	logMain(LOG_ERR, "fails to add record");
+	goto error;
+      }
+    }
     goto end;
   }
 
@@ -126,23 +132,25 @@ getWantedRemoteArchives(Collection* coll)
   RG* ring = 0;
   Archive* archive = 0;
   Record* record = 0;
+  AVLNode* node = 0;
   RGIT* curr = 0;
-  RGIT* curr2 = 0;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "getWantedRemoteArchives");
 
   if (!(ring = createRing())) goto error;
 
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if (archive->state < WANTED) continue; // no remote demand
 
-    // look for a remote demand
-    while ((record = rgNext_r(archive->demands, &curr2))) {
+    // look for a remote-demands
+    curr = 0;
+    while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) != REMOTE_DEMAND) continue;
-
-      logMain(LOG_DEBUG, "working on remote demand: %s:%lli",
-	      archive->hash, archive->size);
+      
+      logMain(LOG_INFO, "working on remote demand:");
+      logRecord(LOG_MAIN, LOG_INFO, record);
       if (!rgInsert(ring, archive)) goto error;
       break;
     }
@@ -174,30 +182,36 @@ addFinalDemands(NotifyData* data)
   Record* record = 0;
   Record* demand = 0;
   char* extra = 0;
+  AVLNode* node = 0;
   RGIT* curr = 0;
-  RGIT* curr2 = 0;
-
+ 
   coll = data->coll;
   checkCollection(coll);
   logMain(LOG_DEBUG, "addFinalDemands");
-
   if (!(localhost = getLocalHost(coll))) goto error;
 
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if (archive->state != WANTED) continue;
     
-    // add final demand
-    curr2 = 0;
-    while ((record = rgNext_r(archive->demands, &curr2))) {
+    // add (a uniq) final demand
+    curr = 0;
+    while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) == FINAL_DEMAND) {
 
-	logMain(LOG_INFO, "found a final demand to notify: %s:%lli",
-		archive->hash, archive->size);
+	logMain(LOG_INFO, "found a final demand to notify:");
+	logRecord(LOG_MAIN, LOG_INFO, record);
 	if (!(extra = createString("!wanted"))) goto error;
 	if (!(demand = newRecord(coll->localhost, archive, DEMAND, extra))) 
 	  goto error;
 	extra = 0;
-	if (!rgInsert(data->toNotify, demand)) goto error;
+	if (!avl_insert(data->toNotify, demand)) {
+	  if (errno != EEXIST) {
+	    logMain(LOG_ERR, "fails to add record");
+	    goto error;
+	  }
+	  destroyRecord(demand);
+	}
 	demand = 0;
 	break;
       }
@@ -207,19 +221,25 @@ addFinalDemands(NotifyData* data)
     if (isEmptyRing(coll->localhost->gateways)) continue;
 
     // ...relay NAT client's final demand too (as our)
-    curr2 = 0;
-    while ((record = rgNext_r(archive->demands, &curr2))) {
+    curr = 0;
+    while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) == REMOTE_DEMAND &&
 	rgShareItems(localhost->gateways, record->server->networks)) {
-
-	logMain(LOG_INFO, "found a remote demand to manage: %s:%lli",
-		record->archive->hash, record->archive->size);
+	
+	logMain(LOG_INFO, "found a remote demand to manage:");
+	logRecord(LOG_MAIN, LOG_INFO, record);
 	if (!(extra = createString("!wanted"))) goto error;
 	if (!(demand = newRecord(coll->localhost, record->archive,
 				 DEMAND, extra))) 
 	  goto error;
 	extra = 0;
-	if (!rgInsert(data->toNotify, demand)) goto error;
+	if (!avl_insert(data->toNotify, demand)) {
+	   if (errno != EEXIST) {
+	    logMain(LOG_ERR, "fails to add record");
+	    goto error;
+	   }
+	   destroyRecord(demand);
+	}
 	demand = 0;
       }
     }
@@ -230,6 +250,7 @@ addFinalDemands(NotifyData* data)
   if (!rc) {
     logMain(LOG_ERR, "addFinalDemands fails");
   }
+  destroyRecord(demand);
   return rc;
 } 
 
@@ -246,21 +267,26 @@ addBadTopLocalSupplies(NotifyData* data)
   int rc = FALSE;
   Collection* coll = 0;
   Archive* archive = 0;
-  RGIT* curr = 0;
+  AVLNode* node = 0;
 
   coll = data->coll;
   checkCollection(coll);
   logMain(LOG_DEBUG, "addBadTopLocalSupplies");
 
   // add local top containers having a bad score
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if (archive->state < AVAILABLE) continue;
     if (!isBadTopContainer(coll, archive)) continue;
-
-    logMain(LOG_INFO, 
-	    "found a bad score's local top container to notify: %s:%lli",
-	    archive->hash, archive->size);
-    if (!rgInsert(data->toNotify, archive->localSupply)) goto error;
+    
+    logMain(LOG_INFO, "found a bad score's top container to notify:");
+    logRecord(LOG_MAIN, LOG_INFO, archive->localSupply);
+    if (!avl_insert(data->toNotify, archive->localSupply)) {
+      if (errno != EEXIST) {
+	logMain(LOG_ERR, "fails to add record");
+	goto error;
+      }
+    }
   }
 
   rc = TRUE;
@@ -280,7 +306,7 @@ addBadTopLocalSupplies(NotifyData* data)
  * Output     : TRUE on success
  =======================================================================*/
 int
-buildNotifyRings(Collection* coll, RG* records)
+buildNotifyRings(Collection* coll, AVLTree* records)
 {
   int rc = FALSE;
   RG* archives = 0;
@@ -382,6 +408,7 @@ sendRemoteNotify(Collection* coll)
   RecordTree* recordTree = 0;
   Record* record = 0;
   RGIT* curr = 0;
+  AVLNode* node = 0;
 
   logMain(LOG_DEBUG, "sendRemoteNotify for %s collections", 
 	  coll->label);
@@ -407,7 +434,6 @@ sendRemoteNotify(Collection* coll)
 
     // skip server not directly connected to us
     if (!rgShareItems(localhost->networks, target->networks)) continue;
-
     if (!sendRemoteNotifyServer(target, recordTree, 0)) goto error3;
   }
 
@@ -416,11 +442,11 @@ sendRemoteNotify(Collection* coll)
   if (!unLockCache(coll)) rc = FALSE;
 
   // free local demands
-  curr = 0;
-  while ((record = rgNext_r(recordTree->records, &curr))) {
+   for (node = recordTree->records->head; node; node = node->next) {
+    record = node->item;
     if (getRecordType(record) == LOCAL_DEMAND) {
       destroyRecord(record);
-      curr->it = 0;
+      node->item = 0;
     }
   }
 
@@ -431,7 +457,9 @@ sendRemoteNotify(Collection* coll)
     logMain(LOG_ERR, "sendRemoteNotify %s collection fails", 
 	    coll->label);
   }
-  recordTree->records = destroyOnlyRing(recordTree->records);
+  recordTree->records->freeitem = 0;
+  avl_free_nodes(recordTree->records);
+  recordTree->records->freeitem = (void(*)(void*)) destroyRecord;
   destroyRecordTree(recordTree);
   return rc;
 }
@@ -447,13 +475,14 @@ sendRemoteNotify(Collection* coll)
 int acceptRemoteNotify(Connexion* connexion)
 {
   int rc = FALSE;
-  RG* records = 0;
+  AVLTree* records = 0;
   Record* record = 0;
   Collection* coll = 0;
   Server* source = 0;
   Server* target = 0;
   Server* localhost = 0;
   RGIT* curr = 0;
+  AVLNode* node = 0;
 
   static char status[][8] = {
     "240 ok"
@@ -492,21 +521,24 @@ int acceptRemoteNotify(Connexion* connexion)
   if (!lockCacheRead(coll)) goto error2;
 
   // del all records we previously get from the calling server
-  curr = 0;
   records = coll->cacheTree->recordTree->records;
-  while ((record = rgNext_r(records, &curr))) {  
+  for (node = records->head; node; node = node->next) {
+    record = node->item;
     if (record->server != source) continue;
     if (!delCacheEntry(coll, record)) goto error3;
   }
 		
   // add new fresh records provided by the calling server
-  while ((record = rgHead(connexion->message->records))) {
-    // record remains into the cache
+  for (node = connexion->message->records->head; node; node = node->next) {
+    record = node->item;
     if (!addCacheEntry(coll, record)) goto error3;
-
-    rgRemove(connexion->message->records);
+    node->item = 0;
   }
-  
+  // record remains into the cache ; tree free by caller
+  connexion->message->records->freeitem = 0;
+  avl_free_nodes(connexion->message->records);
+  connexion->message->records->freeitem = (void(*)(void*)) destroyRecord;
+    
   sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;
  error3:

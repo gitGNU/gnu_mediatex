@@ -108,7 +108,7 @@ main(int argc, char** argv)
   if (!createExempleConfiguration(inputRep)) goto error;
   if (!(coll = getCollection("coll1"))) goto error;
   if (!(tree = createExempleRecordTree(coll))) goto error;
-  
+
   aes = &tree->aes;
   if (!aesInit(aes, key, ENCRYPT)) goto error;
   if (!aesInit(aes, key, ENCRYPT)) goto error;
@@ -125,8 +125,8 @@ main(int argc, char** argv)
   aes->fd = STDOUT_FILENO;
   
   if (!(diseaseRecordTree(tree))) goto error;
-  if (tree->records->nbItems > 0) goto error;
-  tree = destroyRecordTree(tree);
+  //if (avl_count(tree->records) > 0) goto error;
+  tree = destroyRecordTree(tree); 
   /************************************************************************/
 
   freeConfiguration();

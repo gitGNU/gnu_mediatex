@@ -47,7 +47,6 @@ typedef struct ExtractData {
 /* API */
 
 int mdtxCall(int nbArgs, ...);
-int isBadTopContainer(Collection* coll, Archive* archive);
 int extractArchive(ExtractData* data, Archive* archive);
 int extractArchives(Collection* coll);
 

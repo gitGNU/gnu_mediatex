@@ -235,8 +235,8 @@ int loadRecords(Collection* coll)
   int rc = FALSE;
   int fd = -1;
   RecordTree* tree = 0;
-  RGIT* curr = 0;
   Record* record = 0;
+  AVLNode* node = 0;
   
   checkCollection(coll);
   logCommon(LOG_DEBUG, "load %s records", coll->label);
@@ -273,10 +273,9 @@ int loadRecords(Collection* coll)
   destroyRecordTree(coll->cacheTree->recordTree);
   coll->cacheTree->recordTree = tree;
   coll->cacheTree->recordTree->messageType = DISK;
-  curr = 0;
-
-  while ((record = rgNext_r(coll->cacheTree->recordTree->records, &curr)) 
-	!= 0) {
+  for (node = coll->cacheTree->recordTree->records->head;
+       node; node = node->next) {
+    record = node->item;
     if (!addCacheEntry(coll, record)) goto error;
   }
    

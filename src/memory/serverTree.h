@@ -58,8 +58,8 @@ struct Server {
   char* userKey; // creation id
   char* hostKey;
 
-  RG*   images;  // related images to free if we remove this server
-  RG*   records; // related record to free if we remove this server
+  RG*      images;  // related images to free if we remove this server
+  //AVLTree* records; // related record to free if we remove this server
 
   //struct in_addr ipv4; // manage by connect.c
   struct sockaddr_in address; // manage by connect.c

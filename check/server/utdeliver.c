@@ -41,7 +41,7 @@ deliverMails(Collection* coll)
   Configuration* conf = 0;
   Archive* archive = 0;
   char* path = 0;
-  RGIT* curr = 0;
+  AVLNode* node = 0;
 
   logMain(LOG_DEBUG, "delivering %s collection files to users",
 	  coll->label);
@@ -51,10 +51,10 @@ deliverMails(Collection* coll)
   if (!lockCacheRead(coll)) goto error2;
 
   // for each cache entry
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))
-	!= 0) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
 
-    // look if archive is supplyed
+    // look if archive is locally supplyed
     if (archive->localSupply == 0) continue;
 
     // test if the file is really there

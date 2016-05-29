@@ -75,6 +75,8 @@ main(int argc, char** argv)
   Collection* coll = 0;
   RecordTree* tree = 0;
   Record* record = 0;
+  AVLNode* node = 0;
+  AVLNode* next = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -130,12 +132,16 @@ main(int argc, char** argv)
 
   if (!(tree = createExempleRecordTree(coll))) goto error;
   if (!computeExtractScore(coll)) goto error;
-
+  
   // index the record tree into cache
   logMemory(LOG_DEBUG, "___ test indexation ___");
   tree->aes.fd = STDERR_FILENO;
 
-  while ((record = rgHead(tree->records))) {
+  node = tree->records->head;
+  while (node) {
+    record = node->item;
+    next = node->next;
+  
     logMain(LOG_NOTICE, "---"); 
     logMain(LOG_NOTICE, "add new record into cache"); 
     if (!serializeRecord(tree, record)) goto error;
@@ -143,7 +149,8 @@ main(int argc, char** argv)
     fprintf(stderr, "\n");
 
     if (!addCacheEntry(coll, record)) goto error;
-    rgRemove(tree->records);
+    avl_unlink_node(tree->records, node);
+    free(node);
 
     if (record->archive->state >= AVAILABLE) {
       logMain(LOG_NOTICE, "available: score=%.2f toKeep: %s\n",
@@ -160,8 +167,10 @@ main(int argc, char** argv)
     logMain(LOG_NOTICE, "del record from cache"); 
     if (!delCacheEntry(coll, record)) goto error;
     if (!cleanCacheTree(coll)) goto error;
-  }
 
+    node = next;
+  }
+  
   // free memory
   if (!diseaseCacheTree(coll)) goto error;
   tree = destroyRecordTree(tree);

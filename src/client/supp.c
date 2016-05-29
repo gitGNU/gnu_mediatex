@@ -319,7 +319,10 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
     goto error;
   extra = 0;
-  if (!rgInsert(tree->records, record)) goto error;
+  if (!avl_insert(tree->records, record)) {
+    logMain(LOG_ERR, "cannot add record to tree (already there?)");
+    goto error;
+  }
 
   rc = TRUE;
  error:
@@ -328,35 +331,6 @@ addFinalSupplies(Collection* coll, Support* supp, char* path,
   }
   destroyString(extra);
   destroyString(device);
-  return rc;
-}
-
-/*=======================================================================
- * Function   : delFinalSupplies
- * Description: empty the record tree used to talk to server
- * Synopsis   : static int delFinalSupplies(Collection* coll, 
- *                                                     RecordTree* tree)
- * Input      : Collection* coll
- *              RecordTree* tree: the record tree to empty
- * Output     : TRUE on success
- =======================================================================*/
-static int delFinalSupplies(Collection* coll, RecordTree* tree)
-{
-  int rc = FALSE;
-  Record* record = 0;
-
- logMain(LOG_DEBUG, "delFinalSupplies");
-
-  while ((record = rgHead(tree->records))) {
-    if (!delRecord(coll, record)) goto error;
-    rgRemove(tree->records);
-  }
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "delFinalSupplies fails");
-  }
   return rc;
 }
 
@@ -424,8 +398,8 @@ notifyHave(Support* supp, char* path)
     
     // wait until server shut down the sockect
     if (!env.dryRun) tcpRead(socket, reply, 1);
-    
-    if (!delFinalSupplies(coll, tree)) goto error;
+
+    if (!diseaseRecordTree(tree)) goto error;
   }
   
   if (!isShared) {

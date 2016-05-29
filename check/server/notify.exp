@@ -366,10 +366,26 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 93
-[info notify.c] found a local supply to notify: 0387eee9820fa224525ff8b2e0dfa9be:24546
-[info notify.c] found a final demand to notify: 022a34b2f9b893fba5774237e1aa80ea:24075
-[info notify.c] found a remote demand to manage: 022a34b2f9b893fba5774237e1aa80ea:24075
-[info notify.c] found a bad score's local top container to notify: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
+[info notify.c] working on remote demand:
+[info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[info recordTree.c] # ^ REMOTE_DEMAND
+
+[info notify.c] found a local supply to notify:
+[info recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[info recordTree.c] # ^ LOCAL_SUPPLY
+
+[info notify.c] found a final demand to notify:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[info recordTree.c] # ^ FINAL_DEMAND
+
+[info notify.c] found a remote demand to manage:
+[info recordTree.c] D 2010-01-01,01:00:00 bedac32422739d7eced624ba20f5912e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[info recordTree.c] # ^ REMOTE_DEMAND
+
+[info notify.c] found a bad score's top container to notify:
+[info recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[info recordTree.c] # ^ LOCAL_SUPPLY
+
 [info address.c] build socket address 127.0.0.1:11111
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -380,9 +396,6 @@
 [info recordTree.c]   DoCypher   FALSE
 [info recordTree.c] Body
 [info recordTree.c] #                date                             host                             hash                size extra
-[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[info recordTree.c] # ^ LOCAL_DEMAND
-
 [info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 

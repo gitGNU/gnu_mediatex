@@ -91,6 +91,38 @@ cmpRecord(const void *p1, const void *p2)
   return rc;
 }
 
+// same function for AVL trees
+int 
+cmpRecordAvl(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on items
+   * and items are suposed to be Record* 
+   */
+  
+  Record* a1 = (Record*)p1;
+  Record* a2 = (Record*)p2;
+  
+  if (!rc) rc = cmpArchive(&a1->archive, &a2->archive);
+  if (!rc) rc = cmpServer(&a1->server, &a2->server);
+
+  // do sort on REMOVE flag!
+  if (!rc) rc = a1->type - a2->type; 
+
+  if (!rc) {
+    // extra should not but may be null
+    if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
+      rc = strcmp(a1->extra, a2->extra);
+    if (isEmptyString(a1->extra) && !isEmptyString(a2->extra))
+      rc = -1;
+    if (!isEmptyString(a1->extra) && isEmptyString(a2->extra))
+      rc = 1;
+  }
+ 
+  return rc;
+}
+
 /*=======================================================================
  * Function   : cmpRecordSize
  * Description: compare 2 records on size
@@ -220,7 +252,7 @@ destroyRecord(Record* self)
  * Output     : TRUE on success
  =======================================================================*/
 int 
-logRecord(int logModule, int logPriority, RecordTree* tree, Record* self)
+logRecord(int logModule, int logPriority, Record* self)
 {
   struct tm date;
 
@@ -428,7 +460,8 @@ createRecordTree(void)
   rc->aes.way = ENCRYPT;
   rc->doCypher = FALSE;
 
-  if ((rc->records = createRing()) == 0)
+  if (!(rc->records =
+	avl_alloc_tree(cmpRecordAvl, (avl_freeitem_t)destroyRecord)))
     goto error;
   
   return rc;
@@ -450,13 +483,13 @@ destroyRecordTree(RecordTree* self)
 {
   RecordTree* rc = 0;
 
-  if(self)
-    {
-      self->records 
-	= destroyRing(self->records,
-		      (void*(*)(void*)) destroyRecord);
-      free(self);
+  if(self) {
+    if (self->records) {
+      avl_free_tree(self->records); // records items are freed
+      self->records = 0;
     }
+    free(self);
+  }
   
   return(rc);
 }
@@ -504,17 +537,13 @@ logRecordTree(int logModule, int logPriority,
 { 
   int rc = FALSE;
   Record *record = 0;
-  RGIT* curr = 0;
+  AVLNode *node = 0;
 
   checkRecordTree(self);
  
   // use local server fingerPrint if not provided
   if (fingerPrint == 0) {
     fingerPrint = self->collection->userFingerPrint;
-  }
-
-  if (self->records) {
-    rgSort(self->records, cmpRecord);
   }
 
   // headers
@@ -539,9 +568,9 @@ logRecordTree(int logModule, int logPriority,
 	   "extra");
 
   rc = TRUE;
-  if (self->records) {
-    while ((record = rgNext_r(self->records, &curr)))
-      if (!logRecord(logModule, logPriority, self, record)) rc = FALSE;
+  for (node = self->records->head; node; node = node->next) {
+    record = node->item;
+    if (!logRecord(logModule, logPriority, record)) rc = FALSE;
   }
   
  error:
@@ -568,7 +597,7 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 { 
   int rc = FALSE;
   Record *record = 0;
-  RGIT* curr = 0;
+  AVLNode *node = 0;
   AESData* aes = 0;
 
   checkRecordTree(self);
@@ -589,10 +618,6 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
   // use local server fingerPrint if not provided
   if (fingerPrint == 0) {
     fingerPrint = self->collection->userFingerPrint;
-  }
-
-  if(self && self->records) {
-    rgSort(self->records, cmpRecord);
   }
 
   // un-encrypted headers
@@ -619,11 +644,9 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 	   "extra");
   rc = TRUE;
 
-  if(self) {
-    if (self->records) {
-      while ((record = rgNext_r(self->records, &curr)))
-	if (!serializeRecord(self, record)) rc=FALSE;
-    }
+  for (node = self->records->head; node; node = node->next) {
+    record = node->item;
+    if (!serializeRecord(self, record)) rc=FALSE;
   }
   
   if (!aesFlush(aes)) goto error;
@@ -721,8 +744,11 @@ Record* addRecord(Collection* coll, Server* server, Archive* archive,
   // add record to archive ring
   if (!rgInsert(archive->records, record)) goto error;
   
-  // add record to server ring
-  if (!rgInsert(server->records, record)) goto error;
+  /* // add record to server btree */
+  /* if (!avl_insert(server->records, record)) { */
+  /*   logMemory(LOG_ERR, "cannot add record (already there?)"); */
+  /*   goto error; */
+  /* } */
 
   rc = record;
  error:
@@ -746,22 +772,25 @@ int delRecord(Collection* coll, Record* self)
 {
   int rc = FALSE;
   RGIT* curr = 0;
-
+  //AVLNode* node = 0;
+ 
   checkCollection(coll);
   checkRecord(self);
   logMemory(LOG_DEBUG, "delRecord: (%i), %s, %s:%lli",
 	  self->type, self->server->fingerPrint,
 	  self->archive->hash, (long long int)self->archive->size);
 
-  // del record to archive ring
+  // del record from archive ring
   if ((curr = rgHaveItem(self->archive->records, self))) {
     rgRemove_r(self->archive->records, &curr);
   }
 
-  // del record to server ring
-  if ((curr = rgHaveItem(self->server->records, self))) {
-    rgRemove_r(self->server->records, &curr);
-  }
+  /* // del record from server ring */
+  /* if ((node = avl_search(self->server->records, self))) { */
+  /*   avl_unlink_node(self->server->records, node); */
+  /*   remind(node); */
+  /*   free(node); */
+  /* } */
 
   // free the record
   self = destroyRecord(self);
@@ -786,16 +815,19 @@ diseaseRecordTree(RecordTree* self)
 { 
   int rc = FALSE;
   Record *record = 0;
+  AVLNode* node = 0;
   
   checkRecordTree(self);
   checkCollection(self->collection);
   logMemory(LOG_DEBUG, "Disease %s related record tree", 
 	  self->collection->label);
   
-  while ((record = rgHead(self->records))) {
+  for (node = self->records->head; node; node = node->next) {
+    record = node->item;
     if (!delRecord(self->collection, record)) goto error;
-    rgRemove(self->records);
+    node->item = 0;
   }
+  avl_free_nodes(self->records);
   
   rc = TRUE;
  error:

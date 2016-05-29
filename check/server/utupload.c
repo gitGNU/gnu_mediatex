@@ -65,6 +65,7 @@ main(int argc, char** argv)
   char* miscRep = 0;
   char* absoluteMiscRep = 0;
   char* extra = 0;
+  AVLNode* node = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -121,20 +122,21 @@ main(int argc, char** argv)
  /*--------------------------------------------------------*/
   utLog("%s", " * No message ring:", 0);
   if (!(connexion = utUploadMessage(coll, extra))) goto error;
-  connexion->message->records = 
-    destroyRing(connexion->message->records, 
-		(void *(*)(void*)) destroyRecord);
+  avl_free_tree(connexion->message->records);
+  connexion->message->records = 0;
   if (uploadFinaleArchive(connexion)) goto error;
   logMain(LOG_NOTICE, "reply : %s", connexion->status);
   destroyRecordTree(connexion->message);
   free (connexion);
-
+  
   /*--------------------------------------------------------*/
   utLog("%s", " * Empty message ring:", 0);
   if (!(connexion = utUploadMessage(coll, extra))) goto error;
-  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(node = connexion->message->records->head)) goto error;
+  record = node->item;
   record = destroyRecord(record);
-  rgRemove(connexion->message->records);
+  avl_unlink_node(connexion->message->records, node);
+  free(node);
   if (uploadFinaleArchive(connexion)) goto error;
   logMain(LOG_NOTICE, "reply : %s", connexion->status);
   destroyRecordTree(connexion->message);
@@ -143,7 +145,7 @@ main(int argc, char** argv)
   /*--------------------------------------------------------*/
   utLog("%s", " * Not a final suply:", 0);
   if (!(connexion = utUploadMessage(coll, extra))) goto error;
-  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(record = connexion->message->records->head->item)) goto error;
   strcpy(record->extra, "notBeginningWithSlash");
   if (uploadFinaleArchive(connexion)) goto error;
   logMain(LOG_NOTICE, "reply : %s", connexion->status);
@@ -176,7 +178,7 @@ main(int argc, char** argv)
   /*--------------------------------------------------------*/
   utLog(" * Upload providing a target: %s", "store", 0);
   if (!(connexion = utUploadMessage(coll, extra))) goto error;
-  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(record = connexion->message->records->head->item)) goto error;
   if (!(record->extra = catString(record->extra, ":store"))) 
     goto error;
   if (!uploadFinaleArchive(connexion))  {
@@ -194,7 +196,10 @@ main(int argc, char** argv)
 			       "022a34b2f9b893fba5774237e1aa80ea", 24075,
 			       SUPPLY, extra))) goto error;
   extra = 0;
-  if (!rgInsert(connexion->message->records, record)) goto error;
+  if (!avl_insert(connexion->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   if (!uploadFinaleArchive(connexion))  {
     utLog("reply : %s", connexion->status, 0);
     goto error;

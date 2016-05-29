@@ -1214,22 +1214,6 @@ int extractArchive(ExtractData* data, Archive* archive)
   return rc;
 } 
 
-/*=======================================================================
- * Function   : isBadTopContainer
- * Description: check if archive is a top container having bad score
- *              and that is not already into the cache
- * Synopsis   : isBadTopContainer(Collection* coll, Archive* archive)
- * Input      : Collection* coll
- *              Archive* archive
- * Output     : TRUE if container need to be copied into the cache
- * Note       : maybe check minGeoDup and nb REMOTE_SUPPLY too in future
- =======================================================================*/
-int isBadTopContainer(Collection* coll, Archive* archive)
-{
-  return (archive->fromContainers->nbItems == 0 &&
-	  archive->extractScore<=coll->serverTree->scoreParam.maxScore/2);
-}
-
 /* /\*======================================================================= */
 /*  * Function   : getWantedArchives */
 /*  * Description: copy all wanted archives into a ring */
@@ -1290,8 +1274,8 @@ int extractArchives(Collection* coll)
   int rc2 = FALSE;
   Archive* archive = 0;
   Record* record = 0;
+  AVLNode* node = 0;
   RGIT* curr = 0;
-  RGIT* curr2 = 0;
   ExtractData data;
 
   logMain(LOG_DEBUG, "extractArchives %s collection", coll->label);
@@ -1303,7 +1287,8 @@ int extractArchives(Collection* coll)
   if (!lockCacheRead(coll)) goto error2;
 
   // look for archives we will try to extract
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if (!(archive->state == WANTED ||
 	  // candidates for (local or remote) final supplies
 	  (archive->state < WANTED && isBadTopContainer(coll, archive))))
@@ -1315,8 +1300,8 @@ int extractArchives(Collection* coll)
     data.context = X_GW_REMOTE_COPY;
 
     // do scp when archive is locally wanted...
-	    curr2 = 0;
-    while ((record = rgNext_r(archive->demands, &curr2))) {
+    curr = 0;
+    while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) == FINAL_DEMAND) {
 	data.context = X_DO_REMOTE_COPY;
 	break;
@@ -1341,8 +1326,8 @@ int extractArchives(Collection* coll)
   }
 
   // look for archives we will try to deliver
-  curr=0;
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if (archive->state < AVAILABLE) continue;
     if (archive->demands->nbItems == 0) continue;
     if (!deliverArchive(coll, archive)) goto error3;

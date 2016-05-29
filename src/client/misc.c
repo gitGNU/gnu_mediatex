@@ -631,8 +631,8 @@ mdtxAudit(char* label, char* mail)
     if (!lock(fileno(fd), F_WRLCK)) goto error2;
   }
 
-  logMemory(LOG_INFO, "Serializing audit into: %s", 
-	    env.dryRun?"stdout":path);
+  logMain(LOG_INFO, "Serializing audit into: %s", 
+	  env.dryRun?"stdout":path);
 
   if (!loadCollection(coll, EXTR)) goto error2;
 
@@ -659,7 +659,10 @@ mdtxAudit(char* label, char* mail)
       if (!(record = newRecord(coll->localhost, archive, DEMAND, tmp))) 
 	goto error3;
       tmp = 0;
-      if (!rgInsert(tree->records, record)) goto error3;
+      if (!avl_insert(tree->records, record)) {
+	logMain(LOG_ERR, "cannot add record to tree (already there?)");
+	goto error3;
+      }
       record = 0;
     }
   }

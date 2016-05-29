@@ -72,7 +72,7 @@ createCollection(void)
   /* computed paths will be filled by expandCollection */
 
   if (!(rc->archives = 
-	avl_alloc_tree(cmpArchive2, (avl_freeitem_t)destroyArchive)))
+	avl_alloc_tree(cmpArchiveAvl, (avl_freeitem_t)destroyArchive)))
     goto error;
 
   if ((rc->networks = createRing()) == 0) goto error;

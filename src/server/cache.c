@@ -194,10 +194,9 @@ static int
 scanFile(Collection* coll, char* absolutePath, char* relativePath) 
 {
   int rc = FALSE;
-  RG* archives = 0;
   Archive* archive = 0;
   Record *record = 0;
-  RGIT* curr = 0;
+  AVLNode* node = 0;
   struct stat statBuffer;
   CheckData md5; 
   char* extra = 0;
@@ -227,18 +226,19 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     goto end;
   }
 
-  // try to look for archive in md5sums file
-  archives = coll->cacheTree->archives;
-  while ((archive = rgNext_r(archives, &curr))) {
-    
-    if (archive->size != statBuffer.st_size) continue;
-    if ((record = archive->localSupply) == 0) continue;
-    if (strcmp(record->extra, relativePath)) continue;
-
-    // if already there do not compute the md5sums
-    logMain(LOG_INFO, "%s match: md5sum skipped", relativePath);
-    record = 0;
-    goto end;
+  // try to match archive with them loaded from md5sums file
+  //  O(n2) : not so much better than to compute the md5sum !!
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
+    if (archive->size == statBuffer.st_size &&
+	(record = archive->localSupply) &&
+	!strcmp(record->extra, relativePath)) {
+      
+      // we guess it is already there: do not compute the md5sums
+      logMain(LOG_INFO, "%s match: md5sum skipped", relativePath);
+      record = 0;
+      goto end;
+    }
   }
   record = 0;
 
@@ -266,8 +266,8 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
 
   // remove doublons
   if (archive->localSupply && 
-      !(archive->localSupply->type & REMOVE) &&
-      *relativePath != '/') {
+      !(archive->localSupply->type & REMOVE)
+      && *relativePath != '/') { // do not unlink final supplies
     logMain(LOG_WARNING, "remove %s from cache (doublon)", relativePath);
     if (!env.dryRun) {
       if (unlink(absolutePath) == -1) {
@@ -428,9 +428,8 @@ scanSupportFiles(Collection* coll)
   Archive* archive = 0;
   Record* supply = 0;
   Support* supp = 0;
+  AVLNode* node = 0;
   RGIT* curr = 0;
-  RGIT* curr2 = 0;
-
 
   logMain(LOG_DEBUG, "scanSupportFiles");
   checkCollection(coll);
@@ -438,14 +437,16 @@ scanSupportFiles(Collection* coll)
   if (!loadConfiguration(CFG)) goto error;
 
   // start by removing all final-supplies from the cache
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
-    curr2 = 0;
-    while ((supply = rgNext_r(archive->finalSupplies, &curr2))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
+    curr = 0;
+    while ((supply = rgNext_r(archive->finalSupplies, &curr))) {
       if (!delCacheEntry(coll, supply)) goto error;
     }
   } 
 
-  // loop on support files
+  // loop on support files to (re-)add final supplies
+  curr = 0;
   while ((supp = rgNext_r(coll->supports, &curr))) {
     if (*supp->name != '/') continue;
     if (!scanFile(coll, supp->name, supp->name)) goto error;    
@@ -472,8 +473,8 @@ quickScan(Collection* coll)
   int rc = FALSE;
   Archive* archive = 0;
   char* path = 0;
-  RGIT* curr = 0;
   Record* supply = 0;
+  AVLNode* node = 0;
 
   logMain(LOG_DEBUG, "quickScan");
   checkCollection(coll);
@@ -486,7 +487,8 @@ quickScan(Collection* coll)
   if (!scanSupportFiles(coll)) goto error3;
 
   // del cache entry if no more into the physical cache
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     if ((supply = archive->localSupply) == 0) continue;
 
     // test if the file is really there 
@@ -614,12 +616,11 @@ freeCache(Collection* coll, off_t need, int* success)
   CacheTree* self = 0;
   Archive* archive = 0;
   Record* record = 0;
-  RG* archives = 0;
+  AVLNode* node = 0;
   off_t free = 0;
   off_t available = 0;
   time_t date = 0;
   char* path = 0;
-  RGIT* curr = 0;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "free the %s cache", coll->label);
@@ -658,9 +659,10 @@ freeCache(Collection* coll, off_t need, int* success)
   if (!computeExtractScore(coll)) goto error;
 
   // loop on all archives
-  archives = coll->cacheTree->archives;
-  while (need > free && (archive = rgNext_r(archives, &curr))) {
-
+  for (node = coll->cacheTree->archives->head;
+       need > free && node; node = node->next) {
+    archive = node->item;
+    
     // looking for archive that resides into the cache
     if (archive->state < AVAILABLE) continue;
     record = archive->localSupply;

@@ -115,7 +115,10 @@ main(int argc, char** argv)
 
   utLog("%s", "record related to other server", 0);
   if (!(record = utRemoteDemand(coll, server))) goto error;
-  if (!rgInsert(connexion->message->records, record)) goto error;
+  if (!avl_insert(connexion->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   if (checkMessage(connexion)) goto error;
   logMain(LOG_NOTICE, "reply : %s", connexion->status);
   /************************************************************************/

@@ -430,7 +430,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   int rc = FALSE;
   Archive* archive = 0;
   Support* support = 0;
-  RGIT* curr = 0;
+  AVLNode* node = 0;
   MotdSearch data;
   Image* image = 0;
 
@@ -445,7 +445,8 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   logRecordTree(LOG_MAIN, LOG_DEBUG, coll->cacheTree->recordTree, 0);  
   
   // 1) for each cache entry
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
 
     // scan wanted archives not available
     //  note: support files are loaded as final supplies by server
@@ -472,20 +473,16 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   // 2) for each cache entry
   motdRecord->coll = coll;
   if (!computeExtractScore(coll)) goto error2;
-  curr = 0;
-  while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) {
-
-    // looking for top containers (as content cannot have worse score)
-    if (!isEmptyRing(archive->fromContainers)) continue;
-
-    // looking for archive having a bad score
-    if (archive->extractScore > coll->serverTree->scoreParam.maxScore /2)
-      continue;      
+  for (node = coll->cacheTree->archives->head; node; node = node->next) {
+    archive = node->item;
     
     // looking for archive available into the cache
     if (archive->state < AVAILABLE) continue;
- 
-    // looking for archive that have a no local image...
+
+    // looking for bad top container
+    if (!isBadTopContainer(coll, archive)) continue;
+    
+    // looking for archive that have no local image...
     if ((image = getImage(coll, coll->localhost, archive)) &&
 	// ...or a local bad score
 	image->score > coll->serverTree->scoreParam.maxScore / 2)

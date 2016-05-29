@@ -213,7 +213,7 @@ int mdtxFind(RecordTree *tree)
   logMain(LOG_DEBUG, "mdtxFind");
 
   if (!(coll = tree->collection)) goto error;
-  if (!(record = (Record*)tree->records->head->it)) goto error;
+  if (!(record = (Record*)tree->records->head->item)) goto error;
 
   // send query
   if (!mdtxSearch(tree, reply)) goto error;
@@ -291,7 +291,7 @@ int mdtxRegister(RecordTree *tree)
   logMain(LOG_DEBUG, "mdtxRegister");
 
   if (!(coll = tree->collection)) goto error;
-  if (!(record = (Record*)tree->records->head->it)) goto error;
+  if (!(record = (Record*)tree->records->head->item)) goto error;
   if (!(server = getLocalHost(coll))) goto error;
 
   /* querying the local server */
@@ -421,7 +421,11 @@ RecordTree* scanCgiQuery(Collection* coll)
   if (!(record = newRecord(coll->localhost, archive, DEMAND, extra))) 
     goto error;
   extra = 0;
-  if (!rgInsert(tree->records, record)) goto error;
+  if (!avl_insert(tree->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
+  
   logMain(LOG_INFO, "querying for %s %i", 
 	  record->archive->hash, record->archive->size);
   record = 0;
@@ -707,7 +711,7 @@ main(int argc, char** argv)
   
   // build record query from query parameters
   if ((tree = scanCgiQuery(coll)) == 0) goto htmlError;
-  if (!(record = (Record*)tree->records->head->it)) goto htmlError;
+  if (!(record = (Record*)tree->records->head->item)) goto htmlError;
   
   // relay query to daemon(s)
   if (isEmptyString(record->extra) || record->extra[0]=='!') {

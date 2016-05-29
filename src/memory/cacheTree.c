@@ -135,8 +135,12 @@ createCacheTree(void)
    
   memset(rc, 0, sizeof(CacheTree));
   
-  if ((rc->archives = createRing()) == 0) goto error;
   if ((rc->recordTree = createRecordTree()) == 0)
+    goto error;
+
+  // do not destroy archive on this tree
+  if (!(rc->archives =
+	avl_alloc_tree(cmpArchiveCacheAvl, (avl_freeitem_t)0)))
     goto error;
 
   // init the locks
@@ -153,7 +157,7 @@ createCacheTree(void)
   
   if (pthread_rwlockattr_setpshared(rc->attr, PTHREAD_PROCESS_SHARED)) {
     logMemory(LOG_ERR, "pthread_rwlockattr_setpshared fails: %s", 
-	    strerror(errno));
+	      strerror(errno));
     goto error;
   }
   
@@ -192,9 +196,11 @@ destroyCacheTree(CacheTree* self)
 
   if(self == 0) goto error;
 
-  // do not free archives
-  self->archives = destroyOnlyRing(self->archives); 
   self->recordTree = destroyRecordTree(self->recordTree);
+
+  // do not free archives (freeitem callback = NULL)
+  avl_free_tree(self->archives);
+  
   pthread_rwlock_destroy(self->rwlock);
   pthread_rwlockattr_destroy(self->attr);
   
@@ -262,7 +268,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   cache = coll->cacheTree;
   previousState = archive->state;
   logMemory(LOG_DEBUG, "computeArchiveStatus %s:%lli",   
-	  archive->hash, archive->size);
+	    archive->hash, archive->size);
 
   if ((date = currentTime()) == -1) goto error; 
 
@@ -298,7 +304,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
 
   default:
     logMemory(LOG_ERR, "bad state for local supply: %s", 
-	    strRecordType(archive->localSupply));
+	      strRecordType(archive->localSupply));
     goto error2;
   }
 
@@ -325,7 +331,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
 
   // become to be keept
   if (previousState < TOKEEP && archive->state >= TOKEEP)
-     coll->cacheTree->frozenSize += archive->size;
+    coll->cacheTree->frozenSize += archive->size;
 
   // become not to keept anymore
   if (previousState >= TOKEEP && archive->state < TOKEEP)
@@ -339,7 +345,7 @@ computeArchiveStatus(Collection* coll, Archive* archive)
   }
  error:
   if (!rc) {
-     logMemory(LOG_ERR, "computeArchiveStatus fails");
+    logMemory(LOG_ERR, "computeArchiveStatus fails");
   }
   return rc;
 }
@@ -353,13 +359,13 @@ computeArchiveStatus(Collection* coll, Archive* archive)
  *              Record* record: record to add
  * Output     : TRUE on success
  * Note       : Server's records are not managed here
-                Threads must alway call it using cacheAlloc()
+ Threads must alway call it using cacheAlloc()
  =======================================================================*/
 int addCacheEntry(Collection* coll, Record* record) 
 {
   int rc = FALSE;
   Archive* archive = 0;
-  RG* ring = 0;
+  AVLTree* tree = 0;
   //int err = 0;
 
   checkCollection(coll);
@@ -367,20 +373,28 @@ int addCacheEntry(Collection* coll, Record* record)
   archive = record->archive;
   checkArchive(archive);
   logMemory(LOG_DEBUG, "addCacheEntry %s, %s %s:%lli",
-	  strRecordType(record), record->server->fingerPrint, 
-	  record->archive->hash, (long long int)record->archive->size);
+	    strRecordType(record), record->server->fingerPrint, 
+	    record->archive->hash, (long long int)record->archive->size);
 
   // add archive to cache ring if not already there
-  ring = coll->cacheTree->archives;
-  if (!rgHaveItem(ring, archive)) {
+  tree = coll->cacheTree->archives;
+  if (avl_insert(tree, archive)) {
     archive->state = UNUSED;
-    if (!rgInsert(ring, archive)) goto error;
   }
-
+  else {
+    if (errno != EEXIST) {
+      logMemory(LOG_ERR, "fails to add archive");
+      goto error;
+    }
+  }
+  
   // add record is not already there
-  ring = coll->cacheTree->recordTree->records;
-  if (!rgMatchItem(ring, record, cmpRecord)) {
-    if (!rgInsert(ring, record)) goto error;
+  tree = coll->cacheTree->recordTree->records;
+  if (!avl_insert(tree, record)) {
+    if (errno != EEXIST) {
+      logMemory(LOG_ERR, "fails to add record");
+      goto error;
+    }
   }
 
   if (record->type & REMOVE) {
@@ -399,23 +413,23 @@ int addCacheEntry(Collection* coll, Record* record)
     }
     else {
       logMemory(LOG_NOTICE, 
-	      "we only record one local supply by archive");
+		"we only record one local supply by archive");
     }
     break;
       
   case FINAL_SUPPLY:
-     if (!rgInsert(archive->finalSupplies, record)) goto error;
-     break;
+    if (!rgInsert(archive->finalSupplies, record)) goto error;
+    break;
 
   case REMOTE_SUPPLY:
-     if (!rgInsert(archive->remoteSupplies, record)) goto error;
-     break;
+    if (!rgInsert(archive->remoteSupplies, record)) goto error;
+    break;
 
   case FINAL_DEMAND:
   case LOCAL_DEMAND:
   case REMOTE_DEMAND:
-     if (!rgInsert(archive->demands, record)) goto error;
-     break;
+    if (!rgInsert(archive->demands, record)) goto error;
+    break;
 
   default:
     logMemory(LOG_ERR, "cannot index %s record", strRecordType(record));
@@ -428,25 +442,25 @@ int addCacheEntry(Collection* coll, Record* record)
   /*
   // openClose mutex
   if ((err = pthread_mutex_lock(&coll->mutex[iCACH]))) {
-    logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
-    goto error;
+  logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+  goto error;
   }
   */
 
   coll->fileState[iCACH] = MODIFIED;
 
   /*
-  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
+    if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
-  }
+    }
   */
 
   rc = TRUE;
  error:
   if (!rc) {
-     logMemory(LOG_DEBUG, "fails to add a cache entry");
-     delCacheEntry(coll, record);
+    logMemory(LOG_DEBUG, "fails to add a cache entry");
+    delCacheEntry(coll, record);
   }
   return rc;
 }
@@ -473,8 +487,8 @@ int delCacheEntry(Collection* coll, Record* record)
   archive = record->archive;
   checkArchive(archive);
   logMemory(LOG_DEBUG, "delCacheEntry %s, %s %s:%lli",
-	  strRecordType(record), record->server->fingerPrint, 
-	  record->archive->hash, (long long int)record->archive->size);
+	    strRecordType(record), record->server->fingerPrint, 
+	    record->archive->hash, (long long int)record->archive->size);
 
   record->type |= REMOVE;
 
@@ -482,25 +496,25 @@ int delCacheEntry(Collection* coll, Record* record)
   if (!computeArchiveStatus(coll, record->archive)) goto error;
 
   /*
-  if ((err = pthread_mutex_lock(&coll->mutex[iCACH]))) {
+    if ((err = pthread_mutex_lock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
-  }
+    }
   */
 
   coll->fileState[iCACH] = MODIFIED;
 
   /*
-  if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
+    if ((err = pthread_mutex_unlock(&coll->mutex[iCACH]))) {
     logMemory(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
     goto error;
-  }
+    }
   */
 
   rc = TRUE;
  error:
   if (!rc) {
-     logMemory(LOG_ERR, "fails to del a cache entry");
+    logMemory(LOG_ERR, "fails to del a cache entry");
   }
   return rc;
 }
@@ -537,9 +551,9 @@ keepArchive(Collection* coll, Archive* archive)
   logMemory(LOG_DEBUG, "keep %s:%lli", archive->hash, archive->size); 
 
   if (record->type & REMOVE) {
-      logMemory(LOG_ERR, 
+    logMemory(LOG_ERR, 
 	      "cannot keep as local supply is already removed");
-      goto error;
+    goto error;
   }
   
   if ((err = pthread_mutex_lock(&cache->mutex[MUTEX_ALLOC]))) {
@@ -576,7 +590,7 @@ keepArchive(Collection* coll, Archive* archive)
     goto error;
   }
  error:
-    if (!rc) {
+  if (!rc) {
     logMemory(LOG_ERR, "keepArchive fails");
   }
   return rc;
@@ -609,11 +623,11 @@ unKeepArchive(Collection* coll, Archive* archive)
   checkRecord(record);
   cache = coll->cacheTree;
   logMemory(LOG_DEBUG, "un keep %s:%lli",   
-	  archive->hash, archive->size); 
+	    archive->hash, archive->size); 
   
   if (record->type & REMOVE) {
     logMemory(LOG_ERR, 
-	    "cannot unkeep as local supply is already removedkeep");
+	      "cannot unkeep as local supply is already removedkeep");
     goto error;
   }
  
@@ -635,7 +649,7 @@ unKeepArchive(Collection* coll, Archive* archive)
 
   rc = TRUE;
  error:
-    if (!rc) {
+  if (!rc) {
     logMemory(LOG_ERR, "unKeepArchive fails");
   }
   return rc;
@@ -651,12 +665,11 @@ unKeepArchive(Collection* coll, Archive* archive)
 int cleanCacheTree(Collection* coll)
 {
   int rc = FALSE;
-  RG* records = 0;
-  RG* archives = 0;
+  AVLTree* records = 0;
   Record* record = 0;
-  Record* next = 0;
   Archive* archive = 0;
-  RGIT* curr = 0;
+  AVLNode* node = 0;
+  AVLNode* next = 0;
 
   checkCollection(coll);
   logMemory(LOG_DEBUG, "cleanCacheTree %s", coll->label);
@@ -664,30 +677,27 @@ int cleanCacheTree(Collection* coll)
 
   // for all records marked as "removed"
   records = coll->cacheTree->recordTree->records;
-  next = rgNext_r(records, &curr);
-  while (next) {
-    record = next;
+  node = records->head;
+  while (node) {
+    record = node->item;
     archive = record->archive;
-    next = rgNext_r(records, &curr);
+    next = node->next;
+    
     if (!(record->type & REMOVE)) continue; 
 
     switch (getRecordType(record)) {
-
     case MALLOC_SUPPLY:
     case LOCAL_SUPPLY:
       if (archive->localSupply == record) {
 	archive->localSupply = 0; 
       }
       break;
-      
     case FINAL_SUPPLY:
       rgDelItem(archive->finalSupplies, record);
       break;
-      
     case REMOTE_SUPPLY:
       rgDelItem(archive->remoteSupplies, record);
       break;
-      
     case FINAL_DEMAND:
     case LOCAL_DEMAND:
     case REMOTE_DEMAND:
@@ -699,16 +709,18 @@ int cleanCacheTree(Collection* coll)
       goto error2;
     }
 
-    // del record if there
-    if (!rgDelItem(records, record)) {
-      logMemory(LOG_WARNING, "record not found into cache");
-      goto error2;
-    }
+    // remove record (record free by delRecord bellow)
+    avl_unlink_node(records, node);
+    remind(node);
+    free(node);
 
     // remove archive from cache if it has no record
     if (archive->state == UNUSED) {
-      archives = coll->cacheTree->archives;
-      rgDelItem(archives, archive);
+      if ((node = avl_search(coll->cacheTree->archives, archive))) {
+	avl_unlink_node(coll->cacheTree->archives, node);
+	remind(node);
+	free(node);
+      }
     }
 
     // try to disease archive
@@ -716,6 +728,8 @@ int cleanCacheTree(Collection* coll)
 
     // remove the record as owned by cache->recordTree->records
     if (!delRecord(coll, record)) goto error;
+
+    node = next;
   }
 
   rc = TRUE;
@@ -735,22 +749,23 @@ int cleanCacheTree(Collection* coll)
  * Input      : Collection* coll: the collection to use
  * Output     : TRUE on success
  * Note       : Do not disease the recordTree !?
-#warning seems no more needed (try to replace directely by cleanCacheTree)
+ #warning seems no more needed (try to replace directely by cleanCacheTree)
  =======================================================================*/
 int diseaseCacheTree(Collection* coll)
 {
   int rc = FALSE;
-  RG* ring = 0;
+  AVLTree* tree = 0;
+  AVLNode* node = 0;
   Record* record = 0;
-  RGIT* curr = 0;
 
   checkCollection(coll);
   logMemory(LOG_DEBUG, "disease %s cache tree", coll->label);
 
   // for all records
   if (!expandCollection(coll)) goto error;
-  ring = coll->cacheTree->recordTree->records;
-  while ((record = rgNext_r(ring, &curr))) {
+  tree = coll->cacheTree->recordTree->records;
+  for (node = tree->head; node; node = node->next) {
+    record = node->item;
     if (!(record->type & REMOVE) &&
 	!delCacheEntry(coll, record)) goto error;
   }

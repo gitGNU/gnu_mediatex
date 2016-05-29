@@ -280,7 +280,10 @@ utUploadMessage(Collection* coll, char* extra)
     goto error;
   string = 0;
   
-  if (!rgInsert(con->message->records, record)) goto error;
+  if (!avl_insert(con->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   record = 0;
 
   rc = con;
@@ -319,7 +322,10 @@ utCgiMessage(Collection* coll, char* mail)
     goto error;
   string = 0;
 
-  if (!rgInsert(con->message->records, record)) goto error;
+  if (!avl_insert(con->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   record = 0;
 
   rc = con;
@@ -356,8 +362,11 @@ utHaveMessage1(Collection* coll, char* extra)
 			       SUPPLY, string)))
     goto error;
   string = 0;
-  
-  if (!rgInsert(con->message->records, record)) goto error;
+
+  if (!avl_insert(con->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   record = 0;
 
   rc = con;
@@ -394,8 +403,11 @@ utHaveMessage2(Collection* coll, char* extra)
 			       SUPPLY, string)))
     goto error;
   string = 0;
-  
-  if (!rgInsert(con->message->records, record)) goto error;
+
+  if (!avl_insert(con->message->records, record)) {
+    logMain(LOG_ERR, "cannot add record (already there?)");
+    goto error;
+  }
   record = 0;
 
   rc = con;

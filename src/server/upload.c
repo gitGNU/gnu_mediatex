@@ -29,8 +29,8 @@
  * Description: call extract to upload a file on cache
  * Synopsis   : static int 
  *              cacheUpload(Collection* coll, off_t need, int* rcode)
- * Input      : Collection* collection : collections to use
- *              char* sourcePath: file to upload
+ * Input      : Collection* collection: collections to use
+ *              Record*: file to upload
  * Output     : TRUE on success
  =======================================================================*/
 static int
@@ -109,7 +109,8 @@ uploadFinaleArchive(Connexion* connexion)
   int rc = FALSE;
   Collection* coll = 0;
   Record* record = 0;
-
+  AVLNode* node = 0;
+  
   static char status[][64] = {
     "210 ok",
     "310 empty message",
@@ -122,12 +123,14 @@ uploadFinaleArchive(Connexion* connexion)
   checkCollection(coll);
   
   // check we get a final supplies
-  if (isEmptyRing(connexion->message->records)) {
+  if (!connexion->message->records ||
+      !avl_count(connexion->message->records)) {
     sprintf(connexion->status, "%s", status[1]);
     goto error;
   }
 
-  if (!(record = rgHead(connexion->message->records))) goto error;
+  if (!(node = connexion->message->records->head)) goto error;
+  record = node->item;
 
   if (getRecordType(record) != FINAL_SUPPLY) {
     sprintf(connexion->status, status[2], record->extra);
@@ -146,7 +149,9 @@ uploadFinaleArchive(Connexion* connexion)
 
   // push provided final supplies into the cache
   if (!addCacheEntry(coll, record)) goto error3;
-  rgRemove(connexion->message->records); // consume the record
+  avl_unlink_node(connexion->message->records, node); // consume record
+  remind(node);
+  free(node);
   
   // extract the final supply into the cache
   if (!(cacheUpload(coll, record))) goto error4;

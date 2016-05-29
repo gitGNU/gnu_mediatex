@@ -133,7 +133,8 @@ extractFinaleArchives(Connexion* connexion)
   int rc = FALSE;
   ExtractData data;
   Record* record = 0;
-
+  AVLNode* node = 0;
+  
   static char status[][64] = {
     "230 ok",
     "330 empty message",
@@ -148,11 +149,14 @@ extractFinaleArchives(Connexion* connexion)
   data.context = X_NO_REMOTE_COPY;
   
   // check we get a final supplies
-  if (isEmptyRing(connexion->message->records)) {
+  if (!avl_count(connexion->message->records)) {
     sprintf(connexion->status, "%s", status[1]);
     goto error;
   }
-  if (!(record = rgHead(connexion->message->records))) goto error;
+
+   if (!(node = connexion->message->records->head)) goto error;
+  record = node->item;
+  
   if (getRecordType(record) != FINAL_SUPPLY) {
     sprintf(connexion->status, status[2], record->extra);
     goto error;
@@ -163,8 +167,10 @@ extractFinaleArchives(Connexion* connexion)
 
   // push provided final supplies into the cache
   if (!addCacheEntry(data.coll, record)) goto error3;
-  rgRemove(connexion->message->records);
-
+  avl_unlink_node(connexion->message->records, node); // consume record
+  remind(node);
+  free(node);
+  
   // up-down recursive match for wanted content from the final supply
   if (!haveArchive(&data, record->archive)) goto error4;
 

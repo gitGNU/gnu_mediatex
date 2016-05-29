@@ -128,8 +128,9 @@ cmpArchive(const void *p1, const void *p2)
   return rc;
 }
 
+// same function for AVL trees
 int 
-cmpArchive2(const void *p1, const void *p2)
+cmpArchiveAvl(const void *p1, const void *p2)
 {
   int rc = 0;
 
@@ -142,6 +143,44 @@ cmpArchive2(const void *p1, const void *p2)
 
   rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
   if (!rc) rc = a1->size - a2->size; // growing sizes
+ 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cmpArchiveCacheAvl
+ * Description: compare 2 archives in order to optimize the cache
+ * Synopsis   : int cmpArchive(const void *p1, const void *p2)
+ * Input      : const void *p1, const void *p2 : the archives
+ * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Note       : sort by chronological dates and by growing sizes
+ =======================================================================*/
+int 
+cmpArchiveCacheAvl(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on items
+   * and items are suposed to be Archive* 
+   */
+  
+  Archive* a1 = (Archive*)p1;
+  Archive* a2 = (Archive*)p2;
+
+  Record* r1 = a1->localSupply;
+  Record* r2 = a2->localSupply;
+
+  // chronological order
+  if (!rc && r1 && r2) rc = (r1->date - r2->date);
+  // we may have no localSupply
+  if (!rc && !r1 && r2) rc = -1;
+  if (!rc && r1 && !r2) rc = 1;
+
+  // growing sizes
+  if (!rc) rc = a1->size - a2->size;
+
+  // hash
+  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
  
   return rc;
 }
@@ -313,6 +352,7 @@ delArchive(Collection* coll, Archive* self)
   Document* doc = 0;
   AssoCarac* ac = 0;
   RGIT* curr = 0;
+  AVLNode* node = 0;
  
   checkCollection(coll);
   checkArchive(self);
@@ -350,8 +390,8 @@ delArchive(Collection* coll, Archive* self)
   }
 
   // delete archive from collection cache
-  if ((curr = rgHaveItem(coll->cacheTree->archives, self))) {
-    rgRemove_r(coll->cacheTree->archives, &curr);
+  if ((node = avl_search(coll->cacheTree->archives, self))) {
+    avl_delete_node(coll->cacheTree->archives, node);
   }
 
   // delete archive from collection ring and free the archive
@@ -462,6 +502,25 @@ int isIncoming(Collection* coll, Archive* self)
     (self->extractScore ==-1 || 
      self->extractScore <
      coll->serverTree->scoreParam.maxScore /2);
+}
+
+/*=======================================================================
+ * Function   : isBadTopContainer
+ * Description: check if archive is a top container having bad score
+ *              and that is not already into the cache
+ * Synopsis   : isBadTopContainer(Collection* coll, Archive* archive)
+ * Input      : Collection* coll
+ *              Archive* archive
+ * Output     : TRUE if container need to be copied into the cache
+ * Requirement: loadCollection(coll, EXTR)
+ * Note       : maybe check minGeoDup and nb REMOTE_SUPPLY too in future
+ =======================================================================*/
+int isBadTopContainer(Collection* coll, Archive* archive)
+{
+  // looking for top containers (as content cannot have worse score)
+  return (!archive->fromContainers->nbItems &&
+	  // looking for archive having a bad score
+	  archive->extractScore<=coll->serverTree->scoreParam.maxScore/2);
 }
 
 /*=======================================================================

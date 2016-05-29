@@ -486,7 +486,8 @@ int cmpHuman(const void *p1, const void *p2)
   return rc;
 }
 
-int cmpHuman2(const void *p1, const void *p2)
+// same function for avl trees
+int cmpHumanAvl(const void *p1, const void *p2)
 {
   int rc = 0;
   
@@ -632,8 +633,9 @@ cmpDocument(const void *p1, const void *p2)
   return rc;
 }
 
+// same function for AVL trees
 int
-cmpDocument2(const void *p1, const void *p2)
+cmpDocumentAvl(const void *p1, const void *p2)
 {
   int rc = 0;
 
@@ -874,9 +876,9 @@ createCatalogTree(void)
     goto error;
 
   if (!(rc->documents = 
-	avl_alloc_tree(cmpDocument2, (avl_freeitem_t)destroyDocument))
+	avl_alloc_tree(cmpDocumentAvl, (avl_freeitem_t)destroyDocument))
       || !(rc->humans = 
-	   avl_alloc_tree(cmpHuman2, (avl_freeitem_t)destroyHuman)))
+	   avl_alloc_tree(cmpHumanAvl, (avl_freeitem_t)destroyHuman)))
       goto error;
 
   if ((rc->caracs = createRing()) == 0) goto error;
@@ -1915,7 +1917,7 @@ delDocument(Collection* coll, Document* self)
     }
   }
 
-  // delete document from document tree rings and free it
+  // delete document from document tree btree and free it
   avl_delete(coll->catalogTree->documents, self);
 
   rc = TRUE;
@@ -2211,7 +2213,7 @@ diseaseCatalogTree(Collection* coll)
 
   // disease archives
   if (avl_count(coll->archives)) {
-    for(node = coll->archives->head; node; node = node->next) {
+    for (node = coll->archives->head; node; node = node->next) {
       if (!delArchiveCatalog(coll, node->item)) goto error;
     }
   }

@@ -178,9 +178,12 @@ createServer(void)
   if ((rc->networks = createRing()) == 0) goto error;
   if ((rc->gateways = createRing()) == 0) goto error;
   if ((rc->images = createRing()) == 0) goto error;
-  if ((rc->records = createRing()) == 0) goto error;
 
-  return rc;
+   /* if (!(rc->records =  */
+   /* 	 avl_alloc_tree(cmpRecordAvl, (avl_freeitem_t)destroyRecord))) */
+   /*   goto error; */
+
+   return rc;
  error:
   logMemory(LOG_ERR, "malloc: cannot create Server");
   return destroyServer(rc);
@@ -209,9 +212,10 @@ destroyServer(Server* self)
   self->hostKey = destroyString(self->hostKey);
   
   // do not delete objets (owned by serverTree or recordTree)
-  self->records = destroyOnlyRing(self->records);
   self->networks = destroyOnlyRing(self->networks);
   self->gateways = destroyOnlyRing(self->gateways);
+  //self->records->freeitem = 0;
+  //avl_free_tree(self->records);
 
   self->images = 
     destroyRing(self->images, (void*(*)(void*)) destroyImage);
@@ -741,7 +745,7 @@ delServer(Collection* coll, Server* server)
 {
   int rc = FALSE;
   Image* img = 0;
-  Record* rec = 0;
+  //Record* rec = 0;
   RGIT* curr = 0;
 
   checkCollection(coll);
@@ -756,8 +760,8 @@ delServer(Collection* coll, Server* server)
     if (!delImage(coll, img)) goto error;
 
   // delete records
-  while ((rec = rgHead(server->records)))
-    if (!delRecord(coll, rec)) goto error;
+  //while ((rec = rgHead(server->records)))
+  //  if (!delRecord(coll, rec)) goto error;
 
   // delete server from collection ring
   if ((curr = rgHaveItem(coll->serverTree->servers, server))) {

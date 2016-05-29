@@ -863,7 +863,10 @@ createExempleRecordTree(Collection* coll)
     record->date = dates[i];
 
     // add the record to the tree
-    if (!rgInsert(rc->records, record)) goto error;
+    if (!avl_insert(rc->records, record)) {
+      logMemory(LOG_ERR, "cannot add record (already there?)");
+      goto error;
+    }
   }
  
   return rc;

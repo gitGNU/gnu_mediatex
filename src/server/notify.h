@@ -32,7 +32,7 @@ extern int running; // from threads.c
 typedef struct NotifyData {
 
   Collection* coll;
-  RG* toNotify; // records
+  AVLTree* toNotify; // records
   int found;
 
 } NotifyData;
