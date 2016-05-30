@@ -3,6 +3,7 @@
  * Module : have
  *
  * Manage extraction from removable device
+ * scan provided support to find archive to extract
 
  MediaTex is an Electronic Records Management System
  Copyright (C) 2014 2015 2016 Nicolas Roche
@@ -98,12 +99,13 @@ int haveArchive(ExtractData* data, Archive* archive)
     if (!haveContainer(data, archive->toContainer)) goto error;
   }
 
-  // perform extraction
+  // perform cp extraction
   if (archive->state == WANTED) {
     logMain(LOG_NOTICE, "have content to extract: %s:%lli", 
 	    archive->hash, archive->size);
-    data->target = archive;
-    if (!extractArchive(data, archive)) goto error;
+
+#warning TO PASS TO FALSE when delivering prosses becomes ok
+    if (!extractArchive(data, archive, TRUE)) goto error;
   }
 
   // perform delivering
@@ -177,8 +179,7 @@ extractFinaleArchives(Connexion* connexion)
   // copy bad top container having bad score into the cache
   if (record->archive->state < WANTED &&
       isBadTopContainer(data.coll, record->archive)) {
-    data.target = record->archive;
-    if (!extractArchive(&data, record->archive)) goto error;
+    if (!extractArchive(&data, record->archive, TRUE)) goto error;
   }   
 
   sprintf(connexion->status, "%s", status[0]);

@@ -38,7 +38,6 @@ typedef struct ExtractData {
 
   Collection* coll;
   ExtractType context; // manage scp rule
-  Archive* target;     // archive to scp if available
   RG* toKeeps;         // Archive*
   int found;
 
@@ -47,7 +46,7 @@ typedef struct ExtractData {
 /* API */
 
 int mdtxCall(int nbArgs, ...);
-int extractArchive(ExtractData* data, Archive* archive);
+int extractArchive(ExtractData* data, Archive* archive, int doCp);
 int extractArchives(Collection* coll);
 
 #endif /* MDTX_SERVER_EXTRACT_H */

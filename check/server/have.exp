@@ -351,6 +351,7 @@
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : ALLOCATED -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 extracted
 [info perm.c] rmdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/supports
+[notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
 [info extract.c] del to-keep on 1a167d608e76a6a4a8b16d168580873c:20480
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : TOKEEP -> AVAILABLE
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 not found

@@ -141,9 +141,12 @@ Collection mdtx3-coll3@host3.mediatex.org:33
 	share	  SUPP21_logo.part1
 end
 [notice utconf.c] *** Share a support second time:
+[notice confTree.c] support SUPP21_logo.part1 already added to collection coll3
 [notice utconf.c] *** Share support with all collections:
+[notice confTree.c] support SUPP21_logo.part1 already added to collection coll1
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/servers.txt
+[notice confTree.c] support SUPP21_logo.part1 already added to collection coll3
 [info confTree.c] configuration already expanded
 [info confTree.c] configuration already populated
 [info confTree.c] Serializing configuration into: stdout

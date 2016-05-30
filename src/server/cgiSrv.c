@@ -47,8 +47,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
 
   if (!(conf = getConfiguration())) goto error;
   if (!loadCollection(coll, SERV | EXTR | CACH)) goto error;
-  data.target = archive;
-  if (!extractArchive(&data, archive)) goto error2;
+  if (!extractArchive(&data, archive, FALSE)) goto error2;
 #warning How to deliver archive ? (set toKeep date)
   
   *found = data.found;

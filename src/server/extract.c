@@ -24,7 +24,7 @@
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
 
-int extractArchive(ExtractData* data, Archive* archive);
+int extractArchive(ExtractData* data, Archive* archive, int doCp);
 
 /*=======================================================================
  * Function   : mdtxCall
@@ -1028,9 +1028,7 @@ int extractContainer(ExtractData* data, Container* container)
 {
   int rc = FALSE;
   Archive* archive = 0;
-  Record* record = 0;
   RGIT* curr = 0;
-  RGIT* curr2 = 0;
   int found = FALSE;
 
   checkCollection(data->coll);
@@ -1043,39 +1041,28 @@ int extractContainer(ExtractData* data, Container* container)
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
-  // we extract all parents (only one for TGZ, several for CAT...)
+  // we extract all parents (as only one for TGZ, several for CAT...)
   curr = 0;
   found = TRUE;
   while ((archive = rgNext_r(container->parents, &curr))) {
-    if (!extractArchive(data, archive)) goto error;
+    if (!extractArchive(data, archive, FALSE)) goto error;
     found = found && data->found;
   }
-
+  
   logMain(LOG_INFO, "%sfound container %s/%s:%lli", data->found?"":"not ", 
 	  strEType(container->type), container->parent->hash,
 	  (long long int)container->parent->size);
 
   // postfix: copy container parts from final supplies
   if (!found) {
-
-    // for each part we have on final supply
     curr = 0;
     while ((archive = rgNext_r(container->parents, &curr))) {
-      if (archive->state < AVAILABLE &&
-  	  archive->finalSupplies->nbItems > 0) {
-  	logMain(LOG_INFO, "extract part from support");
-
-  	// stop on the first final-supply extraction that success
-	data->found = FALSE;
-  	while (!data->found &&
-  	       (record = rgNext_r(archive->finalSupplies, &curr2))) {
-  	  if (!extractRecord(data, record)) goto error;
-  	}
-      }
+      if (archive->state >= AVAILABLE) continue;
+      if (archive->finalSupplies->nbItems == 0) continue;
+      
+      logMain(LOG_INFO, "extract part from support");
+      if (!extractArchive(data, archive, TRUE)) goto error;
     }
-
-    // here we have only copy parts for next try
-    //data->found = FALSE; (already set)
   }
 
   data->found = found;
@@ -1091,14 +1078,17 @@ int extractContainer(ExtractData* data, Container* container)
 /*=======================================================================
  * Function   : extractArchive
  * Description: Single archive extraction
- * Synopsis   : int extractArchive
- * Input      : Collection* coll = context
- *              Archive* archive = what to extract
- * Output     : int data->found = TRUE if extracted
- *              FALSE on error
+ * Synopsis   : int extractArchive(ExtractData* data, Archive* archive,
+ *                                 int doCpIntoCache)
+ * Input      : Collection* coll: context
+ *              Archive* archive: what to extract
+ *              int doCp: use by extractContainer to provides container 
+ *                        parts, when not all available.
+ * Output     : int data->found: TRUE if extracted
+ *              int rc: FALSE on error
  * Note       : Recursive call
  =======================================================================*/
-int extractArchive(ExtractData* data, Archive* archive)
+int extractArchive(ExtractData* data, Archive* archive, int doCp)
 {
   int rc = FALSE;
   int isThere = FALSE;
@@ -1115,6 +1105,7 @@ int extractArchive(ExtractData* data, Archive* archive)
   data->found = FALSE;
   checkCollection(data->coll);
 
+  // local supply
   if (archive->state >= AVAILABLE) {
     // test if the file is really there 
     if (!(path = getAbsoluteRecordPath(data->coll, archive->localSupply))) 
@@ -1131,26 +1122,20 @@ int extractArchive(ExtractData* data, Archive* archive)
 
   // final supply
   if (archive->finalSupplies->nbItems > 0) {
-    // test if the file is really there 
-    if (!(record = rgHead(archive->finalSupplies))) goto error;
-    if (!(path = getAbsoluteRecordPath(data->coll, record))) 
-      goto error;
-    if (!callAccess(path, &isThere)) goto error;
-    if (!isThere) {
-      logMain(LOG_DEBUG, "no input file: %s", path);
-      goto error;
-    }
 
-    // copy archive if wanted into the cache
-    if (data->target == archive) {
-      if (!extractRecord(data, record)) goto error;
+    // copy archive into the cache if wanted 
+    if (archive->state == WANTED || doCp) {
+      curr = 0;
+      while (!data->found &&
+	     (record = rgNext_r(archive->finalSupplies, &curr))) {
+	data->found = extractRecord(data, record);
+      }
     }
-
-    data->found = TRUE;
+    data->found = TRUE; // from cache or final-supply
     goto end;
   }
 
-  // remote supply
+  // remote supply (infixed call to scp the smallest file)
   if (data->context != X_NO_REMOTE_COPY) {
     if (nbRemoteCopying >= MAX_REMOTE_COPIES) {
       logMain(LOG_WARNING,
@@ -1318,9 +1303,8 @@ int extractArchives(Collection* coll)
 	!haveRecords(archive->finalSupplies))
       data.context = X_DO_REMOTE_COPY;
     
-    data.target = archive;
     if (!(data.toKeeps = createRing())) goto error3;
-    rc2 = extractArchive(&data, archive);
+    rc2 = extractArchive(&data, archive, isBadTopContainer(coll, archive));
     data.toKeeps = destroyOnlyRing(data.toKeeps);
     
     if (!rc2) {
