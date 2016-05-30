@@ -125,7 +125,7 @@ Gateway for:
 <P>
 Provide images: 2
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">( 7.50)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">(7.50)</A></LI>
 <LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">(10.00)</A></LI>
 </UL>
 
@@ -166,7 +166,7 @@ On networks:
 <P>
 Provide images: 1
 <UL>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">( 2.00)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">(2.00)</A></LI>
 </UL>
 
 </P>
@@ -206,9 +206,9 @@ On networks:
 <P>
 Provide images: 3
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">( 9.00)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../archives/0000/002.shtml">( 7.50)</A></LI>
-<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">( 9.00)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../archives/0000/000.shtml">(9.00)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../archives/0000/002.shtml">(7.50)</A></LI>
+<LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../archives/0000/001.shtml">(9.00)</A></LI>
 </UL>
 
 </P>
@@ -252,30 +252,30 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml"> ( 3.75)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml">(3.75)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from AFIO <A HREF="../../archives/0000/008.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from AFIO <A HREF="../../archives/0000/008.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from TAR <A HREF="../../archives/0000/009.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from TAR <A HREF="../../archives/0000/009.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from CPIO <A HREF="../../archives/0000/010.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from CPIO <A HREF="../../archives/0000/010.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.png</SPAN> from ZIP <A HREF="../../archives/0000/013.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.png</SPAN> from ZIP <A HREF="../../archives/0000/013.shtml">(0.00)</A></LI>
 
 <LI>
 <SPAN  CLASS="textit">logo/logo.png</SPAN> from RAR (0.00)
 <UL>
 <LI>
-<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/014.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/014.shtml">(0.00)</A></LI>
 <LI>
-<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/015.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/015.shtml">(0.00)</A></LI>
 </UL>
 </LI>
 
@@ -333,9 +333,9 @@ Comes from:
 <SPAN  CLASS="textit">logo.tgz</SPAN> from CAT (3.75)
 <UL>
 <LI>
-<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/004.shtml"> (10.00)</A></LI>
+<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/004.shtml">(10.00)</A></LI>
 <LI>
-<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/003.shtml"> ( 3.75)</A></LI>
+<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/003.shtml">(3.75)</A></LI>
 </UL>
 </LI>
 
@@ -347,10 +347,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>TGZ ( 3.75)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>TGZ (3.75)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -403,7 +403,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>ISO <A HREF="../../archives/0000/003.shtml">( 3.75)</A> 
+<LI>ISO <A HREF="../../archives/0000/003.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logoP2.cat</SPAN></LI>
 
 </UL>
@@ -447,7 +447,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logoP1.cat</SPAN> from ISO <A HREF="../../archives/0000/001.shtml"> (10.00)</A></LI>
+<SPAN  CLASS="textit">logoP1.cat</SPAN> from ISO <A HREF="../../archives/0000/001.shtml">(10.00)</A></LI>
 
 </UL>
 
@@ -457,7 +457,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>CAT <A HREF="../../archives/0000/005.shtml">( 3.75)</A> 
+<LI>CAT <A HREF="../../archives/0000/005.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo.tgz</SPAN></LI>
 
 </UL>
@@ -509,7 +509,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>GZIP <A HREF="../../archives/0000/010.shtml">( 0.00)</A> 
+<LI>GZIP <A HREF="../../archives/0000/010.shtml">(0.00)</A> 
 <SPAN  CLASS="textit">logo.cpio</SPAN></LI>
 
 </UL>
@@ -561,10 +561,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>AFIO ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>AFIO (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -618,10 +618,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>RAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>RAR (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -670,30 +670,30 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml"> ( 3.75)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TGZ <A HREF="../../archives/0000/005.shtml">(3.75)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TBZ <A HREF="../../archives/0000/007.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from AFIO <A HREF="../../archives/0000/008.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from AFIO <A HREF="../../archives/0000/008.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TAR <A HREF="../../archives/0000/009.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from TAR <A HREF="../../archives/0000/009.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from CPIO <A HREF="../../archives/0000/010.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from CPIO <A HREF="../../archives/0000/010.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from ZIP <A HREF="../../archives/0000/013.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo/logo.xpm</SPAN> from ZIP <A HREF="../../archives/0000/013.shtml">(0.00)</A></LI>
 
 <LI>
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN> from RAR (0.00)
 <UL>
 <LI>
-<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/014.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">part 1 </SPAN><A HREF="../../archives/0000/014.shtml">(0.00)</A></LI>
 <LI>
-<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/015.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">part 2 </SPAN><A HREF="../../archives/0000/015.shtml">(0.00)</A></LI>
 </UL>
 </LI>
 
@@ -748,10 +748,10 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logo.cpio</SPAN> from GZIP <A HREF="../../archives/0000/011.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo.cpio</SPAN> from GZIP <A HREF="../../archives/0000/011.shtml">(0.00)</A></LI>
 
 <LI>
-<SPAN  CLASS="textit">logo.cpio</SPAN> from BZIP <A HREF="../../archives/0000/012.shtml"> ( 0.00)</A></LI>
+<SPAN  CLASS="textit">logo.cpio</SPAN> from BZIP <A HREF="../../archives/0000/012.shtml">(0.00)</A></LI>
 
 </UL>
 
@@ -761,10 +761,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>CPIO ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>CPIO (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -818,10 +818,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>TBZ ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>TBZ (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -867,7 +867,7 @@ Provided by servers:
 Comes from:
 <UL>
 <LI>
-<SPAN  CLASS="textit">logoP2.cat</SPAN> from ISO <A HREF="../../archives/0000/002.shtml"> ( 3.75)</A></LI>
+<SPAN  CLASS="textit">logoP2.cat</SPAN> from ISO <A HREF="../../archives/0000/002.shtml">(3.75)</A></LI>
 
 </UL>
 
@@ -877,7 +877,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>CAT <A HREF="../../archives/0000/005.shtml">( 3.75)</A> 
+<LI>CAT <A HREF="../../archives/0000/005.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo.tgz</SPAN></LI>
 
 </UL>
@@ -929,10 +929,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>ZIP ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>ZIP (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -986,10 +986,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>RAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>RAR (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -1096,10 +1096,10 @@ Comes from:
 
 Content: 2
 <UL>
-<LI>TAR ( 0.00)<UL>
-<LI><A HREF="../../archives/0000/000.shtml">( 8.25)</A> 
+<LI>TAR (0.00)<UL>
+<LI><A HREF="../../archives/0000/000.shtml">(8.25)</A> 
 <SPAN  CLASS="textit">logo/logo.png</SPAN></LI>
-<LI><A HREF="../../archives/0000/006.shtml">( 3.75)</A> 
+<LI><A HREF="../../archives/0000/006.shtml">(3.75)</A> 
 <SPAN  CLASS="textit">logo/logo.xpm</SPAN></LI>
 </UL>
 </LI>
@@ -1153,7 +1153,7 @@ Comes from:
 
 Content: 1
 <UL>
-<LI>BZIP <A HREF="../../archives/0000/010.shtml">( 0.00)</A> 
+<LI>BZIP <A HREF="../../archives/0000/010.shtml">(0.00)</A> 
 <SPAN  CLASS="textit">logo.cpio</SPAN></LI>
 
 </UL>
@@ -1172,22 +1172,22 @@ Content: 1
 <!--#include virtual='../header.shtml' -->
 <P>
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../../archives/0000/000.shtml">( 8.25)</A></LI>
-<LI><code>0387eee9820fa224525ff8b2e0dfa9be:24546 </code><A HREF="../../archives/0000/005.shtml">( 3.75)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="../../archives/0000/000.shtml">(8.25)</A></LI>
+<LI><code>0387eee9820fa224525ff8b2e0dfa9be:24546 </code><A HREF="../../archives/0000/005.shtml">(3.75)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">(3.75)</A></LI>
 <LI><code>1a167d608e76a6a4a8b16d168580873c:20480 </code><A HREF="../../archives/0000/004.shtml">(10.00)</A></LI>
-<LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">( 0.00)</A></LI>
-<LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">( 0.00)</A></LI>
-<LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">( 0.00)</A></LI>
-<LI><code>b281449c229bcc4a3556cdcc0d3ebcec:815 </code><A HREF="../../archives/0000/006.shtml">( 3.75)</A></LI>
-<LI><code>b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 </code><A HREF="../../archives/0000/010.shtml">( 0.00)</A></LI>
-<LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">( 0.00)</A></LI>
-<LI><code>c0c055a0829982bd646e2fafff01aaa6:4066 </code><A HREF="../../archives/0000/003.shtml">( 3.75)</A></LI>
-<LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">( 0.00)</A></LI>
-<LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">( 0.00)</A></LI>
+<LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">(0.00)</A></LI>
+<LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">(0.00)</A></LI>
+<LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">(0.00)</A></LI>
+<LI><code>b281449c229bcc4a3556cdcc0d3ebcec:815 </code><A HREF="../../archives/0000/006.shtml">(3.75)</A></LI>
+<LI><code>b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 </code><A HREF="../../archives/0000/010.shtml">(0.00)</A></LI>
+<LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">(0.00)</A></LI>
+<LI><code>c0c055a0829982bd646e2fafff01aaa6:4066 </code><A HREF="../../archives/0000/003.shtml">(3.75)</A></LI>
+<LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">(0.00)</A></LI>
+<LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">(0.00)</A></LI>
 <LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="../../archives/0000/001.shtml">(10.00)</A></LI>
-<LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">( 0.00)</A></LI>
-<LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">( 0.00)</A></LI>
+<LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">(0.00)</A></LI>
+<LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">(0.00)</A></LI>
 </UL>
 
 </P>
@@ -1209,15 +1209,15 @@ Content: 1
 should be burned into supports:<!--#include virtual='../header.shtml' -->
 <P>
 <UL>
-<LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">( 0.00)</A></LI>
-<LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">( 0.00)</A></LI>
-<LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">( 0.00)</A></LI>
-<LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">( 0.00)</A></LI>
-<LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">( 0.00)</A></LI>
-<LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">( 0.00)</A></LI>
-<LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">( 0.00)</A></LI>
-<LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">( 0.00)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>3a04277dd1f43740a5fe17fd0ae9a5aa:24457 </code><A HREF="../../archives/0000/011.shtml">(0.00)</A></LI>
+<LI><code>65f1464142f405dbbeeea4830c95ddd3:25600 </code><A HREF="../../archives/0000/008.shtml">(0.00)</A></LI>
+<LI><code>7808473c7db9a9e3493a6b61f44f8805:20480 </code><A HREF="../../archives/0000/014.shtml">(0.00)</A></LI>
+<LI><code>b5810aba99ed0d15f1f0a073e646d5bd:25045 </code><A HREF="../../archives/0000/007.shtml">(0.00)</A></LI>
+<LI><code>d79581b67ec1932fd276dcf3b6d6db9a:24733 </code><A HREF="../../archives/0000/013.shtml">(0.00)</A></LI>
+<LI><code>db8b80896f7202b656913f99d438075c:4090 </code><A HREF="../../archives/0000/015.shtml">(0.00)</A></LI>
+<LI><code>f54fba7d2e070d48051ac3f8f1c2eb98:30720 </code><A HREF="../../archives/0000/009.shtml">(0.00)</A></LI>
+<LI><code>fa2b0b536bf61f61617528c474e0bf61:24973 </code><A HREF="../../archives/0000/012.shtml">(0.00)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="../../archives/0000/002.shtml">(3.75)</A></LI>
 </UL>
 
 </P>
@@ -1266,8 +1266,8 @@ Self-ingestion parameters:
 
 All images: 3
 <UL>
-<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="archives/0000/000.shtml">( 8.25)</A></LI>
-<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="archives/0000/002.shtml">( 3.75)</A></LI>
+<LI><code>022a34b2f9b893fba5774237e1aa80ea:24075 </code><A HREF="archives/0000/000.shtml">(8.25)</A></LI>
+<LI><code>0a7ecd447ef2acb3b5c6e4c550e6636f:374784 </code><A HREF="archives/0000/002.shtml">(3.75)</A></LI>
 <LI><code>de5008799752552b7963a2670dc5eb18:391168 </code><A HREF="archives/0000/001.shtml">(10.00)</A></LI>
 </UL>
 
