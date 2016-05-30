@@ -93,9 +93,10 @@ EOF
 function question()
 {
     if [ ! -z "$2" ]; then
-	#echo "=> $2 <="
+	#echo -e "\n=> $2 <="
 	eval $2
     fi
+    echo -ne "\n"
     read -p "?> $1 (y)/n: " VALUE
     case "$VALUE" in
 	n|N)
@@ -318,7 +319,7 @@ function test2()
 	mdtxP "add supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "add file /usr/share/mediatex/misc/logoP2.iso"  
 	mdtxP "check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso"  
-	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
+	echo -ne "\n"
 	mdtxP "ls supp"
 	finalQuestion "is support db updated ?" \
 		      "cat ~serv1/git/serv1/supports.txt"
@@ -337,6 +338,14 @@ function test3()
 	topo "Create 'Hello' collection on server1"
 	startInitdScriptIfNeeded
 	mdtxA "adm add coll hello@localhost"
+	mdtxP "make coll hello"
+	echo -ne "\n"
+	mdtxP "add supp iso1 to coll hello"
+	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello"
+	echo -ne "\n"
+	question "does the configuration mention supports ?" \
+		 "grep -A10 Collection /etc/mediatex/serv1.conf"
+	[ $TEST_OK -eq 0 ] && return
 
 	mdtxP "make coll hello"
 	finalQuestion \
@@ -344,8 +353,9 @@ function test3()
     else
 	topo "Cleanup"
 	mdtxA "adm del coll hello"
-	# here we may want to remove the GIT content too (or not)
-	# rm -fr /var/lib/mediatex/serv1/serv1-hello
+	# needed else the previous entry remains in servers.txt
+	rm -fr /var/lib/mediatex/serv1/serv1-hello
+	stopInitdScript
     fi
 }
 
@@ -377,29 +387,16 @@ function test5()
 	topo "Provide supports to get the requested archive record"
 
 	startInitdScriptIfNeeded
-	mdtxP "add supp iso1 to coll hello"
-	mdtxP "add supp /usr/share/mediatex/misc/logoP2.iso to coll hello"
-	question "does the configuration mention supports ?" \
-		 "grep -A10 Collection /etc/mediatex/serv1.conf"
-	[ $TEST_OK -eq 0 ] && return
     
 	mdtxP "motd"
 	question "only asked to provide iso1 ?"
 	[ $TEST_OK -eq 0 ] && return
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "srv save"
-	question "check your mailbox" \
+	finalQuestion "check your mailbox" \
 		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
-	[ $TEST_OK -eq 0 ] && return
-
-	mdtxP "srv extract"
-	mdtxP "srv save"
-	finalQuestion "Does explicit extraction provides support iso2 ?" \
-	"cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
-	mdtxP "del supp iso1 from coll hello"
-	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
 	rm -fr ~serv1/cache/serv1-hello/logo*
 	rm -fr ~serv1/cache/serv1-hello/supports
 	reloadInitdScript

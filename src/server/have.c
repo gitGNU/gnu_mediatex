@@ -77,7 +77,6 @@ int haveContainer(ExtractData* data, Container* container)
 int haveArchive(ExtractData* data, Archive* archive)
 {
   int rc = FALSE;
-  int toDeliver = FALSE;
 
   logMain(LOG_DEBUG, "have an archive: %s:%lli", 
 	  archive->hash, archive->size);
@@ -90,27 +89,19 @@ int haveArchive(ExtractData* data, Archive* archive)
     data->found = TRUE;
     goto end;
   }
-
-  // force delivering archive that recursively become available 
-  toDeliver = (archive->state == WANTED);
   
   // perform deepest extraction first 
   if (archive->toContainer) {
     if (!haveContainer(data, archive->toContainer)) goto error;
   }
 
-  // perform cp extraction
+  // postfixed cp extraction
   if (archive->state == WANTED) {
     logMain(LOG_NOTICE, "have content to extract: %s:%lli", 
 	    archive->hash, archive->size);
 
-#warning TO PASS TO FALSE when delivering prosses becomes ok
-    if (!extractArchive(data, archive, TRUE)) goto error;
-  }
-
-  // perform delivering
-  if (toDeliver && data->found) {
-    if (!deliverArchive(data->coll, archive)) goto error;
+    if (!extractArchive(data, archive, FALSE)) goto error;
+    if (!extractDelToKeeps(data->coll, data->toKeeps)) goto error;
   }
 
  end:

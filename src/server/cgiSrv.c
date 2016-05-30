@@ -36,19 +36,31 @@ int
 extractCgiArchive(Collection* coll, Archive* archive, int* found)
 {
   int rc = FALSE;
-  Configuration* conf = 0;
   ExtractData data;
-
+  Record* record2 = 0;
+  char* extra = 0;
+ 
   logMain(LOG_DEBUG, "extractCgiArchive");
+  memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
   data.coll = coll;
   data.context = X_NO_REMOTE_COPY;
   *found = FALSE;
 
-  if (!(conf = getConfiguration())) goto error;
   if (!loadCollection(coll, SERV | EXTR | CACH)) goto error;
+  
+  // add a temporary local demand (for deliver process)
+  if (!(extra = createString("!wanted"))) goto error2;
+  if (!(record2 = addRecord(coll, coll->localhost, archive, 
+			      DEMAND, extra))) goto error2;
+  extra = 0;
+  if (!addCacheEntry(coll, record2)) goto error2;
+  
   if (!extractArchive(&data, archive, FALSE)) goto error2;
-#warning How to deliver archive ? (set toKeep date)
+  if (!extractDelToKeeps(coll, data.toKeeps)) goto error;
+
+  // remove local demand (delRecord done by cleanCacheTree)
+  if (!delCacheEntry(coll, record2)) goto error2;
   
   *found = data.found;
   rc = TRUE;
@@ -58,6 +70,7 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   if (!rc) {
     logMain(LOG_ERR, "extractCgiArchive fails");
   }
+  extra = destroyString(extra);
   destroyOnlyRing(data.toKeeps);
   return rc;
 } 
@@ -125,18 +138,20 @@ cgiServer(Connexion* connexion)
       if (!(extra = createString(record->extra))) goto error2;
       if (!(record2 = addRecord(coll, coll->localhost, archive, 
 				DEMAND, extra))) goto error2;
+      extra = 0;
       if (!addCacheEntry(coll, record2)) goto error2;
     }
     sprintf(connexion->status, "%s", status[2]);
   }
-      
+  
   rc = TRUE;
  error2:
   if (!unLockCache(coll)) rc = FALSE;
  error:
- if (!rc) {
+  if (!rc) {
     logMain(LOG_ERR, "cgiServer fails");
   }
+  extra = destroyString(extra);
   return rc;
 }
 

@@ -47,6 +47,7 @@ typedef struct ExtractData {
 
 int mdtxCall(int nbArgs, ...);
 int extractArchive(ExtractData* data, Archive* archive, int doCp);
+int extractDelToKeeps(Collection* coll, RG* toKeeps);
 int extractArchives(Collection* coll);
 
 #endif /* MDTX_SERVER_EXTRACT_H */

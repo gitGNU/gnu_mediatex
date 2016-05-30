@@ -218,19 +218,17 @@ int deliverArchive(Collection* coll, Archive* archive)
 
   // download time
   if (todo >= localDemand) {
-    date += archive->size / conf->uploadRate;
+    date += archive->size / conf->uploadRate + 5;
   }
 
   // adjust to-keep date
-#warning MADE CHANGES HERE (to validate)
-  if (todo >= localDemand && archive->localSupply->date < date) {
-    archive->localSupply->date = date;
+  if (todo >= localDemand) {
+    if (archive->localSupply->date < date)
+      archive->localSupply->date = date;
+    if (archive->backupDate < date)
+      archive->backupDate = date;
     if (!computeArchiveStatus(coll, archive)) goto error;
   }
-  /* if (todo >= localDemand && archive->backupDate < date) { */
-  /*   archive->backupDate = date; */
-  /*   if (!computeArchiveStatus(coll, archive)) goto error; */
-  /* } */
 
   // deliver mails (for all final-demands but not on audit)
   curr = 0;
@@ -252,86 +250,6 @@ int deliverArchive(Collection* coll, Archive* archive)
   }
   return rc;
 }
-
-
-/* ============= */
-/* BACKUP */
-  
-/* /\*======================================================================= */
-/*  * Function   : deliverArchive */
-/*  * Description: adjuste toKeep time and eventually send mails */
-/*  * Synopsis   : int deliverArchive() */
-/*  * Input      : Collection* coll */
-/*  *              Archive* archive */
-/*  * Output     : TRUE on success */
-/*  =======================================================================*\/ */
-/* int deliverArchive(Collection* coll, Archive* archive) */
-/* { */
-/*   int rc = FALSE; */
-/*   Configuration* conf = 0; */
-/*   Record* record = 0; */
-/*   time_t date = -1; */
-/*   RGIT* curr = 0; */
-/*   int doSetToKeep = FALSE; */
-
-/*   logMain(LOG_DEBUG, "deliverArchive"); */
-/*   if (!(conf = getConfiguration())) goto error; */
-/*   if ((date = currentTime()) == -1) goto error;  */
-
-/*   // find longer to-Keep time to honnor all demands */
-/*   while ((record = rgNext_r(archive->demands, &curr))) { */
-/*     if (record->type & REMOVE) continue; */
-
-/*     switch (getRecordType(record)) { */
-/*     case FINAL_DEMAND: // mail + download http */
-      
-/*       // workaround for audit */
-/*       if (!strncmp(record->extra, CONF_AUDIT, strlen(CONF_AUDIT))) { */
-/* 	if (!auditArchive(coll, record)) goto error; */
-/* 	continue; */
-/*       } */
-      
-/*       date += coll->cacheTTL; */
-/*       date -= 1*DAY; */
-/*     case REMOTE_DEMAND: // scp (time between 2 cron) */
-/*       date += 1*DAY; */
-/*     case LOCAL_DEMAND: // cgi */
-/*       date += archive->size / conf->uploadRate; */
-/*       break; */
-/*     default: */
-/*       logMain(LOG_ERR, "a demand record was expected"); */
-/*       goto error; */
-/*     } */
-
-/*     doSetToKeep = TRUE; */
-/*   } */
-
-/*   // adjust to-keep date */
-/*   if (doSetToKeep && archive->localSupply->date < date) { */
-/*     archive->localSupply->date = archive->backupDate = date; */
-/*     if (!computeArchiveStatus(coll, archive)) goto error; */
-/*   } */
-
-/*   // deliver mail */
-/*   curr = 0; */
-/*   while ((record = rgNext_r(archive->demands, &curr))) { */
-/*     if (record->type & REMOVE) continue; */
-/*     if (getRecordType(record) != FINAL_DEMAND) continue; */
-/*     if (!strncmp(record->extra, CONF_AUDIT, strlen(CONF_AUDIT))) continue; */
-
-/*     // we should use a lock to prevent mail to be sent twice */
-/*     record->type |= REMOVE; */
-/*     if (!callMail(coll, archive->localSupply, record->extra)) goto error; */
-/*     if (!delCacheEntry(coll, record)) goto error; */
-/*   } */
-
-/*   rc = TRUE; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "deliverArchive fails"); */
-/*   } */
-/*   return rc; */
-/* } */
 
 /* Local Variables: */
 /* mode: c */

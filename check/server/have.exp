@@ -481,6 +481,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : USED -> UNUSED
 [notice uthave.c] .......................................................
 [notice uthave.c] Now we have :
@@ -493,7 +495,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz

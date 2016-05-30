@@ -728,7 +728,7 @@ extractDelToKeeps(Collection* coll, RG* toKeeps)
   if (!rc) {
     logMain(LOG_ERR, "extractDelToKeeps fails");
   }
-  destroyOnlyRing(toKeeps);
+  rgDelete(toKeeps);
   return rc;
 }
 
@@ -785,7 +785,6 @@ cacheSet(ExtractData* data, Record* record,
 
   // toggle !malloc record to local-supply...
   relativeCachePath = absoluteCachePath + strlen(coll->cacheDir) + 1;
- 
   record->extra = destroyString(record->extra);
   if (!(record->extra = createString(relativeCachePath))) goto error;
 
@@ -1091,6 +1090,7 @@ int extractContainer(ExtractData* data, Container* container)
 int extractArchive(ExtractData* data, Archive* archive, int doCp)
 {
   int rc = FALSE;
+  Collection* coll = 0;
   int isThere = FALSE;
   FromAsso* asso = 0;
   Record* record = 0;
@@ -1098,17 +1098,30 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
   RGIT* curr = 0;
   RG* toKeepsBck = 0;
   RG* toKeepsTmp = 0;
+  int toDeliver = FALSE;
   static int nbRemoteCopying = 0;
 
   logMain(LOG_DEBUG, "extract an archive: %s:%lli", 
 	  archive->hash, archive->size);
+  coll = data->coll;
   data->found = FALSE;
-  checkCollection(data->coll);
+  checkCollection(coll);
 
+  // deliver this archive if extraction success,
+  // if it match any CGI or local user demands
+  curr = 0;
+  while ((record = rgNext_r(archive->demands, &curr))) {
+    if (getRecordType(record) & (LOCAL_DEMAND | FINAL_DEMAND)) {
+      toDeliver = TRUE;
+      break;
+    }
+  }
+  
   // local supply
   if (archive->state >= AVAILABLE) {
+    
     // test if the file is really there 
-    if (!(path = getAbsoluteRecordPath(data->coll, archive->localSupply))) 
+    if (!(path = getAbsoluteRecordPath(coll, archive->localSupply))) 
       goto error;
     if (!callAccess(path, &isThere)) goto error;
     if (!isThere) {
@@ -1123,14 +1136,17 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
   // final supply
   if (archive->finalSupplies->nbItems > 0) {
 
-    // copy archive into the cache if wanted 
-    if (archive->state == WANTED || doCp) {
-      curr = 0;
-      while (!data->found &&
-	     (record = rgNext_r(archive->finalSupplies, &curr))) {
-	data->found = extractRecord(data, record);
+    // copy archive into the cache if it helps
+    if (archive->state == WANTED // localy (toDeliver) or remotely 
+	|| doCp // to help next remote extractions (see extractContainer)
+	|| (archive->state < WANTED && isBadTopContainer(coll, archive)))
+      {
+	curr = 0;
+	while (!data->found &&
+	       (record = rgNext_r(archive->finalSupplies, &curr))) {	  
+	  data->found = extractRecord(data, record);
+	}
       }
-    }
     data->found = TRUE; // from cache or final-supply
     goto end;
   }
@@ -1150,7 +1166,7 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
 
 	// nat server scp from nat clients on remote demand
 	if (data->context == X_GW_REMOTE_COPY &&
-	    !rgShareItems(data->coll->localhost->gateways,
+	    !rgShareItems(coll->localhost->gateways,
 			  record->server->networks))
 	  continue;
 
@@ -1160,7 +1176,6 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
 	  --nbRemoteCopying;
 	  goto error;
 	}
-
 	--nbRemoteCopying;
 	data->found = TRUE;
 	goto end; 
@@ -1180,75 +1195,32 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
     if (!extractContainer(data, asso->container)) goto error;
   }
 
-  // backup temporary toKeeps
+  // backup temporary toKeeps and restore previous context
   toKeepsTmp = data->toKeeps;
   data->toKeeps = toKeepsBck;
-
+  
   if (data->found) {
     if (!extractFromAsso(data, asso)) goto error;
   }
 
-  // release temporary toKeeps
-  if (!extractDelToKeeps(data->coll, toKeepsTmp)) goto error;
-
+  // release temporary toKeeps (recursive extraction is now done)
+  if (!extractDelToKeeps(coll, toKeepsTmp)) goto error;
+  
  end:
   logMain(LOG_NOTICE, "%s:%lli %sfound", 
 	  archive->hash, archive->size, data->found?"":"not ");
+  if (data->found && toDeliver) {
+    if (!deliverArchive(coll, archive)) goto error;
+  }
   rc = TRUE;
  error:
   if (!rc) {
     logMain(LOG_ERR, "extractArchive fails");
   }
   path = destroyString(path);
+  toKeepsTmp = destroyOnlyRing(toKeepsTmp);
   return rc;
 } 
-
-/* /\*======================================================================= */
-/*  * Function   : getWantedArchives */
-/*  * Description: copy all wanted archives into a ring */
-/*  * Synopsis   : RG* getWantedArchives(Collection* coll) */
-/*  * Input      : Collection* coll */
-/*  * Output     : a ring of arhives, 0 o error */
-/*  * */
-/*  * Warning    : there is still no unit test for this function ! */
-/*  =======================================================================*\/ */
-/* RG*  */
-/* getWantedArchives(Collection* coll) */
-/* { */
-/*   RG* rc = 0; */
-/*   RG* ring = 0; */
-/*   Archive* archive = 0; */
-/*   RGIT* curr = 0; */
-
-/*   checkCollection(coll); */
-/*   logMain(LOG_DEBUG, "getWantedArchives"); */
-
-/*   if (!(ring = createRing())) goto error; */
-/*   if (!computeExtractScore(coll)) goto error; */
-
-/*   // look for archives we will try to extract */
-/*   while ((archive = rgNext_r(coll->cacheTree->archives, &curr))) { */
-
-/*     // add all local demands (may be ... */
-/*     if (archive->state == WANTED || */
-/* 	// ...and candidates for (local or remote) final supplies */
-/* 	(archive->state < WANTED && */
-/* 	 isBadTopContainer(coll, archive))) { */
-
-/*       logMain(LOG_INFO, "looking for %s%lli", */
-/* 	      archive->hash, (long long int)archive->size); */
-/*       if (!rgInsert(ring, archive)) goto error; */
-/*     } */
-/*   } */
-  
-/*   rc = ring; */
-/*  error: */
-/*   if (!rc) { */
-/*     logMain(LOG_ERR, "getWantedArchives fails"); */
-/*     destroyOnlyRing(ring); */
-/*   } */
-/*   return rc; */
-/* }  */
 
 /*=======================================================================
  * Function   : extractArchives
@@ -1270,17 +1242,18 @@ int extractArchives(Collection* coll)
   logMain(LOG_DEBUG, "extractArchives %s collection", coll->label);
   checkCollection(coll);
   memset(&data, 0, sizeof(ExtractData));
+  if (!(data.toKeeps = createRing())) goto error;
   data.coll = coll;
 
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
 
-  // look for archives we will try to extract
+  // try to extract/deliver all demands
   for (node = coll->cacheTree->archives->head; node; node = node->next) {
     archive = node->item;
-    if (!(archive->state == WANTED ||
+    if (isEmptyRing(archive->demands) &&
 	  // candidates for (local or remote) final supplies
-	  (archive->state < WANTED && isBadTopContainer(coll, archive))))
+	!(archive->state < WANTED && isBadTopContainer(coll, archive)))
       continue;
     logMain(LOG_INFO, "looking for %s%lli",
 	    archive->hash, (long long int)archive->size);
@@ -1297,15 +1270,14 @@ int extractArchives(Collection* coll)
       }
     }
     
-    // ...or if top container having bad score not already burned
-    // locally
+    // ...or if it is a top container having bad score,
+    // not already burned locally
     if (isBadTopContainer(coll, archive) &&
 	!haveRecords(archive->finalSupplies))
       data.context = X_DO_REMOTE_COPY;
     
-    if (!(data.toKeeps = createRing())) goto error3;
     rc2 = extractArchive(&data, archive, isBadTopContainer(coll, archive));
-    data.toKeeps = destroyOnlyRing(data.toKeeps);
+    if (!extractDelToKeeps(coll, data.toKeeps)) goto error3;
     
     if (!rc2) {
       logMain(LOG_WARNING, "however continue...");
@@ -1313,14 +1285,6 @@ int extractArchives(Collection* coll)
     }
   }
 
-  // look for archives we will try to deliver
-  for (node = coll->cacheTree->archives->head; node; node = node->next) {
-    archive = node->item;
-    if (archive->state < AVAILABLE) continue;
-    if (archive->demands->nbItems == 0) continue;
-    if (!deliverArchive(coll, archive)) goto error3;
-  }
-  
   rc = TRUE;
  error3:
   if (!unLockCache(coll)) rc = FALSE;

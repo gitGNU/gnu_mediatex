@@ -49,7 +49,7 @@ cacheUpload(Collection* coll, Record* record)
 
   logMain(LOG_DEBUG, "upload file: %s", record->extra);
   checkCollection(coll);
-  memset(&data, 0, sizeof(ExtractData)); 
+  memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
   data.context = X_NO_REMOTE_COPY;
   data.coll = coll;
@@ -84,7 +84,9 @@ cacheUpload(Collection* coll, Record* record)
 
   // do the upload
   if (!extractArchive(&data, record->archive, TRUE)) goto error;
+  if (!extractDelToKeeps(coll, data.toKeeps)) goto error;
   if (!data.found) goto error;
+  
 
   rc = TRUE;
  error:

@@ -40,7 +40,7 @@ USERS_coll_remove_user $USER
 
 # do not purge the collection
 if [ -d $STATEDIR/$MDTX/$USER ]; then
-    Warning "note: do not purge $STATEDIR/$MDTX/$USER directory."
+    Notice "note: do not purge $STATEDIR/$MDTX/$USER directory."
     chown -R root.root $STATEDIR/$MDTX/$USER
 fi
 

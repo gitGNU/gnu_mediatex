@@ -285,6 +285,7 @@
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info openClose.c] steps: 0 / 93
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice extract.c] de5008799752552b7963a2670dc5eb18:391168 not found
 [info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 not found
@@ -312,6 +313,7 @@
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] .......................................................
@@ -346,8 +348,13 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] .......................................................
@@ -359,7 +366,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] S 2010-01-01,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice utcgiSrv.c] -------------------------------------------------------
@@ -430,6 +437,7 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> TOKEEP
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 found
 [info extract.c] found container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546
@@ -441,7 +449,7 @@
 [info cache.c] - frozen        24546
 [info cache.c] = avail     104833054
 [info cache.c] need            24075
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> ALLOCATED
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [notice extract.c] do tar -zxf
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar
@@ -474,6 +482,10 @@
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] .......................................................
@@ -485,7 +497,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-01,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
@@ -560,6 +572,7 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
 [notice extract.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 not found
@@ -588,6 +601,7 @@
 [notice extract.c] db8b80896f7202b656913f99d438075c:4090 not found
 [info extract.c] not found container RAR/7808473c7db9a9e3493a6b61f44f8805:20480
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 not found
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] .......................................................
@@ -626,6 +640,7 @@
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 93
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> TOKEEP
@@ -674,7 +689,7 @@
 [info cache.c] - frozen        28612
 [info cache.c] = avail     104828988
 [info cache.c] need            24075
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> ALLOCATED
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/logo
 [notice extract.c] do tar -zxf
 [info perm.c] mkdir LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/tar
@@ -707,6 +722,10 @@
 [info extract.c] del to-keep on 0387eee9820fa224525ff8b2e0dfa9be:24546
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utcgiSrv.c] .......................................................
 [notice utcgiSrv.c] Now we have :
 [notice utcgiSrv.c] .......................................................
@@ -718,7 +737,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-01,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz

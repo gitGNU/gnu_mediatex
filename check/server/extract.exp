@@ -487,6 +487,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -498,7 +500,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
@@ -656,6 +658,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -667,7 +671,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd b5810aba99ed0d15f1f0a073e646d5bd               25045 logo.tar.bz2
@@ -828,6 +832,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -839,7 +845,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd d79581b67ec1932fd276dcf3b6d6db9a               24733 logo.zip
@@ -993,6 +999,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -1004,7 +1012,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd f54fba7d2e070d48051ac3f8f1c2eb98               30720 logo.tar
@@ -1194,6 +1202,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -1205,7 +1215,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 3a04277dd1f43740a5fe17fd0ae9a5aa               24457 logo.cpio.gz
@@ -1401,6 +1411,8 @@
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
+[info extract.c] del to-keep on 022a34b2f9b893fba5774237e1aa80ea:24075
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice utextract.c] .......................................................
 [notice utextract.c] Now we have :
 [notice utextract.c] .......................................................
@@ -1412,7 +1424,7 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-16,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
+[notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5               25088 logo.cpio
