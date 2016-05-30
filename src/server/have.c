@@ -139,7 +139,8 @@ extractFinaleArchives(Connexion* connexion)
   memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
   data.coll = connexion->message->collection;
-  data.context = X_NO_REMOTE_COPY;
+  data.scpContext = X_NO_REMOTE_COPY;
+  data.cpContext  = X_DO_LOCAL_COPY;
   
   // check we get a final supplies
   if (!avl_count(connexion->message->records)) {
@@ -170,7 +171,7 @@ extractFinaleArchives(Connexion* connexion)
   // copy bad top container having bad score into the cache
   if (record->archive->state < WANTED &&
       isBadTopContainer(data.coll, record->archive)) {
-    if (!extractArchive(&data, record->archive, TRUE)) goto error;
+    if (!extractArchive(&data, record->archive, TRUE)) goto error4;
   }   
 
   sprintf(connexion->status, "%s", status[0]);

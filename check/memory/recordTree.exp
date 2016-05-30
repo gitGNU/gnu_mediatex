@@ -8,8 +8,6 @@ Body
 #                date                             host                             hash                size extra
 S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !malloc
 # ^ MALLOC_SUPPLY
-S 1970-01-01,01:00:01 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 /logo.png
-# ^ FINAL_SUPPLY
 S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 # ^ LOCAL_SUPPLY
 D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -20,4 +18,4 @@ S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e
 # ^ REMOTE_SUPPLY
 S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 # ^ LOCAL_SUPPLY
-            
+   

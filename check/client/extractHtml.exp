@@ -1200,7 +1200,7 @@ Content: 1
 
 <P>
 
-<SPAN  CLASS="textbf">Bad archives</SPAN> : 9
+<SPAN  CLASS="textbf">Bad images</SPAN> : 9
 <BR>
 <SPAN  CLASS="textit">Perenniality lost</SPAN>
 <BR>
@@ -1308,7 +1308,7 @@ ALT='top'></A>
 (0.00)
 
 <BR><A HREF="<!--#echo var='HOME' -->/score/lists/0000/000.shtml">All archives</A>
-<BR><A HREF="<!--#echo var='HOME' -->/score/badLists/0000/000.shtml">Bad archives</A>
+<BR><A HREF="<!--#echo var='HOME' -->/score/badLists/0000/000.shtml">Bad images</A>
 <BR><UL>
 <LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_6b18ed0194b0fbadd08e0a13cccda00e.shtml">127.0.0.1</A></LI>
 <LI><A HREF="<!--#echo var='HOME' -->/score/servers/srv_746d6ceeb76e05cfa2dea92a1c5753cd.shtml">localhost</A></LI>

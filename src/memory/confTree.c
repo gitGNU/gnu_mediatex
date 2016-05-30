@@ -1222,6 +1222,7 @@ int delSupportFromCollection(Support* support, Collection* coll)
  * Synopsis   : Server* getLocalHost(Collection* coll)
  * Input      : Collection* coll: 
  * Output     : The localhost server, 0 on error
+ * Requirement: populateCollection(coll)
  =======================================================================*/
 Server* 
 getLocalHost(Collection* coll)

@@ -29,15 +29,21 @@
 #define MAX_REMOTE_COPIES 1 // maximum number of scp's threads
 
 typedef enum {
-  X_NO_REMOTE_COPY, // no scp extraction 
-  X_DO_REMOTE_COPY, // do scp extraction (if locally needed)
-  X_GW_REMOTE_COPY  // only do scp extraction from gateway (default)
-} ExtractType;
+  X_NO_REMOTE_COPY, // no scp extraction (all except extract)
+  X_DO_REMOTE_COPY, // do scp extraction (only extract)
+  X_GW_REMOTE_COPY  // only do scp extraction from gateway (only extract)
+} ExtractScpType;
+
+typedef enum {
+  X_NO_LOCAL_COPY, // no cp extraction (only cgi server)
+  X_DO_LOCAL_COPY, // others
+} ExtractCpType;
 
 typedef struct ExtractData {
 
   Collection* coll;
-  ExtractType context; // manage scp rule
+  ExtractScpType scpContext; // manage scp rule
+  ExtractCpType  cpContext;  // manage cp rule
   RG* toKeeps;         // Archive*
   int found;
 

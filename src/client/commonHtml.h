@@ -35,6 +35,8 @@ int getArchiveUri2(char* buf, char* path, int id);
 int getContentListUri(char* buf, char* path, int archId, int listId);
 int getArchiveUri(char* buf, char* path, Archive* archive);
 int getDocumentUri(char* buf, char* path, int id);
+char* getArchiveScore(Archive* self);
+char* getContainerScore(Container* self);
 int serializeHtmlListBar(Collection* coll, FILE* fd, int n, int N);
 int htmlAssoCarac(FILE* fd, AssoCarac* self);
 int serializeHtmlCache(Collection* coll);

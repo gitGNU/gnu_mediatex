@@ -144,8 +144,24 @@ mdtxDelCollection(char* label)
   //if (!allowedUser(env.confLabel)) goto error;
   if (!(conf = getConfiguration())) goto error;
 
-  // call script without removing ourself from severs.txt
-  // so as to eventally repare collection (del/add)
+  // note: do not expand collection (may fails)
+  if (!loadConfiguration(CFG)) goto error;
+  if (!(coll = getCollection(label))) {
+    logMain(LOG_WARNING, "there was no collection named '%s'", label);
+    goto end;
+  }
+
+  // we delete the server (continue on error)
+  if (!loadCollection(coll, SERV)) goto nextStep;
+  if (!populateCollection(coll)) goto nextStep;
+  if (!getLocalHost(coll)) goto nextStep;
+  if (!delServer(coll, coll->localhost)) goto nextStep;
+  if (!wasModifiedCollection(coll, SERV)) goto nextStep;
+  if (!releaseCollection(coll, SERV)) goto nextStep;
+  if (!saveCollection(coll, SERV)) goto nextStep;
+
+ nextStep:
+  // call script
   argv[0] = createString(conf->scriptsDir);
   argv[0] = catString(argv[0], "/free.sh");
   argv[1] = label;
@@ -155,12 +171,6 @@ mdtxDelCollection(char* label)
   }
 
   // upgrade configuration file
-  // note: do not expand collection
-  if (!loadConfiguration(CFG)) goto error;
-  if (!(coll = getCollection(label))) {
-    logMain(LOG_WARNING, "there was no collection named '%s'", label);
-    goto end;
-  }
   if (!delCollection(coll)) goto error;
   conf->fileState[iCFG] = MODIFIED;
   

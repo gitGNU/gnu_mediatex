@@ -92,11 +92,11 @@ EOF
 # $2: command to exec before
 function question()
 {
+    echo -ne "\n"
     if [ ! -z "$2" ]; then
-	#echo -e "\n=> $2 <="
+	#echo "=> $2 <="
 	eval $2
     fi
-    echo -ne "\n"
     read -p "?> $1 (y)/n: " VALUE
     case "$VALUE" in
 	n|N)
@@ -110,6 +110,7 @@ function question()
 # $2: command to exec before
 function notice()
 {
+    echo -ne "\n"
     if [ ! -z "$2" ]; then
 	#echo "=> $2 <="
 	eval $2
@@ -354,7 +355,7 @@ function test3()
 	topo "Cleanup"
 	mdtxA "adm del coll hello"
 	# needed else the previous entry remains in servers.txt
-	rm -fr /var/lib/mediatex/serv1/serv1-hello
+	# rm -fr /var/lib/mediatex/serv1/serv1-hello
 	stopInitdScript
     fi
 }
@@ -365,18 +366,23 @@ function test4()
     if [ "x$1" != "xclean" ]; then
 	topo "Ask for an archive record not yet into the cache"
 	startInitdScriptIfNeeded
+	sleep 1
+	
 	echo "123456789012345" | netcat 127.0.0.1 6001
 	statusInitdScript
 	question "does server survive after a strange message ?"
 	[ $TEST_OK -eq 0 ] && return
+	
 	yourMail
 	mdtxP "srv save"
 	finalQuestion "does the server get it ?" \
-		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
+		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'" 
     else
 	topo "Cleanup"
 	stopInitdScript
 	rm -f ~serv1/md5sums/serv1-hello.md5
+	rm -fr ~serv1/cache/serv1-hello/logo*
+	rm -fr ~serv1/cache/serv1-hello/supports
     fi
 }
 
@@ -385,21 +391,29 @@ function test5()
 {
     if [ "x$1" != "xclean" ]; then
 	topo "Provide supports to get the requested archive record"
-
 	startInitdScriptIfNeeded
     
 	mdtxP "motd"
 	question "only asked to provide iso1 ?"
 	[ $TEST_OK -eq 0 ] && return
+	
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso"
 	mdtxP "srv save"
-	finalQuestion "check your mailbox" \
-		 "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
+	question "check your mailbox" \
+		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
+	[ $TEST_OK -eq 0 ] && return
+	
+	mdtxP "srv extract"
+	mdtxP "srv save"
+	finalQuestion "does extract copy support iso2 into the cache ?" \
+		      "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	rm -fr ~serv1/cache/serv1-hello/logo*
 	rm -fr ~serv1/cache/serv1-hello/supports
 	reloadInitdScript
+	echo -n "!> you may need to re-ask for the logo file"
+	echo " and give an email address."
     fi
 }
 
@@ -425,7 +439,8 @@ EOF
 	[ $TEST_OK -eq 0 ] && return
 	
 	# clean extracted files (~test5) on cache for next tests
-	topo "remove support iso2 and extract files"
+	topo "remove supports and extract files"
+	mdtxP "del supp iso1 from coll hello"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
 	sleep 1 # warning del supp will HUP server (so will scan cache)
 	rm -fr ~serv1/cache/serv1-hello/logo*
@@ -473,6 +488,7 @@ function test8()
 	notice "you will be ask twice for this fingerprint" \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv1-hello" serv2
+	echo -ne "\n"
 
 	# register serv2-hello key on serv1
 	cp ~serv2/home/serv2-hello/.ssh/id_dsa.pub \
@@ -481,7 +497,7 @@ function test8()
 
 	# server 2 register for collection hello on server 1
 	mdtxA "adm add coll serv1-hello" serv2
-
+	
 	question "connected to serv1 gitbare ?" \
 		 "grep url ~serv2/git/serv2-hello/.git/config"
 	[ $TEST_OK -eq 0 ] && return
@@ -547,10 +563,10 @@ function test10()
 	mdtxP "add supp iso1 to coll hello" serv2
 	mdtxP "motd" serv2
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv2
-
 	mdtxP "motd" serv2
+	
 	question "motd do not ask for 'iso1' anymore" ""
-
+	[ $TEST_OK -eq 0 ] && return
 	mdtxP "srv notify" serv2
 
 	# check server 1 was notified
@@ -568,7 +584,8 @@ function test10()
 	topo "Cleanup"
 	mdtxP "del supp iso1" serv2
 	for SERV in serv1 serv2; do
-	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
+	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports
 	    reloadInitdScript $SERV
 	done
 	mdtxP "srv notify" serv2
@@ -610,6 +627,7 @@ function test12()
 	notice "you will be ask twice for this fingerprint" \
 	       "grep 'host fingerprint' /etc/mediatex/serv1.conf"
 	mdtxA "adm add coll serv1-hello" serv3
+	echo -ne "\n"
 
 	# register serv3-hello key on serv1
 	cp ~serv3/home/serv3-hello/.ssh/id_dsa.pub \
@@ -779,7 +797,7 @@ function test16()
 function test17()
 {
     if [ "x$1" != "xclean" ]; then
-	topo "Server 1 provides second support and tell it to others"
+	topo "Server 1 provides first support and tell it to others"
 
 	mdtxP "motd" serv1
 	mdtxP "check supp iso1 on /usr/share/mediatex/misc/logoP1.iso" serv1
@@ -931,7 +949,7 @@ function test21()
 	    rm -f /var/cache/mediatex/$SERV/md5sums/$SERV-hello.md5
 	    startInitdScript $SERV
 	done
-	rm -f /var/cache/mediatex/serv1/tmp/serv1-hello/audit*.txt
+	rm -f ~serv1/tmp/serv1-hello/audit*.txt
     fi
 }
 

@@ -44,7 +44,8 @@ extractCgiArchive(Collection* coll, Archive* archive, int* found)
   memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
   data.coll = coll;
-  data.context = X_NO_REMOTE_COPY;
+  data.scpContext = X_NO_REMOTE_COPY;
+  data.cpContext =  X_NO_LOCAL_COPY;
   *found = FALSE;
 
   if (!loadCollection(coll, SERV | EXTR | CACH)) goto error;

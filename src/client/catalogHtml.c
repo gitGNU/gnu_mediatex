@@ -131,7 +131,8 @@ int getCateListUri(char* buf, char* path, int cateId, int listId)
  * Synopsis   : static int htmlIndexArchive(FILE* fd, 
  *                                    Collection* coll, Archive* self)
  * Input      : FILE* fd = where to latexalize
- *              Archive* self = what to latexalize
+ *              Collection * coll: context
+ *              Archive* self: what to latexalize
  * Output     : TRUE on success
  =======================================================================*/
 static int 
@@ -140,7 +141,6 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
   int rc = FALSE;
   AssoCarac *assoCarac = 0;
   char url[512];
-  char score[8];
   char* path = "floppy-icon.png";
   RGIT* curr = 0;
 
@@ -151,7 +151,6 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
   if (!sprintf(url, 
 	       "../../../cgi/get.cgi?hash=%s&size=%lli", 
 	       self->hash, (long long int)self->size)) goto error;
-  if (!sprintf(score, "(%5.2f)", self->extractScore)) goto error;
 
   htmlLiOpen(fd);
 
@@ -166,7 +165,7 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
   htmlImage(fd, "../../../icons", path, url);
 
   getArchiveUri(url, "../../../score", self);
-  htmlLink(fd, 0, url, score);
+  htmlLink(fd, 0, url, getArchiveScore(self));
 
   /* latexalize caracs */
   if (!isEmptyRing(self->assoCaracs)) {

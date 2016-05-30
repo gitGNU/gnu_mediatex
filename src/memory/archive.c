@@ -529,7 +529,7 @@ int isBadTopContainer(Collection* coll, Archive* archive)
  * Synopsis   : int hasExtractRule(Archive* self)
  * Input      : Archive* self
  * Output     : TRUE on success
-*  Requirement: loadCollection(coll, EXTR)
+ * Requirement: loadCollection(coll, EXTR)
  =======================================================================*/
 int hasExtractRule(Archive* self)
 {

@@ -1139,7 +1139,9 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
     // copy archive into the cache if it helps
     if (archive->state == WANTED // localy (toDeliver) or remotely 
 	|| doCp // to help next remote extractions (see extractContainer)
-	|| (archive->state < WANTED && isBadTopContainer(coll, archive)))
+	|| (data->cpContext == X_DO_LOCAL_COPY // provides bad images
+	    && archive->state < WANTED
+	    && isBadTopContainer(coll, archive)))
       {
 	curr = 0;
 	while (!data->found &&
@@ -1152,7 +1154,7 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
   }
 
   // remote supply (infixed call to scp the smallest file)
-  if (data->context != X_NO_REMOTE_COPY) {
+  if (data->scpContext != X_NO_REMOTE_COPY) {
     if (nbRemoteCopying >= MAX_REMOTE_COPIES) {
       logMain(LOG_WARNING,
 	      "skip remote extraction as %i are already running",
@@ -1165,7 +1167,7 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
 	if (record->type & REMOVE) continue;
 
 	// nat server scp from nat clients on remote demand
-	if (data->context == X_GW_REMOTE_COPY &&
+	if (data->scpContext == X_GW_REMOTE_COPY &&
 	    !rgShareItems(coll->localhost->gateways,
 			  record->server->networks))
 	  continue;
@@ -1243,6 +1245,7 @@ int extractArchives(Collection* coll)
   checkCollection(coll);
   memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
+  data.cpContext = X_DO_LOCAL_COPY;
   data.coll = coll;
 
   if (!loadCollection(coll, SERV|EXTR|CACH)) goto error;
@@ -1258,14 +1261,15 @@ int extractArchives(Collection* coll)
     logMain(LOG_INFO, "looking for %s%lli",
 	    archive->hash, (long long int)archive->size);
     
-    // define default extraction context (ie: scp or not)
-    data.context = X_GW_REMOTE_COPY;
+    // define default scp extraction context:
+    // only scp to provides nat client content (not recheable by others)
+    data.scpContext = X_GW_REMOTE_COPY;
 
-    // do scp when archive is locally wanted...
+    // but also do scp when archive is locally wanted...
     curr = 0;
     while ((record = rgNext_r(archive->demands, &curr))) {
       if (getRecordType(record) == FINAL_DEMAND) {
-	data.context = X_DO_REMOTE_COPY;
+	data.scpContext = X_DO_REMOTE_COPY;
 	break;
       }
     }
@@ -1274,7 +1278,7 @@ int extractArchives(Collection* coll)
     // not already burned locally
     if (isBadTopContainer(coll, archive) &&
 	!haveRecords(archive->finalSupplies))
-      data.context = X_DO_REMOTE_COPY;
+      data.scpContext = X_DO_REMOTE_COPY;
     
     rc2 = extractArchive(&data, archive, isBadTopContainer(coll, archive));
     if (!extractDelToKeeps(coll, data.toKeeps)) goto error3;

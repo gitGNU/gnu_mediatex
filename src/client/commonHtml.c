@@ -230,6 +230,48 @@ int getDocumentUri(char* buf, char* path, int id)
   return rc;
 }
 
+/*=======================================================================
+ * Function   : getArchiveScore
+ * Description: print score into buffer and return it
+ * Synopsis   : getArchiveScore(Archive* self) 
+ *              Archive* self: related archive
+ * Output     : char* buf = the static string buffer
+ =======================================================================*/
+char* getArchiveScore(Archive* self)
+{
+  static char score[8];
+
+  if (self->incInherency) {
+    sprintf(score, "(%s)", "---");
+  }
+  else {
+    sprintf(score, "(%.2f)", self->extractScore);
+  }
+
+  return score;
+}
+
+/*=======================================================================
+ * Function   : getContainerScore
+ * Description: print score into buffer and return it
+ * Synopsis   : getContainerScore(Container* self) 
+ *              Container* self: related container
+ * Output     : char* buf = the static string buffer
+ =======================================================================*/
+char* getContainerScore(Container* self)
+{
+  static char score[8];
+
+  if (self->incInherency) {
+    sprintf(score, "(%s)", "---");
+  }
+  else {
+    sprintf(score, "(%.2f)", self->score);
+  }
+
+  return score;
+}
+
 
 /*=======================================================================
  * Function   : serializeHtmlListBar

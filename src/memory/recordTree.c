@@ -646,7 +646,14 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 
   for (node = self->records->head; node; node = node->next) {
     record = node->item;
-    if (!serializeRecord(self, record)) rc=FALSE;
+
+    // usefull to comment this for debuging
+    //  (harmless but server should not serialize final-support on disk)
+    // do not serialize final-supplies on md5sum.txt file
+    if (self->messageType == DISK &&
+    	getRecordType(record) == FINAL_SUPPLY) continue;
+    
+    if (!serializeRecord(self, record)) rc = FALSE;
   }
   
   if (!aesFlush(aes)) goto error;

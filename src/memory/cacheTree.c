@@ -250,7 +250,7 @@ haveRecords(RG* ring)
  * Synopsis   : int computeArchiveStatus(Archive* self)
  * Input      : Archive* self = the archive
  * Output     : TRUE on success
- *
+ * Requirement: loadCollection(coll, SERV)
  * Note       : This function and only this one use the
  *              MUTEX_COMPUTE mutex so as to be threads-safe
  =======================================================================*/

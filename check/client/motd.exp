@@ -79,7 +79,6 @@
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
 [notice cacheTree.c] we only record one local supply by archive
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> ALLOCATED

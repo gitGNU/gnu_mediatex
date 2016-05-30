@@ -471,17 +471,18 @@ serializeServerTree(Collection* coll)
   fprintf(fd, "# This file is managed by MediaTeX software.\n");
   
   if (!self->master) {
-    logMemory(LOG_ERR, "loose master server for %s collection", 
+    logMemory(LOG_WARNING, "loose master server for %s collection", 
 	    coll->label);
-    goto error;
   }
 
   // tel which is the master collection server
-  fprintf(fd, "# MediaTeX %s@%s:%i servers list:\n\n", 
-	  self->master->user, self->master->host, 
-	  self->master->sshPort);
+  if (self->master) {
+    fprintf(fd, "# MediaTeX %s@%s:%i servers list:\n\n", 
+	    self->master->user, self->master->host, 
+	    self->master->sshPort);
+    fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
+  }
   
-  fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
   fprintf(fd, "%-10s %s\n", "https", self->doHttps?"yes":"no");
   
@@ -619,8 +620,8 @@ addImage(Collection* coll, Server* server, Archive* archive)
  *              Image* image : the image to del
  * Output     : TRUE on success
  * Note       :
- *     Non sens: seul delArchive et delServer peuvent l'appeler
- *     or delServer => O(n2) pour rien.
+ *     Non sens: only delArchive and delServer can call it.
+ *     from  delServer => O(n2)
  =======================================================================*/
 int
 delImage(Collection* coll, Image* image)
@@ -755,6 +756,9 @@ delServer(Collection* coll, Server* server)
   // delete from coll if localhost 
   if (coll->localhost == server) coll->localhost = 0;
 
+  // delete master (needed by mdtxDelCollection to serialize)
+  if (coll->serverTree->master == server) coll->serverTree->master = 0;
+  
   // delete images own by the this server
   while ((img = rgHead(server->images)))
     if (!delImage(coll, img)) goto error;

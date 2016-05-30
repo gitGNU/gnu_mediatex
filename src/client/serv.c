@@ -409,7 +409,7 @@ delKey(char* label, char* key)
   if (!(coll = mdtxGetCollection(label))) goto error;
   servers = coll->serverTree;
 
-  // look if key is ouself
+  // look if key is ourself
   if (!strncmp(coll->userFingerPrint, hash, MAX_SIZE_MD5)) {
     logMain(LOG_WARNING, "key \"%s\" is our %s collection key", 
 	    hash, coll->label);

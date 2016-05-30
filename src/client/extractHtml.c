@@ -68,9 +68,11 @@ int getBadListUri(char* buf, char* path, int id)
 /*=======================================================================
  * Function   : htmlFromAsso
  * Description: HTML for FromAsso.
- * Synopsis   : static int serializeHtmlFromAsso(FromAsso* self, FILE* fd)
- * Input      : FromAsso* self = what to latexalize
- *              FILE* fd = where to latexalize
+ * Synopsis   : static int serializeHtmlFromAsso(
+ *                               FromAsso* self, FILE* fd, int isHeader)
+ * Input      : FromAsso* self: what to latexalize
+ *              FILE* fd: where to latexalize
+ *              int isHeader:
  * Output     : TRUE on success
  =======================================================================*/
 static int 
@@ -82,7 +84,6 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
   int many = FALSE;
   char url[64];
   char label[16];
-  char score[8];
   int i = 0;
 
   if(self == 0) goto error;
@@ -94,7 +95,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
 
   htmlItalic(fd, self->path?self->path:"??");
   if (!fprintf(fd, _(" from %s "), strEType(container->type))) goto error;
-  if (many) fprintf(fd, "(%.2f)\n", container->score);
+  if (many) fprintf(fd, "%s\n", getContainerScore(container));
 
   // do not sort !
   if (many) htmlUlOpen(fd);
@@ -113,8 +114,7 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
       htmlItalic(fd, label);
     }
 
-    if (!sprintf(score, " (%5.2f)", archive->extractScore)) goto error;    
-    htmlLink(fd, 0, url, score);    
+    htmlLink(fd, 0, url, getArchiveScore(archive));    
     if (many) htmlLiClose(fd);
   }
 
@@ -135,8 +135,8 @@ htmlFromAsso(FromAsso* self, FILE* fd, int isHeader)
  * Function   : htmlContainer
  * Description: HTML for Container.
  * Synopsis   : int htmlContainer(Container* self, FILE* fd)
- * Input      : Container* self = what to latexalize
- *              FILE* fd = where to latexalize
+ * Input      : Container* self: what to latexalize
+ *              FILE* fd: where to latexalize
  * Output     : TRUE on success
  =======================================================================*/
 int
@@ -147,7 +147,6 @@ htmlContainer(Container* self, FILE* fd)
   AVLNode *node = 0;
   int many = FALSE;
   char url [128];
-  char score[8];
 
   if(self == 0) goto error;
   logMain(LOG_DEBUG, "htmlContainer");
@@ -156,7 +155,7 @@ htmlContainer(Container* self, FILE* fd)
   htmlLiOpen(fd);
 
   fprintf(fd, "%s ", strEType(self->type));
-  if (many) fprintf(fd, "(%5.2f)", self->score);
+  if (many) fprintf(fd, "%s", getContainerScore(self));
 
   // do not sort !
   if (many) htmlUlOpen(fd);
@@ -166,8 +165,7 @@ htmlContainer(Container* self, FILE* fd)
 
     getArchiveUri(url, "../..", asso->archive);
     if (many) htmlLiOpen(fd);
-    if (!sprintf(score, "(%5.2f)", asso->archive->extractScore)) goto error;
-    htmlLink(fd, 0, url, score);
+    htmlLink(fd, 0, url, getArchiveScore(asso->archive));
     if (!fprintf(fd, "%s", " ")) goto error;
     htmlItalic(fd, asso->path);
     if (many) htmlLiClose(fd);
@@ -206,7 +204,6 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
   char *path = 0;
   char url[128];
   char text[128];
-  char score[8];
   int j = 0;
 
   getContentListUri(url, "/", archId, i);
@@ -232,11 +229,10 @@ serializeHtmlContentList(Collection* coll, AVLNode **node,
     getArchiveUri(url, "../../../..", archive);
     if (!sprintf(text, "%s:%lli ", archive->hash,
 		 (long long int)archive->size)) goto error;
-    if (!sprintf(score, "(%5.2f)", archive->extractScore)) goto error;
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, 0, url, score);
+    htmlLink(fd, 0, url, getArchiveScore(archive));
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -357,7 +353,7 @@ serializeHtmlScoreArchive(Collection* coll, Archive* self)
   htmlBr(fd);
   if (!sprintf(text, "%s/../icons", home)) goto error;
   htmlImage(fd, text, "floppy-icon.png", url);
-  if (!fprintf(fd, " (%.2f)", self->extractScore)) goto error;
+  if (!fprintf(fd, " %s", getArchiveScore(self))) goto error;
 
   /* latexalize caracs */
   if (!isEmptyRing(self->assoCaracs)) {
@@ -639,7 +635,7 @@ serializeHtmlServer(Collection* coll, Server* server)
       getArchiveUri(url, "..", image->archive);
       if (!sprintf(text, "%s:%lli ", image->archive->hash, 
 		   (long long int)image->archive->size)) goto error;
-      if (!sprintf(score, "(%5.2f)", image->score)) goto error;
+      if (!sprintf(score, "(%.2f)", image->score)) goto error;
 
       htmlLiOpen(fd);
       htmlVerb(fd, text);
@@ -686,7 +682,6 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
   char *path = 0;
   char url[128];
   char text[128];
-  char score[8];
   int j = 0;
 
   getArchiveListUri(url, "/", i);
@@ -711,11 +706,10 @@ serializeHtmlArchiveList(Collection* coll, AVLNode **node, int i, int n)
     getArchiveUri(url, "../..", archive);
     if (!sprintf(text, "%s:%lli ", archive->hash, 
 		 (long long int)archive->size)) goto error;
-    if (!sprintf(score, "(%5.2f)", archive->extractScore)) goto error;
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, 0, url, score);
+    htmlLink(fd, 0, url, getArchiveScore(archive));
     htmlLiClose(fd);
 
     *node = (*node)->next;
@@ -847,7 +841,6 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
   char *path = 0;
   char url[128];
   char text[128];
-  char score[8];
   int j = 0;
 
   checkCollection(coll);
@@ -875,11 +868,10 @@ serializeHtmlBadList(Collection* coll, RG* ring, int i, int n)
     getArchiveUri(url, "../..", archive);
     if (!sprintf(text, "%s:%lli ", archive->hash,
 		 (long long int)archive->size)) goto error;
-    if (!sprintf(score, "(%5.2f)", archive->extractScore)) goto error;
 
     htmlLiOpen(fd);
     htmlVerb(fd, text);
-    htmlLink(fd, 0, url, score);
+    htmlLink(fd, 0, url, getArchiveScore(archive));
     htmlLiClose(fd);
 
     archive = rgNext(ring);
@@ -959,7 +951,7 @@ serializeHtmlBadLists(Collection* coll)
   
   htmlSSIHeader2(fd, "../..", "score");
   htmlPOpen(fd);
-  htmlBold(fd, _("Bad archives"));
+  htmlBold(fd, _("Bad images"));
   if (!fprintf(fd, " : %i", nb)) goto error;
   htmlBr(fd);
   htmlItalic(fd, text);
@@ -1031,7 +1023,6 @@ serializeHtmsScoreIndex(Collection* coll)
   Archive* archive = 0;
   char url[128];
   char text[128];
-  char score[8];
 
   if (!(serverTree = coll->serverTree)) goto error;
 
@@ -1107,11 +1098,10 @@ serializeHtmsScoreIndex(Collection* coll)
       getArchiveUri(url, "", archive);
       if (!sprintf(text, "%s:%lli ", archive->hash, 
 		   (long long int)archive->size)) goto error;
-      if (!sprintf(score, "(%5.2f)", archive->extractScore)) goto error;
 
       htmlLiOpen(fd);
       htmlVerb(fd, text);
-      htmlLink(fd, 0, url, score);
+      htmlLink(fd, 0, url, getArchiveScore(archive));
 
       htmlLiClose(fd);
     }
@@ -1183,7 +1173,7 @@ serializeHtmlScoreHeader(Collection* coll)
 
   // archive with bad score lists
   getBadListUri(url, "<!--#echo var='HOME' -->/score", 1);
-  htmlLink(fd, 0, url, _("Bad archives"));
+  htmlLink(fd, 0, url, _("Bad images"));
   htmlBr(fd);
 
   // each server

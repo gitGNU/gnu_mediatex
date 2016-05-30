@@ -13,9 +13,6 @@
 
 *** BUGS
 
-- if test3 fails, record (final-supply) remain in test 5
-- test renaming file into the cache (as now, they where lost)
-
 *** TO TEST
 
 - optimise cache.c::freeCache (ex: sort on sizes / related to btree order)

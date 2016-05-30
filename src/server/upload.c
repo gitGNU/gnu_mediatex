@@ -51,7 +51,8 @@ cacheUpload(Collection* coll, Record* record)
   checkCollection(coll);
   memset(&data, 0, sizeof(ExtractData));
   if (!(data.toKeeps = createRing())) goto error;
-  data.context = X_NO_REMOTE_COPY;
+  data.scpContext = X_NO_REMOTE_COPY;
+  data.cpContext  = X_DO_LOCAL_COPY;
   data.coll = coll;
 
   // (double) check we get a final supplies
