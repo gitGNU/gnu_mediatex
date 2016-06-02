@@ -1,17 +1,19 @@
 
 *** DONE
 
-*** TO TEST
+*** TO TEST (first)
 
-*** TODO
+*** BUGS
 
+*** TODO (first)
+
+- version 0.5 so as potential user use git as fast as possible
 - manage [full] server scan (done at startup, but not on reload)
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - mdtx srv strip (clean files available from containers into cache)
 - mdtx srv clean (clean files availables from supports)
 - document audit process
-
-*** BUGS
+- manage favicon like done for logo
 
 *** TO TEST
 
@@ -21,9 +23,10 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
+- ease several servers conf: manage /etc/init.d, cron... from adm init
 - mediatex [quick] scan
-- use add-if-not-there function (EEXIST cf notify.c)
 - monitor cache sizes: all/used/allocated/free (mediatex srv status -> log)
+- use add-if-not-there function (EEXIST cf notify.c)
 - serialise b-tree using another order
 - i10n for french
 
@@ -44,7 +47,6 @@
 - add supp: wait CD doors is locked
 - manage accents into cache filenames (cgi should rewrite URLs)
    Content-Type: text/html; charset=UTF-8 ?
-- ease several servers conf: manage /etc/init.d, cron... from adm init
 - replace gethostby*_r by getaddrinfo and co
 - replace ardsm by mqueue (linear list if reverse link not used)
 - add thread ID to the log

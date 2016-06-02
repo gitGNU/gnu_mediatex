@@ -63,7 +63,7 @@ function SSH_build_key()
     chmod 644 id_dsa.pub
     chmod 600 id_dsa
     chown $1:$1 *
-    cd - >/dev/null
+    cd - > /dev/null 2>&1 || true
 
     # reset known servers keys
     rm -f $SSH_KNOWNHOSTS
@@ -92,7 +92,7 @@ function SSH_bootstrapKeys()
 
     chmod 644 known_hosts
     chown $1:$1 known_hosts
-    cd - >/dev/null
+    cd - > /dev/null 2>&1 || true
 }
 
 # configure ssh without host checking in the curent directory

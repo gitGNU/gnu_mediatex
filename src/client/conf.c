@@ -147,8 +147,8 @@ mdtxDelCollection(char* label)
   // note: do not expand collection (may fails)
   if (!loadConfiguration(CFG)) goto error;
   if (!(coll = getCollection(label))) {
-    logMain(LOG_WARNING, "there was no collection named '%s'", label);
-    goto end;
+    logMain(LOG_NOTICE, "there was no collection named '%s'", label);
+    goto nextStep;
   }
 
   // we delete the server (continue on error)
@@ -171,10 +171,11 @@ mdtxDelCollection(char* label)
   }
 
   // upgrade configuration file
-  if (!delCollection(coll)) goto error;
-  conf->fileState[iCFG] = MODIFIED;
+  if (coll) {
+    if (!delCollection(coll)) goto error;
+    conf->fileState[iCFG] = MODIFIED;
+  }
   
- end:
   rc = TRUE;
  error:
   if (!rc) {

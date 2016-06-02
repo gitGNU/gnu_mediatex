@@ -262,7 +262,7 @@ function GIT_mdtx_import()
        	Info "su $MDTX -c \"$QUERY2\""
 	cd $GIT || Error "cannot cd to git working directory: $GIT"
 	su $MDTX -c "$QUERY2" || Error "cannot add files to $MDTX module"
-	cd - > /dev/null || true
+	cd - > /dev/null 2>&1 || true
 
 	if [ $UNIT_TEST_RUNNING -eq 1 ]; then
             SIGN1="HOSTNAME"
@@ -296,7 +296,9 @@ function GIT_coll_import()
 	Warning "re-use already checkouted $1 module"
     else
 	Info "su $1 -c \"$QUERY1\""
+	cd $GIT || Error "cannot cd to git working directory: $GIT"
 	su $1 -c "$QUERY1" || Error "cannot checkout $1 module"
+	cd - > /dev/null 2>&1 || true
     fi
     
     if [ -f $GIT/logo ]; then
@@ -343,10 +345,10 @@ EOF
 
 	# import them
        	Info "su $1 -c \"$QUERY2\""
-	su $1 -c "$QUERY2" ||
+	su $1 -c "$QUERY2" || \
 	    Error "cannot add files to $1 module"
 	
-	cd - >/dev/null || true
+	cd - > /dev/null 2>&1 || true
 
 	if [ $UNIT_TEST_RUNNING -eq 1 ]; then
             SIGN1="HOSTNAME"
@@ -382,5 +384,7 @@ function GIT_coll_checkout()
     USERS_install $GIT "${_VAR_LIB_M_MDTX_COLL[@]}"
     
     Info "su $1 -c \"$QUERY\""
+    cd $GIT || Error "cannot cd to git working directory: $GIT"
     su $1 -c "$QUERY" || Error "cannot clone $MODULE module"
+    cd - > /dev/null 2>&1 || true
 }

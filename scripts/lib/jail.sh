@@ -215,13 +215,29 @@ function JAIL_unbind()
     Debug $FUNCNAME 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
 
-    [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
+    [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] || \
 	umount $JAIL/var/cache
+    [ $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ] || \
+	umount $JAIL/var/lib/gitbare
+    
+    # wait for umount
+    DO_WAIT=1
+    NB_WAIT=3
+    while [ $DO_WAIT -eq 1 -a $NB_WAIT -gt 0 ]; do
+        if [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 -o \
+            $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ]; then
+            DO_WAIT=0
+        fi
+        if [ $DO_WAIT -eq 1 ]; then
+	    Info "wait for unbind"
+	    sleep 1
+	fi
+        NB_WAIT=$[--NB_WAIT]
+    done
+
     [ $(grep -c $JAIL/var/cache /etc/mtab) -eq 0 ] ||
 	Error "Cannot unbind $JAIL/var/cache"
 
-    [ $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ] ||
-	umount $JAIL/var/lib/gitbare
     [ $(grep -c $JAIL/var/lib/gitbare /etc/mtab) -eq 0 ] || 
 	Error "Cannot unbind $JAIL/var/lib/gitbare"
 
