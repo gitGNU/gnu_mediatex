@@ -25,7 +25,8 @@ are already taken into account for many features.
 Testing @mediatex{} with about 50000 archives. 
 @note{} this example last very long time and consequently shows actual limits of @mediatexO{}.
 
-Download the Open Icons Library and build the related catalog and extraction rules files. This last about 15 minutes.
+Download the Open Icons Library and build the related catalog and extraction rules files.
+This last about 15 minutes.
 @example
 $ /usr/share/mediatex/examples/example.sh
 @end example
@@ -68,9 +69,8 @@ $ tar -jxf OpenIconsLibrary.tbz
 # /etc/init.d/mediatexd start
 @end example
 
-@todo{} still in development.
-
-The server will take too long time to scan the cache directory (I guess because of records managed into a list instead of a hash-table).
+The server will take too long time to scan the cache directory when starting (should be make optional in a futher version).
+This last about 4 minutes.
 
 Audit the collection:
 @example
@@ -80,6 +80,8 @@ $ mediatex srv extract
 @end example
 
 You should be notified by mail that the audit report is uploaded to the collection.
+The audit process is not optimized as it not requiered but only provides a way to double check all goes wright.
+This last about 4 hours.
 
 @node Firewall
 @section Configuration behind a firewall

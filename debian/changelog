@@ -1,3 +1,9 @@
+mediatex (0.5-1) jessie; urgency=low
+
+  * Upgrade from cvs to git
+
+ -- nroche <nroche@fred.narval.tk>  Thu, 02 Jun 2016 23:39:43 +0200
+
 mediatex (0.4-1) jessie; urgency=low
 
   * Upgrade to automake 1.14

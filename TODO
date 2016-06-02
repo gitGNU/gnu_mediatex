@@ -7,7 +7,6 @@
 
 *** TODO (first)
 
-- version 0.5 so as potential user use git as fast as possible
 - manage [full] server scan (done at startup, but not on reload)
 - remove MDTX_DELIVER code?: register.h ... mediatexd.c
 - mdtx srv strip (clean files available from containers into cache)

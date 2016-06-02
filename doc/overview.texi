@@ -376,7 +376,7 @@ is the longest query (and which imply parsing most meta-data files). They gives 
 
 @note{} @acronym{ADM64} systems use double of memory.
 
-Roughly this should gives about:
+Roughly this should gives about (to update, maybe quicker now):
 
 @multitable @columnfractions .20 .14 .10 .10 .10 .10
 @headitem archives @tab @acronym{GIT} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
@@ -396,7 +396,9 @@ The logarithmic factor is accented by the fact the files are serialised and
 parsed (into a b-tree) using the same order, which may be corrected in a 
 further version.
 @item
-Other processes like scanning the cache and building the audit report are not yet optimised too. So even if theoretically it should be possible to handle 500,000 archives by collection, in practice you should not manage more than 25 000 so easely. 
+Other processes like scanning the cache and building the audit report are not yet optimised too. 
+So even if theoretically it should be possible to handle about 500,000 archives by collection, 
+in practice it has not been tested yet with more than 50,000 archives. 
 @end itemize
 
 @node Why
