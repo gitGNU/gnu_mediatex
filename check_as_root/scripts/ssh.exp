@@ -25,7 +25,6 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut3-mdtx/ut3-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/jail root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut3-mdtx/cache root root 0755 NO ACL

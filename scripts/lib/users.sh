@@ -141,7 +141,6 @@ function USERS_mdtx_populate()
 
     # /var/cache/mediatex/mdtx
     USERS_install $MDTXHOME  "${_VAR_CACHE_M_MDTX_HOME[@]}"
-    USERS_install $JAIL      "${_VAR_CACHE_M_MDTX_JAIL[@]}"
     USERS_install $MDTX_HTML "${_VAR_CACHE_M_MDTX_HTML[@]}"
     USERS_install $MD5SUMS   "${_VAR_CACHE_M_MDTX_MD5SUMS[@]}"
     USERS_install $CACHES    "${_VAR_CACHE_M_MDTX_CACHE[@]}"

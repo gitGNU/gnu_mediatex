@@ -24,7 +24,6 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut2-mdtx/ut2-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut2-mdtx/cache root root 0755 NO ACL
@@ -50,7 +49,6 @@ Fait.
           root           root drwxr-xr-x SYSCONFDIR/apache2/conf-available
           root           root -r--r--r-- SYSCONFDIR/apache2/conf-available/mediatex-ut2-mdtx.conf
           root           root drwxr-xr-x SYSCONFDIR/cron.d
-          root           root -rw-r----- SYSCONFDIR/cron.d/mediatex_cron
           root           root drwxr-xr-x SYSCONFDIR/mediatex
           root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut2-mdtx.conf
           root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut2-mdtx-hello
@@ -103,7 +101,6 @@ Fait.
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/score/.htaccess
 ut2-mdtx-hello ut2-mdtx-hello drwx------ LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/.ssh
-          root           root drwxr-xr-x LOCALSTATEDIR/cache/mediatex/ut2-mdtx/jail
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/md5sums
           root           root drwxrwx--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/public_html/cgit.cgi
@@ -165,5 +162,4 @@ drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
--rw-r----- SYSCONFDIR/cron.d/mediatex_cron
 [info uthtdocs.sh] success

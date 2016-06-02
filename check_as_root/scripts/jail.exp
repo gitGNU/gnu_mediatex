@@ -26,7 +26,6 @@ Fait.
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx root root 0755 NO ACL
-[debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/public_html root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/md5sums root root 0750 u:%s:rwx g:%s:rwx
 [debug users.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/cache root root 0755 NO ACL
@@ -42,11 +41,11 @@ Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut5-mdtx/git/ut5-mdtx'...
 warning: Vous semblez avoir cloné un dépôt vide.
 fait.
 [info git.sh] su ut5-mdtx -c "git add -A"
-[debug git.sh] GIT_upgrade: ut5-mdtx latitude FINGERPRINT
+[debug git.sh] GIT_upgrade: ut5-mdtx HOSTNAME FINGERPRINT
 [info git.sh] su ut5-mdtx -c 'git config color.diff auto'
 [info git.sh] su ut5-mdtx -c 'git config color.status auto'
 [info git.sh] su ut5-mdtx -c 'git config color.branch auto'
-[info git.sh] su ut5-mdtx -c 'git config user.name 'latitude''
+[info git.sh] su ut5-mdtx -c 'git config user.name 'HOSTNAME''
 [info git.sh] su ut5-mdtx -c 'git config user.email 'FINGERPRINT''
 [info git.sh] su ut5-mdtx -c 'git config push.default simple'
 [debug git.sh] GIT_commit: ut5-mdtx Initial mdtx setup
@@ -62,6 +61,7 @@ To LOCALSTATEDIR/lib/mediatex/ut5-mdtx/ut5-mdtx
  * [new branch]      master -> master
 [debug utjail.sh] SSH_chroot_login: yes
 [debug utjail.sh] JAIL_build:
+[debug jail.sh] USERS_install: LOCALSTATEDIR/cache/mediatex/ut5-mdtx/jail root root 0755 NO ACL
 [debug jail.sh] JAIL_add_binary: /bin/ls
 [debug jail.sh] JAIL_add_binary: /bin/bash
 [debug jail.sh] JAIL_add_binary: /usr/bin/id

@@ -272,7 +272,7 @@ function GIT_mdtx_import()
 	    SIGN2=$(ssh-keygen -lf /etc/ssh/ssh_host_rsa_key.pub | \
 			   cut -d' ' -f2 | sed -e 's/://g')
 	fi
-	GIT_upgrade $MDTX "$(hostname)" $SIGN2
+	GIT_upgrade $MDTX "$SIGN1" $SIGN2
 	GIT_commit $MDTX "Initial mdtx setup"
 	GIT_push $MDTX
     fi
@@ -300,7 +300,7 @@ function GIT_coll_import()
     fi
     
     if [ -f $GIT/logo ]; then
-	Warning "re-use already imported collection module"
+	Warning "re-use already imported $1 module"
 	chown -R $1.$1 $GITBARE/$1
     else 
 	cd $GIT || Error "cannot cd to git working directory: $GIT"

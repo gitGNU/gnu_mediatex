@@ -82,7 +82,7 @@ function JAIL_add_library()
 
 ## API
 
-# build the chroot jail
+# (re-)build the chroot jail
 # Note: the chroot jail MUST be owned and only be readable by root
 #  reference code should be here :
 #  /usr/share/initramfs-tools/hook-functions::copy_exec()
@@ -102,8 +102,9 @@ function JAIL_build()
     #  found using `strace -f -p $SSHD_PID`
     LIBRARIES="ld-linux libnss_files" # libnss_compat libnsl libnss_nis"
 
+    rm -fr $JAIL
+    USERS_install $JAIL "${_VAR_CACHE_M_MDTX_JAIL[@]}"
     mkdir -p $JAIL/{bin,dev,etc,tmp,usr/bin} #,proc,sys,dev/pts}
-    #mkdir -p $JAIL/lib/i386-linux-gnu/i686/cmo
     mkdir -p $JAIL/{var/cache,var/lib/gitbare,var/tmp}
 
     for i in $BINARIES; do
