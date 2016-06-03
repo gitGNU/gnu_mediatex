@@ -61,7 +61,9 @@ fi
 HTDOCS_unconfigure_mdtx_apache2
 
 Info "Please check if these apache modules we were using are still needed:"
-Info "* auth_digest autoindex env include rewrite userdir ssl"
-Info "done"
+Info "* authz_core auth_digest authz_groupfile autoindex cgi env *"
+Info "* include rewrite userdir setenvif ssl                     *"
 
 /usr/sbin/invoke-rc.d apache2 restart
+
+Info "done"

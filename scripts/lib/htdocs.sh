@@ -123,8 +123,14 @@ function HTDOCS_configure_coll_apache2()
 <body>
 </html>
 EOF
-   
-    chown $MDTX:$1 $COLL_HTML/index.shtml
+
+    # html help message (erased next by make)
+    cat > $COLL_HTML/index/index.shtml <<EOF
+<h2>Please run: </br> <pre>$ mediatex make</pre> </h2>
+EOF
+
+    chown $MDTX:$MDTX $COLL_HTML/index.shtml
+    chown $MDTX:$MDTX $COLL_HTML/index/index.shtml
 }
 
 # Configure cgit for collection

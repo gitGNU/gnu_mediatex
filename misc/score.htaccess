@@ -1,2 +1,3 @@
 # login/password
+Require env NO_AUTH
 Require group score

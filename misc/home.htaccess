@@ -2,7 +2,10 @@
 #SSLOptions +StrictRequire
 #SSLRequireSSL
 
-# Server side includes
+# uncomment to disable authentification
+#SetEnvIf Request_Protocol "^H" NO_AUTH
+
+# server side includes
 Options +Includes
 DirectoryIndex index.shtml
 

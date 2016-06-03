@@ -8,17 +8,8 @@ AddHandler cgi-script .cgi
        SetEnv MDTX_LOG_SEVERITY_MAIN info
 
        # login/password
+       Require env NO_AUTH
        Require group index
-</Files>
-
-#<Files search.cgi>
-#       # login/password
-#       Require group index
-#</Files>
-
-<Files viewvc.cgi>
-       # login/password
-       Require group history
 </Files>
 
 <Files cgit.cgi>
@@ -26,5 +17,12 @@ AddHandler cgi-script .cgi
        SetEnv CGIT_CONFIG ../../cgitrc
 
        # login/password
+       Require env NO_AUTH
        Require group history
 </Files>
+
+#<Files search.cgi>
+#       # login/password
+#       Require env NO_AUTH
+#       Require group index
+#</Files>

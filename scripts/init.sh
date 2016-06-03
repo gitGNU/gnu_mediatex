@@ -49,8 +49,8 @@ HTDOCS_configure_mdtx_apache2
 
 # only needed once
 /usr/sbin/a2enmod \
-    auth_digest authz_groupfile autoindex cgi env include rewrite \
-    userdir ssl
+    authz_core auth_digest authz_groupfile autoindex cgi env include \
+    rewrite userdir setenvif ssl
 /usr/sbin/a2ensite default-ssl
 /usr/sbin/invoke-rc.d rsyslog restart
 /sbin/ldconfig

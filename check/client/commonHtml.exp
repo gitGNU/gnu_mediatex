@@ -182,6 +182,7 @@ HeaderName /mediatex/mdtx1/home/mdtx1-coll1/public_html/cacheHeader.shtml
 ReadmeName /mediatex/mdtx1/home/mdtx1-coll1/public_html/footer.html
 
 # login/password
+Require env NO_AUTH
 Require group cache
 [info confTree.c] free configuration
 [info utcommonHtml.c] exit on success

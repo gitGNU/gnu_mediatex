@@ -749,6 +749,7 @@ serializeHtmlCacheHtaccess(Collection* coll)
 	       " /mediatex/%s/home/%s/public_html/footer.html\n"
 	       "\n"
 	       "# login/password\n"
+	       "Require env NO_AUTH\n"
 	       "Require group cache\n",
 	       coll->user,
 	       env.confLabel, coll->user,

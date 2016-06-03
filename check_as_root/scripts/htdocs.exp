@@ -94,7 +94,8 @@ Fait.
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/icons
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/.htaccess
-      ut2-mdtx ut2-mdtx-hello -rw-rw---- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
+      ut2-mdtx       ut2-mdtx -rw-rw---- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index/index.shtml
+      ut2-mdtx       ut2-mdtx -rw-rw---- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index.shtml
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/logo
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/mediatex.css
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/readme.html
