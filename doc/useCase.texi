@@ -1,7 +1,7 @@
 @cindex OAIS
 
 @menu
-* Exemple::     Archiving icons
+* Example::     Archiving icons
 * Firewall::    Configuration behind a firewall
 * GitLogs::     Search the metadata history
 * Portail::	Minimal Php inerface
@@ -18,12 +18,11 @@ as the ``Administration'' and ``Preservation planing'' functionality
 are already taken into account for many features.
 @end itemize
 
-@node Exemple
+@node Example
 @section Archiving icons
 @cindex Example
 
-Testing @mediatex{} with about 50000 archives. 
-@note{} this example last very long time and consequently shows actual limits of @mediatexO{}.
+Testing @mediatex{} with about 50,000 archives. 
 
 Download the Open Icons Library and build the related catalog and extraction rules files.
 This last about 15 minutes.
@@ -33,43 +32,41 @@ $ /usr/share/mediatex/examples/example.sh
 
 If not already done, please configure the @code{mdtx-hello} collection: @pxref{Scenario 2}.
 
-Empty the catalog and extraction meta-data files:
-@example
-$ cat /dev/null > ~mdtx-hello/git/catalog000.txt
-$ cat /dev/null > ~mdtx-hello/git/extract000.txt
-$ mediatex upgrade
-@end example
-
 Grow the cache size by modifying @file{/etc/mediatex/mdtx.conf}
 @example
 # default cache parameters
 cacheSize  1 Go
 @end example
-And reload the server:
+
+Empty the catalog and extraction meta-data files:
 @example
-# /etc/init.d/mediatexd reload
+$ cat /dev/null > ~mdtx-hello/git/catalog000.txt
+$ cat /dev/null > ~mdtx-hello/git/extract000.txt
+$ mediatex upgrade+
 @end example
 
 Uploading the icons and build the @acronym{HTML} catalog:
 @example
-$ mediatex upload++ file download as OpenIconsLibrary.tbz \
+$ mediatex upload++ file open_icon_library-standard.tar.gz \
    catalog icons.cat rules icons.ext to coll hello
 @end example
 
-Browses the icons catalog via this @sc{url}: @*
-@url{https://localhost/~mdtx-hello}, using @code{mdtx} log-in and the password you provide before.
+Archive are now injected. You can browses the icons catalog at this @sc{url}: @*
+@url{https://localhost/~mdtx-hello}, using @code{mdtx} login and the password you provide before. Now @mediatex{} should be able to help you conserving or migrating theses archives. 
 
-The first time you request for an archive, it take long time to extract it from this big @acronym{TBZ} container. 
-To speed up the audit process that simulate all archive retrieval, first manually extract all archives from the @acronym{TBZ} container:
+The audit process show bellow is not requiered but only provides a way to double check all goes wright (@mediatex{} already do that by providing a score for collections).
+
+It take time to extract archives from this big @acronym{TAR} container. 
+To speed up the audit process that simulate all archive retrieval, you can first manually extract all archives:
 @example
 # /etc/init.d/mediatexd stop
 $ mediatex su
-$ cd ~/cache/mdtx-hello
-$ tar -jxf OpenIconsLibrary.tbz
+$ cd ~mdtx/cache/mdtx-hello
+$ tar -zxf 2016-06/OpenIconsLibrary.tar.gz
 # /etc/init.d/mediatexd start
 @end example
 
-The server will take too long time to scan the cache directory when starting (should be make optional in a futher version).
+The server will take too long time to scan the cache directory when (re-)starting. (This should become optional in further versions).
 This last about 4 minutes.
 
 Audit the collection:
@@ -79,10 +76,7 @@ $ mediatex srv extract
 # tail -f /var/log/mediatex
 @end example
 
-You should be notified by mail that the audit report is uploaded to the collection.
-The audit process is not optimized as it not requiered but only provides a way to double check all goes wright.
-This last about 4 hours.
-
+You should be notified by mail that the audit report is uploaded to the collection. The audit process is not optimized and probably will not. This last about 4 hours.
 @node Firewall
 @section Configuration behind a firewall
 @cindex Firewall

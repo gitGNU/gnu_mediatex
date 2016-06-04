@@ -320,7 +320,9 @@ collectionLoop(Collection* coll, int collFiles,
   logCommon(LOG_DEBUG, "file loop on %s collection (%s)", 
 	  coll->label, strCF(collFiles));
 
-  // cache need computeExtractScore so cache must be disease first
+  // reverse order:
+  // - cache need computeExtractScore so cache must be disease first.
+  // - catalog get archives so they need to be added first by extract.
   for (i=iCACH; i>=iCTLG; --i) {
     if (collFiles & (1<<i)) {
       if (!callback(coll, i)) goto error;
@@ -845,12 +847,13 @@ saveColl(Collection* coll, int i)
     coll->fileState[i] = LOADED;
   }
   else {
-    logCommon(LOG_DEBUG, "do not save collection as...");
+    logCommon(LOG_INFO, "do not save %s collection (%s)",
+	      coll->label, strCF(1<<i));
     if (coll->fileState[i] != MODIFIED) {
-      logCommon(LOG_DEBUG, "... not modified");
+      logCommon(LOG_DEBUG, "... as not modified");
     }
     if (coll->cptInUse[i]) {
-      logCommon(LOG_DEBUG, "... still used by %i functions", 
+      logCommon(LOG_DEBUG, "... as still used by %i functions", 
 	      coll->cptInUse[i]);
     }
   }
@@ -1075,6 +1078,17 @@ diseaseColl(Collection* coll, int i)
     }
     coll->fileState[i] = DISEASED;
   }
+  else {
+    logCommon(LOG_INFO, "do not disease %s collection (%s)",
+	      coll->label, strCF(1<<i));
+    if (coll->fileState[i] != LOADED) {
+      logCommon(LOG_DEBUG, "... as not loaded");
+    }
+    if (coll->cptInUse[i]) {
+      logCommon(LOG_DEBUG, "... as still used by %i functions", 
+	      coll->cptInUse[i]);
+    }
+  }
 
   rc = TRUE; 
  error2:
@@ -1136,7 +1150,8 @@ clientDiseaseAll()
   logCommon(LOG_DEBUG, "clientDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr))) {
+  while ((coll = rgNext_r(conf->collections, &curr))) {
+    if (!(coll->memoryState & EXPANDED)) continue;
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }
@@ -1166,7 +1181,8 @@ int serverDiseaseAll()
   logCommon(LOG_DEBUG, "serverDiseaseAll");
   if (!(conf = env.confTree)) goto error; // do not malloc
 
-  if ((coll = rgNext_r(conf->collections, &curr))) {
+  while ((coll = rgNext_r(conf->collections, &curr))) {
+    if (!(coll->memoryState & EXPANDED)) continue;
     if (!saveCollection(coll, CACH)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   }

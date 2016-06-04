@@ -39,6 +39,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/mediatex.h])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CHECK_FUNCS([acl])
 AC_CHECK_FUNCS([alarm])
 AC_CHECK_FUNCS([dup2])
 AC_CHECK_FUNCS([getcwd])

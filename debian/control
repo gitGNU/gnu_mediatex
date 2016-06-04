@@ -8,6 +8,6 @@ Homepage: http://narval.tk/mediatexi
 
 Package: mediatex
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, cvs, viewvc, git, cgit, initramfs-tools, libavl1, libacl1, acl, tar, cpio, gzip, bzip2, unzip
+Depends: ${shlibs:Depends}, ${misc:Depends}, rsyslog, ssh, apache2, git, cgit, initramfs-tools, libavl1, libacl1, acl, tar, cpio, gzip, bzip2, unzip
 Description: MediaTeX archivage software
  MediaTeX is an light ERMS providing perenial archivage on CD.

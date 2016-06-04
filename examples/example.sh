@@ -51,25 +51,42 @@ if [ ! -d $BASE ]; then
     tar -jxf download
 fi
 
+if [ ! -f $BASE.tar ]; then
+    echo "* do a tar and gz container instead of tbz"
+    tar -cf $BASE.tar $BASE
+fi
+if [ ! -f $BASE.tar.gz ]; then
+    echo "* idem..."
+    gzip -k $BASE.tar
+fi
+
 if [ ! -f icons.ext ]; then
     echo "* build extraction rules"
 
     if [ ! -f icons.tmp ]; then
-	find $BASE -type f -exec sh -c \
-	     'FILE_MD5=$(md5sum {} | cut -d" " -f 1);
-     FILE_SIZE=$(ls -l {} | cut -d" " -f 5);
-     echo "$FILE_MD5:$FILE_SIZE {}" >> icons.tmp' \;
+	find $BASE -type f -exec sh -c '\
+	    FILE_MD5=$(md5sum {} | cut -d" " -f 1); \
+            FILE_SIZE=$(ls -l {} | cut -d" " -f 5); \
+            echo "$FILE_MD5:$FILE_SIZE {}" >> icons.tmp' \;
     fi
-	
-    FILE_MD5=$(md5sum $FILE | cut -d' ' -f 1)
-    FILE_SIZE=$(ls $FILE -l | cut -d' ' -f 5)
-    
+
+    FILE1_MD5=$(md5sum $BASE.tar | cut -d' ' -f 1)
+    FILE1_SIZE=$(ls $BASE.tar -l | cut -d' ' -f 5)
+    FILE2_MD5=$(md5sum $BASE.tar.gz | cut -d' ' -f 1)
+    FILE2_SIZE=$(ls $BASE.tar.gz -l | cut -d' ' -f 5)
     cat > icons.ext <<EOF
-(TBZ
-$FILE_MD5:$FILE_SIZE
+(GZIP
+$FILE2_MD5:$FILE2_SIZE
+=>
+$FILE1_MD5:$FILE1_SIZE $BASE.tar
+)
+
+(TAR
+$FILE1_MD5:$FILE1_SIZE
 =>
 EOF
-    
+
+    # remove doublons
     sort icons.tmp -k 1,1 -u >> icons.ext 
     echo ")" >> icons.ext
 fi

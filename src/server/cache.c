@@ -271,7 +271,7 @@ scanFile(Collection* coll, char* absolutePath, char* relativePath)
     logMain(LOG_WARNING, "remove %s from cache (doublon)", relativePath);
     if (!env.dryRun) {
       if (unlink(absolutePath) == -1) {
-	logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
+	logMain(LOG_ERR, "error with unlink: %s", strerror(errno));
 	goto error;
       }
     }
