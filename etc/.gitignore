@@ -4,8 +4,7 @@ Makefile.in
 Makefile
 # make
 .deps
-mediatex.conf
-mediatex_log.conf
+mediatex_apache.conf
+mediatex_rsyslog.conf
 mediatex_logrotate.conf
-mediatex_logrotate
 mediatex_ld.conf

@@ -36,8 +36,8 @@ MDTX_SH_USERS=1
 # $rand (out): result
 function USERS_root_random()
 {
-    rand=$(echo "$RANDOM*($1+1)/32768" | bc)
-    rand=$(printf "%02i\n" $rand)
+    RAND=$(echo "$RANDOM*($1+1)/32768" | bc)
+    RAND=$(printf "%02i\n" $RAND)
 }
 
 # install a directory
@@ -82,30 +82,11 @@ function USERS_root_populate()
 {
     Debug "$FUNCNAME" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    CRON_FILE=$SYSCONFDIR/cron.d/mediatex_cron
 
     USERS_install $STATEDIR "${_VAR_LIB_M[@]}"
     USERS_install $CACHEDIR "${_VAR_CACHE_M[@]}"
     USERS_install $ETCDIR "${_ETC_M[@]}"
     USERS_install $PIDDIR "${_VAR_RUN_M[@]}"
-
-    # configure cron
-    if [ "$MDTX" == "mdtx" ]; then
-	# presentely cron only run under default mdtx context
-	install -o root -g root -m 640 \
-		$MISC/mediatex_cron $SYSCONFDIR/cron.d
-	sed $CRON_FILE -i -e "s!DATADIR!$DATADIR!"
-	USERS_root_random 59
-	sed $CRON_FILE -i -e "s!#M1!$rand!"
-	USERS_root_random 59
-	sed $CRON_FILE -i -e "s!#M2!$rand!"
-	USERS_root_random 59
-	sed $CRON_FILE -i -e "s!#M3!$rand!"
-	USERS_root_random 23
-	sed $CRON_FILE -i -e "s!H1!$rand!"
-	USERS_root_random 23
-	sed $CRON_FILE -i -e "s!H2!$rand!"
-    fi
 }
 
 # this function remove the root directories
@@ -114,22 +95,26 @@ function USERS_root_disease()
 {
     Debug "$FUNCNAME" 2
     [ $(id -u) -eq 0 ] || Error "need to be root"
-    CRON_FILE=$SYSCONFDIR/cron.d/mediatex_cron
+    ALONE=1;
     
     # clean base directories if no more used
-    for DIR in $STATEDIR $CACHEDIR $ETCDIR $PIDDIR; do
+    for DIR in $STATEDIR $CACHEDIR $ETCDIR; do
 	if [ -d "$DIR" ]; then
-	    [ $(ls $DIR | wc -l) -gt 0 ] || rmdir $DIR
+	    if [ $(ls $DIR | wc -l) -gt 0 ]; then
+		ALONE=0
+	    else
+		rmdir $DIR
+	    fi
 	fi
     done
-
-    # presentely cron only run under default mdtx context
-    if [ "$MDTX" == "mdtx" ]; then
-	rm -f $CRON_FILE
+    if [ $ALONE -eq 1 -a -d "$PIDDIR" ]; then
+	if [ $(ls $PIDDIR | wc -l) -gt 0 ]; then
+	    rmdir $DIR
+	fi
     fi
 }
 
-# this function create the server directories
+# this function create the mdtx directories
 function USERS_mdtx_populate()
 {
     Debug "$FUNCNAME" 2
@@ -158,6 +143,9 @@ function USERS_mdtx_disease()
 {
     Debug "$FUNCNAME" 2
 
+    # unconfigure related services
+    USERS_mdtx_disable
+    
     # /etc/mediatex/mdtx* (links)
     rm -fr $ETCDIR/${MDTX}*
 
@@ -168,8 +156,8 @@ function USERS_mdtx_disease()
     rm -fr $MDTXHOME
 
     # /var/lib/mediatex/mdtx
-    # purge was asked, so we destroy all data sources
-    rm -fr $GITBARE
+    # do not destroy all meta-data repositories
+    #rm -fr $GITBARE
 }
 
 # this function populate a collection
@@ -225,6 +213,84 @@ function USERS_coll_disease()
     rm -f $ETCDIR/$1
 }
 
+# this function configure related services
+function USERS_mdtx_enable()
+{
+    Debug "$FUNCNAME:" 2
+    POSTFIX=""
+    if [ "$MDTX" != "mdtx" ]; then
+	POSTFIX="-$MDTX"
+    fi
+    CRON_FILE=$SYSCONFDIR/cron.d/mediatex$POSTFIX
+    ROTATE_FILE=$SYSCONFDIR/logrotate.d/httpd-prerotate/mediatex$POSTFIX
+    INIT_FILE=$SYSCONFDIR/init.d/mediatexd$POSTFIX
+
+    # create the mdtx directories
+    USERS_mdtx_populate
+    
+    # configure cron
+    if [ ! -f $CRON_FILE ]; then
+	install -o root -g root -m 640 $MISC/cron $CRON_FILE
+	sed $CRON_FILE -i \
+	    -e "s!DATADIR!$DATADIR!" \
+	    -e "s!MDTX=mdtx!MDTX=$MDTX!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M1!$RAND!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M2!$RAND!"
+	USERS_root_random 59
+	sed $CRON_FILE -i -e "s!#M3!$RAND!"
+	USERS_root_random 23
+	sed $CRON_FILE -i -e "s!H1!$RAND!"
+	USERS_root_random 23
+	sed $CRON_FILE -i -e "s!H2!$RAND!"
+    fi
+
+    # configure logrotate on apache logs
+    if [ ! -f $ROTATE_FILE ]; then
+	cat >$ROTATE_FILE <<EOF
+#!/bin/bash
+MDTX=$MDTX $DATADIR/scripts/logrotate_apache.sh
+EOF
+	chmod +x $ROTATE_FILE
+    fi
+
+    # init script for other instances than mdtx
+    if [ "$MDTX" != "mdtx" ]; then
+	if [ ! -f $INIT_FILE ]; then
+	    cp $SYSCONFDIR/init.d/mediatexd $INIT_FILE
+	    sed -i $INIT_FILE \
+		-e "s!\(# Provides:          mediatexd\)!\1$POSTFIX!" \
+		-e "s!USER=mdtx!USER=$MDTX!"
+	fi
+	chmod +x $INIT_FILE
+    fi
+}
+
+# this function unconfigure related services
+function USERS_mdtx_disable()
+{
+    Debug "$FUNCNAME:" 2
+    POSTFIX=""
+    if [ "$MDTX" != "mdtx" ]; then
+	POSTFIX="-$MDTX"
+    fi
+    CRON_FILE=$SYSCONFDIR/cron.d/mediatex$POSTFIX
+    ROTATE_FILE=$SYSCONFDIR/logrotate.d/httpd-prerotate/mediatex$POSTFIX
+    INIT_FILE=$SYSCONFDIR/init.d/mediatexd$POSTFIX
+    
+    # unconfigure cron
+    rm -f $CRON_FILE
+
+    # unconfigure logrotate on apache logs
+    rm -f $ROTATE_FILE
+
+    # remove init script for other instances than mdtx
+    if [ "$MDTX" != "mdtx" ]; then
+	rm -f $INIT_FILE
+    fi
+}
+
 # this function disease a group
 # $1: the group name
 function USERS_disease_group()
@@ -261,7 +327,7 @@ function USERS_add_to_group()
     fi
 }
 
-# this function add a user to a group
+# this function del a user from a group
 # $1: the user name
 # $2: the group name
 function USERS_del_from_group()
@@ -333,7 +399,7 @@ function USERS_mdtx_create_user()
     # home directory is /var/cache/mediatex/mdtx
     USERS_create_user $MDTX $MDTXHOME
     USERS_add_to_group $MDTX cdrom
-    USERS_mdtx_populate
+    USERS_mdtx_enable
 }
 
 # this function remove the mdtx user
@@ -366,7 +432,6 @@ function USERS_coll_remove_user()
     Debug "$FUNCNAME: $1" 2
     [ $# -eq 1 ] || Error "expect 1 parameter"
 
-    #USERS_del_from_group $1 ${MDTX}_md
     USERS_remove_user $1
     USERS_coll_disease $1
 }

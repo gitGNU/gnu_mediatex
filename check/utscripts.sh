@@ -34,7 +34,7 @@ function UNIT_TEST_populate_datadir()
 {
     mkdir -p $MISC
 
-    for f in mediatex_cron mediatex.conf supports.txt logo \
+    for f in cron mediatex.conf supports.txt logo \
 	catalog000.txt extract000.txt servers.txt htgroup \
 	mediatex.css floppy-icon.png apache-mdtx.conf; do
 	install -o root -g root -m 444 $srcdir/../misc/$f $MISC

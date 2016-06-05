@@ -27,20 +27,23 @@ common_mandeps = $(top_srcdir)/configure.ac
 # binary when any source file changes, only the main one.
 # Use -o so that the `missing' program can infer the output file.
 
-mediatex.cgi.1: $(top_srcdir)/src/cgi $(common_mandeps)
-	$(HELP2MAN) --no-discard-stderr --name="Mediatex cgi program" \
-	--info-page=mediatex \
-	../src/cgi -o $@
-
 mediatex.1: $(top_srcdir)/src/mediatex $(common_mandeps)
-	$(HELP2MAN) --no-discard-stderr --name="Mediatex client program" \
-	--info-page=mediatex \
-	../src/mediatex -o $@
+	$(HELP2MAN) --no-discard-stderr --libtool \
+		--name="Mediatex client program" \
+		--info-page=mediatex \
+		../src/mediatex -o $@
 
 mediatexd.1: $(top_srcdir)/src/mediatexd $(common_mandeps)
-	$(HELP2MAN) --no-discard-stderr --name="Mediatex server program" \
-	--info-page=mediatex \
-	../src/mediatexd -o $@
+	$(HELP2MAN) --no-discard-stderr --libtool \
+		--name="Mediatex server program" \
+		--info-page=mediatexd \
+		../src/mediatexd -o $@
+
+mediatex.cgi.1: $(top_srcdir)/src/mediatex-cgi $(common_mandeps)
+	$(HELP2MAN) --no-discard-stderr --libtool \
+		--name="Mediatex cgi program" \
+		--info-page=mediatex-cgi \
+		../src/mediatex-cgi -o $@
 
 clean-local:
 	rm -f *.1

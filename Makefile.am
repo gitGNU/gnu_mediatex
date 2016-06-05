@@ -22,3 +22,9 @@
 # Build recursively
 SUBDIRS = doc misc etc scripts po src check check_as_root man examples
 ACLOCAL_AMFLAGS= -I m4
+
+sharedir =  $(datarootdir)@mdtx_mediatexdir@
+
+uninstall-hook:
+	rmdir $(sharedir) 2>/dev/null || true
+	rmdir $(localstatedir)/lib/mediatex 2>/dev/null || true

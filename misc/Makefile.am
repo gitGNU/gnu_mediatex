@@ -21,7 +21,7 @@
 
 miscdir = $(datarootdir)@mdtx_mediatexdir@/misc
 dist_misc_DATA = \
-	mediatex_cron mediatex.conf \
+	cron mediatex.conf \
 	supports.txt catalog000.txt extract000.txt servers.txt \
 	index.htaccess score.htaccess cgi.htaccess \
 	home.htaccess apache-mdtx.conf htgroup \
@@ -30,3 +30,6 @@ dist_misc_DATA = \
 	logo.tgz logo.tar.bz2 logo.afio \
 	logo.tar logo.cpio.gz logo.cpio logo.cpio.bz2 \
 	logo.zip logo.part1.rar logo.part2.rar
+
+uninstall-hook:
+	rmdir $(miscdir) 2>/dev/null || true

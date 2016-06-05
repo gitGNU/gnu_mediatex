@@ -38,10 +38,10 @@ USER="$MDTX-$1"
 # changes into /var/lib and /var/cache
 USERS_coll_remove_user $USER
 
-# do not purge the collection
-if [ -d $STATEDIR/$MDTX/$USER ]; then
-    Notice "note: do not purge $STATEDIR/$MDTX/$USER directory."
-    chown -R root.root $STATEDIR/$MDTX/$USER
+# do not purge the collection repository
+if [ -d $GITBARE/$USER ]; then
+    Notice "Let you purge '$GITBARE/$USER' repository"
+    chown -R root.root $GITBARE/$USER
 fi
 
 Info "done"

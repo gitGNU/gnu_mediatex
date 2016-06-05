@@ -232,16 +232,10 @@ BUILT_SOURCES = \
 	parser/shellQuery.h \
 	parser/shellQuery.tab.h
 
-cgidir = $(datarootdir)@mdtx_mediatexdir@/cgi-dir
-cgi_PROGRAMS = cgi
-
 bin_PROGRAMS = \
 	mediatex \
-	mediatexd
-
-cgi_SOURCE = cgi.c
-cgi_LDADD = libmediatex.la
-cgi_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
+	mediatexd \
+	mediatex-cgi
 
 mediatex_SOURCE = mediatex.c
 mediatex_LDADD = libmediatex.la client/libclient.a
@@ -250,6 +244,10 @@ mediatex_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 mediatexd_SOURCE = mediatexd.c
 mediatexd_LDADD = libmediatex.la server/libserver.a
 mediatexd_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
+
+mediatex_cgi_SOURCE = mediatex-cgi.c
+mediatex_cgi_LDADD = libmediatex.la
+mediatex_cgi_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 %.tab.h %.tab.c: %.y
 	$(YACC) $<
@@ -266,6 +264,16 @@ endif
 distclean-local:
 	-rm -f parser/*.[ch] parser/*.output
 
+uninstall-hook:
+	rmdir $(includedir)/mediatex/client 2>/dev/null || true
+	rmdir $(includedir)/mediatex/common 2>/dev/null || true
+	rmdir $(includedir)/mediatex/memory 2>/dev/null || true
+	rmdir $(includedir)/mediatex/misc 2>/dev/null || true
+	rmdir $(includedir)/mediatex 2>/dev/null || true
+
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
 ACLOCAL_AMFLAGS= -I m4
+
+
+

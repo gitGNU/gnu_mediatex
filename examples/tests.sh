@@ -149,16 +149,13 @@ function sedInPlace()
     rm $file
 }
 
-# add init script for new server 
-# (as sytemd cannot handle a single one)
+# modify server configuration
 # $1: mdtx user (serv1 by default)
-function startInitdScript()
+function mdtxConfigure()
 {
     SERVER=${1-serv1}
     PORT=600${SERVER#serv}
 
-    query "start" $SERVER
-    
     # replace localhost by 127.0.0.1 in configuration
     sedInPlace "s/\(host.*\)localhost/\1127.0.0.1/" \
 	       /etc/mediatex/$SERVER.conf
@@ -166,13 +163,10 @@ function startInitdScript()
     # set dedicated socket port
     sedInPlace "s/6561/$PORT/" /etc/mediatex/$SERVER.conf
 
+    # adapt init script if used
     if [ $DEBUG_SERVER -eq 0 ]; then
-	# copy initd script
-	sed -e "s|mediatexd|mediatexd-$SERVER|" \
-	    -e "s|\(DAEMON=/usr/bin\)/.*|\1/mediatexd|" \
-	    -e "s|mdtx|$SERVER|" \
-	    -e "s|--severity notice|$SEVERITY_SERVER|" \
-	    /etc/init.d/mediatexd > /etc/init.d/mediatexd-$SERVER
+	sed -i /etc/init.d/mediatexd-$SERVER \
+	    -e "s|--severity notice|$SEVERITY_SERVER|"
 	cat >>/etc/init.d/mediatexd-$SERVER <<EOF
 
 do_stop_cmd() {
@@ -184,8 +178,18 @@ do_stop_cmd() {
 	return \$RETVAL
 }
 EOF
-	
-	chmod +x /etc/init.d/mediatexd-$SERVER
+    fi
+}
+
+# $1: mdtx user (serv1 by default)
+function startInitdScript()
+{
+    SERVER=${1-serv1}
+    PORT=600${SERVER#serv}
+
+    query "start" $SERVER
+    
+    if [ $DEBUG_SERVER -eq 0 ]; then
 	/etc/init.d/mediatexd-$SERVER start
     else 
 	cat >/tmp/doNotClose.sh <<EOF
@@ -230,7 +234,6 @@ function stopInitdScript()
     
     if [ $DEBUG_SERVER -eq 0 ]; then
 	/etc/init.d/mediatexd-$SERVER stop
-	rm -f /etc/init.d/mediatexd-$SERVER
     else
 	kill -TERM $(cat /var/run/mediatex/${SERVER}d.pid) || \
 	    rm /var/run/mediatex/${SERVER}d.pid
@@ -299,11 +302,11 @@ function test1()
     if [ "x$1" != "xclean" ]; then
 	topo "Initialize"
 	mdtxA "adm init"
+	mdtxConfigure
 	startInitdScript
 	finalQuestion "is http://localhost/~serv1/ correct ?"
     else
 	topo "Cleanup"
-	mdtxA "adm remove"
 	mdtxA "adm purge"
 	stopInitdScript
     fi
@@ -439,7 +442,7 @@ EOF
 	[ $TEST_OK -eq 0 ] && return
 	
 	# clean extracted files (~test5) on cache for next tests
-	topo "remove supports and extract files"
+	notice "remove supports and extract files"
 	mdtxP "del supp iso1 from coll hello"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
 	sleep 1 # warning del supp will HUP server (so will scan cache)
@@ -461,6 +464,7 @@ function test7()
 	topo "Configure server 2 (as a private network gateway)"
 	startInitdScriptIfNeeded
 	mdtxA "adm init" serv2
+	mdtxConfigure serv2
 	sedInPlace "s/networks   www/networks   www, private/" \
 	    /etc/mediatex/serv2.conf
 	echo "Gateways private" >> /etc/mediatex/serv2.conf
@@ -600,6 +604,7 @@ function test11()
         topo "Configure server 3 (from inside a private network)"
 
 	mdtxA "adm init" serv3
+	mdtxConfigure serv3
 	sedInPlace "s/networks   www/networks   private/" \
 		   /etc/mediatex/serv3.conf
 	mdtxP "check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso" \
@@ -864,9 +869,8 @@ function test19()
 
 	sedInPlace "s/\(logApache\) *\(.*\)/\1 yes/" \
 		   ~serv1-hello/git/servers.txt
-	QUERY="/etc/logrotate.d/httpd-prerotate/mediatex_logrotate"
+	QUERY="/etc/logrotate.d/httpd-prerotate/mediatex-serv1"
 	query $QUERY serv1
-	export MDTX=serv1 
 	$QUERY
 	mdtxP "make" serv1
 

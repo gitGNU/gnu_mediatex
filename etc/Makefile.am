@@ -21,49 +21,59 @@
 
 include $(top_srcdir)/Make-rules
 
-apachedir = $(sysconfdir)/apache2/conf-available/
-dist_apache_DATA = mediatex.conf
+ldsoconfdir = $(sysconfdir)/ld.so.conf.d
+dist_ldsoconf_DATA = mediatex_ld.conf
+
+apachedir = $(sysconfdir)/apache2/conf-available
+dist_apache_DATA = mediatex_apache.conf
 
 rsyslogdir = $(sysconfdir)/rsyslog.d
-dist_rsyslog_DATA = mediatex_log.conf
+dist_rsyslog_DATA = mediatex_rsyslog.conf
 
 logrotatedir = $(sysconfdir)/logrotate.d
 dist_logrotate_DATA = mediatex_logrotate.conf
 
-logrotateApachedir = $(logrotatedir)/httpd-prerotate
-dist_logrotateApache_SCRIPTS = mediatex_logrotate
-
-ldsoconfdir = $(sysconfdir)/ld.so.conf.d
-dist_ldsoconf_DATA = mediatex_ld.conf
-
 completiondir = $(sysconfdir)/bash_completion.d
-dist_completion_DATA = mediatex_comp
+dist_completion_DATA = mediatex_bash_completion
 
 EXTRA_DIST = \
+	ld.src \
 	apache.src \
 	rsyslog.src \
 	logrotate.src \
-	logrotate_apache.src \
-	ld.src
 CLEANFILES = \
-	mediatex.conf \
-	mediatex_log.conf \
-	mediatex_logrotate.conf \
-	mediatex_logrotate \
-	mediatex_ld.conf
+	mediatex_ld.conf \
+	mediatex_apache.conf \
+	mediatex_rsyslog.conf \
+	mediatex_logrotate.conf
 
-mediatex.conf: apache.src $(top_srcdir)/config.h
+mediatex_ld.conf: ld.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-mediatex_log.conf: rsyslog.src $(top_srcdir)/config.h
+mediatex_apache.conf: apache.src $(top_srcdir)/config.h
+	$(do_subst) < $< > $@
+
+mediatex_rsyslog.conf: rsyslog.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
 mediatex_logrotate.conf: logrotate.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
-mediatex_logrotate: logrotate_apache.src $(top_srcdir)/config.h
-	$(do_subst) < $< > $@
+install-data-hook:
+	cd $(ldsoconfdir); \
+	mv mediatex_ld.conf mediatex.conf
+	cd $(apachedir); \
+	mv mediatex_apache.conf mediatex.conf
+	cd $(rsyslogdir); \
+	mv mediatex_rsyslog.conf mediatex.conf
+	cd $(logrotatedir); \
+	mv mediatex_logrotate.conf mediatex.conf
+	cd $(completiondir); \
+	mv mediatex_bash_completion mediatex
 
-mediatex_ld.conf: ld.src $(top_srcdir)/config.h
-	$(do_subst) < $< > $@
-
+uninstall-hook:
+	rm -f $(ldsoconfdir)/mediatex.conf
+	rm -f $(apachedir)/mediatex.conf
+	rm -f $(rsyslogdir)/mediatex.conf
+	rm -f $(logrotatedir)/mediatex.conf
+	rm -f $(completiondir)/mediatex
