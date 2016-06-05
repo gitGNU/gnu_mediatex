@@ -28,13 +28,13 @@ $ git clone git://git.savannah.nongnu.org/mediatex.git
 Software requirements.
 @itemize @bullet
 @item Compilation:
-automake gettext libtool make flex bison help2man texinfo transfig libssl-dev libavl-dev libacl1-dev
+automake bison flex gettext help2man libacl1-devlibavl-dev libtool libssl-dev make texinfo transfig 
 @c @item Info documentation:
 @c ghostscript
 @item Documentation in others format than texinfo and man (optional):
 imagemagick texlive
 @item Installation:
-ssh apache2 git cgit libavl1 libacl1 acl tar cpio gzip bzip2 unzip bc findutils
+acl apache2 bc bzip2 cgit cpio findutils git gzip libavl1 libacl1 rsyslog ssh tar unzip 
 @item Debian package generation:
 libfile-fcntllock-perl
 @end itemize
