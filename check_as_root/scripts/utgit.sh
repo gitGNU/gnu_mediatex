@@ -50,7 +50,7 @@ USER="$MDTX-$COLL"
 # cleanup if previous test has failed
 USERS_coll_remove_user $USER
 USERS_mdtx_remove_user
-
+rm -fr $GITBARE
 
 # cf init.sh
 USERS_root_populate
@@ -102,6 +102,7 @@ cd - >/dev/null
 # cf free.sh & remove.sh
 USERS_coll_remove_user $USER
 USERS_mdtx_remove_user
+rm -fr $GITBARE
 
 Info "success" 
 UNIT_TEST_stop "git"

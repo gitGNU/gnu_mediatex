@@ -292,6 +292,7 @@ function cleanAll()
     for SERV in serv1 serv2 serv3; do
 	stopInitdScript $SERV
 	mdtxA "adm purge" $SERV
+	rm -fr /var/lib/mediatex/$SERV
     done
     rm -f /tmp/test.nb
 }
@@ -307,8 +308,9 @@ function test1()
 	finalQuestion "is http://localhost/~serv1/ correct ?"
     else
 	topo "Cleanup"
-	mdtxA "adm purge"
 	stopInitdScript
+	mdtxA "adm purge"
+	rm -fr /var/lib/mediatex/$SERV
     fi
 }
 
@@ -476,6 +478,7 @@ function test7()
 	topo "Cleanup"
 	stopInitdScript serv2
 	mdtxA "adm purge" serv2
+	rm -fr /var/lib/mediatex/serv2
     fi
 }
 
@@ -615,6 +618,7 @@ function test11()
 	topo "Cleanup"
 	stopInitdScript serv3
 	mdtxA "adm purge" serv3
+	rm -fr /var/lib/mediatex/serv3
     fi
 }
 

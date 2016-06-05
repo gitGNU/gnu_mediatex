@@ -40,7 +40,7 @@ EXTRA_DIST = \
 	ld.src \
 	apache.src \
 	rsyslog.src \
-	logrotate.src \
+	logrotate.src
 CLEANFILES = \
 	mediatex_ld.conf \
 	mediatex_apache.conf \
@@ -59,17 +59,18 @@ mediatex_rsyslog.conf: rsyslog.src $(top_srcdir)/config.h
 mediatex_logrotate.conf: logrotate.src $(top_srcdir)/config.h
 	$(do_subst) < $< > $@
 
+# '|| true' needed for 'distcheck'
 install-data-hook:
 	cd $(ldsoconfdir); \
-	mv mediatex_ld.conf mediatex.conf
+	mv mediatex_ld.conf mediatex.conf || true
 	cd $(apachedir); \
-	mv mediatex_apache.conf mediatex.conf
+	mv mediatex_apache.conf mediatex.conf || true
 	cd $(rsyslogdir); \
-	mv mediatex_rsyslog.conf mediatex.conf
+	mv mediatex_rsyslog.conf mediatex.conf || true
 	cd $(logrotatedir); \
-	mv mediatex_logrotate.conf mediatex.conf
+	mv mediatex_logrotate.conf mediatex.conf || true
 	cd $(completiondir); \
-	mv mediatex_bash_completion mediatex
+	mv mediatex_bash_completion mediatex || true
 
 uninstall-hook:
 	rm -f $(ldsoconfdir)/mediatex.conf

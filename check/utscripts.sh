@@ -49,9 +49,14 @@ function UNIT_TEST_populate_datadir()
     mkdir -p $UNIT_TEST_ROOTDIR
     chmod 755 $UNIT_TEST_ROOTDIR
 
-    mkdir -p $ETCDIR # TO MOVE !!
+    #mkdir -p $ETCDIR # TO MOVE !!
     mkdir -p $SYSCONFDIR/apache2/conf-available
     mkdir -p $SYSCONFDIR/cron.d
+    mkdir -p $SYSCONFDIR/logrotate.d/httpd-prerotate
+    mkdir -p $SYSCONFDIR/init.d
+    
+    install -o root -g root -m 444 $srcdir/../scripts/mediatexd \
+	    $SYSCONFDIR/init.d
 }
 
 # this function set the directory to use for unit tests. 

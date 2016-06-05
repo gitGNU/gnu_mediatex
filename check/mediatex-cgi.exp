@@ -1,11 +1,11 @@
 ** first query: asking for content
-[info cgi.c] * mediatex cgi script *
+[info mediatex-cgi.c] * mediatex cgi script *
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
-[info cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
+[info mediatex-cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
-[info cgi.c] cgi lunched on localhost: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
+[info mediatex-cgi.c] cgi lunched on localhost: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 746d6ceeb76e05cfa2dea92a1c5753cd
-[info cgi.c] ask  localhost/746d6ceeb76e05cfa2dea92a1c5753cd server for file
+[info mediatex-cgi.c] ask  localhost/746d6ceeb76e05cfa2dea92a1c5753cd server for file
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -19,9 +19,9 @@
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 
-[info cgi.c] localhost:6560 tel (120) not found
+[info mediatex-cgi.c] localhost:6560 tel (120) not found
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
-[info cgi.c] ask  127.0.0.1/6b18ed0194b0fbadd08e0a13cccda00e server for file
+[info mediatex-cgi.c] ask  127.0.0.1/6b18ed0194b0fbadd08e0a13cccda00e server for file
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to 127.0.0.1 (6b18ed0194b0fbadd08e0a13cccda00e)
 [info recordTree.c] # Collection's records:
@@ -35,10 +35,10 @@
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 
-[info cgi.c] 127.0.0.1:6560 tel (120) not found
+[info mediatex-cgi.c] 127.0.0.1:6560 tel (120) not found
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
 [info confTree.c] free configuration
-[info cgi.c] exit on success
+[info mediatex-cgi.c] exit on success
 Content-Type: text/html
 
 {top template}
@@ -54,10 +54,10 @@ Mail <INPUT type=text name=mail>
 </FORM>
 {bottom template}
 ** second query: register a mail address
-[info cgi.c] * mediatex cgi script *
+[info mediatex-cgi.c] * mediatex cgi script *
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
-[info cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
-[info cgi.c] register final demand at localhost/746d6ceeb76e05cfa2dea92a1c5753cd server
+[info mediatex-cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
+[info mediatex-cgi.c] register final demand at localhost/746d6ceeb76e05cfa2dea92a1c5753cd server
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -71,9 +71,9 @@ Mail <INPUT type=text name=mail>
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 test@test.org
 [info recordTree.c] # ^ FINAL_DEMAND
 
-[info cgi.c] localhost:6560 tel (221) ok
+[info mediatex-cgi.c] localhost:6560 tel (221) ok
 [info confTree.c] free configuration
-[info cgi.c] exit on success
+[info mediatex-cgi.c] exit on success
 Content-Type: text/html
 Refresh: 3; url=../index/
 

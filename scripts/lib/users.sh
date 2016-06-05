@@ -216,7 +216,7 @@ function USERS_coll_disease()
 # this function configure related services
 function USERS_mdtx_enable()
 {
-    Debug "$FUNCNAME:" 2
+    Debug "$FUNCNAME" 2
     POSTFIX=""
     if [ "$MDTX" != "mdtx" ]; then
 	POSTFIX="-$MDTX"
@@ -270,7 +270,7 @@ EOF
 # this function unconfigure related services
 function USERS_mdtx_disable()
 {
-    Debug "$FUNCNAME:" 2
+    Debug "$FUNCNAME" 2
     POSTFIX=""
     if [ "$MDTX" != "mdtx" ]; then
 	POSTFIX="-$MDTX"

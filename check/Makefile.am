@@ -130,7 +130,7 @@ TESTS = \
 	common/ssh.sh \
 	common/upgrade.sh \
 	common/openClose.sh \
-	cgi.sh \
+	mediatex-cgi.sh \
 	common/extractScore.sh \
 	client/serv.sh \
 	client/conf.sh \
@@ -208,7 +208,7 @@ dist_check_DATA = \
 	common/ssh.exp4 \
 	common/upgrade.exp \
 	common/openClose.exp \
-	cgi.exp \
+	mediatex-cgi.exp \
 	common/extractScore.exp \
 	client/serv.exp \
 	client/conf.exp \

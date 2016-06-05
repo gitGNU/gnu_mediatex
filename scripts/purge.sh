@@ -53,7 +53,11 @@ for _USER in $USERS; do
 done
 
 USERS_mdtx_remove_user
+ALONE=0
 USERS_root_disease
+if [ $ALONE -eq 1 ]; then
+    /usr/sbin/a2disconf mediatex
+fi
 
 if [ -f /etc/apache2/conf-enabled/${MEDIATEX#/}-$MDTX.conf ]; then
     /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
@@ -70,6 +74,5 @@ if [ -d $GITBARE ]; then
     Notice "Let you purge '$GITBARE' repositories"
     chown -R root.root $GITBARE
 fi
-
 
 Info "done"

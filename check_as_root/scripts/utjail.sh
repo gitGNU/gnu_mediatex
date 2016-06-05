@@ -53,7 +53,8 @@ JAIL_unbind
 USERS_mdtx_remove_user
 USERS_coll_remove_user $USER
 USERS_mdtx_disease
-    
+rm -fr $GITBARE
+
 # cf init.sh
 USERS_root_populate
 USERS_mdtx_create_user
@@ -106,6 +107,7 @@ SSH_chroot_login no
 USERS_coll_disease $USER
 USERS_coll_remove_user $USER
 USERS_mdtx_remove_user
+rm -fr $GITBARE
 
 Info "success"
 UNIT_TEST_stop "jail"

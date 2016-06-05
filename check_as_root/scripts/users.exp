@@ -4,6 +4,7 @@
 [debug users.sh] USERS_disease_group: ut1-mdtx
 [info users.sh] ut1-mdtx user already removed
 [debug users.sh] USERS_mdtx_disease
+[debug users.sh] USERS_mdtx_disable
 [debug utusers.sh] USERS_coll_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_remove_user: ut1-mdtx-hello
 [debug users.sh] USERS_disease_group: ut1-mdtx-hello
@@ -25,6 +26,7 @@
 Ajout de l'utilisateur « ut1-mdtx » au groupe « cdrom »...
 Ajout de l'utilisateur ut1-mdtx au groupe cdrom
 Fait.
+[debug users.sh] USERS_mdtx_enable
 [debug users.sh] USERS_mdtx_populate
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
@@ -40,6 +42,7 @@ Fait.
 [info users.sh] ut1-mdtx user already exists
 [debug users.sh] USERS_add_to_group: ut1-mdtx cdrom
 [info users.sh] ut1-mdtx user already beyong to cdrom group
+[debug users.sh] USERS_mdtx_enable
 [debug users.sh] USERS_mdtx_populate
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx root root 0755 NO ACL
 [debug users.sh] USERS_install: LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx root root 0750 u:%s:rwx g:%s:rwx u:www-data:r-x
@@ -75,6 +78,13 @@ Fait.
           root           root drwxr-xr-x SYSCONFDIR/apache2
           root           root drwxr-xr-x SYSCONFDIR/apache2/conf-available
           root           root drwxr-xr-x SYSCONFDIR/cron.d
+          root           root -rw-r----- SYSCONFDIR/cron.d/mediatex-ut1-mdtx
+          root           root drwxr-xr-x SYSCONFDIR/init.d
+          root           root -r--r--r-- SYSCONFDIR/init.d/mediatexd
+          root           root -r-xr-xr-x SYSCONFDIR/init.d/mediatexd-ut1-mdtx
+          root           root drwxr-xr-x SYSCONFDIR/logrotate.d
+          root           root drwxr-xr-x SYSCONFDIR/logrotate.d/httpd-prerotate
+          root           root -rwxr-xr-x SYSCONFDIR/logrotate.d/httpd-prerotate/mediatex-ut1-mdtx
           root           root drwxr-xr-x SYSCONFDIR/mediatex
           root           root lrwxrwxrwx SYSCONFDIR/mediatex/ut1-mdtx.conf
           root           root drwxr-xr-x EXEC_PREFIX
@@ -84,6 +94,7 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cron
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/extract000.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
@@ -91,7 +102,6 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
-          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
@@ -141,18 +151,24 @@ Suppression de l'utilisateur « ut1-mdtx »...
 Attention ! Le groupe « ut1-mdtx » ne contient plus aucun membre.
 Fait.
 [debug users.sh] USERS_mdtx_disease
+[debug users.sh] USERS_mdtx_disable
 [debug utusers.sh] USERS_mdtx_remove_user: 
 [debug users.sh] USERS_remove_user: ut1-mdtx
 [debug users.sh] USERS_disease_group: ut1-mdtx
 [info users.sh] ut1-mdtx user already removed
 [debug users.sh] USERS_mdtx_disease
+[debug users.sh] USERS_mdtx_disable
 * cleanup : *
 drwxrwxrwx LOCALSTATEDIR/run/mediatex
+drwxrwx--- LOCALSTATEDIR/lib/mediatex/ut1-mdtx/ut1-mdtx
 drwxr-xr-x /var/ut/ut1-mdtx
 drwxr-xr-x SYSCONFDIR
 drwxr-xr-x SYSCONFDIR/apache2
 drwxr-xr-x SYSCONFDIR/apache2/conf-available
 drwxr-xr-x SYSCONFDIR/cron.d
+drwxr-xr-x SYSCONFDIR/init.d
+drwxr-xr-x SYSCONFDIR/logrotate.d
+drwxr-xr-x SYSCONFDIR/logrotate.d/httpd-prerotate
 drwxr-xr-x SYSCONFDIR/mediatex
 drwxr-xr-x EXEC_PREFIX
 drwxr-xr-x DATAROOTDIR
@@ -163,10 +179,13 @@ drwxr-xr-x LOCALSTATEDIR/cache
 drwxr-xr-x LOCALSTATEDIR/cache/mediatex
 drwxr-xr-x LOCALSTATEDIR/lib
 drwxr-xr-x LOCALSTATEDIR/lib/mediatex
+drwxr-xr-x LOCALSTATEDIR/lib/mediatex/ut1-mdtx
 drwxr-xr-x LOCALSTATEDIR/run
+-r--r--r-- SYSCONFDIR/init.d/mediatexd
 -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
+-r--r--r-- DATAROOTDIR/mediatex/misc/cron
 -r--r--r-- DATAROOTDIR/mediatex/misc/extract000.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/floppy-icon.png
 -r--r--r-- DATAROOTDIR/mediatex/misc/home.htaccess
@@ -174,7 +193,6 @@ drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/index.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/logo
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
--r--r--r-- DATAROOTDIR/mediatex/misc/mediatex_cron
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
 -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
