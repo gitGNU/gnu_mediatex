@@ -43,6 +43,7 @@ if [ $MDTX = mdtx ]; then
 fi
 
 JAIL_unbind
-#SSH_chroot_login no
+SSH_chroot_login no
+USERS_mdtx_disable
 
 Info "done"

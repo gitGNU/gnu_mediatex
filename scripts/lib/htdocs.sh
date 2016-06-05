@@ -112,7 +112,8 @@ function HTDOCS_configure_coll_apache2()
     ln -sf $COLL_GIT $ETCDIR/$1
 
     # cgi scripts
-    ln -sf $DATADIR/cgi-dir/cgi $COLL_HTML/cgi/get.cgi
+    #ln -sf ${LOCALSTATEDIR}/lib/mediatex-cgi $COLL_HTML/cgi/get.cgi
+    ln -sf $BINDIR/mediatex-cgi $COLL_HTML/cgi/get.cgi
 
     # html redirection
     cat > $COLL_HTML/index.shtml <<EOF

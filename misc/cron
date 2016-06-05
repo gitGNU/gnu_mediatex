@@ -22,6 +22,7 @@
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
+MDTX=mdtx
 
 # m  h dom mon dow user	command
 #M1  *   *   *   * root DATADIR/scripts/cron_hourly.sh

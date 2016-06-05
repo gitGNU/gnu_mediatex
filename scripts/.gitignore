@@ -5,7 +5,8 @@ Makefile.in
 Makefile
 
 # make
+mediatexd
 cron_daily.sh
 cron_hourly.sh
 cron_monthly.sh
-mediatexd
+logrotate_apache.sh

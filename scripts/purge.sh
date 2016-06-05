@@ -59,11 +59,17 @@ if [ -f /etc/apache2/conf-enabled/${MEDIATEX#/}-$MDTX.conf ]; then
     /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
 fi
 HTDOCS_unconfigure_mdtx_apache2
-
-Info "Please check if these apache modules we were using are still needed:"
-Info "* authz_core auth_digest authz_groupfile autoindex cgi env *"
-Info "* include rewrite userdir setenvif ssl                     *"
-
 /usr/sbin/invoke-rc.d apache2 restart
+
+Notice "Please check if these apache modules are still needed:"
+Notice "* authz_core auth_digest authz_groupfile autoindex cgi env"
+Notice "* include rewrite userdir setenvif ssl"
+
+# do not purge the meta-data repository
+if [ -d $GITBARE ]; then
+    Notice "Let you purge '$GITBARE' repositories"
+    chown -R root.root $GITBARE
+fi
+
 
 Info "done"

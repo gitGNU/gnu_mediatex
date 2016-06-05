@@ -100,9 +100,9 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   int s;
 
   logMisc (LOG_DEBUG, "find an /etc/group line");
+  *buffer = 0;
 
   // allocate buffer
-  *buffer = 0;
   if ((bufsize = sysconf(_SC_GETGR_R_SIZE_MAX)) == -1) {
     bufsize = 16384;        /* I do not know what to put here ? */
   }
@@ -120,11 +120,11 @@ getGroupLine (char* label, gid_t gid, struct group* gr, char** buffer)
   }
   if (result == 0) {
     if (s == 0) {
-      logMisc (LOG_WARNING, "group not found: %s.");
+      logMisc (LOG_WARNING, "group not found");
 
-      if (!strcmp(label, env.confLabel)) {
-	logMisc (LOG_INFO, "Try to (re-)initialize mediatex:");
-	logMisc (LOG_INFO, "-> # mediatex adm init [-c %s]", label);
+      if (label && !strcmp(label, env.confLabel)) {
+	logMisc (LOG_WARNING, "Try to (re-)initialize mediatex:");
+	logMisc (LOG_WARNING, "-> # mediatex adm init [-c %s]", label);
       }
     }
     else {
