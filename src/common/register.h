@@ -26,20 +26,26 @@
 
 #include "mediatex-types.h"
 
-#define MDTX_SAVEMD5 0 // force daemon to write md5sum.txt file
-#define MDTX_EXTRACT 1 // run extraction procedure
-#define MDTX_NOTIFY  2 // run notify procedure
-#define MDTX_DELIVER 3 // run extraction procedure
+// registers defined into share memory
+#define REG_SAVEMD5   0 // force daemon to write md5sum.txt file
+#define REG_EXTRACT   1 // run extraction
+#define REG_NOTIFY    2 // run notify
+#define REG_QUICKSCAN 3 // run (quick) scan
+#define REG_SCAN      4 // run scan
+#define REG_TRIM      5 // only let containers
+#define REG_CLEAN     6 // remove what if safe locally
+#define REG_PURGE     7 // remove what if safe
+#define REG_STATUS    8 // log the memory status
+#define REG_SHM_BUFF_SIZE 9
 
-#define MDTX_DONE  '0'
-#define MDTX_QUERY '1'
-#define MDTX_ERROR '2'
-
-#define MDTX_SHM_BUFF_SIZE 5
+// possible values into registers
+#define REG_DONE  '0'
+#define REG_QUERY '1'
+#define REG_ERROR '2'
 
 typedef struct ShmParam {
   int flag;
-  char buf[MDTX_SHM_BUFF_SIZE+1];
+  char buf[REG_SHM_BUFF_SIZE+1];
 } ShmParam;
 
 void mdtxShmCopy(void *buffer, int shmSize, void* arg);

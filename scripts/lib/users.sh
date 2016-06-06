@@ -157,7 +157,7 @@ function USERS_mdtx_disease()
 
     # /var/lib/mediatex/mdtx
     # do not destroy all meta-data repositories
-    #rm -fr $GITBARE
+    #rm -fr $GITBARE/$MDTX
 }
 
 # this function populate a collection

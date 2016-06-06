@@ -472,7 +472,7 @@ srvQuery: shellSAVE shellEOL
   logParser(LOG_INFO, "send SAVEMD5 signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    if (!mdtxSyncSignal(MDTX_SAVEMD5)) YYABORT;
+    if (!mdtxSyncSignal(REG_SAVEMD5)) YYABORT;
   }
 }
         | shellEXTRACT shellEOL
@@ -480,7 +480,7 @@ srvQuery: shellSAVE shellEOL
   logParser(LOG_INFO, "send EXTRACT signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    if (!mdtxSyncSignal(MDTX_EXTRACT)) YYABORT;
+    if (!mdtxSyncSignal(REG_EXTRACT)) YYABORT;
   }
 }
         | shellNOTIFY shellEOL
@@ -488,17 +488,19 @@ srvQuery: shellSAVE shellEOL
   logParser(LOG_INFO, "send NOTIFY signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    if (!mdtxSyncSignal(MDTX_NOTIFY)) YYABORT;
+    if (!mdtxSyncSignal(REG_NOTIFY)) YYABORT;
   }
 }
+/*
         | shellDELIVER shellEOL
 {
   logParser(LOG_INFO, "send DELIVER signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    if (!mdtxSyncSignal(MDTX_DELIVER)) YYABORT;
+    if (!mdtxSyncSignal(REG_DELIVER)) YYABORT;
   }
 }
+*/
 
  /* support queries API */
 

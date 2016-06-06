@@ -524,7 +524,7 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
 
   if (!env.noRegression) {
     // ask daemon to update md5sumsDB file
-    if (!mdtxSyncSignal(MDTX_SAVEMD5)) {
+    if (!mdtxSyncSignal(REG_SAVEMD5)) {
       logMain(LOG_WARNING, "fail to update md5sumsDB file");
     }
   }

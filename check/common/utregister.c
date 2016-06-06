@@ -40,7 +40,7 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
-  fprintf(stderr, "\n\t\t{ -I | -G | -F | -S | -E | -N | -D | -e }");
+  fprintf(stderr, "\n\t\t{ -I | -G | -F | -S | -E | -N | -D } [ -e ]");
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
@@ -50,8 +50,8 @@ usage(char* programName)
 	  "  -W, --do-save\t\tsave md5sums.txt file\n"
 	  "  -E, --do-extract\tperform extracton\n"
 	  "  -N, --do-notify\tperform notification\n"
-	  "  -D, --do-deliver\tperform deliver\n"
-	  "  -e, --do-errorx\terror test\n");
+	  //"  -D, --do-deliver\tperform deliver\n"
+	  "  -e, --do-error\terror test\n");
   return;
 }
 
@@ -62,7 +62,7 @@ usage(char* programName)
  * modif      : 2012/05/01
  * Description: Unit test for register module.
  * Synopsis   : ./utregister
- * Input      : { -I | -G | -F | -5 | -X | -N | -S }
+ * Input      : { -I | -G | -F | -W | -E | -N | -D } | -e ]
  * Output     : stdout
  =======================================================================*/
 int 
@@ -115,24 +115,24 @@ main(int argc, char** argv)
 
     case 'W':
       if (signal != UNDEF) rc=4;
-      signal = MDTX_SAVEMD5;
+      signal = REG_SAVEMD5;
       break;
 
     case 'E':
       if (signal != UNDEF) rc=5;
-      signal = MDTX_EXTRACT;
+      signal = REG_EXTRACT;
       break;
 
     case 'N':
       if (signal != UNDEF) rc=6;
-      signal = MDTX_NOTIFY;
+      signal = REG_NOTIFY;
       break;
-
+      /*
     case 'D':
       if (signal != UNDEF) rc=7;
-      signal = MDTX_DELIVER;
+      signal = REG_DELIVER;
       break;
-
+      */
     case 'e':
       doError = TRUE;
       break;
@@ -152,7 +152,7 @@ main(int argc, char** argv)
     rc = mdtxShmInitialize();
     break;
   case GET:
-    if (!(rc = shmRead(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE,
+    if (!(rc = shmRead(getConfiguration()->confFile, REG_SHM_BUFF_SIZE,
 		       mdtxShmRead, (void*)&param)))
       goto error;
     printf("=> %s\n", param.buf);
@@ -166,7 +166,7 @@ main(int argc, char** argv)
   default:
     if (doError) {
       param.flag = signal;
-      if (!(rc = shmWrite(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE,
+      if (!(rc = shmWrite(getConfiguration()->confFile, REG_SHM_BUFF_SIZE,
 			  mdtxShmError, (void*)&param)))
 	goto error;
     }

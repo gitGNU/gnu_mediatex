@@ -55,7 +55,7 @@ signalJob(void* arg)
   long int rc = FALSE;
   int loop = FALSE;
   ShmParam param;
-  int rc3 = MDTX_DONE;
+  int rc3 = REG_DONE;
   RGIT* curr = 0;
 
   (void) arg;
@@ -63,57 +63,57 @@ signalJob(void* arg)
   if (!(conf = getConfiguration())) goto error;
 
   do {
-    int rc2 = MDTX_DONE;
+    int rc2 = REG_DONE;
     loop = FALSE;
-    if (!shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE,
+    if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
 		 mdtxShmRead, (void*)&param))
       goto error;
     
-    if (param.buf[MDTX_SAVEMD5] == MDTX_QUERY) {
+    if (param.buf[REG_SAVEMD5] == REG_QUERY) {
       logMain(LOG_NOTICE, "signalJob %i: SAVEMD5", me);
 
       // force writing
       while ((coll = rgNext_r(conf->collections, &curr))) {
 	coll->fileState[iCACH] = MODIFIED;
       }
-      if (!serverSaveAll()) rc2 = MDTX_ERROR;
-      param.flag = MDTX_SAVEMD5;
+      if (!serverSaveAll()) rc2 = REG_ERROR;
+      param.flag = REG_SAVEMD5;
       loop = TRUE;
       goto quit;
     }
     
-    if (param.buf[MDTX_EXTRACT] == MDTX_QUERY) {
+    if (param.buf[REG_EXTRACT] == REG_QUERY) {
       logMain(LOG_NOTICE, "signalJob %i: EXTRACT", me);
-      if (!serverLoop(extractArchives)) rc2 = MDTX_ERROR;
-      param.flag = MDTX_EXTRACT;
+      if (!serverLoop(extractArchives)) rc2 = REG_ERROR;
+      param.flag = REG_EXTRACT;
       loop = TRUE;
       goto quit;
     }
     
-    if (param.buf[MDTX_NOTIFY] == MDTX_QUERY) {
+    if (param.buf[REG_NOTIFY] == REG_QUERY) {
       logMain(LOG_NOTICE, "signalJob %i: NOTIFY", me);
-      if (!serverLoop(sendRemoteNotify)) rc2 = MDTX_ERROR;
-      param.flag = MDTX_NOTIFY;
+      if (!serverLoop(sendRemoteNotify)) rc2 = REG_ERROR;
+      param.flag = REG_NOTIFY;
       loop = TRUE;
       goto quit;
     }
 
-    /* if (param.buf[MDTX_DELIVER] == MDTX_QUERY) { */
+    /* if (param.buf[REG_DELIVER] == REG_QUERY) { */
     /*   logMain(LOG_NOTICE, "signalJob %i: DELIVER", me); */
-    /*   if (!serverLoop(deliverMails)) rc2 = MDTX_ERROR; */
-    /*   param.flag = MDTX_DELIVER; */
+    /*   if (!serverLoop(deliverMails)) rc2 = REG_ERROR; */
+    /*   param.flag = REG_DELIVER; */
     /*   loop = TRUE; */
     /*   goto quit; */
     /* } */
 
   quit:
     if (loop) {
-      if (!shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE,
-		    (rc2 == MDTX_DONE)?mdtxShmDisable:mdtxShmError,
+      if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
+		    (rc2 == REG_DONE)?mdtxShmDisable:mdtxShmError,
 		    (void*)&param))
 	goto error;
     }
-    if (rc2 == MDTX_ERROR) rc3 = MDTX_ERROR;
+    if (rc2 == REG_ERROR) rc3 = REG_ERROR;
   } while (loop);
 
   rc = TRUE;

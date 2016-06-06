@@ -57,7 +57,7 @@ mdtxShmRead(void *buffer, int shmSize, void* arg)
   ShmParam* param = (ShmParam*)arg;
 
   strncpy(param->buf, (char*)buffer, shmSize);
-  param->buf[MDTX_SHM_BUFF_SIZE] = (char)0;
+  param->buf[REG_SHM_BUFF_SIZE] = (char)0;
 }
   
 /*=======================================================================
@@ -76,7 +76,7 @@ mdtxShmEnable(void *buffer, int shmSize, void* arg)
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
 
-  ((char*)buffer)[param->flag] = MDTX_QUERY;
+  ((char*)buffer)[param->flag] = REG_QUERY;
 }
 
 /*=======================================================================
@@ -95,7 +95,7 @@ mdtxShmDisable(void *buffer, int shmSize, void* arg)
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
 
-  ((char*)buffer)[param->flag] = MDTX_DONE;
+  ((char*)buffer)[param->flag] = REG_DONE;
 }
 
 /*=======================================================================
@@ -114,7 +114,7 @@ mdtxShmError(void *buffer, int shmSize, void* arg)
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
 
-  ((char*)buffer)[param->flag] = MDTX_ERROR;
+  ((char*)buffer)[param->flag] = REG_ERROR;
 }
 
 /*=======================================================================
@@ -130,9 +130,9 @@ mdtxShmInitialize()
   static char* buffer = "0000\0";
   ShmParam param;
 
-  strncpy(param.buf, buffer, MDTX_SHM_BUFF_SIZE);
+  strncpy(param.buf, buffer, REG_SHM_BUFF_SIZE);
   logCommon(LOG_NOTICE, "Initialise SHM using %s conf file", env.confLabel);
-  return shmWrite(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE, 
+  return shmWrite(getConfiguration()->confFile, REG_SHM_BUFF_SIZE, 
 		  mdtxShmCopy, (void*)&param);
 }
 
@@ -146,7 +146,7 @@ mdtxShmInitialize()
 int
 mdtxShmFree()
 {
-  return shmFree(getConfiguration()->confFile, MDTX_SHM_BUFF_SIZE);
+  return shmFree(getConfiguration()->confFile, REG_SHM_BUFF_SIZE);
 }
 
 /*=======================================================================
@@ -229,17 +229,17 @@ int mdtxSyncSignal(int flag)
   }
 
   // Read register
-  if (!shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE, 
+  if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE, 
 	       mdtxShmRead, (void*)&param))
       goto error;
 
   // Do no set if register is already set
-  if (param.buf[flag] == MDTX_QUERY) goto quit;
+  if (param.buf[flag] == REG_QUERY) goto quit;
 
   // Set register
   logCommon(LOG_INFO, "setting %i register", flag);
   param.flag = flag;
-  if (!shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE, 
+  if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE, 
 		mdtxShmEnable, (void*)&param))
     goto error;
 
@@ -251,13 +251,13 @@ int mdtxSyncSignal(int flag)
   logCommon(LOG_INFO, "waiting for %i register unset", flag);
   do {
     usleep(200000);
-    rc = shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE, 
+    rc = shmRead(conf->confFile, REG_SHM_BUFF_SIZE, 
 		 mdtxShmRead, (void*)&param);
   }
-  while (rc && (param.buf[flag] == MDTX_QUERY));
+  while (rc && (param.buf[flag] == REG_QUERY));
 
   rc = TRUE;
-  if (param.buf[flag] != MDTX_DONE) {
+  if (param.buf[flag] != REG_DONE) {
     logCommon(LOG_WARNING, "server fails to perform your query");
   }
  error:

@@ -68,7 +68,7 @@ install-data-hook:
 	cd $(rsyslogdir); \
 	mv mediatex_rsyslog.conf mediatex.conf || true
 	cd $(logrotatedir); \
-	mv mediatex_logrotate.conf mediatex.conf || true
+	mv mediatex_logrotate.conf mediatex || true
 	cd $(completiondir); \
 	mv mediatex_bash_completion mediatex || true
 
@@ -76,5 +76,5 @@ uninstall-hook:
 	rm -f $(ldsoconfdir)/mediatex.conf
 	rm -f $(apachedir)/mediatex.conf
 	rm -f $(rsyslogdir)/mediatex.conf
-	rm -f $(logrotatedir)/mediatex.conf
+	rm -f $(logrotatedir)/mediatex
 	rm -f $(completiondir)/mediatex

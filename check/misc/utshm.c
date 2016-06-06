@@ -27,7 +27,7 @@
 
 #include "mediatex.h"
 
-#define SHM_BUFF_SIZE 4
+#define SHM_BUFF_SIZE 32
 
 /*=======================================================================
  * Function   : 

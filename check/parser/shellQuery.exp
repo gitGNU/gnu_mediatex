@@ -20,7 +20,6 @@
 [info shellQuery.y] send SAVEMD5 signal to daemon
 [info shellQuery.y] send EXTRACT signal to daemon
 [info shellQuery.y] send NOTIFY signal to daemon
-[info shellQuery.y] send DELIVER signal to daemon
 [info shellQuery.y] add SUPP support on PATH
 [info shellQuery.y] add PATH file
 [info shellQuery.y] remove a support

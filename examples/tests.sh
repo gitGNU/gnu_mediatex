@@ -123,7 +123,7 @@ function yourMail()
 {
     SERVER=${1-serv1}
 
-    echo "> Please, browse https://localhost/~${SERVER}-hello"
+    echo "> Please, browse https://127.0.0.1/~${SERVER}-hello"
     notice "ask for the logo file and give an email address."
     read -p "> push a key to continue"
 }
@@ -291,8 +291,8 @@ function cleanAll()
     topo "Clean all"
     for SERV in serv1 serv2 serv3; do
 	stopInitdScript $SERV
-	mdtxA "adm purge" $SERV
 	rm -fr /var/lib/mediatex/$SERV
+	mdtxA "adm purge" $SERV
     done
     rm -f /tmp/test.nb
 }
@@ -309,8 +309,8 @@ function test1()
     else
 	topo "Cleanup"
 	stopInitdScript
+	rm -fr /var/lib/mediatex/serv1
 	mdtxA "adm purge"
-	rm -fr /var/lib/mediatex/$SERV
     fi
 }
 
@@ -477,8 +477,8 @@ function test7()
     else
 	topo "Cleanup"
 	stopInitdScript serv2
-	mdtxA "adm purge" serv2
 	rm -fr /var/lib/mediatex/serv2
+	mdtxA "adm purge" serv2
     fi
 }
 
@@ -617,8 +617,8 @@ function test11()
     else
 	topo "Cleanup"
 	stopInitdScript serv3
-	mdtxA "adm purge" serv3
 	rm -fr /var/lib/mediatex/serv3
+	mdtxA "adm purge" serv3
     fi
 }
 

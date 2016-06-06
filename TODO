@@ -7,7 +7,11 @@
 
 *** TODO (first)
 
-- manage signals for all and for each collections
+- manage [quick] server scan (done at startup, but not on reload)
+- remove MDTX_DELIVER code?: register.h ... mediatexd.c
+- mdtx srv strip (clean files available from containers into cache)
+- mdtx srv clean (clean files availables from supports)
+- monitor cache sizes: all/used/allocated/free (mediatex srv status -> log)
 
 *** TO TEST
 
@@ -17,11 +21,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- manage [quick] server scan (done at startup, but not on reload)
-- remove MDTX_DELIVER code?: register.h ... mediatexd.c
-- mdtx srv strip (clean files available from containers into cache)
-- mdtx srv clean (clean files availables from supports)
-- monitor cache sizes: all/used/allocated/free (mediatex srv status -> log)
 - document .htaccess switchs (https/auth)
 - manage favicon like done for logo
 - use add-if-not-there function (EEXIST cf notify.c)
@@ -45,6 +44,7 @@
 - add supp: wait CD doors is locked
 - manage accents into cache filenames (cgi should rewrite URLs)
    Content-Type: text/html; charset=UTF-8 ?
+- manage signals for all and for each collections
 - replace gethostby*_r by getaddrinfo and co
 - replace ardsm by mqueue (linear list if reverse order link not used)
 - add thread ID to the log

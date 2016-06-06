@@ -77,7 +77,7 @@ signalJob(void* arg)
   if (!(conf = getConfiguration())) goto error;
   me = taskSignalNumber;
   
-  if (!shmRead(conf->confFile, MDTX_SHM_BUFF_SIZE,
+  if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
   	       mdtxShmRead, (void*)&param))
     goto error;
 
@@ -90,7 +90,7 @@ signalJob(void* arg)
     logMain(LOG_NOTICE, "finish job %i for signal", me);
     usleep(50000);
     strcpy(param.buf, "0000");
-    rc = shmWrite(conf->confFile, MDTX_SHM_BUFF_SIZE,
+    rc = shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
     		  mdtxShmCopy, (void*)&param);
   }
 

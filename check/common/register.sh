@@ -55,9 +55,9 @@ echo "* Send notify message" >>common/$TEST.out
 common/ut$TEST -N >>common/$TEST.out 2>&1 &
 wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
 
-echo "* Send deliver message" >>common/$TEST.out
-common/ut$TEST -D >>common/$TEST.out 2>&1 &
-wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+#echo "* Send deliver message" >>common/$TEST.out
+#common/ut$TEST -D >>common/$TEST.out 2>&1 &
+#wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
 
 echo "* Free shm" >>common/$TEST.out
 #sleep 1
