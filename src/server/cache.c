@@ -550,7 +550,7 @@ quickScanAll(void)
 }
 
 /*=======================================================================
- * Function   : cacheStatus
+ * Function   : cacheSizes
  * Description: log cache status
  * Synopsis   : static void cacheSize(CacheTree* self, 
  *                                    off_t* free, off_t* available)
@@ -783,6 +783,139 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
   return rc;
 }
 
+/*=======================================================================
+ * Function   : scanCache
+ * Description: scan cache
+ * Synopsis   : int scanCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int scanCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "scanCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "scanCache fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : quickScanCache
+ * Description: scan cache quickly
+ * Synopsis   : int quickScanCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int quickScanCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "quickScanCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "quickScanCache fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : trimCache
+ * Description: trim cache: remove all safe and extractable from a
+ *              containers available into the cache
+ * Synopsis   : int trimCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int trimCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "trimCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "trimCache fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cleanCache
+ * Description: clean cache: remove all safe and extractable from 
+ *              final-supplies (supports locally available)
+ * Synopsis   : int cleanCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int cleanCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "cleanCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "cleanCache fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : purgeCache
+ * Description: purge cache: remove all safe
+ * Synopsis   : int purgeCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int purgeCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "purgeCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "purgeCache fails");
+  } 
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : statusCache
+ * Description: display the cache status into the logs
+ * Synopsis   : int statusCache(Collection* coll)
+ * Input      : Collection* coll
+ * Output     : TRUE on success
+ =======================================================================*/
+int statusCache(Collection* coll)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "statusCache on collection %s", coll->label);
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "statusCache fails");
+  } 
+  return rc;
+}
 
 /* Local Variables: */
 /* mode: c */

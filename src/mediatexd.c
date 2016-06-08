@@ -56,14 +56,32 @@ signalJob(void* arg)
   int loop = FALSE;
   ShmParam param;
   int rc3 = REG_DONE;
+  int rc2 = REG_DONE;
   RGIT* curr = 0;
+  int i = 0;
+  
+  struct job {
+    int reg;
+    int (*function)(Collection*);
+    char *name; // only for logs
+  };
+  struct job jobs[8] = {
+    {REG_EXTRACT, extractArchives, "EXTRACT"},
+    {REG_NOTIFY, sendRemoteNotify, "NOTIFY"},
+    {REG_QUICKSCAN, quickScanCache, "QUICK SCAN"},
+    {REG_SCAN, scanCache, "SCAN"},
+    {REG_TRIM, trimCache, "TRIM"},
+    {REG_CLEAN, cleanCache, "CLEAN"},
+    {REG_PURGE, purgeCache, "PURGE"},
+    {REG_STATUS, statusCache, "STATUS"}
+  };
 
   (void) arg;
   logMain(LOG_DEBUG, "signalJob: %i", me);
   if (!(conf = getConfiguration())) goto error;
 
   do {
-    int rc2 = REG_DONE;
+    rc2 = REG_DONE;
     loop = FALSE;
     if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
 		 mdtxShmRead, (void*)&param))
@@ -81,30 +99,16 @@ signalJob(void* arg)
       loop = TRUE;
       goto quit;
     }
-    
-    if (param.buf[REG_EXTRACT] == REG_QUERY) {
-      logMain(LOG_NOTICE, "signalJob %i: EXTRACT", me);
-      if (!serverLoop(extractArchives)) rc2 = REG_ERROR;
-      param.flag = REG_EXTRACT;
-      loop = TRUE;
-      goto quit;
+   
+    for (i=0; i<8; ++i) { // jobs[8]
+      if (param.buf[jobs[i].reg] == REG_QUERY) {
+	logMain(LOG_NOTICE, "signalJob %i: %s", me, jobs[i].name);
+	if (!serverLoop(jobs[i].function)) rc2 = REG_ERROR;
+	param.flag = jobs[i].reg;
+	loop = TRUE;
+	goto quit;
+      }
     }
-    
-    if (param.buf[REG_NOTIFY] == REG_QUERY) {
-      logMain(LOG_NOTICE, "signalJob %i: NOTIFY", me);
-      if (!serverLoop(sendRemoteNotify)) rc2 = REG_ERROR;
-      param.flag = REG_NOTIFY;
-      loop = TRUE;
-      goto quit;
-    }
-
-    /* if (param.buf[REG_DELIVER] == REG_QUERY) { */
-    /*   logMain(LOG_NOTICE, "signalJob %i: DELIVER", me); */
-    /*   if (!serverLoop(deliverMails)) rc2 = REG_ERROR; */
-    /*   param.flag = REG_DELIVER; */
-    /*   loop = TRUE; */
-    /*   goto quit; */
-    /* } */
 
   quit:
     if (loop) {

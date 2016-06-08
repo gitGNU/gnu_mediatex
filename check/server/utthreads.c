@@ -72,10 +72,13 @@ signalJob(void* arg)
   int me = 0;
   long int rc = FALSE;
   ShmParam param;
+  char bufWithZeros[REG_SHM_BUFF_SIZE+1];
 
   (void)arg;
   if (!(conf = getConfiguration())) goto error;
   me = taskSignalNumber;
+  memset(bufWithZeros, '0', REG_SHM_BUFF_SIZE);
+  bufWithZeros[REG_SHM_BUFF_SIZE] = 0; 
   
   if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
   	       mdtxShmRead, (void*)&param))
@@ -83,13 +86,13 @@ signalJob(void* arg)
 
   logMain(LOG_INFO, "in  shm: (%s)", param.buf);  
 
-  if (strcmp(param.buf, "0000")) {
+  if (strcmp(param.buf, bufWithZeros)) {
     usleep(50000);
     logMain(LOG_NOTICE, "doing job %i for signal", me);
     usleep(50000);
     logMain(LOG_NOTICE, "finish job %i for signal", me);
     usleep(50000);
-    strcpy(param.buf, "0000");
+    strcpy(param.buf, bufWithZeros);
     rc = shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
     		  mdtxShmCopy, (void*)&param);
   }

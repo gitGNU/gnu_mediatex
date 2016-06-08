@@ -127,11 +127,13 @@ mdtxShmError(void *buffer, int shmSize, void* arg)
 int 
 mdtxShmInitialize()
 {
-  static char* buffer = "0000\0";
   ShmParam param;
 
-  strncpy(param.buf, buffer, REG_SHM_BUFF_SIZE);
-  logCommon(LOG_NOTICE, "Initialise SHM using %s conf file", env.confLabel);
+  logCommon(LOG_NOTICE, "Initialise SHM using %s conf file", 
+	    env.confLabel);
+
+  memset(param.buf, '0', REG_SHM_BUFF_SIZE);
+  param.buf[REG_SHM_BUFF_SIZE] = 0; 
   return shmWrite(getConfiguration()->confFile, REG_SHM_BUFF_SIZE, 
 		  mdtxShmCopy, (void*)&param);
 }

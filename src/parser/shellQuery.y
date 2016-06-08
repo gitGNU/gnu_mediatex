@@ -135,10 +135,13 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 %token            shellSU
 %token            shellMOTD
 %token            shellAUDIT
-%token            shellDELIVER
 %token            shellSAVE
 %token            shellEXTRACT
 %token            shellNOTIFY
+%token            shellQUICK
+%token            shellSCAN
+%token            shellTRIM
+%token            shellSTATUS
 
 %token            shellAROBASE
 %token            shellCOLON
@@ -491,16 +494,54 @@ srvQuery: shellSAVE shellEOL
     if (!mdtxSyncSignal(REG_NOTIFY)) YYABORT;
   }
 }
-/*
-        | shellDELIVER shellEOL
+        | shellQUICK shellSCAN shellEOL
 {
-  logParser(LOG_INFO, "send DELIVER signal to daemon");
+  logParser(LOG_INFO, "send QUICKSCAN signal to daemon");
   if (!env.noRegression) {
     if (!allowedUser(env.confLabel)) YYABORT;
-    if (!mdtxSyncSignal(REG_DELIVER)) YYABORT;
+    if (!mdtxSyncSignal(REG_QUICKSCAN)) YYABORT;
   }
 }
-*/
+        | shellSCAN shellEOL
+{
+  logParser(LOG_INFO, "send SCAN signal to daemon");
+  if (!env.noRegression) {
+    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!mdtxSyncSignal(REG_SCAN)) YYABORT;
+  }
+}
+        | shellTRIM shellEOL
+{
+  logParser(LOG_INFO, "send TRIM signal to daemon");
+  if (!env.noRegression) {
+    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!mdtxSyncSignal(REG_TRIM)) YYABORT;
+  }
+}
+        | shellCLEAN shellEOL
+{
+  logParser(LOG_INFO, "send CLEAN signal to daemon");
+  if (!env.noRegression) {
+    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!mdtxSyncSignal(REG_CLEAN)) YYABORT;
+  }
+}
+        | shellPURGE shellEOL
+{
+  logParser(LOG_INFO, "send PURGE signal to daemon");
+  if (!env.noRegression) {
+    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!mdtxSyncSignal(REG_PURGE)) YYABORT;
+  }
+}
+        | shellSTATUS shellEOL
+{
+  logParser(LOG_INFO, "send  signal to daemon");
+  if (!env.noRegression) {
+    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!mdtxSyncSignal(REG_STATUS)) YYABORT;
+  }
+}
 
  /* support queries API */
 

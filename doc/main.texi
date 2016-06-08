@@ -108,8 +108,20 @@ Ask @activityServerO{} to perform extractions.
 @item @eventClientNotify
 Ask @activityServerO{} to communicate its state to other servers.
 
-@item @eventClientDeliver
-Ask @activityServerO{} to deliver mails related to extracted archives (no more needed).
+@item @eventClientScan
+Ask @activityServerO{} to manage file added manually to the cache. The files must be describes into meta-data, otherwise they are deleted from the cache. On quick scan, only file's sizes are matche, not checksums.
+
+@item @eventClientTrim
+Ask @activityServerO{} to remove from the cache all files that can be extracted by using containers present into the cache.
+
+@item @eventClientClean
+Ask @activityServerO{} to remove from the cache all files that are safe and can be extracted locally using local supports.
+
+@item @eventClientPurge
+Ask @activityServerO{} to remove from the cache all files that are safe.
+
+@item @eventClientStatus
+Ask @activityServerO{} to log its memory status and available cache's sizes.
 
 @end table
 @item Internal/debug queries:
@@ -412,10 +424,14 @@ Bellow details how meta-data files are affected by @activityClientO{}'s queries.
 @item Queries to operate on @activityServerO{}:
 @multitable @columnfractions .50   .03     .05      .07     .03     .03     .07     .05     .03
 @headitem Client query             @tab [A @tab [B  @tab [C @tab [D @tab D] @tab C] @tab B] @tab A]
-@item @eventClientSave{}           @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
-@item @eventClientExtract{}        @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
-@item @eventClientNotify{}         @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
-@item @eventClientDeliver{}        @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y  
+@item @eventClientSave{}           @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientExtract{}        @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientNotify{}         @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientScan{}           @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientTrim{}           @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientClean{}          @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientPurge{}          @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
+@item @eventClientStatus{}         @tab    @tab     @tab    @tab    @tab    @tab    @tab    @tab y
 @end multitable
 
 @item @actorPublisherO{} data management's queries:

@@ -54,7 +54,7 @@ telnet 127.0.0.1 6560 >/dev/null 2>&1 || true
 
 # synchronize with daeomon
 shm=$(common/utregister -G 2>/dev/null);
-while [ "$shm" != "=> 0000" ]; do
+while [ "$shm" != "=> 000000000" ]; do
 	shm=$(common/utregister -G 2>/dev/null)
 done
 

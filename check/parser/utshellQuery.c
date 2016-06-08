@@ -219,9 +219,6 @@ main(int argc, char** argv)
     case shellAUDIT:
       strcpy(token, "AUDIT");
       break;
-    case shellDELIVER:
-      strcpy(token, "DELIVER");
-      break;
     case shellSAVE:
       strcpy(token, "SAVE");
       break;
@@ -230,6 +227,18 @@ main(int argc, char** argv)
       break;
     case shellNOTIFY:
       strcpy(token, "NOTIFY");
+      break;
+    case shellQUICK:
+      strcpy(token, "QUICK");
+      break;
+    case shellSCAN:
+      strcpy(token, "SCAN");
+      break;
+    case shellTRIM:
+      strcpy(token, "TRIM");
+      break;
+    case shellSTATUS:
+      strcpy(token, "STATUS");
       break;
     case shellAROBASE:
       strcpy(token, "AROBASE");

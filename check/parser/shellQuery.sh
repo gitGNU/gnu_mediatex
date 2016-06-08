@@ -61,7 +61,12 @@ parser/ut$TEST.tab adm get PATH1 as COLL on PATH2 as PATH3 >>parser/$TEST.out 2>
 parser/ut$TEST.tab srv save >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab srv extract >>parser/$TEST.out 2>&1
 parser/ut$TEST.tab srv notify >>parser/$TEST.out 2>&1
-#parser/ut$TEST.tab srv deliver >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv quick scan >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv scan >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv trim >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv clean >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv purge >>parser/$TEST.out 2>&1
+parser/ut$TEST.tab srv status >>parser/$TEST.out 2>&1
 
 # apiSuppQuery
 parser/ut$TEST.tab add supp SUPP on PATH >>parser/$TEST.out 2>&1

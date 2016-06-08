@@ -469,6 +469,20 @@
 @macro eventServerCgiQuery
 @event{<cgiSrv-query>}
 @end macro
+@c   - have
+@macro eventServerHaveQuery
+@event{<have>}
+@end macro
+@c   - notify
+@macro eventServerNotify
+@event{notify()}
+@end macro
+@macro eventServerNotifyReg
+@event{[notify]}
+@end macro
+@macro eventServerNotifyQuery
+@event{<notify>}
+@end macro
 @c   - extract
 @macro eventServerExtract
 @event{extract()}
@@ -476,16 +490,29 @@
 @macro eventServerExtractReg
 @event{[extract]}
 @end macro
-@c   - have
-@macro eventServerHaveQuery
-@event{<have>}
+@c   - quick scan
+@macro eventServerQuickScanReg
+@event{[quick-scan]}
 @end macro
-@c   - notify
-@macro eventServerNotifyReg
-@event{[notify]}
+@c   - scan
+@macro eventServerScanReg
+@event{[scan]}
 @end macro
-@macro eventServerNotifyQuery
-@event{<notify>}
+@c   - trim
+@macro eventServerTrimReg
+@event{[trim]}
+@end macro
+@c   - clean
+@macro eventServerCleanReg
+@event{[clean]}
+@end macro
+@c   - purge
+@macro eventServerPurgeReg
+@event{[purge]}
+@end macro
+@c   - status
+@macro eventServerStatusReg
+@event{[status]}
 @end macro
 
 @c - Client
@@ -501,8 +528,20 @@
 @macro eventClientReload
 @event{$ mediatex srv reload}
 @end macro
-@macro eventClientDeliver
-@event{$ mediatex srv deliver}
+@macro eventClientScan
+@event{$ mediatex srv [quick] scan}
+@end macro
+@macro eventClientTrim
+@event{$ mediatex srv trim}
+@end macro
+@macro eventClientClean
+@event{$ mediatex srv clean}
+@end macro
+@macro eventClientPurge
+@event{$ mediatex srv purge}
+@end macro
+@macro eventClientStatus
+@event{$ mediatex srv status}
 @end macro
 
 @c     - serv

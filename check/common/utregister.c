@@ -40,7 +40,10 @@ static void
 usage(char* programName)
 {
   mdtxUsage(programName);
-  fprintf(stderr, "\n\t\t{ -I | -G | -F | -S | -E | -N | -D } [ -e ]");
+  fprintf(stderr, 
+	  "\n\t\t{ -I | -G | -F | "
+	  "\n\t\t  -W | -E | -N | -Q | -S | -T | -C | -P | -L }"
+	  "\n\t\t[ -e ]\n");
 
   mdtxOptions();
   fprintf(stderr, "  ---\n"
@@ -50,8 +53,13 @@ usage(char* programName)
 	  "  -W, --do-save\t\tsave md5sums.txt file\n"
 	  "  -E, --do-extract\tperform extracton\n"
 	  "  -N, --do-notify\tperform notification\n"
-	  //"  -D, --do-deliver\tperform deliver\n"
-	  "  -e, --do-error\terror test\n");
+	  "  -Q, --do-quick-scan\tperform quick scan\n"
+	  "  -S, --do-scan\tperform scan\n"
+	  "  -T, --do-trim\tperform trim\n"
+	  "  -C, --do-clean\tperform clean\n"
+	  "  -P, --do-purge\tperform purge\n"
+	  "  -L, --do-status\tperform log status\n"
+	  "  -e, --set-error\terror test\n");
   return;
 }
 
@@ -62,7 +70,7 @@ usage(char* programName)
  * modif      : 2012/05/01
  * Description: Unit test for register module.
  * Synopsis   : ./utregister
- * Input      : { -I | -G | -F | -W | -E | -N | -D } | -e ]
+ * Input      : (see usage above)
  * Output     : stdout
  =======================================================================*/
 int 
@@ -75,7 +83,7 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS"IGFWENDe";
+  char* options = MDTX_SHORT_OPTIONS"IGFWENQSTCPde";
   struct option longOptions[] = {
     MDTX_LONG_OPTIONS,
     {"initialize", required_argument, 0, 'I'},
@@ -84,8 +92,13 @@ main(int argc, char** argv)
     {"do-save", required_argument, 0, 'W'},
     {"do-extract", required_argument, 0, 'E'},
     {"do-notify", required_argument, 0, 'N'},
-    {"do-deliver", required_argument, 0, 'D'},
-    {"do-error", required_argument, 0, 'e'},
+    {"do-quick-scan", required_argument, 0, 'Q'},
+    {"do-scan", required_argument, 0, 'S'},
+    {"do-trim", required_argument, 0, 'T'},
+    {"do-clean", required_argument, 0, 'C'},
+    {"do-purge", required_argument, 0, 'P'},
+    {"do-status", required_argument, 0, 'd'},
+    {"set-error", required_argument, 0, 'e'},
     {0, 0, 0, 0}
   };
 
@@ -127,12 +140,37 @@ main(int argc, char** argv)
       if (signal != UNDEF) rc=6;
       signal = REG_NOTIFY;
       break;
-      /*
-    case 'D':
+
+    case 'Q':
       if (signal != UNDEF) rc=7;
-      signal = REG_DELIVER;
+      signal = REG_QUICKSCAN;
       break;
-      */
+
+    case 'S':
+      if (signal != UNDEF) rc=7;
+      signal = REG_SCAN;
+      break;
+
+    case 'T':
+      if (signal != UNDEF) rc=7;
+      signal = REG_TRIM;
+      break;
+
+    case 'C':
+      if (signal != UNDEF) rc=7;
+      signal = REG_CLEAN;
+      break;
+
+    case 'P':
+      if (signal != UNDEF) rc=7;
+      signal = REG_PURGE;
+      break;
+
+    case 'd':
+      if (signal != UNDEF) rc=7;
+      signal = REG_STATUS;
+      break;
+
     case 'e':
       doError = TRUE;
       break;

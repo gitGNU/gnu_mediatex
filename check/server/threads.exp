@@ -6,10 +6,10 @@
 [notice utthreads.c] doing job 1 for localhost
 [notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
-[info utthreads.c] in  shm: (1000)
+[info utthreads.c] in  shm: (100000000)
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
-[info utthreads.c] out shm: (0000)
+[info utthreads.c] out shm: (000000000)
 [notice threads.c] accepting signal HUP
 [notice utthreads.c] daemon wake-up
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
@@ -22,28 +22,28 @@
 [notice utthreads.c] doing job 1 for localhost
 [notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
-[info utthreads.c] in  shm: (1000)
+[info utthreads.c] in  shm: (100000000)
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
-[info utthreads.c] out shm: (0000)
+[info utthreads.c] out shm: (000000000)
 [notice threads.c] accepting signal USR1
-[info utthreads.c] in  shm: (1000)
+[info utthreads.c] in  shm: (100000000)
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
-[info utthreads.c] out shm: (0000)
+[info utthreads.c] out shm: (000000000)
 [notice threads.c] accepting signal USR1
-[info utthreads.c] in  shm: (1000)
+[info utthreads.c] in  shm: (100000000)
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
-[info utthreads.c] out shm: (0000)
+[info utthreads.c] out shm: (000000000)
 [info threads.c] accepting connexion from 127.0.0.1:XXXXX (localhost)
 [notice utthreads.c] doing job 1 for localhost
 [notice utthreads.c] finish job 1 for localhost
 [notice threads.c] accepting signal USR1
-[info utthreads.c] in  shm: (1000)
+[info utthreads.c] in  shm: (100000000)
 [notice utthreads.c] doing job 1 for signal
 [notice utthreads.c] finish job 1 for signal
-[info utthreads.c] out shm: (0000)
+[info utthreads.c] out shm: (000000000)
 [notice threads.c] accepting signal TERM
 [notice utthreads.c] daemon exiting
 [info address.c] build socket address 127.0.0.1:6560

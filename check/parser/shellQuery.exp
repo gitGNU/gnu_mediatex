@@ -20,6 +20,12 @@
 [info shellQuery.y] send SAVEMD5 signal to daemon
 [info shellQuery.y] send EXTRACT signal to daemon
 [info shellQuery.y] send NOTIFY signal to daemon
+[info shellQuery.y] send QUICKSCAN signal to daemon
+[info shellQuery.y] send SCAN signal to daemon
+[info shellQuery.y] send TRIM signal to daemon
+[info shellQuery.y] send CLEAN signal to daemon
+[info shellQuery.y] send PURGE signal to daemon
+[info shellQuery.y] send  signal to daemon
 [info shellQuery.y] add SUPP support on PATH
 [info shellQuery.y] add PATH file
 [info shellQuery.y] remove a support

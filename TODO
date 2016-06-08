@@ -5,6 +5,8 @@
 
 *** BUGS
 
+- make's tool bare re-appear into the cron's mail
+
 *** TODO (first)
 
 - manage [quick] server scan (done at startup, but not on reload)

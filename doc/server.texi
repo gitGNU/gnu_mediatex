@@ -34,10 +34,17 @@ from @procScriptsInitd{}: standard @acronym{UNIX} process management (HUP signal
 from @procClientMisc{}: serialize the last cache status into a file.
 
 @item @eventServerExtractReg
-@itemx @eventServerNotifyReg{} 
-@itemx @eventServerDeliverReg
+@itemx @eventServerNotifyReg
 from @activityClientO{} respectively to 
-@procServerExtract{}, @procServerNotify{} and @procServerDeliver{}: ask to extract, notify or deliver (no more used) by setting a value into share memory and sending a signal.
+@procServerExtract{}, @procServerNotify{}: ask to extract or notify archive contents.
+
+@item @eventServerQuickScanReg
+@itemx @eventServerScanReg
+@itemx @eventServerTrimReg
+@itemx @eventServerCleanReg
+@itemx @eventServerPurgeReg
+@itemx @eventServerStatusReg
+from @activityClientO{}: ask server to operate on its cache content.
 
 @item @eventServerCgiQuery{} 
 from @procScriptsCgi{} to @procServerCgiSrv{}: receive a socket query asking for an archive.

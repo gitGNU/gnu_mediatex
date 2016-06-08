@@ -75,8 +75,12 @@ from @actorPublisherO{}, @procToolsSyslog{}, @procScriptsCron{} or @procScriptsA
 from @actorPublisherO{} to @procClientMisc{}: build/clean the @acronym{HTML} catalogue ; change to server or collection system user ; simulate retrieving all archives.
 
 @item @eventClientSave
-@itemx @eventClientDeliver{} (no more used)
-from @actorPublisherO{} to @activityServer{}: repectively ask @activityServer{} to dump its state into disk or to deliver mails related to extracted archives (no more needed).
+@itemx @eventClientScan
+@itemx @eventClientTrim
+@itemx @eventClientClean
+@itemx @eventClientPurge
+@itemx @eventClientStatus
+from @actorPublisherO{} to @activityServer{}: repectively ask @activityServer{} to dump its state into disk, to manage cache content or to log its memory status.
 
 @item @eventClientExtract
 @itemx @eventClientNotify
@@ -146,7 +150,6 @@ from @procClientMisc{} to @procToolsSsh{}: copy file from one remote server's ca
 @item @eventServerSaveReg
 @itemx @eventServerExtractReg
 @itemx @eventServerNotifyReg
-@itemx @eventServerDeliverReg
 from @activityClient{} to @activityServer{}: wrap the queries to @activityServerO{}.
 
 @item @eventServerHaveQuery

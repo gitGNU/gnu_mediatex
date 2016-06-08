@@ -55,9 +55,29 @@ echo "* Send notify message" >>common/$TEST.out
 common/ut$TEST -N >>common/$TEST.out 2>&1 &
 wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
 
-#echo "* Send deliver message" >>common/$TEST.out
-#common/ut$TEST -D >>common/$TEST.out 2>&1 &
-#wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+echo "* Send quick scan message" >>common/$TEST.out
+common/ut$TEST -Q >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+
+echo "* Send scan message" >>common/$TEST.out
+common/ut$TEST -S >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+
+echo "* Send trim message" >>common/$TEST.out
+common/ut$TEST -T >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+
+echo "* Send clean message" >>common/$TEST.out
+common/ut$TEST -C >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+
+echo "* Send purge message" >>common/$TEST.out
+common/ut$TEST -P >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
+
+echo "* Send status message" >>common/$TEST.out
+common/ut$TEST -d >>common/$TEST.out 2>&1 &
+wait || common/ut$TEST -G -swarning >>common/$TEST.out 2>&1
 
 echo "* Free shm" >>common/$TEST.out
 #sleep 1

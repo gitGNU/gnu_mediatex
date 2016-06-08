@@ -38,6 +38,13 @@ int quickScan(Collection* collection);
 int quickScanAll(void);
 int cacheAlloc(Record** record, Collection* coll, Archive* archive);
 
+int scanCache(Collection* coll);
+int quickScanCache(Collection* coll);
+int trimCache(Collection* coll);
+int cleanCache(Collection* coll);
+int purgeCache(Collection* coll);
+int statusCache(Collection* coll);
+
 #endif /* MDTX_SERVER_CACHE_H */
 
 /* Local Variables: */

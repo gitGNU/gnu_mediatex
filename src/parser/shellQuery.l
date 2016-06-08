@@ -316,8 +316,20 @@
 	  return(shellNOTIFY);
 	}
 
-	deliver {
-	  return(shellDELIVER);
+	quick {
+	  return(shellQUICK);
+	}
+
+	scan {
+	  return(shellSCAN);
+	}
+
+	trim {
+	  return(shellTRIM);
+	}
+
+	status {
+	  return(shellSTATUS);
 	}
 
 	@ {

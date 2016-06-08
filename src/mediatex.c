@@ -78,7 +78,9 @@ usage(char* programName)
 	  "  audit coll COLL for MAIL  Extract all archives from a collection.\n"
 
 	  "\nQueries to daemon:\n"
-	  "  srv (save|extract|notify|deliver)  repectively ask server to dump its state into disk, perform extractions, communicate its state to other servers, deliver mails related to extracted archives (no more needed).\n"
+	  "  srv (save|extract|notify)  repectively ask server to dump its state into disk, perform extractions, communicate its state to other servers, deliver mails related to extracted archives (no more needed).\n"
+	  "  srv [quick] scan  ask server to manage file added manually to the cache. Only check file's sizes but do not compute checksums on quick scan.\n"
+	  "  srv (trim|clean|purge)  ask server remove from the cache all files that repectively can be extracted by using containers present into the cache, are safe and can be extracted locally using local supports or that are safe.\n"
 
 	  "\nInternal/debug queries:\n"
 	  "  adm (update|commit|make) [coll COLL]  Manage CVS synchronisation (already managed by ``upgrade'' query) or Build the local HTML catalogue without CVS synchronisation.\n"

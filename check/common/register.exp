@@ -1,22 +1,58 @@
 * Initialize shm
 [notice register.c] Initialise SHM using mdtx1 conf file
-=> 0000
+=> 000000000
 * Send save message
 [info register.c] setting 0 register
 [info register.c] sending signal 10 to XXXX
 [info register.c] waiting for 0 register unset
-=> 1000
-=> 0000
+=> 100000000
+=> 000000000
 * Send extract message
 [info register.c] setting 1 register
 [info register.c] sending signal 10 to XXXX
 [info register.c] waiting for 1 register unset
-=> 0100
-=> 0000
+=> 010000000
+=> 000000000
 * Send notify message
 [info register.c] setting 2 register
 [info register.c] sending signal 10 to XXXX
 [info register.c] waiting for 2 register unset
-=> 0010
-=> 0000
+=> 001000000
+=> 000000000
+* Send quick scan message
+[info register.c] setting 3 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 3 register unset
+=> 000100000
+=> 000000000
+* Send scan message
+[info register.c] setting 4 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 4 register unset
+=> 000010000
+=> 000000000
+* Send trim message
+[info register.c] setting 5 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 5 register unset
+=> 000001000
+=> 000000000
+* Send clean message
+[info register.c] setting 6 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 6 register unset
+=> 000000100
+=> 000000000
+* Send purge message
+[info register.c] setting 7 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 7 register unset
+=> 000000010
+=> 000000000
+* Send status message
+[info register.c] setting 8 register
+[info register.c] sending signal 10 to XXXX
+[info register.c] waiting for 8 register unset
+=> 000000001
+=> 000000000
 * Free shm
