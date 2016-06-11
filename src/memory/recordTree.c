@@ -129,7 +129,7 @@ cmpRecordAvl(const void *p1, const void *p2)
  * Synopsis   : int cmpRecordSize(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
  * Output     : -1, 0 or 1 respectively for lower, equal or greater
- * Note       : sort by growing sizes 
+ * Note       : sort by alphabetic order
  =======================================================================*/
 int 
 cmpRecordSize(const void *p1, const void *p2)
@@ -170,7 +170,7 @@ cmpRecordSize(const void *p1, const void *p2)
  * Synopsis   : int cmpRecordPath(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
  * Output     : -1, 0 or 1 respectively for lower, equal or greater
- * Note       : sort by growing sizes 
+ * Note       : sort by alphabetic order 
  =======================================================================*/
 int 
 cmpRecordPath(const void *p1, const void *p2)
@@ -187,6 +187,30 @@ cmpRecordPath(const void *p1, const void *p2)
   if (!rc) rc = strcmp(a1->extra, a2->extra);
   if (!rc) rc = cmpRecord(p1, p2);
  
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : cmpRecordPathAvl
+ * Description: compare 2 records on path
+ * Synopsis   : int cmpRecordPathAvl(const void *p1, const void *p2)
+ * Input      : const void *p1, const void *p2 : the records
+ * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Note       : sort by alpabetic order (uniq key) 
+ =======================================================================*/
+int 
+cmpRecordPathAvl(const void *p1, const void *p2)
+{
+  int rc = 0;
+
+  /* p1 and p2 are pointers on items
+   * and items are suposed to be Record* 
+   */
+  
+  Record* a1 = (Record*)p1;
+  Record* a2 = (Record*)p2;
+
+  if (!rc) rc = strcmp(a1->extra, a2->extra);
   return rc;
 }
 
@@ -273,7 +297,7 @@ logRecord(int logModule, int logPriority, Record* self)
 	  MAX_SIZE_SIZE, (long long unsigned int)self->archive->size,
 	  self->extra?self->extra:"");
 
-  logEmit(logModule, logPriority, "# ^ %s\n", strRecordType(self));
+  logEmit(logModule, logPriority, "# ^ %s", strRecordType(self));
  end:
   return TRUE;
  error:
@@ -297,7 +321,7 @@ serializeRecord(RecordTree* tree, Record* self)
   checkRecord(self);
   checkRecordTree(tree);
 
-  // not esay to read when serializing to stdout because of aesPrint
+  // not easy to read when serializing to stdout because of aesPrint
   if (!env.noRegression) {
     logMemory(LOG_DEBUG, "serialize Record: %s, %s %s:%lli",
     strRecordType(self), self->server->fingerPrint, 
@@ -306,13 +330,17 @@ serializeRecord(RecordTree* tree, Record* self)
  
   if (self->type & REMOVE) goto end;
 
-  if (getRecordType(self) == MALLOC_SUPPLY) {
-     logMemory(LOG_WARNING, "get a malloc record ?!");
+  switch (getRecordType(self)) {
+  case MALLOC_SUPPLY:
+    logMemory(LOG_INFO, "ignore malloc record");
+    goto end;
+  case UNDEF_RECORD:
+    logMemory(LOG_WARNING, "ignore undefined record");
+    goto end;
+  default:
+    ;
   }
-  if (getRecordType(self) == UNDEF_RECORD) {
-     logMemory(LOG_WARNING, "get an undef record ?!");
-  }
-
+  
   if (localtime_r(&self->date, &date) == (struct tm*)0) {
     logMemory(LOG_ERR, "localtime_r returns on error");
     goto error;

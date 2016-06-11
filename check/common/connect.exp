@@ -27,10 +27,8 @@
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash1                 123 path1
 [info recordTree.c] # ^ REMOTE_DEMAND
-
 [info recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa                            hash2                 456 path2
 [info recordTree.c] # ^ REMOTE_DEMAND
-
 [info recordTree.c] Serializing UNKNOWN record tree in file: stdout
 [info confTree.c] free configuration
 [info utconnect.c] exit on success

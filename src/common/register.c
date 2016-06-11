@@ -67,11 +67,11 @@ mdtxShmRead(void *buffer, int shmSize, void* arg)
  * Synopsis   : void mdtxShmEnable(void *buffer, void* arg)
  * Input      : void *buffer: SHM buffer
  *              int shmSize: SHM size
- *              void* arg:    input from pointer on ShmParam 
+ *              void* arg:    input from pointer on ShmParam
  * Output     : N/A
  =======================================================================*/
-static void 
-mdtxShmEnable(void *buffer, int shmSize, void* arg) 
+static void
+mdtxShmEnable(void *buffer, int shmSize, void* arg)
 {
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
@@ -86,11 +86,12 @@ mdtxShmEnable(void *buffer, int shmSize, void* arg)
  * Synopsis   : void mdtxShmDisable(void *buffer, void* arg)
  * Input      : void *buffer: SHM buffer
  *              int shmSize: SHM size
- *              void* arg:    input from pointer on ShmParam 
+ *              void* arg:    input from pointer on ShmParam
  * Output     : N/A
+ * Note       : never used
  =======================================================================*/
-void 
-mdtxShmDisable(void *buffer, int shmSize, void* arg) 
+void
+mdtxShmDisable(void *buffer, int shmSize, void* arg)
 {
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
@@ -105,11 +106,12 @@ mdtxShmDisable(void *buffer, int shmSize, void* arg)
  * Synopsis   : void mdtxShmDisable(void *buffer, void* arg)
  * Input      : void *buffer: SHM buffer
  *              int shmSize: SHM size
- *              void* arg:    input from pointer on ShmParam 
+ *              void* arg:    input from pointer on ShmParam
  * Output     : N/A
+ * Note       : only used by init test
  =======================================================================*/
-void 
-mdtxShmError(void *buffer, int shmSize, void* arg) 
+void
+mdtxShmError(void *buffer, int shmSize, void* arg)
 {
   ShmParam* param = (ShmParam*)arg;
   (void) shmSize;
@@ -187,7 +189,7 @@ mdtxAsyncSignal(int signal)
     goto error;
   }
 
-  // send SIGUSR1 to daemon
+  // send signal (HUP or SIGUSR1) to daemon
   logCommon(LOG_INFO, "sending signal %i to %i", signal, pid);
 
   if (kill(pid, signal) == -1) {
@@ -236,16 +238,17 @@ int mdtxSyncSignal(int flag)
       goto error;
 
   // Do no set if register is already set
-  if (param.buf[flag] == REG_QUERY) goto quit;
+  if (param.buf[flag] == REG_QUERY || param.buf[flag] == REG_PENDING) 
+    goto wait;
 
-  // Set register
+  // Set registers
   logCommon(LOG_INFO, "setting %i register", flag);
   param.flag = flag;
   if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE, 
 		mdtxShmEnable, (void*)&param))
     goto error;
 
- quit:
+ wait:
   // Send SIGUSR1 signal to the daemon
   if (!mdtxAsyncSignal(SIGUSR1)) goto error;
 

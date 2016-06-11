@@ -168,7 +168,7 @@ main(int argc, char** argv)
   if (!utAddLocalDemand(coll, "022a34b2f9b893fba5774237e1aa80ea", 24075, 
 			"nroche@narval.tk")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   utLog("%s", "Now we have :", coll);
 
   utLog("%s", "deliver the mail:", 0);

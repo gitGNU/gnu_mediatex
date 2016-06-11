@@ -335,11 +335,13 @@ memoryStatus(int priority, char* file, int line)
   sprintSize(max, (long long unsigned int)alloc->maxAllocated);
   sprintSize(lim, (long long unsigned int)alloc->limAllocated);
 
+  logAlloc(priority, file, line, "===");
   logAlloc(priority, file, line, 
 	   "Memory: VSZ ; SELF: actual, max reach, nice limit");
   logAlloc(priority, file, line, 
 	   "%11s%15s%11s%12s", vsz, use, max, lim);
-
+  logAlloc(priority, file, line, "===");
+  
  error:
   return;
 }

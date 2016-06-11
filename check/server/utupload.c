@@ -116,7 +116,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   utLog("%s", "Scan gives :", coll);
 
  /*--------------------------------------------------------*/
@@ -173,7 +173,7 @@ main(int argc, char** argv)
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
 
   /*--------------------------------------------------------*/
   utLog(" * Upload providing a target: %s", "store", 0);

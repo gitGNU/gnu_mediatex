@@ -967,7 +967,7 @@ getCollection(char *label)
 /*=======================================================================
  * Function   : addCollection
  * Description: Add a collection if not already there.
- * Synopsis   : Collection* getCollection(char* label)
+ * Synopsis   : Collection* addCollection(char* label)
  * Input      : char* label         = The catalog's label
  * Output     : The catalog's collection we have found/added
  =======================================================================*/

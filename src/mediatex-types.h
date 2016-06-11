@@ -267,6 +267,13 @@ struct ScoreParam {
 
 // Defensive programming macros
 
+#define checkString(string, label) {				\
+    if (!string || !(*string))	{				\
+      logMisc(LOG_ERR, "please provide a %s", label);		\
+      goto error;						\
+    }								\
+  }
+
 #define checkLabel(label) {					\
     if (!label || !(*label))	{				\
       logMisc(LOG_ERR, "%s", "please provide a label");		\

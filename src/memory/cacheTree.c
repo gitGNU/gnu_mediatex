@@ -308,9 +308,12 @@ computeArchiveStatus(Collection* coll, Archive* archive)
     goto error2;
   }
 
-  // state 5: to keep archive having a bad score (incoming included) or 
-  // still in use for extraction
-  if (archive->extractScore <= coll->serverTree->scoreParam.maxScore /2
+  // state 5: to keep archive
+  // - wanted
+  // - having a bad score (incoming included)
+  // - still in use for extraction
+  if (haveRecords(archive->demands) ||
+      archive->extractScore <= coll->serverTree->scoreParam.maxScore /2
       || archive->localSupply->date > date) {
     archive->state = TOKEEP;
   }

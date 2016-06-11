@@ -3,17 +3,16 @@
 
 *** TO TEST (first)
 
+- does loadCollection alway need EXTR (to use getArchive) ?
+- is cleanCacheTree() call somewhere ?
+
 *** BUGS
 
 - make's tool bare re-appear into the cron's mail
 
 *** TODO (first)
 
-- manage [quick] server scan (done at startup, but not on reload)
-- remove MDTX_DELIVER code?: register.h ... mediatexd.c
-- mdtx srv strip (clean files available from containers into cache)
-- mdtx srv clean (clean files availables from supports)
-- monitor cache sizes: all/used/allocated/free (mediatex srv status -> log)
+- use 'srv purge' into tests.sh
 
 *** TO TEST
 
@@ -24,6 +23,7 @@
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - document .htaccess switchs (https/auth)
+- document git merge
 - manage favicon like done for logo
 - use add-if-not-there function (EEXIST cf notify.c)
 - serialise b-tree using another order

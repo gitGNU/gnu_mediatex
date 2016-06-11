@@ -39,9 +39,10 @@
 #define REG_SHM_BUFF_SIZE 9
 
 // possible values into registers
-#define REG_DONE  '0'
-#define REG_QUERY '1'
-#define REG_ERROR '2'
+#define REG_DONE    '0'
+#define REG_QUERY   '1'
+#define REG_PENDING '2'
+#define REG_ERROR   '3'
 
 typedef struct ShmParam {
   int flag;

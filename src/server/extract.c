@@ -1023,7 +1023,8 @@ extractFromAsso(ExtractData* data, FromAsso* asso)
  *              FALSE on error
  * Note       : Recursive calls to extract container(s)
  =======================================================================*/
-int extractContainer(ExtractData* data, Container* container)
+int
+extractContainer(ExtractData* data, Container* container)
 {
   int rc = FALSE;
   Archive* archive = 0;
@@ -1087,7 +1088,8 @@ int extractContainer(ExtractData* data, Container* container)
  *              int rc: FALSE on error
  * Note       : Recursive call
  =======================================================================*/
-int extractArchive(ExtractData* data, Archive* archive, int doCp)
+int
+extractArchive(ExtractData* data, Archive* archive, int doCp)
 {
   int rc = FALSE;
   Collection* coll = 0;
@@ -1231,7 +1233,8 @@ int extractArchive(ExtractData* data, Archive* archive, int doCp)
  * Input      : Collection* coll
  * Output     : TRUE on success
  =======================================================================*/
-int extractArchives(Collection* coll)
+int
+extractArchives(Collection* coll)
 {
   int rc = FALSE;
   int rc2 = FALSE;

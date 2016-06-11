@@ -30,7 +30,6 @@ struct Support
 {
   char     name[MAX_SIZE_STRING+1];
 
-  Archive* archive;
   char     quickMd5sum[MAX_SIZE_MD5+1];
   char     fullMd5sum[MAX_SIZE_MD5+1];
   char     quickShasum[MAX_SIZE_SHA+1];

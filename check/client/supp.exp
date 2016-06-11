@@ -150,7 +150,6 @@ score      state label
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 /HERE/misc/logoP1.iso:supports/SUPP21_logo.part1
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [notice utsupp.c] *** Update a support:
 [info supportTree.c] Serializing the supports list file: stdout
 score      state label

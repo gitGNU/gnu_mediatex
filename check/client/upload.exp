@@ -95,7 +95,6 @@
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -198,7 +197,6 @@ Document "css": "css"
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -269,7 +267,6 @@ Document "css": "css"
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -321,7 +318,6 @@ Document "css": "css"
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -397,7 +393,6 @@ Document "css": "css"
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -441,7 +436,6 @@ Document "css": "css"
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 99b882d1ba57c2c83a53a719e2433518                1004 /HERE/misc/mediatex.css:dirname/filename
 [info recordTree.c] # ^ FINAL_SUPPLY
-
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)

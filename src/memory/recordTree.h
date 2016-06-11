@@ -65,6 +65,8 @@ int cmpRecordQuick(const void *p1, const void *p2);
 int cmpRecord(const void *p1, const void *p2);
 int cmpRecordSize(const void *p1, const void *p2);
 int cmpRecordPath(const void *p1, const void *p2);
+int cmpRecordPathAvl(const void *p1, const void *p2);
+
 Record* createRecord(void);
 Record* destroyRecord(Record* self);
 Record* copyRecord(Record* destination, Record* source);

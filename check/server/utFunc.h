@@ -29,6 +29,8 @@
 
 /* API */
 
+void utHideLogs();
+void utRestoreLogs();
 int utCleanCaches();
 int utCopyFileOnCache(Collection* coll, char* srcdir, char* file);
 

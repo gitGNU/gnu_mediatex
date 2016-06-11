@@ -18,7 +18,6 @@
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
-
 [info mediatex-cgi.c] localhost:6560 tel (120) not found
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
 [info mediatex-cgi.c] ask  127.0.0.1/6b18ed0194b0fbadd08e0a13cccda00e server for file
@@ -34,7 +33,6 @@
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
-
 [info mediatex-cgi.c] 127.0.0.1:6560 tel (120) not found
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
 [info confTree.c] free configuration
@@ -70,7 +68,6 @@ Mail <INPUT type=text name=mail>
 [info recordTree.c] #                date                             host                             hash                size extra
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 test@test.org
 [info recordTree.c] # ^ FINAL_DEMAND
-
 [info mediatex-cgi.c] localhost:6560 tel (221) ok
 [info confTree.c] free configuration
 [info mediatex-cgi.c] exit on success

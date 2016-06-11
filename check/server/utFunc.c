@@ -24,6 +24,41 @@
 #include "mediatex.h"
 #include "server/utFunc.h"
 
+static LogSeverity* logSeverityBackup[LOG_MAX_MODULE];
+
+/*=======================================================================
+ * Function   : utHideLogs
+ * Description: disable logs
+ =======================================================================*/
+void utHideLogs()
+{
+  int i = 0;
+  
+  for (i=0; i<LOG_MAX_MODULE; ++i){
+    logSeverityBackup[i] = env.logHandler->severity[i];
+    
+    if (i == LOG_MAIN) {
+      env.logHandler->severity[i] = &LogSeverities[5]; // notice
+    }
+    else {
+      env.logHandler->severity[i] = &LogSeverities[3]; // err
+    }
+  }
+}
+
+/*=======================================================================
+ * Function   : utHideLogs
+ * Description: re-enable logs
+ =======================================================================*/
+void utRestoreLogs()
+{
+  int i = 0;
+  
+  for (i=0; i<LOG_MAX_MODULE; ++i){
+    env.logHandler->severity[i] = logSeverityBackup[i];
+  }
+}
+
 /*=======================================================================
  * Function   : utCleanCache
  * Description: Clean the physical caches
@@ -32,8 +67,6 @@ int
 utCleanCaches(void)
 {
   int rc = FALSE;
- 
-  logMain(LOG_NOTICE, "clean the cache");
   Configuration* conf = 0;
   Collection* coll = 0;
   RGIT* curr = 0;
@@ -42,12 +75,17 @@ utCleanCaches(void)
 
   logMain(LOG_NOTICE, "clean cache for all collections");
 
+  // hide the logs
+  utHideLogs();
+
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!conf->collections) goto error;
   while ((coll = rgNext_r(conf->collections, &curr))) {
-    if (!diseaseCacheTree(coll)) goto error;
+
+    // set directory paths
+    if (!expandCollection(coll)) goto error;
 
     // clean cache dir
     if (!(argv[2] = createString(cmd))) goto error;
@@ -63,9 +101,15 @@ utCleanCaches(void)
     if (!execScript(argv, 0, 0, FALSE)) goto error;
     argv[2] = destroyString(argv[2]);
 
-    // this emulate loadRecords call (we dont call it into unit tests)
+    // empty the cache
+    if (!diseaseCacheTree(coll)) goto error;
+    
+    // hide score computation
     if (!computeExtractScore(coll)) goto error;
   }
+
+  // restore the logs
+  utRestoreLogs();
 
   rc = TRUE;
  error:
@@ -89,10 +133,10 @@ int
 utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
 {
   int rc = FALSE;
-
   char* argv[] = {"/bin/cp", "-f", 0, 0, 0};
 
-  logMain(LOG_NOTICE, "copy %s to the %s cache", srcfile, coll->label);
+  utHideLogs();
+  logMain(LOG_NOTICE, "copy %s into the %s cache", srcfile, coll->label);
 
   if (!(argv[2] = createString(srcdir))) goto error;
   if (!(argv[2] = catString(argv[2], "/../misc/"))) goto error;
@@ -108,6 +152,7 @@ utCopyFileOnCache(Collection* coll, char* srcdir, char* srcfile)
 	    srcfile, coll->label);
   } 
   if (argv[2]) destroyString(argv[2]);
+  utRestoreLogs();
   return rc;
 }
 

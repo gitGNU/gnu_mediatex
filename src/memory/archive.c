@@ -276,7 +276,7 @@ getArchive(Collection* coll, char* hash, off_t size)
   AVLNode* node = 0;
 
   checkCollection(coll);
-  checkLabel(hash);
+  checkString(hash, "hash");
   logMemory(LOG_DEBUG, "getArchive %s:%lli", hash, (long long int) size);
 
   // look for archive

@@ -33,7 +33,6 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] D 2010-01-01,01:00:00 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 [notice recordTree.c] # ^ REMOTE_DEMAND
-
 [err threads.c] checkMessage fails
 [notice utmessage.c] reply : 304 message contains a record not related to author 746d6ceeb76e05cfa2dea92a1c5753cd but aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 [info confTree.c] free configuration

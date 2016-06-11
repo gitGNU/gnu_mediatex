@@ -113,27 +113,27 @@ main(int argc, char** argv)
   
   utLog("%s", "2) retry with it on cache", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "3) retry with tgz on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "4) try with only part1 on cache", 0);
   if (!utCleanCaches()) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
   
   utLog("%s", "5) try with part2 added on cache too", 0);
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);
 
@@ -142,7 +142,7 @@ main(int argc, char** argv)
   
   utLog("%s", "6) register a mail", 0);
   if (!utCleanCaches()) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   if (!(connexion = utCgiMessage(coll, "test@test.com"))) goto error;
   if (!cgiServer(connexion)) goto error;
   utLog("%s", "Now we have :", coll);

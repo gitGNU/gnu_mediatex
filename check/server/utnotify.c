@@ -161,7 +161,7 @@ main(int argc, char** argv)
   if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
 
   utLog("%s", "we have :", coll);
   if (!sendRemoteNotify(coll)) goto error;

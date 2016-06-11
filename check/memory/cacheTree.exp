@@ -77,10 +77,8 @@
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [notice utcacheTree.c] ---
 [notice utcacheTree.c] add new record into cache
-[warning recordTree.c] get a malloc record ?!
-S 1970-01-01,01:00:02 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !malloc
-# ^ MALLOC_SUPPLY
-          
+[info recordTree.c] ignore malloc record
+
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> ALLOCATED
 [notice utcacheTree.c] del record from cache
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : ALLOCATED -> UNUSED

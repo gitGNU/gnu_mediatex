@@ -25,6 +25,18 @@
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
 
+static int addFiles(Collection* coll, char* inputRep)
+{
+  if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logoP1.iso")) goto error;
+  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
+  return TRUE;
+ error:
+  return FALSE;
+}
 
 /*=======================================================================
  * Function   : usage
@@ -104,11 +116,12 @@ main(int argc, char** argv)
 
   // export mdtx environment
   if (!setEnv(programName, &env)) goto optError;
-
   /************************************************************************/
-  if (!(coll = mdtxGetCollection("coll3"))) goto error;
+  utLog("%s", "Unit test Cleanup:", 0);
+  if (!utCleanCaches()) goto error;
 
-  utLog("%s", "Paths", 0);
+  // test getFinalSupplyInPath function
+  utLog("%s", "1) Paths", 0);
   strcpy(path, "/path/to/file");
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
@@ -137,22 +150,73 @@ main(int argc, char** argv)
   extra = getFinalSupplyOutPath(path);
   logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
   extra = destroyString(extra);
+  //===============================================================
+  
+  // test (re-)loading functions
+  utLog("%s", "2) API", 0);
+  if (!(coll = mdtxGetCollection("coll1"))) goto error;
+  if (!addFiles(coll, inputRep)) goto error;
+  utLog("%s", "Begin with:", coll);
 
-  utLog("%s", "Clean the cache:", 0);
-  if (!utCleanCaches()) goto error;
+  utLog("%s", "2.1) Reload the cache:", 0);
+  if (!loadCache(coll)) goto error; 
+  if (!loadCache(coll)) goto error; // test removing support file
+  utLog("%s", "Reload gives:", coll);
+  
+  utLog("%s", "2.2) Quick scan the cache directory:", 0);
+  if (!scanCollection(coll, TRUE)) goto error;
+  utLog("%s", "Quick scan gives:", coll);
+    
+  utLog("%s", "2.3) Scan the cache directory:", 0);
+  coll->fileState[iCACH] = LOADED; // force loosing modifications 
+  if (!diseaseCollection(coll, CACH)) goto error;
+  if (!loadCache(coll)) goto error;
+  utLog("%s", "Begin with:", coll);
+  if (!scanCollection(coll, FALSE)) goto error;
+  utLog("%s", "Scan gives:", coll);
 
-  utLog("%s", "Scan the cache directory :", 0);
-  if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP2.cat")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP1.iso")) goto error;
-  if (!utCopyFileOnCache(coll, inputRep, "logoP2.iso")) goto error;
-  if (!quickScan(coll)) goto error;
-  utLog("%s", "Scan gives :", coll);
+  utLog("%s", "2.4) Trim cat1:", 0);
+  if (!trimCache(coll)) goto error;
+  utLog("%s", "Trim gives:", coll);
 
+  utLog("%s", "2.5) Clean cat1 and iso1:", 0);
+  coll->fileState[iCACH] = LOADED; // force loosing modifications 
+  if (!diseaseCollection(coll, CACH)) goto error;
+  if (!addFiles(coll, inputRep)) goto error;
+  if (!loadCache(coll)) goto error;
+  utLog("%s", "Begin with:", coll);
+  if (!cleanCache(coll)) goto error;
+  utLog("%s", "Clean gives:", coll);
+  
+  utLog("%s", "2.6) Clean only cat1 (no local image):", 0);
+  coll->fileState[iCACH] = LOADED; // force loosing modifications 
+  if (!diseaseCollection(coll, CACH)) goto error;
+  if (!addFiles(coll, inputRep)) goto error;
+  if (!loadCache(coll)) goto error;
+
+  // iso1 no more available from local supports 
+  if (!(archive =
+	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
+    goto error;
+  if (!delImage(coll, getImage(coll, coll->localhost, archive)))
+    goto error;
+  
+  utLog("%s", "Begin with:", coll);
+  if (!cleanCache(coll)) goto error;
+  utLog("%s", "Clean gives:", coll);
+
+  utLog("%s", "2.7) Purge cat1 :", 0);
+  if (!purgeCache(coll)) goto error;
+  utLog("%s", "Purge gives:", coll);
+  //===============================================================
+
+  utLog("%s", "3) Allocation", 0);
+  if (!(coll = mdtxGetCollection("coll3"))) goto error;
+  if (!addFiles(coll, inputRep)) goto error;
+  if (!loadCache(coll)) goto error;
+  utLog("%s", "Begin with:", coll);
   /*--------------------------------------------------------*/
-  utLog("%s", "Keep logoP1.iso and logoP2.iso:", 0);
+  utLog("%s", "3.1) Keep logoP1.iso and logoP2.iso:", 0);
   if (!(archive =
   	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
     goto error;
@@ -164,7 +228,7 @@ main(int argc, char** argv)
   utLog("%s", "Now we have :", coll);
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for too much place :", 0);
+  utLog("%s", "3.2) Ask for too much place :", 0);
   size = coll->cacheTree->totalSize;
   if (!(archive = addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   			     size))) goto error;
@@ -172,25 +236,26 @@ main(int argc, char** argv)
   utLog("reply : %i", record?1:0, coll); // 0: too much
   
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for little place so do not suppress anything :", 0);
+  utLog("%s", "3.3) Ask for little place so do not suppress anything :", 0);
   size = coll->cacheTree->totalSize - coll->cacheTree->useSize;
   archive->size = size;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
-  record->extra[0]='*';
+  //record->extra[0]='*'; // ALLOCATED -> AVAILABLE
   utLog("reply : %i", record?1:0, coll); // 1: already avail
   if (!delCacheEntry(coll, record)) goto error;
 
   /*--------------------------------------------------------*/
-  utLog("%s", "Ask for place so as we need to suppress files :", 0);
+  utLog("%s", "3.4) Ask for place so as we need to suppress files :", 0);
   size = coll->cacheTree->totalSize - coll->cacheTree->frozenSize;
   if (!(archive = addArchive(coll, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   			    size))) goto error;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
-  record->extra[0]='*'; // ALLOCATED -> AVAILABLE
-  if (!delCacheEntry(coll, record)) goto error;
+  //record->extra[0]='*'; // ALLOCATED -> AVAILABLE
   utLog("reply : %i", record?1:0, coll); // 1: del some entries
+  if (!statusCache(coll)) goto error;
+  if (!delCacheEntry(coll, record)) goto error;
   record = 0;
 
   /*--------------------------------------------------------*/

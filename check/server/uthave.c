@@ -112,7 +112,7 @@ main(int argc, char** argv)
   utLog("%s", "Clean the cache and add part1:", 0);
   if (!utCleanCaches()) goto error;
 
-  if (!quickScan(coll)) goto error;
+  if (!scanCollection(coll, TRUE)) goto error;
   utLog("%s", "add a demand for logo.png", 0);
   if (!utAddFinalDemand(coll)) goto error;
   utLog("%s", "Now we have :", coll);

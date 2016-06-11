@@ -181,14 +181,19 @@ newLine: line
 	    MAX_SIZE_SIZE, (long long int)$1->archive->size, 
 	    $1->extra?$1->extra:"");
 
-   if (!avl_insert(recordTree->records, $1)) {
-     logParser(LOG_ERR, "cannot add record (already there?)");
-     // RQ: YYABORT will close the socket, do YYERROR close it ?
-     YYERROR;
+  if (getRecordType($1) == MALLOC_SUPPLY) {
+    logParser(LOG_WARNING, "ignore malloc record");
+    if (!delRecord(recordTree->collection, $1)) YYERROR;
+  }
+  else {
+    if (!avl_insert(recordTree->records, $1)) {
+      logParser(LOG_ERR, "cannot add record (already there?)");
+      // RQ: YYABORT will close the socket, do YYERROR close it ?
+      YYERROR;
+    }
   }
 
   $1 = 0;
-
 }
 ;
 
@@ -210,10 +215,9 @@ line: recordTYPE recordDATE recordHASH recordHASH recordSIZE recordPATH
     YYERROR;
   }
 
-  if (!(archive = addArchive(recordTree->collection, $4, $5))) 
-    YYERROR;
-
+  if (!(archive = addArchive(recordTree->collection, $4, $5))) YYERROR;
   if (!(extra = createString($6))) YYERROR;
+
   if (!($$ = 
 	addRecord(recordTree->collection, server, archive, $1, extra)))
     YYERROR;

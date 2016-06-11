@@ -34,10 +34,13 @@ char* getFinalSupplyInPath(char* path);
 char* getFinalSupplyOutPath(char* path);
 char* getAbsoluteRecordPath(Collection* coll, Record* record);
 
-int quickScan(Collection* collection);
-int quickScanAll(void);
+int scanCollection(Collection* collection, int doQuick);
 int cacheAlloc(Record** record, Collection* coll, Archive* archive);
 
+/* Signal jobs */
+
+int loadCache(Collection* coll); // HUP
+int saveCache(Collection* coll);
 int scanCache(Collection* coll);
 int quickScanCache(Collection* coll);
 int trimCache(Collection* coll);

@@ -273,8 +273,7 @@ int loadRecords(Collection* coll)
   destroyRecordTree(coll->cacheTree->recordTree);
   coll->cacheTree->recordTree = tree;
   coll->cacheTree->recordTree->messageType = DISK;
-  for (node = coll->cacheTree->recordTree->records->head;
-       node; node = node->next) {
+  for (node = tree->records->head; node; node = node->next) {
     record = node->item;
     if (!addCacheEntry(coll, record)) goto error;
   }
@@ -1081,6 +1080,9 @@ diseaseColl(Collection* coll, int i)
   else {
     logCommon(LOG_INFO, "do not disease %s collection (%s)",
 	      coll->label, strCF(1<<i));
+    if (coll->fileState[i] == MODIFIED) {
+      logCommon(LOG_DEBUG, "... as modified");
+    }
     if (coll->fileState[i] != LOADED) {
       logCommon(LOG_DEBUG, "... as not loaded");
     }

@@ -2,281 +2,7 @@
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] Clean the cache and add part1:
 [notice uthave.c] .......................................................
-[notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info openClose.c] estimate 93 steps for load
-[info openClose.c] parse coll1 collection ( SX )
-[info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
-[info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
-[info openClose.c] steps: 93 / 93
-[info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
-[info extractScore.c]    7.50
-[info extractScore.c]    9.00
-[info extractScore.c] = 16.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  8.25
-[info extractScore.c] local image score for de5008799752552b7963a2670dc5eb18:391168
-[info extractScore.c]   10.00
-[info extractScore.c]    2.00
-[info extractScore.c] +  9.00
-[info extractScore.c] = 21.00
-[info extractScore.c] / 2
-[info extractScore.c] > 10.00
-[info extractScore.c] -------
-[info extractScore.c] = 10.00
-[info extractScore.c] local image score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]    7.50
-[info extractScore.c] =  7.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  3.75
-[info extractScore.c]        archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]       container ISO/de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]      archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]        archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]       container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]      archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]     container CAT/1a167d608e76a6a4a8b16d168580873c:20480 = 3.75
-[info extractScore.c]    archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]    archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]    archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]    archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]      archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]     container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]      archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]     container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]    archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]    archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]    archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]    archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive 022a34b2f9b893fba5774237e1aa80ea:24075 = 8.25
-[info extractScore.c]  archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]  archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]  archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c]  archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]  archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]  archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive b281449c229bcc4a3556cdcc0d3ebcec:815 = 3.75
-[info extractScore.c]  archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]  archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]  archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]  archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]  archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]  archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info openClose.c] estimate 93 steps for load
-[info openClose.c] parse coll2 collection ( SX )
-[info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/servers.txt
-[info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 93
-[info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
-[info extractScore.c]    7.50
-[info extractScore.c]    9.00
-[info extractScore.c] = 16.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  8.25
-[info extractScore.c] local image score for de5008799752552b7963a2670dc5eb18:391168
-[info extractScore.c]   10.00
-[info extractScore.c]    2.00
-[info extractScore.c] +  9.00
-[info extractScore.c] = 21.00
-[info extractScore.c] / 2
-[info extractScore.c] > 10.00
-[info extractScore.c] -------
-[info extractScore.c] = 10.00
-[info extractScore.c] local image score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]    7.50
-[info extractScore.c] =  7.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  3.75
-[info extractScore.c]        archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]       container ISO/de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]      archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]        archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]       container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]      archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]     container CAT/1a167d608e76a6a4a8b16d168580873c:20480 = 3.75
-[info extractScore.c]    archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]    archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]    archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]    archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]      archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]     container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]      archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]     container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]    archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]    archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]    archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]    archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive 022a34b2f9b893fba5774237e1aa80ea:24075 = 8.25
-[info extractScore.c]  archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]  archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]  archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c]  archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]  archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]  archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive b281449c229bcc4a3556cdcc0d3ebcec:815 = 3.75
-[info extractScore.c]  archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]  archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]  archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]  archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]  archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]  archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info openClose.c] estimate 93 steps for load
-[info openClose.c] parse coll3 collection ( SX )
-[info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/servers.txt
-[info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/extract000.txt
-[info openClose.c] steps: 93 / 93
-[info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
-[info extractScore.c]    7.50
-[info extractScore.c]    9.00
-[info extractScore.c] = 16.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  8.25
-[info extractScore.c] local image score for de5008799752552b7963a2670dc5eb18:391168
-[info extractScore.c]   10.00
-[info extractScore.c]    2.00
-[info extractScore.c] +  9.00
-[info extractScore.c] = 21.00
-[info extractScore.c] / 2
-[info extractScore.c] > 10.00
-[info extractScore.c] -------
-[info extractScore.c] = 10.00
-[info extractScore.c] local image score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]    7.50
-[info extractScore.c] =  7.50
-[info extractScore.c] / 2
-[info extractScore.c] -------
-[info extractScore.c] =  3.75
-[info extractScore.c]        archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]       container ISO/de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]      archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c] obsolete incoming archive: 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
-[info extractScore.c]        archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]       container ISO/0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]      archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]     container CAT/1a167d608e76a6a4a8b16d168580873c:20480 = 3.75
-[info extractScore.c]    archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]    archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]    archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]    archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]      archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]     container GZIP/3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]      archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]     container BZIP/fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
-[info extractScore.c]    archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]    archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]    archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]    archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive 022a34b2f9b893fba5774237e1aa80ea:24075 = 8.25
-[info extractScore.c]  archive 0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]  archive 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 = 3.75
-[info extractScore.c]  archive 1a167d608e76a6a4a8b16d168580873c:20480 = 10.00
-[info extractScore.c]  archive 3a04277dd1f43740a5fe17fd0ae9a5aa:24457 = 0.00
-[info extractScore.c]  archive 65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]  archive 7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]   container TGZ/0387eee9820fa224525ff8b2e0dfa9be:24546 = 3.75
-[info extractScore.c]   container TBZ/b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]   container AFIO/65f1464142f405dbbeeea4830c95ddd3:25600 = 0.00
-[info extractScore.c]   container TAR/f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]   container CPIO/b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]   container ZIP/d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]   container RAR/7808473c7db9a9e3493a6b61f44f8805:20480 = 0.00
-[info extractScore.c]  archive b281449c229bcc4a3556cdcc0d3ebcec:815 = 3.75
-[info extractScore.c]  archive b34bb9bf9ae4ec5b4a5bc2ab3e2a18c5:25088 = 0.00
-[info extractScore.c]  archive b5810aba99ed0d15f1f0a073e646d5bd:25045 = 0.00
-[info extractScore.c]  archive c0c055a0829982bd646e2fafff01aaa6:4066 = 3.75
-[info extractScore.c]  archive d79581b67ec1932fd276dcf3b6d6db9a:24733 = 0.00
-[info extractScore.c]  archive db8b80896f7202b656913f99d438075c:4090 = 0.00
-[info extractScore.c]  archive de5008799752552b7963a2670dc5eb18:391168 = 10.00
-[info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
-[info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll3 collection (5 X )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
@@ -300,7 +26,6 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
-
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part 1
@@ -388,10 +113,8 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
-
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part2
@@ -497,63 +220,14 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] Clean the cache:
 [notice uthave.c] .......................................................
-[notice utFunc.c] clean the cache
 [notice utFunc.c] clean cache for all collections
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll2/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll2/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> UNUSED
-[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
-[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
-[info command.c] execScript: /bin/bash
-[info command.c]  arg1: -c
-[info command.c]  arg2: rm -fr LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll3/*
-[info command.c] --- exec system call begin ---
-[info command.c] hide stdout from child (use '-sdebug:script' to show)
-[info command.c] --- exec system call end ---
-[info command.c] /bin/bash execution returns 0
 [info confTree.c] free configuration
 [info uthave.c] exit on success

@@ -89,10 +89,10 @@ int auditArchive(Collection* coll, Record* demand)
   Record* supply = 0;
   CheckData md5; 
   char* path = 0;
-  struct stat statBuffer;
   char size[MAX_SIZE_SIZE+1];
   char status[2]="0";
   char *argv[] = {0, 0, 0, 0, 0, 0, 0};
+  struct stat statBuffer;
   
   logMain(LOG_DEBUG, "auditArchive");
   checkCollection(coll);
@@ -221,7 +221,7 @@ int deliverArchive(Collection* coll, Archive* archive)
     date += archive->size / conf->uploadRate + 5;
   }
 
-  // adjust to-keep date
+  // adjust the to-keep date
   if (todo >= localDemand) {
     if (archive->localSupply->date < date)
       archive->localSupply->date = date;

@@ -51,79 +51,87 @@ signalJob(void* arg)
 {
   int me = taskSignalNumber;
   Configuration* conf = 0;
-  Collection* coll = 0;
   long int rc = FALSE;
-  int loop = FALSE;
-  ShmParam param;
-  int rc3 = REG_DONE;
   int rc2 = REG_DONE;
-  RGIT* curr = 0;
   int i = 0;
+  int j = 0;
+  char mask[REG_SHM_BUFF_SIZE];
+  ShmParam param;
   
   struct job {
     int reg;
     int (*function)(Collection*);
     char *name; // only for logs
   };
-  struct job jobs[8] = {
+
+  static struct job jobs[9] = {
+    {REG_SAVEMD5, saveCache, "SAVEMD5"},
+    {REG_STATUS, statusCache, "STATUS"},
     {REG_EXTRACT, extractArchives, "EXTRACT"},
     {REG_NOTIFY, sendRemoteNotify, "NOTIFY"},
-    {REG_QUICKSCAN, quickScanCache, "QUICK SCAN"},
-    {REG_SCAN, scanCache, "SCAN"},
-    {REG_TRIM, trimCache, "TRIM"},
-    {REG_CLEAN, cleanCache, "CLEAN"},
     {REG_PURGE, purgeCache, "PURGE"},
-    {REG_STATUS, statusCache, "STATUS"}
+    {REG_CLEAN, cleanCache, "CLEAN"},
+    {REG_TRIM, trimCache, "TRIM"},
+    {REG_SCAN, scanCache, "SCAN"},
+    {REG_QUICKSCAN, quickScanCache, "QUICK SCAN"}
   };
 
   (void) arg;
   logMain(LOG_DEBUG, "signalJob: %i", me);
   if (!(conf = getConfiguration())) goto error;
+  memset(mask, 0, REG_SHM_BUFF_SIZE);
 
-  do {
-    rc2 = REG_DONE;
-    loop = FALSE;
-    if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
-		 mdtxShmRead, (void*)&param))
-      goto error;
-    
-    if (param.buf[REG_SAVEMD5] == REG_QUERY) {
-      logMain(LOG_NOTICE, "signalJob %i: SAVEMD5", me);
-
-      // force writing
-      while ((coll = rgNext_r(conf->collections, &curr))) {
-	coll->fileState[iCACH] = MODIFIED;
-      }
-      if (!serverSaveAll()) rc2 = REG_ERROR;
-      param.flag = REG_SAVEMD5;
-      loop = TRUE;
-      goto quit;
-    }
+  if (!shmRead(conf->confFile, REG_SHM_BUFF_SIZE,
+	       mdtxShmRead, (void*)&param))
+    goto error;
    
-    for (i=0; i<8; ++i) { // jobs[8]
-      if (param.buf[jobs[i].reg] == REG_QUERY) {
-	logMain(LOG_NOTICE, "signalJob %i: %s", me, jobs[i].name);
-	if (!serverLoop(jobs[i].function)) rc2 = REG_ERROR;
-	param.flag = jobs[i].reg;
-	loop = TRUE;
-	goto quit;
-      }
-    }
+  // find a job to do
+  for (i=0; i<9 && param.buf[jobs[i].reg] != REG_QUERY; ++i);
+  if (i >= 9) {
+    logMain(LOG_INFO, "signalJob: nothing to do");
+    goto end;
+  }
 
-  quit:
-    if (loop) {
-      if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
-		    (rc2 == REG_DONE)?mdtxShmDisable:mdtxShmError,
-		    (void*)&param))
-	goto error;
-    }
-    if (rc2 == REG_ERROR) rc3 = REG_ERROR;
-  } while (loop);
+  logMain(LOG_NOTICE, "signalJob %i: %s", me, jobs[i].name);
+  mask[jobs[i].reg] = 1;
 
+  // "purge" do more than "clean", and so...
+  switch (jobs[i].reg) {
+  case REG_PURGE:
+    mask[REG_CLEAN] = 1;
+  case REG_CLEAN:
+    mask[REG_TRIM] = 1;
+  case REG_TRIM:
+  case REG_SCAN:
+    mask[REG_QUICKSCAN] = 1;
+  case REG_QUICKSCAN:
+    mask[REG_STATUS] = 1;
+  }
+  
+  // mark job as pending
+  for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
+    if (mask[j]) param.buf[j] = REG_PENDING;
+  }
+  if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
+		mdtxShmCopy, (void*)&param)) goto error;
+  
+  // do the jobs
+  if (jobs[i].reg == REG_STATUS) {
+    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+  }
+  if (!serverLoop(jobs[i].function)) rc2 = REG_ERROR;
+
+  // mark job as done
+  for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
+    if (mask[j]) param.buf[j] = rc2;
+  }
+  if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
+		mdtxShmCopy, (void*)&param)) goto error;
+ end:
   rc = TRUE;
  error:
   if (rc) {
-    if (rc3) {
+    if (rc2 == REG_DONE) {
       logMain(LOG_NOTICE, "signalJob %i: success", me);
     } else {
       logMain(LOG_ERR, "signalJob %i: fails", me);
@@ -148,29 +156,33 @@ int
 hupManager()
 {
   int rc = FALSE;
-  
-  if (!serverSaveAll()) {
-    logMain(LOG_ERR, "Fails to save md5sums before reloading");
-    goto error;
-  }
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
 
+  if (!serverSaveAll()) goto error;
   freeConfiguration();
-
-  if (!loadConfiguration(CFG)) {
-    logMain(LOG_ERR, "HUP: fails to reload configuration");
-    goto error;
-  }
+  if (!loadConfiguration(CFG)) goto error;
+  if (!expandConfiguration()) goto error;
   
-  if (!quickScanAll()) {
-    logMain(LOG_ERR, "HUP: fails to scan caches");
-    goto error;
+  // for all collection
+  conf = getConfiguration();
+  if (conf->collections) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
+      if (!loadCache(coll)) goto error;
+    }
   }
+
+  // where to call it ? no use here because of freeConfiguration()
+  //if (!cleanCacheTree(coll)) goto error;
 
   rc = TRUE;
-  logMain(LOG_NOTICE, "daemon is HUP");
  error:
   if (!rc) {
-    logMain(LOG_ERR, "daemon fails to update: exiting");
+    logMain(LOG_ERR, "daemon HUP fails: exiting");
+  }
+  else {
+    logMain(LOG_NOTICE, "daemon is HUP");
   }
   return rc;
 }
