@@ -12,7 +12,7 @@
 
 *** TODO (first)
 
-- use 'srv purge' into tests.sh
+- tests.sh: let iso1 on serv1
 
 *** TO TEST
 

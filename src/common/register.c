@@ -259,8 +259,9 @@ int mdtxSyncSignal(int flag)
     rc = shmRead(conf->confFile, REG_SHM_BUFF_SIZE, 
 		 mdtxShmRead, (void*)&param);
   }
-  while (rc && (param.buf[flag] == REG_QUERY));
-
+  while (rc && (param.buf[flag] == REG_QUERY ||
+		param.buf[flag] == REG_PENDING));
+  
   rc = TRUE;
   if (param.buf[flag] != REG_DONE) {
     logCommon(LOG_WARNING, "server fails to perform your query");

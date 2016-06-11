@@ -416,7 +416,7 @@ function test5()
 	topo "Cleanup"
 	rm -fr ~serv1/cache/serv1-hello/logo*
 	rm -fr ~serv1/cache/serv1-hello/supports
-	reloadInitdScript
+	mdtxP "srv quick scan"
 	echo -n "!> you may need to re-ask for the logo file"
 	echo " and give an email address."
     fi
@@ -447,13 +447,14 @@ EOF
 	notice "remove supports and extract files"
 	mdtxP "del supp iso1 from coll hello"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
-	sleep 1 # warning del supp will HUP server (so will scan cache)
 	rm -fr ~serv1/cache/serv1-hello/logo*
 	rm -fr ~serv1/cache/serv1-hello/supports
+	mdtxP "srv quick scan"
 	mdtxP "upgrade+"
     else
 	topo "Cleanup"
 	rm -fr ~serv1/cache/serv1-hello/incoming
+	mdtxP "srv quick scan"
 	sedInPlace "/(INC/, /)/ d" ~serv1-hello/git/extract000.txt
 	reloadInitdScript
     fi
@@ -516,14 +517,15 @@ function test8()
     else
 	topo "Cleanup"
 
-	# remove serv2-hello keys from serv1
+	mdtxA "adm del coll hello" serv2
+	mdtxP "upgrade" serv1
+
+	# remove serv2-hello keys from serv1 (double check)
 	SRV="~serv1/git/serv1-hello/servers.txt"
 	FPS=$(grep Server $SRV | awk '{ print $2 }')
 	for FP in $FPS; do 
 	    mdtxP "del key $FP from coll hello" serv1
 	done
-	
-	mdtxA "adm del coll hello" serv2
 	restartInitdScript serv1
     fi
 }
@@ -593,7 +595,7 @@ function test10()
 	for SERV in serv1 serv2; do
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports
-	    reloadInitdScript $SERV
+	    mdtxP "srv quick scan" $SERV
 	done
 	mdtxP "srv notify" serv2
     fi
@@ -657,15 +659,16 @@ function test12()
     else
 	topo "Cleanup"
 
-	# remove serv3-hello keys from serv1 (but not serv2 key!)
+	mdtxA "adm del coll hello" serv3
+	mdtxP "upgrade" serv1
+
+	# remove serv3-hello keys from serv1 (double check)
 	SRV="~serv1/git/serv1-hello/servers.txt"
 	FPS1=$(grep -B3 end $SRV | grep Server | awk '{ print $2 }')
 	FPS2=$(grep -B4 6003 $SRV | grep Server | awk '{ print $2 }')
 	for FP in $FPS1 $FPS2; do 
 	    mdtxP "del key $FP from coll hello" serv1
 	done
-	
-	mdtxA "adm del coll hello" serv3
     fi
 }
 
@@ -724,10 +727,10 @@ function test14()
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logoP2.cat
 	    rm -f /var/cache/mediatex/$SERV/cache/$SERV-hello/logo.tgz
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo
-	    reloadInitdScript $SERV
+	    mdtxP "srv quick scan" $SERV
 	done
 	rm -fr ~serv3/cache/serv3-hello/*
-	reloadInitdScript serv3
+	mdtxP "srv quick scan" serv3
     fi
 }
 
@@ -754,7 +757,7 @@ function test15()
     else
 	topo "Cleanup"
 	rm -f ~serv1/cache/serv1-hello/logo.png
-	reloadInitdScript serv1
+	mdtxP "srv quick scan" serv1
     fi
 }
 
@@ -830,15 +833,13 @@ function test17()
 	mdtxP "srv save" serv3
 	finalQuestion "does serv 1 and 2 no more looking for logo.png ?" \
 	    "cat ~serv1/md5sums/serv1-hello.md5 && echo -ne '\n' \
-             && cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n' \
-             && cat ~serv3/md5sums/serv3-hello.md5 && echo -ne '\n'"
+             && cat ~serv2/md5sums/serv2-hello.md5 && echo -ne '\n'"
     else
 	topo "Cleanup"
 	for SERV in serv1 serv2 serv3; do
-	    stopInitdScript $SERV
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/logo*
 	    rm -fr /var/cache/mediatex/$SERV/cache/$SERV-hello/supports
-	    startInitdScript $SERV
+	    mdtxP "srv quick scan" $SERV
 	done
     fi	    
 }
@@ -946,7 +947,7 @@ function test21()
 	mdtxP "srv extract" serv1
 	mdtxP "make" serv1
 
-	finalQuestion "do you receive the audit repport ?"
+	finalQuestion "do you receive the audit repport? (mail)"
 	[ $TEST_OK -eq 0 ] && return
     else
 	topo "Cleanup"

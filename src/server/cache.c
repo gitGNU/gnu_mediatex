@@ -561,7 +561,8 @@ scanSupportFiles(Collection* coll)
   curr = 0;
   while ((supp = rgNext_r(coll->supports, &curr))) {
     if (*supp->name != '/') continue;
-    if (!getArchive(coll, supp->fullMd5sum, supp->size)) goto error;
+    if (!(archive = getArchive(coll, supp->fullMd5sum, supp->size)))
+      goto error;
     if (!addFile(coll, supp->name, archive)) goto error;
   }
 
