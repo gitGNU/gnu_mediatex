@@ -26,6 +26,6 @@
 BINDIR=CONF_BINDIR
 MDTX=${MDTX-mdtx}
 
-$BINDIR/mediatex -c $MDTX -swarning -ffile srv extract    
-$BINDIR/mediatex -c $MDTX -swarning -ffile srv notify
+$BINDIR/mediatex -c $MDTX -swarning -p srv extract    
+$BINDIR/mediatex -c $MDTX -swarning -p srv notify
 

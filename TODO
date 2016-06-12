@@ -3,28 +3,21 @@
 
 *** TO TEST (first)
 
-- does loadCollection alway need EXTR (to use getArchive) ?
-- is cleanCacheTree() call somewhere ?
-
 *** BUGS
-
-- make's tool bare re-appear into the cron's mail
 
 *** TODO (first)
 
-- tests.sh: let iso1 on serv1
-
 *** TO TEST
 
+- make's tool bare re-appear into the cron's mail
 - optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
 - pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- document .htaccess switchs (https/auth)
 - document git merge
-- manage favicon like done for logo
+- document .htaccess switchs (https/auth)
 - use add-if-not-there function (EEXIST cf notify.c)
 - serialise b-tree using another order
 - i10n for french
@@ -32,7 +25,10 @@
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- simplify code: is loadCollection alway need EXTR (to use getArchive) ?
+- simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
+- find how to speed-up mediatex when there is no dns available
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c

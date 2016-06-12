@@ -177,13 +177,17 @@ Choose severity among @code{err}, @code{warning}, @code{notice}, @code{info} and
 You may provide modules among @code{alloc}, @code{script}, @code{misc}, @code{memory}, @code{parser}, @code{common} and @code{main}.
 If you provide no module, all except the @code{alloc} module will be selected.
 
-@item -m @var{number}
-@itemx --memory-limit @var{number}
-Set a nice limit for malloc in Mo. When @activityServerO{} overcome this limit, it will try to release objects not used.  
-
 @item -n
 @itemx --dry-run
 Do a dry run: do not write anything.
+
+@item -p
+@itemx --no-progbar
+Do not display the progression bar.
+
+@item -m @var{number}
+@itemx --memory-limit @var{number}
+Set a nice limit for malloc in Mo. When @activityServerO{} overcome this limit, it will try to release objects not used.  
 
 @item -L, 
 @itemx --debug-lexer

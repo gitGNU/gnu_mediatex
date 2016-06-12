@@ -98,6 +98,7 @@ typedef struct MdtxEnv {
   char* confLabel;
   int dryRun;        // output to stdout (set by unit tests by default)
   int noRegression;  // fixed dates and no sig to server (unit tests only)
+  int noProgBar;     // do not display progression bar
   int noGit;         // do not use git (cgi and server)
   int noGitPullPush; // no pull/push (no network) but still do commits
   int cvsprintMax;   // maximum size for files handle by GIT
@@ -130,7 +131,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 	/* allocating */						\
 	0, (int (*)(long))0, 0,						\
 	/* configuration */						\
-	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, TRUE, 500*KILO,		\
+	DEFAULT_MDTXUSER "1", TRUE, TRUE, TRUE, TRUE, TRUE, 500*KILO,	\
 	/* debug */							\
 	FALSE,								\
 	/* global data structure */					\
@@ -149,7 +150,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 	/* allocating */						\
 	128, (int (*)(long))0, 0,					\
 	/* configration */						\
-	DEFAULT_MDTXUSER, FALSE, FALSE, TRUE, TRUE, 500*KILO,		\
+	DEFAULT_MDTXUSER, FALSE, FALSE, FALSE,TRUE, TRUE, 500*KILO,	\
 	/* debug */							\
 	FALSE,								\
 	/* global data structure */					\

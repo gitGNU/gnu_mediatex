@@ -102,14 +102,14 @@ htmlMainHeadBasic(FILE* fd, char* title, char* url)
 	       "<META HTTP-EQUIV='Content-Style-Type' "
 	       "CONTENT='text/css'>\n"
 	       "\n"
-	       "<LINK REL='STYLESHEET' "
-	       "HREF='%s/mediatex.css'>\n"
+	       "<LINK REL='STYLESHEET' HREF='%s/mediatex.css'>\n"
+	       "<LINK REL='icon' TYPE='image/png' HREF='%s/logo'>\n"
 	       "\n"
 	       "</HEAD>\n"
 	       "\n"
 	       "<BODY >\n"
 	       "<TABLE CELLPADDING=3>\n",
-	       title, title, url)) goto error;
+	       title, title, url, url)) goto error;
 
   rc = TRUE;
  error:

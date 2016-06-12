@@ -26,5 +26,5 @@
 BINDIR=CONF_BINDIR
 MDTX=${MDTX-mdtx}
 
-$BINDIR/mediatex -c $MDTX -swarning -ffile make >/dev/null
-$BINDIR/mediatex -c $MDTX -swarning -ffile motd >CONF_SYSCONFDIR/motd
+$BINDIR/mediatex -c $MDTX -swarning -p make >/dev/null
+$BINDIR/mediatex -c $MDTX -swarning -p motd >CONF_SYSCONFDIR/motd

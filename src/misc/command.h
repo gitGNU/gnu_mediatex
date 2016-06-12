@@ -27,7 +27,7 @@
 #include "mediatex-types.h"
 #include <getopt.h>
 
-#define MISC_SHORT_OPTIONS "hVvf:s:l:nm:"
+#define MISC_SHORT_OPTIONS "hVvf:s:l:nm:p"
 #define MISC_LONG_OPTIONS				\
   {"help", no_argument, 0, 'h'},			\
   {"version", no_argument, 0, 'V'},			\
@@ -36,7 +36,9 @@
   {"severity", required_argument, 0, 's'},		\
   {"log-file", required_argument, 0, 'l'},		\
   {"dry-run", no_argument, 0, 'n'},			\
-  {"memory-limit", required_argument, 0, 'm'}
+  {"memory-limit", required_argument, 0, 'm'},		\
+  {"no-progbar", no_argument, 0, 'p'}
+
 #define MEMORY_SHORT_OPTIONS MISC_SHORT_OPTIONS
 #define MEMORY_LONG_OPTIONS				\
   MISC_LONG_OPTIONS
@@ -154,10 +156,6 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
     env.logFile = optarg;						\
     break;								\
 									\
-  case 'n':								\
-    env.dryRun = 1;							\
-    break;								\
-									\
   case 'm':								\
     if(optarg == (char*)0 || *optarg == (char)0) {			\
       fprintf(stderr,							\
@@ -167,6 +165,14 @@ int execScript(char** argv, char* user, char* pwd, int doHideStderr);
       rc = 1;								\
     }									\
     env.allocLimit = atoi(optarg);					\
+    break;								\
+    									\
+  case 'n':								\
+    env.dryRun = 1;							\
+    break;								\
+									\
+  case 'p':								\
+    env.noProgBar = 1;							\
     break;								\
 									\
   default:								\

@@ -51,7 +51,7 @@ Document "git_$DATE": "backups"
  $SIGN
 EOF
 
-	    $BINDIR/mediatex -c $MDTX upload++ \
+	    $BINDIR/mediatex -c $MDTX -swarning -p upload++ \
 		file $NAME.tgz as mediatex/backups/ \
 		catalog $NAME.cat \
 		to coll $COLL

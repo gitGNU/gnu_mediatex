@@ -34,31 +34,31 @@ TEST=${TEST%.sh}
 # run units tests
 
 # 1) A single reader
-misc/ut$TEST -i /dev/null -p R >misc/$TEST.out1 2>&1 &
+misc/ut$TEST -i /dev/null -P R >misc/$TEST.out1 2>&1 &
 PID1=$!
 
 # 2) Two readers may read in the same time
-misc/ut$TEST -i /dev/null -p R >misc/$TEST.out2 2>&1 &
+misc/ut$TEST -i /dev/null -P R >misc/$TEST.out2 2>&1 &
 PID2=$!
 
 # 3) writer cannot erase the file while other are reading
 while [ -z "$(ps -ef | grep [u]t$TEST)" ]; do :; done
 
-misc/ut$TEST -i /dev/null -p W >misc/$TEST.out3 2>&1 &
+misc/ut$TEST -i /dev/null -P W >misc/$TEST.out3 2>&1 &
 
 # 4) A single writer
 while [ ! -z "$(ps -ef | grep [u]t$TEST | grep W)" ]; do :; done
 kill -SIGUSR1 $PID1
 kill -SIGUSR1 $PID2
 while [ ! -z "$(ps -ef | grep [u]t$TEST)" ]; do :; done
-misc/ut$TEST -i /dev/null -p W >misc/$TEST.out4 2>&1 &
+misc/ut$TEST -i /dev/null -P W >misc/$TEST.out4 2>&1 &
 
 # 5) Two writers (or -6- writer and readers) cannot run in the same time
 while [ -z "$(ps -ef | grep [u]t$TEST)" ]; do :; done
-misc/ut$TEST -i /dev/null -p W >misc/$TEST.out5 2>&1 &
-misc/ut$TEST -i /dev/null -p R >misc/$TEST.out6 2>&1 &
+misc/ut$TEST -i /dev/null -P W >misc/$TEST.out5 2>&1 &
+misc/ut$TEST -i /dev/null -P R >misc/$TEST.out6 2>&1 &
 
-while [ -z "$(ps -ef | grep [u]t$TEST | grep -- -p)" ]; do :; done
+while [ -z "$(ps -ef | grep [u]t$TEST | grep -- -P)" ]; do :; done
 killall ut$TEST 2>/dev/null || /bin/true
 while [ ! -z "$(ps -ef | grep [u]t$TEST)" ]; do :; done
 rm -f misc/$TEST.out

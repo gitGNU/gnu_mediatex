@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -x
 #=======================================================================
 # * Project: MediaTex
 # * Module : scripts
@@ -21,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #=======================================================================
-#set -x
-set -e
 
 BINDIR=CONF_BINDIR
 CACHEDIR=CONF_LOCALSTATEDIR/cacheCONF_MEDIATEXDIR
@@ -75,7 +74,7 @@ $SIGN1:$SIZE1 $TARGETDIR/$NAME.log
 )
 EOF
 	    
-	    $BINDIR/mediatex -c $MDTX upload++ \
+	    $BINDIR/mediatex -c $MDTX -swarning -p upload++ \
 			     file /tmp/$NAME.log.gz as mediatex/backups/ \
 			     catalog /tmp/$NAME.cat rules /tmp/$NAME.ext \
 			     to coll $COLL

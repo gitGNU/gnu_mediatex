@@ -99,8 +99,8 @@ gestionnaireSIGALRM(int i)
  =======================================================================*/
 int startProgBar(char* label)
 {
-  // only run progbar for client (but not for cgi or server)
-  if (env.noRegression || env.logFacility != 99) 
+  // do not use a progbar into cron, or when syslog is used
+  if (env.noProgBar || env.logFacility != 99) 
     return TRUE; 
 
   env.progBar.label = label;
@@ -116,8 +116,8 @@ int startProgBar(char* label)
  =======================================================================*/
 void stopProgBar()
 {
-  // only run progbar for client (but not for cgi or server)
-  if (env.noRegression || env.logFacility != 99) return; 
+  // do not use a progbar into cron, or when syslog is used
+  if (env.noProgBar || env.logFacility != 99) return; 
 
   e2fsck_clear_progbar(&env.progBar.bar);
   env.progBar.label = 0;

@@ -678,7 +678,7 @@ main(int argc, char** argv)
   };
 
   // import mdtx environment
-  //env.logFacility = "local2";
+  env.noProgBar = TRUE;
   getEnv(&env);
 
   // parse the command line

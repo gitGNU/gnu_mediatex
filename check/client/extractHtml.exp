@@ -1293,6 +1293,7 @@ All images: 3
 <META HTTP-EQUIV='Content-Style-Type' CONTENT='text/css'>
 
 <LINK REL='STYLESHEET' HREF='<!--#echo var='HOME' -->/mediatex.css'>
+<LINK REL='icon' TYPE='image/png' HREF='<!--#echo var='HOME' -->/logo'>
 
 </HEAD>
 

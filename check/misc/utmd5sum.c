@@ -63,18 +63,16 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"i:p";
+  char* options = MISC_SHORT_OPTIONS"i:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
     {"input-file", required_argument, 0, 'i'},
-    {"no-progbar", no_argument, 0, 'p'},
     {0, 0, 0, 0}
   };
 
   // import mdtx environment
   env = envUnitTest;
   getEnv(&env);
-  env.noRegression = FALSE; // show the progbar 
 
   // parse the command line
   while ((cOption = getopt_long(argc, argv, options, longOptions, 0)) 
@@ -95,10 +93,6 @@ main(int argc, char** argv)
 	break;
       }
       strncpy(inputPath, optarg, strlen(optarg)+1);
-      break;
-      
-    case 'p':
-      env.noRegression = TRUE; // hide the progbar
       break;
 
       GET_MISC_OPTIONS; // generic options

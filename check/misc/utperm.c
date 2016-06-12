@@ -43,7 +43,7 @@ void usage(char* programName)
 	  "  -w, --pwd\tpath to the current directory (make distcheck)\n"
 	  "  -u, --user\texpected owner user of the directory\n"
 	  "  -g, --group\texpected owner group of the directory\n"
-	  "  -p, --perm\texpected permissions on the directory (777)\n"
+	  "  -P, --perm\texpected permissions on the directory (777)\n"
 	  "  -a, --acl\texpected permissions on the directory\n");
   return;
 }
@@ -79,14 +79,14 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"d:w:u:g:p:a:";
+  char* options = MISC_SHORT_OPTIONS"d:w:u:g:P:a:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
     {"dir", required_argument, 0, 'd'},
     {"pwd", required_argument, 0, 'w'},
     {"user", required_argument, 0, 'u'},
     {"group", required_argument, 0, 'g'},
-    {"perm", required_argument, 0, 'p'},
+    {"perm", required_argument, 0, 'P'},
     {"acl", required_argument, 0, 'a'},
     {0, 0, 0, 0}
   };
@@ -167,7 +167,7 @@ main(int argc, char** argv)
       strncpy(group, optarg, strlen(optarg)+1);
       break;
 
-    case 'p':
+    case 'P':
       if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the permission\n",
 		programName);

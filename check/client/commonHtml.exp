@@ -19,6 +19,7 @@
 <META HTTP-EQUIV='Content-Style-Type' CONTENT='text/css'>
 
 <LINK REL='STYLESHEET' HREF='<!--#echo var='HOME' -->/mediatex.css'>
+<LINK REL='icon' TYPE='image/png' HREF='<!--#echo var='HOME' -->/logo'>
 
 </HEAD>
 
@@ -76,6 +77,7 @@ HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
 <META HTTP-EQUIV='Content-Style-Type' CONTENT='text/css'>
 
 <LINK REL='STYLESHEET' HREF='https://localhost/~mdtx1-coll1/mediatex.css'>
+<LINK REL='icon' TYPE='image/png' HREF='https://localhost/~mdtx1-coll1/logo'>
 
 </HEAD>
 
@@ -133,6 +135,7 @@ HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'>Version</A></TD>
 <META HTTP-EQUIV='Content-Style-Type' CONTENT='text/css'>
 
 <LINK REL='STYLESHEET' HREF='https://localhost/~mdtx1-coll1/mediatex.css'>
+<LINK REL='icon' TYPE='image/png' HREF='https://localhost/~mdtx1-coll1/logo'>
 
 </HEAD>
 

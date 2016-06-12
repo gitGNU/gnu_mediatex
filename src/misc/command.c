@@ -78,7 +78,7 @@ miscUsage(char* programName)
 	  "-h | -V | -v |"
 	  " [ -f facility ] [ -l logFile ]"
 	  " [ -s severity[:module(,module)*] ]"
-	  " [ -m memoryLimit ] [ -n ]");
+	  " [ -m memoryLimit ] [ -n ] [ -p ] ");
 }
 
 /*=======================================================================
@@ -145,8 +145,9 @@ miscOptions()
 	  "\t\t\tamongs 'err', 'warning', 'notice', 'info', 'debug';\n"
 	  "\t\t\tmodules amongs 'alloc', 'script', 'misc', 'memory', "
 	  "'parser', 'common', 'main'\n"
+	  "  -m, --memory-limit\tnice limit for malloc in Mo\n"
 	  "  -n, --dry-run\t\tdo a dry run\n"
-	  "  -m, --memory-limit\tnice limit for malloc in Mo\n");
+	  "  -p, --no-progbar\tdon't display progression bar\n");
 }
 
 /*=======================================================================

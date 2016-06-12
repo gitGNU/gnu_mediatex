@@ -445,7 +445,7 @@ EOF
 	
 	# clean extracted files (~test5) on cache for next tests
 	notice "remove supports and extract files"
-	mdtxP "del supp iso1 from coll hello"
+	#mdtxP "del supp iso1 from coll hello"
 	mdtxP "del supp /usr/share/mediatex/misc/logoP2.iso from coll hello"
 	rm -fr ~serv1/cache/serv1-hello/logo*
 	rm -fr ~serv1/cache/serv1-hello/supports
@@ -777,8 +777,8 @@ function test16()
 	done
 
 	# move supp1 from serv2 to serv1
-	mdtxP "del supp iso1 from coll hello" serv2
-	mdtxP "add supp iso1 to coll hello" serv1
+	#mdtxP "del supp iso1 from coll hello" serv2
+	#mdtxP "add supp iso1 to coll hello" serv1
 
 	# same as test4
 	mdtxP "make" serv3

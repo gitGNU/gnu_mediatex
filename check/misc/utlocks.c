@@ -77,7 +77,7 @@ void usage(char* programName)
   miscOptions();
   fprintf(stderr, "  ---\n"
 	  "  -i, --input-file\tinput device to compute checksums on\n"
-	  "  -p, --perm\t\tread/write mode: R or W\n");
+	  "  -P, --perm\t\tread/write mode: R or W\n");
   return;
 }
 
@@ -103,7 +103,7 @@ main(int argc, char** argv)
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MISC_SHORT_OPTIONS"i:p:";
+  char* options = MISC_SHORT_OPTIONS"i:P:";
   struct option longOptions[] = {
     MISC_LONG_OPTIONS,
     {"input-file", required_argument, 0, 'i'},
@@ -136,7 +136,7 @@ main(int argc, char** argv)
       strncpy(inputPath, optarg, strlen(optarg)+1);
       break;
 
-    case 'p':
+    case 'P':
       if(optarg == 0 || *optarg == (char)0) {
 	fprintf(stderr, "%s: nil or empty argument for the permission\n",
 		programName);

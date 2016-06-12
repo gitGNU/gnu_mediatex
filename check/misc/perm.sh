@@ -53,7 +53,7 @@ misc/ut$TEST -d $DIR -u foo -g $USER \
 misc/ut$TEST -d $DIR -u $USER -g bar \
     >>misc/$TEST.out 2>&1 || /bin/true
 
-misc/ut$TEST -d $DIR -u $USER -g $USER -p 755 \
+misc/ut$TEST -d $DIR -u $USER -g $USER -P 755 \
     >>misc/$TEST.out 2>&1 || /bin/true
 
 misc/ut$TEST -d $DIR -u $USER -g $USER -a "u:www-data:r--" \
