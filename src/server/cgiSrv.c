@@ -25,6 +25,58 @@
 #include "server/mediatex-server.h"
 
 /*=======================================================================
+ * Function   : excape_url
+ * Description: do URL encode
+ * Synopsis   : void escapeUrl(char* url, char* escapedUrl)
+ * Input      : char* url: url to encode
+ *              char* escapedUrl: allocated buffer for the resulting url
+ * Output     : N/A
+ * Note       : table build using:
+ * int i, j, v, n = 0;
+ *  for (i=0; i<16; ++i) {
+ *    for (j=0; j<16; ++j) {
+ *      v = (isalnum(n) || n=='*' || n=='-' || n=='.' || n=='_' )?
+ *	  n:(n==' ')?'+':0;
+ *      printf("%3i,", v);
+ *      ++n;
+ *    }
+ *    printf("\n");
+ * }
+ =======================================================================*/
+void escapeUrl(char* url, char* escapedUrl)
+{
+  static char escapeUrlTable[256] = {
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    43,  0,  0,  0,  0,  0,  0,  0,  0,  0, 42,  0,  0, 45, 46, 47,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57,  0,  0,  0,  0,  0,  0,
+    0, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+    80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,  0,  0,  0,  0, 95,
+    0, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,
+    112,113,114,115,116,117,118,119,120,121,122,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
+  };
+  unsigned char* ptr = (unsigned char*)url;
+
+  for (; *ptr; ptr++){
+    if (escapeUrlTable[*ptr]) {
+      sprintf(escapedUrl, "%c", escapeUrlTable[*ptr]);
+    }
+    else {
+      sprintf(escapedUrl, "%%%02X", *ptr);
+    }
+    while (*++escapedUrl);
+  }
+}
+
+/*=======================================================================
  * Function   : extractLocalArchive
  * Description: Get or extract one archive into the local cache
  * Synopsis   : Archive* extractLocalArchive(Archive* archive)
@@ -97,7 +149,7 @@ cgiServer(Connexion* connexion)
 
   static char status[][32] = {
     "120 not found %s:%lli",
-    "220 ok %s/cache/%s",
+    "220 ok %s/cache/", // ++"%s"
     "221 ok",
     "320 empty message",
   };
@@ -125,8 +177,13 @@ cgiServer(Connexion* connexion)
       sprintf(connexion->status, status[0], archive->hash, archive->size);
     }
     else {
-      sprintf(connexion->status, status[1],
-	      coll->localhost->url, archive->localSupply->extra);
+      sprintf(connexion->status, status[1], coll->localhost->url);
+
+      // escape url into status[1] string
+      extra = connexion->status;
+      while (*++extra);
+      escapeUrl(archive->localSupply->extra, extra);
+      extra = 0;
     }
   }
   else {

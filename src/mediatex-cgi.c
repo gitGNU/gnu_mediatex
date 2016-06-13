@@ -28,7 +28,7 @@ static char* confLabel = 0;
 
 
 /*=======================================================================
- * Function   : loadTemplate
+ * Function   : sendTemplate
  * Description: Send a template file (xxxHeader.shtml or footer.html)
  * Synopsis   : int sendTemplate(char* filename)
  * Input      : char* filename
@@ -230,7 +230,7 @@ int mdtxFind(RecordTree *tree)
     url = reply + 7; // "220 ok URL"
     logMain(LOG_DEBUG, "found at %s", url);
     
-    fprintf(stdout, "Content-Type: text/html\r\n");
+    fprintf(stdout, "Content-Type: text/html; charset=utf-8\r\n");
     fprintf(stdout, "Refresh: 0; url=%s\r\n", url);
     fprintf(stdout, "\r\n");
     sendTemplate(coll, "cgiHeader.shtml");
@@ -241,7 +241,7 @@ int mdtxFind(RecordTree *tree)
   default:
     logMain(LOG_DEBUG, "not found");
     
-    fprintf(stdout, "Content-Type: text/html\r\n");
+    fprintf(stdout, "Content-Type: text/html; charset=utf-8\r\n");
     fprintf(stdout, "\r\n");
     sendTemplate(coll, "cgiHeader.shtml");
     fprintf(stdout, 
@@ -315,7 +315,7 @@ int mdtxRegister(RecordTree *tree)
   case 221:
     logMain(LOG_DEBUG, "registered at localhost");
     
-    fprintf(stdout, "%s", "Content-Type: text/html\r\n");
+    fprintf(stdout, "%s", "Content-Type: text/html; charset=utf-8\r\n");
     fprintf(stdout, "%s", "Refresh: 3; url=../index/\r\n");
     fprintf(stdout, "%s", "\r\n");
     sendTemplate(coll, "cgiHeader.shtml");
@@ -329,7 +329,7 @@ int mdtxRegister(RecordTree *tree)
   default:
     logMain(LOG_ERR, "registration fails");
     
-    fprintf(stdout, "Content-Type: text/html\r\n");
+    fprintf(stdout, "Content-Type: text/html; charset=utf-8\r\n");
     fprintf(stdout, "\r\n");
     sendTemplate(coll, "cgiHeader.shtml");
     fprintf(stdout, 
@@ -538,7 +538,7 @@ static void usageHtml(Collection* coll, char* programName)
 {
   logMain(LOG_INFO, "sending usage message");
 
-  fprintf(stdout, "Content-Type: text/html\r\n");
+  fprintf(stdout, "Content-Type: text/html; charset=utf-8\r\n");
   fprintf(stdout, "\r\n");
 
   sendTemplate(coll, "cgiHeader.shtml");
@@ -573,7 +573,7 @@ static void iamAloneHtml(Collection* coll, char* programName)
 {
   logMain(LOG_INFO, "no server is running");
 
-  fprintf(stdout, "Content-Type: text/html\r\n");
+  fprintf(stdout, "Content-Type: text/html; charset=utf-8\r\n");
   fprintf(stdout, "\r\n");
 
   sendTemplate(coll, "cgiHeader.shtml");

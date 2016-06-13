@@ -37,7 +37,7 @@
 [info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
 [info confTree.c] free configuration
 [info mediatex-cgi.c] exit on success
-Content-Type: text/html
+Content-Type: text/html; charset=utf-8
 
 {top template}
 <br>Sorry, this document is not available yet.
@@ -71,7 +71,7 @@ Mail <INPUT type=text name=mail>
 [info mediatex-cgi.c] localhost:6560 tel (221) ok
 [info confTree.c] free configuration
 [info mediatex-cgi.c] exit on success
-Content-Type: text/html
+Content-Type: text/html; charset=utf-8
 Refresh: 3; url=../index/
 
 {top template}

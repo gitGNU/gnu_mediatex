@@ -5,6 +5,9 @@
 
 *** BUGS
 
+- mediatex adm add fails as not binded ?!
+- mkdir -p /var/run/mediatex (why needed ?)
+
 *** TODO (first)
 
 *** TO TEST
@@ -40,8 +43,6 @@
 - test an apache configuration using claim-based authentication (openId)
 - move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
-- manage accents into cache filenames (cgi should rewrite URLs)
-   Content-Type: text/html; charset=UTF-8 ?
 - manage signals for all and for each collections
 - replace gethostby*_r by getaddrinfo and co
 - replace ardsm by mqueue (linear list if reverse order link not used)
