@@ -732,8 +732,9 @@ freeCache(Collection* coll, off_t need, int* success)
   }
 
   // We will free some archive from the cache.
-  // some optimisation should be great here: sort on size or date
-  // TO TEST
+  // - suppress older files first
+  // - if same date, suppress smallest first
+#warning to test as do not seems like that (->utcacheTree)
 
   // - compute scores (do not delete archive with bad score)
   //if (!computeExtractScore(coll)) goto error;

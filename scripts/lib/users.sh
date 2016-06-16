@@ -107,8 +107,9 @@ function USERS_root_disease()
 	    fi
 	fi
     done
+    # not needed as /var/run is now a tmpfs filesystem
     if [ $ALONE -eq 1 -a -d "$PIDDIR" ]; then
-	if [ $(ls $PIDDIR | wc -l) -gt 0 ]; then
+	if [ $(ls $PIDDIR | wc -l) -eq 0 ]; then
 	    rmdir $DIR
 	fi
     fi

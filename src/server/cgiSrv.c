@@ -31,7 +31,7 @@
  * Input      : char* url: url to encode
  *              char* escapedUrl: allocated buffer for the resulting url
  * Output     : N/A
- * Note       : table build using:
+ * Note       : table built using:
  * int i, j, v, n = 0;
  *  for (i=0; i<16; ++i) {
  *    for (j=0; j<16; ++j) {
@@ -42,6 +42,8 @@
  *    }
  *    printf("\n");
  * }
+ * Thanks     : Alian 
+ *            (http://stackoverflow.com/questions/5842471/c-url-encoding)
  =======================================================================*/
 void escapeUrl(char* url, char* escapedUrl)
 {

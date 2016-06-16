@@ -23,11 +23,22 @@ DAEMON_ARGS="--conf-label $USER --background
  --facility local2 --severity notice"
 
 #
-# Function that sends a SIGHUP to the daemon/service
-# so as  daemon can reload its configuration without
-# restarting
+# /var/run/mediatex is lost when system halt, because now /var/run
+# is a tmpfs filesystem
+# 
+do_start_prepare()
+{
+    if [ ! -d $PIDDIR ]; then
+	mkdir -m 0777 $PIDDIR
+    fi
+}
+
 #
-do_reload() {
+# Function that sends a SIGHUP to the daemon/service, 
+# so as daemon can reload its configuration without restarting
+#
+do_reload()
+{
 	start-stop-daemon --stop --signal HUP --quiet \
 	    --pidfile $PIDFILE
 	return 0

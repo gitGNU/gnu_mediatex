@@ -5,21 +5,21 @@
 
 *** BUGS
 
-- mediatex adm add fails as not binded ?!
-- mkdir -p /var/run/mediatex (why needed ?)
+- init script's restart kill other mediatex daemon (serv1...)
+
+> start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec /usr/bin/mediatexd
 
 *** TODO (first)
 
 *** TO TEST
 
-- make's tool bare re-appear into the cron's mail
-- optimise cache.c::freeCache (ex: sort on sizes / related to btree order)
+- cache.c::freeCache (loop on chronological dates and growing sizes ?)
 - pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- document git merge
+- add lexems for '<<<<<<<' to detect git conflicts
 - document .htaccess switchs (https/auth)
 - use add-if-not-there function (EEXIST cf notify.c)
 - serialise b-tree using another order
@@ -35,7 +35,7 @@
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
-- add an apache alias for '~' as it is not on mac keyboard
+- add an apache alias for '~' as it is complicated to type on mac keyboard
 - move date parser/serialiser code into perm.c
 - refuse "^../" as content extraction rule
 - manage ECDSA keys

@@ -66,14 +66,14 @@ signalJob(void* arg)
 
   static struct job jobs[9] = {
     {REG_SAVEMD5, saveCache, "SAVEMD5"},
-    {REG_STATUS, statusCache, "STATUS"},
     {REG_EXTRACT, extractArchives, "EXTRACT"},
     {REG_NOTIFY, sendRemoteNotify, "NOTIFY"},
     {REG_PURGE, purgeCache, "PURGE"},
     {REG_CLEAN, cleanCache, "CLEAN"},
     {REG_TRIM, trimCache, "TRIM"},
     {REG_SCAN, scanCache, "SCAN"},
-    {REG_QUICKSCAN, quickScanCache, "QUICK SCAN"}
+    {REG_QUICKSCAN, quickScanCache, "QUICK SCAN"},
+    {REG_STATUS, statusCache, "STATUS"}
   };
 
   (void) arg;
@@ -85,49 +85,47 @@ signalJob(void* arg)
 	       mdtxShmRead, (void*)&param))
     goto error;
    
-  // find a job to do
-  for (i=0; i<9 && param.buf[jobs[i].reg] != REG_QUERY; ++i);
-  if (i >= 9) {
-    logMain(LOG_INFO, "signalJob: nothing to do");
-    goto end;
-  }
-
-  logMain(LOG_NOTICE, "signalJob %i: %s", me, jobs[i].name);
-  mask[jobs[i].reg] = 1;
-
-  // "purge" do more than "clean", and so...
-  switch (jobs[i].reg) {
-  case REG_PURGE:
-    mask[REG_CLEAN] = 1;
-  case REG_CLEAN:
-    mask[REG_TRIM] = 1;
-  case REG_TRIM:
-  case REG_SCAN:
-    mask[REG_QUICKSCAN] = 1;
-  case REG_QUICKSCAN:
-    mask[REG_STATUS] = 1;
-  }
+  // loop on jobs (as several jobs may be wanted here)
+  for (i=0; i<9 ; ++i) {
+    if (param.buf[jobs[i].reg] != REG_QUERY) continue;
   
-  // mark job as pending
-  for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
-    if (mask[j]) param.buf[j] = REG_PENDING;
+    logMain(LOG_NOTICE, "signalJob %i: %s", me, jobs[i].name);
+    mask[jobs[i].reg] = 1;
+      
+    // "purge" do more than "clean", and so...
+    switch (jobs[i].reg) {
+    case REG_PURGE:
+      mask[REG_CLEAN] = 1;
+    case REG_CLEAN:
+      mask[REG_TRIM] = 1;
+    case REG_TRIM:
+    case REG_SCAN:
+      mask[REG_QUICKSCAN] = 1;
+    case REG_QUICKSCAN:
+      mask[REG_STATUS] = 1;
+    }
+      
+    // mark job as pending
+    for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
+      if (mask[j]) param.buf[j] = REG_PENDING;
+    }
+    if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
+		  mdtxShmCopy, (void*)&param)) goto error;
+      
+    // do the jobs
+    if (jobs[i].reg == REG_STATUS) {
+      memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
+    }
+    if (!serverLoop(jobs[i].function)) rc2 = REG_ERROR;
+      
+    // mark job as done
+    for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
+      if (mask[j]) param.buf[j] = rc2;
+    }
+    if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
+		  mdtxShmCopy, (void*)&param)) goto error;
   }
-  if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
-		mdtxShmCopy, (void*)&param)) goto error;
-  
-  // do the jobs
-  if (jobs[i].reg == REG_STATUS) {
-    memoryStatus(LOG_NOTICE, __FILE__, __LINE__);
-  }
-  if (!serverLoop(jobs[i].function)) rc2 = REG_ERROR;
 
-  // mark job as done
-  for (j=0; j<REG_SHM_BUFF_SIZE; ++j) {
-    if (mask[j]) param.buf[j] = rc2;
-  }
-  if (!shmWrite(conf->confFile, REG_SHM_BUFF_SIZE,
-		mdtxShmCopy, (void*)&param)) goto error;
- end:
   rc = TRUE;
  error:
   if (rc) {

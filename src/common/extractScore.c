@@ -412,7 +412,7 @@ getExtractStatus(Collection* coll, off_t* badSize, RG** badArchives)
   if (*badSize >= MEGA) {
     // add \n to not disturb the progbar
     logCommon(LOG_ALERT, 
-	    "%s collection: %lli Mo should be burned into supports\n",
+	    "%s collection: %lli Mo should be burned into supports",
 	    coll->label, *badSize / MEGA);
   } 
   

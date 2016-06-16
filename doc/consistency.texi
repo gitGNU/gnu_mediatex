@@ -31,9 +31,80 @@ $ mediatex srv notify
 @node Scenario A
 @section GIT conflicts
 
-@todo{}
-Sorry, not yet documented, please refer to @acronym{GIT} manual (@code{man 1 git}).
+@acronym{GIT} conflict may happen if 2 @actorPublisher{}s are editing the same meta-data. 
+
+We initialise 2 mediatex servers on the same host (we need 2 different ports):
+@example
+# mediatex -c serv1 adm init
+# mediatex -c serv2 adm init
+# sed --follow-symlinks -i /etc/mediatex/serv1.conf -e "s/6561/6001/"
+# sed --follow-symlinks -i /etc/mediatex/serv2.conf -e "s/6561/6002/"
+# /etc/init.d/mediatexd-serv1 start
+# /etc/init.d/mediatexd-serv2 start
+@end example
+
+We initialise a collection shared by the 2 servers:
+@example
+# mediatex -c serv1 adm add coll hello
+# mediatex -c serv2 adm add coll serv1-hello@@localhost
+# mediatex -c serv1 add key ~serv2-hello/.ssh/id_dsa.pub to coll hello
+# mediatex -c serv2 adm add coll serv1-hello@@localhost
+@end example
+
+Now we edit the same stanza:
+@example
+# vi ~serv1-hello/git/catalog000.txt
+<<<
+  "another thing?" = "no"
+---
+  "another thing?" = "yes"
+>>>
+
+# vi ~serv2-hello/git/catalog000.txt
+<<<
+  "another thing?" = "no"
+---
+  "another thing?" = "maybe"
+>>>
+@end example
+
+A conflict will occurs when second server upgrade:
+@example
+# mediatex -c serv1 upgrade
+# mediatex -c serv2 upgrade
+scanner read unexpected caractere '<'
+catalog parser fails on line 19
+@end example
+
+You have to edit that file again to resolve the conflict:
+@example
+<<<<<<< HEAD
+  "another thing?" = "maybe"
+=======
+  "another thing?" = "yes"
+>>>>>>> 1d155a18d058093d47cd8649b5cd4d241de0c86f
+@end example
+
+Now upgrade do no more complains:
+@example
+# mediatex -c serv2 upgrade
+@end example
+
 If you need specific permissions you can use ``@eventClientMiscSu{}'' to become the collection system user.
+@example
+# mediatex -c serv2 su coll hello
+$ cd ~/git
+$ git status
+@end example
+Next, please refer to @acronym{GIT} manual (@code{man 1 git}).
+
+Cleanup:
+@example
+# mediatex -c serv1 adm purge
+# mediatex -c serv2 adm purge
+# rm -fr /var/lib/mediatex/serv1
+# rm -fr /var/lib/mediatex/serv2
+@end example
 
 @node Scenario B
 @section Address's change
