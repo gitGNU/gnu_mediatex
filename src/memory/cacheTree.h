@@ -73,7 +73,6 @@ struct CacheTree
   RecordTree* recordTree;
 
   // Archive* that define at less 1 Record
-  // use by cache.c::freeCache
   AVLTree* archives; // Archive*
 };
 

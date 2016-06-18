@@ -205,12 +205,12 @@ main(int argc, char** argv)
   if (!cleanCache(coll)) goto error;
   utLog("%s", "Clean gives:", coll);
 
-  utLog("%s", "2.7) Purge cat1 :", 0);
+  utLog("%s", "2.7) Purge iso1 :", 0);
   if (!purgeCache(coll)) goto error;
   utLog("%s", "Purge gives:", coll);
   //===============================================================
 
-  utLog("%s", "3) Allocation", 0);
+  utLog("%s", "3) Allocations...", 0);
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
   if (!addFiles(coll, inputRep)) goto error;
   if (!loadCache(coll)) goto error;
@@ -241,9 +241,13 @@ main(int argc, char** argv)
   archive->size = size;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
-  //record->extra[0]='*'; // ALLOCATED -> AVAILABLE
+  record->extra[0]='a'; // MALLOC_SUPPLY -> LOCAL_SUPPLY
+  // ALLOCATED -> AVAILABLE
+  archive->extractScore = 9;
+  if (!computeArchiveStatus(coll, archive)) goto error;
+  extra = getAbsoluteCachePath(coll, record->extra);
+  fopen(extra, "w"); // something to unlink
   utLog("reply : %i", record?1:0, coll); // 1: already avail
-  if (!delCacheEntry(coll, record)) goto error;
 
   /*--------------------------------------------------------*/
   utLog("%s", "3.4) Ask for place so as we need to suppress files :", 0);
@@ -252,7 +256,6 @@ main(int argc, char** argv)
   			    size))) goto error;
   record = 0;
   if (!cacheAlloc(&record, coll, archive)) goto error;
-  //record->extra[0]='*'; // ALLOCATED -> AVAILABLE
   utLog("reply : %i", record?1:0, coll); // 1: del some entries
   if (!statusCache(coll)) goto error;
   if (!delCacheEntry(coll, record)) goto error;

@@ -1,10 +1,10 @@
 [info serverTree.c] Serializing the server tree file: LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
-[info serverTree.c] 6b18ed0194b0fbadd08e0a13cccda00e may reach 746d6ceeb76e05cfa2dea92a1c5753cd
-[info serverTree.c] 6b18ed0194b0fbadd08e0a13cccda00e may reach bedac32422739d7eced624ba20f5912e
-[info serverTree.c] bedac32422739d7eced624ba20f5912e may reach 746d6ceeb76e05cfa2dea92a1c5753cd
-[info serverTree.c] bedac32422739d7eced624ba20f5912e may reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach bedac32422739d7eced624ba20f5912e
+[info serverTree.c] 6b18ed0194b0fbadd08e0a13cccda00e can reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] 6b18ed0194b0fbadd08e0a13cccda00e can reach bedac32422739d7eced624ba20f5912e
+[info serverTree.c] bedac32422739d7eced624ba20f5912e can reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] bedac32422739d7eced624ba20f5912e can reach 6b18ed0194b0fbadd08e0a13cccda00e
 [info serverTree.c] Serializing the server tree file: stdout
 # This file is managed by MediaTeX software.
 # MediaTeX (null)@:0 servers list:

@@ -60,7 +60,7 @@ diff $srcdir/$TEST.exp $TEST.out
 
 # note for gdb:
 # M-x gdb
-# Run gdb (like this): libtool --mode=execute gdb --annotate=3 ../src/cgi
+# Run gdb (like this): libtool --mode=execute gdb --annotate=3 ../src/mediatex-cgi
 # > set env REQUEST_METHOD=GET
 # > set env QUERY_STRING=hash=40485334450b64014fd7a4810b5698b3&size=12
 # > set env SCRIPT_FILENAME=/mdtx1-coll1/public_html/cgi/get.cgi

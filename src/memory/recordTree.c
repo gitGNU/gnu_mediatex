@@ -28,45 +28,19 @@
 #include "mediatex-config.h"
 
 /*=======================================================================
- * Function   : cmpRecordQuick
- * Description: compare 2 records
- * Synopsis   : int cmpRecord(const void *p1, const void *p2)
- * Input      : const void *p1, const void *p2 : the records
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
- * Note       : only match ip, hash and size
- =======================================================================*/
-int 
-cmpRecordQuick(const void *p1, const void *p2)
-{
-  int rc = 0;
-
-  /* p1 and p2 are pointers on &items
-   * and items are suposed to be Record* 
-   */
-  
-  Record* a1 = *((Record**)p1);
-  Record* a2 = *((Record**)p2);
-
-  if (!rc) rc = cmpArchive(&a1->archive, &a2->archive);
-  if (!rc) rc = cmpServer(&a1->server, &a2->server);
- 
-  return rc;
-}
-
-/*=======================================================================
  * Function   : cmpRecord
  * Description: compare 2 records
  * Synopsis   : int cmpRecord(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Output     : <, = or >0 respectively for lower, equal or greater
  =======================================================================*/
-int 
+int
 cmpRecord(const void *p1, const void *p2)
 {
   int rc = 0;
 
   /* p1 and p2 are pointers on &items
-   * and items are suposed to be Record* 
+   * and items are suposed to be Record*
    */
   
   Record* a1 = *((Record**)p1);
@@ -76,7 +50,7 @@ cmpRecord(const void *p1, const void *p2)
   if (!rc) rc = cmpServer(&a1->server, &a2->server);
 
   // do sort on REMOVE flag!
-  if (!rc) rc = a1->type - a2->type; 
+  if (!rc) rc = a1->type - a2->type;
 
   if (!rc) {
     // extra should not but may be null
@@ -91,7 +65,14 @@ cmpRecord(const void *p1, const void *p2)
   return rc;
 }
 
-// same function for AVL trees
+/*=======================================================================
+ * Function   : cmpRecordAvl
+ * Description: compare 2 records
+ * Synopsis   : int cmpRecord(const void *p1, const void *p2)
+ * Input      : const void *p1, const void *p2 : the records
+ * Output     : <, = or >0 respectively for lower, equal or greater
+ * Note       : sort by chronological dates and by growing sizes
+ =======================================================================*/
 int 
 cmpRecordAvl(const void *p1, const void *p2)
 {
@@ -104,63 +85,13 @@ cmpRecordAvl(const void *p1, const void *p2)
   Record* a1 = (Record*)p1;
   Record* a2 = (Record*)p2;
   
-  if (!rc) rc = cmpArchive(&a1->archive, &a2->archive);
-  if (!rc) rc = cmpServer(&a1->server, &a2->server);
+  // chronological order 
+  if (!rc) rc = (a1->date - a2->date);
 
-  // do sort on REMOVE flag!
-  if (!rc) rc = a1->type - a2->type; 
+  // growing sizes
+  if (!rc) rc = a1->archive->size - a2->archive->size;
 
-  if (!rc) {
-    // extra should not but may be null
-    if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
-      rc = strcmp(a1->extra, a2->extra);
-    if (isEmptyString(a1->extra) && !isEmptyString(a2->extra))
-      rc = -1;
-    if (!isEmptyString(a1->extra) && isEmptyString(a2->extra))
-      rc = 1;
-  }
- 
-  return rc;
-}
-
-/*=======================================================================
- * Function   : cmpRecordSize
- * Description: compare 2 records on size
- * Synopsis   : int cmpRecordSize(const void *p1, const void *p2)
- * Input      : const void *p1, const void *p2 : the records
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
- * Note       : sort by alphabetic order
- =======================================================================*/
-int 
-cmpRecordSize(const void *p1, const void *p2)
-{
-  int rc = 0;
-
-  /* p1 and p2 are pointers on &items
-   * and items are suposed to be Record* 
-   */
-  
-  Record* a1 = *((Record**)p1);
-  Record* a2 = *((Record**)p2);
-
-  if (!rc) rc = cmpArchiveSize(&a1->archive, &a2->archive);
-  if (!rc) rc = cmpServer(&a1->server, &a2->server);
-
-  // don't sort on REMOVE flag!
-  if (!rc) rc = (a1->type & 0x3) - (a2->type & 0x3); 
-
-  if (!rc) {
-    // extra should not but may be null
-    if ((a1->type & 0x3) == DEMAND) {
-      if (!isEmptyString(a1->extra) && !isEmptyString(a2->extra))
-	rc = strcmp(a1->extra, a2->extra);
-      if (isEmptyString(a1->extra) && !isEmptyString(a2->extra))
-	rc = -1;
-      if (!isEmptyString(a1->extra) && isEmptyString(a2->extra))
-	rc = 1;
-    }
-  }
- 
+  if (!rc) rc = cmpRecord(&a1, &a2);
   return rc;
 }
 
@@ -169,7 +100,7 @@ cmpRecordSize(const void *p1, const void *p2)
  * Description: compare 2 records on path
  * Synopsis   : int cmpRecordPath(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Output     : <, = or >0 respectively for lower, equal or greater
  * Note       : sort by alphabetic order 
  =======================================================================*/
 int 
@@ -195,7 +126,7 @@ cmpRecordPath(const void *p1, const void *p2)
  * Description: compare 2 records on path
  * Synopsis   : int cmpRecordPathAvl(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the records
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Output     : <, = or >0 respectively for lower, equal or greater
  * Note       : sort by alpabetic order (uniq key) 
  =======================================================================*/
 int 
@@ -211,6 +142,8 @@ cmpRecordPathAvl(const void *p1, const void *p2)
   Record* a2 = (Record*)p2;
 
   if (!rc) rc = strcmp(a1->extra, a2->extra);
+
+  // use for local cache so no need to compare on other fields
   return rc;
 }
 

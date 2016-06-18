@@ -5,24 +5,18 @@
 
 *** BUGS
 
-- init script's restart kill other mediatex daemon (serv1...)
-
-> start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec /usr/bin/mediatexd
-
 *** TODO (first)
 
 *** TO TEST
 
-- cache.c::freeCache (loop on chronological dates and growing sizes ?)
 - pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- add lexems for '<<<<<<<' to detect git conflicts
-- document .htaccess switchs (https/auth)
 - use add-if-not-there function (EEXIST cf notify.c)
 - serialise b-tree using another order
+- document server::https and .htaccess switchs (https/auth)
 - i10n for french
 
 *** TODO MAYBE
@@ -31,6 +25,7 @@
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
+- add lexems for '<<<<<<<' to detect git conflicts
 - find how to speed-up mediatex when there is no dns available
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c

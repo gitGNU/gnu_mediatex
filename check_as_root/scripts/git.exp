@@ -52,7 +52,7 @@ fait.
 [info git.sh]'
 [info git.sh] su ut4-mdtx -c 'git commit -a -m "Initial mdtx setup" 2>&1'
 [master  XXX] Initial mdtx setup
- 2 files changed, 36 insertions(+)
+ 2 files changed, 40 insertions(+)
  create mode 100644 supports.txt
  create mode 100644 ut4-mdtx.conf
 [debug git.sh] GIT_push: ut4-mdtx
@@ -64,7 +64,7 @@ To LOCALSTATEDIR/lib/mediatex/ut4-mdtx/ut4-mdtx
 [info git.sh] su ut4-mdtx -c 'git update-index --refresh'
 ut4-mdtx.conf: needs update
 [info git.sh] su ut4-mdtx -c 'git diff-index --exit-code HEAD 2>&1'
-:100644 100644 6eb7b0cd1b2c524a8f744a25509c93c78e0548f3 0000000000000000000000000000000000000000 M	ut4-mdtx.conf
+:100644 100644 57d90407ffe531b544b84b133a04d79454f08f13 0000000000000000000000000000000000000000 M	ut4-mdtx.conf
 [info git.sh] su ut4-mdtx -c 'git commit -a -m "Manual user edition" 2>&1'
 [master  XXX] Manual user edition
  1 file changed, 3 insertions(+)
@@ -76,7 +76,7 @@ Already up-to-date.
 [info git.sh] su ut4-mdtx -c 'git update-index --refresh'
 ut4-mdtx.conf: needs update
 [info git.sh] su ut4-mdtx -c 'git diff-index --exit-code HEAD 2>&1'
-:100644 100644 fb9db330fa82c6d98dc76e799490ad24861b7611 0000000000000000000000000000000000000000 M	ut4-mdtx.conf
+:100644 100644 4552169afc06957794b5b6c3245395b727ece9f2 0000000000000000000000000000000000000000 M	ut4-mdtx.conf
 [info git.sh] su ut4-mdtx -c 'git commit -a -m "Unit test" 2>&1'
 [master  XXX] Unit test
  1 file changed, 3 insertions(+)
@@ -133,7 +133,7 @@ fait.
 [info git.sh]'
 [info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "Initial collection setup" 2>&1'
 [master  XXX] Initial collection setup
- 13 files changed, 151 insertions(+)
+ 13 files changed, 169 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 apache2/cgi.htaccess
  create mode 100644 apache2/home.htaccess
@@ -174,7 +174,7 @@ Clonage dans 'LOCALSTATEDIR/cache/mediatex/ut4-mdtx/git/ut4-mdtx-hello'...
 [info git.sh]'
 [info git.sh] su ut4-mdtx-hello -c 'git update-index --refresh'
 [info git.sh] su ut4-mdtx-hello -c 'git diff-index --exit-code HEAD 2>&1'
-:100644 100644 39f24c05953a80d2a01ce528d226746517497bf6 bd973e103d08d6ba17b065940804c467603b90fa M	catalog000.txt
+:100644 100644 401488f27fb90a6efc985c0763e32ad73db22416 e48ca0f95faa302eaeb6084c59f01c1446fe5027 M	catalog000.txt
 [info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "Manual user edition" 2>&1'
 [master  XXX] Manual user edition
  1 file changed, 3 insertions(+)
@@ -186,7 +186,7 @@ Already up-to-date.
 [info git.sh]'
 [info git.sh] su ut4-mdtx-hello -c 'git update-index --refresh'
 [info git.sh] su ut4-mdtx-hello -c 'git diff-index --exit-code HEAD 2>&1'
-:100644 100644 bd973e103d08d6ba17b065940804c467603b90fa caed0c9de1576f67ded9542d462b583dc964783c M	catalog000.txt
+:100644 100644 e48ca0f95faa302eaeb6084c59f01c1446fe5027 e1ca97082848914375437270cca5f285674bea87 M	catalog000.txt
 [info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "coll unit test" 2>&1'
 [master  XXX] coll unit test
  1 file changed, 3 insertions(+)

@@ -60,6 +60,7 @@ main(int argc, char** argv)
   Server* server1 = 0;
   Server* server2 = 0;
   Server* server3 = 0;
+  int itIs = FALSE;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -118,12 +119,18 @@ main(int argc, char** argv)
   if (rgShareItems(server1->networks, server3->networks)) goto error;
 
   // test reachability
-  if (!isReachable(coll, server1, server2)) goto error;
-  if (isReachable(coll, server1, server3)) goto error;
-  if (!isReachable(coll, server2, server1)) goto error;
-  if (!isReachable(coll, server2, server3)) goto error;
-  if (!isReachable(coll, server3, server1)) goto error;
-  if (!isReachable(coll, server3, server2)) goto error;
+  if (!isReachable(coll, server1, server2, &itIs)) goto error;
+  if (!itIs) goto error;
+  if (!isReachable(coll, server1, server3, &itIs)) goto error;
+  if (itIs) goto error;
+  if (!isReachable(coll, server2, server1, &itIs)) goto error;
+  if (!itIs) goto error;
+  if (!isReachable(coll, server2, server3, &itIs)) goto error;
+  if (!itIs) goto error;
+  if (!isReachable(coll, server3, server1, &itIs)) goto error;
+  if (!itIs) goto error;
+  if (!isReachable(coll, server3, server2, &itIs)) goto error;
+  if (!itIs) goto error;
 
   // test disease and log parameters
   if (!diseaseServer(coll, server1)) goto error;

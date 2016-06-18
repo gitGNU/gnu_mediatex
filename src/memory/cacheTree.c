@@ -140,7 +140,7 @@ createCacheTree(void)
 
   // do not destroy archive on this tree
   if (!(rc->archives =
-	avl_alloc_tree(cmpArchiveCacheAvl, (avl_freeitem_t)0)))
+	avl_alloc_tree(cmpArchiveAvl, (avl_freeitem_t)0)))
     goto error;
 
   // init the locks

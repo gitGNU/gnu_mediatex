@@ -229,9 +229,9 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 store_00/it/here
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 3f18841537668dcf4fafd1471c64d52d                1937 store
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 store_00/it/here
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c] -------------------------------------------------------

@@ -107,7 +107,7 @@ error:
  * Description: compare 2 archives
  * Synopsis   : int cmpArchive(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the archives
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Output     : <, = or >0 respectively for lower, equal or greater
  * Note       : the first one is used by sort and second one by avl trees
  =======================================================================*/
 int 
@@ -148,74 +148,11 @@ cmpArchiveAvl(const void *p1, const void *p2)
 }
 
 /*=======================================================================
- * Function   : cmpArchiveCacheAvl
- * Description: compare 2 archives in order to optimize the cache
- * Synopsis   : int cmpArchive(const void *p1, const void *p2)
- * Input      : const void *p1, const void *p2 : the archives
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
- * Note       : sort by chronological dates and by growing sizes
- =======================================================================*/
-int 
-cmpArchiveCacheAvl(const void *p1, const void *p2)
-{
-  int rc = 0;
-
-  /* p1 and p2 are pointers on items
-   * and items are suposed to be Archive* 
-   */
-  
-  Archive* a1 = (Archive*)p1;
-  Archive* a2 = (Archive*)p2;
-
-  Record* r1 = a1->localSupply;
-  Record* r2 = a2->localSupply;
-
-  // chronological order
-  if (!rc && r1 && r2) rc = (r1->date - r2->date);
-  // we may have no localSupply
-  if (!rc && !r1 && r2) rc = -1;
-  if (!rc && r1 && !r2) rc = 1;
-
-  // growing sizes
-  if (!rc) rc = a1->size - a2->size;
-
-  // hash
-  rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
- 
-  return rc;
-}
-
-/*=======================================================================
- * Function   : cmpArchiveSize
- * Description: compare 2 archives by size
- * Synopsis   : int cmpArchiveSize(const void *p1, const void *p2)
- * Input      : const void *p1, const void *p2 : the archives
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
- =======================================================================*/
-int 
-cmpArchiveSize(const void *p1, const void *p2)
-{
-  int rc = 0;
-
-  /* p1 and p2 are pointers on &items
-   * and items are suposed to be Archive* 
-   */
-  
-  Archive* a1 = *((Archive**)p1);
-  Archive* a2 = *((Archive**)p2);
-
-  rc = a1->size - a2->size; // growing sizes
-  if (!rc) rc = strncmp(a1->hash, a2->hash, MAX_SIZE_MD5);
- 
-  return rc;
-}
-
-/*=======================================================================
  * Function   : cmpArchiveScore
  * Description: compare 2 archives by size first
  * Synopsis   : int cmpArchiveSize(const void *p1, const void *p2)
  * Input      : const void *p1, const void *p2 : the archives
- * Output     : -1, 0 or 1 respectively for lower, equal or greater
+ * Output     : <, = or >0 respectively for lower, equal or greater
  =======================================================================*/
 int 
 cmpArchiveScore(const void *p1, const void *p2)

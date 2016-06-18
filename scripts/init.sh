@@ -60,7 +60,7 @@ HTDOCS_configure_mdtx_apache2
 /usr/sbin/a2enconf ${MEDIATEX#/}-$MDTX.conf >/dev/null
 /usr/sbin/invoke-rc.d apache2 restart
 
-# script is not automatically installed for other instances than mdtx
+# init script is run at startup for mdtx instance
 if [ $MDTX = mdtx ]; then
     /usr/sbin/update-rc.d ${MEDIATEX#/}d defaults
     /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart $MDTX

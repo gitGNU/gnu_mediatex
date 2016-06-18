@@ -79,10 +79,10 @@
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [info cacheTree.c] b281449c229bcc4a3556cdcc0d3ebcec:815 (score= 3.75) : UNUSED -> WANTED
 [info cacheTree.c] zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz:42 (score=-1.00) : UNUSED -> TOKEEP
 [info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:42 (score=-1.00) : UNUSED -> TOKEEP

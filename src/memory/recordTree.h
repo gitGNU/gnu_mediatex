@@ -61,9 +61,8 @@ struct RecordTree
   AVLTree*    records;
 };
 
-int cmpRecordQuick(const void *p1, const void *p2);
 int cmpRecord(const void *p1, const void *p2);
-int cmpRecordSize(const void *p1, const void *p2);
+int cmpRecordAvl(const void *p1, const void *p2);
 int cmpRecordPath(const void *p1, const void *p2);
 int cmpRecordPathAvl(const void *p1, const void *p2);
 

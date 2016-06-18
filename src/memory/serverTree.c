@@ -883,22 +883,22 @@ diseaseServerTree(Collection* coll)
  * Description: test if "from" server may use gateways to reach "to" 
  *              server
  * Synopsis   : int isReachable(Collection* coll, 
- *                                         Server* from, Server* to)
+ *                              Server* from, Server* to, int* itIs)
  * Input      : Collection* coll : where to add
- *              Server* server = the proxy server 
- *              Server* proxy  = the proxy client
+ *              Server* from: the source server
+ *              Server* to:   the destination server
+ *              int* itIs:    TRUE if reachable
  * Output     : TRUE on success
  * Note       : this function is not symmetric
  =======================================================================*/
 int 
-isReachable(Collection* coll, Server* from, Server* to)
+isReachable(Collection* coll, Server* from, Server* to, int* itIs)
 {
   int rc = FALSE;
-  int loop = TRUE;
+  int loop1 = TRUE;
   RG* reach = 0;
   void* it = 0;
   RG* tmp = 0;
-  //RG* tmp2 = 0;
   RGIT* curr = 0;
   Server* server = 0;
   int nbReachable = 0;
@@ -906,48 +906,56 @@ isReachable(Collection* coll, Server* from, Server* to)
   logMemory(LOG_DEBUG, "isReachable from %s to %s",
 	  from->fingerPrint, to->fingerPrint);
 
+  *itIs = FALSE;
+  if (from == to) {
+    *itIs = TRUE;
+    goto end;
+  }
+
   // networks we can reach
   if (!(reach = createRing())) goto error;
   while ((it = rgNext_r(from->networks, &curr))) {
     if (!rgInsert(reach, it)) goto error;
   }
-  nbReachable = reach->nbItems;
+
+  if (LOG_DEBUG < env.logHandler->severity[LOG_MEMORY]->code) {
+    logMemory(LOG_DEBUG, "we want to reach on of them:");
+    while ((it = rgNext(to->networks))) {
+      logMemory(LOG_DEBUG, "- %s", (char*)it);
+    }
+  }
 
   // loop until "to" is located under a reachable network
-  /* printf("\n"); */
-  while (loop) {
+  while (loop1) {
+    nbReachable = reach->nbItems;
 
-    /* printf("looping...\n"); */
-    /* printf("we now we can reach:"); */
-    /* while ((it = rgNext(reach))) printf(" %s", (char*)it); */
-    /* printf ("\n"); */
-
-    /* printf("we want to reach on of them:"); */
-    /* while ((it = rgNext(to->networks))) printf(" %s", (char*)it); */
-    /* printf ("\n"); */
+    if (LOG_DEBUG < env.logHandler->severity[LOG_MEMORY]->code) {
+      logMemory(LOG_DEBUG, "now we can reach:");
+      while ((it = rgNext(reach))) {
+	logMemory(LOG_DEBUG, "- %s", (char*)it);
+      }
+    }
 
     // exit when reachable
+    if (tmp) tmp = destroyOnlyRing(tmp);
     if (!(tmp = rgInter(reach, to->networks))) goto error;
     if (!isEmptyRing(tmp)) {
-      rc = TRUE;
-      tmp = destroyOnlyRing(tmp);
-      /* printf("... ok reachable\n"); */
+      *itIs = TRUE;
       goto end;
     }
-    tmp = destroyOnlyRing(tmp);
 
-    // look for a new gateway (juste one)
-    loop = FALSE;
+    // look for a (only one) new gateway
+    loop1 = FALSE;
     curr = 0; 
-    while (!loop && (server = rgNext_r(coll->serverTree->servers, &curr))) {
+    while (!loop1 && 
+	   (server = rgNext_r(coll->serverTree->servers, &curr))) {
+      tmp = destroyOnlyRing(tmp);
       if (!(tmp = rgInter(reach, server->gateways))) goto error;
       if (!isEmptyRing(tmp)) {
 
-	/* printf("new reachable networks:"); */
-	/* while ((it = rgNext(server->networks))) printf(" %s", (char*)it); */
-	/* printf ("\n");      */
+	logMemory(LOG_DEBUG, "find a gateway: %s", server->fingerPrint);
 
-	// we find one so we now we can reach its networks
+	// we find a new gateway: we can reach its networks
 	tmp = destroyOnlyRing(tmp);
 	if (!(tmp = rgUnion(reach, server->networks))) goto error;
 	reach = destroyOnlyRing(reach);
@@ -955,22 +963,22 @@ isReachable(Collection* coll, Server* from, Server* to)
 	tmp = 0;
 
 	// but is there new networks ?
-	loop = (reach->nbItems > nbReachable);
+	loop1 = (reach->nbItems > nbReachable);
       }
-      tmp = destroyOnlyRing(tmp);
     }
   }
 
-  /* printf("... not reachable\n"); */
  end:
-  logMemory(LOG_INFO, "%s may %sreach %s",
-	  from->fingerPrint, rc?"":"not ", to->fingerPrint);
-  reach = destroyOnlyRing(reach);
-  return rc;
+  logMemory(LOG_INFO, "%s can%s reach %s",
+	  from->fingerPrint, *itIs?"":"not", to->fingerPrint);
+  rc = TRUE;
  error:
-  logMemory(LOG_DEBUG, "isReachable fails");
+  if (!rc) {
+    logMemory(LOG_ERR, "isReachable fails");
+  }
   reach = destroyOnlyRing(reach);
-  return FALSE;
+  if (tmp) tmp = destroyOnlyRing(tmp);
+  return rc;
 }
 
 

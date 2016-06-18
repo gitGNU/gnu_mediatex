@@ -111,10 +111,10 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part2
@@ -218,11 +218,11 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-16,01:00:05 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo/logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 supports/logoP1.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] -------------------------------------------------------

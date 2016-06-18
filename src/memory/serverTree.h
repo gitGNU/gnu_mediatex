@@ -119,7 +119,7 @@ int delServer(Collection* coll, Server* Server);
 int diseaseServer(Collection* coll, Server* server);
 int diseaseServerTree(Collection* coll);
 
-int isReachable(Collection* coll, Server* from, Server* to);
+int isReachable(Collection* coll, Server* from, Server* to, int* itIs);
 
 #endif /* MISC_MEMORY_SERVER_H */
 

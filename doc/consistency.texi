@@ -39,8 +39,8 @@ We initialise 2 mediatex servers on the same host (we need 2 different ports):
 # mediatex -c serv2 adm init
 # sed --follow-symlinks -i /etc/mediatex/serv1.conf -e "s/6561/6001/"
 # sed --follow-symlinks -i /etc/mediatex/serv2.conf -e "s/6561/6002/"
-# /etc/init.d/mediatexd-serv1 start
-# /etc/init.d/mediatexd-serv2 start
+# /etc/init.d/mediatexd-serv1 restart
+# /etc/init.d/mediatexd-serv2 restart
 @end example
 
 We initialise a collection shared by the 2 servers:

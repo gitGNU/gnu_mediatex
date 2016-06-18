@@ -1,27 +1,32 @@
-# MediaTeX extraction metadata: test1
-
-(ISO
-de5008799752552b7963a2670dc5eb18:391168
-=>
-1a167d608e76a6a4a8b16d168580873c:20480 logoP1.cat
-)
+# MediaTeX extraction metadata:
 
 (ISO
 0a7ecd447ef2acb3b5c6e4c550e6636f:374784
 =>
-c0c055a0829982bd646e2fafff01aaa6:4066 logoP2.cat
+c0c055a0829982bd646e2fafff01aaa6:4066	logoP2.cat
+)
+
+(ISO
+de5008799752552b7963a2670dc5eb18:391168
+=>
+1a167d608e76a6a4a8b16d168580873c:20480	logoP1.cat
 )
 
 (CAT
 1a167d608e76a6a4a8b16d168580873c:20480
 c0c055a0829982bd646e2fafff01aaa6:4066
 =>
-0387eee9820fa224525ff8b2e0dfa9be:24546 logo.tgz
+0387eee9820fa224525ff8b2e0dfa9be:24546	logo.tgz
 )
 
 (TGZ
 0387eee9820fa224525ff8b2e0dfa9be:24546
 =>
-022a34b2f9b893fba5774237e1aa80ea:24075 logo/logo.png
-b281449c229bcc4a3556cdcc0d3ebcec:815   logo/logo.xpm
+022a34b2f9b893fba5774237e1aa80ea:24075	logo/logo.png
+b281449c229bcc4a3556cdcc0d3ebcec:815	logo/logo.xpm
 )
+
+# Local Variables:
+# mode: conf
+# mode: font-lock
+# End:

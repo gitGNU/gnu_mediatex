@@ -137,6 +137,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   ServerTree *sTree = 0;
   Server* localhost = 0;
   Server *server = 0;
+  int itIs = FALSE;
 
   logMain(LOG_DEBUG, "mdtxSearch");
 
@@ -152,16 +153,9 @@ int mdtxSearch(RecordTree* rTree, char* reply)
   /* loop on every server */
   rgRewind(sTree->servers);
   while ((server = rgNext(sTree->servers))) {
-    if (!isReachable(coll, localhost, server)) continue;
-					   
-    /*
-    // skip server not directly connected to us
-    if (!rgShareItems(localhost->networks, server->networks)) {
-      logMain(LOG_INFO, "do not connect unreachable server %s:%i",
-	      server->host, server->mdtxPort);
-      continue;
-    }
-    */
+    if (!isReachable(coll, localhost, server, &itIs)) goto error;
+    if (!itIs) continue;
+
     // query server
     //if (!server) break;
     logMain(LOG_INFO, "ask  %s/%s server for file",

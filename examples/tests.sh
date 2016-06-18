@@ -166,18 +166,8 @@ function mdtxConfigure()
     # adapt init script if used
     if [ $DEBUG_SERVER -eq 0 ]; then
 	sed -i /etc/init.d/mediatexd-$SERVER \
-	    -e "s|--severity notice|$SEVERITY_SERVER|"
-	cat >>/etc/init.d/mediatexd-$SERVER <<EOF
-
-do_stop_cmd() {
-	start-stop-daemon --stop --quiet --retry=TERM/1/KILL/5 \
-	    \${PIDFILE:+--pidfile \${PIDFILE}} --name \$NAME --exec \$DAEMON
-	RETVAL="\$?"
-	[ "$RETVAL" = 2 ] && return 2
-	rm -f \$PIDFILE
-	return \$RETVAL
-}
-EOF
+	    -e "s|--severity notice|$SEVERITY_SERVER|" \
+	    -e "s|TERM/10/KILL/5|TERM/1/KILL/5|"
     fi
 }
 
@@ -601,7 +591,7 @@ function test10()
     fi
 }
 
-# Configure server 3 (from inside a private network)
+# Configure server 3 (inside a private network)
 # (close to test 7)
 function test11()
 {

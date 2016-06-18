@@ -4,7 +4,7 @@
 [info mediatex-cgi.c] querying for 40485334450b64014fd7a4810b5698b3 12
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info mediatex-cgi.c] cgi lunched on localhost: localhost/746d6ceeb76e05cfa2dea92a1c5753cd
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 746d6ceeb76e05cfa2dea92a1c5753cd
 [info mediatex-cgi.c] ask  localhost/746d6ceeb76e05cfa2dea92a1c5753cd server for file
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
@@ -19,7 +19,7 @@
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 [info mediatex-cgi.c] localhost:6560 tel (120) not found
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 6b18ed0194b0fbadd08e0a13cccda00e
 [info mediatex-cgi.c] ask  127.0.0.1/6b18ed0194b0fbadd08e0a13cccda00e server for file
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to 127.0.0.1 (6b18ed0194b0fbadd08e0a13cccda00e)
@@ -34,7 +34,7 @@
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 40485334450b64014fd7a4810b5698b3                  12 !wanted
 [info recordTree.c] # ^ LOCAL_DEMAND
 [info mediatex-cgi.c] 127.0.0.1:6560 tel (120) not found
-[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd may not reach bedac32422739d7eced624ba20f5912e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach bedac32422739d7eced624ba20f5912e
 [info confTree.c] free configuration
 [info mediatex-cgi.c] exit on success
 Content-Type: text/html; charset=utf-8

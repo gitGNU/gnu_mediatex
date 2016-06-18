@@ -42,10 +42,10 @@
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/supports.txt
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [info openClose.c] estimate 93 steps for load
@@ -66,16 +66,16 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
-[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
+[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] 2.2) Quick scan the cache directory:
@@ -117,22 +117,22 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
@@ -140,24 +140,24 @@
 [notice utcache.c] 2.3) Scan the cache directory:
 [notice utcache.c] .......................................................
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> USED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : USED -> UNUSED
-[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
-[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : USED -> UNUSED
 [info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : AVAILABLE -> UNUSED
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcache.c] .......................................................
 [notice utcache.c] Begin with:
@@ -172,16 +172,16 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
-[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
+[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
@@ -224,22 +224,22 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
@@ -291,20 +291,20 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
@@ -312,13 +312,13 @@
 [notice utcache.c] 2.5) Clean cat1 and iso1:
 [notice utcache.c] .......................................................
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> USED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : USED -> UNUSED
-[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : USED -> UNUSED
 [info cacheTree.c] de5008799752552b7963a2670dc5eb18:391168 (score=10.00) : AVAILABLE -> UNUSED
 [notice utFunc.c] copy logo.png into the coll1 cache
 [notice utFunc.c] copy logo.tgz into the coll1 cache
@@ -331,10 +331,10 @@
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcache.c] .......................................................
 [notice utcache.c] Begin with:
@@ -349,16 +349,16 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
-[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
+[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
@@ -415,32 +415,32 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] 2.6) Clean only cat1 (no local image):
 [notice utcache.c] .......................................................
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> USED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : USED -> UNUSED
-[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : USED -> UNUSED
 [notice utFunc.c] copy logo.png into the coll1 cache
 [notice utFunc.c] copy logo.tgz into the coll1 cache
 [notice utFunc.c] copy logoP1.cat into the coll1 cache
@@ -452,10 +452,10 @@
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
+[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
-[info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
 [notice utcache.c] .......................................................
 [notice utcache.c] Begin with:
@@ -470,16 +470,16 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
-[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
+[notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
+[notice recordTree.c] # ^ FINAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
@@ -534,25 +534,25 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] -------------------------------------------------------
-[notice utcache.c] 2.7) Purge cat1 :
+[notice utcache.c] 2.7) Purge iso1 :
 [notice utcache.c] .......................................................
 [info openClose.c] estimate 93 steps for load
 [info openClose.c] parse coll1 collection (5 X )
@@ -593,23 +593,23 @@
 [notice recordTree.c] #                date                             host                             hash                size extra
 [notice recordTree.c] S 1970-01-01,01:00:03 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
-[notice recordTree.c] # ^ LOCAL_DEMAND
-[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
-[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ REMOTE_SUPPLY
+[notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
+[notice recordTree.c] # ^ FINAL_DEMAND
+[notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
+[notice recordTree.c] # ^ LOCAL_DEMAND
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 /HERE/misc/logoP2.iso:supports/
 [notice recordTree.c] # ^ FINAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] -------------------------------------------------------
-[notice utcache.c] 3) Allocation
+[notice utcache.c] 3) Allocations...
 [notice utcache.c] .......................................................
 [notice utFunc.c] copy logo.png into the coll3 cache
 [notice utFunc.c] copy logo.tgz into the coll3 cache
@@ -661,15 +661,15 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
@@ -690,15 +690,15 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
@@ -727,15 +727,15 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
@@ -752,6 +752,7 @@
 [info cache.c] = avail     104063036
 [info cache.c] need        104018481
 [info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score=-1.00) : UNUSED -> ALLOCATED
+[info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score= 9.00) : ALLOCATED -> AVAILABLE
 [notice utcache.c] .......................................................
 [notice utcache.c] reply : 1
 [notice utcache.c] .......................................................
@@ -763,37 +764,38 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           104018481 amalloc
+[notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 1a167d608e76a6a4a8b16d168580873c               20480 logoP1.cat
-[notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           104018481 !malloc
-[notice recordTree.c] # ^ MALLOC_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utcache.c] -------------------------------------------------------
-[info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score=-1.00) : ALLOCATED -> UNUSED
 [notice utcache.c] -------------------------------------------------------
 [notice utcache.c] 3.4) Ask for place so as we need to suppress files :
 [notice utcache.c] .......................................................
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
-[info cache.c] - used         839119
-[info cache.c] = free      104018481
+[info cache.c] - used      104857600
+[info cache.c] = free              0
 [info cache.c]   total     104857600
 [info cache.c] - frozen       794564
 [info cache.c] = avail     104063036
 [info cache.c] need        104063036
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> UNUSED
-[notice cache.c] remove logo.png from cache (free)
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
 [notice cache.c] remove logoP1.cat from cache (free)
+[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> UNUSED
+[notice cache.c] remove logo.png from cache (free)
+[info cacheTree.c] aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:104018481 (score= 9.00) : AVAILABLE -> UNUSED
+[notice cache.c] remove amalloc from cache (free)
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
 [info cache.c] - used         794564
@@ -813,13 +815,13 @@
 [notice recordTree.c]   DoCypher   FALSE
 [notice recordTree.c] Body
 [notice recordTree.c] #                date                             host                             hash                size extra
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
+[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 0387eee9820fa224525ff8b2e0dfa9be               24546 logo.tgz
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb           104063036 !malloc
 [notice recordTree.c] # ^ MALLOC_SUPPLY
-[notice recordTree.c] S 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd c0c055a0829982bd646e2fafff01aaa6                4066 logoP2.cat
+[notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 2010-01-01,01:05:00 746d6ceeb76e05cfa2dea92a1c5753cd de5008799752552b7963a2670dc5eb18              391168 logoP1.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY

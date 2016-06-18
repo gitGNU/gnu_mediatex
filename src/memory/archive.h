@@ -73,8 +73,6 @@ struct Archive
 char* strAState(AState state);
 int cmpArchive(const void *p1, const void *p2);
 int cmpArchiveAvl(const void *p1, const void *p2);
-int cmpArchiveCacheAvl(const void *p1, const void *p2);
-int cmpArchiveSize(const void *p1, const void *p2);
 int cmpArchiveScore(const void *p1, const void *p2);
 Archive* getArchive(Collection* coll, char* hash, off_t size);
 Archive* addArchive(Collection* coll, char* hash, off_t size);

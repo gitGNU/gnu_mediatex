@@ -771,24 +771,18 @@ cacheSet(ExtractData* data, Record* record,
   // (rename do not honor default target acl)
   logMain(LOG_INFO, "move %s to %s", 
 	  absoluteExtractPath, absoluteCachePath);
-  /*
-  if (rename(absoluteExtractPath, absoluteCachePath)) {
-    logMain(LOG_ERR, "rename fails: %s", strerror(errno));
-    goto error;
-  }
-  */
   if (!extractCp(absoluteExtractPath, absoluteCachePath)) goto error;
   if (unlink(absoluteExtractPath)) {
     logMain(LOG_ERR, "unlink fails: %s", strerror(errno));
     goto error;
   }
 
-  // toggle !malloc record to local-supply...
+  // toggle !malloc record to local-supply
   relativeCachePath = absoluteCachePath + strlen(coll->cacheDir) + 1;
   record->extra = destroyString(record->extra);
   if (!(record->extra = createString(relativeCachePath))) goto error;
 
-  // ...and add a toKepp on the new extracted archive
+  // add a toKepp on the new extracted archive
   if (!extractAddToKeep(data, record->archive)) goto error;
 
   logMain(LOG_NOTICE, "%s:%lli extracted", 

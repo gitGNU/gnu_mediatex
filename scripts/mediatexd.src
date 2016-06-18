@@ -43,3 +43,15 @@ do_reload()
 	    --pidfile $PIDFILE
 	return 0
 }
+
+#
+# Function that stops the daemon/service
+#
+do_stop_cmd() {
+	start-stop-daemon --stop --quiet --retry=TERM/10/KILL/5 \
+	    --pidfile $PIDFILE --exec $DAEMON --user $USER
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	rm -f $PIDFILE
+	return $RETVAL
+}

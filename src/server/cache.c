@@ -196,17 +196,26 @@ getAbsoluteRecordPath(Collection* coll, Record* record)
 static int 
 removeFile(char* absolutePath, char* relativePath, char* message)
 {
-  // do not unlink final supplies
-  if (*relativePath == '/') return TRUE;
+  int rc = FALSE;
 
-  logMain(LOG_NOTICE, "remove %s from cache (%s)",
+  // do not unlink final supplies
+  if (*relativePath == '/') goto end;
+
+  logMain(LOG_NOTICE, "remove %s from cache (%s)", 
 	  relativePath, message);
 
   if (!env.dryRun) {
     if (unlink(absolutePath) == -1) {
-      logMain(LOG_ERR, "error with unlink %s:", strerror(errno));
-      return FALSE;
+      logMain(LOG_ERR, "unlink fails: %s", strerror(errno));
+      goto error;
     }
+  }
+
+ end:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "removeFile fails on %s", relativePath);
   }
   return TRUE;
 }
@@ -472,9 +481,14 @@ scanMd5sumFiles(Collection* coll, AVLTree* localSuppliesOk, int doQuick)
   // check cache entries
   for (node = coll->cacheTree->archives->head; node; node = node->next) {
     archive = node->item;
+
+    // look for local-supply
     if (archive->state < AVAILABLE ||
 	!(supply = archive->localSupply) ||
 	supply->type & REMOVE) continue;
+
+    // do not work on support-file
+    if (*supply->extra == '/') continue;
 
     logMain(LOG_INFO, "check: %s", supply->extra);
     
@@ -509,7 +523,10 @@ scanMd5sumFiles(Collection* coll, AVLTree* localSuppliesOk, int doQuick)
     }
 
     // add file to localSuppliesOk tree for scanRepository
-    if (!avl_insert(localSuppliesOk, supply)) goto error;
+    if (!avl_insert(localSuppliesOk, supply)) {
+      logMain(LOG_ERR, "avl_insert fails");
+      goto error;
+    }
     continue;
 
   unIndex:
@@ -657,7 +674,7 @@ loadCache(Collection* coll)
 }
 
 /*=======================================================================
- * Function   : cacheSizes
+ * Function   : cacheSzes
  * Description: log cache status
  * Synopsis   : static void cacheSize(CacheTree* self, 
  *                                    off_t* free, off_t* available)
@@ -695,7 +712,6 @@ freeCache(Collection* coll, off_t need, int* success)
 {
   int rc = FALSE;
   CacheTree* self = 0;
-  Archive* archive = 0;
   Record* record = 0;
   AVLNode* node = 0;
   off_t free = 0;
@@ -731,25 +747,19 @@ freeCache(Collection* coll, off_t need, int* success)
     goto end;
   }
 
-  // We will free some archive from the cache.
-  // - suppress older files first
-  // - if same date, suppress smallest first
-#warning to test as do not seems like that (->utcacheTree)
+  // loop on all local-supplies
+  // (order by chronological dates and growing size)
+  for (node = self->recordTree->records->head; need > free && node; 
+       node = node->next) {
+    record = node->item;
+    if (record->type & REMOVE) continue;
+    if (getRecordType(record) != LOCAL_SUPPLY) continue;
+    if (record->archive->state < AVAILABLE) continue; // see cacheSet
 
-  // - compute scores (do not delete archive with bad score)
-  //if (!computeExtractScore(coll)) goto error;
-
-  // loop on all archives
-  for (node = coll->cacheTree->archives->head;
-       need > free && node; node = node->next) {
-    archive = node->item;
-    
-    // looking for archive that resides into the cache
-    if (archive->state < AVAILABLE) continue;
-    record = archive->localSupply;
-
-    // looking for perenial archive we can safely delete from the cache
-    if (archive->state >= TOKEEP) continue;
+    // looking for perenial archive we can safely delete from the
+    // cache. Warning: if record's date change, chronological order is
+    // not updated
+    if (record->archive->state >= TOKEEP) continue;    
 
     // un-index the record from cache (do not free the record)
     if (!delCacheEntry(coll, record)) goto error;
