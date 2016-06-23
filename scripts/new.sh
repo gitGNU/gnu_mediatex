@@ -35,9 +35,10 @@ set -e
 
 Debug "new"
 [ $(id -u) -eq 0 ] || Error "need to be root"
-[ ! -z "$MDTX_MDTXUSER" ] || 
-Error "expect MDTX_MDTXUSER variable to be set by the environment"
+[ ! -z "$MDTX_MDTXUSER" ] || \
+    Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $1 ] || Error "expect a label as first parameter"
+[ ! "$1" = "mdtx" ] || Error "collection cannot be labeled mdtx"
 
 SERV=$(echo $1 | cut -s -d "-" -f1)
 TMP=$(echo $1 | cut -d "-" -f2)

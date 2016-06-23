@@ -32,9 +32,12 @@ set -e
 
 Debug "clean"
 [ $(id -u) -eq 0 ] || Error "need to be root"
+[ ! -z "$MDTX_MDTXUSER" ] || \
+    Error "expect MDTX_MDTXUSER variable to be set by the environment"
 [ ! -z $1 ] || Error "expect a label as first parameter"
 [ ! "$1" = "mdtx" ] || Error "collection cannot be labeled mdtx"
-USER="$MDTX-$1"
+COLL=$1
+USER=$MDTX-$COLL
 
 rm -fr $CACHEDIR/$MDTX/home/$USER/public_html
 USERS_coll_populate $USER

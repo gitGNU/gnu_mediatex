@@ -223,7 +223,8 @@ function USERS_mdtx_enable()
 	POSTFIX="-$MDTX"
     fi
     CRON_FILE=$SYSCONFDIR/cron.d/mediatex$POSTFIX
-    ROTATE_FILE=$SYSCONFDIR/logrotate.d/httpd-prerotate/mediatex$POSTFIX
+    ROTATE_DIR=$SYSCONFDIR/logrotate.d/httpd-prerotate
+    ROTATE_FILE=$ROTATE_DIR/mediatex$POSTFIX
     INIT_FILE=$SYSCONFDIR/init.d/mediatexd$POSTFIX
 
     # create the mdtx directories
@@ -248,6 +249,9 @@ function USERS_mdtx_enable()
     fi
 
     # configure logrotate on apache logs
+    if [ ! -d $ROTATE_DIR ]; then
+	mkdir $ROTATE_DIR
+    fi
     if [ ! -f $ROTATE_FILE ]; then
 	cat >$ROTATE_FILE <<EOF
 #!/bin/bash
