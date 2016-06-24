@@ -41,11 +41,20 @@ typedef struct RG
   int nbItems;
 } RG;
 
-/* void* rgNext_r(RG* ring, RGIT** curr) is provided as a macro */
+/* void* rgNext_r(RG* ring, RGIT** curr) provided as a macro */
 #define rgNext_r(ring, curr)				\
 (ring->head?						\
  ((*curr = (*curr) ? (*curr)->next : ring->head)?	\
   (*curr)->it : 0) : 0)
+
+/* RGIT* rgHaveItem(RG* ring, void* pItem) provided as a macro */
+#define rgHaveItem(ring, pItem)					\
+  ({								\
+    RGIT* rc = 0;						\
+    void* pIt = 0;						\
+    while ((pIt = rgNext_r(ring, &rc)) && pIt != pItem);	\
+    rc;								\
+  })
 
 RGIT* rgCreate(void);
 void rgDestroy(RGIT* item);
@@ -64,7 +73,6 @@ void rgRewind(RG* ring);
 int rgSort(RG* ring, int(*compar)(const void *, const void *));
 RGIT* rgMatchItem(RG* ring, void* pItem, 
 		  int(*compar)(const void *, const void *));
-RGIT* rgHaveItem(RG* ring, void* pItem);
 int rgDelItem(RG* ring, void* pItem);
 int rgShareItems(RG* ring1, RG* ring2);
 RG* rgInter(RG* ring1, RG* ring2);
