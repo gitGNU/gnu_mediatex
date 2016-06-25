@@ -614,26 +614,26 @@ rgMatchItem(RG* ring, void* pItem,
   return rc;
 }
 
-/*=======================================================================
- * Function   : rgHaveItem
- * Description: look if an item is on the ring
- * Synopsis   : int rgHaveItem(RG* ring, void* pItem)
- * Input      : RG* ring = ring to look into
- *              void* pItem = item to look for
- * Output     : a pointer on RGIT or 0 if not found
- =======================================================================*/
-RGIT*
-rgHaveItem(RG* ring, void* pItem)
-{
-  RGIT* rc = 0;
-  void* pIt = 0;
+/* /\*======================================================================= */
+/*  * Function   : rgHaveItem */
+/*  * Description: look if an item is on the ring */
+/*  * Synopsis   : int rgHaveItem(RG* ring, void* pItem) */
+/*  * Input      : RG* ring = ring to look into */
+/*  *              void* pItem = item to look for */
+/*  * Output     : a pointer on RGIT or 0 if not found */
+/*  =======================================================================*\/ */
+/* RGIT* */
+/* rgHaveItem(RG* ring, void* pItem) */
+/* { */
+/*   RGIT* rc = 0; */
+/*   void* pIt = 0; */
 
-  while ((pIt = rgNext_r(ring, &rc))) {
-    if (pIt == pItem) break;
-  }
+/*   while ((pIt = rgNext_r(ring, &rc))) { */
+/*     if (pIt == pItem) break; */
+/*   } */
 
-  return rc;
-}
+/*   return rc; */
+/* } */
 
 /*=======================================================================
  * Function   : rgDelItem
