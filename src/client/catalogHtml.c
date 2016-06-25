@@ -192,15 +192,17 @@ htmlIndexArchive(FILE* fd, Collection* coll, Archive* self)
 
 /*=======================================================================
  * Function   : serializeHtmlRoleList
- * Description: Latexalize an Human list.
- * Synopsis   : int serializeHtmlHumList(Collection* coll, int i, int n)
+ * Description: Htmlize a role list.
+ * Synopsis   : int serializeHtmlHumList(Collection* coll, 
+ *                                       AVLNode** node, int i, int n)
  * Input      : Collection* coll
+ *              AVLNode** node: first asso from the list
  *              int i = current role list
  *              int n = last role list
- * Output     : TRUE on success
+ * Output     : TRUE on success ; node is move forward to next list
  =======================================================================*/
 static int 
-serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
+serializeHtmlRoleList(Collection* coll, AVLNode** node, int i, int n)
 {
   int rc = FALSE;
   AssoRole* asso = 0;
@@ -213,10 +215,9 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
   int humId = -1;
 
   checkCollection(coll);
-  if (!assoRoles) goto error;
-  asso = rgCurrent(assoRoles);
+  if (!*node) goto error;
+  asso = (*node)->item;
   roleId = asso->role->id;
-  humId = asso->human->id;
 
   getRoleListUri(url, "/", roleId, i);
   if (!(path = createString(coll->htmlIndexDir))) goto error;
@@ -235,6 +236,7 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
 
   htmlUlOpen(fd);
   for (j = 0; j < MAX_INDEX_PER_PAGE && asso; ++j) {
+    humId = asso->human->id;
 
     getHumanUri(url, "../../..", humId);
     if (!sprintf(text, "%s %s", asso->human->firstName,
@@ -243,8 +245,10 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
     htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
-    while ((asso = rgNext(assoRoles)) && humId == asso->human->id);
-    if (asso) humId = asso->human->id;
+    do {
+      *node = (*node)->next;
+      asso = *node?(*node)->item:0;
+    } while (asso && humId == asso->human->id);
   }
   htmlUlClose(fd);
 
@@ -271,7 +275,8 @@ serializeHtmlRoleList(Collection* coll, RG* assoRoles, int i, int n)
 /*=======================================================================
  * Function   : serializeHtmlRole
  * Description: HTML for Role.
- * Synopsis   : static int serializeHtmlRole(Collection* coll, Carac* self)
+ * Synopsis   : static int serializeHtmlRole(Collection* coll, 
+ *                                           Carac* self)
  * Input      : Collection* coll = context
  *              Carac* self = Role to serialize
  * Output     : TRUE on success
@@ -281,6 +286,7 @@ serializeHtmlRole(Collection* coll, Role* self)
 {
   int rc = FALSE;
   AssoRole* assoRole = 0;
+  AVLNode* node = 0;
   FILE* fd = stdout;
   char* path = 0;
   char* path2 = 0;
@@ -306,15 +312,11 @@ serializeHtmlRole(Collection* coll, Role* self)
   }
 
   // compute the number of human into this role
-  if (!isEmptyRing(self->assos)) {
-    if (!rgSort(self->assos, cmpAssoRole)) goto error; 
-
-    rgRewind(self->assos);
-    while ((assoRole = rgNext(self->assos))) {
-      if (humId == assoRole->human->id) continue;
-      humId = assoRole->human->id;
-      ++nbHum;
-    }
+  for (node = self->assos->head; node; node = node->next) {
+    assoRole = node->item;
+    if (humId == assoRole->human->id) continue;
+    humId = assoRole->human->id;
+    ++nbHum;
   }
 
   // serialize header file for this role
@@ -340,7 +342,7 @@ serializeHtmlRole(Collection* coll, Role* self)
   }
 
   // serialize human lists for this role
-  if (!isEmptyRing(self->assos)) {
+  if ((node = self->assos->head)) {
  
     // build lists sub-directories (group by MAX_FILES_PER_DIR)
     n = (nbHum - 1) / MAX_INDEX_PER_PAGE +1;
@@ -349,10 +351,8 @@ serializeHtmlRole(Collection* coll, Role* self)
     if (!htmlMakeDirs(path, n)) goto error;
       
     // populate role list subdirectories
-    rgRewind(self->assos);
-    rgNext(self->assos); // current point on first item
     for (i=1 ; i<=n; ++i) {
-      if (!serializeHtmlRoleList(coll, self->assos, i, n)) goto error;
+      if (!serializeHtmlRoleList(coll, &node, i, n)) goto error;
     }
   }
 
@@ -492,7 +492,7 @@ serializeHtmlHuman(Collection* coll, Human* self)
  * Function   : serializeHtmlDocument
  * Description: HTML for Document.
  * Synopsis   : static int serializeHtmlDocument(Collection* coll, 
- *                                                     Document* self)
+ *                                               Document* self)
  * Input      : Collection* coll = context
  *              Document* self = what to serialize
  * Output     : TRUE on success
@@ -623,18 +623,20 @@ serializeHtmlDocument(Collection* coll, Document* self)
 
 /*=======================================================================
  * Function   : serializeHtmlCateList
- * Description: Latexalize an Human list.
- * Synopsis   : int serializeHtmlHumList(Collection* coll, int i, int n)
+ * Description: Htmlize a category list.
+ * Synopsis   : int serializeHtmlHumList(Collection* coll,
+ *                                       AVLNode** node, int i, int n)
  * Input      : Collection* coll
- *              int i = current category list
- *              int n = last cate list
- * Output     : TRUE on success
+ *              AVLNode** node: first document of the list
+ *              int i: current category list
+ *              int n: last cate list
+ * Output     : TRUE on success ; node is move forward to next list
  =======================================================================*/
 static int 
-serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
+serializeHtmlCateList(Collection* coll, Category* self, AVLNode** node,
+		      int i, int n)
 {
   int rc = FALSE;
-  RG* documents = 0;
   Document* document = 0;
   FILE *fd = stdout;
   char *path = 0;
@@ -659,13 +661,13 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
 
   fprintf(fd, "<!--#include virtual='../header.shtml' -->");
 
-  if (isEmptyRing(documents = self->documents)) goto end;
-  document = rgCurrent(documents);
+  if (!node || !*node) goto end;
   htmlPOpen(fd);
   if (!serializeHtmlListBar(coll, fd, i, n)) goto error;
 
   htmlUlOpen(fd);
-  for (j = 0; j < MAX_INDEX_PER_PAGE && document; ++j) {
+  for (j = 0; j < MAX_INDEX_PER_PAGE && *node; ++j) {
+    document = (*node)->item;
 
     getDocumentUri(url, "../../..", document->id);
     if (!sprintf(text, "%s", document->label)) goto error;
@@ -673,7 +675,7 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
     htmlLink(fd, 0, url, text);
     htmlLiClose(fd);
 
-    document = rgNext(documents);
+    *node = (*node)->next;
   }
   htmlUlClose(fd);
 
@@ -692,7 +694,7 @@ serializeHtmlCateList(Collection* coll, Category* self, int i, int n)
   }
  error:
   if (!rc) {
-    logMain(LOG_ERR, "serializeHtmlRoleList fails");
+    logMain(LOG_ERR, "serializeHtmlCateList fails");
   }
   path = destroyString(path);
   return rc;
@@ -714,6 +716,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
   AssoCarac  *assoCarac = 0;
   Human *human = 0;
   Category* cat = 0;
+  AVLNode* node = 0;
   FILE* fd = stdout;
   char* path = 0;
   char* path2 = 0;
@@ -820,7 +823,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
   }
 
    // documents
-  nbDoc = self->documents->nbItems;
+  nbDoc = avl_count(self->documents);
   htmlPOpen(fd);
   if (!fprintf(fd, _("\nDocuments: %i\n"), nbDoc)) goto error;
 
@@ -831,8 +834,7 @@ serializeHtmlCategory(Collection* coll, Category* self)
   }
 
   // serialize document lists for this category
-  if (!isEmptyRing(self->documents)) {
-    if (!rgSort(self->documents, cmpDocument)) goto error;
+  if ((node = self->documents->head)) {
 
     // compute the number of document into this category
     n = (nbDoc - 1) / MAX_INDEX_PER_PAGE +1;
@@ -843,16 +845,14 @@ serializeHtmlCategory(Collection* coll, Category* self)
     if (!htmlMakeDirs(path, n)) goto error;
       
     // populate category list subdirectories
-    rgRewind(self->documents);
-    rgNext(self->documents); // current point on first item
     for (i=1 ; i<=n; ++i) {
-      if (!serializeHtmlCateList(coll, self, i, n)) goto error;
+      if (!serializeHtmlCateList(coll, self, &node, i, n)) goto error;
     }
   }
   else {
     // serialize an empty file to be loaded anyway
     if (!htmlMakeDirs(path, 1)) goto error;
-    if (!serializeHtmlCateList(coll, self, 1, 0)) goto error;
+    if (!serializeHtmlCateList(coll, self, 0, 1, 0)) goto error;
   }
 
   rc = TRUE;
@@ -868,12 +868,14 @@ serializeHtmlCategory(Collection* coll, Category* self)
 
 /*=======================================================================
  * Function   : serializeHtmlDocList
- * Description: Latexalize an Document list.
- * Synopsis   : int serializeHtmlDocList(Collection* coll, int i, int n)
+ * Description: Htmlize a document list.
+ * Synopsis   : int serializeHtmlDocList(Collection* coll, 
+ *                                       AVLNode **node, int i, int n)
  * Input      : Collection* coll
- *              int i = current document list
- *              int n = last document list
- * Output     : TRUE on success
+ *              AVLNode **node: first document of the list
+ *              int i: current document list
+ *              int n: last document list
+ * Output     : TRUE on success ; node is move forward to next list
  =======================================================================*/
 static int 
 serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
@@ -905,7 +907,7 @@ serializeHtmlDocList(Collection* coll, AVLNode **node, int i, int n)
 
   htmlUlOpen(fd);
   for (j = 0; j < MAX_INDEX_PER_PAGE && *node; ++j) {
-    document = (Document*)(*node)->item;
+    document = (*node)->item;
 
     getDocumentUri(url, "../..", document->id);
     htmlLiOpen(fd);
@@ -1025,12 +1027,14 @@ serializeHtmlDocLists(Collection* coll, CatalogTree* self)
 
 /*=======================================================================
  * Function   : serializeHtmlHumList
- * Description: Latexalize an Human list.
- * Synopsis   : int serializeHtmlHumList(Collection* coll, int i, int n)
+ * Description: Htmlize a human list.
+ * Synopsis   : int serializeHtmlHumList(Collection* coll, 
+ *                                       AVLNode **node,int i, int n)
  * Input      : Collection* coll
- *              int i = current human list
- *              int n = last human list
- * Output     : TRUE on success
+ *              AVLNode **node: first human of the list
+ *              int i: current human list
+ *              int n: last human list
+ * Output     : TRUE on success ; node is move forward to next list
  =======================================================================*/
 static int 
 serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
@@ -1064,7 +1068,7 @@ serializeHtmlHumList(Collection* coll, AVLNode **node, int i, int n)
 
   htmlUlOpen(fd);
   for (j = 0; j < MAX_INDEX_PER_PAGE && *node; ++j) {
-    human = (Human*)(*node)->item;
+    human = (*node)->item;
 
     getHumanUri(url, "../..", human->id);
     if (!sprintf(text, "%s %s", human->firstName,

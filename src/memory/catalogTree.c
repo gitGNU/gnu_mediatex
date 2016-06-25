@@ -23,6 +23,11 @@
 
 #include "mediatex-config.h"
 
+void* avl_insert_2(AVLTree* tree, void* item)
+{
+  return avl_insert(tree, item);
+}
+
 
 /*=======================================================================
  * Function   : caracType2string
@@ -202,11 +207,12 @@ serializeAssoCarac(AssoCarac* self, CvsFile* fd)
   return(rc);
 }
 
+
 /*=======================================================================
  * Function   : cmpAssoRole
  * Description: compare two assoRoles
  * Synopsis   : int cmpAssoRole(const void *p1, const void *p2)
- * Input      : p1 and p2 are pointers on AssoRole*
+ * Input      : p1 and p2 are pointers on AssoRole**
  * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
  =======================================================================*/
 int 
@@ -224,7 +230,28 @@ cmpAssoRole(const void *p1, const void *p2)
   return rc;
 }
 
-
+/*=======================================================================
+ * Function   : cmpAssoRoleAvl
+ * Description: compare two assoRoles
+ * Synopsis   : int cmpAssoRoleAvl(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on AssoRole*
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
+int 
+cmpAssoRoleAvl(const void *p1, const void *p2)
+{
+  int rc = 0;
+  
+  /* p1 and p2 are pointers on &items */
+  const AssoRole* v1 = p1;
+  const AssoRole* v2 = p2;
+
+  rc = cmpRole(&v1->role, &v2->role);
+  if (!rc) rc = cmpHuman(&(v1->human), &(v2->human));
+  if (!rc) rc = cmpDocument(&(v1->document), &(v2->document));
+  return rc;
+}
+
 /*=======================================================================
  * Function   : createRole
  * Description: Create, by memory allocation a Role
@@ -243,7 +270,10 @@ createRole(void)
   }
 
   memset(rc, 0, sizeof(Role));
-  if ((rc->assos = createRing()) == 0) goto error;
+  if (!(rc->assos 
+	= avl_alloc_tree(cmpAssoRoleAvl, 
+			 (avl_freeitem_t)destroyAssoRole)))
+    goto error;
   
   return rc;  
  error:  
@@ -266,10 +296,8 @@ destroyRole(Role* self)
   if(self) {
     self->label = destroyString(self->label);
     
-    // we destroy the assoRole too
-    self->assos
-      = destroyRing(self->assos,
-		    (void*(*)(void*)) destroyAssoRole);
+    // do destroy the assoRole too
+    avl_free_tree(self->assos);
     free(self);
   }
 
@@ -492,8 +520,8 @@ int cmpHumanAvl(const void *p1, const void *p2)
   int rc = 0;
   
   /* p1 and p2 are pointers on items */
-  Human* v1 = (Human*)p1;
-  Human* v2 = (Human*)p2;
+  const Human* v1 = p1;
+  const Human* v2 = p2;
 
   rc = strcmp(v1->firstName, v2->firstName);
   if (!rc) rc = strcmp(v1->secondName, v2->secondName);
@@ -617,7 +645,7 @@ destroyDocument(Document* self)
  * Function   : cmpDocument
  * Description: compare two Documents alphabetically
  * Synopsis   : int cmpDocument(const void *p1, const void *p2)
- * Input      : p1 and p2 are pointers on Document
+ * Input      : p1 and p2 are pointers on Document*
  * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
  =======================================================================*/
 int
@@ -633,6 +661,13 @@ cmpDocument(const void *p1, const void *p2)
   return rc;
 }
 
+/*=======================================================================
+ * Function   : cmpDocumentAvl
+ * Description: compare two Documents alphabetically
+ * Synopsis   : int cmpDocumentAvl(const void *p1, const void *p2)
+ * Input      : p1 and p2 are pointers on Document
+ * Output     : p1 = p2 ? 0 : (p1 < p2 ? -1 : 1)
+ =======================================================================*/
 // same function for AVL trees
 int
 cmpDocumentAvl(const void *p1, const void *p2)
@@ -739,8 +774,9 @@ createCategory(void)
   if ((rc->fathers = createRing()) == 0 ||
       (rc->childs = createRing()) == 0 ||
       (rc->assoCaracs = createRing()) == 0 ||
-      (rc->humans = createRing()) == 0 ||
-      (rc->documents = createRing()) == 0)
+      (rc->humans = createRing()) == 0);
+
+  if (!(rc->documents = avl_alloc_tree(cmpDocumentAvl, 0)))
     goto error;
 
   return rc;
@@ -772,9 +808,9 @@ destroyCategory(Category* self)
     
     /* do not destroy objects */
     self->humans = destroyOnlyRing(self->humans);
-    self->documents = destroyOnlyRing(self->documents);
     self->childs = destroyOnlyRing(self->childs);
     self->fathers = destroyOnlyRing(self->fathers);
+    avl_free_tree(self->documents);
     free(self);
   }
 
@@ -1309,16 +1345,15 @@ int
 delRole(Collection* coll, Role* self)
 {
   int rc = FALSE;
-  AssoRole* aR = 0;
+  AVLNode *node = 0;
   RGIT* curr = 0;
   
   checkCollection(coll);
   logMemory(LOG_DEBUG, "delRole %s", self->label);
 
   // delete related assossiations
-  while ((aR = rgHead(self->assos))) {
-    if (!delAssoRole(coll, aR)) goto error;
-  }
+  while ((node = self->assos->head))
+    if (!delAssoRole(coll, node->item)) goto error;
 
   // delete role from catalogTree rings
   if ((curr = rgHaveItem(coll->catalogTree->roles, self))) {
@@ -1401,7 +1436,10 @@ addAssoRole(Collection* coll,
   asso->document = document;
   
   // add it to the role ring
-  if (!rgInsert(role->assos, asso)) goto error;
+  if (!avl_insert_2(role->assos, asso)) {
+    logMemory(LOG_ERR, "assoRole already added ?");
+    goto error;
+  }
 
   // add it to the human ring
   if (!rgInsert(human->assoRoles, asso)) goto error;
@@ -1449,12 +1487,8 @@ delAssoRole(Collection* coll, AssoRole* self)
     rgRemove_r(self->document->assoRoles, &curr);
   }
 
-  if ((curr = rgHaveItem(self->role->assos, self))) {
-    rgRemove_r(self->role->assos, &curr);
-  }
-
-  // free the assoRole
-  destroyAssoRole(self);
+  // free the assoRole  
+  avl_delete(self->role->assos, self);
 
   rc = TRUE;
  error:
@@ -1598,7 +1632,7 @@ addHuman(Collection* coll, char* firstName, char* secondName)
   if (!(human->firstName = createString(firstName))) goto error;
   if (!(human->secondName = createString(secondName))) goto error;
   human->id = coll->catalogTree->maxId[HUM]++;
-  if (!avl_insert(coll->catalogTree->humans, human)) goto error;
+  if (!avl_insert_2(coll->catalogTree->humans, human)) goto error;
 
  end:
   rc = human;
@@ -1622,8 +1656,8 @@ int
 delHuman(Collection* coll, Human* self)
 {
   int rc = FALSE;
+  AssoRole* ar = 0;
   Category* cat = 0;
-  AssoRole* aR = 0;
   RGIT* curr = 0;
   RGIT* curr2 = 0;
   
@@ -1632,8 +1666,9 @@ delHuman(Collection* coll, Human* self)
   logMemory(LOG_DEBUG, "delHuman %s-%s", self->firstName, self->secondName);
 
   // delete assoRole associations
-  while ((aR = rgHead(self->assoRoles)))
-    if (!delAssoRole(coll, aR)) goto error;
+  while ((ar = rgNext_r(self->assoRoles, &curr))) {
+    if (!delAssoRole(coll, ar)) goto error;
+  }
 
   // delete human from categories rings
   curr = 0;
@@ -1751,11 +1786,14 @@ int addDocumentToCategory(Collection* coll, Document* document,
   logMemory(LOG_DEBUG, "addDocumentToCategory %s, %s",
 	  document->label, category->label);
 
-  // add document to category ring
-  if (!rgHaveItem(category->documents, document) &&
-      !rgInsert(category->documents, document)) goto error;
+  // add document to category tree
+  if (!avl_insert_2(category->documents, document)) {
+    if (errno != EEXIST) {
+      goto error;
+    }
+  }
   
-  // add document to category ring
+  // add category to document ring
   if (!rgHaveItem(document->categories, category) &&
       !rgInsert(document->categories, category)) goto error;
 
@@ -1788,12 +1826,10 @@ int delDocumentToCategory(Collection* coll, Document* document,
   logMemory(LOG_DEBUG, "delDocumentToCategory %s, %s",
 	  document->label, category->label);
 
-  // del document to category ring
-  if ((curr = rgHaveItem(category->documents, document))) {
-    rgRemove_r(category->documents, &curr);
-  }
+  // del document from category tree (do not free it)
+  avl_delete(category->documents, document);
   
-  // del document to category ring
+  // del category from document ring
   if ((curr = rgHaveItem(document->categories, category))) {
     rgRemove_r(document->categories, &curr);
   }
@@ -1854,16 +1890,26 @@ addDocument(Collection* coll, char* label)
   checkLabel(label);
   logMemory(LOG_DEBUG, "addDocument %s", label);
 
-  // already there
-  if ((document = getDocument(coll, label))) goto end;
-
   // add new one if not already there
   if ((document = createDocument()) == 0) goto error;
   if (!(document->label = createString(label))) goto error; 
-  document->id = coll->catalogTree->maxId[DOC]++;
-  if (!avl_insert(coll->catalogTree->documents, document)) goto error;
+  if (avl_insert_2(coll->catalogTree->documents, document)) {
+    document->id = coll->catalogTree->maxId[DOC]++;
+  }
+  else {
+    if (errno != EEXIST) {
+      logMemory(LOG_ERR, "fails to add archive");
+      goto error;
+    }
 
- end:
+    // already there
+    document = destroyDocument(document);
+    if (!(document = getDocument(coll, label))) {
+      logMemory(LOG_ERR, "document not already there as expected");
+      goto error;
+    }
+  }
+
   rc = document;
  error:
   if (!rc) {
@@ -1901,12 +1947,10 @@ delDocument(Collection* coll, Document* self)
     if (!delAssoRole(coll, aR)) goto error;
   }
 
-  // delete document from categories rings
+  // delete document from categories tree (do not free it)
   curr = curr2 = 0;
   while ((cat = rgNext_r(self->categories, &curr))) {
-    if ((curr2 = rgHaveItem(cat->documents, self))) {
-      rgRemove_r(cat->documents, &curr2);
-    }
+    avl_delete(cat->documents, self);
   }
 
   // delete document from archive rings
@@ -2125,6 +2169,7 @@ delCategory(Collection* coll, Category* self)
   Document* doc = 0;
   RGIT* curr = 0;
   RGIT* curr2 = 0;
+  AVLNode* node = 0;
   
   checkCollection(coll);
   if (!self) goto error;
@@ -2149,9 +2194,9 @@ delCategory(Collection* coll, Category* self)
 
   // delete category from documents rings
   curr = 0;
-  curr2 = 0;
-  while ((doc = rgNext_r(self->documents, &curr))) {
-    if ((curr2 = rgHaveItem(doc->categories, self))) {
+  for (node = self->documents->head; node; node = node->next) {
+    doc = node->item;
+    if ((curr = rgHaveItem(doc->categories, self))) {
       rgRemove_r(doc->categories, &curr2);
     }
   }

@@ -158,7 +158,8 @@ destroyCollection(Collection* self)
   // free the locks
   for (i=iCTLG; i<iCACH; ++i) {
     if ((err = pthread_mutex_destroy(&self->mutex[i]))) {
-      logMemory(LOG_INFO, "pthread_mutex_destroy[%i]: %s", i, strerror(err));
+      logMemory(LOG_INFO, "pthread_mutex_destroy[%i]: %s", i, 
+		strerror(err));
       goto error;
     }
   }

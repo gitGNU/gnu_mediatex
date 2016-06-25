@@ -16,9 +16,9 @@
 [notice utFunc.c] copy logoP1.cat into the coll1 cache
 [notice utFunc.c] copy logo.tgz into the coll1 cache
 [notice utFunc.c] copy logoP2.iso into the coll1 cache
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll1 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx2/cache/mdtx2-coll1/
 [info cache.c] scan: logo.tgz
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
@@ -56,9 +56,9 @@
 [notice recordTree.c] S 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice utnotify.c] -------------------------------------------------------
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll1 collection (5SX )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info notify.c] working on remote demand:
 [info recordTree.c] D 2010-01-01,01:00:00 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
 [info recordTree.c] # ^ REMOTE_DEMAND

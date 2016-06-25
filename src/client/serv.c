@@ -64,7 +64,7 @@ static int setConcurentAccessLock()
     goto error;
   }
 
-  logMain(LOG_INFO, "client ipc key: {%s, %i}", 
+  logMain(LOG_DEBUG, "client ipc key: {%s, %i}", 
 	  conf->confFile, COMMON_OPEN_CLOSE_PROJECT_ID); 
   logMain(LOG_DEBUG, "client ipc key: 0x%x", key); 
 
@@ -287,7 +287,6 @@ mdtxUpgrade(char* label)
   Collection* coll = 0;
 
   checkLabel(label);
-  logMain(LOG_DEBUG, "plan to upgrade %s collection", label);
 
   if (!(conf = getConfiguration())) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;

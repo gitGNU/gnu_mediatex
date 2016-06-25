@@ -1,11 +1,11 @@
 [notice utmisc.c] *************************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
-[info openClose.c] estimate 137 steps for load
+[info openClose.c] estimate 141 steps for load
 [info openClose.c] parse coll1 collection ( SXC)
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/catalog000.txt
-[info openClose.c] steps: 137 / 137
+[info openClose.c] steps: 137 / 141
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
 [info extractScore.c]    9.00
@@ -79,13 +79,8 @@
 [info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [info misc.c] Make HTML for coll1
-[info misc.c] estimate 17 steps for archives
-[info misc.c] estimate 19 steps for all
-[info misc.c] html
 [info extractScore.c] extraction score = 0.00
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
-[info misc.c] steps: 29 / 19
-[info misc.c] ending
 [notice utmisc.c] *************************************************
 [info misc.c] Serializing audit into: LOCALSTATEDIR/cache/mediatex/mdtx1/tmp/mdtx1-coll1/audit_20100101-010000__XXX.txt)
 [notice utmisc.c] *************************************************

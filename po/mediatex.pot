@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mediatex 0.5\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2016-05-30 18:53+0200\n"
+"POT-Creation-Date: 2016-06-25 01:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Very good perenniality"
 msgstr ""
 
-#: src/client/catalogHtml.c:330
+#: src/client/catalogHtml.c:332
 msgid "Role "
 msgstr ""
 
@@ -59,7 +59,7 @@ msgstr ""
 msgid "for "
 msgstr ""
 
-#: src/client/catalogHtml.c:567 src/client/catalogHtml.c:806
+#: src/client/catalogHtml.c:567 src/client/catalogHtml.c:809
 #, c-format
 msgid ""
 "\n"
@@ -78,71 +78,71 @@ msgstr ""
 msgid "No record\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:751
+#: src/client/catalogHtml.c:754
 msgid "Class"
 msgstr ""
 
-#: src/client/catalogHtml.c:761
+#: src/client/catalogHtml.c:764
 msgid ""
 "\n"
 "Parent classes: "
 msgstr ""
 
-#: src/client/catalogHtml.c:777
+#: src/client/catalogHtml.c:780
 msgid ""
 "\n"
 "Sub-classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:793
+#: src/client/catalogHtml.c:796
 msgid ""
 "\n"
 "Characteristics:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:825
+#: src/client/catalogHtml.c:828
 #, c-format
 msgid ""
 "\n"
 "Documents: %i\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:985
+#: src/client/catalogHtml.c:987
 msgid "All documents "
 msgstr ""
 
-#: src/client/catalogHtml.c:1147
+#: src/client/catalogHtml.c:1151
 msgid "All parteners "
 msgstr ""
 
-#: src/client/catalogHtml.c:1213
+#: src/client/catalogHtml.c:1217
 msgid "Welcome!"
 msgstr ""
 
-#: src/client/catalogHtml.c:1214
+#: src/client/catalogHtml.c:1218
 msgid " on collection "
 msgstr ""
 
-#: src/client/catalogHtml.c:1217
+#: src/client/catalogHtml.c:1221
 msgid "(you are on "
 msgstr ""
 
-#: src/client/catalogHtml.c:1219
+#: src/client/catalogHtml.c:1223
 msgid " server)"
 msgstr ""
 
-#: src/client/catalogHtml.c:1320
+#: src/client/catalogHtml.c:1324
 msgid "All documents"
 msgstr ""
 
-#: src/client/catalogHtml.c:1326
+#: src/client/catalogHtml.c:1330
 #, c-format
 msgid ""
 "\n"
 "Classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:1345
+#: src/client/catalogHtml.c:1349
 msgid "Parteners:"
 msgstr ""
 

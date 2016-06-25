@@ -31,7 +31,7 @@ Patches are welcome; if possible, please make them with @samp{@w{diff
 
 @unnumberedsec Tips to debug
 @itemize @bullet
-@item run scripts alone : just change directory to @file{/usr/share/mediatex/scripts} or for instance :
+@item run scripts alone : change directory to @file{/usr/share/mediatex/scripts} or set the @code{srcdir} variable. For instance :
 @example
 srcdir=/usr/share/mediatex/scripts MDTX_MDTXUSER=serv1 \
 /usr/share/mediatex/scripts/audit.sh hello \
@@ -71,14 +71,12 @@ $ emacs23
 (gdb) set args -sinfo -ffile
 (gdb) b extractRecord
 (gdb) r
-
-# ps -ef | grep /usr/bin/mediatexd
-# echo 2804 > /var/run/mediatex/mdtxd.pid
-# mediatex -c serv2 srv extract
 @end example
 
 @item @code{gdb} attachin daemon:
 @example
+$ cat /var/run/mediatex/mdtx.pid
+@var{PID}
 $ gdb
 > attach @var{PID}
 @end example
@@ -105,34 +103,36 @@ $ gdb mediatexd
 $ valgrind \
        --leak-check=full --show-reachable=yes --track-origins=yes 
        mediatexd
-[notice threads.c:390] Daemon (@var{PID}) started
 @dots{}
-# echo @var{PID} > /var/run/mediatex/mdtxd.pid
 # mediatex srv notify 
 # kill -SIGTERM @var{PID}
 @end example
 
-@item @code{massif} to detect memory hogs
+@item 
+@code{gprof}: need to compile using the static library
+@file{src/Makefile.am}
 @example
-$ pmap @var{PID}
-
-# su mdtx
-$ cd /tmp
-$ valgrind --tool=massif mediatexd mediatexd -sdebug
-[notice threads.c:390] Daemon (@var{PID}) started
-@dots{}
-# echo @var{PID} > /var/run/mediatex/mdtxd.pid
-# mediatex srv notify 
-# kill -SIGTERM @var{PID}
-$ ms_print massif.out.@var{PID} | less
+<<<
+mediatex_LDADD = client/libclient.a libmediatex.la
+---
+mediatex_LDADD = client/libclient.a libmediatex.a
+<<<
 @end example
 
-@item @code{gprof}
 @example
-$ make CFLAGS="-p"
-$ mediatex make
+$ make CFLAGS="-g -p"
+# make install
+# mediatex upload
 $ ls gmon.out
 $ gprof /usr/bin/mediatex > gprof.txt
+@end example
+
+@item @code{kcachegrind}: profiling that include system calls
+@example
+# apt-get install kcachegrind
+# chmod u-s /usr/bin/mediatex
+# valgrind --tool=callgrind mediatex upload
+$ kcachegrind callgrind.out.nnn
 @end example
 
 @item 
@@ -158,6 +158,19 @@ Otherwise, you need to drop setuid bit on binary and to run it as root, as seen 
 check memory in use
 @example
 $ ps -e -ovsz -orss,args= | sort -b -k1,1n | grep mediatex
+@end example
+
+@item @code{massif} to detect memory hogs
+@example
+$ pmap @var{PID}
+
+# su mdtx
+$ cd /tmp
+$ valgrind --tool=massif mediatexd mediatexd -sdebug
+@dots{}
+# mediatex srv notify 
+# kill -SIGTERM @var{PID}
+$ ms_print massif.out.@var{PID} | less
 @end example
 
 @c @item 

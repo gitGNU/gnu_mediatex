@@ -1,12 +1,12 @@
-[info serv.c] client ipc key: {LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf, 6562}
 [notice utserv.c] please send me HUP, USR1 or TERM signals:
 [notice utserv.c] *** upgrade:
 [info openClose.c] callCommit mdtx1: manual user edition
 [info openClose.c] callPull mdtx1
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info openClose.c] callCommit mdtx1-coll1: manual user edition
+[info openClose.c] Git pull coll1 collection
 [info openClose.c] callPull mdtx1-coll1
-[info openClose.c] estimate 137 steps for load
+[info openClose.c] estimate 141 steps for load
 [info openClose.c] parse coll1 collection ( SXC)
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info openClose.c] callCommit mdtx1: manual user edition
@@ -33,7 +33,7 @@
 [info openClose.c] callUpgrade mdtx1-coll1: fp=746d6ceeb76e05cfa2dea92a1c5753cd url=ssh://mdtx1-coll1@localhost:/var/lib/gitbare/mdtx1-coll1
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/catalog000.txt
-[info openClose.c] steps: 137 / 137
+[info openClose.c] steps: 137 / 141
 [info openClose.c] callCommit mdtx1-coll1: manual user edition
 [notice utserv.c] *** refuse to del localhost key: 
 [info serv.c] del 746d6ceeb76e05cfa2dea92a1c5753cd key from coll1 collection
@@ -180,7 +180,6 @@ end
 =================================
   Second run 
 =================================
-[info serv.c] client ipc key: {LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf, 6562}
 [err serv.c] cannot take concurent access as it is already locked
 [err serv.c] fails to get writter lock
 [info confTree.c] free configuration

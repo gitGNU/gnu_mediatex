@@ -253,9 +253,7 @@ addArchive(Collection* coll, char* hash, off_t size)
   // add new one if not already there
   if (!(archive = createArchive())) goto error;
   strncpy(archive->hash, hash, MAX_SIZE_MD5);
-#if 1
-  archive->hash[MAX_SIZE_MD5] = (char)0; // developpement code
-#endif
+  archive->hash[MAX_SIZE_MD5] = 0;
   archive->size = size;
   archive->id = coll->maxId++;
 

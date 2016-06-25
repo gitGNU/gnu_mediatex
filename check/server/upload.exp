@@ -3,11 +3,11 @@
 [notice utupload.c] Clean the cache:
 [notice utupload.c] .......................................................
 [notice utFunc.c] clean cache for all collections
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice utupload.c] .......................................................
 [notice utupload.c] Scan gives :
@@ -39,9 +39,9 @@
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Upload using default target:
 [notice utupload.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cacheTree.c] 3f18841537668dcf4fafd1471c64d52d:1937 (score=-1.00) : UNUSED -> USED
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -99,25 +99,25 @@
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Already there:
 [notice utupload.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [err upload.c] uploadFinaleArchive fails
 [notice utupload.c] reply : 313 already exists 3f18841537668dcf4fafd1471c64d52d:1937
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c] Clean the cache:
 [notice utupload.c] .......................................................
 [notice utFunc.c] clean cache for all collections
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Upload providing a target: store
 [notice utupload.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cacheTree.c] 3f18841537668dcf4fafd1471c64d52d:1937 (score=-1.00) : UNUSED -> USED
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600
@@ -172,9 +172,9 @@
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Upload providing a target: store/it/here
 [notice utupload.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> USED
 [info cache.c] cache sizes:
 [info cache.c]   total     104857600

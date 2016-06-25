@@ -378,7 +378,7 @@ loadCvsFiles(Collection* coll, int fileIdx)
     if (access(path, R_OK)) break;
     if (!parser(coll, path)) goto error;
   }
-  while (++i < 100);
+  while (++i < 1000);
   coll->fileState[fileIdx] = LOADED;
 
   // load last addon
@@ -539,6 +539,9 @@ loadCollectionNbSteps(Collection* coll, int collFiles)
     }    
   }
 
+  // add 3%
+  env.progBar.max *= 1.03;
+
   if (env.progBar.max > 0) {
     logCommon(LOG_INFO, "estimate %i steps for load", env.progBar.max);
   }
@@ -566,7 +569,7 @@ loadCollection(Collection* coll, int collFiles)
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "load %s collection (%s)", 
-	  coll->label, strCF(collFiles));
+	    coll->label, strCF(collFiles));
 
   // force catalog to use archives from extract (assert no ophanes)
   if (collFiles & CTLG) collFiles |= EXTR;
@@ -577,15 +580,16 @@ loadCollection(Collection* coll, int collFiles)
     if (!callCommit(coll->user, "manual user edition")) goto error;
     if (!env.noGitPullPush) {
       if (coll->toUpdate && collFiles & (CTLG | EXTR | SERV)) {
+	logMain(LOG_INFO, "Git pull %s collection", coll->label);
 	if (callPull(coll->user)) coll->toUpdate = FALSE;
       }
     }
   }
 
   if (!loadCollectionNbSteps(coll, collFiles)) goto error;
-  if (env.progBar.max > 0) { // else nothing to do
-    logCommon(LOG_INFO, "parse %s collection (%s)", 
-	      coll->label, strCF(collFiles));
+  if (env.progBar.max > 0) {
+    logMain(LOG_INFO, "parse %s collection (%s)", 
+	    coll->label, strCF(collFiles));
   }
 
   startProgBar("load");
@@ -931,7 +935,7 @@ saveCollection(Collection* coll, int collFiles)
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "save %s collection (%s)", 
-	  coll->label, strCF(collFiles));
+	    coll->label, strCF(collFiles));
 
   if (!(conf = getConfiguration())) goto error;
   if (!saveCollectionNbSteps(coll, collFiles)) goto error;
@@ -950,6 +954,7 @@ saveCollection(Collection* coll, int collFiles)
   if (coll->toCommit && !env.noGit) {
     if (!callCommit(coll->user, 0)) goto error;
     if (!env.noGitPullPush) {
+      logMain(LOG_INFO, "Git push %s collection", coll->label);
       if (callPush(coll->user)) {
 	conf->toHup = TRUE;
 	coll->toCommit = FALSE;

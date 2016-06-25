@@ -52,22 +52,21 @@ int mdtxMake(char* label)
   env.progBar.max = 0;
   n = avl_count(coll->archives);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
-  logMain(LOG_INFO, "estimate %i steps for archives", env.progBar.max);
+  logMain(LOG_DEBUG, "estimate %i steps for archives", env.progBar.max);
   n = avl_count(coll->catalogTree->documents);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
   n = avl_count(coll->catalogTree->humans);
   env.progBar.max += n + 2*n / MAX_INDEX_PER_PAGE;
-  logMain(LOG_INFO, "estimate %i steps for all", env.progBar.max);
+  logMain(LOG_DEBUG, "estimate %i steps for all", env.progBar.max);
 
-  logMain(LOG_INFO, "html");
   if (!becomeUser(env.confLabel, TRUE)) goto error2;
   startProgBar("make");
   if (!serializeHtmlCache(coll)) goto error3;
   if (!serializeHtmlIndex(coll)) goto error3;
   if (!serializeHtmlScore(coll)) goto error3;
   stopProgBar();
-  logMain(LOG_INFO, "steps: %lli / %lli", env.progBar.cur, env.progBar.max);
-  logMain(LOG_INFO, "ending");
+  logMain(LOG_DEBUG, "done: steps %lli / %lli", 
+	  env.progBar.cur, env.progBar.max);
 
   rc = TRUE;
  error3:

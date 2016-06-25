@@ -237,12 +237,14 @@ bin_PROGRAMS = \
 	mediatexd \
 	mediatex-cgi
 
-mediatex_SOURCE = mediatex.c
-mediatex_LDADD = libmediatex.la client/libclient.a
+mediatex_SOURCE = main.c
+
+# Switch to create a statically linked version (for gprof)
+mediatex_LDADD = client/libclient.a libmediatex.la
 mediatex_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 mediatexd_SOURCE = mediatexd.c
-mediatexd_LDADD = libmediatex.la server/libserver.a
+mediatexd_LDADD = server/libserver.a libmediatex.la
 mediatexd_LDFLAGS = @LIBINTL@ -lpthread -lm -lavl -lcrypto -lacl
 
 mediatex_cgi_SOURCE = mediatex-cgi.c

@@ -104,6 +104,11 @@ int cvsCutOpen(CvsFile* fd)
 	}
 	fd->fd = 0;
       }
+      if (i == 999) {
+	logMemory(LOG_CRIT, "%s", 
+		  "you win: too much metadata files, I can't believe it!");
+	goto error;
+      }
     }
     while (++i < 1000);
     

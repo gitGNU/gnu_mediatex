@@ -43,11 +43,11 @@ struct AssoCarac
 struct Role
 {
   int       id;    // role_ID.html pages
-  int       tag;   // dedicated for external use
+  //int       tag;   // dedicated for external use
   char*     label;
-  RG*       assos; // AssoRole* ; no gain with AVL here 
+  AVLTree*  assos; // AssoRole*
 
-  // TODO : father + child like category
+  /* * MAYBE : father + child like category */
 };
 
 /* (Human x Role x Document) */
@@ -60,22 +60,22 @@ struct AssoRole
 
 struct Category
 {
-  int    id;         // ID fo html pages
-  int    tag;        // dedicated for external use
-  char*  label;
-  int    show;       // if we display it in the html index or not
+  int      id;         // ID fo html pages
+  //int      tag;        // dedicated for external use
+  char*    label;
+  int      show;       // if we display it in the html index or not
 
-  RG*    fathers;    // Category*
-  RG*    childs;     // Category*
-  RG*    assoCaracs; // AssoCarac*
-  RG*    humans;     // Human*
-  RG*    documents;  // Document*
+  RG*      fathers;    // Category*
+  RG*      childs;     // Category*
+  RG*      assoCaracs; // AssoCarac*
+  RG*      humans;     // Human*
+  AVLTree* documents;  // Document*
 };
 
 struct Human
 {
   int    id;         // ID fo html pages
-  int    tag;        // dedicated for external use
+  //int    tag;        // dedicated for external use
   char*  firstName;
   char*  secondName;
 
@@ -87,7 +87,7 @@ struct Human
 struct Document
 {
   int    id;         // ID fo html pages
-  int    tag;        // dedicated for external use
+  //int    tag;        // dedicated for external use
   char*  label;
 
   RG*    categories; // Category*
@@ -195,6 +195,8 @@ Category* addCategory(Collection* coll, char* label, int show);
 int delCategory(Collection* coll, Category* self);
 
 int diseaseCatalogTree(Collection* coll);
+
+void* avl_insert_2(AVLTree* tree, void* item);
 
 #endif /* MDTX_MEMORY_CATALOG_H */
 

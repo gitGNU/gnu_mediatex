@@ -3,11 +3,11 @@
 [notice uthave.c] Clean the cache and add part1:
 [notice uthave.c] .......................................................
 [notice utFunc.c] clean cache for all collections
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5 X )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] add a demand for logo.png
@@ -30,9 +30,9 @@
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part 1
 [notice uthave.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : UNUSED -> USED
 [notice have.c] have content to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
@@ -119,9 +119,9 @@
 [notice uthave.c] -------------------------------------------------------
 [notice uthave.c] provide part2
 [notice uthave.c] .......................................................
-[info openClose.c] estimate 93 steps for load
+[info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 93
+[info openClose.c] steps: 0 / 95
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : UNUSED -> USED
 [notice have.c] have content to extract: 022a34b2f9b893fba5774237e1aa80ea:24075
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> TOKEEP

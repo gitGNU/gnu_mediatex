@@ -9,15 +9,20 @@
 
 *** TO TEST
 
+archives       GIT(K)    RAM(K)  HTML(M)  HTML    time/load/git
+                                          inodes
+----------------------------------------------------------
+ 27550         30469     74028   357M     88717   1'06-30''/6''/22''
+ 54950         59537    132772   598M    148294  1'47''-54''/12''/49''
+ 82398         88657    191636   840M    207985  3'25''-1'12''/17''/1'14''
+110006        118810    251308   1,1G    268029  3'18''-1'24''/21''/1'23''
+
 - pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- use add-if-not-there function (EEXIST cf notify.c)
-- serialise b-tree using another order
 - document server::https and .htaccess switchs (https/auth)
-- i10n for french
 
 *** TODO MAYBE
 
@@ -26,7 +31,7 @@
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add lexems for '<<<<<<<' to detect git conflicts
-- find how to speed-up mediatex when there is no dns available
+- find how to speed-up mediatex when there is no dns are available
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
@@ -38,8 +43,8 @@
 - test an apache configuration using claim-based authentication (openId)
 - move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
+- i10n for french
 - manage signals for all and for each collections
 - replace gethostby*_r by getaddrinfo and co
 - replace ardsm by mqueue (linear list if reverse order link not used)
 - add thread ID to the log
-
