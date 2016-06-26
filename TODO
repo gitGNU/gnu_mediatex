@@ -5,17 +5,15 @@
 
 *** BUGS
 
+$ mediatex upgrade
+mediatex[19775]: [err extractTree.c:791] container already there
+...
+Jun 26 12:52:45 fred mediatex[19775]: [err shellQuery.y:877] query fails
+[segfault]
+
 *** TODO (first)
 
 *** TO TEST
-
-archives       GIT(K)    RAM(K)  HTML(M)  HTML    time/load/git
-                                          inodes
-----------------------------------------------------------
- 27550         30469     74028   357M     88717   1'06-30''/6''/22''
- 54950         59537    132772   598M    148294  1'47''-54''/12''/49''
- 82398         88657    191636   840M    207985  3'25''-1'12''/17''/1'14''
-110006        118810    251308   1,1G    268029  3'18''-1'24''/21''/1'23''
 
 - pgrof: test with more than 100k entries
 
@@ -37,6 +35,7 @@ archives       GIT(K)    RAM(K)  HTML(M)  HTML    time/load/git
 - rename src/memory/cvsprint.c -> gitprint.c
 - add an apache alias for '~' as it is complicated to type on mac keyboard
 - move date parser/serialiser code into perm.c
+- no more use own malloc into mediatex (still usefull for other client)
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh and cgi templates

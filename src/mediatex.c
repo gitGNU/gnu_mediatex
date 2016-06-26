@@ -127,7 +127,7 @@ main(int argc, char** argv)
   // import mdtx environment
   env.noGit = FALSE;         // enable git
   env.noGitPullPush = FALSE; // enable git to reach network
-  env.allocLimit *= 2;
+  env.allocLimit *= 8;
   env.allocDiseaseCallBack = clientDiseaseAll;
   getEnv(&env);
 

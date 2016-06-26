@@ -940,7 +940,7 @@ saveCollection(Collection* coll, int collFiles)
   if (!(conf = getConfiguration())) goto error;
   if (!saveCollectionNbSteps(coll, collFiles)) goto error;
   if (env.progBar.max > 0) { // else nothing to do
-    logCommon(LOG_DEBUG, "serialize  %s collection (%s)", 
+    logMain(LOG_INFO, "serialize  %s collection (%s)", 
 	      coll->label, strCF(collFiles));
   }
 

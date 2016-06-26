@@ -352,53 +352,51 @@ we do not use a centralise database but text files spread on all servers
 using @sc{GIT}. 
 
 Consequently parsers needs a proportional amount of @acronym{CPU} and 
-memory in regards to these files size (whereas database do not).
+memory in regards to these file's sizes (whereas databases without indexe do not).
 The generated @acronym{HTML} catalogue also requires much more place than
-a database do (moreover, limitation should comes from the number of 
-available inodes on the partition where the @acronym{HTML} catalogue is 
-store).
+a dynamic web site does (moreover, limitation should comes from the number of available inodes on the partition where the @acronym{HTML} catalogue is 
+stored).
 
 All in all, the @mediatexO{} system is not designed to handle collections 
 having more than half a million archives (whereas databases easily handle millions). It should handle several such ``not so big'' collections, but not toot much too.
 
-Following tests are based on the @acronym{HTML} catalogue generation, which
-is the longest query (and which imply parsing most meta-data files). They gives an idea of resources (size on disk, amount of memory and @acronym{CPU} time) involved.
+Following tests are based on the @acronym{GIT} upgrade plus @acronym{HTML} catalogue generation, which is the more consumming query (and which imply parsing most meta-data files). It gives an idea of resources (size on disk, amount of memory and @acronym{CPU} time) involved.
 
-@multitable @columnfractions .20 .14 .10 .10 .10 .10
+@multitable @columnfractions .14 .14 .14 .14 .14 .14
 @headitem archives @tab @acronym{GIT} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
-@item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
-@item 27k  @tab 12M  @tab 40M  @tab 377M @tab 90k  @tab 20''
-@item 55k  @tab 21M  @tab 67M  @tab 638M @tab 151k @tab 32''
-@item 82k  @tab 31M  @tab 94M  @tab 913M @tab 212k @tab 51''
-@item 110k @tab 40M  @tab 122M @tab 1.2G @tab 273k @tab 1'3
-@item 137k @tab 50M  @tab 145M @tab 1.4G @tab 334k @tab 1'20
-@end multitable
-
-@note{} @acronym{ADM64} systems use double of memory.
-
-Roughly this should gives about (to update, maybe quicker now):
-
-@multitable @columnfractions .20 .14 .10 .10 .10 .10
-@headitem archives @tab @acronym{GIT} @tab @acronym{RAM} @tab @acronym{HTML} @tab @acronym{HTML} inodes @tab time 
-@item 10k  @tab 4M   @tab 20M  @tab 135M @tab 32k  @tab 10''
-@item 50k  @tab 20M  @tab 65M  @tab 600M @tab 150k @tab 30''
-@item 100k @tab 35M  @tab 120M @tab 1.1G @tab 250k @tab 5'
-@item 300k @tab 100M @tab 500M @tab 3.3G @tab 750k @tab 60'
+@item  27,550 @tab  30M @tab   74M @tab 357M @tab    88,717 @tab 1'06
+@item  54,950 @tab  59M @tab  132M @tab 598M @tab   148,294 @tab 1'47
+@item  82,398 @tab  88M @tab  191M @tab 840M @tab   207,985 @tab 3'25
+@item 110,006 @tab 118M @tab  251M @tab 1,1G @tab   268,029 @tab 3'18
+@item 137,561 @tab 147M @tab  310M @tab 1,3G @tab   328,002 @tab 5'21
+@item 165,104 @tab 177M @tab  371M @tab 1,6G @tab   387,836 @tab 5'11
+@item 192,771 @tab 207M @tab  432M @tab 1,8G @tab   447,971 @tab 5'47
+@item 220,346 @tab 237M @tab  493M @tab 2,1G @tab   507,945 @tab 5'18
+@item 247,861 @tab 267M @tab  553M @tab 2,3G @tab   567,664 @tab
+@item 302,912 @tab 326M @tab  674M @tab 2,8G @tab   687,278 @tab 8'31
+@item 330,371 @tab 356M @tab  735M @tab 3,0G @tab   746,934 @tab
+@item 358,005 @tab 386M @tab  796M @tab 3,2G @tab   807,007 @tab 10'43
+@item 385,425 @tab 416M @tab  856M @tab 3,5G @tab   866,551 @tab 11'17
+@item 412,848 @tab 446M @tab  916M @tab 3,7G @tab   926,102 @tab 12'29
+@item 440,405 @tab      @tab  977M @tab 3,9G @tab   985,990 @tab 
+@item 467,899 @tab 505M @tab 1038M @tab 4,2G @tab 1,045,755 @tab 23'37
+@item 495,383 @tab 535M @tab 1098M @tab 4,4G @tab 1,105,445 @tab 14'33
 @end multitable
 
 @note{}
 @itemize @bullet
 @item
-Synchronisation times using @acronym{GIT} depends on the network connection.
-@item 
-The 2 last lines in the above array are extrapolated (should be @math{O(n*log(n)}).
-The logarithmic factor is accented by the fact the files are serialised and 
-parsed (into a b-tree) using the same order, which may be corrected in a 
-further version.
+This benchmark is run on a i686 operating system with an AMD Sempron(tm) Processor 3200+ and 2G of @acronym{RAM}. It make me aware that @acronym{ADM64} system use double of memory.
 @item
-Other processes like scanning the cache and building the audit report are not yet optimised too. 
-So even if theoretically it should be possible to handle about 500,000 archives by collection, 
-in practice it has not been tested yet with more than 50,000 archives. 
+Benchmark is done sequentially in order to test the @acronym{GIT} merging with a constant amount of data added each time.
+Synchronisation times using @acronym{GIT} depends on the network connection,
+and the upper benchmark is using the local network interface.
+@item 
+Time spent looks quiet linear (I was expecting @math{O(n*log(n)}). @acronym{GIT} push and @acronym{HTML} serialisation last most time, about 40% each. Parsing and serializing metadata last about 10% each.
+@item
+I was happily surprized that the logarithmic factor is not accented by the fact the files are serialised and parsed (into b-trees) using the same order.
+@item
+The audit report process is not optimised. It is possible to handle up to 1,000,000 archives or 500M of metadata by collection, but this particulary process has not been tested yet with more than 50,000 archives (as it last hours).
 @end itemize
 
 @node Why
