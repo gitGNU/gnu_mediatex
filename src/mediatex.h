@@ -148,7 +148,7 @@ extern MdtxEnv envUnitTest; // only used for copy
 	  LOG_NOTICE, LOG_NOTICE, LOG_NOTICE},				\
       0,								\
 	/* allocating */						\
-	128, (int (*)(long))0, 0,					\
+	256, (int (*)(long))0, 0,					\
 	/* configration */						\
 	DEFAULT_MDTXUSER, FALSE, FALSE, FALSE,TRUE, TRUE, 500*KILO,	\
 	/* debug */							\

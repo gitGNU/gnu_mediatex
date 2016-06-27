@@ -11,6 +11,10 @@ mediatex[19775]: [err extractTree.c:791] container already there
 Jun 26 12:52:45 fred mediatex[19775]: [err shellQuery.y:877] query fails
 [segfault]
 
+$ mediatex upload file check/asalae_179243_1.zip to coll dbtest
+[err upload.c:240] Incoming archive 2847be24fd74f1d17dc1cb4c777cf2c864683 already has an extraction rule
+
+
 *** TODO (first)
 
 *** TO TEST
@@ -21,6 +25,7 @@ Jun 26 12:52:45 fred mediatex[19775]: [err shellQuery.y:877] query fails
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 - document server::https and .htaccess switchs (https/auth)
+- cache::loadCache() do not need to load extraction metadata
 
 *** TODO MAYBE
 
@@ -30,6 +35,7 @@ Jun 26 12:52:45 fred mediatex[19775]: [err shellQuery.y:877] query fails
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add lexems for '<<<<<<<' to detect git conflicts
 - find how to speed-up mediatex when there is no dns are available
+- change ring for avl-tree everywhere rgSort() is used (cpu optimisation)
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
