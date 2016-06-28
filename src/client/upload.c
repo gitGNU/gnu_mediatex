@@ -45,7 +45,6 @@ uploadCatalog(Collection* upload, char* path)
   
   if (!(upload->catalogTree = createCatalogTree())) goto error;
   if (!(upload->catalogDB = createString(path))) goto error;
-
   if (!parseCatalogFile(upload, path)) goto error;
 
   rc = TRUE;
@@ -77,13 +76,12 @@ uploadExtract(Collection* upload, char* path)
   
   if (!(upload->extractTree = createExtractTree())) goto error;
   if (!(upload->extractDB = createString(path))) goto error;
-
   if (!parseExtractFile(upload, path)) goto error;
 
   // assert there is no INC content  
   if (!(self = upload->extractTree)) goto error;
   if (avl_count(self->incoming->childs) > 0) {
-    logMain(LOG_ERR, "Incoming rules should not provide INC contents");
+    logMain(LOG_ERR, "unexpected incoming rules on upload");
     rc = FALSE;
   }
 
@@ -142,7 +140,7 @@ uploadContent(Collection* upload, char* path)
   if (!(archive = addArchive(upload, md5.fullMd5sum, statBuffer.st_size)))
     goto error;
 
-  // add extraction rule
+  // add incoming extraction rule
   if (!(time = currentTime())) goto error;
   if (localtime_r(&time, &date) == (struct tm*)0) {
     logMemory(LOG_ERR, "localtime_r returns on error");
@@ -226,22 +224,6 @@ areNotAlreadyThere(Collection *coll, Collection* upload)
   if (!(self = upload->extractTree)) goto error;
   if (!loadCollection(coll, EXTR)) goto error;
   rc = TRUE;
-
-  // loop on uploaded INC contents (should have only one in fact)
-  container = self->incoming;
-  for(node = container->childs->head; node; node = node->next) {
-    archUp = ((FromAsso*)node->item)->archive;
-
-    // check it is not already into actual extractTree:
-    if ((archCol = getArchive(coll, archUp->hash, archUp->size))) {      
-      if (hasExtractRule(archCol)) {
-	logMain(LOG_ERR, 
-		"Incoming archive %s%lli already has an extraction rule", 
-		archUp->hash, archUp->size);
-	rc = FALSE;
-      }
-    }
-  }
   
   // loop on uploaded containers
   if (avl_count(self->containers)) {
@@ -451,7 +433,8 @@ mdtxUpload(char* label, char* catalog, char* extract,
   if (!allowedUser(env.confLabel)) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
 
-  // build a new collection to parse upload contents
+  // create a new collection to parse upload contents
+  if ((upload = getCollection("_upload_"))) goto error;
   if (!(upload = addCollection("_upload_"))) goto error;
   if (!(upload->masterLabel = createString(coll->masterUser))) goto error;
   if (!(upload->user = createString(coll->user))) goto error;
@@ -475,14 +458,17 @@ mdtxUpload(char* label, char* catalog, char* extract,
 
   // prevent saveCollection from unlinking new NNN.txt files,
   // and also force reload on upload+[+] to use the new NNN.txt files
+  // note: that does not disease upload coll as not set as LOADED
+  // * MAYBE: simplify below code understanding by reparsing upload into
+  // coll (no more NNN files nor reload needed on upload+[+])
   if (!clientDiseaseAll()) goto error;
 
-  // concatenate metadata to the true collection
+  // serialize NNN.txt files
   upload->memoryState |= EXPANDED;
   if (catalog && !concatCatalog(coll, upload)) goto error;
   if ((extract || file) && !concatExtract(coll, upload)) goto error;
 
-  // tell the server we have upgrade files
+  // tell the server we have upgraded the extraction metadata
   if ((extract || file) && !env.noRegression && !env.dryRun) {
      mdtxAsyncSignal(0); // send HUP signal to daemon
   }

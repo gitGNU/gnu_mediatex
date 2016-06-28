@@ -789,6 +789,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
   // already there
   if ((container = getContainer(coll, type, parent))) {
     logMemory(LOG_ERR, "container already there");
+    container = 0;
     goto error;
   }
 

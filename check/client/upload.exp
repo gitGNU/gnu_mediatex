@@ -11,8 +11,6 @@
 [err upload.c] isFileRefbyExtract fails
 [err upload.c] Extract file should provide a container for 022a34b2f9b893fba5774237e1aa80ea24075
 [err upload.c] isFileRefbyExtract fails
-[err upload.c] Incoming archive 0a7ecd447ef2acb3b5c6e4c550e6636f374784 already has an extraction rule
-[err upload.c] Incoming archive de5008799752552b7963a2670dc5eb18391168 already has an extraction rule
 [err upload.c] Incoming container 0a7ecd447ef2acb3b5c6e4c550e6636f374784 already set as container
 [err upload.c] Incoming container de5008799752552b7963a2670dc5eb18391168 already set as container
 [err upload.c] Incoming container 1a167d608e76a6a4a8b16d168580873c20480 already set as container

@@ -85,7 +85,6 @@ int diseaseArchive(Collection* coll, Archive* arch);
 int diseaseArchives(Collection* coll);
 int isIncoming(Collection* coll, Archive* self);
 int isBadTopContainer(Collection* coll, Archive* archive);
-int hasExtractRule(Archive* self);
 
 #endif /* MDTX_MEMORY_ARCHIVE_H */
 

@@ -458,25 +458,6 @@ int isBadTopContainer(Collection* coll, Archive* archive)
 	  archive->extractScore<=coll->serverTree->scoreParam.maxScore/2);
 }
 
-/*=======================================================================
- * Function   : hasExtractRule
- * Description: state if an archive belongs extract metadata
- * Synopsis   : int hasExtractRule(Archive* self)
- * Input      : Archive* self
- * Output     : TRUE on success
- * Requirement: loadCollection(coll, EXTR)
- =======================================================================*/
-int hasExtractRule(Archive* self)
-{
-  // archive may appears in 3 location into extract metadata:
-  // - only as a container for images
-  // - only as a content for final contents
-  // - only as an incoming content for incoming content having no rules
-  return (self->toContainer ||
-	  !isEmptyRing(self->fromContainers) ||
-	  self->uploadTime); // ~isIncoming()
-}
-
 /* Local Variables: */
 /* mode: c */
 /* mode: font-lock */

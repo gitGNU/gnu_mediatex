@@ -5,16 +5,6 @@
 
 *** BUGS
 
-$ mediatex upgrade
-mediatex[19775]: [err extractTree.c:791] container already there
-...
-Jun 26 12:52:45 fred mediatex[19775]: [err shellQuery.y:877] query fails
-[segfault]
-
-$ mediatex upload file check/asalae_179243_1.zip to coll dbtest
-[err upload.c:240] Incoming archive 2847be24fd74f1d17dc1cb4c777cf2c864683 already has an extraction rule
-
-
 *** TODO (first)
 
 *** TO TEST

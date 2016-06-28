@@ -1898,7 +1898,7 @@ addDocument(Collection* coll, char* label)
   }
   else {
     if (errno != EEXIST) {
-      logMemory(LOG_ERR, "fails to add archive");
+      logMemory(LOG_ERR, "fails to add document");
       goto error;
     }
 

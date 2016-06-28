@@ -989,7 +989,7 @@ addCollection(char *label)
   // add new one if not already there
   if (!(coll = createCollection())) goto error;
   strncpy(coll->label, label, MAX_SIZE_COLL);
-  coll->label[MAX_SIZE_COLL] = (char)0; // developpement code 
+  coll->label[MAX_SIZE_COLL] = (char)0;
   if (!rgInsert(conf->collections, coll)) goto error;
 
  end:
