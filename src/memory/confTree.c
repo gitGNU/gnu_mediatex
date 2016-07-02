@@ -505,6 +505,7 @@ createConfiguration(void)
   }
     
   memset(conf, 0, sizeof(Configuration));
+  conf->sem = -1;
   if ((conf->allNetworks = createRing()) == 0) goto error;
   if ((conf->networks = createRing()) == 0) goto error;
   if ((conf->gateways = createRing()) == 0) goto error;

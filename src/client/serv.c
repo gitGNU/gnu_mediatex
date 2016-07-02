@@ -51,7 +51,7 @@ static int setConcurentAccessLock()
   logMain(LOG_DEBUG, "initialise the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
-  if (conf->sem) goto end;
+  if (conf->sem != -1) goto end;
   
   // force becoming mdtx user 
   if (!becomeUser(env.confLabel, FALSE)) goto error;
@@ -117,7 +117,7 @@ int clientWriteLock()
 
   if (!(conf = getConfiguration())) goto error;
   if (!setConcurentAccessLock()) goto error;
-  if (conf->sem == 0) {
+  if (conf->sem == -1) {
     logMain(LOG_ERR, "concurrent access lock is not initialized"); 
     goto error;
   }
@@ -171,7 +171,7 @@ int clientWriteUnlock()
   logMain(LOG_DEBUG, "release the concurrent access"); 
 
   if (!(conf = getConfiguration())) goto error;
-  if (conf->sem == 0) {
+  if (conf->sem == -1) {
     logMain(LOG_ERR, "concurrent access lock already unlock"); 
     goto error;
   }
@@ -191,7 +191,7 @@ int clientWriteUnlock()
     goto error;
   }
 
-  conf->sem = 0;
+  conf->sem = -1;
   rc = TRUE;
  error:
   if (!logoutUser(uid)) rc = FALSE;

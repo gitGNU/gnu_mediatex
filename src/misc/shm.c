@@ -53,8 +53,8 @@ shmWrite(char* pathFile, int shmSize,
 {
   int rc = FALSE;
   key_t key;
-  int sem;
-  int shm;
+  int sem = -1;
+  int shm = -1;
   struct sembuf sembuf;
   semun_t u_semun;
   unsigned short table[1];
@@ -166,8 +166,8 @@ shmRead(char* pathFile, int shmSize,
 {
   int rc = FALSE;
   key_t key;
-  int sem;
-  int shm;
+  int sem = -1;
+  int shm = -1;
   struct sembuf sembuf;
   void* buffer = 0;
 
@@ -258,8 +258,8 @@ shmFree(char* pathFile, int shmSize)
 {
   int rc = FALSE;
   key_t key;
-  int sem = 0;
-  int shm = 0;
+  int sem = -1;
+  int shm = -1;
   union semun arg;
 
   logMisc(LOG_DEBUG, "shmFree");
