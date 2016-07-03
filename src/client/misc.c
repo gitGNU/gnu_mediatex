@@ -39,6 +39,7 @@ int mdtxMake(char* label)
   Collection* coll = 0;
   int uid = getuid();
   int n = 0;
+  char progBarLabel[MAX_SIZE_COLL+6];
 
   checkLabel(label);
   if (!(coll = mdtxGetCollection(label))) goto error;
@@ -60,7 +61,8 @@ int mdtxMake(char* label)
   logMain(LOG_DEBUG, "estimate %i steps for all", env.progBar.max);
 
   if (!becomeUser(env.confLabel, TRUE)) goto error2;
-  startProgBar("make");
+  sprintf(progBarLabel, "make %s", label);
+  startProgBar(progBarLabel);
   if (!serializeHtmlCache(coll)) goto error3;
   if (!serializeHtmlIndex(coll)) goto error3;
   if (!serializeHtmlScore(coll)) goto error3;

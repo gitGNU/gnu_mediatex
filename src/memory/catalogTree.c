@@ -2244,10 +2244,6 @@ diseaseCatalogTree(Collection* coll)
   while ((role = rgHead(self->roles))) 
     if (!delRole(coll, role)) goto error;
 
- // diseases categories
-  while ((category = rgHead(self->categories)))
-    if (!delCategory(coll, category)) goto error;
-
   // disease humans
   while ((node = self->humans->head))
     if (!delHuman(coll, node->item)) goto error;
@@ -2255,6 +2251,10 @@ diseaseCatalogTree(Collection* coll)
   // disease documents
   while ((node = self->documents->head))
     if (!delDocument(coll, node->item)) goto error;
+
+  // diseases categories
+  while ((category = rgHead(self->categories)))
+    if (!delCategory(coll, category)) goto error;
 
   // disease archives
   if (avl_count(coll->archives)) {
