@@ -25,6 +25,48 @@
 #include "mediatex-config.h"
 #include "client/mediatex-client.h"
 
+/*=======================================================================
+ * Function   : createUploadFile 
+ * Description: Create, by memory allocation an image file (ISO file)
+ * Synopsis   : UploadFile* createUploadFile(void)
+ * Input      : N/A
+ * Output     : The address of the create empty image file
+ =======================================================================*/
+UploadFile* 
+createUploadFile(void)
+{
+  UploadFile* rc = 0;
+
+  rc = (UploadFile*)malloc(sizeof(UploadFile));
+  if(rc == 0) goto error;
+   
+  memset(rc, 0, sizeof(UploadFile));
+
+  return(rc);
+ error:
+  logMemory(LOG_ERR, "malloc: cannot create an UploadFile");
+  return(rc);
+}
+
+/*=======================================================================
+ * Function   : destroyUploadFile 
+ * Description: Destroy an image file by freeing all the allocate memory.
+ * Synopsis   : void destroyUploadFile(UploadFile* self)
+ * Input      : UploadFile* self = the address of the image file to
+ *              destroy.
+ * Output     : Nil address of an image FILE
+ =======================================================================*/
+UploadFile* 
+destroyUploadFile(UploadFile* self)
+{
+  if(self == 0) goto error;
+  destroyString(self->source);
+  destroyString(self->target);
+  free(self);
+ error:
+  return (UploadFile*)0;
+}
+
 
 /*=======================================================================
  * Function   : uploadCatalog
@@ -257,21 +299,22 @@ areNotAlreadyThere(Collection *coll, Collection* upload)
  * Function   : uploadFile 
  * Description: Ask daemon to upload the file
  * Synopsis   : static int
- *               uploadFile(Collection* coll, Archive* archive, 
- *                          char* source, char* target)
+ *               uploadFile(Collection* coll, RG* upFiles)
  * Input      : Collection* coll
- *              Archive* archive
- *            : char* source: path to the file to upload
- *              char* target: path to use into the cache
+ *              RG* upFiles: UploadFile's ring (source, target + archive)
  * Output     : TRUE on success
  =======================================================================*/
 static int
-uploadFile(Collection* coll, Archive* archive, char* source, char* target)
+uploadFile(Collection* coll, RG* upFiles)
 {
   int rc = FALSE;
   int socket = -1;
   RecordTree* tree = 0;
   Record* record = 0;
+  UploadFile* upFile = 0;
+  Archive* archive = 0;
+  char* source = 0;
+  char* target = 0;
   char buf[MAX_SIZE_STRING] = "";
   char* extra = 0;
   char* message = 0;
@@ -281,7 +324,10 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
 
   logMain(LOG_DEBUG, "uploadFile");
   checkCollection(coll);
-  checkLabel(source);
+  if (isEmptyRing(upFiles)) {
+    logMain(LOG_ERR, "Please provide a ring");
+    goto error;
+  }
 
   // build the UPLOAD message
   if (!getLocalHost(coll)) goto error;
@@ -289,25 +335,33 @@ uploadFile(Collection* coll, Archive* archive, char* source, char* target)
   tree->collection = coll;
   tree->messageType = UPLOAD; 
 
-  // tels "/source:target"
-  if (!(extra = getAbsolutePath(source))) goto error;
-  if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", extra, 
-	       target?":":"", target?target:"") 
-      >= MAX_SIZE_STRING) {
-    logMain(LOG_ERR, "buffer too few to copy source and target paths");
-    goto error;
-  }
+  // add files to the UPLOAD message
+  rgRewind(upFiles);
+  while ((upFile = rgNext(upFiles))) {
+    source = upFile->source;
+    target = upFile->target;
+    archive = upFile->archive;
+  
+    // tels "/source:target"
+    if (!(extra = getAbsolutePath(source))) goto error;
+    if (snprintf(buf, MAX_SIZE_STRING, "%s%s%s", extra, 
+		 target?":":"", target?target:"") 
+	>= MAX_SIZE_STRING) {
+      logMain(LOG_ERR, "buffer too few to copy source and target paths");
+      goto error;
+    }
 
-  extra = destroyString(extra);
-  extra = createString(buf);
-  if (!(record = addRecord(coll, coll->localhost, archive, SUPPLY, extra)))
-    goto error;
-  extra = 0;
-  if (!avl_insert(tree->records, record)) {
-    logMain(LOG_ERR, "cannot add record to tree (already there?)");
-    goto error;
+    extra = destroyString(extra);
+    extra = createString(buf);
+    if (!(record = addRecord(coll, coll->localhost, archive,
+			     SUPPLY, extra))) goto error;
+    extra = 0;
+    if (!avl_insert(tree->records, record)) {
+      logMain(LOG_ERR, "cannot add record to tree (already there?)");
+      goto error;
+    }
+    record = 0;
   }
-  record = 0;
   
   // ask daemon to upload the file into the cache
   if ((socket = connectServer(coll->localhost)) == -1) goto error;
@@ -407,30 +461,30 @@ concatExtract(Collection* coll, Collection *upload)
  * Function   : mdtxUpload
  * Description: upload manager
  * Synopsis   : int mdtxUpload(char* label, char* catalog, char* extract, 
- *                             char* file, char* targetPath)
+ *                             RG* upFiles)
  * Input      : char* label: related collection
  *              char* catalog: catalog metadata file to upload
  *              char* extract: extract metadata file to upload
- *              char* file: data to upload
- *              char* targetPath: where to copy data into the cache
+ *              RG* upFiles: ring of UploadFile* (source+target paths)
  * Output     : TRUE on success
  =======================================================================*/
 int 
-mdtxUpload(char* label, char* catalog, char* extract, 
-	   char* file, char* targetPath)
+mdtxUpload(char* label, char* catalog, char* extract, RG* upFiles)
 { 
   int rc = FALSE;
   Collection *coll = 0;
   Collection *upload = 0;
-  Archive* archive = 0;
-
+  UploadFile* upFile = 0;
+  int isAllowed = 0;
+  
   logMain(LOG_DEBUG, "mdtxUpload");
   checkLabel(label);
-  if (!catalog && !extract && !file) {
+  if (!catalog && !extract && isEmptyRing(upFiles)) {
     logMain(LOG_ERR, "please provide some content to upload");
     goto error;
   }
-  if (!allowedUser(env.confLabel)) goto error;
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
   if (!(coll = mdtxGetCollection(label))) goto error;
 
   // create a new collection to parse upload contents
@@ -442,19 +496,31 @@ mdtxUpload(char* label, char* catalog, char* extract,
 
   // uploaded contents to the new collection
   if (extract && !uploadExtract(upload, extract)) goto error;
-  if (file && !(archive = uploadContent(upload, file))) goto error;
+  if (!isEmptyRing(upFiles)) {
+    while ((upFile = rgNext(upFiles))) {
+      if (!(upFile->archive = uploadContent(upload, upFile->source)))
+	goto error;
+    }
+  }
   if (catalog && !uploadCatalog(upload, catalog)) goto error;
 
   // Do some checks depending on what we have
-  if (extract && file && 
-      !isFileRefbyExtract(upload, archive)) goto error;
-
+  if (extract && !isEmptyRing(upFiles)) {
+    rgRewind(upFiles);
+    while ((upFile = rgNext(upFiles))) {
+      if (!isFileRefbyExtract(upload, upFile->archive)) goto error;
+    }
+  }
+    
   // Check we erase nothing in actual extraction metadata
-  if ((extract || file) &&
-      !areNotAlreadyThere(coll, upload)) goto error;
-
+  if (extract || !isEmptyRing(upFiles)) {
+    if (!areNotAlreadyThere(coll, upload)) goto error;
+  }
+  
   // ask daemon to upload the file
-  if (file && !uploadFile(coll, archive, file, targetPath)) goto error;
+  if (!isEmptyRing(upFiles)) {
+    if (!uploadFile(coll, upFiles)) goto error;
+  }
 
   // prevent saveCollection from unlinking new NNN.txt files,
   // and also force reload on upload+[+] to use the new NNN.txt files
@@ -466,11 +532,15 @@ mdtxUpload(char* label, char* catalog, char* extract,
   // serialize NNN.txt files
   upload->memoryState |= EXPANDED;
   if (catalog && !concatCatalog(coll, upload)) goto error;
-  if ((extract || file) && !concatExtract(coll, upload)) goto error;
+  if (extract || !isEmptyRing(upFiles)) {
+    if (!concatExtract(coll, upload)) goto error;
+  }
 
   // tell the server we have upgraded the extraction metadata
-  if ((extract || file) && !env.noRegression && !env.dryRun) {
-     mdtxAsyncSignal(0); // send HUP signal to daemon
+  if (extract || !isEmptyRing(upFiles)) {
+    if (!env.noRegression && !env.dryRun) {
+      mdtxAsyncSignal(0); // send HUP signal to daemon
+    }
   }
 
   rc = TRUE;

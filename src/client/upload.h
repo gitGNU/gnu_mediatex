@@ -26,9 +26,23 @@
 
 #include "mediatex-types.h"
 
+typedef struct UploadFile {
+  char* source;
+  char* target;
+  Archive* archive; // buffer used by mdtxUpload()
+} UploadFile;
+  
+typedef struct UploadParams {
+  RG* upFiles;     // UploadFile*
+  char* catalog;
+  char* extract;
+} UploadParams;
+
+UploadFile* createUploadFile(void);
+UploadFile* destroyUploadFile(UploadFile* self);
+
 /* API */
-int mdtxUpload(char* label, char* catalog, char* extract, 
-	       char* file, char* targetPath);
+int mdtxUpload(char* label, char* catalog, char* extract, RG* upFiles);
 
 #endif /* MDTX_CLIENT_UPLOAD_H */
 

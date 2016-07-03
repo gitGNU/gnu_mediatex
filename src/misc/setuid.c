@@ -183,14 +183,17 @@ undoSeteuid (void)
 
 /*=======================================================================
  * Function   : allowedUser
- * Description: int allowedUser (char* label)
+ * Description: int allowedUser (char* label, int *isAllowed; int optUid)
  * Synopsis   : Check if current user is allowed to change to 
  *              the label user
  * Input      : char* label: the username to become
- * Output     : TRUE on success
+ *              int optUid: optionnal uid to override current user
+ *                          (ex: www-data)
+ * Output     : int *isAllowed: TRUE if allowed
+ *              FALSE on error
  =======================================================================*/
 int
-allowedUser (char* label)
+allowedUser (char* label, int *isAllowed, int optUid)
 {
   int rc = FALSE;
   struct passwd pw;
@@ -202,16 +205,20 @@ allowedUser (char* label)
   if (!label) goto error;
   logMisc (LOG_DEBUG, "check permissions to become %s user", label);
 
-  if (env.noRegression) return TRUE;
+  *isAllowed = FALSE;
+  if (env.noRegression) {
+    *isAllowed = TRUE;
+    goto end;
+  }
 
   if (strncmp(label, env.confLabel, strlen(env.confLabel))) {
-    logMisc (LOG_ERR, "the %s user account is not manage by mediatex", 
+    logMisc (LOG_NOTICE, "the %s user account is not manage by mediatex", 
 	     label);
-    goto error;
+    goto end;
   }
 
   // get current user name
-  if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;
+  if (!getPasswdLine (0, optUid?optUid:getuid(), &pw, &buf1)) goto error;
   logMisc (LOG_DEBUG, "you are %s", pw.pw_name);
 
   // if current user is already label
@@ -239,14 +246,16 @@ allowedUser (char* label)
 	   belongs?"":" NOT", env.confLabel);
 
   if (!belongs) {
-    logMisc (LOG_ERR, "%s user not alowed do switch to user %s",
+    logMisc (LOG_NOTICE, "%s user not allowed do switch to user %s",
 	     pw.pw_name, label);
-    goto error; 
+    goto end;
   }
     
  ok:
   logMisc (LOG_INFO, "%s user allowed to switch to user %s",
 	   pw.pw_name, label);
+  *isAllowed = TRUE;
+ end:
   rc = TRUE;
  error:
   if (buf1) free (buf1);
@@ -276,12 +285,16 @@ becomeUser (char* label, int doCheck)
   struct group gr;
   char *buf1 = 0;
   char *buf2 = 0;
-
+  int isAllowed = 0;
+  
   if (!label) goto error;
   logMisc (LOG_DEBUG, "becomeUser %s", label);
 
   if (env.noRegression) return TRUE;
-  if (doCheck && !allowedUser (label)) goto error;
+  if (doCheck) {
+    if (!allowedUser (label, &isAllowed, 0)) goto error;
+    if (!isAllowed) goto error;
+  }
 
   // get current user name
   if (!getPasswdLine (0, getuid(), &pw, &buf1)) goto error;

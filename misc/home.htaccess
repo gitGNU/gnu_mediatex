@@ -2,7 +2,7 @@
 #SSLOptions +StrictRequire
 #SSLRequireSSL
 
-# uncomment to disable authentification
+# uncomment to disable authentication
 #SetEnvIf Request_Protocol "^H" NO_AUTH
 
 # server side includes

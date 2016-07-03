@@ -34,6 +34,9 @@
 [notice utupload.c] -------------------------------------------------------
 [notice utupload.c]  * Not a final suply:
 [notice utupload.c] .......................................................
+[info openClose.c] estimate 95 steps for load
+[info openClose.c] parse coll3 collection (5 X )
+[info openClose.c] steps: 0 / 95
 [err upload.c] uploadFinaleArchive fails
 [notice utupload.c] reply : 332 message do not provide a final supply notBeginningWithSlash
 [notice utupload.c] -------------------------------------------------------

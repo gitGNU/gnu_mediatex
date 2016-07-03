@@ -37,7 +37,8 @@ dist_scripts_SCRIPTS = \
 	mount.sh umount.sh \
 	deliver.sh audit.sh \
 	cron_hourly.sh cron_daily.sh cron_monthly.sh \
-	logrotate_apache.sh
+	logrotate_apache.sh \
+	put.cgi
 
 dist_scriptslib_SCRIPTS = \
 	lib/log.sh \

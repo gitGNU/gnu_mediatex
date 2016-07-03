@@ -89,12 +89,6 @@ typedef struct Record Record;
 
 // needed by parsers so as to include scanners headers
 typedef void* yyscan_t;
-typedef struct UploadParams {
-  char* file;
-  char* catalog;
-  char* extract;
-  char* target;
-} UploadParams;
 
 // define the fundamental boolean constants
 #define TRUE 1

@@ -64,7 +64,7 @@ usage(char* programName)
 	  "  check supp SUPP on PATH  Provide an external support (that is accessible now).\n"
 	  "  add supp SUPP to (all|coll COLL)  Share a support with a collection.\n"
 	  "  del supp SUPP from (all|coll COLL)  Withdraw a support from a collection.\n"
-	  "  upload+{0,2} [file FILE as TARGET] [catalog FILE] [rules FILE] to coll COLL  Upload an incoming archive into the cache. Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.\n"
+	  "  upload+{0,2} [file FILE as TARGET]* [catalog FILE] [rules FILE] to coll COLL  Upload an incoming archive into the cache. Appending one or two '+' will run ``uprade'' or ``upgrade+make'' queries too.\n"
 	  
 	  "\nMeta-data management:\n"
 	  "  list [master] coll  List collections.\n"	  

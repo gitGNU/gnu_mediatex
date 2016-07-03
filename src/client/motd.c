@@ -572,10 +572,12 @@ updateMotd()
   Record* record = 0;
   char car = ':';
   int isFileToBurn = 0;
+  int isAllowed = 0;
 
   logMain(LOG_DEBUG, "updateMotd");
 
-  if (!allowedUser(env.confLabel)) goto error;
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
   if (!(conf = getConfiguration())) goto error;
   if (!loadConfiguration(CFG|SUPP)) goto error;
   if (!expandConfiguration()) goto error2;

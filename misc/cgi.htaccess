@@ -21,6 +21,11 @@ AddHandler cgi-script .cgi
        Require group history
 </Files>
 
+<Files put.*>
+       # login/password
+       Require group upload
+</Files>
+
 #<Files search.cgi>
 #       # login/password
 #       Require env NO_AUTH

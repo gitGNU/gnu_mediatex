@@ -131,33 +131,46 @@ uploadFinaleArchive(Connexion* connexion)
     goto error;
   }
 
-  if (!(node = connexion->message->records->head)) goto error;
-  record = node->item;
-
-  if (getRecordType(record) != FINAL_SUPPLY) {
-    sprintf(connexion->status, status[2], record->extra);
-    goto error;
-  }
-
   if (!loadCollection(coll, EXTR | CACH)) goto error;
   if (!lockCacheRead(coll)) goto error2;
+
+  for (node = connexion->message->records->head;
+       node; node = node->next) {
+    record = node->item;
+
+    if (getRecordType(record) != FINAL_SUPPLY) {
+      sprintf(connexion->status, status[2], record->extra);
+      goto error3;
+    }
  
-  // check archive is not already there
-  if ((record->archive->localSupply)) {
-    sprintf(connexion->status, status[3],
-	    record->archive->hash, record->archive->size);
-    goto error3;
+    // check archive is not already there
+    if ((record->archive->localSupply)) {
+      sprintf(connexion->status, status[3],
+	      record->archive->hash, record->archive->size);
+      goto error3;
+    }
   }
 
-  // push provided final supplies into the cache
-  if (!addCacheEntry(coll, record)) goto error3;
+  for (node = connexion->message->records->head;
+       node; node = node->next) {
+    record = node->item;
+    
+    // push provided final supplies into the cache
+    if (!addCacheEntry(coll, record)) goto error3;
+  
+    // extract the final supply into the cache
+    if (!(cacheUpload(coll, record))) goto error4;
+  }
+  
+  // record remains into the cache ; tree free by caller
+  connexion->message->records->freeitem = 0;
+  avl_free_nodes(connexion->message->records);
+  connexion->message->records->freeitem = (void(*)(void*)) destroyRecord;
+  /*
   avl_unlink_node(connexion->message->records, node); // consume record
-  remind(node);
-  free(node);
-  
-  // extract the final supply into the cache
-  if (!(cacheUpload(coll, record))) goto error4;
-  
+    remind(node);
+    free(node);
+  */
   sprintf(connexion->status, "%s", status[0]);
   rc = TRUE;
  error4:

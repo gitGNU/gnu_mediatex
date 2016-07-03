@@ -27,7 +27,7 @@
 <TABLE CELLPADDING=3>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
-<A NAME='tex2html1'
+<A NAME='mdtx1'
 HREF='<!--#echo var='HOME' -->/cache'><IMG
 ALIGN='BOTTOM' BORDER='0' SRC='<!--#echo var='HOME' -->/logo'
 ALT='top'></A>
@@ -44,14 +44,16 @@ ALT='top'></A>
 <TD ALIGN='LEFT' VALIGN='TOP'><TABLE>
 <TR><TD>
 <TABLE CELLPADDING=3>
-<TR><TD ALIGN='CENTER'><A NAME='tex2html7'
+<TR><TD ALIGN='CENTER'><A NAME='mdtx7'
 HREF='<!--#echo var='HOME' -->/index'>Index</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html8'
+<TD ALIGN='CENTER'><A NAME='mdtx8'
 HREF='<!--#echo var='HOME' -->/cache'>Cache</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html9'
+<TD ALIGN='CENTER'><A NAME='mdtx9'
 HREF='<!--#echo var='HOME' -->/score'>Score</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html10'
+<TD ALIGN='CENTER'><A NAME='mdtx10'
 HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
+<TD ALIGN='CENTER'><A NAME='mdtx11'
+HREF='<!--#echo var='HOME' -->/cgi/put.shtml'>Upload</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>
@@ -85,7 +87,7 @@ HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
 <TABLE CELLPADDING=3>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
-<A NAME='tex2html1'
+<A NAME='mdtx1'
 HREF='https://localhost/~mdtx1-coll1/cache'><IMG
 ALIGN='BOTTOM' BORDER='0' SRC='https://localhost/~mdtx1-coll1/logo'
 ALT='top'></A>
@@ -102,14 +104,16 @@ ALT='top'></A>
 <TD ALIGN='LEFT' VALIGN='TOP'><TABLE>
 <TR><TD>
 <TABLE CELLPADDING=3>
-<TR><TD ALIGN='CENTER'><A NAME='tex2html7'
+<TR><TD ALIGN='CENTER'><A NAME='mdtx7'
 HREF='https://localhost/~mdtx1-coll1/index'>Index</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html8'
+<TD ALIGN='CENTER'><A NAME='mdtx8'
 HREF='https://localhost/~mdtx1-coll1/cache'>Cache</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html9'
+<TD ALIGN='CENTER'><A NAME='mdtx9'
 HREF='https://localhost/~mdtx1-coll1/score'>Score</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html10'
+<TD ALIGN='CENTER'><A NAME='mdtx10'
 HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'>Version</A></TD>
+<TD ALIGN='CENTER'><A NAME='mdtx11'
+HREF='https://localhost/~mdtx1-coll1/cgi/put.shtml'>Upload</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>
@@ -143,7 +147,7 @@ HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'>Version</A></TD>
 <TABLE CELLPADDING=3>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
-<A NAME='tex2html1'
+<A NAME='mdtx1'
 HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'><IMG
 ALIGN='BOTTOM' BORDER='0' SRC='https://localhost/~mdtx1-coll1/logo'
 ALT='top'></A>
@@ -155,14 +159,16 @@ ALT='top'></A>
 <TD ALIGN='LEFT' VALIGN='TOP'><TABLE>
 <TR><TD>
 <TABLE CELLPADDING=3>
-<TR><TD ALIGN='CENTER'><A NAME='tex2html7'
+<TR><TD ALIGN='CENTER'><A NAME='mdtx7'
 HREF='https://localhost/~mdtx1-coll1/index'>Index</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html8'
+<TD ALIGN='CENTER'><A NAME='mdtx8'
 HREF='https://localhost/~mdtx1-coll1/cache'>Cache</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html9'
+<TD ALIGN='CENTER'><A NAME='mdtx9'
 HREF='https://localhost/~mdtx1-coll1/score'>Score</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html10'
+<TD ALIGN='CENTER'><A NAME='mdtx10'
 HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'>Version</A></TD>
+<TD ALIGN='CENTER'><A NAME='mdtx11'
+HREF='https://localhost/~mdtx1-coll1/cgi/put.shtml'>Upload</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>

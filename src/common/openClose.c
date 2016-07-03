@@ -1240,11 +1240,13 @@ Support* mdtxGetSupport(char* label)
 {
   Support* rc = 0;
   Support* supp = 0;
-
+  int isAllowed = 0;
+  
   checkLabel(label);  
   logCommon(LOG_DEBUG, "get %s support", label);
 
-  if (!allowedUser(env.confLabel)) goto error;
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
   if (!loadConfiguration(SUPP)) goto error;
   if (!(supp = getSupport(label))) goto error;
 
@@ -1271,10 +1273,12 @@ clientLoop(int (*callback)(char*))
   Configuration* conf = 0;
   Collection* coll = 0;
   RGIT* curr = 0;
-
+  int isAllowed = 0;
+  
   logCommon(LOG_DEBUG, "loop on all collections");
 
-  if (!allowedUser(env.confLabel)) goto error;
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
 
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
@@ -1311,11 +1315,13 @@ serverLoop(int (*callback)(Collection*))
   Configuration* conf = 0;
   Collection* coll = 0;
   RGIT* curr = 0;
-
+  int isAllowed = 0;
+  
   logCommon(LOG_DEBUG, "loop on all collections (2)");
 
-  if (!allowedUser(env.confLabel)) goto error;
-
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
+  
   // for all collection
   if (!loadConfiguration(CFG)) goto error;
   conf = getConfiguration();

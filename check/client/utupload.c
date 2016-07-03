@@ -77,6 +77,8 @@ main(int argc, char** argv)
   char* extract = 0;
   char* file = 0;
   char* targetPath = 0;
+  UploadFile* upFile = 0;
+  RG* upFiles = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
@@ -219,9 +221,19 @@ main(int argc, char** argv)
 	    file?" file":"", 
 	    targetPath?" target":"");
     logMain(LOG_NOTICE, "***********************************************"); 
+
     
-    if (!mdtxUpload("coll2", catalog, extract, file, targetPath)) 
+    if (file) {
+      if (!(upFile = createUploadFile())) goto error;
+      if (!(upFile->source = createString(file))) goto error;
+    }
+    if (targetPath && !(upFile->target = createString(targetPath)))
       goto error;
+    if (file) {
+      if (!(upFiles = createRing())) goto error;
+      if (!rgInsert(upFiles, upFile)) goto error;
+    }
+    if (!mdtxUpload("coll2", catalog, extract, upFiles)) goto error;
   }
   /************************************************************************/
   
@@ -232,6 +244,7 @@ main(int argc, char** argv)
   free(extract);
   free(file);
   free(targetPath);
+  destroyRing(upFiles, (void*(*)(void*)) destroyUploadFile);
   ENDINGS;
   rc=!rc;
  optError:

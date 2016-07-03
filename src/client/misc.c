@@ -110,24 +110,23 @@ int mdtxUpgradePlus(char* label)
  * Author     : Nicolas ROCHE
  * modif      : 2013/10/23
  * Description: Upload + upgrade
- * Synopsis   : int mdtxUploadPlus(char* label, char* path)
+ * Synopsis   : int mdtxUploadPlus(char* label, char* catalog,
+ *                                 char* extract, RG* upFiles)
  * Input      : char* label = collection to pre-process
  *              char* catalog: catalog metadata file to upload
  *              char* extract: extract metadata file to upload
- *              char* file: data to upload
- *              char* targetPath: where to copy data into the cache
+ *              RG* upFiles: ring or UploadFile* ; data to upload
  * Output     : TRUE on success
  =======================================================================*/
-int mdtxUploadPlus(char* label, char* catalog, char* extract, 
-		   char* file, char* targetPath)
+int mdtxUploadPlus(char* label, char* catalog, char* extract, RG* upFiles)
 {
   int rc = FALSE;
 
   checkLabel(label);
-  if (!mdtxUpload(label, catalog, extract, file, targetPath)) 
-    goto error;
-
+  
+  if (!mdtxUpload(label, catalog, extract, upFiles)) goto error;
   if (!mdtxUpgrade(label)) goto error;
+  
   rc = TRUE;
  error:
   if (!rc) {
@@ -141,24 +140,24 @@ int mdtxUploadPlus(char* label, char* catalog, char* extract,
  * Author     : Nicolas ROCHE
  * modif      : 2013/10/23
  * Description: Upload + upgrade + make
- * Synopsis   : int mdtxUploadPlusPlus(char* label, char* path)
+ * Synopsis   : int mdtxUploadPlusPlus(char* label, char* catalog,
+ *                                     char* extract, RG* upFiles)
  * Input      : char* label = collection to pre-process
  *              char* catalog: catalog metadata file to upload
  *              char* extract: extract metadata file to upload
- *              char* file: data to upload
- *              char* targetPath: where to copy data into the cache
+ *              RG* upFiles: ring or UploadFile* ; data to upload
  * Output     : TRUE on success
  =======================================================================*/
 int mdtxUploadPlusPlus(char* label, char* catalog, char* extract, 
-		   char* file, char* targetPath)
+		       RG* upFiles)
 {
   int rc = FALSE;
 
   checkLabel(label);
-  if (!mdtxUploadPlus(label, catalog, extract, file, targetPath))
-    goto error;
-
+  
+  if (!mdtxUploadPlus(label, catalog, extract, upFiles)) goto error;
   if (!mdtxMake(label)) goto error;
+  
   rc = TRUE;
  error:
   if (!rc) {
@@ -182,10 +181,12 @@ mdtxClean(char* label)
   Configuration* conf = 0;
   //Collection* coll = 0;
   char* argv[3] = {0, 0, 0};
+  int isAllowed = 0;
 
   logMain(LOG_DEBUG, "del a collection");
 
-  if (!allowedUser(env.confLabel)) goto error;
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
   if (!(conf = getConfiguration())) goto error;
 
   argv[0] = createString(conf->scriptsDir);
@@ -458,6 +459,7 @@ mdtxSu(char* label)
   char* home = 0;
   char* user = 0;
   LogSeverity* tmpSev =  env.logHandler->severity[LOG_SCRIPT];
+  int isAllowed = 0;
   
   logMain(LOG_DEBUG, "mdtxSu %s", label?label:"");
 
@@ -481,7 +483,8 @@ mdtxSu(char* label)
 
   if (!env.noRegression && !env.dryRun) {
     if (setenv("HOME", home, 1) == -1) goto error;
-    if (!allowedUser(user)) goto error;
+    if (!allowedUser(user, &isAllowed, 0)) goto error;
+    if (!isAllowed) goto error;
     
     // do not close stdout! else we loose id and groups.
     env.logHandler->severity[LOG_SCRIPT] = LogSeverities+7;

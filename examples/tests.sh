@@ -293,6 +293,7 @@ function test1()
     if [ "x$1" != "xclean" ]; then
 	topo "Initialize"
 	mdtxA "adm init"
+	mdtxA "adm add user www-data"
 	mdtxConfigure
 	startInitdScript
 	finalQuestion "is http://localhost/~serv1/ correct ?"

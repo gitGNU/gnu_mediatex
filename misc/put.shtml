@@ -1,0 +1,60 @@
+<!--#set var='HOME' value='..' -->
+<!--#include virtual='../cgiHeader.shtml' -->
+
+<head>
+  <script type="text/javascript" src="put.js"></script>
+</head>
+<body>
+<br>
+<form action="put.cgi" method="post" enctype="multipart/form-data">
+  <hr>
+
+  <h3>
+   Document:
+   <input type="text" name="document" required>
+  </h3>
+  <div>
+    Caracs:
+    <input type="button" value="+" name="btCa" onClick="addCarac('document')">
+    <input type="button" value="-" name="btCd" onClick="delCarac('document')">
+    <div id="documentCarac"></div>
+  </div>
+  <div>
+    Into category:
+    <input type="button" value="+" name="btPa" onClick="addParent('document')">
+    <input type="button" value="-" name="btPd" onClick="delParent('document')">
+    <div id="documentParent"></div>
+  </div>
+  <hr>
+
+  <h3>
+    Archives:
+    <input type="button" value="+" name="bt3a" onClick="addArchive()">
+    <input type="button" value="-" name="bt3d" onClick="delArchive()">
+  </h3>
+  <div id="archive"></div>
+  <hr>
+
+  <h3>
+    Humans:
+    <input type="button" value="+" name="bt2a" onClick="addHuman()">
+    <input type="button" value="-" name="bt2d" onClick="delHuman()">
+  </h3>
+  <div id="human"></div>
+  <hr>
+
+  <h4>
+    <i>Categories:</i>
+    <input type="button" value="+" name="btCatA" onClick="addCategory()">
+    <input type="button" value="-" name="btCatD" onClick="delCategory()">
+  </h4>
+  <div id="category"></div>
+  <hr>
+
+  <input type="submit" value="Submit">
+</form>
+<script type="text/javascript">addArchive()</script>
+</body>
+</html>
+
+<!--#include virtual='../footer.html' -->

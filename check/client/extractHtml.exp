@@ -1301,7 +1301,7 @@ All images: 3
 <TABLE CELLPADDING=3>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
-<A NAME='tex2html1'
+<A NAME='mdtx1'
 HREF='<!--#echo var='HOME' -->/score'><IMG
 ALIGN='BOTTOM' BORDER='0' SRC='<!--#echo var='HOME' -->/logo'
 ALT='top'></A>
@@ -1322,14 +1322,16 @@ ALT='top'></A>
 <TD ALIGN='LEFT' VALIGN='TOP'><TABLE>
 <TR><TD>
 <TABLE CELLPADDING=3>
-<TR><TD ALIGN='CENTER'><A NAME='tex2html7'
+<TR><TD ALIGN='CENTER'><A NAME='mdtx7'
 HREF='<!--#echo var='HOME' -->/index'>Index</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html8'
+<TD ALIGN='CENTER'><A NAME='mdtx8'
 HREF='<!--#echo var='HOME' -->/cache'>Cache</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html9'
+<TD ALIGN='CENTER'><A NAME='mdtx9'
 HREF='<!--#echo var='HOME' -->/score'>Score</A></TD>
-<TD ALIGN='CENTER'><A NAME='tex2html10'
+<TD ALIGN='CENTER'><A NAME='mdtx10'
 HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
+<TD ALIGN='CENTER'><A NAME='mdtx11'
+HREF='<!--#echo var='HOME' -->/cgi/put.shtml'>Upload</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>

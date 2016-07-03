@@ -31,10 +31,10 @@ int mdtxRemove();
 int mdtxPurge();
 int mdtxMake(char* label);
 int mdtxUpgradePlus(char* label);
-int mdtxUploadPlus(char* label, char* catalog, char* extract, 
-		   char* file, char* targetPath);
-int mdtxUploadPlusPlus(char* label, char* catalog, char* extract, 
-	       char* file, char* targetPath);
+int mdtxUploadPlus(char* label, char* catalog, char* extract,
+		   RG* upFiles);
+int mdtxUploadPlusPlus(char* label, char* catalog, char* extract,
+		       RG* upFiles);
 int mdtxClean(char* label);
 int mdtxAddUser(char* user);
 int mdtxDelUser(char* user);

@@ -313,6 +313,7 @@ function GIT_coll_import()
 	install -o $1 -g $1 -m 660 $MISC/floppy-icon.png icons 
 	install -o $1 -g $1 -m 660 $MISC/home.htaccess apache2
 	install -o $1 -g $1 -m 660 $MISC/htgroup apache2
+	install -o $1 -g $1 -m 770 $MISC/put.sh put.sh
 
 	sed apache2/htgroup -i -e "s!MDTX!$MDTX!"
 

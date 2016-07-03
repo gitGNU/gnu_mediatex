@@ -649,7 +649,7 @@
 @event{$ mediatex adm get @var{path} as @var{coll} on @var{path}}
 @end macro
 @macro eventClientUpload
-@event{$ mediatex upload[++] [file @var{file} [as @var{target}]] [catalog @var{file}] [rules @var{file}] to coll @var{coll}}
+@event{$ mediatex upload[++] [file @var{file} [as @var{target}]]* [catalog @var{file}] [rules @var{file}] to coll @var{coll}}
 @end macro
 @macro eventClientMiscAudit
 @event{$ mediatex audit coll @var{coll} for @var{mail}}

@@ -51,6 +51,7 @@
    
 %{
 #include "mediatex-config.h"
+#include "client/mediatex-client.h"
 #include "parser/shellQuery.tab.h"
 %}
 

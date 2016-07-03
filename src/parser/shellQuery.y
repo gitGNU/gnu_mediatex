@@ -69,7 +69,7 @@
 #include "parser/shellQuery.h"
 
 void shell_error(yyscan_t yyscanner, Collection* coll, 
-		 UploadParams* upParam, const char* message);
+		 UploadParams* upParam, const char* message); 
 %}
 
 /* declarations: ===================================================*/
@@ -151,6 +151,7 @@ void shell_error(yyscan_t yyscanner, Collection* coll,
 %type <string>    collection
 %type <string>    support
 %type <string>    file
+%type <string>    target
 %type <string>    key
 
 %%
@@ -221,17 +222,21 @@ uploadParams: uploadParams uploadParam
 
 target: shellAS shellSTRING
 {
-  if (!(upParam->target = createString($2))) YYABORT;
+  strcpy($$, $2);
 }
       | // empty
+{
+  $$[0] = 0;
+}     
 
 uploadParam: file target
 {
-  if (upParam->file) {
-    logParser(LOG_ERR, "please only provide one data file to upload");
-    YYABORT;
-  }
-  if (!(upParam->file = createString($1))) YYABORT;
+  UploadFile* upFile = 0;
+
+  if (!(upFile = createUploadFile())) YYABORT;
+  if (!(upFile->source = createString($1))) YYABORT;
+  if ($2 && !(upFile->target = createString($2))) YYABORT;
+  if (!rgInsert(upParam->upFiles, upFile)) YYABORT;
 }
            | shellCATALOG shellSTRING
 {
@@ -295,7 +300,7 @@ apiQuery: apiSuppQuery
 	   mediatex list supp
 	   mediatex note supp as TEXT
 	   mediatex check supp on PATH 
-	   mediatex upload+{0,2} file PATH catalog PATH extract PATH to coll COLL 
+	   mediatex upload+{0,2} [file PATH as PATH]* [catalog PATH] [extract PATH} to coll COLL 
 	*/
           | apiCollQuery
 	/* mediatex add key PATH to coll COLL
@@ -428,32 +433,44 @@ admConfQuery: shellINIT shellEOL
             | shellBIND shellEOL
 {
   logParser(LOG_INFO, "bind mediatex directories");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxBind()) YYABORT;
   }
 }
             | shellUNBIND shellEOL
 {
   logParser(LOG_INFO, "unbind mediatex directories");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxUnbind()) YYABORT;
   }
 }
             | shellMOUNT shellSTRING shellON shellSTRING shellEOL
 {
   logParser(LOG_INFO, "mount %s on %s", $2, $4);
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxMount($2, $4)) YYABORT;
   }
 }
             | shellUMOUNT shellSTRING shellEOL
 {
   logParser(LOG_INFO, "umount %s", $2);
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxUmount($2)) YYABORT;
   }
 }
@@ -461,8 +478,11 @@ admConfQuery: shellINIT shellEOL
 	               shellAS shellSTRING shellEOL
 {
   logParser(LOG_INFO, "get %s as %s on %s as %s", $2, $4, $6, $8);
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     env.noGit = TRUE; // do not use git at all (no commit)
     if (!mdtxScp($4, $6, $2, $8)) YYABORT;
   }
@@ -473,72 +493,99 @@ admConfQuery: shellINIT shellEOL
 srvQuery: shellSAVE shellEOL
 {
   logParser(LOG_INFO, "send SAVEMD5 signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_SAVEMD5)) YYABORT;
   }
 }
         | shellEXTRACT shellEOL
 {
   logParser(LOG_INFO, "send EXTRACT signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_EXTRACT)) YYABORT;
   }
 }
         | shellNOTIFY shellEOL
 {
   logParser(LOG_INFO, "send NOTIFY signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_NOTIFY)) YYABORT;
   }
 }
         | shellQUICK shellSCAN shellEOL
 {
   logParser(LOG_INFO, "send QUICKSCAN signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_QUICKSCAN)) YYABORT;
   }
 }
         | shellSCAN shellEOL
 {
   logParser(LOG_INFO, "send SCAN signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_SCAN)) YYABORT;
   }
 }
         | shellTRIM shellEOL
 {
   logParser(LOG_INFO, "send TRIM signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_TRIM)) YYABORT;
   }
 }
         | shellCLEAN shellEOL
 {
   logParser(LOG_INFO, "send CLEAN signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_CLEAN)) YYABORT;
   }
 }
         | shellPURGE shellEOL
 {
   logParser(LOG_INFO, "send PURGE signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_PURGE)) YYABORT;
   }
 }
         | shellSTATUS shellEOL
 {
   logParser(LOG_INFO, "send  signal to daemon");
+  int isUserAllowed = FALSE;
+  
   if (!env.noRegression) {
-    if (!allowedUser(env.confLabel)) YYABORT;
+    if (!allowedUser(env.confLabel, &isUserAllowed, 0)) YYABORT;
+    if (!isUserAllowed) YYABORT;
     if (!mdtxSyncSignal(REG_STATUS)) YYABORT;
   }
 }
@@ -639,7 +686,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUpload($4, upParam->catalog, upParam->extract, 
-		    upParam->file, upParam->target)) YYABORT;
+		    upParam->upFiles)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -649,7 +696,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUploadPlus($4, upParam->catalog, upParam->extract, 
-		    upParam->file, upParam->target)) YYABORT;
+		    upParam->upFiles)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -659,7 +706,7 @@ apiSuppQuery: shellADD support shellTO shellALL shellEOL
   if (!env.noRegression) {
     if (!clientWriteLock()) YYABORT;
     if (!mdtxUploadPlusPlus($4, upParam->catalog, upParam->extract, 
-		    upParam->file, upParam->target)) YYABORT;
+		    upParam->upFiles)) YYABORT;
     if (!clientWriteUnlock()) YYABORT;
   }
 }
@@ -844,14 +891,17 @@ parseShellQuery(int argc, char** argv, int optind)
   void* buffer = 0;
   yyscan_t scanner;
   Collection* coll = 0;
-  UploadParams upParam = {0, 0, 0};
+  UploadParams upParam;
 
   logParser(LOG_DEBUG, "parseShellQuery");
   if (!getCommandLine(argc, argv, optind)) {
     rc = TRUE; // no query
     goto error;
   }
-    
+
+  memset(&upParam, 0, sizeof(UploadParams));
+  if (!(upParam.upFiles = createRing())) goto error;
+  
   // initialise parser
   if (shell_lex_init(&scanner)) {
     logParser(LOG_ERR, "shell_lex_init fails");
@@ -878,8 +928,7 @@ parseShellQuery(int argc, char** argv, int optind)
   }
   destroyString(upParam.catalog);
   destroyString(upParam.extract);
-  destroyString(upParam.file);
-  destroyString(upParam.target);
+  destroyRing(upParam.upFiles, (void*(*)(void*)) destroyUploadFile);
   return rc;
 }
 

@@ -4,6 +4,7 @@
 * Example::     Archiving icons
 * Firewall::    Configuration behind a firewall
 * GitLogs::     Search the metadata history
+* HTTP::        Configure HTTP
 * Portail::	Minimal Php inerface
 * Linking::	Library API
 @end menu
@@ -134,6 +135,39 @@ commit <COMMIT_NUMBER>
 $ git diff <COMMIT_NUMBER>
 @end example
 
+@node HTTP
+@section Configure HTTP
+
+Default is to use @acronym{HTTPS} for the catalogue's @acronym{URL}s.
+But @acronym{HTTP} can be used instead : @dataServers
+@example
+https      no
+@end example
+
+However, both @acronym{HTTPS} and @acronym{HTTP} remain reachable.
+You can force @acronym{HTTPS} access if needed:
+@file{/etc/@/mediatex/@/mdtx-@var{COLL}/@/apache2/@/home.htaccess}
+@example
+# uncomment to force https (no more http available)
+SSLOptions +StrictRequire
+SSLRequireSSL
+@end example
+
+Default is to protect contents by passwords.
+You can disable them if no more wanted: @file{/etc/@/mediatex/@/mdtx-@var{COLL}/@/apache2/@/home.htaccess}
+@example
+# uncomment to disable authentication
+SetEnvIf Request_Protocol "^H" NO_AUTH
+@end example
+
+Default is to not allow @code{www-data} user to lunch @mediatexO queries.
+However this may allow to upload files via a dedicated @acronym{cgi} script shown on the menu line of the @acronym{HTML} catalogue.
+@example
+# mediatex adm add user www-data
+$ mediatex make
+@end example
+This feature remains protected by password even if authentication is disabled as shown before.
+
 @page
 @node Portail
 @section Minimal Php inerface
@@ -142,6 +176,8 @@ $ git diff <COMMIT_NUMBER>
 A minimal @sc{cakePhp} application is provided with the sources
 (@file{/usr/@/share/@/mediatex/@/useCases/@/cake.tgz}),
 showing how to use the @sc{Mediatex} system as a storage layer.
+
+@note Not tested for a while
 
 @image{mediatex-figures/useCase,,,,}
 

@@ -178,16 +178,20 @@ upload++ motd upgrade upgrade+ make clean su audit"
 	    if [ $COMP_CWORD -gt 3 ]; then
 		case "${COMP_WORDS[COMP_CWORD-4]}" in
 		    catalog) # catalog FILE file FILE
-			COMPREPLY=( $( compgen -W "rules as" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file rules as" -- $cur ) )
 			return 0
 			;;
 		    rules) # rules FILE file FILE
-			COMPREPLY=( $( compgen -W "catalog as" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file catalog as" -- $cur ) )
+			return 0
+			;;
+		    file|as) # file|as FILE file FILE
+			COMPREPLY=( $( compgen -W "file catalog rule as" -- $cur ) )
 			return 0
 			;;
 		esac
 	    fi
-	    COMPREPLY=( $( compgen -W "catalog rules as" -- $cur ) )
+	    COMPREPLY=( $( compgen -W "file catalog rules as" -- $cur ) )
 	    return 0
 	    ;;
 	as)
@@ -202,16 +206,20 @@ upload++ motd upgrade upgrade+ make clean su audit"
 	    if [ $COMP_CWORD -gt 5 ]; then
 		case "${COMP_WORDS[COMP_CWORD-6]}" in
 		    catalog) # catalog FILE file FILE as
-			COMPREPLY=( $( compgen -W "rules" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file rules" -- $cur ) )
 			return 0
 			;;
 		    rules) # rules FILE file FILE as
-			COMPREPLY=( $( compgen -W "catalog" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file catalog" -- $cur ) )
+			return 0
+			;;
+		    file|as) # file|as FILE file FILE as
+			COMPREPLY=( $( compgen -W "file catalog rule" -- $cur ) )
 			return 0
 			;;
 		esac
 	    fi
-	    COMPREPLY=( $( compgen -W "catalog rules" -- $cur ) )
+	    COMPREPLY=( $( compgen -W "file catalog rules" -- $cur ) )
 	    return 0
 	    ;;
 	catalog)
@@ -222,7 +230,7 @@ upload++ motd upgrade upgrade+ make clean su audit"
 			return 0
 			;;
 		    file|as) # XXX FILE catalog
-			COMPREPLY=( $( compgen -W "rules" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file rules" -- $cur ) )
 			return 0
 			;;
 		esac
@@ -238,7 +246,7 @@ upload++ motd upgrade upgrade+ make clean su audit"
 			return 0
 			;;
 		    file|as) # XXX FILE rules
-			COMPREPLY=( $( compgen -W "catalog" -- $cur ) )
+			COMPREPLY=( $( compgen -W "file catalog" -- $cur ) )
 			return 0
 			;;
 		esac

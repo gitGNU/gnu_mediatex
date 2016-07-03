@@ -26,6 +26,7 @@ dist_misc_DATA = \
 	index.htaccess score.htaccess cgi.htaccess \
 	home.htaccess apache-mdtx.conf htgroup \
 	mediatex.css floppy-icon.png \
+	put.shtml put.js put.sh \
 	logo logo.png \
 	logoP1.iso logoP2.iso logoP1.cat logoP2.cat\
 	logo.tgz logo.tar.bz2 logo.afio \

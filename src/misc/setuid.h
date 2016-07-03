@@ -37,7 +37,7 @@ int getGroupLine (char* label, gid_t gid,
 		  struct group* gr, char** buffer);
 
 int undoSeteuid (void);
-int allowedUser (char* label);
+int allowedUser (char* label, int* isAllowed, int optUid);
 int becomeUser (char* label, int doCheck);
 int logoutUser (int uid);
 
