@@ -133,7 +133,7 @@ fait.
 [info git.sh]'
 [info git.sh] su ut4-mdtx-hello -c 'git commit -a -m "Initial collection setup" 2>&1'
 [master  XXX] Initial collection setup
- 13 files changed, 169 insertions(+)
+ 14 files changed, 211 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 apache2/cgi.htaccess
  create mode 100644 apache2/home.htaccess
@@ -145,6 +145,7 @@ fait.
  create mode 100644 icons/floppy-icon.png
  create mode 100644 logo
  create mode 100644 mediatex.css
+ create mode 100755 put.sh
  create mode 100644 readme.html
  create mode 100644 servers.txt
 [debug git.sh] GIT_push: ut4-mdtx-hello
