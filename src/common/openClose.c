@@ -566,6 +566,7 @@ int
 loadCollection(Collection* coll, int collFiles)
 {
   int rc = FALSE;
+  char progBarLabel[MAX_SIZE_COLL+6];
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "load %s collection (%s)", 
@@ -592,7 +593,8 @@ loadCollection(Collection* coll, int collFiles)
 	    coll->label, strCF(collFiles));
   }
 
-  startProgBar("load");
+  sprintf(progBarLabel, "load %s", coll->label);
+  startProgBar(progBarLabel);
   if (!collectionLoop(coll, collFiles, loadColl)) goto error;
   stopProgBar();
 
@@ -932,6 +934,7 @@ saveCollection(Collection* coll, int collFiles)
 {
   int rc = FALSE;
   Configuration* conf = 0;
+  char progBarLabel[MAX_SIZE_COLL+6];
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "save %s collection (%s)", 
@@ -944,7 +947,8 @@ saveCollection(Collection* coll, int collFiles)
 	      coll->label, strCF(collFiles));
   }
 
-  startProgBar("save");
+  sprintf(progBarLabel, "save %s", coll->label);
+  startProgBar(progBarLabel);
   if (!collectionLoop(coll, collFiles, saveColl)) goto error;
   stopProgBar();
   logCommon(LOG_INFO, "steps: %lli / %lli", 
