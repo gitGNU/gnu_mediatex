@@ -4,7 +4,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- replace txt2sql example
 
 *** TODO MAYBE
 

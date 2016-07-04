@@ -20,7 +20,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 examplesdir = $(datarootdir)@mdtx_mediatexdir@/examples
-dist_examples_DATA = cake.tgz txt2sql.tgz
+dist_examples_DATA = cake.tgz seda-0.2.tgz
 dist_examples_SCRIPTS = tests.sh example.sh
 
 uninstall-hook:

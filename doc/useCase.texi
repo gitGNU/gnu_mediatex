@@ -284,17 +284,13 @@ To be fully operational, this implementation lakes a process to recover the data
 @cindex Library
 @cindex Linking
 One other possibility is to link with the @mediatexO{}'s library,
-using the parsers in order to write your own steriliser that
-converts @mediatexO{}'s input to your @acronym{OAIS}'s data management
-input format:
-@itemize @bullet
-@item for the ingestion process
-@item in order to give back all the meta-data
-@end itemize
+using its @acronym{API} to write your own parser, and the mediatex parsers write your own serialiser.
 
-The @file{/usr/@/share/@/mediatex/@/useCases/@/txt2sql.c} 
-file is provided as an example.
-It convert all the collection's meta-data to an @acronym{SQL} script:
+The @file{/usr/@/share/@/mediatex/@/examples/@/seda-0.2.tgz} project
+provide such examples.
+It import meta-data from an @acronym{XML} file and export them into a @acronym{SQL} script.
+
+Bellow show how the main functions linked with mediatex are:
 @example
 #include "mediatex.h"
 #include "client/commonHtml.h"
@@ -313,9 +309,10 @@ static void
 usage(char* programName)
 @{
   mdtxUsage(programName);
-  fprintf(stderr, "\n\t\tlabel");
+  fprintf(stderr, "\n\t\t-i label");
   mdtxOptions();
-  fprintf(stderr, "  ---\n  label:\t\tcollection's label");
+  fprintf(stderr, "  ---\n"
+	  "  -i, --label\t\tcollection's label\n");
   return;
 @}
 
@@ -329,15 +326,17 @@ usage(char* programName)
 int 
 main(int argc, char** argv)
 @{
-  Collection* coll = NULL;
+  Collection* coll = 0;
+  char* label = 0;
   // ---
   int rc = 0;
   int cOption = EOF;
   char* programName = *argv;
-  char* options = MDTX_SHORT_OPTIONS;
+  char* options = MDTX_SHORT_OPTIONS"i:";
   struct option longOptions[] = @{
-    MDTX_LONG_OPTIONS,
-    @{0, 0, 0, 0@}
+    @{"label", required_argument, 0, 'i'@},
+    MDTX_LONG_OPTIONS,             
+    @{0, 0, 0, 0@}                 
   @};
 
   setlocale (LC_ALL, "");
@@ -352,6 +351,10 @@ main(int argc, char** argv)
         != EOF) @{
     switch(cOption) @{
       
+    case 'i':
+      label = optarg;
+      break;
+
       GET_MDTX_OPTIONS; // generic options
     @}
     if (rc) goto optError;
@@ -361,14 +364,9 @@ main(int argc, char** argv)
   if (!setEnv(programName, &env)) goto optError;
  
   /*******************************************************************/
-  if (argc == optind) @{
-    usage; // expect a collection label as first parameter
-    goto optError;
-  @}
+  logEmit(LOG_INFO, "** txt2sql: %s **", label);
 
-  logEmit(LOG_INFO, "** txt2sql: %s **", argv[optind]);
-
-  if (!(coll = mdtxGetCollection(argv[optind]))) goto error;
+  if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV|CTLG|EXTR)) goto error;
   // DO YOUR EXPORT HERE
   if (!releaseCollection(coll, SERV|CTLG|EXTR)) goto error;
