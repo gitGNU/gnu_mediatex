@@ -1,3 +1,10 @@
+mediatex (0.6-2) jessie; urgency=medium
+
+  * Optimize cache policy and client speed
+  * Add a cgi upload script
+
+ -- nroche <nroche@fred.narval.tk>  Mon, 04 Jul 2016 07:42:43 +0200
+
 mediatex (0.5-1) jessie; urgency=low
 
   * Upgrade from cvs to git
