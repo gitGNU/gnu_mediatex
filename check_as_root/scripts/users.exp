@@ -103,6 +103,7 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/put.sh
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
@@ -194,6 +195,7 @@ drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/logo
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+-r--r--r-- DATAROOTDIR/mediatex/misc/put.sh
 -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt

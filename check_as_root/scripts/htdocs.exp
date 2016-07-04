@@ -77,6 +77,7 @@ Fait.
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/logo
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/put.sh
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
@@ -99,6 +100,10 @@ Fait.
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/get.cgi
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/.htaccess
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/put.cgi
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/put.js
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/put.sh
+          root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/cgi/put.shtml
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/.htaccess
           root           root lrwxrwxrwx LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/icons
       ut2-mdtx       ut2-mdtx drwxr-x--- LOCALSTATEDIR/cache/mediatex/ut2-mdtx/home/ut2-mdtx-hello/public_html/index
@@ -176,6 +181,7 @@ drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- DATAROOTDIR/mediatex/misc/logo
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.conf
 -r--r--r-- DATAROOTDIR/mediatex/misc/mediatex.css
+-r--r--r-- DATAROOTDIR/mediatex/misc/put.sh
 -r--r--r-- DATAROOTDIR/mediatex/misc/score.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/servers.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/supports.txt
