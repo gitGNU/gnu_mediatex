@@ -1,25 +1,15 @@
 
-*** DONE
-
-*** TO TEST (first)
-
-*** BUGS
-
-*** TODO (first)
-
 *** TO TEST
-
-- pgrof: test with more than 100k entries
 
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- document server::https and .htaccess switchs (https/auth)
-- cache::loadCache() do not need to load extraction metadata
+- replace txt2sql example
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- cache::loadCache() do not need to load extraction metadata
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?

@@ -1,10 +1,10 @@
 Source: mediatex
 Section: misc
 Priority: extra
-Maintainer: Nicolas Roche <nroche@prologue.fr>
+Maintainer: Nicolas Roche <nroche@narval.fr.eu.org>
 Build-Depends: debhelper (>= 8), bison, flex, gettext, help2man, libacl1-dev, libavl-dev, libssl-dev, texinfo, transfig, libtool, libfile-fcntllock-perl
 Standards-Version: 3.9.1
-Homepage: http://narval.tk/mediatexi
+Homepage: http://www.nongnu.org/mediatex/
 
 Package: mediatex
 Architecture: any
