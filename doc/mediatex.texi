@@ -41,7 +41,7 @@ Texts.  A copy of the license is included in the section entitled
 @titlepage
 @title Mediatex
 @subtitle for version @value{VERSION}, @value{UPDATED}
-@author Nicolas Roche (@email{nroche@@narval.tk})
+@author Nicolas Roche (@email{nroche@@narval.fr.eu.org})
 @page
 @vskip 0pt plus 1filll
 @insertcopying

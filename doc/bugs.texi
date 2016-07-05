@@ -3,7 +3,7 @@
 @cindex Bugs
 
 To report bugs or suggest enhancements for Mediatex, please
-send electronic mail to @email{nroche@@narval.tk}.
+send electronic mail to @email{nroche@@narval.fr.eu.org}.
 
 For bug reports, please include enough information for the maintainers
 to reproduce the problem.  Generally speaking, that means:
