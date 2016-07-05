@@ -1,4 +1,4 @@
-mediatex (0.6-2) jessie; urgency=medium
+mediatex (0.6-1) jessie; urgency=medium
 
   * Optimize cache policy and client speed
   * Add a cgi upload script

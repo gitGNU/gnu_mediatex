@@ -119,6 +119,8 @@ then
 	fi
     done    
 
+    /usr/sbin/a2disconf mediatex
+    /usr/sbin/a2disconf mediatex-mdtx.conf
     invoke-rc.d apache2 reload
 fi
 
