@@ -68,12 +68,6 @@ fi
 JAIL_bind # not needed but more confortable
 
 # restart apache
-# wait a little if apache was'nt installed before
-ls -l /etc/ssl/certs/ssl-cert-snakeoil.pem >/tmp/debug.txt
-while [! -f /etc/ssl/certs/ssl-cert-snakeoil.pem ]; do
-    sleep 1
-    ls -l /etc/ssl/certs/ssl-cert-snakeoil.pem >>/tmp/debug.txt
-done
 /usr/sbin/invoke-rc.d apache2 restart
 
 Info "done"
