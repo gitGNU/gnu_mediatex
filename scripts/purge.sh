@@ -65,8 +65,10 @@ fi
 HTDOCS_unconfigure_mdtx_apache2
 
 # wait a little if apache was'nt installed before
+ls -l /etc/ssl/certs/ssl-cert-snakeoil.pem
 while [! -f /etc/ssl/certs/ssl-cert-snakeoil.pem ]; do
     sleep 1
+    ls -l /etc/ssl/certs/ssl-cert-snakeoil.pem
 done
 /usr/sbin/invoke-rc.d apache2 restart
 
