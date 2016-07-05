@@ -57,7 +57,7 @@ HTDOCS_configure_mdtx_apache2
 /sbin/ldconfig
 
 # mdtx config for apache
-/usr/sbin/a2enconf ${MEDIATEX#/}-$MDTX.conf >/dev/null
+/usr/sbin/a2enconf ${MEDIATEX#/}-$MDTX >/dev/null
 /usr/sbin/invoke-rc.d apache2 restart
 
 # init script is run at startup for mdtx instance

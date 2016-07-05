@@ -120,14 +120,13 @@ function JAIL_build()
     # needed by scp
     [ -e $JAIL/dev/null ] || mknod -m 666 $JAIL/dev/null c 1 3
 
-    # users and groups: merge files if they already exist
+    # add users
     for FILE in /etc/passwd /etc/group; do
-	touch $JAIL$FILE
-	for MEMBER in root www-data $MDTX ${MDTX}_md; do
-	    if ! grep -q "^$MEMBER:" $JAIL$FILE; then
-		grep "^$MEMBER:" $FILE | cat >> ${JAIL}${FILE}
-	    fi
-	done
+	touch ${JAIL}${FILE}
+    done
+    USERS=$(grep "^$MDTX-" /etc/passwd | cut -d':' -f1) || true
+    for _USER in $MDTX $USERS; do
+	JAIL_add_user $_USER
     done
 
     # needed by git

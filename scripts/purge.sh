@@ -60,7 +60,7 @@ if [ $ALONE -eq 1 ]; then
 fi
 
 if [ -f /etc/apache2/conf-enabled/${MEDIATEX#/}-$MDTX.conf ]; then
-    /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
+    /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX
 fi
 HTDOCS_unconfigure_mdtx_apache2
 
