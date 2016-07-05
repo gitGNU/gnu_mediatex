@@ -4,11 +4,12 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
+- mediatexd.c: remove ~mdtx/tmp/ content when exiting
+- cache::loadCache() do not need to load extraction metadata
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
-- cache::loadCache() do not need to load extraction metadata
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?

@@ -121,6 +121,7 @@ then
 
     /usr/sbin/a2disconf mediatex || true
     /usr/sbin/a2disconf mediatex-mdtx || true
+    rm -f /etc/apache2/conf-available/mediatex-mdtx.conf
     invoke-rc.d apache2 reload || true
 fi
 

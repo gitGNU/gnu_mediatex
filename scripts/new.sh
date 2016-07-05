@@ -89,13 +89,8 @@ fi
 GIT_coll_checkout $USER $SERV $COLL $HOST
 HTDOCS_configure_coll_cgit $USER
 
-# BUG too ?
-# reload daemons as there configuration have changed
-/usr/sbin/invoke-rc.d apache2 reload
-
-# BUG (to remove when ACL will be implemented)
-#if [ $MDTX = mdtx ]; then
-#    /usr/sbin/invoke-rc.d ${MEDIATEX#/}d restart
-#fi
+# BUG ?
+# reload daemons as configuration has changed
+#/usr/sbin/invoke-rc.d apache2 reload
 
 Info "done"
