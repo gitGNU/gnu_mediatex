@@ -63,6 +63,11 @@ if [ -f /etc/apache2/conf-enabled/${MEDIATEX#/}-$MDTX.conf ]; then
     /usr/sbin/a2disconf ${MEDIATEX#/}-$MDTX.conf
 fi
 HTDOCS_unconfigure_mdtx_apache2
+
+# wait a little if apache was'nt installed before
+while [! -f /etc/ssl/certs/ssl-cert-snakeoil.pem ]; do
+    sleep 1
+done
 /usr/sbin/invoke-rc.d apache2 restart
 
 Notice "Please check if these apache modules are still needed:"
