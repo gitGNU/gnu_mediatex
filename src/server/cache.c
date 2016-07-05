@@ -603,7 +603,7 @@ int
 scanCollection(Collection* coll, int doQuick)
 {
   int rc = FALSE;
-  AVLTree* localSuppliesOk;
+  AVLTree* localSuppliesOk = 0;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "%sscanCollection %s",
