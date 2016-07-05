@@ -137,6 +137,7 @@ $ git diff <COMMIT_NUMBER>
 
 @node HTTP
 @section Configure HTTP
+@cindex Upload
 
 Default is to use @acronym{HTTPS} for the catalogue's @acronym{URL}s.
 But @acronym{HTTP} can be used instead : @dataServers
@@ -160,13 +161,16 @@ You can disable them if no more wanted: @file{/etc/@/mediatex/@/mdtx-@var{COLL}/
 SetEnvIf Request_Protocol "^H" NO_AUTH
 @end example
 
-Default is to not allow @code{www-data} user to lunch @mediatexO queries.
-However this may allow to upload files via a dedicated @acronym{cgi} script shown on the menu line of the @acronym{HTML} catalogue.
+Default is to disallow @code{www-data} user to lunch @mediatexO queries.
+However allowing him make possible to upload files via a dedicated @acronym{cgi} script shown on the menu line of the @acronym{HTML} catalogue.
 @example
 # mediatex adm add user www-data
 $ mediatex make
 @end example
-This feature remains protected by password even if authentication is disabled as shown before.
+This extra feature remains protected by password even if authentication is disabled as shown before. The final query lauched by the @code{www-data} user is configurable into the @file{/etc/@/mediatex/@/mdtx-@var{COLL}/@/put.sh} script.
+@example
+QUERY="mediatex upload++"
+@end example
 
 @page
 @node Portail
@@ -280,6 +284,8 @@ To be fully operational, this implementation lakes a process to recover the data
 @section Library API
 @cindex C library
 @cindex SQL
+@cindex XML
+@cindex SEDA
 
 @cindex Library
 @cindex Linking

@@ -89,7 +89,7 @@ The fully @acronym{DEBIAN} build process should finish using @code{pbuilder}:
 @example
 $ cd mediatex-0.5
 $ cp -fr ../debian .
-# pbuilder create --distribution squeeze \
+# pbuilder create --distribution jessie \
   --basetgz ../jessie.tgz \
   --mirror http://ftp.fr.debian.org/debian
 # pdebuild --use-pdebuild-internal \
@@ -146,24 +146,23 @@ $ mediatex check supp ex-cd1 on /usr/share/mediatex/misc/logoP1.iso
 @end example
 
 @sc{motd} will not complain any more about this support 
-as it was seen recently and own a good score.
+as it was seen recently.
 
 @cindex Support
 Add a new support. @*
 @example
 $ mediatex add supp ex-cd2 on /usr/share/mediatex/misc/logoP2.iso
 @end example
-@note{} So as not to wast a @sc{cd}, we are using an @sc{iso} files
+@note{} As it works the same way, we are using here @sc{iso} files
 instead of real supports (CD, USB key, @dots{} 
-from such @code{/dev/sd[bc@dots{}]} peripheral files) 
-as it works the same way.
+from such @code{/dev/sd[bc@dots{}]} peripheral files).
 
 Add a new File. @*
 @example
 $ mediatex add file /usr/share/mediatex/misc/logoP1.iso
 @end example
 Moreover, your final archive may simply be a file on your filesystem.
-In this case @mediatexO{} can automatically acces it without asking for,
+In this case @mediatexO{} can automatically access it without asking for,
 using the message of the day.
 
 @note{} There is a 10 chars string you can use to put what you want in order to record a state for each support.
@@ -213,8 +212,7 @@ $ htdigest /etc/mediatex/mdtx-hello/apache2/htpasswd \
 @end example
 
 Give him permissions on some of the @sc{html} sections by editing 
-the following file: @*
-@file{/etc/mediatex/mdtx-hello/apache2/htgroup}
+the @file{/etc/@/mediatex/@/mdtx-hello/@/apache2/@/htgroup} file: @*
 @example
 index: mdtx @var{usename2}
 cache: mdtx @var{usename2}
@@ -300,8 +298,8 @@ $ cowsay mheu2 > cow2.txt
 $ mediatex upload file cow2.txt to coll hello
 @end example
 
-Then, @actorPublisherO{} have to retrieve the files form the cache
-, store them into a support and provide this new support to the collection.
+Then, @actorPublisherO{} have to retrieve the files form the cache, 
+store them into a support and provide this new support to the collection.
 @example
 $ mediatex motd
 $ mediatex add supp ex-cow1 on cow1.tgz
@@ -399,7 +397,7 @@ Once second server notify, first server will copy back the provided file it need
 @end example
 
 @note{} as for every supports having a bad score, the uploaded files
-((@ref{Scenario 4}) are duplicated too.
+(@ref{Scenario 4}) are duplicated too.
 @example
  @var{hostname2}$ mediatex srv extract
  @var{hostname2}$ ls ~mdtx/cache/mdtx-hello

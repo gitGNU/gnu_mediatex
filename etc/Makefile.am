@@ -61,15 +61,15 @@ mediatex_logrotate.conf: logrotate.src $(top_srcdir)/config.h
 
 # '|| true' needed for 'distcheck'
 install-data-hook:
-	cd $(ldsoconfdir); \
+	cd $(DESTDIR)$(ldsoconfdir); \
 	mv mediatex_ld.conf mediatex.conf || true
-	cd $(apachedir); \
+	cd $(DESTDIR)$(apachedir); \
 	mv mediatex_apache.conf mediatex.conf || true
-	cd $(rsyslogdir); \
+	cd $(DESTDIR)$(rsyslogdir); \
 	mv mediatex_rsyslog.conf mediatex.conf || true
-	cd $(logrotatedir); \
+	cd $(DESTDIR)$(logrotatedir); \
 	mv mediatex_logrotate.conf mediatex || true
-	cd $(completiondir); \
+	cd $(DESTDIR)$(completiondir); \
 	mv mediatex_bash_completion mediatex || true
 
 uninstall-hook:
