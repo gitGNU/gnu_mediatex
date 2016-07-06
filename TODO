@@ -1,6 +1,10 @@
 
 *** TO TEST
 
+*** BUG
+
+- device.c:86 chdir fails when done from root home as non root
+
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;

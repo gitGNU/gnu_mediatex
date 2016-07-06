@@ -1,6 +1,6 @@
 @cindex Apache
 
-@actorUser{} use @sc{Apache} to browse the @acronym{HTML} catalogue and access archives.
+@actorUser{} use @sc{Apache} to browse the @acronym{HTML} catalogue and access archives. (For tips, you should maybe read this section first : @pxref{HTTP}).
 @sc{Apache} is configured to query the @activityServer{} via the @procScriptsCgi{} @acronym{CGI} script.
 
 The followings @sc{Apache}'s modules are enabled by @sc{Mediatex}:
@@ -188,6 +188,11 @@ AddHandler cgi-script .cgi
        Require env NO_AUTH
        Require group history
 </Files>
+
+<Files put.*>
+       # login/password
+       Require group upload
+</Files>
 @end example
 
 @actorUser{} logins and passwords are manage by the 2 files bellow.
@@ -203,6 +208,13 @@ cache: mdtx
 score: mdtx, @var{username1}
 history: mdtx
 @end example
+@itemize @bullet
+@item ``index'' section is the descriptive catalog. 
+@item ``cache'' section gives access to the archive files.
+@item ``score'' section details the extraction meta-data. It provides scores for archives, servers and the whole collection. 
+@item ``version'' section shows the history of meta-data.
+@item optional ``upload'' section provides a form to add archives.
+@end itemize
 
 @table @file
 @item /etc/mediatex/mdtx-COLL/apache2/htpasswd

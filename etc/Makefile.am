@@ -73,8 +73,8 @@ install-data-hook:
 	mv mediatex_bash_completion mediatex || true
 
 uninstall-hook:
-	rm -f $(ldsoconfdir)/mediatex.conf
-	rm -f $(apachedir)/mediatex.conf
-	rm -f $(rsyslogdir)/mediatex.conf
-	rm -f $(logrotatedir)/mediatex
-	rm -f $(completiondir)/mediatex
+	rm -f $(DESTDIR)$(ldsoconfdir)/mediatex.conf
+	rm -f $(DESTDIR)$(apachedir)/mediatex.conf
+	rm -f $(DESTDIR)$(rsyslogdir)/mediatex.conf
+	rm -f $(DESTDIR)$(logrotatedir)/mediatex
+	rm -f $(DESTDIR)$(completiondir)/mediatex

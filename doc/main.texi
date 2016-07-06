@@ -338,7 +338,7 @@ Systems users and groups:
 @actorUser
 @item mdtx
 @activityServer{}, @activityClient{} (default)
-@item mdtx-@var{col}
+@item mdtx-@var{coll}
 @activityClient{} (collection context)
 @item @var{username}
 @actorPublisher{}s

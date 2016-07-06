@@ -171,7 +171,7 @@ Dear $NAME,
 
 The audit you requested on $COLL collection is completed.
 - /tmp/$FILENAME
-- upload: $DO_LOG
+- uploaded: $DO_LOG
 
 $([ ! -f /usr/games/cowsay ] || /usr/games/cowsay mheu)
 EOF

@@ -9,7 +9,7 @@ AddHandler cgi-script .cgi
 
        # login/password
        Require env NO_AUTH
-       Require group index
+       Require group cache
 </Files>
 
 <Files cgit.cgi>
@@ -26,8 +26,3 @@ AddHandler cgi-script .cgi
        Require group upload
 </Files>
 
-#<Files search.cgi>
-#       # login/password
-#       Require env NO_AUTH
-#       Require group index
-#</Files>

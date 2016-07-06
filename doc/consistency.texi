@@ -138,9 +138,9 @@ slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW_IP}
 @c change @code{host} parameter into @dataServersO{} on every slaves and upgrade them.
 @end itemize
 
-@note{} By using an hostname (configured in @file{/etc/hosts} for instance)
-instead of an @acronym{IP} address into @code{host} parameter from @dataConfO{}, 
-changing the @acronym{IP} number has no incidence on @mediatexO{}'s configuration.
+@note{} By using a hostname (defined into @file{/etc/hosts} for instance)
+instead of an @acronym{IP} address for the @code{host} parameter into @dataConfO{}, 
+changing the @acronym{IP} has no incidence on @mediatexO{}'s configuration.
 
 @node Scenario C
 @section Socket key's change
@@ -163,16 +163,15 @@ The key fingerprint is:
 @var{NEW_FINGERPRINT}
 @end example
 
-This public key is shared and used by servers to identify themselves under the collection context. 
-In fact, we re-use the @acronym{ssh} connections keys that was first dedicated to login from servers to others under the collection context (or account). 
+This public key is shared and used by servers to identify themselves under the collection context, and to perform remote copies.
 
 @itemize
 @item 
 Changing the collection's keys on a slave server make the @acronym{GIT} connection no more available. The new keys need to be send via another media, in the same way we first connect a new server to the collection:
 @example
-(s1)# scp ~/@var{MDTX}-@var{COLL}/.ssh/id_dsa.pub @var{MASTER}:@var{PATH}
-(s2)$ mediatex add key @var{PATH} to coll @var{COLL}
-(s1)$ mediatex upgrade
+(slave)# scp ~/@var{MDTX}-@var{COLL}/.ssh/id_dsa.pub @var{MASTER}:@var{PATH}
+(master)$ mediatex add key @var{PATH} to coll @var{COLL}
+(slave)$ mediatex upgrade
 @end example
 
 @item 
@@ -182,9 +181,7 @@ $ mediatex upgrade
 @end example
 @end itemize
 
-Until the new id (the fingerprint of the public key) is not known by servers 
-and so they cannot match an @acronym{IP} address to a known server,
-they will refuse remote incoming socket's connection.
+Both remote copies and socket's connections will fails until the target server automatically upgrade (via @acronym{CRON}) and then get the new public key of the source server.
 
 @node Scenario E
 @section Host key's change
@@ -206,8 +203,8 @@ However, upgrade is not sufficient on the master host and every slaves will have
 @example
 slave$ mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{MASTER}
 @c or:
-@c # rm ~/.ssh/known_hosts
-@c # rm ~/.ssh/config 
+@c # rm ~mdtx-coll/.ssh/known_hosts
+@c # rm ~mdtx-coll/.ssh/config 
 @c $ mediatex upgrade
 The authenticity of host '@var{MASTER}' can't be established.
 Are you sure you want to continue connecting (yes/no)? 
@@ -227,7 +224,7 @@ In this section we move the @acronym{GIT}'s bare collection's repository from ma
 
 First we backup the collection on master host:
 @example
-# tar -C /var/lib/mediatex/@var{MDTX}/ @var{MDTX}-@var{COLL} -zcf backup.tgz
+# tar -C /var/lib/mediatex/@var{MDTX} @var{MDTX}-@var{COLL} -zcf backup.tgz
 @end example
 
 Next we restore it on the host we choose as new master and we re-add the collection so as to force a fresh checkout:
@@ -239,9 +236,9 @@ Next we restore it on the host we choose as new master and we re-add the collect
 
 @itemize
 @item 
-On same host (so as to restore an old state of the collection), it enough.
+If the tarball is extracted on the same host (so as to restore an old state of the collection), it is enough.
 @item 
-If we move master to a new host or one other host from the collection, all slaves will have to re-subscribe :
+If we move the git bare repository to another host, all hosts will have to re-subscribe :
 @example
 # mediatex adm add coll @var{MDTX}-@var{COLL}@@@var{NEW-MASTER}
 @end example
