@@ -91,7 +91,7 @@ main(int argc, char** argv)
 
   /************************************************************************/
   // !!! remind to protect \" in cmdline
-  if (!getCommandLine(argc, argv, optind)) goto error;
+  getCommandLine(argc, argv, optind);
 
   shell_lex_init(&scanner);
   buffer = shell__scan_string(env.commandLine, scanner);

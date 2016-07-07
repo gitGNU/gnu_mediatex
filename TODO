@@ -1,19 +1,23 @@
 
+*** DONE
+
+- mediatex.c: segfault when empty command line
+- device.c:86 chdir fails to comes backs if no persmission (add message)
+- scp extract fails when server just added (add message)
+- mediatexd.c: remove ~mdtx/tmp/mdtx-coll/* content when exiting
+
 *** TO TEST
 
 *** BUG
 
-- device.c:86 chdir fails when done from root home as non root
-
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- mediatexd.c: remove ~mdtx/tmp/ content when exiting
-- cache::loadCache() do not need to load extraction metadata
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- cache::loadCache() do not need to load extraction metadata
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?

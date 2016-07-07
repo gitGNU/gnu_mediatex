@@ -533,6 +533,13 @@ mdtxScp(char* label, char* fingerPrint, char* source, char* target)
   if (!(coll = mdtxGetCollection(label))) goto error;
   if (!loadCollection(coll, SERV)) goto error;
   if (!(server = getServer(coll, fingerPrint))) goto error2;
+  
+  // maybe server was justed added (mediatex add key)
+  if (isEmptyString(server->host)) {
+    logMain(LOG_WARNING, "server still have no hostname: %s", 
+	    fingerPrint);
+    goto error;
+  }
 
   if (!(argv[1] = createString(server->user))
       || !(argv[1] = catString(argv[1], "@"))

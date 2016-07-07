@@ -84,6 +84,8 @@ getAbsolutePath(char* path)
     // cd back to the previous current directory 
     if (chdir(pwd1)) {
       logMisc(LOG_ERR, "chdir %s: %s", path, strerror(errno));
+      logMisc(LOG_ERR, "Please, move into a directory you are allowed"
+	      "to come back and retry");      
       goto error;
     }
    

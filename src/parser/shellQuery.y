@@ -288,6 +288,7 @@ query: shellADMIN admConfQuery
 	  mediatex srv notify 
 	  mediatex src deliver */
      | apiQuery
+     | /* empty query*/
         
 apiQuery: apiSuppQuery
         /* mediatex add supp SUPP to all
@@ -891,17 +892,12 @@ parseShellQuery(int argc, char** argv, int optind)
   void* buffer = 0;
   yyscan_t scanner;
   Collection* coll = 0;
-  UploadParams upParam;
+  UploadParams upParam = {0, 0, 0};
 
   logParser(LOG_DEBUG, "parseShellQuery");
-  if (!getCommandLine(argc, argv, optind)) {
-    rc = TRUE; // no query
-    goto error;
-  }
-
-  memset(&upParam, 0, sizeof(UploadParams));
   if (!(upParam.upFiles = createRing())) goto error;
-  
+  getCommandLine(argc, argv, optind);
+
   // initialise parser
   if (shell_lex_init(&scanner)) {
     logParser(LOG_ERR, "shell_lex_init fails");

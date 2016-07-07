@@ -144,11 +144,11 @@ To do so:
 @item 
 it isn't using @acronym{SGBD} to handle meta-data but text files.
 @item 
-it doesn't do mirroring replication (@acronym{rsync}), but share caches locally and acces them remotely (read only).
+it doesn't do mirroring replication (@acronym{rsync}), but share caches locally and access them remotely (read only).
 @item 
 is not a @acronym{PHP} application but build a static @acronym{WEB} site and provides a @acronym{CGI} application based on a @acronym{C} library. (@pxref{Portail})
 @item 
-is not based on a replicated @acronym{SGBD} but a @acronym{GIT} repository.
+is not based on a replicated @acronym{SGBD} but on a @acronym{GIT} repository.
 @item 
 it doesn't provide dynamic search. To do it you first have to export the meta-data into a database using the @acronym{C} library.
 (@pxref{Linking})

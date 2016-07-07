@@ -211,7 +211,6 @@ line: recordTYPE recordDATE recordHASH recordHASH recordSIZE recordPATH
   }
   */
   if (!(server = addServer(recordTree->collection, $3))) {
-    logParser(LOG_ERR, "unknown server: %s", $3);
     YYERROR;
   }
 

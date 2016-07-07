@@ -185,7 +185,7 @@ makeDir(char* base, char* path, mode_t mode)
  * Description: remove directories recursively if not empty
  * Synopsis   : int removeDir(char* path) 
  * Input      : char* base = directory path to not remove
- *              char* path = directory path to build (including base)
+ *              char* path = directory path to remove (including base)
  * Output     : path is modified: '/' are replaced by '\0'
  *              TRUE on success
  =======================================================================*/

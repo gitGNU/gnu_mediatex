@@ -164,7 +164,7 @@ hupManager()
   if (!expandConfiguration()) goto error;
   
   // for all collection
-  conf = getConfiguration();
+  if (!(conf = getConfiguration())) goto error;
   if (conf->collections) {
     while ((coll = rgNext_r(conf->collections, &curr))) {
       if (!loadCache(coll)) goto error;
@@ -294,6 +294,56 @@ socketJob(void* arg)
 
   socketJobEnds(con);
   return (void*)rc;
+}
+
+/*=======================================================================
+ * Function   : cleanTmpDirOnExit
+ * Description: call rm -fr ~mdtx/tmp/'*'
+ * Synopsis   : cleanTmpDirOnExit
+ * Input      : char* source: source path
+ *              char* target: destination path
+ * Output     : TRUE on success
+ * Note       : we need to load bash in order to use the '*'
+ =======================================================================*/
+int 
+cleanTmpDirOnExit()
+{
+  int rc = FALSE;
+  char* argv[] = {"/bin/bash", "-c", 0, 0};
+  char *cmd = 0;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+
+  logMain(LOG_DEBUG, "cleanTmpDirOnExit");
+
+  if (!loadConfiguration(CFG)) goto error;
+  if (!(conf = getConfiguration())) goto error;
+
+  // for all collection
+  if (conf->collections) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
+      if (isEmptyString(coll->extractDir)) goto error;
+
+      if (!(cmd = createString("/bin/rm -fr "))) goto error;
+      if (!(cmd = catString(cmd, coll->extractDir))) goto error;
+      if (!(cmd = catString(cmd, "/*"))) goto error;
+      argv[2] = cmd;
+
+      logMain(LOG_INFO, "%s %s %s", argv[0], argv[1], argv[2]);
+      if (!env.dryRun && !execScript(argv, 0, 0, FALSE)) goto error;
+
+      cmd = destroyString(cmd);
+    }
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "cleanTmpDirOnExit fails");
+  }
+  cmd = destroyString(cmd);
+  return rc;
 }
 
 /*=======================================================================
@@ -441,7 +491,7 @@ main(int argc, char** argv)
   if (!mainLoop()) goto error3;  
   /************************************************************************/
   
-  rc = TRUE;
+  rc = cleanTmpDirOnExit();
  error3:
   if (!mdtxCall(2, "adm", "unbind")) rc = FALSE;
  error2:

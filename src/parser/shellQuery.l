@@ -411,15 +411,13 @@
 /*=======================================================================
  * Function   : getCommandLine
  * Description: scan the command line (without options)
- * Synopsis   : int getCommandLine(int argc, char** argv, int optind)
+ * Synopsis   : void getCommandLine(int argc, char** argv, int optind)
  * Input      : int argc, char** argv, int optind
  * Output     : set the commandLine global variable
- *              TRUE on success
  * Note       : remind to protect \" in cmdline
 =======================================================================*/
-int getCommandLine(int argc, char** argv, int optind)
+void getCommandLine(int argc, char** argv, int optind)
 {
-  int rc = FALSE;
   int i = 0;
   int lenght = 0;
   char* ptr = env.commandLine;
@@ -432,16 +430,9 @@ int getCommandLine(int argc, char** argv, int optind)
     *(ptr++) = ' ';
   }
   *(ptr) = (char)0;
-  if (ptr == env.commandLine) goto error;
-  logParser(LOG_DEBUG, "command line: %s", env.commandLine);
+  logParser(LOG_DEBUG, "command line: %s", 
+	    (ptr == env.commandLine)?"(empty)":env.commandLine);
   *(--ptr) = '\n';
-  rc = TRUE;
-
- error:
-  if (!rc) {
-    logParser(LOG_WARNING, "%s", "empty comand line");
-  }
-  return rc;
 } 
 
 /* Local Variables: */

@@ -35,7 +35,7 @@
 #include "client/upload.h"
 
 // parsers
-int getCommandLine(int argc, char** argv, int optind);
+void getCommandLine(int argc, char** argv, int optind);
 int parseShellQuery(int argc, char** argv, int optind);
 
 #endif /* MDTX_CLIENT_H */
