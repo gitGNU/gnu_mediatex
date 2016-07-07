@@ -235,7 +235,7 @@ uploadParam: file target
 
   if (!(upFile = createUploadFile())) YYABORT;
   if (!(upFile->source = createString($1))) YYABORT;
-  if ($2 && !(upFile->target = createString($2))) YYABORT;
+  if (*$2 && !(upFile->target = createString($2))) YYABORT;
   if (!rgInsert(upParam->upFiles, upFile)) YYABORT;
 }
            | shellCATALOG shellSTRING
