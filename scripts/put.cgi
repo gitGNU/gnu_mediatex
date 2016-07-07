@@ -29,7 +29,7 @@ use CGI;
 use CGI::Carp qw ( fatalsToBrowser );
 use File::Basename;
 
-$CGI::POST_MAX = 1024 * 5000;
+$CGI::POST_MAX = 1024 * 1024 * 1024 * 5; # 5 Go
 my $safe_filename_characters = "a-zA-Z0-9_.-";
 my $uploadDir = "/tmp/somedir";
 my $query = CGI->new; # create new CGI object
@@ -235,6 +235,13 @@ do {
 my $document=$query->param('document');
 my $documentCarac = getCarac('document');
 my $documentParent = getParent('document');
+
+# check if all ok
+if (!defined($document)) {
+    print "No good. Maybe you try to upload more than ".
+	($CGI::POST_MAX /1024 /1024) . "Mo.<br>";
+    goto error;
+}
 
 ###################################################################
 
