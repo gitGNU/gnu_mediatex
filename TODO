@@ -1,11 +1,4 @@
 
-*** DONE
-
-- mediatex.c: segfault when empty command line
-- device.c:86 chdir fails to comes backs if no persmission (add message)
-- scp extract fails when server just added (add message)
-- mediatexd.c: remove ~mdtx/tmp/mdtx-coll/* content when exiting
-
 *** TO TEST
 
 *** BUG
