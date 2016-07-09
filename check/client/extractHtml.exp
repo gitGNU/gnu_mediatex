@@ -1330,8 +1330,6 @@ HREF='<!--#echo var='HOME' -->/cache'>Cache</A></TD>
 HREF='<!--#echo var='HOME' -->/score'>Score</A></TD>
 <TD ALIGN='CENTER'><A NAME='mdtx10'
 HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
-<TD ALIGN='CENTER'><A NAME='mdtx11'
-HREF='<!--#echo var='HOME' -->/cgi/put.shtml'>Upload</A></TD>
 </TR>
 </TABLE>
 <DIV ALIGN='CENTER'>

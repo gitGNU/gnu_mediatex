@@ -43,7 +43,6 @@
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info supportFile.y] parse supports from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/supports.txt
@@ -68,8 +67,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -119,8 +116,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -142,7 +137,6 @@
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> UNUSED
@@ -155,7 +149,6 @@
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
@@ -174,8 +167,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -226,8 +217,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -293,8 +282,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -314,7 +301,6 @@
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
@@ -332,7 +318,6 @@
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
@@ -351,8 +336,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -417,8 +400,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -436,7 +417,6 @@
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> WANTED
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> USED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> WANTED
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : WANTED -> UNUSED
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : TOKEEP -> UNUSED
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> UNUSED
@@ -453,7 +433,6 @@
 [info recordFile.y] parse records
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : UNUSED -> TOKEEP
-[info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> AVAILABLE
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [info cacheTree.c] 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (score= 3.75) : TOKEEP -> TOKEEP
@@ -472,8 +451,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -536,8 +513,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted
@@ -595,8 +570,6 @@
 [notice recordTree.c] # ^ LOCAL_SUPPLY
 [notice recordTree.c] S 1970-01-01,01:00:04 746d6ceeb76e05cfa2dea92a1c5753cd 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 logoP2.iso
 [notice recordTree.c] # ^ LOCAL_SUPPLY
-[notice recordTree.c] S 1970-01-01,01:00:05 7af51aceb06864e690fa6a9e00000001 022a34b2f9b893fba5774237e1aa80ea               24075 logo.png
-[notice recordTree.c] # ^ REMOTE_SUPPLY
 [notice recordTree.c] D 1970-01-01,01:00:06 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 test@test.com
 [notice recordTree.c] # ^ FINAL_DEMAND
 [notice recordTree.c] D 1970-01-01,01:00:07 746d6ceeb76e05cfa2dea92a1c5753cd 022a34b2f9b893fba5774237e1aa80ea               24075 !wanted

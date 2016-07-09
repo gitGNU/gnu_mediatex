@@ -557,15 +557,18 @@ int
 serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
 { 
   int rc = FALSE;
+  Server* localhost = 0;
   Record *record = 0;
   AVLNode *node = 0;
   AESData* aes = 0;
+  int itIs = FALSE;
 
   checkRecordTree(self);
   logMemory(LOG_INFO, "Serializing %s record tree in file: %s", 
 	  strMessageType(self->messageType), path?path:"stdout");
 
   aes = &(self->aes);
+  if (!(localhost = getLocalHost(self->collection))) goto error;
 
   // output file to use (may already be set into aes->fd)
   if (!env.dryRun && !isEmptyString(path)) {
@@ -608,12 +611,22 @@ serializeRecordTree(RecordTree* self, char* path, char* fingerPrint)
   for (node = self->records->head; node; node = node->next) {
     record = node->item;
 
-    // usefull to comment this for debuging
-    //  (harmless but server should not serialize final-support on disk)
-    // do not serialize final-supplies on md5sum.txt file
-    if (self->messageType == DISK &&
-    	getRecordType(record) == FINAL_SUPPLY) continue;
-    
+    // cleaning some records when saving on disk
+    if (self->messageType == DISK) {
+
+      // usefull to comment this for debuging
+      //  (harmless but server should not serialize final-support on disk)
+      // do not serialize final-supplies on md5sum.txt file
+      if (getRecordType(record) == FINAL_SUPPLY) continue;
+
+      // remove record that comes from badly configured networks
+      if (getRecordType(record) == REMOTE_SUPPLY) {
+	if (!isReachable(self->collection, 
+			 localhost, record->server, &itIs)) goto error;
+	if (!itIs) continue;
+      }
+    }
+
     if (!serializeRecord(self, record)) rc = FALSE;
   }
   

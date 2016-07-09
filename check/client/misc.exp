@@ -79,6 +79,15 @@
 [info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [info misc.c] Make HTML for coll1
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach bedac32422739d7eced624ba20f5912e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach bedac32422739d7eced624ba20f5912e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 6b18ed0194b0fbadd08e0a13cccda00e
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd can reach 746d6ceeb76e05cfa2dea92a1c5753cd
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach bedac32422739d7eced624ba20f5912e
 [info extractScore.c] extraction score = 0.00
 [emerg extractScore.c] coll1 collection: Perenniality lost (0.00)
 [notice utmisc.c] *************************************************

@@ -322,7 +322,7 @@ as seen previously (@ref{Scenario 3}).
 $ mediatex make coll hello
 @end example
 
-@note{} If you accept @code{www-data} user as a @actorPublisher{}, the @acronym{HTTP} catalog provides an upload form (@pxref{HTTP}).
+@note{} If you accept @code{www-data} user as a @actorPublisher{}, the @acronym{HTTP} catalog provides an upload form (@pxref{HTTP}) accessible from the ``cache'' section.
 
 @node Scenario 5
 @section Scenario 5: add a second server

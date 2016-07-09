@@ -2,7 +2,6 @@
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
-- move Upload section in Cache on top of servers list 
 
 *** TODO MAYBE
 

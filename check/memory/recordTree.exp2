@@ -1,6 +1,8 @@
 [info recordTree.c] Serializing DISK record tree in file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
 [info recordTree.c] ignore malloc record
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach 7af51aceb06864e690fa6a9e00000001
 [info recordTree.c] Serializing DISK record tree in file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.aes
 [info recordTree.c] ignore malloc record
+[info serverTree.c] 746d6ceeb76e05cfa2dea92a1c5753cd cannot reach 7af51aceb06864e690fa6a9e00000001
 [info confTree.c] free configuration
 [info utrecordTree.c] exit on success

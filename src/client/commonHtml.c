@@ -471,15 +471,18 @@ serializeHtmlCacheHeader(Collection* coll)
   int rc = TRUE;
   ServerTree* self = 0;
   Server *server = 0;
+  Server* localhost = 0;
   RGIT* curr = 0;
-  char* path = 0;
   FILE* fd = stdout; 
+  char* path = 0;
   char url[512];
+  int itIs = FALSE;
 
   if (!(self = coll->serverTree)) goto error;
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cacheHeader.shtml"))) goto error;
   logMain(LOG_DEBUG, "serialize %s", path);
+  if (!(localhost = getLocalHost(coll))) goto error;
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
@@ -488,12 +491,16 @@ serializeHtmlCacheHeader(Collection* coll)
   if (!htmlMainHead(fd, _("Cache"))) goto error;
   if (!htmlLeftPageHead(fd, "cache")) goto error;
 
+  // server links
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr))) {
+      if (!isReachable(coll, localhost, server, &itIs)) goto error;
+      if (!itIs) continue;
+
       strcpy(url, server->url);
       strcpy(url + strlen(url), "/cache"); 
       htmlLiOpen(fd);
@@ -501,6 +508,14 @@ serializeHtmlCacheHeader(Collection* coll)
       htmlLiClose(fd);      
     }
     htmlUlClose(fd);
+  }
+
+  // upload link
+  if (!allowedUser(env.confLabel, &itIs, 33)) goto error;
+  if (itIs) {
+    strcpy(url, localhost->url);
+    strcpy(url + strlen(url), "/cgi/put.shtml");
+    htmlLink(fd, 0, url, "Upload");
   }
   
   if (!htmlLeftPageTail(fd)) goto error;
@@ -534,37 +549,51 @@ serializeHtmlCgiHeader(Collection* coll)
   int rc = TRUE;
   Configuration* conf = 0;
   ServerTree* self = 0;
+  Server* localhost = 0;
   Server *server = 0;
   RGIT* curr = 0;
+  FILE* fd = stdout;
   char* path = 0;
   char url[512];
-  FILE* fd = stdout; 
+  int itIs = FALSE;
 
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/cgiHeader.shtml"))) goto error;
   logMain(LOG_DEBUG, "serialize %s", path);
   if (!(conf = getConfiguration())) goto error;
   if (!(self = coll->serverTree)) goto error;
-  if (!getLocalHost(coll)) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
   
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
-  if (!htmlMainHeadBasic(fd, _("Cache"), coll->localhost->url))
+  if (!htmlMainHeadBasic(fd, _("Cache"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cache", coll->localhost->url))
+  if (!htmlLeftPageHeadBasic(fd, "cache", localhost->url))
     goto error;
 
+  // upload link
+  if (!allowedUser(env.confLabel, &itIs, 33)) goto error;
+  if (itIs) {
+    strcpy(url, localhost->url);
+    strcpy(url + strlen(url), "/cgi/put.shtml");
+    htmlLink(fd, 0, url, "Upload");
+  }
+
+  // server links
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr))) {
+      if (!isReachable(coll, localhost, server, &itIs)) goto error;
+      if (!itIs) continue;
+
       strcpy(url, server->url);
-      strcpy(url + strlen(url), "/cache"); 
+      strcpy(url + strlen(url), "/cache");
       htmlLiOpen(fd);
       htmlLink(fd, 0, url, server->host);
       htmlLiClose(fd);      
@@ -573,7 +602,7 @@ serializeHtmlCgiHeader(Collection* coll)
   }
   
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHeadBasic(fd, coll->localhost->url)) goto error;
+  if (!htmlRightHeadBasic(fd, localhost->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);
@@ -603,37 +632,40 @@ serializeHtmlGitHeader(Collection* coll)
   int rc = TRUE;
   Configuration* conf = 0;
   ServerTree* self = 0;
-  //Server *server = 0;
-  //RGIT* curr = 0;
+  Server* localhost = 0;
+  Server *server = 0;
+  RGIT* curr = 0;
   char* path = 0;
-  //char url[512];
+  char url[512];
   FILE* fd = stdout; 
+  int itIs = FALSE;
 
   if (!(path = createString(coll->htmlDir))) goto error;
   if (!(path = catString(path, "/gitHeader.html"))) goto error;
   logMain(LOG_DEBUG, "serialize %s", path);
   if (!(conf = getConfiguration())) goto error;
   if (!(self = coll->serverTree)) goto error;
-  if (!getLocalHost(coll)) goto error;
+  if (!(localhost = getLocalHost(coll))) goto error;
   
   if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
     logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
     goto error;
   }  
 
-  if (!htmlMainHeadBasic(fd, _("Version"), coll->localhost->url))
+  if (!htmlMainHeadBasic(fd, _("Version"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/",
-			     coll->localhost->url))
+  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/", localhost->url))
     goto error;
 
-  /*
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
     htmlUlOpen(fd);
 
     rgRewind(self->servers);
     while ((server = rgNext_r(self->servers, &curr))) {
+      if (!isReachable(coll, localhost, server, &itIs)) goto error;
+      if (!itIs) continue;
+
       strcpy(url, server->url);
       strcpy(url + strlen(url), "/cgi/cgit.cgi/.git/"); 
       htmlLiOpen(fd);
@@ -642,10 +674,9 @@ serializeHtmlGitHeader(Collection* coll)
     }
     htmlUlClose(fd);
   }
-  */
   
   if (!htmlLeftPageTail(fd)) goto error;
-  if (!htmlRightHeadBasic(fd, coll->localhost->url)) goto error;
+  if (!htmlRightHeadBasic(fd, localhost->url)) goto error;
   
   if (!env.dryRun) {
     fclose(fd);

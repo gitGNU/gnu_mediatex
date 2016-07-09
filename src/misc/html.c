@@ -195,7 +195,6 @@ int
 htmlRightHeadBasic(FILE* fd, char* url)
 {
   int rc = FALSE;
-  int doUpload = 0;
 
   logMisc(LOG_DEBUG, "htmlRightHeadBasic");
   
@@ -212,24 +211,13 @@ htmlRightHeadBasic(FILE* fd, char* url)
 	       "<TD ALIGN='CENTER'><A NAME='mdtx9'\n"
 	       "HREF='%s/score'>Score</A></TD>\n"
 	       "<TD ALIGN='CENTER'><A NAME='mdtx10'\n"
-	       "HREF='%s/cgi/cgit.cgi/.git/'>Version</A></TD>\n",
-	       url, url, url, url)) goto error;
-
-  if (!allowedUser(env.confLabel, &doUpload, 33)) goto error;
-  if (doUpload) {
-    if (!fprintf(fd,
-		 "<TD ALIGN='CENTER'><A NAME='mdtx11'\n"
-		 "HREF='%s/cgi/put.shtml'>Upload</A></TD>\n",
-		 url)) goto error;
-  }
-  
-  if (!fprintf(fd,
+	       "HREF='%s/cgi/cgit.cgi/.git/'>Version</A></TD>\n"
 	       "</TR>\n"
 	       "</TABLE>\n"
 	       "<DIV ALIGN='CENTER'>\n"
 	       "\n"
-	       "</DIV>\n\n"
-	       )) goto error;
+	       "</DIV>\n\n",
+	       url, url, url, url)) goto error;
   
   rc = TRUE;
  error:

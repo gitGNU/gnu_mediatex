@@ -162,7 +162,7 @@ SetEnvIf Request_Protocol "^H" NO_AUTH
 @end example
 
 Default is to disallow @code{www-data} user to lunch @mediatexO queries.
-However allowing him make possible to upload files via a dedicated @acronym{cgi} script shown on the menu line of the @acronym{HTML} catalogue.
+However allowing him make possible to upload files via a dedicated @acronym{cgi} script shown on ``cache'' section of the @acronym{HTML} catalogue.
 @example
 # mediatex adm add user www-data
 $ mediatex make
