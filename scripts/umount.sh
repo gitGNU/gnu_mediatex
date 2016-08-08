@@ -28,7 +28,7 @@ set -e
 [ -z $libdir ] && libdir=$srcdir/lib
 [ ! -z $MDTX_SH_INCLUDE ]  || source $libdir/include.sh
 
-Debug "mount"
+Debug "umount"
 [ $(id -u) -eq 0 ] || Error "need to be root"
 [ ! -z "$1" ] || Error "please provide a relative path where to umount"
 MNT=$1
