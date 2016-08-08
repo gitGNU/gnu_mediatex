@@ -35,7 +35,6 @@ struct Archive
   // not easy to parse into uchar[16]
   char  hash[MAX_SIZE_MD5+1]; 
   int   id;  // id used to serialize html pages
-  int   tag; // dedicated for external use
 
   // off_t must be 64bit to manage CDRom size
   // (_FILE_OFFSET_BITS set to 64 by mediatex.h)

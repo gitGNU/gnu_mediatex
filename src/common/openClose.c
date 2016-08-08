@@ -1165,6 +1165,9 @@ clientDiseaseAll()
     if (!(coll->memoryState & EXPANDED)) continue;
     if (!saveCollection(coll, CTLG|EXTR|SERV)) goto error;
     if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
+
+    // reset archive's html ids
+    coll->maxId = 0;
   }
 
   rc = TRUE;

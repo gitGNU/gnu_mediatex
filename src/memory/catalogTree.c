@@ -1025,7 +1025,7 @@ serializeCatalogTree(Collection* coll, CvsFile* fd)
 
   fd->print(fd, "# Humans:\n\n");
   if (avl_count(self->humans)) {
-    for(node = self->humans->head; node; node = node->next) {
+    for (node = self->humans->head; node; node = node->next) {
       human = (Human*)node->item;
       if (!serializeHuman(human, fd)) goto error;
     }
@@ -1033,7 +1033,7 @@ serializeCatalogTree(Collection* coll, CvsFile* fd)
 
   fd->print(fd, "# Archives:\n\n");
   if (avl_count(coll->archives)) {
-    for(node = coll->archives->head; node; node = node->next) {
+    for (node = coll->archives->head; node; node = node->next) {
       archive = (Archive*)node->item;
       if (!isEmptyRing(archive->assoCaracs)) {
 	if (!serializeCatalogArchive(archive, fd)) goto error;
@@ -1043,7 +1043,7 @@ serializeCatalogTree(Collection* coll, CvsFile* fd)
 
   fd->print(fd, "# Documents:\n\n");
   if (avl_count(self->documents)) {
-    for(node = self->documents->head; node; node = node->next) {
+    for (node = self->documents->head; node; node = node->next) {
       document = (Document*)node->item;
       if (!serializeDocument(document, fd)) goto error;
     }
@@ -2234,7 +2234,7 @@ diseaseCatalogTree(Collection* coll)
   Carac* carac = 0;
   Role* role = 0;
   AVLNode *node = 0;
-  //int i = 0;
+  int i = 0;
 
   if(coll == 0) goto error;
   if((self = coll->catalogTree) == 0) goto error;
@@ -2270,6 +2270,11 @@ diseaseCatalogTree(Collection* coll)
   // try to disease archives
   if (!diseaseArchives(coll)) goto error;
 
+  // reset html ids
+  for (i=0; i<CTYPE_MAX; ++i) {
+    self->maxId[i] = 0;
+  }
+  
   rc = TRUE;
  error:
   if (!rc) {

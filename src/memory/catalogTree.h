@@ -43,7 +43,6 @@ struct AssoCarac
 struct Role
 {
   int       id;    // role_ID.html pages
-  //int       tag;   // dedicated for external use
   char*     label;
   AVLTree*  assos; // AssoRole*
 
@@ -61,7 +60,6 @@ struct AssoRole
 struct Category
 {
   int      id;         // ID fo html pages
-  //int      tag;        // dedicated for external use
   char*    label;
   int      show;       // if we display it in the html index or not
 
@@ -75,7 +73,6 @@ struct Category
 struct Human
 {
   int    id;         // ID fo html pages
-  //int    tag;        // dedicated for external use
   char*  firstName;
   char*  secondName;
 
@@ -87,7 +84,6 @@ struct Human
 struct Document
 {
   int    id;         // ID fo html pages
-  //int    tag;        // dedicated for external use
   char*  label;
 
   RG*    categories; // Category*
