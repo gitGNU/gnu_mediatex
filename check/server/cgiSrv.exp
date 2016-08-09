@@ -6,10 +6,10 @@
 [notice utcgiSrv.c] -------------------------------------------------------
 [notice utcgiSrv.c] 1) try to extract the demand
 [notice utcgiSrv.c] .......................................................
-[info openClose.c] estimate 95 steps for load
-[info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
+[info openClose.c] estimate 95 steps for load
+[info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] steps: 0 / 95
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice extract.c] de5008799752552b7963a2670dc5eb18:391168 not found

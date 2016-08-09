@@ -168,13 +168,14 @@ cgiServer(Connexion* connexion)
   // only process the first archive
   if (!(record = connexion->message->records->head->item)) goto error;
   if (!(archive = record->archive)) goto error;
-  if (!lockCacheRead(coll)) goto error;
+  if (!loadCollection(coll, CACH)) goto error;
+  if (!lockCacheRead(coll)) goto error2;
 
   // Cgi-server handle 2 calls:
   if (isEmptyString(record->extra) || !strncmp(record->extra, "!w", 2)) {
 
     // case1: query without mail => try to extract archive
-    if (!extractCgiArchive(coll, archive, &found)) goto error2;
+    if (!extractCgiArchive(coll, archive, &found)) goto error3;
     if (!found) {
       sprintf(connexion->status, status[0], archive->hash, archive->size);
     }
@@ -194,18 +195,20 @@ cgiServer(Connexion* connexion)
     for (node = connexion->message->records->head; node;
 	 node = node->next) {
       record = node->item;
-      if (!(archive = record->archive)) goto error2;
-      if (!(extra = createString(record->extra))) goto error2;
+      if (!(archive = record->archive)) goto error3;
+      if (!(extra = createString(record->extra))) goto error3;
       if (!(record2 = addRecord(coll, coll->localhost, archive, 
-				DEMAND, extra))) goto error2;
+				DEMAND, extra))) goto error3;
       extra = 0;
-      if (!addCacheEntry(coll, record2)) goto error2;
+      if (!addCacheEntry(coll, record2)) goto error3;
     }
     sprintf(connexion->status, "%s", status[2]);
   }
   
   rc = TRUE;
  error2:
+  if (!releaseCollection(coll, CACH)) rc = FALSE;
+ error3:
   if (!unLockCache(coll)) rc = FALSE;
  error:
   if (!rc) {

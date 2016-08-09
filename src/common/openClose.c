@@ -337,6 +337,79 @@ collectionLoop(Collection* coll, int collFiles,
 }
 
 /*=======================================================================
+ * Function   : releaseCollection
+ * Description: Call serializer on private files
+ * Synopsis   : int releaseCollection()
+ * Input      : N/A
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+releaseColl(Collection* coll, int i)
+{
+  int rc = FALSE;
+  int err = 0;
+
+  checkCollection(coll);
+  logCommon(LOG_DEBUG, "do release %s collection (%s)", 
+	  coll->label, strCF(1<<i));
+
+  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
+    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
+    goto error;
+  }
+  
+  // in use -1
+  --coll->cptInUse[i];
+
+  // assert cpt >= 0
+  if (coll->cptInUse[i] < 0) {
+    logCommon(LOG_WARNING, "cptInUse for %s = %i !", 
+	    strCF(1<<i), coll->cptInUse[i]);
+  }
+
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    goto error;
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logCommon(LOG_ERR, "fails to do release collection");
+  }
+  return rc;
+}
+
+/*=======================================================================
+ * Function   : releaseCollection
+ * Description: Call serializer on private files
+ * Synopsis   : int releaseCollection()
+ * Input      : N/A
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+releaseCollection(Collection* coll, int collFiles)
+{
+  int rc = FALSE;
+
+  checkCollection(coll);
+  logCommon(LOG_DEBUG, "release %s collection (%s)", 
+	  coll->label, strCF(collFiles));
+
+  // force catalog to use archives from extract (assert no ophanes)
+  if (collFiles & CTLG) collFiles |= EXTR;
+
+  if (!collectionLoop(coll, collFiles, releaseColl)) goto error;
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logCommon(LOG_ERR, "fails to release collection");
+  }
+  return rc;
+}
+
+/*=======================================================================
  * Function   : loadCvsFiles
  * Description: Call the parser on shared files
  * Synopsis   : int loadCvsFiles(Collection* coll, char* base)
@@ -418,6 +491,7 @@ static int
 loadColl(Collection* coll, int fileIdx)
 {
   int rc = FALSE;
+  int nbInUse = 0;
   int err = 0;
 
   checkCollection(coll);
@@ -429,9 +503,18 @@ loadColl(Collection* coll, int fileIdx)
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
   }
-  
+
+  // in use +1
+  nbInUse = ++coll->cptInUse[fileIdx];
+
+  if ((err = pthread_mutex_unlock(&coll->mutex[fileIdx]))) {
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    goto error2;
+  }
+
   // load if needed
-  if (coll->fileState[fileIdx] == DISEASED) {
+  if (nbInUse == 1 && coll->fileState[fileIdx] == DISEASED) {
+    
     switch (fileIdx) {
     case iCTLG:
       if (!loadCvsFiles(coll, iCTLG)) goto error2;
@@ -460,14 +543,10 @@ loadColl(Collection* coll, int fileIdx)
     }
   }
   
-  // in use +1
-  ++coll->cptInUse[fileIdx];
-
   rc = TRUE;
  error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[fileIdx]))) {
-    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
-    rc = FALSE;
+  if (!rc) {
+    releaseColl(coll, fileIdx); // not in use
   }
  error:
   if (!rc) {
@@ -678,79 +757,6 @@ wasModifiedCollection(Collection* coll, int collFiles)
 }
 
 /*=======================================================================
- * Function   : releaseCollection
- * Description: Call serializer on private files
- * Synopsis   : int releaseCollection()
- * Input      : N/A
- * Output     : TRUE on success
- =======================================================================*/
-static int 
-releaseColl(Collection* coll, int i)
-{
-  int rc = FALSE;
-  int err = 0;
-
-  checkCollection(coll);
-  logCommon(LOG_DEBUG, "do release %s collection (%s)", 
-	  coll->label, strCF(1<<i));
-
-  if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
-    logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
-    goto error;
-  }
-  
-  // in use -1
-  --coll->cptInUse[i];
-
-  // assert cpt >= 0
-  if (coll->cptInUse[i] < 0) {
-    logCommon(LOG_WARNING, "cptInUse for %s = %i !", 
-	    strCF(1<<i), coll->cptInUse[i]);
-  }
-
-  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
-    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
-    goto error;
-  }
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logCommon(LOG_ERR, "fails to do release collection");
-  }
-  return rc;
-}
-
-/*=======================================================================
- * Function   : releaseCollection
- * Description: Call serializer on private files
- * Synopsis   : int releaseCollection()
- * Input      : N/A
- * Output     : TRUE on success
- =======================================================================*/
-int 
-releaseCollection(Collection* coll, int collFiles)
-{
-  int rc = FALSE;
-
-  checkCollection(coll);
-  logCommon(LOG_DEBUG, "release %s collection (%s)", 
-	  coll->label, strCF(collFiles));
-
-  // force catalog to use archives from extract (assert no ophanes)
-  if (collFiles & CTLG) collFiles |= EXTR;
-
-  if (!collectionLoop(coll, collFiles, releaseColl)) goto error;
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logCommon(LOG_ERR, "fails to release collection");
-  }
-  return rc;
-}
-
-/*=======================================================================
  * Function   : saveConfiguration
  * Description: Call serializer on private files
  * Synopsis   : int saveConfiguration()
@@ -802,7 +808,7 @@ saveConfiguration()
 /*=======================================================================
  * Function   : saveColl
  * Description: Call serializer on private files
- * Synopsis   : int saveColl()
+ * Synopsis   : int saveColl(Collection* coll, int i)
  * Input      : N/A
  * Output     : TRUE on success
  =======================================================================*/
@@ -811,6 +817,7 @@ saveColl(Collection* coll, int i)
 {
   int rc = FALSE;
   int err = 0;
+  int nbInUse = 0;
   CvsFile fd = {0, 0, 0, FALSE, 0, cvsCutOpen, cvsCutPrint};
 
   checkCollection(coll);
@@ -822,32 +829,39 @@ saveColl(Collection* coll, int i)
     goto error;
   }
 
+  nbInUse = coll->cptInUse[i];
+
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    goto error;
+  }
+  
   // save if modifyed and no more used
-  if (coll->fileState[i] == MODIFIED && coll->cptInUse[i] == 0) {
+  if (coll->fileState[i] == MODIFIED && nbInUse == 0) {
     switch (i) {
     case iCTLG:
-      if (!serializeCatalogTree(coll, &fd)) goto error2;
+      if (!serializeCatalogTree(coll, &fd)) goto error;
       coll->toCommit = TRUE;
       break;
     case iEXTR:
-      if (!serializeExtractTree(coll, &fd)) goto error2;
+      if (!serializeExtractTree(coll, &fd)) goto error;
       coll->toCommit = TRUE;
       break;
     case iSERV:
-      if (!serializeServerTree(coll)) goto error2;
+      if (!serializeServerTree(coll)) goto error;
       coll->toCommit = TRUE;
       break;
     case iCACH:
       // this must only be done by the server !
-      if (!lockCacheRead(coll)) goto error2;
+      if (!lockCacheRead(coll)) goto error;
       coll->cacheTree->recordTree->collection = coll;
       coll->cacheTree->recordTree->messageType = DISK;
       if (!serializeRecordTree(coll->cacheTree->recordTree,
-			       coll->md5sumsDB, 0)) goto error2;
-      if (!unLockCache(coll)) goto error2;
+			       coll->md5sumsDB, 0)) goto error;
+      if (!unLockCache(coll)) goto error;
       break;
     default:
-      goto error2;
+      goto error;
     }
     coll->fileState[i] = LOADED;
   }
@@ -857,18 +871,12 @@ saveColl(Collection* coll, int i)
     if (coll->fileState[i] != MODIFIED) {
       logCommon(LOG_DEBUG, "... as not modified");
     }
-    if (coll->cptInUse[i]) {
-      logCommon(LOG_DEBUG, "... as still used by %i functions", 
-	      coll->cptInUse[i]);
+    if (nbInUse) {
+      logCommon(LOG_DEBUG, "... as still used by %i functions", nbInUse);
     }
   }
 
   rc = TRUE;
- error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
-    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
-    rc = FALSE;
-  }
  error:
   if (!rc) {
     logCommon(LOG_ERR, "fails to save collection");
@@ -1045,9 +1053,9 @@ int serverSaveAll()
 }
 
 /*=======================================================================
- * Function   : diseaseCollection
+ * Function   : diseaseColl
  * Description: Release memory used to parse metadata files
- * Synopsis   : int diseaseCollection()
+ * Synopsis   : int diseaseColl(Collection* coll, int i)
  * Input      : N/A
  * Output     : TRUE on success
  =======================================================================*/
@@ -1055,6 +1063,7 @@ static int
 diseaseColl(Collection* coll, int i)
 {
   int rc = FALSE;
+  int nbInUse = 0;
   int err = 0;
 
   checkCollection(coll);
@@ -1064,25 +1073,32 @@ diseaseColl(Collection* coll, int i)
   if ((err = pthread_mutex_lock(&coll->mutex[i]))) {
     logCommon(LOG_ERR, "pthread_mutex_lock fails: %s", strerror(err));
     goto error;
-  } 
+  }
+
+  nbInUse = coll->cptInUse[i];
+
+  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
+    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
+    goto error;
+  }
   
   // disease if loaded and no more used
-  if (coll->fileState[i] == LOADED && coll->cptInUse[i] == 0) {
+  if (coll->fileState[i] == LOADED && nbInUse == 0) {
     switch (i) {
     case iCTLG:
-      if (!diseaseCatalogTree(coll)) goto error2;
+      if (!diseaseCatalogTree(coll)) goto error;
       break;
     case iEXTR:
-      if (!diseaseExtractTree(coll)) goto error2;
+      if (!diseaseExtractTree(coll)) goto error;
       break;
     case iSERV:
-      if (!diseaseServerTree(coll)) goto error2;
+      if (!diseaseServerTree(coll)) goto error;
       break;
     case iCACH:
-      if (!diseaseCacheTree(coll)) goto error2;
+      if (!diseaseCacheTree(coll)) goto error;
       break;
     default:
-      goto error2;
+      goto error;
     }
     coll->fileState[i] = DISEASED;
   }
@@ -1095,18 +1111,12 @@ diseaseColl(Collection* coll, int i)
     if (coll->fileState[i] != LOADED) {
       logCommon(LOG_DEBUG, "... as not loaded");
     }
-    if (coll->cptInUse[i]) {
-      logCommon(LOG_DEBUG, "... as still used by %i functions", 
-	      coll->cptInUse[i]);
+    if (nbInUse) {
+      logCommon(LOG_DEBUG, "... as still used by %i functions", nbInUse);
     }
   }
 
-  rc = TRUE; 
- error2:
-  if ((err = pthread_mutex_unlock(&coll->mutex[i]))) {
-    logCommon(LOG_ERR, "pthread_mutex_unlock fails: %s", strerror(err));
-    rc = FALSE;
-  }
+  rc = TRUE;
  error:
   if (!rc) {
     logCommon(LOG_ERR, "fails to disease collection");

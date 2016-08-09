@@ -733,7 +733,7 @@ int cleanCacheTree(Collection* coll)
     if (!diseaseArchive(coll, record->archive)) goto error2;  
 
     // remove the record as owned by cache->recordTree->records
-    if (!delRecord(coll, record)) goto error;
+    if (!delRecord(coll, record)) goto error2;
 
     node = next;
   }
