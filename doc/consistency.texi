@@ -9,6 +9,7 @@
 * Scenario D::          Collection user key's change.
 * Scenario E::          Host key's change.
 * Scenario F::          Server's change.
+* Scenario G::          GIT recovering.
 @end menu
 
 Some usual cases of typology modifications will follows.
@@ -245,3 +246,16 @@ If we move the git bare repository to another host, all hosts will have to re-su
 @end itemize
 
 All in all, when ``upgrade'' fails we can ever re-subscribe to re-synchronise collection.
+
+@node Scenario G
+@section GIT recovering
+
+For example, here we recover the @file{/etc/mediatex/mdtx.conf} file:
+@example
+$ mediatex su
+$ cd ~mdtx/git/mdtx
+$ git log
+$ git revert --no-commit 0766c053..HEAD
+$ vi mdtx.conf
+$ git commit -a
+@end example

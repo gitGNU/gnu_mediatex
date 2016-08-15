@@ -110,7 +110,8 @@ void extr_error(yyscan_t yyscanner, Collection* coll,
 file: stanzas
     | //empty file
 {
-  logParser(LOG_WARNING, "%s", "the extract file was empty");
+  logParser(LOG_WARNING, "the %s' extract file was empty", 
+	    coll->label);
 }
 ;
 

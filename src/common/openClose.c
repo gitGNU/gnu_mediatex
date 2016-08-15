@@ -1318,44 +1318,6 @@ clientLoop(int (*callback)(char*))
   return rc;
 }
 
-/*=======================================================================
- * Function   : serverLoop
- * Description: Execute a callback function on all collections
- * Synopsis   : int serverLoop(int (*callback)(char*))
- * Input      : void (*callback)(char*): callback function
- * Output     : TRUE on success
- =======================================================================*/
-int 
-serverLoop(int (*callback)(Collection*))
-{
-  int rc = FALSE;
-  Configuration* conf = 0;
-  Collection* coll = 0;
-  RGIT* curr = 0;
-  int isAllowed = 0;
-  
-  logCommon(LOG_DEBUG, "loop on all collections (2)");
-
-  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
-  if (!isAllowed) goto error;
-  
-  // for all collection
-  if (!loadConfiguration(CFG)) goto error;
-  conf = getConfiguration();
-  if (conf->collections) {
-    while ((coll = rgNext_r(conf->collections, &curr))) {
-      if (!callback(coll)) goto error;
-    }
-  }
-
-  rc = TRUE;
- error:
-  if (!rc) {
-    logCommon(LOG_ERR, "serverLoop fails");
-  } 
-  return rc;
-}
-
 /* Local Variables: */
 /* mode: c */
 /* mode: font-lock */

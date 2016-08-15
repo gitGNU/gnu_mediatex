@@ -258,7 +258,7 @@ void signalJobEnds()
 /*=======================================================================
  * Function   : serverManager
  * Description: Get accepted socket and call dedicated callback function
- * Synopsis   : int serverLoop(int sock, 
+ * Synopsis   : int serverManager(int sock, 
  *                                  struct sockaddr_in* address_accepted)
  * Input      : int sock = the connexion socket 
  *              struct sockaddr_in* address_accepted = the socket address
@@ -444,7 +444,8 @@ int checkMessage(Connexion* con)
    "304 message contains a record not related to author %s but %s",
    "401 fails to read message",
    "402 fails to load %s collection's serverTree",
-   "403 fails to get localhost"
+   "403 fails to get localhost",
+   "404 fails to load %s collection's cache"
   };
 
   logMain(LOG_DEBUG, "checkMessage");
@@ -460,13 +461,13 @@ int checkMessage(Connexion* con)
   }
 
   if (!loadCollection(coll, SERV)) {
-    sprintf(con->status, status[4], coll->label);
+    sprintf(con->status, status[5], coll->label);
     goto error;
   }
 
   // minimal upgrade
   if (!getLocalHost(coll)) {
-    sprintf(con->status, "%s", status[5]);
+    sprintf(con->status, "%s", status[6]);
     goto error2;
   }
   
@@ -493,7 +494,13 @@ int checkMessage(Connexion* con)
       }
     }
   }
-    
+  
+  // load md5sum file
+  if (!loadCache(coll)) {
+    sprintf(con->status, status[6], coll->label);
+    goto error2;
+  }
+
   con->server = server;
   rc = TRUE;
  error2:

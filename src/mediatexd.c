@@ -38,6 +38,45 @@
 extern int taskSocketNumber;
 extern int taskSignalNumber;
 
+/*=======================================================================
+ * Function   : serverLoop
+ * Description: Execute a callback function on all collections
+ * Synopsis   : int serverLoop(int (*callback)(char*))
+ * Input      : void (*callback)(char*): callback function
+ * Output     : TRUE on success
+ =======================================================================*/
+int 
+serverLoop(int (*callback)(Collection*))
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+  int isAllowed = 0;
+  
+  logCommon(LOG_DEBUG, "loop on all collections (2)");
+
+  if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
+  if (!isAllowed) goto error;
+  
+  // for all collection
+  if (!loadConfiguration(CFG)) goto error;
+  conf = getConfiguration();
+  if (conf->collections) {
+    while ((coll = rgNext_r(conf->collections, &curr))) {
+      if (!loadCache(coll)) goto error;
+      if (!callback(coll)) goto error;
+    }
+  }
+
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logCommon(LOG_ERR, "serverLoop fails");
+  } 
+  return rc;
+}
+
 
 /*=======================================================================
  * Function   : signalJob
@@ -154,25 +193,11 @@ int
 hupManager()
 {
   int rc = FALSE;
-  Configuration* conf = 0;
-  Collection* coll = 0;
-  RGIT* curr = 0;
 
   if (!serverSaveAll()) goto error;
   freeConfiguration();
   if (!loadConfiguration(CFG)) goto error;
   if (!expandConfiguration()) goto error;
-  
-  // for all collection
-  if (!(conf = getConfiguration())) goto error;
-  if (conf->collections) {
-    while ((coll = rgNext_r(conf->collections, &curr))) {
-      if (!loadCache(coll)) goto error;
-    }
-  }
-
-  // where to call it ? no use here because of freeConfiguration()
-  //if (!cleanCacheTree(coll)) goto error;
 
   rc = TRUE;
  error:
@@ -227,7 +252,7 @@ socketJob(void* arg)
   static char status[][32] = {
     "301 message parser error",
     "305 unknown message type: %s",
-    "400 internal error",
+    "400 internal error"
   };
 
   logMain(LOG_DEBUG, "socketJob %i", me);

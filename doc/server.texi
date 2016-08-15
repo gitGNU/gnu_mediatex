@@ -141,6 +141,7 @@ internal error
 @item 401 fails to read message
 @item 402 fails to load %s collection's serverTree
 @item 403 fails to get localhost
+@item 404 fails to load %s collection's cache
 @end table
 
 @item @procServerUpload{} messages (@code{-1-})

@@ -120,7 +120,8 @@ void cata_error(yyscan_t yyscanner, Collection* coll, Category* category,
 file: stanzas 
     | //empy file 
 {
-  logParser(LOG_WARNING, "the catalog file was empty");
+  logParser(LOG_WARNING, "the %s' catalog file was empty",
+	    coll->label);
 }
 
 stanzas: stanzas stanza

@@ -157,6 +157,7 @@ mdtxLsSupport()
   supports = conf->supports;
 
   rgRewind(supports);
+  if (!rgSort(supports, cmpSupport)) goto error;
   while ((supp = rgNext(supports))) {
     if (!scoreSupport(supp, &conf->scoreParam)) goto error;
   }
