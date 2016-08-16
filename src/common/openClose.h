@@ -42,7 +42,6 @@ int releaseCollection(Collection* coll, int collFiles);
 int saveConfiguration();
 int saveCollection(Collection* coll, int collFiles);
 int clientSaveAll();
-int serverSaveAll();
 
 int diseaseCollection(Collection* coll, int collFiles);
 int clientDiseaseAll();

@@ -39,6 +39,36 @@ extern int taskSocketNumber;
 extern int taskSignalNumber;
 
 /*=======================================================================
+ * Function   : serverSaveAll
+ * Description: Call serializer on all modified files
+ * Synopsis   : int serverSaveAll()
+ * Input      : N/A
+ * Output     : TRUE on success
+ =======================================================================*/
+static int serverSaveAll()
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  RGIT* curr = 0;
+  
+  logCommon(LOG_DEBUG, "server save all");
+  if (!(conf = env.confTree)) goto end; // nothing was loaded
+
+  while ((coll = rgNext_r(conf->collections, &curr))) {
+    if (!saveCollection(coll, CACH)) goto error;
+  }
+
+ end:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logCommon(LOG_ERR, "server fails to save all");
+  }
+  return rc;
+}
+
+/*=======================================================================
  * Function   : serverLoop
  * Description: Execute a callback function on all collections
  * Synopsis   : int serverLoop(int (*callback)(char*))
@@ -53,22 +83,46 @@ serverLoop(int (*callback)(Collection*))
   Collection* coll = 0;
   RGIT* curr = 0;
   int isAllowed = 0;
+  int* done = 0;
+  int i = 0;
   
   logCommon(LOG_DEBUG, "loop on all collections (2)");
 
   if (!allowedUser(env.confLabel, &isAllowed, 0)) goto error;
   if (!isAllowed) goto error;
   
-  // for all collection
-  if (!loadConfiguration(CFG)) goto error;
-  conf = getConfiguration();
-  if (conf->collections) {
-    while ((coll = rgNext_r(conf->collections, &curr))) {
-      if (!loadCache(coll)) goto error;
+  if (!(conf = getConfiguration())) goto error;
+  if (!(done = malloc(sizeof(int)*conf->collections->nbItems)))
+    goto error;
+  memset(done, 0, sizeof(int)*conf->collections->nbItems);
+
+  // for all already loaded collections
+  while ((coll = rgNext_r(conf->collections, &curr))) {
+
+    if (coll->fileState[iCACH] >= LOADED) {
+      logCommon(LOG_DEBUG, "do job on %s loaded collection", 
+		coll->label);
       if (!callback(coll)) goto error;
+      done[i] = TRUE;
     }
+
+    ++i;
   }
 
+  // do not force saving for collection not already loaded 
+  if (callback == saveCache) goto end;
+
+  // for all other collections
+  curr = 0; i = 0;
+  while ((coll = rgNext_r(conf->collections, &curr))) {
+    if (done[i]) continue;
+    logCommon(LOG_NOTICE, "do job on %s now loaded collection", 
+	      coll->label);
+    if (!loadCache(coll)) goto error;
+    if (!callback(coll)) goto error;
+  }
+
+  end:
   rc = TRUE;
  error:
   if (!rc) {
@@ -194,8 +248,13 @@ hupManager()
 {
   int rc = FALSE;
 
+  // save collection that was eventually loaded
   if (!serverSaveAll()) goto error;
+
+  // free all memory
   freeConfiguration();
+
+  // load only configuration (no collection yet)
   if (!loadConfiguration(CFG)) goto error;
   if (!expandConfiguration()) goto error;
 

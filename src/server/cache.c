@@ -876,19 +876,11 @@ cacheAlloc(Record** record, Collection* coll, Archive* archive)
 int saveCache(Collection* coll)
 {
   int rc = FALSE;
-  Configuration* conf = 0;
-  RGIT* curr = 0;
 
   checkCollection(coll);
   logMain(LOG_DEBUG, "saveCache on collection %s", coll->label);
-  if (!(conf = getConfiguration())) goto error;
 
-  // force writing
-  while ((coll = rgNext_r(conf->collections, &curr))) {
-    coll->fileState[iCACH] = MODIFIED;
-  }
-
-  if (!serverSaveAll()) goto error;
+  if (!saveCollection(coll, CACH)) goto error;
 
   rc = TRUE;
  error:

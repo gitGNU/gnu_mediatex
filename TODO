@@ -1,4 +1,6 @@
 
+*** BUGS
+
 *** TODO
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;

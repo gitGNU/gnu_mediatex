@@ -1023,36 +1023,6 @@ clientSaveAll()
 }
 
 /*=======================================================================
- * Function   : serverSaveAll
- * Description: Call serializer on all modified files
- * Synopsis   : int serverSaveAll()
- * Input      : N/A
- * Output     : TRUE on success
- =======================================================================*/
-int serverSaveAll()
-{
-  int rc = FALSE;
-  Configuration* conf = 0;
-  Collection* coll = 0;
-  RGIT* curr = 0;
-  
-  logCommon(LOG_DEBUG, "server save all");
-  if (!(conf = env.confTree)) goto end; // nothing was loaded
-
-  while ((coll = rgNext_r(conf->collections, &curr))) {
-    if (!saveCollection(coll, CACH)) goto error;
-  }
-
- end:
-  rc = TRUE;
- error:
-  if (!rc) {
-    logCommon(LOG_ERR, "server fails to save all");
-  }
-  return rc;
-}
-
-/*=======================================================================
  * Function   : diseaseColl
  * Description: Release memory used to parse metadata files
  * Synopsis   : int diseaseColl(Collection* coll, int i)
