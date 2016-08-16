@@ -28,7 +28,7 @@ $ git clone git://git.savannah.nongnu.org/mediatex.git
 Software requirements.
 @itemize @bullet
 @item Compilation:
-automake bison flex gettext help2man libacl1-devlibavl-dev libtool libssl-dev make texinfo transfig 
+automake bison flex gettext help2man libacl1-dev libavl-dev libtool libssl-dev make texinfo transfig 
 @c @item Info documentation:
 @c ghostscript
 @item Documentation in others format than texinfo and man (optional):

@@ -260,6 +260,8 @@ addFinalDemands(NotifyData* data)
  * Synopsis   : int addBadTopLocalSupplies(NotifyData* data)
  * Input      : NotifyData* data
  * Output     : TRUE on success
+ * Note       : support files need to be locally extracted first in
+ *              order to be remotely notifyed
  =======================================================================*/
 int 
 addBadTopLocalSupplies(NotifyData* data)
@@ -272,13 +274,13 @@ addBadTopLocalSupplies(NotifyData* data)
   coll = data->coll;
   checkCollection(coll);
   logMain(LOG_DEBUG, "addBadTopLocalSupplies");
-
+  
   // add local top containers having a bad score
   for (node = coll->cacheTree->archives->head; node; node = node->next) {
     archive = node->item;
     if (archive->state < AVAILABLE) continue;
     if (!isBadTopContainer(coll, archive)) continue;
-    
+
     logMain(LOG_INFO, "found a bad score's top container to notify:");
     logRecord(LOG_MAIN, LOG_INFO, archive->localSupply);
     if (!avl_insert(data->toNotify, archive->localSupply)) {
