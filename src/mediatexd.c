@@ -115,11 +115,15 @@ serverLoop(int (*callback)(Collection*))
   // for all other collections
   curr = 0; i = 0;
   while ((coll = rgNext_r(conf->collections, &curr))) {
-    if (done[i]) continue;
-    logMain(LOG_DEBUG, "do job on %s now loaded collection", 
+
+    if (!done[i]) {
+      logMain(LOG_DEBUG, "do job on %s now loaded collection", 
 	      coll->label);
-    if (!loadCache(coll)) goto error;
-    if (!callback(coll)) goto error;
+      if (!loadCache(coll)) goto error;
+      if (!callback(coll)) goto error;
+    }
+
+    ++i;
   }
 
   end:
