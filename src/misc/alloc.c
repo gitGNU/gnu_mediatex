@@ -114,20 +114,21 @@ void* mdtxMalloc(size_t size, char* file, int line)
 
   // free extra memory when limite is reach
   if (alloc->diseaseCallBack) {
-    while ((size2 = size + alloc->sumAllocated - alloc->limAllocated) > 0 
-	   && nbTry--) {
+    while (size + alloc->sumAllocated > alloc->limAllocated && 
+	   nbTry--) {
 
       // sleep before trying again
       if (nbTry < 3) sleep(10);
 
       logAlloc(LOG_NOTICE, file, line, "try to free some memory");
       alreadyDoingCallback = TRUE;
+      size2 = size + alloc->sumAllocated - alloc->limAllocated;
       alloc->diseaseCallBack(size2);
       alreadyDoingCallback = FALSE;
     }
 
     // refuse to allocate more memory than expected
-    if (size2 > 0) goto error;
+    if (size + alloc->sumAllocated > alloc->limAllocated) goto error;
   }
 
  checked:
