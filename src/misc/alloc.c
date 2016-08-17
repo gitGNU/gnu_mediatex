@@ -98,8 +98,6 @@ initMalloc(size_t niceLimit, int (*callback)(long))
 void* mdtxMalloc(size_t size, char* file, int line)
 {
   void* rc = 0;
-  size_t need = 0;
-  size_t prev = 0;
   size_t size2 = 0;
   Alloc* alloc = env.alloc;
 
@@ -119,31 +117,25 @@ void* mdtxMalloc(size_t size, char* file, int line)
   }
   
   // try to allocate
-  need = 0;
-  do { 
-    if ((rc = malloc(size))) break;
-    logAlloc(LOG_WARNING, file, line, 
-	     "malloc fails: %s", strerror(errno));
-    need = (need==0)?1:(need<<1);
-    prev = alloc->sumAllocated;
-  } while (alloc->diseaseCallBack(need) && prev != alloc->sumAllocated);
+  if (!(rc = malloc(size))) goto error;
 
-  if (rc) {
-    size2 = malloc_usable_size (rc);
-    pthread_mutex_lock(&alloc->mallocMutex);
-    alloc->sumAllocated += size2;
-    ++alloc->nbAlloc;
-    if (alloc->sumAllocated > alloc->maxAllocated) {
-      alloc->maxAllocated = alloc->sumAllocated;
-    }
-    pthread_mutex_unlock(&alloc->mallocMutex);
+  // remind how much was allocated
+  size2 = malloc_usable_size (rc);
+  pthread_mutex_lock(&alloc->mallocMutex);
+  alloc->sumAllocated += size2;
+  ++alloc->nbAlloc;
+  if (alloc->sumAllocated > alloc->maxAllocated) {
+    alloc->maxAllocated = alloc->sumAllocated;
+  }
+  pthread_mutex_unlock(&alloc->mallocMutex);
 
-    logAlloc(LOG_DEBUG, file, line,
-	     "malloc n%i: %i (sum= %i / lim= %i)",
-	     alloc->nbAlloc, size2, 
-	     alloc->sumAllocated, alloc->limAllocated);
-  } 
-  else {
+  logAlloc(LOG_DEBUG, file, line,
+	   "malloc n%i: %i (sum= %i / lim= %i)",
+	   alloc->nbAlloc, size2, 
+	   alloc->sumAllocated, alloc->limAllocated);
+
+ error:
+  if (!rc) {
     logAlloc(LOG_ERR, file, line, 
 	     "mdtxMalloc fails (sum= %i / lim= %i)",
 	     alloc->sumAllocated, alloc->limAllocated);
