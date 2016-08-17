@@ -100,6 +100,7 @@ void* mdtxMalloc(size_t size, char* file, int line)
   void* rc = 0;
   size_t size2 = 0;
   Alloc* alloc = env.alloc;
+  int nbTry = 3;
 
   if (!alloc) {
     setEnv("(setEnv not yet called)", &env);
@@ -108,15 +109,18 @@ void* mdtxMalloc(size_t size, char* file, int line)
   }
 
   // try to free extra memory if needed
-  if (size + alloc->sumAllocated > alloc->limAllocated) {
-    if (alloc->diseaseCallBack) {
-      logAlloc(LOG_NOTICE, file, line,
-	       "try to free some memory");
-      alloc->diseaseCallBack(size);
+  if (alloc->diseaseCallBack) {
+    while (size + alloc->sumAllocated > alloc->limAllocated && nbTry--) {
+      
+      logAlloc(LOG_NOTICE, file, line, "try to free some memory");
+      alloc->diseaseCallBack(size + alloc->sumAllocated
+			     - alloc->limAllocated);
+      if (size + alloc->sumAllocated > alloc->limAllocated) sleep(10);
     }
   }
-  
+
   // try to allocate
+  if (size + alloc->sumAllocated > alloc->limAllocated) goto error;
   if (!(rc = malloc(size))) goto error;
 
   // remind how much was allocated

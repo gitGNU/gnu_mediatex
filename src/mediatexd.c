@@ -100,7 +100,7 @@ serverLoop(int (*callback)(Collection*))
   while ((coll = rgNext_r(conf->collections, &curr))) {
 
     if (coll->fileState[iCACH] >= LOADED) {
-      logCommon(LOG_DEBUG, "do job on %s loaded collection", 
+      logMain(LOG_DEBUG, "do job on %s loaded collection", 
 		coll->label);
       if (!callback(coll)) goto error;
       done[i] = TRUE;
@@ -116,7 +116,7 @@ serverLoop(int (*callback)(Collection*))
   curr = 0; i = 0;
   while ((coll = rgNext_r(conf->collections, &curr))) {
     if (done[i]) continue;
-    logCommon(LOG_NOTICE, "do job on %s now loaded collection", 
+    logMain(LOG_DEBUG, "do job on %s now loaded collection", 
 	      coll->label);
     if (!loadCache(coll)) goto error;
     if (!callback(coll)) goto error;
