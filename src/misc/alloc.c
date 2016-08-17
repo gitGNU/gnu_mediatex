@@ -113,8 +113,13 @@ void* mdtxMalloc(size_t size, char* file, int line)
     while (size + alloc->sumAllocated > alloc->limAllocated && nbTry--) {
       
       logAlloc(LOG_NOTICE, file, line, "try to free some memory");
-      alloc->diseaseCallBack(size + alloc->sumAllocated
-			     - alloc->limAllocated);
+
+      // horrible hack as callback also need to allocate memory
+      size2 = size + alloc->sumAllocated - alloc->limAllocated;
+      alloc->limAllocated += 8*1024;
+      alloc->diseaseCallBack(size2);
+      alloc->limAllocated -= 8*1024;
+
       if (size + alloc->sumAllocated > alloc->limAllocated) sleep(10);
     }
   }

@@ -362,6 +362,10 @@ void socketJobEnds(Connexion* connexion)
   if (!env.noRegression) {
     memoryStatus(LOG_INFO, __FILE__, __LINE__);
   }
+
+  // usefull for gdb when debuging several threads. else get:
+  // Cannot get thread event message: debugger service failed
+  /* sleep(300); */
 }
 
 
