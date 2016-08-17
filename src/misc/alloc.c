@@ -118,12 +118,11 @@ void* mdtxMalloc(size_t size, char* file, int line)
 	   nbTry--) {
 
       // sleep before trying again
-      if (nbTry < 3) sleep(10);
+      if (nbTry < 2 && !env.noRegression) sleep(10);
 
       logAlloc(LOG_NOTICE, file, line, "try to free some memory");
       alreadyDoingCallback = TRUE;
-      size2 = size + alloc->sumAllocated - alloc->limAllocated;
-      alloc->diseaseCallBack(size2);
+      alloc->diseaseCallBack(size);
       alreadyDoingCallback = FALSE;
     }
 
