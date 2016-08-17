@@ -97,6 +97,7 @@ initMalloc(size_t niceLimit, int (*callback)(long))
  =======================================================================*/
 void* mdtxMalloc(size_t size, char* file, int line)
 {
+  static int alreadyDoingCallback = FALSE;
   void* rc = 0;
   size_t size2 = 0;
   Alloc* alloc = env.alloc;
@@ -108,24 +109,29 @@ void* mdtxMalloc(size_t size, char* file, int line)
     alloc = env.alloc;
   }
 
-  // try to free extra memory if needed
+  // prevent for infinite loop as callback himself call malloc
+  if (alreadyDoingCallback) goto checked;
+
+  // free extra memory when limite is reach
   if (alloc->diseaseCallBack) {
-    while (size + alloc->sumAllocated > alloc->limAllocated && nbTry--) {
-      
+    while ((size2 = size + alloc->sumAllocated - alloc->limAllocated) > 0 
+	   && nbTry--) {
+
+      // sleep before trying again
+      if (nbTry < 3) sleep(10);
+
       logAlloc(LOG_NOTICE, file, line, "try to free some memory");
-
-      // horrible hack as callback also need to allocate memory
-      size2 = size + alloc->sumAllocated - alloc->limAllocated;
-      alloc->limAllocated += 8*1024;
+      alreadyDoingCallback = TRUE;
       alloc->diseaseCallBack(size2);
-      alloc->limAllocated -= 8*1024;
-
-      if (size + alloc->sumAllocated > alloc->limAllocated) sleep(10);
+      alreadyDoingCallback = FALSE;
     }
+
+    // refuse to allocate more memory than expected
+    if (size2 > 0) goto error;
   }
 
-  // try to allocate
-  if (size + alloc->sumAllocated > alloc->limAllocated) goto error;
+ checked:
+  // allocate (should never fails under linux)
   if (!(rc = malloc(size))) goto error;
 
   // remind how much was allocated
