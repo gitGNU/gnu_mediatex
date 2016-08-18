@@ -254,6 +254,13 @@ mdtxAddFile(char* path)
   // get the absolute path of the file
   if (!(absolutePath = getAbsolutePath(path))) goto error;
 
+  // check path do not comes from mediatex's cache
+  if (!strncmp(absolutePath, CONF_CACHEDIR, strlen(CONF_CACHEDIR))) {
+    logMain(LOG_ERR, "support file must comes from outside of "
+	    "the mediatex's cache");
+    goto error;
+  }
+
   // look for this name in the support Ring
   if (!loadConfiguration(SUPP)) goto error;
   if ((supp = getSupport(absolutePath))) {
