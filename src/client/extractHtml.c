@@ -1070,7 +1070,7 @@ serializeHtmsScoreIndex(Collection* coll)
   htmlUlClose(fd);
   htmlPClose(fd);
 
-    // score parameter of the collection
+  // score parameter of the collection
   htmlPOpen(fd);
   if (!fprintf(fd, _("\nSelf-ingestion parameters:\n"))) goto error;
   htmlUlOpen(fd);
