@@ -1,5 +1,7 @@
 
-*** BUGS
+*** BUG
+
+- server with hight loverage segfault about once a week
 
 *** TODO
 

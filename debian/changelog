@@ -1,3 +1,9 @@
+mediatex (0.7-1) jessie; urgency=medium
+
+  * Correct server memory allocation
+
+ -- nroche <nroche@fred.narval.tk>  Wed, 24 Aug 2016 02:26:35 +0200
+
 mediatex (0.6-1) jessie; urgency=medium
 
   * Optimize cache policy and client speed
