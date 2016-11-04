@@ -454,6 +454,11 @@ serializeCollection(Collection* self, FILE* fd)
     printLapsTime(fd, "\t%s ", "queryTTL", self->queryTTL);
   }
 
+  if (self->motdPolicy) { // != mUNDEF
+    fprintf(fd, "%-10s %s\n", "motdPolicy",
+	    self->motdPolicy==2?"all":"most");
+  }
+  
   /* mediatex private parameters */
   fprintf(fd, "\t# --\n");
   fprintf(fd, "\tlocalhost %s\n", self->userFingerPrint); 
@@ -873,6 +878,10 @@ serializeConfiguration(Configuration* self)
   fprintf(fd, "%-10s %.2f\n", "powSupp",  self->scoreParam.powSupp);
   fprintf(fd, "%-10s %.2f\n", "factSupp", self->scoreParam.factSupp);
 
+  fprintf(fd, "\n# motd policy\n");
+  fprintf(fd, "%-10s %s\n", "motdPolicy",
+	  (self->motdPolicy==2)?"all":"most");
+  
   fprintf(fd, 
 	  "\n# The below section is also managed by MediaTeX software.\n"
 	  "# You should not edit by hand parameters bellow the -- line.\n"
@@ -1250,7 +1259,37 @@ getLocalHost(Collection* coll)
   rc = coll->localhost;
  error:
   if (rc == 0) {
-    logMemory(LOG_ERR, "fails to get localhost server object");
+    logMemory(LOG_ERR, "getLocalHost fails");
+  }
+  return rc;
+}
+
+
+/*=======================================================================
+ * Function   : getMotdPolicy(Collection* coll)
+ * Description: Get the local motd policy
+ * Synopsis   : MotdPolicy getMotdPolicy(Collection* coll)
+ * Input      : Collection* coll: 
+ * Output     : The motd policy: MOST or ALL
+ =======================================================================*/
+MotdPolicy 
+getMotdPolicy(Collection* coll)
+{
+  MotdPolicy rc = mUNDEF;
+  Configuration* conf = 0;
+  
+  if (!(conf = getConfiguration())) goto error;
+  logMemory(LOG_DEBUG, "getMotdPolicy");
+
+  if (coll->motdPolicy == mUNDEF) {
+    rc = conf->motdPolicy;
+  } else {
+    rc = coll->motdPolicy;
+  }
+  
+ error:
+  if (rc == mUNDEF) {
+    logMemory(LOG_ERR, "getMotdPolicy fails");
   }
   return rc;
 }

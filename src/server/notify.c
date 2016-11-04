@@ -24,18 +24,19 @@
 #include "mediatex-config.h"
 #include "server/mediatex-server.h"
 
-int notifyArchive(NotifyData* data, Archive* archive);
+static int notifyArchive(NotifyData* data, Archive* archive);
 
 /*=======================================================================
  * Function   : notifyContainer
  * Description: Single container notifyion
- * Synopsis   : int notifyContainer
+ * Synopsis   : static int notifyContainer(NotifyData* data, 
+ *                                         Container* container)
  * Input      : Collection* coll = context
  *              Container* container = what to notify
  * Output     : int *found = TRUE if notifyed
  *              FALSE on error
  =======================================================================*/
-int 
+static int
 notifyContainer(NotifyData* data, Container* container)
 {
   int rc = FALSE;
@@ -69,13 +70,14 @@ notifyContainer(NotifyData* data, Container* container)
 /*=======================================================================
  * Function   : notifyArchive
  * Description: Single archive notifyion
- * Synopsis   : int notifyArchive
+ * Synopsis   : static int notifyArchive(NotifyData* data, 
+ *                                       Archive* archive)
  * Input      : Collection* coll = context
  *              Archive* archive = what to notify
  * Output     : int *found = TRUE if notifyed
  *              FALSE on error
  =======================================================================*/
-int 
+static int
 notifyArchive(NotifyData* data, Archive* archive)
 {
   int rc = FALSE;
@@ -121,11 +123,11 @@ notifyArchive(NotifyData* data, Archive* archive)
 /*=======================================================================
  * Function   : getWantedRemoteArchives
  * Description: copy all remotely wanted archives into a ring
- * Synopsis   : RG* getWantedArchives(Collection* coll)
+ * Synopsis   : static RG* getWantedArchives(Collection* coll)
  * Input      : Collection* coll
  * Output     : a ring of arhives, 0 o error
  =======================================================================*/
-RG* 
+static RG*
 getWantedRemoteArchives(Collection* coll)
 {
   RG* rc = 0;
@@ -168,11 +170,11 @@ getWantedRemoteArchives(Collection* coll)
 /*=======================================================================
  * Function   : addFinalDemands
  * Description: Add final demands to the message to send
- * Synopsis   : int addFinalDemands(NotifyData* data)
+ * Synopsis   : static int addFinalDemands(NotifyData* data)
  * Input      : NotifyData* data
  * Output     : TRUE on success
  =======================================================================*/
-int 
+static int
 addFinalDemands(NotifyData* data)
 {
   int rc = FALSE;
@@ -202,7 +204,7 @@ addFinalDemands(NotifyData* data)
 	logMain(LOG_INFO, "found a final demand to notify:");
 	logRecord(LOG_MAIN, LOG_INFO, record);
 	if (!(extra = createString("!wanted"))) goto error;
-	if (!(demand = newRecord(coll->localhost, archive, DEMAND, extra))) 
+	if (!(demand = newRecord(localhost, archive, DEMAND, extra))) 
 	  goto error;
 	extra = 0;
 	if (!avl_insert(data->toNotify, demand)) {
@@ -218,7 +220,7 @@ addFinalDemands(NotifyData* data)
     }
 
     // if localhost is a gateway...
-    if (isEmptyRing(coll->localhost->gateways)) continue;
+    if (isEmptyRing(localhost->gateways)) continue;
 
     // ...relay NAT client's final demand too (as our)
     curr = 0;
@@ -229,7 +231,7 @@ addFinalDemands(NotifyData* data)
 	logMain(LOG_INFO, "found a remote demand to manage:");
 	logRecord(LOG_MAIN, LOG_INFO, record);
 	if (!(extra = createString("!wanted"))) goto error;
-	if (!(demand = newRecord(coll->localhost, record->archive,
+	if (!(demand = newRecord(localhost, record->archive,
 				 DEMAND, extra))) 
 	  goto error;
 	extra = 0;
@@ -257,13 +259,13 @@ addFinalDemands(NotifyData* data)
 /*=======================================================================
  * Function   : addBadTopLocalSupplies
  * Description: Check for top containers having bad score (as iso)
- * Synopsis   : int addBadTopLocalSupplies(NotifyData* data)
+ * Synopsis   : static int addBadTopLocalSupplies(NotifyData* data)
  * Input      : NotifyData* data
  * Output     : TRUE on success
  * Note       : support files need to be locally extracted first in
  *              order to be remotely notifyed
  =======================================================================*/
-int 
+static int
 addBadTopLocalSupplies(NotifyData* data)
 {
   int rc = FALSE;
@@ -300,14 +302,137 @@ addBadTopLocalSupplies(NotifyData* data)
 } 
 
 /*=======================================================================
+ * Function   : askForLocalImage
+ * Description: add a demand for an image not already handle locally
+ * Synopsis   : static int askForLocalImage(NotifyData* data, 
+ *                                          Archive* archive)
+ * Input      : NotifyData* data
+ *            : Archive* archive
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+askForLocalImage(NotifyData* data, Archive* archive)
+{
+  int rc = FALSE;
+  Collection* coll = 0;
+  Server* localhost = 0;
+  Image* image = 0;
+  Record* demand = 0;
+  RGIT* curr = 0;
+  char* extra = 0;
+
+  coll = data->coll;
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "%s", "askForImage");
+  localhost = coll->localhost;
+
+  // check no local image matchs the on provided
+  while ((image = rgNext_r(localhost->images, &curr))) {
+    if (image->archive == archive) break;
+  }
+  if (image) goto end;
+
+  // add demand for an image to burn locally:
+  if (!(extra = createString("!wanted"))) goto error;
+  if (!(demand = newRecord(localhost, archive, DEMAND, extra)))
+    goto error;
+  
+  logMain(LOG_INFO, "%s", "add demand for an image to burn locally:");
+  logRecord(LOG_MAIN, LOG_INFO, demand);
+  extra = 0;
+  if (!avl_insert(data->toNotify, demand)) {
+    if (errno != EEXIST) {
+      logMain(LOG_ERR, "fails to add record");
+      goto error;
+    }
+    destroyRecord(demand);
+  }
+  demand = 0;
+
+ end:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "askForImage fails");
+  }
+  destroyRecord(demand);
+  return rc;
+}
+  
+/*=======================================================================
+ * Function   : addMotdPolicyAll
+ * Description: Ask for top containers not already burned locally
+ * Synopsis   : static int addMotdAll(NotifyData* data)
+ * Input      : NotifyData* data
+ * Output     : TRUE on success
+ =======================================================================*/
+static int
+addMotdPolicyAll(NotifyData* data)
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Collection* coll = 0;
+  Archive* archive = 0;
+  Server* localhost = 0;
+  Container* container = 0;
+  FromAsso* fromAsso = 0;
+  AVLNode* node = 0;
+  RGIT* curr = 0;
+
+  coll = data->coll;
+  checkCollection(coll);
+  logMain(LOG_DEBUG, "addMotdAll");
+  if (!(conf = getConfiguration())) goto error;
+
+  // ask other servers to provides supports only if motd policy is all
+  if (getMotdPolicy(coll) != ALL) goto end;
+  if (!(localhost = getLocalHost(coll))) goto error; 
+  
+  // add local top containers not handle as local supports
+
+  // look into incomings (that may be safe archive [*])
+  container = coll->extractTree->incoming;
+  for (node = container->childs->head; node; node = node->next) {
+      fromAsso = node->item;
+      if (isIncoming(coll, fromAsso->archive)) continue; // [*]
+
+      logMain(LOG_INFO, "%s", "ask for local image (from incoming)");
+      if (!askForLocalImage(data, fromAsso->archive)) goto error;
+  }
+
+  // look into containers from extractTree
+  for (node = coll->extractTree->containers->head;
+       node; node = node->next) {
+    container = node->item;
+
+    // for all top parents
+    curr = 0;
+    while ((archive = rgNext_r(container->parents, &curr))) {
+      if (archive->fromContainers->nbItems) continue;
+
+      logMain(LOG_INFO, "%s", "ask for local image");
+      if (!askForLocalImage(data, archive)) goto error;
+    }
+  }
+
+ end:
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "addMotdPolicyAll fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
  * Function   : buildNotifyRings
  * Description: build records to send (local supplies + local demands)
- * Synopsis   : RG* buildNotifyRings(Collection* coll, RG* records)
+ * Synopsis   : static RG* buildNotifyRings(Collection* coll, RG* records)
  * Input      : Collection* coll
  *              RG* records: the record's ring to push into
  * Output     : TRUE on success
  =======================================================================*/
-int
+static int
 buildNotifyRings(Collection* coll, AVLTree* records)
 {
   int rc = FALSE;
@@ -329,12 +454,15 @@ buildNotifyRings(Collection* coll, AVLTree* records)
     if (!notifyArchive(&data, archive)) goto error;
   }
 
-  // next, add final demands (on localserver)
+  // next, ask for final demands (on localserver)
   if (!addFinalDemands(&data)) goto error;
 
-  // and, add top archives with bad score
+  // tels top archives with bad score
   if (!computeExtractScore(data.coll)) goto error;
   if (!addBadTopLocalSupplies(&data)) goto error;
+
+  // ask for top archives not already burned locally
+  if (!addMotdPolicyAll(&data)) goto error;
 
   rc = TRUE;
  error:
@@ -348,16 +476,15 @@ buildNotifyRings(Collection* coll, AVLTree* records)
 /*=======================================================================
  * Function   : sendRemoteNotifyServer
  * Description: Notify a server about a collection
- * Synopsis   : int sendRemoteNotify(Server* server, 
- *                                   RecordTree* recordTree,
- *                                   Server* server
+ * Synopsis   : static int sendRemoteNotify(Server* server, 
+ *                                RecordTree* recordTree, Server* origin)
  * Input      : Collection* collection
  *              Server* server = server to call
  *              RecordTree* recordTree = content to send
  *              Server* origin = overriding caller (when Nat)
  * Output     : TRUE on success
  =======================================================================*/
-int 
+static int
 sendRemoteNotifyServer(Server* server, RecordTree* recordTree, 
 		       Server* origin)
 {
@@ -500,7 +627,7 @@ int acceptRemoteNotify(Connexion* connexion)
   if (!(localhost = getLocalHost(coll))) goto error2;
   
   // first: if localhost is a gateway...
-  if (!isEmptyRing(coll->localhost->gateways)) {
+  if (!isEmptyRing(localhost->gateways)) {
     curr = 0;
 
     // ...forward the message to the Nat clients

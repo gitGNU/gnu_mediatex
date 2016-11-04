@@ -140,13 +140,9 @@ main(int argc, char** argv)
   string = 0;
   if (!addCacheEntry(coll, record)) goto error;
   record = 0;
- 
-  // test 1
-  logMain(LOG_INFO, "** Test 1");
-  if (!updateMotd()) goto error;
 
-  // test 2: test alphabetic order on supports
-  logMain(LOG_INFO, "** Test 2");
+  // test 1: test alphabetic order on supports
+  logMain(LOG_INFO, "** Test 1");
   sprintf(path, "%s/logoP1.iso", inputRep);
   if (!mdtxAddSupport("AAA", path)) goto error;
   if (!mdtxAddSupport("ZZZ", path)) goto error;

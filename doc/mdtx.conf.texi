@@ -94,6 +94,9 @@ badScore   1.00
 powSupp    2.00
 factSupp   2.00
 
+# motd policy
+motdPolicy most
+
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: 89ff8cc8968fac6bc456757ce563b0b4)
@@ -127,6 +130,7 @@ collectionLine: SHARE supports
               | CACHESIZE number SIZE
               | CACHETTL number TIME
               | QUERYTTL number TIME
+              | MOTDPOLICY (most|all)
 
 supports: supports , support
         | support
@@ -151,6 +155,7 @@ confLine: HOST string
        | BADSCORE score
        | POWSUPP score
        | FACTSUPP score
+       | MOTDPOLICY (most|all)
 
 networks: networks , network
         | network

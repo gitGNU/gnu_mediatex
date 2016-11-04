@@ -45,6 +45,9 @@ typedef enum {iCTLG=0, iEXTR=1, iSERV=2, iCACH=3} CollFileIdx;
 typedef enum {CTLG=1, EXTR=2, SERV=4, CACH=8} CollFile;
 typedef enum {DISEASED=0, LOADED=1, MODIFIED=2} FileState;
 
+// Motd policy : Most/All
+typedef enum {mUNDEF=0, MOST=1, ALL=2} MotdPolicy;
+
 struct Collection {
 
   /* from configuration file: mediatex.conf */
@@ -58,9 +61,10 @@ struct Collection {
   off_t  cacheSize; // maximum size for cache
   time_t cacheTTL;  // time to live for target files in cache
   time_t queryTTL;  // time to live for queries in memory
+  MotdPolicy motdPolicy; // retrieve all images locally or not (default)
 
   /* objects */
-  Server* localhost;
+  Server* localhost; // set by common/upgrade.c or getLocalHost()
 
   /* avl tree */
   AVLTree* archives; // all archives share by trees (Archive*)
@@ -144,6 +148,7 @@ struct Configuration {
   time_t checkTTL;  // time period between 2 md5 checks on supports
   time_t fileTTL;   // time period between 2 md5 checks on support files
   ScoreParam scoreParam; // parameter use to compute score
+  MotdPolicy motdPolicy; // retrieve all images locally or not (default)
 
   /* keys (not parsed from the configuration file) */
   char* hostKey;  // /etc/ssh/ssh_host_dsa.pub content
@@ -212,7 +217,8 @@ int delSupportFromCollection(Support* support, Collection* coll);
 char* addNetwork(char *label);
 int addNetworkToRing(RG* ring, char *label);
 Server* getLocalHost(Collection* coll);
-
+MotdPolicy getMotdPolicy(Collection* coll);
+  
 #endif /* MDTX_MEMORY_CONF_H */
 
 /* Local Variables: */

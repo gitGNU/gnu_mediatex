@@ -6,12 +6,14 @@ and the archives that needs to be put on external supports to be safe.
 
 Process conceptual model:
 
-@process{Motd} use 2 options defined into the  @dataConf{} file:
+@process{Motd} use 3 options defined into the  @dataConf{} file:
 @table @code
 @item checkTTL 
 The time interval we have to re-check supports before @mediatexO{} considers them obsolete (In this case, scores are impacted now ; but you ever can provide the support after and recover your previous scores).
 @item fileTTL
 Twice the time interval @mediatexO{} will automatically re-check support's files.
+@item motdPolicy
+Set to ``All'' if all images must be retrieve localy. Default is 'Most' to only retrieve localy images having a bad score.
 @end table
 
 @image{mediatex-figures/motd,,,,}

@@ -280,6 +280,7 @@ scoreLocalImages(Collection* coll)
   Image* image2 = 0;
   Image* image3 = 0;
   int nbSupp = 0;
+  RGIT* curr = 0;
 
   checkCollection(coll);
   logCommon(LOG_DEBUG, "scores for %s collection", coll->label);
@@ -289,8 +290,8 @@ scoreLocalImages(Collection* coll)
   serverTree = coll->serverTree;
 
   // for each support names:
-  rgRewind(coll->supports);
-  while ((supp = rgNext(coll->supports))) {
+  curr = 0;
+  while ((supp = rgNext_r(coll->supports, &curr))) {
  
     // compute score on support (using collection's parameters)
     if (!scoreSupport(supp, &serverTree->scoreParam)) goto error;

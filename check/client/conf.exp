@@ -114,6 +114,9 @@ badScore   1.00
 powSupp    2.00
 factSupp   2.00
 
+# motd policy
+motdPolicy most
+
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
@@ -181,6 +184,9 @@ maxScore   10.00
 badScore   1.00
 powSupp    2.00
 factSupp   2.00
+
+# motd policy
+motdPolicy most
 
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.
@@ -255,6 +261,9 @@ badScore   1.00
 powSupp    2.00
 factSupp   2.00
 
+# motd policy
+motdPolicy most
+
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
@@ -323,6 +332,9 @@ badScore   1.00
 powSupp    2.00
 factSupp   2.00
 
+# motd policy
+motdPolicy most
+
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.
 # (host fingerprint: f3e8a2cfcf01e5779608583de63cdc42)
@@ -390,6 +402,9 @@ maxScore   10.00
 badScore   1.00
 powSupp    2.00
 factSupp   2.00
+
+# motd policy
+motdPolicy most
 
 # The below section is also managed by MediaTeX software.
 # You should not edit by hand parameters bellow the -- line.

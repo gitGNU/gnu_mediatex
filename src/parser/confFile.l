@@ -209,6 +209,10 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
     return(confCOMMENT);
   }
 
+  motdPolicy {
+    return(confMOTDPOLICY);
+  }
+  
   /* stanzas */
 
   coll(ection)? {
@@ -303,6 +307,16 @@ COLL           [^\r\n[:blank:]:\-@]{1,20}
   s(econd)? {
     yylval->time = 1;
     return(confTIME);
+  }
+
+  most {
+    yylval->time = 1;
+    return(confNUMBER);
+  }
+  
+  all {
+    yylval->time = 2;
+    return(confNUMBER);
   }
  }
 

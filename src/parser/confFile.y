@@ -116,6 +116,7 @@ void conf_error(yyscan_t yyscanner, Collection* coll,
 %token          confAROBASE
 %token          confMINUS
 %token          confENDBLOCK
+%token          confMOTDPOLICY
 
 %token <string> confSTRING
 %token <number> confNUMBER
@@ -179,6 +180,11 @@ collectionLine: confSHARE supports
 {
   logParser(LOG_DEBUG, "line %-3i %s", LINENO, "query TTL");
   coll->queryTTL = $2*$3;
+}
+              | confMOTDPOLICY confNUMBER
+{
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "motd policy");
+  coll->motdPolicy = $2;
 }
 ;
 
@@ -283,6 +289,11 @@ confLine: confHOST confSTRING
 {
   logParser(LOG_DEBUG, "line %-3i %s", LINENO, "score: fact supp");
   getConfiguration()->scoreParam.factSupp = $2;
+}
+       | confMOTDPOLICY confNUMBER
+{
+  logParser(LOG_DEBUG, "line %-3i %s", LINENO, "motd policy");
+  getConfiguration()->motdPolicy = $2;
 }
 ;
 

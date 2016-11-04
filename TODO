@@ -1,10 +1,23 @@
 
+*** DONE
+
+- add attribute motd=(most|all) into mediatex.conf
+
+*** TEST
+
+- addapt notify to ask for images on ALL motd's policy
+- addapt motd a) : motd archive maching ALL motdPolicy
+- addapt motd b) : motd redondant support already burned
+
 *** BUG
 
 - server with hight loverage segfault about once a week
 
 *** TODO
 
+- document motd output
+- add cmpArchiveQuick() that check pointers
+- remove back link into ardsm
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 
 *** TODO MAYBE

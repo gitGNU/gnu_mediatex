@@ -217,6 +217,9 @@ main(int argc, char** argv)
     case confTIME:
       strcpy(token, "TIME");
       break;
+    case confMOTDPOLICY:
+      strcpy(token, "MOTDPOLICY");
+      break;
 
     case 0:
       strcpy(token, "EOF");
