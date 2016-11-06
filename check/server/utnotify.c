@@ -165,11 +165,22 @@ main(int argc, char** argv)
 
   utLog("%s", "we have :", coll);
   if (!sendRemoteNotify(coll)) goto error;
+  
+  utLog("%s", "Clean the cache:", 0);
+  if (!utCleanCaches()) goto error;
+  
+  // 2) test sending message having motdPolicy=All
+  utLog("%s", "*** test sending message having motdPolicy=All:", 0);
+  coll->motdPolicy = ALL;
+
+  utLog("%s", "we have :", coll);
+  if (!sendRemoteNotify(coll)) goto error;
 
   utLog("%s", "Clean the cache:", 0);
   if (!utCleanCaches()) goto error;
-
-  // 2) test receiving message
+  coll->motdPolicy = MOST;
+  
+  // 3) test receiving message
   utLog("%s", "*** test receiving message:", 0);
   utLog("%s", "Build message:", 0);
   if (!(connexion = utConnexion(coll, NOTIFY, server1))) goto error;

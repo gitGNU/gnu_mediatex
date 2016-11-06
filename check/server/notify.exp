@@ -102,6 +102,100 @@
 [notice utnotify.c] .......................................................
 [notice utFunc.c] clean cache for all collections
 [notice utnotify.c] -------------------------------------------------------
+[notice utnotify.c] *** test sending message having motdPolicy=All:
+[notice utnotify.c] .......................................................
+[notice utnotify.c] .......................................................
+[notice utnotify.c] we have :
+[notice utnotify.c] .......................................................
+[notice recordTree.c] # Collection's records:
+[notice recordTree.c] Headers
+[notice recordTree.c]   Collection coll1               
+[notice recordTree.c]   Type       UNKNOWN
+[notice recordTree.c]   Server     6b18ed0194b0fbadd08e0a13cccda00e
+[notice recordTree.c]   DoCypher   FALSE
+[notice recordTree.c] Body
+[notice recordTree.c] #                date                             host                             hash                size extra
+[notice utnotify.c] -------------------------------------------------------
+[info openClose.c] estimate 95 steps for load
+[info openClose.c] parse coll1 collection (5SX )
+[info openClose.c] steps: 0 / 95
+[info notify.c] ask for local image (from incoming)
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e b5810aba99ed0d15f1f0a073e646d5bd               25045 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 65f1464142f405dbbeeea4830c95ddd3               25600 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e f54fba7d2e070d48051ac3f8f1c2eb98               30720 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 3a04277dd1f43740a5fe17fd0ae9a5aa               24457 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e fa2b0b536bf61f61617528c474e0bf61               24973 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e d79581b67ec1932fd276dcf3b6d6db9a               24733 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 7808473c7db9a9e3493a6b61f44f8805               20480 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info notify.c] ask for local image
+[info notify.c] add demand for an image to burn locally:
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e db8b80896f7202b656913f99d438075c                4090 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
+[info recordTree.c] # Collection's records:
+[info recordTree.c] Headers
+[info recordTree.c]   Collection coll1               
+[info recordTree.c]   Type       NOTIFY
+[info recordTree.c]   Server     6b18ed0194b0fbadd08e0a13cccda00e
+[info recordTree.c]   DoCypher   FALSE
+[info recordTree.c] Body
+[info recordTree.c] #                date                             host                             hash                size extra
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e db8b80896f7202b656913f99d438075c                4090 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 7808473c7db9a9e3493a6b61f44f8805               20480 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 3a04277dd1f43740a5fe17fd0ae9a5aa               24457 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e d79581b67ec1932fd276dcf3b6d6db9a               24733 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e fa2b0b536bf61f61617528c474e0bf61               24973 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e b5810aba99ed0d15f1f0a073e646d5bd               25045 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 65f1464142f405dbbeeea4830c95ddd3               25600 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e f54fba7d2e070d48051ac3f8f1c2eb98               30720 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[info recordTree.c] D 2010-01-01,01:00:00 6b18ed0194b0fbadd08e0a13cccda00e 0a7ecd447ef2acb3b5c6e4c550e6636f              374784 !wanted
+[info recordTree.c] # ^ LOCAL_DEMAND
+[notice notify.c] localhost:11111 notified
+[err address.c] gethostbyname_r mediatex.org: Unknown host
+[err address.c] getIpFromHostname fails
+[err address.c] buildSocketAddress fails
+[err connect.c] buildServerAddress fails
+[err connect.c] connectServer fails
+[notice notify.c] cannot connect mediatex.org
+[notice utnotify.c] -------------------------------------------------------
+[notice utnotify.c] Clean the cache:
+[notice utnotify.c] .......................................................
+[notice utFunc.c] clean cache for all collections
+[notice utnotify.c] -------------------------------------------------------
 [notice utnotify.c] *** test receiving message:
 [notice utnotify.c] .......................................................
 [notice utnotify.c] -------------------------------------------------------

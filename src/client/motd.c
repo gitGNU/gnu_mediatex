@@ -308,7 +308,7 @@ updateMotdFromSupportDB(Motd* motd)
   // look for unused supports
   rgRewind(conf->supports);
   while ((support = rgNext(conf->supports))) {
-    if (isEmptyRing(support->collections)) {
+    if (isEmptyRing(support->collections)) { // not used by any collection
       if (!addMotdSupport(motd->motdDelSupports, support, 0)) goto error;
     }
   }
@@ -489,7 +489,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
       if (!strncmp(support->fullMd5sum, archive->hash, MAX_SIZE_MD5) &&
 	  support->size == archive->size) {
 	
-	// add a motd notification on support (to check)
+	// add a motd notification on support (to provide)
 	if (!addMotdSupport(motd->motdAskSupports, support, coll))
 	  goto error2;
       }
@@ -643,20 +643,22 @@ updateMotd()
     logMain(LOG_ERR, "cannot update motd from md5sumsDB");
     goto error;
   }
-
+  
   printf("\n%s\n", "*****************************");
   printf("%s\n", "Mediatex's message of the day");
   printf("%s\n", "*****************************");
+
+  /* TODO: remove supports from motd->motdDelSupports */
 
   // supports to ask for
   if (!isEmptyRing(motd->motdAskSupports)) {
     printf("Please provide theses local supports:\n");
     if (!rgSort(motd->motdAskSupports, cmpMotdSupport)) goto error;
-    while ((motdSupp = rgNext(motd->motdDelSupports))) {
+    while ((motdSupp = rgNext(motd->motdAskSupports))) {
       printf("- %s", motdSupp->support->name);
       car = ':';
       if (motdSupp->ask4periodicCheck) {
-	printf("%c %s", car, "not used");
+	printf("%c %s", car, "periodic check");
 	car = ',';
       }
       if (motdSupp->collections) {
@@ -680,8 +682,8 @@ updateMotd()
     printf("Please burn theses files:\n"); 
     while ((motdRec = rgNext(motd->motdAddRecords))) {
       if (isEmptyRing(motdRec->records)) continue;
-      rgSort(motdRec->records, cmpRecordPath);
       printf("- Collection %s:\n", motdRec->coll->label); 
+      rgSort(motdRec->records, cmpRecordPath);
       rgRewind(motdRec->records);
       while ((record = rgNext(motdRec->records))) {
 	printf(" - %s/%s (%5.2f)\n", motdRec->coll->cacheDir,
@@ -690,11 +692,16 @@ updateMotd()
     }
   }
 
+  /* TODO: check why
+     Please remove theses local supports:
+     - /HERE/misc/logoP1.iso: not used
+  */
+
   // supports to destroy
   if (!isEmptyRing(motd->motdDelSupports)) {
     printf("Please remove theses local supports:\n");
     if (!rgSort(motd->motdDelSupports, cmpMotdSupport)) goto error;
-    while ((motdSupp = rgNext(motd->motdAskSupports))) {
+    while ((motdSupp = rgNext(motd->motdDelSupports))) {
       printf("- %s", motdSupp->support->name);
       car = ':';
       if (motdSupp->ask4periodicCheck) {

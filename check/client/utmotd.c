@@ -149,8 +149,13 @@ main(int argc, char** argv)
   if (!mdtxShareSupport("AAA", "coll1")) goto error; // set wrong order
   if (!mdtxShareSupport("ZZZ", "coll1")) goto error;
   if (!scoreLocalImages(coll)) goto error; // <- this perturb first test!
-  if (!updateMotd()) goto error; 
-  
+  if (!updateMotd()) goto error;
+  /*
+  // test 2: test having motdPolicy=ALL
+  logMain(LOG_INFO, "** Test 2 having motdPolicy=ALL");
+  coll->motdPolicy = ALL;
+  if (!updateMotd()) goto error;
+  */
   if (!releaseCollection(coll, CACH)) goto error;
   /************************************************************************/
   
