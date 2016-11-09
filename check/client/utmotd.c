@@ -102,7 +102,7 @@ main(int argc, char** argv)
   // export mdtx environment
   if (!setEnv(programName, &env)) goto optError;
 
-  /************************************************************************/
+  /**********************************************************************/
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
   
   // add a demand for logo.xmp
@@ -157,7 +157,7 @@ main(int argc, char** argv)
   if (!updateMotd()) goto error;
   
   if (!releaseCollection(coll, CACH)) goto error;
-  /************************************************************************/
+  /**********************************************************************/
   
   freeConfiguration();
   rc = TRUE;

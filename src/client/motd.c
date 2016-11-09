@@ -496,7 +496,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
     if (!(archive =
 	  getArchive(coll, support->fullMd5sum, support->size)))
       goto error;
-    if (!isEmptyRing(archive->fromContainers)) continue;
+    if (isEmptyRing(archive->fromContainers)) continue;
 
     // assert we do not already aked for it
     while ((motdSupp = rgNext_r(motd->motdAskSupports, &curr))) {
