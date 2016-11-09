@@ -280,49 +280,6 @@ addMotdSupport(RG* ring, Support* support, Collection* coll)
 }
 
 /*=======================================================================
- * Function   : updateMotdFromSupportDB
- * Description: List not seens for a while supports
- * Synopsis   : SupportTree* updateMotdFromSupportDB(Motd* motd)
- * Input      : Motd* motd: where we write results 
- * Output     : TRUE on success
- =======================================================================*/
-int
-updateMotdFromSupportDB(Motd* motd)
-{
-  int rc = FALSE;
-  Configuration* conf = 0;
-  Support *support = 0;
-  
-  logMain(LOG_DEBUG, "updateMotdFromSupportDB");
-  if (!(conf = getConfiguration())) goto error;
-
-  // notify bad supports
-  rgRewind(conf->supports);
-  while ((support = rgNext(conf->supports))) {
-    if (!scoreSupport(support, &conf->scoreParam)) goto error;
-    if (!support->score) { // obsolete: need to be checked
-      if (!addMotdSupport(motd->motdAskSupports, support, 0)) goto error;
-    }
-  }
-
-  // look for unused supports
-  rgRewind(conf->supports);
-  while ((support = rgNext(conf->supports))) {
-    if (isEmptyRing(support->collections)) { // not used by any collection
-      if (!addMotdSupport(motd->motdDelSupports, support, 0)) goto error;
-    }
-  }
-  
-  rc = TRUE;
- error:
-  if (!rc) {
-    logMain(LOG_ERR, "updateMotdFromSupportDB fails");
-  }
-  return rc;
-}
-
-
-/*=======================================================================
  * Function   : motdContainer
  * Description: Find image related to a container
  * Synopsis   : int motdContainer(MotdSearch* data, 
@@ -457,6 +414,8 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   MotdSearch data;
   Image* image = 0;
   MotdPolicy motdPolicy = mUNDEF;
+  MotdSupport* motdSupp = 0;
+  RGIT* curr = 0;
   int doIt = FALSE;
 
   logMain(LOG_DEBUG, "updateMotdFromMd5sumsDB for %s collection",
@@ -538,6 +497,12 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
 	  getArchive(coll, support->fullMd5sum, support->size)))
       goto error;
     if (!isEmptyRing(archive->fromContainers)) continue;
+
+    // assert we do not already aked for it
+    while ((motdSupp = rgNext_r(motd->motdAskSupports, &curr))) {
+      if (!cmpSupport(&motdSupp->support, &support)) break;
+    } 
+    if (motdSupp) continue;
     
     if (!addMotdSupport(motd->motdDelSupports, support, coll))
       goto error;
@@ -604,6 +569,67 @@ updateMotdFromAllMd5sumsDB(Motd* motd)
 }
 
 /*=======================================================================
+ * Function   : updateMotdFromSupportDB
+ * Description: List not seens for a while supports
+ * Synopsis   : SupportTree* updateMotdFromSupportDB(Motd* motd)
+ * Input      : Motd* motd: where we write results 
+ * Output     : TRUE on success
+ =======================================================================*/
+int
+updateMotdFromSupportDB(Motd* motd)
+{
+  int rc = FALSE;
+  Configuration* conf = 0;
+  Support *support = 0;
+  MotdSupport* motdSupp = 0;
+  RGIT* curr = 0;
+  
+  logMain(LOG_DEBUG, "updateMotdFromSupportDB");
+  if (!(conf = getConfiguration())) goto error;
+
+  // notify supports we no more use
+  rgRewind(conf->supports);
+  while ((support = rgNext(conf->supports))) {
+    if (!isEmptyRing(support->collections)) continue;
+
+    // assert we do not already aked for it
+    while ((motdSupp = rgNext_r(motd->motdAskSupports, &curr))) {
+      if (!cmpSupport(&motdSupp->support, &support)) break;
+    } 
+    if (motdSupp) continue;
+    
+    // tels it is not used by any collection
+    if (!addMotdSupport(motd->motdDelSupports, support, 0)) goto error;
+  }
+  
+  // notify supports we need to check
+  rgRewind(conf->supports);
+  while ((support = rgNext(conf->supports))) {
+    
+    // assert support is not already tells to be unused
+    while ((motdSupp = rgNext_r(motd->motdDelSupports, &curr))) {
+      if (!cmpSupport(&motdSupp->support, &support)) break;
+    } 
+    if (motdSupp) continue;
+    
+    // obsolete: need to be checked
+    if (!scoreSupport(support, &conf->scoreParam)) goto error; 
+    if (support->score) continue;
+
+    // tels we do not see this support for too long time, and that
+    // we need the Publisher to provides it.
+    if (!addMotdSupport(motd->motdAskSupports, support, 0)) goto error;
+  }
+  
+  rc = TRUE;
+ error:
+  if (!rc) {
+    logMain(LOG_ERR, "updateMotdFromSupportDB fails");
+  }
+  return rc;
+}
+
+/*=======================================================================
  * Function   : updateMotd
  * Description: Print the motd
  * Synopsis   : int updateMotd()
@@ -634,13 +660,13 @@ updateMotd()
   if (!expandConfiguration()) goto error;
   if (!(motd = createMotd())) goto error;
   
-  if (!updateMotdFromSupportDB(motd))  {
-    logMain(LOG_ERR, "cannot update motd from supportDB");
-    goto error;
-  }
-  
   if (!updateMotdFromAllMd5sumsDB(motd)) {
     logMain(LOG_ERR, "cannot update motd from md5sumsDB");
+    goto error;
+  }
+
+  if (!updateMotdFromSupportDB(motd))  {
+    logMain(LOG_ERR, "cannot update motd from supportDB");
     goto error;
   }
   

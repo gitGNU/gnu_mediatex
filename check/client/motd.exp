@@ -124,28 +124,6 @@
 [info upgrade.c] > 10.00
 [info upgrade.c] -------
 [info upgrade.c] = 10.00
-[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
-[info upgrade.c] file: = 10.00
-[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
-[warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
-[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (/HERE/misc/logo.png)
-[info upgrade.c] file: = 10.00
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (/HERE/misc/logoP1.iso)
-[info upgrade.c] file: = 10.00
-[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP12_logo.png)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.80)) ) * 1.00 = 0.22
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP23_logo.part1)
-[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (0.20)) ) * 1.00 = 0.71
-[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP32_logo.part2)
-[info upgrade.c] laps < suppTTL: pow ( 0.599452, 1/2.00 ) * 9.00 + 1.00 = 7.97
-[info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (SUPP33_logo.part2)
-[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (AAA)
-[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
-[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (ZZZ)
-[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
 [info openClose.c] estimate 95 steps for load
 [info openClose.c] parse coll1 collection (5SX )
 [info openClose.c] steps: 0 / 95
@@ -314,6 +292,14 @@
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [info openClose.c] steps: 93 / 95
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
+[warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
+[info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (AAA)
+[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
+[info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (ZZZ)
+[info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
 [info confTree.c] free configuration
 [info utmotd.c] exit on success
 
@@ -330,4 +316,12 @@ Please burn theses files:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/logoP2.iso ( 3.75)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
+Please remove theses local supports:
+- /HERE/misc/logo.png: not used
+- /HERE/misc/logoP1.iso: not used
+- /HERE/misc/logoP2.iso: coll1
+- SUPP12_logo.png: not used
+- SUPP23_logo.part1: not used
+- SUPP32_logo.part2: not used
+- SUPP33_logo.part2: not used
 
