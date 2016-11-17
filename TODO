@@ -1,11 +1,6 @@
 
 *** DONE
 
-- add attribute motd=(most|all) into mediatex.conf
-- addapt notify to ask for images on ALL motd's policy
-- addapt motd a) : motd archive maching ALL motdPolicy
-- addapt motd b) : motd redondant support already burned
-
 *** TEST
 
 *** BUG
@@ -14,32 +9,29 @@
 
 *** TODO
 
-- document motd output
-- add cmpArchiveQuick() that check pointers
-- avl_insert: use EEXIST instead of getter (cf catalogTree.c)
-- remove back link into ardsm
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
+- avl_insert: use EEXIST instead of getter (cf catalogTree.c)
 - cache::loadCache() do not need to load extraction metadata
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
 - simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add lexems for '<<<<<<<' to detect git conflicts
-- find how to speed-up mediatex when there is no dns are available
+- find how to speed-up mediatex when there is no dns available
 - change ring for avl-tree everywhere rgSort() is used (cpu optimisation)
 - add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
 - add an apache alias for '~' as it is complicated to type on mac keyboard
 - move date parser/serialiser code into perm.c
-- no more use own malloc into mediatex (still usefull for other client)
+- no more use custom malloc into mediatex (still usefull for other client)
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh and cgi templates
-- test an apache configuration using claim-based authentication (openId)
+- test an apache configuration using ldap or openId
 - move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
 - i10n for french

@@ -153,8 +153,9 @@ computeContainer(Collection* coll, Container* self, int depth)
 
   checkContainer(self);
   if (self->score != -1) goto quit; // already computed
-  if (self->type == INC) {
-    logCommon(LOG_ERR, "internal error: INC container not expected");
+  if (self->type == INC || self->type == IMG) {
+    logCommon(LOG_ERR, "internal error: %s container not expected",
+	      strEType(self->type));
     goto error;
   }
 
@@ -245,6 +246,7 @@ computeArchive(Collection* coll, Archive* self, int depth)
   self->incInherency = TRUE;
   rgRewind(self->fromContainers);
   while ((asso = rgNext(self->fromContainers))) {
+    if (asso->container->type == IMG) continue;
     if (!computeContainer(coll, asso->container, depth+1)) goto error;
     self->incInherency &= asso->container->incInherency;
     if (self->extractScore < asso->container->score) {

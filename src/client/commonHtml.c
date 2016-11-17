@@ -129,9 +129,9 @@ int getRelativeUri(char* buf, char* prefix, char* suffix)
 }
 
 /*=======================================================================
- * Function   : getArchiveHeaderUri
+ * Function   : getArchiveUri1
  * Description: Get relative path to archive page
- * Synopsis   : int getArchiveHeaderUri(char* buf, char* path, int id) 
+ * Synopsis   : int getArchiveUri1(char* buf, char* path, int id) 
  *              char* path = path to use as prefix
  *              int id = number use to compute page location
  * Output     : char* buf = the Uri
@@ -151,7 +151,7 @@ int getArchiveUri1(char* buf, char* path, int id)
 /*=======================================================================
  * Function   : getArchiveUri2
  * Description: Get relative path to an archive directory
- * Synopsis   : int getContentDir(char* buf, char* path, int id) 
+ * Synopsis   : int getArchiveUri2(char* buf, char* path, int id) 
  *              char* path = path to use as prefix
  *              int id = number use to compute page location
  * Output     : char* buf = the Uri

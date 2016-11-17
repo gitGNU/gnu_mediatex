@@ -1,10 +1,10 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll1.md5
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll1 collection ( SX )
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
 [info extractScore.c]    9.00
@@ -124,18 +124,18 @@
 [info upgrade.c] > 10.00
 [info upgrade.c] -------
 [info upgrade.c] = 10.00
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll1 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info motd.c]       3 images matched
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (5SX )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll2.md5
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection ( SX )
 [info serverFile.y] parse coll2 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/servers.txt
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
 [info extractScore.c]    9.00
@@ -209,15 +209,15 @@
 [info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll2.md5
-[info openClose.c] steps: 93 / 95
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] steps: 98 / 100
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection ( SX )
 [info serverFile.y] parse coll3 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/servers.txt
 [info extractFile.y] parse coll3 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll3/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info extractScore.c] local image score for 022a34b2f9b893fba5774237e1aa80ea:24075
 [info extractScore.c]    7.50
 [info extractScore.c]    9.00
@@ -291,7 +291,7 @@
 [info extractScore.c]  archive f54fba7d2e070d48051ac3f8f1c2eb98:30720 = 0.00
 [info extractScore.c]  archive fa2b0b536bf61f61617528c474e0bf61:24973 = 0.00
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
 [info upgrade.c] file: = 10.00
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
@@ -302,16 +302,16 @@
 [info upgrade.c] laps < suppTTL: pow ( 1.000000, 1/2.00 ) * 9.00 + 1.00 = 10.00
 [info utmotd.c] ** Test 2 having motdPolicy=ALL
 [info confTree.c] configuration already expanded
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll1 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info motd.c]       3 images matched
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (5SX )
-[info openClose.c] steps: 0 / 95
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] steps: 0 / 100
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
 [info upgrade.c] file: = 10.00
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
@@ -333,7 +333,6 @@ Please provide theses local supports:
 Please burn theses files:
 - Collection coll1:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
- - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/logoP2.iso ( 3.75)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
 Please remove theses local supports:
 - /HERE/misc/logo.png: not used
@@ -355,7 +354,6 @@ Please provide theses local supports:
 Please burn theses files:
 - Collection coll1:
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
- - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/logoP2.iso ( 3.75)
  - LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
 Please remove theses local supports:
 - /HERE/misc/logo.png: not used

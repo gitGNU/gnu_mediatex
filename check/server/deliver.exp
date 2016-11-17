@@ -8,9 +8,9 @@
 [notice utdeliver.c] .......................................................
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice utFunc.c] copy logo.png into the coll3 cache
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cache.c] scan: logo.png
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes

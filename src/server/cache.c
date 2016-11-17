@@ -90,26 +90,35 @@ getFinalSupplyInPath(char* extra)
   }
   return rc;
 }
+
 /*=======================================================================
  * Function   : getFinalSupplyOutPath
  * Description: remove ending ':supportName' if there
- * Synopsis   : char* getFinalSupplyOutPath(char* extra) 
- * Input      : char* extra = the extra record's attribute
+ * Synopsis   : char* getFinalSupplyOutPath(Collection* coll, 
+ *                                          Record* record) 
+ * Input      : Collection* coll 
+ *              Record* record: the input record to work on
  * Output     : Allocated string based on second part or NULL on failure
  =======================================================================*/
 char*
-getFinalSupplyOutPath(char* extra) 
+getFinalSupplyOutPath(Collection* coll, Record* record) 
 {
   char* rc = 0;
+  char* extra = 0;
   char* ptrOut = 0;
   char* ptrColon = 0;
   char* ptrPart2 = 0;
   char* ptrFilename = 0;
   char car = 0;
+  FromAsso* asso = 0;
+  AVLNode* node = 0;
 
-  checkLabel(extra);
+  checkCollection(coll);
+  checkRecord(record);
   logMain(LOG_DEBUG, "getFinalSupplyOutPath %s", extra);
-
+  extra = record->extra;
+  checkLabel(extra);
+  
   // look for ':' that limit part1 and part2, if there
   for (ptrColon=extra; *ptrColon && *ptrColon != ':'; ++ptrColon);
 
@@ -120,6 +129,18 @@ getFinalSupplyOutPath(char* extra)
   car = *ptrColon;
   *ptrColon = 0;
 
+  // look if an IMG rule matchs
+  for (node = coll->extractTree->images->childs->head;
+       node; node = node->next) {
+    asso = node->item;
+    
+    if (asso->archive == record->archive) break;
+  }
+  if (node) {
+    if (!(ptrOut = createString(asso->path))) goto error;
+    goto end;
+  }
+  
   // set output to "PART2"
   if (!isEmptyString(ptrPart2)) {
     if (!(ptrOut = createString(ptrPart2))) goto error;
@@ -137,6 +158,7 @@ getFinalSupplyOutPath(char* extra)
     if (!(ptrOut = catString(ptrOut, ptrFilename+1))) goto error;
   }
 
+ end:
   rc = ptrOut;
   ptrOut = 0;
  error:

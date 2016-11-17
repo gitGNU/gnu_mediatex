@@ -1,10 +1,10 @@
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
-[info openClose.c] estimate 141 steps for load
+[info openClose.c] estimate 146 steps for load
 [info openClose.c] parse coll1 collection ( SXC)
 [info serverFile.y] parse coll1 servers from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/servers.txt
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/catalog000.txt
-[info openClose.c] steps: 137 / 141
+[info openClose.c] steps: 142 / 146
 <!--#set var='HOME' value='../../..' -->
 <!--#include virtual='../../../indexHeader.shtml' -->
 
@@ -47,7 +47,7 @@ Records:
 </LI>
 <LI><A HREF="../../../cgi/get.cgi?hash=b281449c229bcc4a3556cdcc0d3ebcec&size=815">
 <IMG BORDER="0" SRC="../../../icons/floppy-icon.png" ALT="download"/>
-</A><A HREF="../../../score/archives/0000/006.shtml">(-1.00)</A><UL>
+</A><A HREF="../../../score/archives/0000/007.shtml">(-1.00)</A><UL>
 <LI>format = XPM</LI>
 <LI>licence = GPLv3</LI>
 </UL>

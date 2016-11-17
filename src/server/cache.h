@@ -31,7 +31,7 @@
 
 char* getAbsoluteCachePath(Collection* coll, char* path);
 char* getFinalSupplyInPath(char* path);
-char* getFinalSupplyOutPath(char* path);
+char* getFinalSupplyOutPath(Collection* coll, Record* record);
 char* getAbsoluteRecordPath(Collection* coll, Record* record);
 
 int scanCollection(Collection* collection, int doQuick);

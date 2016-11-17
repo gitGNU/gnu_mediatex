@@ -430,6 +430,15 @@ int createExempleExtractTree(Collection* coll)
   // this one should be automatically removed
   if (!(asso = addFromAsso(coll, logo, container, dateString))) goto error;
 
+  // IMG
+  if (!(container = coll->extractTree->images)) goto error;
+  if (!(asso = addFromAsso(coll, gzip, container,
+			   "here/logo.gz"))) goto error;
+
+  // this one should be automatically removed*
+  if (!(asso = addFromAsso(coll, logo, container,
+			   "here/logo.png"))) goto error;  
+
   return TRUE;
  error:
   logMemory(LOG_ERR, 

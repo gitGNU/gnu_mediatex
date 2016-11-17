@@ -47,6 +47,11 @@ Exemple:
 de5008799752552b7963a2670dc5eb18:391168	2010-01-01,01:00:00
 )
 
+(IMG
+=>
+3a04277dd1f43740a5fe17fd0ae9a5aa:24457  here/logo.gz
+)
+
 (ISO
 de5008799752552b7963a2670dc5eb18:391168
 =>
@@ -74,6 +79,12 @@ b281449c229bcc4a3556cdcc0d3ebcec:815    logo/logo.xpm
 )
 @end example
 
+@note
+@itemize @bullet
+@item The @code{INC} container is used to remind the date new incoming where uploaded in order to let a delay, @code{uploadTTL} @dataServersO{} for @actorPublisherO before the uploaded file's score impact the whole collection score.
+@item The @code{IMG} container is used to remind an extraction path to used when a support need to be copied into the cache. This feature is optionnal ; else the @file{supports/} dirname concatened with the support's name/basename will be used.
+@end itemize
+
 Grammar:
 @example
 file: stanzas
@@ -84,11 +95,11 @@ stanzas: stanzas stanza
 
 stanza: ( container => childs )
 
-container: incContainer
+container: orphaneContainer
          | stdContainer
          | stdContainer parents
 
-incContainer: type 
+orphaneContainer: type 
 
 stdContainer: type archive
 
@@ -106,7 +117,8 @@ archive: hash : size
 
 hash: [[:xdigit:]]@{32@}
 string: [^[:blank:]\)\n\r]@{1,511@}
-type: REC | ISO | CAT | TGZ | TAR | ZIP
+type: INC | IMG | ISO | CAT | TGZ | TBZ | TAR | CPIO
+    | GZIP | BZIP | ZIP | RAR
 size: [[:digit:]]+
 @end example
 

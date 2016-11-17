@@ -199,12 +199,6 @@ scoreSupport(Support* supp, ScoreParam *p)
   // check support validity
   ttl = (isSupportFile(supp))?conf->fileTTL:conf->checkTTL;
   laps = now - supp->lastCheck;
-  if (laps > ttl) {
-    logCommon(LOG_WARNING, "\"%s\" support have expired since %d days",
-	      supp->name, laps/(60*60*24));
-    // score = 0: unchecked support for too many time (may be broken)
-    goto end;
-  }
 
   // static score for support file
   if (isSupportFile(supp)) {
@@ -220,6 +214,13 @@ scoreSupport(Support* supp, ScoreParam *p)
       
     supp->score = p->fileScore;
     logCommon(LOG_INFO, "file: = %.2f", supp->score);
+    goto end;
+  }
+  
+  if (laps > ttl) {
+    logCommon(LOG_WARNING, "\"%s\" support have expired since %d days",
+	      supp->name, laps/(60*60*24));
+    // score = 0: unchecked support for too many time (may be broken)
     goto end;
   }
   

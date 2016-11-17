@@ -51,7 +51,31 @@ to @activityServer{}: ask @activityServer{} to dump its state into disk.
 @end table
 @end itemize
 
-Examples:
+Example:
+@example
+*****************************
+Mediatex's message of the day
+*****************************
+Please provide theses local supports:
+- AAA: periodic check, coll1
+- ZZZ: coll1, coll2
+Please burn theses files:
+- Collection coll1:
+ - /var/cache/mediatex/mdtx1/cache/mdtx1-coll1/aaa (-1.00)
+ - /var//cache/mediatex/mdtx1/cache/mdtx1-coll1/zzz (-1.00)
+Please remove theses local supports:
+- /HERE/misc/logo.png: not used
+- SUPP11_logo.png: coll1
+@end example
+
+@note
+@itemize @bullet
+@item First stanza ask @actorPublisherO{} to provide (@eventClientSuppCheck{}) supports either because it wasn't checked for too long time or because it is needed in order to extract some content for a collection.
+@item Second stanza ask @actorPublisherO{} to fix some cache content into a new support (@eventClientSuppAdd{} or @eventClientSuppFileAdd{} followed by @eventClientConfShareSupport{}).
+@item Third stanza notify @actorPublisherO{} that some supports may be removed because either it is no more used by any collection or because another safe support already include it.
+@end itemize
+
+See also:
 @itemize @bullet
 @item Extract an archive: @pxref{Scenario 3}.
 @item Adding new archives: @pxref{Scenario 4}.

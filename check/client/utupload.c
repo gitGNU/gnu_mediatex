@@ -174,12 +174,12 @@ main(int argc, char** argv)
   // export mdtx environment
   if (!setEnv(programName, &env)) goto optError;
 
-  /************************************************************************/
+  /**********************************************************************/
   // Unit tests
-  logMain(LOG_NOTICE, "***********************************************"); 
+  logMain(LOG_NOTICE, "**********************************************"); 
   if (!catalog && !extract &&!file) {
     logMain(LOG_NOTICE, "* Upload: internal tests");
-    logMain(LOG_NOTICE, "***********************************************"); 
+    logMain(LOG_NOTICE, "**********************************************"); 
 
     // first run functions without error
     if (!(coll = mdtxGetCollection("coll1"))) goto error;
@@ -220,7 +220,7 @@ main(int argc, char** argv)
 	    extract?" extract":"", 
 	    file?" file":"", 
 	    targetPath?" target":"");
-    logMain(LOG_NOTICE, "***********************************************"); 
+    logMain(LOG_NOTICE, "**********************************************"); 
 
     
     if (file) {
@@ -235,7 +235,7 @@ main(int argc, char** argv)
     }
     if (!mdtxUpload("coll2", catalog, extract, upFiles)) goto error;
   }
-  /************************************************************************/
+  /**********************************************************************/
   
   rc = TRUE;
  error:

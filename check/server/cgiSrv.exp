@@ -8,9 +8,9 @@
 [notice utcgiSrv.c] .......................................................
 [info openClose.c] parse records file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
 [notice openClose.c] no md5sums file: LOCALSTATEDIR/cache/mediatex/mdtx1/md5sums/mdtx1-coll3.md5
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice extract.c] de5008799752552b7963a2670dc5eb18:391168 not found
 [info extract.c] not found container ISO/de5008799752552b7963a2670dc5eb18:391168
@@ -56,17 +56,17 @@
 [notice utcgiSrv.c] 2) retry with it on cache
 [notice utcgiSrv.c] .......................................................
 [notice utFunc.c] copy logo.png into the coll3 cache
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cache.c] scan: logo.png
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea quick md5sum computed on 24075 bytes
 [info md5sum.c] 022a34b2f9b893fba5774237e1aa80ea  full md5sum computed on 24075 bytes
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> AVAILABLE
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : AVAILABLE -> TOKEEP
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : TOKEEP -> TOKEEP
 [notice extract.c] 022a34b2f9b893fba5774237e1aa80ea:24075 found
@@ -93,17 +93,17 @@
 [notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean cache for all collections
 [notice utFunc.c] copy logo.tgz into the coll3 cache
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cache.c] scan: logo.tgz
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be quick md5sum computed on 24546 bytes
 [info md5sum.c] 0387eee9820fa224525ff8b2e0dfa9be  full md5sum computed on 24546 bytes
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : UNUSED -> TOKEEP
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 (score= 3.75) : TOKEEP -> TOKEEP
 [notice extract.c] 0387eee9820fa224525ff8b2e0dfa9be:24546 found
@@ -174,17 +174,17 @@
 [notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean cache for all collections
 [notice utFunc.c] copy logoP1.cat into the coll3 cache
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cache.c] scan: logoP1.cat
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c quick md5sum computed on 20480 bytes
 [info md5sum.c] 1a167d608e76a6a4a8b16d168580873c  full md5sum computed on 20480 bytes
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : UNUSED -> AVAILABLE
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
@@ -233,9 +233,9 @@
 [notice utcgiSrv.c] 5) try with part2 added on cache too
 [notice utcgiSrv.c] .......................................................
 [notice utFunc.c] copy logoP2.cat into the coll3 cache
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] check: logoP1.cat
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cache.c] scan: logoP1.cat
@@ -243,9 +243,9 @@
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6 quick md5sum computed on 4066 bytes
 [info md5sum.c] c0c055a0829982bd646e2fafff01aaa6  full md5sum computed on 4066 bytes
 [info cacheTree.c] c0c055a0829982bd646e2fafff01aaa6:4066 (score= 3.75) : UNUSED -> TOKEEP
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5SX )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [info cacheTree.c] 1a167d608e76a6a4a8b16d168580873c:20480 (score=10.00) : AVAILABLE -> TOKEEP
 [notice extract.c] 1a167d608e76a6a4a8b16d168580873c:20480 found
@@ -356,9 +356,9 @@
 [notice utcgiSrv.c] 6) register a mail
 [notice utcgiSrv.c] .......................................................
 [notice utFunc.c] clean cache for all collections
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll3 collection (5 X )
-[info openClose.c] steps: 0 / 95
+[info openClose.c] steps: 0 / 100
 [info cache.c] scaning directory: LOCALSTATEDIR/cache/mediatex/mdtx1/cache/mdtx1-coll3/
 [info cacheTree.c] 022a34b2f9b893fba5774237e1aa80ea:24075 (score= 8.25) : UNUSED -> WANTED
 [notice utcgiSrv.c] .......................................................

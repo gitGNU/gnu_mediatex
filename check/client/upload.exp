@@ -1,12 +1,12 @@
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: internal tests
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
-[info openClose.c] estimate 141 steps for load
+[info openClose.c] estimate 146 steps for load
 [info openClose.c] parse coll1 collection (  XC)
 [info extractFile.y] parse coll1 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/extract000.txt
 [info catalogFile.y] parse coll1 catalog from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll1/catalog000.txt
-[info openClose.c] steps: 137 / 141
+[info openClose.c] steps: 142 / 146
 [err upload.c] Extract file should provide a container for aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa123
 [err upload.c] isFileRefbyExtract fails
 [err upload.c] Extract file should provide a container for 022a34b2f9b893fba5774237e1aa80ea24075
@@ -28,9 +28,9 @@
 [err upload.c] areNotAlreadyThere fails
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: catalog
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
 [err catalogFile.y] line 5: unknown archive 99b882d1ba57c2c83a53a719e2433518:1004
@@ -40,15 +40,15 @@
 [err upload.c] mdtxUpload fails
 [info confTree.c] free configuration
 [info utupload.c] exit on error
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: extract
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -71,16 +71,16 @@
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: file
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -114,16 +114,16 @@
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: catalog extract
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info openClose.c] do not save coll2 collection ( S  )
 [info openClose.c] do not save coll2 collection (  X )
 [info openClose.c] do not save coll2 collection (   C)
@@ -172,17 +172,17 @@ Document "css": "css"
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: catalog file
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -242,17 +242,17 @@ Document "css": "css"
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: extract file
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -292,18 +292,18 @@ Document "css": "css"
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: catalog extract file
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info extractFile.y] parse _upload_ extraction data from client/upload.ext
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
 [info catalogFile.y] parse _upload_ catalog from client/upload.cat
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -369,16 +369,16 @@ Document "css": "css"
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: file target
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -406,22 +406,27 @@ Document "css": "css"
 99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
 )
 
+(IMG
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	dirname/mediatex.css
+)
+
 # Local Variables:
 # mode: conf
 # mode: font-lock
 # End:
 [info confTree.c] free configuration
 [info utupload.c] exit on success
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [notice utupload.c] * Upload: file target
-[notice utupload.c] ***********************************************
+[notice utupload.c] **********************************************
 [info confFile.y] parse configuration from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1/mdtx1.conf
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518 quick md5sum computed on 1004 bytes
 [info md5sum.c] 99b882d1ba57c2c83a53a719e2433518  full md5sum computed on 1004 bytes
-[info openClose.c] estimate 95 steps for load
+[info openClose.c] estimate 100 steps for load
 [info openClose.c] parse coll2 collection (  X )
 [info extractFile.y] parse coll2 extraction data from LOCALSTATEDIR/cache/mediatex/mdtx1/git/mdtx1-coll2/extract000.txt
-[info openClose.c] steps: 93 / 95
+[info openClose.c] steps: 98 / 100
 [info address.c] build socket address 127.0.0.1:6560
 [info connect.c] connected to localhost (746d6ceeb76e05cfa2dea92a1c5753cd)
 [info recordTree.c] # Collection's records:
@@ -447,6 +452,11 @@ Document "css": "css"
 (INC
 =>
 99b882d1ba57c2c83a53a719e2433518:1004	2010-01-01,01:00:00
+)
+
+(IMG
+=>
+99b882d1ba57c2c83a53a719e2433518:1004	dirname/filename
 )
 
 # Local Variables:

@@ -128,6 +128,12 @@ STRING  [^[:blank:]\)\n\r]{1,511}
     return(extrTYPE);
   }
 
+  img {
+    BEGIN(CONTAINERS);
+    yylval->type = IMG;
+    return(extrTYPE);
+  }
+    
   iso {
     BEGIN(CONTAINERS);
     yylval->type = ISO;

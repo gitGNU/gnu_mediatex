@@ -597,6 +597,7 @@ createConfiguration(void)
   conf->httpPort = HTTP_PORT;
   conf->httpsPort = HTTPS_PORT;
   conf->mdtxPort = env.noRegression?TESTING_PORT:CONF_PORT;
+  conf->motdPolicy=MOST;
 
   rc = conf;
  error:

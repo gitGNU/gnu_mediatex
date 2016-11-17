@@ -37,8 +37,8 @@ strEType(EType self)
 {
 
   static char* typeLabels[ETYPE_MAX] =
-    {"UNDEF", 
-     "INC", "ISO", "CAT", 
+    {"UNDEF", "INC", "IMG",
+     "ISO", "CAT", 
      "TGZ", "TBZ", "AFIO",
      "TAR", "CPIO", 
      "GZIP", "BZIP",
@@ -197,6 +197,28 @@ destroyContainer(Container* self)
 
 
 /*=======================================================================
+ * Function   : hasExtractionPath
+ * Description: check if an IMG's extraction path is already provided
+ * Synopsis   : int hasExtractionPath(Archive* self)
+ * Input      : Archive* self : what to check
+ * Output     : TRUE on success
+ =======================================================================*/
+static int 
+hasExtractionPath(Archive* self)
+{
+  FromAsso* fromAsso = 0;
+  RGIT* curr = 0;
+
+  while ((fromAsso = rgNext_r(self->fromContainers, &curr))) {
+    if (fromAsso->container->type == INC ||
+	fromAsso->container->type == IMG) continue;
+    break;
+  }
+  
+  return (fromAsso != 0);
+}
+
+/*=======================================================================
  * Function   : serializeContainer
  * Description: Serialize a Container.
  * Synopsis   : int serializeContainer(Collection* coll, 
@@ -220,24 +242,16 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
   }
 
   if (avl_count(self->childs) < 1) {
-    if (self->type != INC) {
-      fd->print(fd, "\n#(%s\n", strEType(self->type));
-      fd->print(fd, "#=>\n");
-      fd->print(fd, "#)\n");
-      goto end;
-    }
-    else {
-      /* not blocking but prefer to stop now */
-      logMemory(LOG_CRIT, "empty container to serialize !");
-      goto error;
-    }
+    // not blocking but we prefer to stop now
+    logMemory(LOG_CRIT, "do not serialize an empty container!");
+    goto error;
   }
 
   fd->print(fd, "\n(%s\n", strEType(self->type));
   fd->doCut = FALSE;
  
-  // serialise parents (only INC container doesn't have parent)
-  if (self->type != INC) {
+  // serialise parents (only INC and IMG container doesn't have parent)
+  if (self->type != INC && self->type != IMG) {
     rgRewind(self->parents);
     if ((archive = rgNext(self->parents)) == 0) goto error;
     do {
@@ -252,14 +266,19 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
 
     for (node = self->childs->head; node; node = node->next) {
       asso = node->item;
+
+      // remove safe incoming
       if (self->type == INC && !isIncoming(coll, asso->archive)) continue;
+
+      // remove image when path is available from another rule
+      if (self->type == IMG && hasExtractionPath(asso->archive)) continue;
+      
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
       fd->print(fd, "\t%s\n", asso->path);
     }
   }
 
   fd->print(fd, ")\n");
- end:
   fd->doCut = TRUE;
   ++env.progBar.cur;
   rc = TRUE;
@@ -348,6 +367,10 @@ createExtractTree(void)
   if (!(rc->incoming = createContainer())) goto error;
   rc->incoming->type = INC;
 
+  // special IMG container to reminds supports paths (facultative)
+  if (!(rc->images = createContainer())) goto error;
+  rc->images->type = IMG;
+
   rc->score = -1;
 
   return rc;
@@ -371,6 +394,7 @@ destroyExtractTree(ExtractTree* self)
 
   avl_free_tree(self->containers);
   self->incoming = destroyContainer(self->incoming);
+  self->images = destroyContainer(self->images);
 
   free(self);
 
@@ -429,6 +453,11 @@ serializeExtractTree(Collection* coll, CvsFile* fd)
     if (!serializeContainer(coll, self->incoming, fd)) goto error;
   }
 
+  // serialize IMG container if not empty
+  if (avl_count(self->images->childs) > 0) {
+    if (!serializeContainer(coll, self->images, fd)) goto error;
+  }
+
   // serialize all other containers
   if (avl_count(self->containers)) {
     for(node = self->containers->head; node; node = node->next) {
@@ -467,14 +496,15 @@ addFromArchive(Collection* coll, Container* container, Archive* archive)
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "addFromArchive %s/%s:%lli -> %s:%lli",
 	    strEType(container->type), 
-	    container->type == INC?"-":container->parent->hash,
-	    container->type == INC?0:
-	    (long long int)container->parent->size,
+	    container->type == INC || container->type == IMG?
+	    "-":container->parent->hash,
+	    container->type == INC || container->type == IMG?
+	    0:(long long int)container->parent->size,
 	    archive->hash, (long long int)archive->size);
 
-  if (container->type == INC) {
-    logMemory(LOG_ERR, 
-	      "INC container cannot have parent");
+  if (container->type == INC || container->type == IMG) {
+    logMemory(LOG_ERR, "%s container cannot have parent",
+	      strEType(container->type));
     goto error;
   }
   
@@ -550,9 +580,10 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
   if (!container || !archive) goto error;
   logMemory(LOG_DEBUG, "delFromArchive %s/%s:%lli -> %s:%lli",
 	    strEType(container->type), 
-	    container->type == INC?"-":container->parent->hash,
-	    container->type == INC?0:
-	    (long long int)container->parent->size,
+	    container->type == INC || container->type == IMG?
+	    "-":container->parent->hash,
+	    container->type == INC || container->type == IMG?
+	    0:(long long int)container->parent->size,
 	    archive->hash, (long long int)archive->size);
 
   // del archive to container's parents ring
@@ -604,9 +635,10 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   logMemory(LOG_DEBUG, "addFromAsso %s:%lli -> %s/%s:%lli",
 	    archive->hash, (long long int)archive->size,
 	    strEType(container->type), 
-	    container->type == INC?"-":container->parent->hash,
-	    container->type == INC?0:
-	    (long long int)container->parent->size);
+	    container->type == INC || container->type == IMG?
+	    "-":container->parent->hash,
+	    container->type == INC || container->type == IMG?
+	    0:(long long int)container->parent->size);
 
   switch (container->type) {
   case GZIP:
@@ -647,6 +679,10 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
     }
 
     break;
+    
+  case IMG:
+    break;
+    
   default:
     // having 1 inc asso and 1 normal asso => remove the inc asso
     if (archive->uploadTime) {
@@ -665,8 +701,9 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   asso->container = container;
   asso->path = string;
 
-  // incomings do not provides extraction path
-  if (container->type != INC) {
+  // incomings do not provides extraction path, and both
+  // incomings and images are not linked to archive
+  if (container->type != INC && container->type != IMG) {
     if (!rgInsert(archive->fromContainers, asso)) goto error;
   }
   if (!avl_insert(container->childs, asso)) {
@@ -703,9 +740,10 @@ delFromAsso(Collection* coll, FromAsso* self)
   logMemory(LOG_DEBUG, "delFromAsso %s:%lli -> %s/%s:%lli",
 	    self->archive->hash, (long long int)self->archive->size,
 	    strEType(self->container->type), 
-	    self->container->type == INC?"-":self->container->parent->hash,
-	    self->container->type == INC?0:
-	    (long long int)self->container->parent->size);
+	    self->container->type == INC || self->container->type == IMG?
+	    "-":self->container->parent->hash,
+	    self->container->type == INC || self->container->type == IMG?
+	    0:(long long int)self->container->parent->size);
 
   // incomings do not provides extraction path
   if (self->container->type == INC) {
@@ -781,8 +819,9 @@ addContainer(Collection* coll, EType type, Archive* parent)
   checkArchive(parent);
   logMemory(LOG_DEBUG, "addContainer %s", strEType(type));
 
-  if (type == INC) {
-    logMemory(LOG_ERR, "INC container always exists and cannot be add");
+  if (type == INC || type == IMG) {
+    logMemory(LOG_ERR, "%s container always exists and cannot be add",
+	      strEType(type));
     goto error;
   }
 
@@ -832,9 +871,10 @@ delContainer(Collection* coll, Container* self)
   if (!self) goto error;
   logMemory(LOG_DEBUG, "delContainer %s/%s:%lli", 
 	    strEType(self->type), 
-	    self->type == INC?"-":self->parent->hash,
-	    self->type == INC?0:
-	    (long long int)self->parent->size);
+	    self->type == INC || self->type == IMG?
+	    "-":self->parent->hash,
+	    self->type == INC || self->type == IMG?
+	    0:(long long int)self->parent->size);
 
   // delete content associations to archives
   while ((node = self->childs->head)) {
@@ -874,6 +914,7 @@ diseaseExtractTree(Collection* coll)
 
   // diseases containers
   if (!delContainer(coll, coll->extractTree->incoming)) goto error;
+  if (!delContainer(coll, coll->extractTree->images)) goto error;
   while ((node = coll->extractTree->containers->head))
     if (!delContainer(coll, node->item)) goto error;
 

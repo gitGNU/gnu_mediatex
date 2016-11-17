@@ -119,42 +119,61 @@ main(int argc, char** argv)
   /************************************************************************/
   utLog("%s", "Unit test Cleanup:", 0);
   if (!utCleanCaches()) goto error;
-
+  if (!(coll = mdtxGetCollection("coll1"))) goto error;
+ 
   // test getFinalSupplyInPath function
   utLog("%s", "1) Paths", 0);
   strcpy(path, "/path/to/file");
+  if (!(record = createRecord())) goto error;
+  record->extra = path;
+  
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
   extra = destroyString(extra);
-  extra = getFinalSupplyOutPath(path);
+  extra = getFinalSupplyOutPath(coll, record);
   logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
   extra = destroyString(extra);
   strcpy(path, "/path/to/file:");
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
   extra = destroyString(extra);
-  extra = getFinalSupplyOutPath(path);
+  extra = getFinalSupplyOutPath(coll, record);
   logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
   extra = destroyString(extra);
   strcpy(path, "/path/to/file:place/to/strore/newFilename");
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
   extra = destroyString(extra);
-  extra = getFinalSupplyOutPath(path);
+  extra = getFinalSupplyOutPath(coll, record);
   logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
   extra = destroyString(extra);
   strcpy(path, "/path/to/file:place/to/strore/newDirectory/");
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
   extra = destroyString(extra);
-  extra = getFinalSupplyOutPath(path);
+  extra = getFinalSupplyOutPath(coll, record);
   logMain(LOG_NOTICE, "finalSupply output %s -> %s", path, extra);
   extra = destroyString(extra);
+  
+  // try retrieving an IMG rule
+  if (!(archive =
+	getArchive(coll, "3a04277dd1f43740a5fe17fd0ae9a5aa", 24457)))
+    goto error;
+  record->archive = archive;
+  archive = 0;
+  extra = getFinalSupplyInPath(path);
+  logMain(LOG_NOTICE, "IMG finalSupply input %s -> %s", path, extra);
+  extra = destroyString(extra);
+  extra = getFinalSupplyOutPath(coll, record);
+  logMain(LOG_NOTICE, "IMG finalSupply output %s -> %s", path, extra);
+  extra = destroyString(extra);
+  record->extra = 0;
+  destroyRecord(record);
+  record = 0;
   //===============================================================
   
   // test (re-)loading functions
   utLog("%s", "2) API", 0);
-  if (!(coll = mdtxGetCollection("coll1"))) goto error;
   if (!addFiles(coll, inputRep)) goto error;
   utLog("%s", "Begin with:", coll);
 

@@ -479,7 +479,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
 	// ...that have no local image...
 	(!(image = getImage(coll, coll->localhost, archive)) ||
 	 // ...or a local bad score
-	 image->score > coll->serverTree->scoreParam.maxScore / 2)) {
+	 image->score <= coll->serverTree->scoreParam.maxScore / 2)) {
       doIt = TRUE;
     }
     

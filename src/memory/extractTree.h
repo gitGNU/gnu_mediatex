@@ -29,6 +29,7 @@
 // Container types
 typedef enum {UNDEF=0, 
 	      INC,             // for uploads not already burned
+	      IMG,             // tips to remind supports extraction path
 	      ISO,             // CD image
 	      CAT,             // generic way to do multi-volume
 	      TGZ, TBZ, AFIO,  // GNU/Linux agregation + compression
@@ -62,7 +63,10 @@ struct Container {
 
 struct ExtractTree {
   AVLTree* containers;
-  Container* incoming;   // special container with no parent
+
+  // special container with no parents
+  Container* incoming;   // provides unsafe incomings
+  Container* images;     // provides unknown paths
 
   float score;           // global score for the collection
 };

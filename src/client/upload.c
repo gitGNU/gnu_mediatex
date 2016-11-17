@@ -140,13 +140,13 @@ uploadExtract(Collection* upload, char* path)
  * Function   : uploadContent
  * Description: add uploaded content file to extract metadata
  * Synopsis   : static Archive* uploadContent(
- *                                        Collection* upload, char* path)
+ *                               Collection* upload, UploadFile* upFile)
  * Input      : Collection* upload: collection used to parse upload
  *              char* path: input file to upload
  * Output     : Archive object on success ; NULL on error
  =======================================================================*/
 static Archive* 
-uploadContent(Collection* upload, char* path)
+uploadContent(Collection* upload, UploadFile* upFile)
 { 
   Archive* rc = 0;
   struct stat statBuffer;
@@ -156,9 +156,13 @@ uploadContent(Collection* upload, char* path)
   struct tm date;
   char dateString[32];
   Container* container = 0;
+  char* path = 0;
+  char* target = 0;
+  char* ptr = 0;
 
   logMain(LOG_DEBUG, "uploadContent");
   checkCollection(upload);
+  path = upFile->source;
   checkLabel(path);
 
   if (!upload->extractTree) {
@@ -197,6 +201,23 @@ uploadContent(Collection* upload, char* path)
   if (!(addFromAsso(upload, archive, container, dateString))) 
     goto error;
 
+  // add image extraction rule
+  if (upFile->target) {
+    if (!(target = createString(upFile->target))) goto error;
+    
+    // if target is a directory
+    if (target[strlen(target)-1] == '/') {
+
+      // concatcat the filename
+      for (ptr = path+strlen(path)-1; ptr > path && *ptr != '/'; --ptr);
+      if (!(target = catString(target, ptr+1))) goto error;
+    }
+    
+    if (!(container = upload->extractTree->images)) goto error;
+    if (!(addFromAsso(upload, archive, container, target)))
+      goto error;
+  }
+  
   rc = archive;
   archive = 0;
  error:
@@ -204,6 +225,7 @@ uploadContent(Collection* upload, char* path)
     logMain(LOG_ERR, "uploadExtract fails");
   }
   if (archive) delArchive(upload, archive);
+  if (target) destroyString(target);
   return rc;
 }
 
@@ -498,7 +520,7 @@ mdtxUpload(char* label, char* catalog, char* extract, RG* upFiles)
   if (extract && !uploadExtract(upload, extract)) goto error;
   if (!isEmptyRing(upFiles)) {
     while ((upFile = rgNext(upFiles))) {
-      if (!(upFile->archive = uploadContent(upload, upFile->source)))
+      if (!(upFile->archive = uploadContent(upload, upFile)))
 	goto error;
     }
   }

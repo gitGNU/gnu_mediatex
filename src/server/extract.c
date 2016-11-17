@@ -830,7 +830,7 @@ extractRecord(ExtractData* data, Record* sourceRecord)
   // split extra if we get a final supply
   if (getRecordType(sourceRecord) == FINAL_SUPPLY) {
     finalSupplySource = getFinalSupplyInPath(sourceRecord->extra);
-    finalSupplyTarget = getFinalSupplyOutPath(sourceRecord->extra);
+    finalSupplyTarget = getFinalSupplyOutPath(coll, sourceRecord);
 
     if (!finalSupplySource || !finalSupplyTarget) {
       logMain(LOG_ERR, "fails to parse support paths: %s",
@@ -842,7 +842,7 @@ extractRecord(ExtractData* data, Record* sourceRecord)
   // allocate place on cache
   if (!cacheAlloc(&targetRecord, coll, sourceRecord->archive)) goto error;
 
-  // Retieve canonical path we will try to use for extraction:
+  // Retrieve canonical path we will try to use for extraction:
   // - final supply
   if (finalSupplyTarget) {
     relativeCanonicalPath = finalSupplyTarget;

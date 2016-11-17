@@ -133,7 +133,7 @@ stanza: extrOPEN container extrIMPLIES childs extrCLOSE
 }
 ;
 
-container: incContainer
+container: orphaneContainer
          | stdContainer
          | stdContainer parents
 {
@@ -142,16 +142,22 @@ container: incContainer
 ;
 
 
-incContainer: extrTYPE 
+orphaneContainer: extrTYPE 
 {
-  logParser(LOG_DEBUG, "line %i: incContainer: %s", 
+  logParser(LOG_DEBUG, "line %i: orphaneContainer: %s", 
 	    LINENO, strEType($1));
-  if ($1 != INC) {
+  switch ($1) {
+  case INC:
+    container = coll->extractTree->incoming;
+    break;
+  case IMG:
+    container = coll->extractTree->images;
+    break;
+  default:
     logParser(LOG_ERR, "line %i: %s", LINENO, 
-	      "only the 'INC' container do not provide parent");
+	      "only 'INC' or 'IMG' containers do not provide parent");
     YYERROR;
   }
-  container = coll->extractTree->incoming;
 }
 
 stdContainer: extrTYPE archive
