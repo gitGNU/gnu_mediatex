@@ -136,7 +136,7 @@ miscOptions()
 	  "\n\nOptions:\n"
 	  "  -h, --help\t\tdisplay this message\n"
 	  "  -V, --version\tdisplay the version number\n"
-	  "  -v, --verebosity\tincrease verbosity (wrapper for -s)\n"
+	  "  -v, --verebose\tincrease verbosity (wrapper for -s)\n"
 	  "  -f, --facility\tset facility to use for logging\n"
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"
 	  "  -l, --log-file\tlog into a file\n"

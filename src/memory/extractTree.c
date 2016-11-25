@@ -706,10 +706,21 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   if (container->type != INC && container->type != IMG) {
     if (!rgInsert(archive->fromContainers, asso)) goto error;
   }
+
+  // only provide archives once by container
   if (!avl_insert(container->childs, asso)) {
-    logMemory(LOG_ERR, "cannot add %s:%lli (already there?)",
-	      archive->hash, (long long int)archive->size);
-    goto error;
+    if (errno != EEXIST) {
+      logMemory(LOG_ERR, "fails to add add %s:%lli content",
+		archive->hash, (long long int)archive->size);
+      goto error;
+    }
+
+    // ignore having several IMG assos if they exacly match
+    if (container->type != IMG) {
+      logMemory(LOG_ERR, "cannot add %s:%lli (already there)",
+		archive->hash, (long long int)archive->size);	
+      goto error;
+    }
   }
  end:
   rc = asso;

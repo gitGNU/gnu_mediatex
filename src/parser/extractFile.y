@@ -164,9 +164,9 @@ stdContainer: extrTYPE archive
 {
   logParser(LOG_DEBUG, "line %i: stdContainer: %s archive",
 	    LINENO, strEType($1));
-  if ($1 == INC) {
+  if ($1 == INC || $1 == IMG) {
     logParser(LOG_ERR, "line %i: %s (%s)", LINENO, 
-	      "the 'INC' container cannot have parent");
+	      "'INC' and 'IMG' containers cannot have parent");
     YYERROR;
   }
   if (!(container = addContainer(coll, $1, $2))) YYERROR;
@@ -186,9 +186,9 @@ parents: parents parent
 childs: childs2
       | /*empty*/
 {
-  if (container->type != INC) {
+  if (container->type != INC && container->type != IMG) {
     logParser(LOG_ERR, "line %i: %s", LINENO, 
-	      "only the 'INC' container may do not provide childs");
+	      "only 'INC' or 'IMG' containers may do not provide childs");
     YYERROR;
   }
 }
