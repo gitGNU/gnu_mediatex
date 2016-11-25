@@ -99,7 +99,7 @@ main(int argc, char** argv)
   // export mdtx environment
   if (!setEnv(programName, &env)) goto optError;
 
-  /************************************************************************/
+  /***********************************************************************/
   if (!createExempleConfiguration(inputRep)) goto error;
   if (!(coll = getCollection("coll1"))) goto error;
   if (!createExempleExtractTree(coll)) goto error;
@@ -109,13 +109,20 @@ main(int argc, char** argv)
     logMemory(LOG_ERR, "Error while serializing the extract exemple");
     goto error;
   }
+
+  /* TODO:
+     - check adding 2 times a standard fromAssos (error)
+     - check adding 2 times an INC fromAssos (no error)
+     - check adding 2 times an IMG fromAssos having same path (no error)
+     - check adding 2 times an IMG fromAssos not having same path (error)
+  */
   
   // test disease
   if (!diseaseExtractTree(coll)) goto error;
   env.dryRun = TRUE;
   if (!serializeExtractTree(coll, &fd)) goto error;
   if (avl_count(coll->extractTree->containers)) goto error;
-  /************************************************************************/
+  /***********************************************************************/
 
   freeConfiguration();
   rc = TRUE;

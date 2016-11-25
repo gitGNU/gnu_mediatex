@@ -608,6 +608,36 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
 }
 
 /*=======================================================================
+ * Function   : getFromAsso
+ * Description: Search a fromAsso into a Container
+ * Synopsis   : fromAsso* getFromAsso(Container* container, 
+ *                                    Archive* parent)
+ * Input      : Container* container: where to find
+ *              Archive* archive: content to find 
+ * Output     : The address of the fromAsso.
+ =======================================================================*/
+FromAsso* 
+getFromAsso(Container* container, Archive* archive)
+{
+  FromAsso* rc = 0;
+  FromAsso asso;
+  AVLNode* node = 0;
+
+  checkContainer(container);
+  checkArchive(archive);
+  logMemory(LOG_DEBUG, "%s", "getFromAsso");
+
+  // look for fromAsso
+  asso.archive = archive;
+  asso.container = container;
+  if ((node = avl_search(container->childs, &asso))) {
+    rc = (FromAsso*)node->item;
+  }
+ error:
+  return rc;
+}
+
+/*=======================================================================
  * Function   : addFromAsso
  * Description: Add a fromAsso if not already there
  * Synopsis   : FromAsso* addFromAsso(Collection* coll, Archive* archive
@@ -681,6 +711,18 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
     break;
     
   case IMG:
+    // ignore having several IMG assos if they exacly match
+    if ((asso = getFromAsso(container, archive))) {
+      if (strcmp(asso->path, path)) {
+	logMemory(LOG_ERR,
+		  "cannot add several IMG asso with different paths"
+		  " (%s:%lli)",
+		  archive->hash, (long long int)archive->size);
+	asso = 0;
+	goto error;
+      }
+      goto end;
+    }
     break;
     
   default:
@@ -712,15 +754,12 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
     if (errno != EEXIST) {
       logMemory(LOG_ERR, "fails to add add %s:%lli content",
 		archive->hash, (long long int)archive->size);
-      goto error;
     }
-
-    // ignore having several IMG assos if they exacly match
-    if (container->type != IMG) {
+    else {
       logMemory(LOG_ERR, "cannot add %s:%lli (already there)",
-		archive->hash, (long long int)archive->size);	
-      goto error;
+		archive->hash, (long long int)archive->size);
     }
+    goto error;
   }
  end:
   rc = asso;
@@ -780,11 +819,11 @@ delFromAsso(Collection* coll, FromAsso* self)
 
 /*=======================================================================
  * Function   : getContainer
- * Description: Search or may create a Container
+ * Description: Search a Container
  * Synopsis   : Container* getContainer(Collection* coll, 
  *                                        EType type, Archive* parent)
  * Input      : Collection* coll: where to find
- *              EType type : first id
+ *              EType type: first id
  *              Archive* parent : second id
  * Output     : The address of the Container.
  =======================================================================*/
@@ -849,10 +888,16 @@ addContainer(Collection* coll, EType type, Archive* parent)
   container->parent = parent;
   if (!addFromArchive(coll, container, parent)) goto error;
   if (!avl_insert(coll->extractTree->containers, container)) {
-    logMemory(LOG_ERR, "cannot add container (already there?)");
+    if (errno != EEXIST) {
+      logMemory(LOG_ERR, "fails to add %s container", strEType(type))
+    }
+    else {
+      logMemory(LOG_ERR, "cannot add %i container (already there)",
+		strEType(type))
+    }
     goto error;
   }
-
+  
   rc = container;
  error:
   if (!rc) {
