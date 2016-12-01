@@ -75,7 +75,7 @@ miscUsage(char* programName)
 {
   fprintf(stderr, "\nUsage: %s", basename(programName));
   fprintf(stderr, 
-	  "-h | -V | -v |"
+	  "-h | -V | [ -v ]"
 	  " [ -f facility ] [ -l logFile ]"
 	  " [ -s severity[:module(,module)*] ]"
 	  " [ -m memoryLimit ] [ -n ] [ -p ] ");
@@ -135,7 +135,7 @@ miscOptions()
   fprintf(stderr, 
 	  "\n\nOptions:\n"
 	  "  -h, --help\t\tdisplay this message\n"
-	  "  -V, --version\tdisplay the version number\n"
+	  "  -V, --version\t\tdisplay the version number\n"
 	  "  -v, --verebose\tincrease verbosity (wrapper for -s)\n"
 	  "  -f, --facility\tset facility to use for logging\n"
 	  "\t\t\tsee syslog(3) : mainly 'file' or 'local2' here\n"

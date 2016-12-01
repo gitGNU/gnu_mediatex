@@ -77,9 +77,9 @@ $ make html pdf
 Someone may also prefers to build and install a @acronym{DEBIAN} package:
 @example
 $ make dist
-$ tar -zxf mediatex-0.5.tar.gz
-$ mv mediatex-0.5.tar.gz mediatex_0.5.orig.tar.gz
-$ cd mediatex-0.5
+$ tar -zxf mediatex-0.7.tar.gz
+$ mv mediatex-0.7.tar.gz mediatex_0.7.orig.tar.gz
+$ cd mediatex-0.7
 $ cp -fr ../debian .
 $ dpkg-buildpackage -us -uc
 $ ls ..
@@ -87,7 +87,7 @@ $ ls ..
 
 The fully @acronym{DEBIAN} build process should finish using @code{pbuilder}:
 @example
-$ cd mediatex-0.5
+$ cd mediatex-0.7
 $ cp -fr ../debian .
 # pbuilder create --distribution jessie \
   --basetgz ../jessie.tgz \

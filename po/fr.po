@@ -2,15 +2,15 @@
 # Traductions françaises du paquet MediaTex.
 # Copyright (C) 2014 THE MediaTex'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the MediaTex package.
-# nroche <nroche@narval.tk>, 2014.
+# nroche <nroche@narval.fr.eu.org>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
-"Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2016-08-24 08:36+0200\n"
+"Report-Msgid-Bugs-To: nroche@narval.fr.eu.org\n"
+"POT-Creation-Date: 2016-11-30 16:54+0100\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
-"Last-Translator: nroche <nroche@narval.tk>\n"
+"Last-Translator: nroche <nroche@narval.fr.eu.org>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/common/extractScore.c:386
+#: src/common/extractScore.c:388
 msgid "Perenniality lost"
 msgstr ""
 
-#: src/common/extractScore.c:390
+#: src/common/extractScore.c:392
 msgid "Serious risk to loose perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:394
+#: src/common/extractScore.c:396
 msgid "Bad perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:398
+#: src/common/extractScore.c:400
 msgid "Good perenniality"
 msgstr ""
 
-#: src/common/extractScore.c:401
+#: src/common/extractScore.c:403
 msgid "Very good perenniality"
 msgstr ""
 

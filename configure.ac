@@ -19,7 +19,8 @@ dnl
 dnl  You should have received a copy of the GNU General Public License
 dnl  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([mediatex], [0.7], [nroche@narval.fr.eu.org])
+AC_INIT([mediatex], [0.7], [nroche@narval.fr.eu.org] []
+		    [http://www.nongnu.org/mediatex/])
 AM_INIT_AUTOMAKE([subdir-objects])
 
 # i18n support from GNU gettext.

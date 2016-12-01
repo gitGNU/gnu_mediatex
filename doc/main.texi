@@ -159,7 +159,8 @@ Theses options apply to the 3 binaries provided by @mediatexO.
 @itemx --help
 Display the help message.
 
-@item -v, --version
+@item -V
+@itemx --version
 Display the mediatex software version.
 
 @item -f @var{facility}
@@ -176,6 +177,10 @@ Set severity to log, by modules.
 Choose severity among @code{err}, @code{warning}, @code{notice}, @code{info} and @code{debug}.
 You may provide modules among @code{alloc}, @code{script}, @code{misc}, @code{memory}, @code{parser}, @code{common} and @code{main}.
 If you provide no module, all except the @code{alloc} module will be selected.
+
+@item -v
+@itemx --dry-run
+increase verbosity (wrapper for -s), from @code{-s "info"}, @code{-s "debug:main,script"} to @code{-s "debug:memory,misc"} for @code{-vvv}
 
 @item -n
 @itemx --dry-run

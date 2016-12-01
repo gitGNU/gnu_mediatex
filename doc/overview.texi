@@ -1,4 +1,4 @@
-The GNU @mediatexO{} 
+The @mediatexO{} 
 project intends to make easier as possible 
 archives management by spreading and accessing @acronym{WORM} supports 
 (as compact disks) and dedicated meta-data.
