@@ -402,6 +402,7 @@ int motdArchive(MotdSearch* data, Archive* archive, int depth)
  *              Collection* coll: collection we are working on
  *              MotdRecord* motdRecord: where we write records to burn
  * Output     : TRUE on success
+ * TODO       : finish test covering within utmotd
  =======================================================================*/
 int
 updateMotdFromMd5sumsDB(Motd* motd, Collection* coll, 
@@ -415,6 +416,7 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
   Image* image = 0;
   MotdPolicy motdPolicy = mUNDEF;
   MotdSupport* motdSupp = 0;
+  FromAsso* asso = 0;
   RGIT* curr = 0;
   int doIt = FALSE;
 
@@ -490,15 +492,25 @@ updateMotdFromMd5sumsDB(Motd* motd, Collection* coll,
     }
   }
 
-  // 3) for each support, check it is not included into another support
+  // 3) for each support, check support we can withdraw
   rgRewind(coll->supports);
   while ((support = rgNext(coll->supports))) {
     if (!(archive =
 	  getArchive(coll, support->fullMd5sum, support->size)))
       goto error;
-    if (isEmptyRing(archive->fromContainers)) continue;
 
-    // assert we do not already aked for it
+    // assert it is included into another safe support
+    curr = 0;
+    while ((asso = rgNext_r(archive->fromContainers, &curr))) {
+      if (asso->container->score >
+	  coll->serverTree->scoreParam.maxScore / 2) break;
+    }
+    if (!asso) continue;
+
+    /* TODO: not tested by utmotd yet */
+    
+    // assert we do not already ask for it
+    curr = 0;
     while ((motdSupp = rgNext_r(motd->motdAskSupports, &curr))) {
       if (!cmpSupport(&motdSupp->support, &support)) break;
     } 
@@ -636,6 +648,7 @@ updateMotdFromSupportDB(Motd* motd)
  * Input      : N/A
  * Output     : TRUE on success
  * MAYBE      : show sharable supports?
+ * TODO       : reply above question
  =======================================================================*/
 int 
 updateMotd()
@@ -673,8 +686,6 @@ updateMotd()
   printf("\n%s\n", "*****************************");
   printf("%s\n", "Mediatex's message of the day");
   printf("%s\n", "*****************************");
-
-  /* TODO: remove supports from motd->motdDelSupports */
 
   // supports to ask for
   if (!isEmptyRing(motd->motdAskSupports)) {

@@ -3,6 +3,29 @@
 
 *** TEST
 
+File agregated into a new support wich is still only available from master
+place should not be removed :
+> Please remove theses local supports:
+> - /var/lib/jukebox/galoupinou/ASI-merci-patron.com.mp4: galoupinou
+
+> (file) Provided by servers:
+>    fred (10.00)
+>    evo.narval.tk (10.00)
+>
+> (iso) Comes from:
+>    Keny_Arkana-Lusine_a_adulte_-_YouTube.mp4 from ISO (5.00)
+cf updateMotdFromMd5sumsDB // assert it is included into another safe support
+
+looks good but need a new test:
+- regression into utmotd 
+<<<
+ - SUPP11_logo.png: coll1
+---
+ [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
+ [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
+ - SUPP11_logo.png: periodic check
+>>>
+
 *** BUG
 
 - server with hight loverage segfault about once a week

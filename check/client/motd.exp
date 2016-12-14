@@ -294,6 +294,8 @@
 [info openClose.c] steps: 98 / 100
 [info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
 [info upgrade.c] file: = 10.00
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
+[warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
 [info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (AAA)
@@ -314,6 +316,8 @@
 [info openClose.c] steps: 0 / 100
 [info upgrade.c] compute support score for 0a7ecd447ef2acb3b5c6e4c550e6636f:374784 (/HERE/misc/logoP2.iso)
 [info upgrade.c] file: = 10.00
+[info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
+[warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (SUPP21_logo.part1)
 [info upgrade.c] laps > suppTTL: (1 / (1 + 2.00 * (1.00)) ) * 1.00 = 0.33
 [info upgrade.c] compute support score for de5008799752552b7963a2670dc5eb18:391168 (AAA)
@@ -328,6 +332,7 @@ Mediatex's message of the day
 *****************************
 Please provide theses local supports:
 - AAA: coll1
+- SUPP11_logo.png: periodic check
 - SUPP21_logo.part1: coll1
 - ZZZ: coll1
 Please burn theses files:
@@ -337,7 +342,6 @@ Please burn theses files:
 Please remove theses local supports:
 - /HERE/misc/logo.png: not used
 - /HERE/misc/logoP1.iso: not used
-- SUPP11_logo.png: coll1
 - SUPP12_logo.png: not used
 - SUPP23_logo.part1: not used
 - SUPP32_logo.part2: not used
@@ -349,6 +353,7 @@ Mediatex's message of the day
 *****************************
 Please provide theses local supports:
 - AAA: coll1
+- SUPP11_logo.png: periodic check
 - SUPP21_logo.part1: coll1
 - ZZZ: coll1
 Please burn theses files:
@@ -358,7 +363,6 @@ Please burn theses files:
 Please remove theses local supports:
 - /HERE/misc/logo.png: not used
 - /HERE/misc/logoP1.iso: not used
-- SUPP11_logo.png: coll1
 - SUPP12_logo.png: not used
 - SUPP23_logo.part1: not used
 - SUPP32_logo.part2: not used
