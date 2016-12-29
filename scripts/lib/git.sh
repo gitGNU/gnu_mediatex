@@ -324,17 +324,14 @@ function GIT_coll_import()
 	done
 	install -o $1 -g $1 -m 660 /dev/null readme.html
 
-	for t in home index score cgi; do
+	for t in home cache index score cgi; do
 	    install -o $1 -g $1 -m 660 $MISC/$t.htaccess apache2/
-
-	    # adapt them
-	    sed apache2/$t.htaccess -i \
-		-e "s!MEDIATEX/!$MEDIATEX/!" \
-		-e "s!MDTX-COLL!$1!" \
-		-e "s!/MDTX/!/$MDTX/!" \
-		-e "s!HOMES!$HOMES!"
 	done
-
+	
+	# adapt home.htaccess
+	sed apache2/home.htaccess -i \
+	    -e "s!MDTX-COLL!$1!" \
+	    
 	cat > .gitignore <<EOF
 *NNN.txt
 EOF

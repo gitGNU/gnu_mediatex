@@ -68,8 +68,10 @@ misc/ut$TEST -d $DIR -u $USER -g $USER -a "u:www-data:r-x" \
 
 rmdir $DIR
 
-# suppress the current date
-sed -i -e "s/\(current date: \).*/\1 XXX/" misc/$TEST.out
+# suppress the current date and user
+sed misc/$TEST.out -i \
+    -e "s/\(current date: \).*/\1 XXX/" \
+    -e "s/\ \($(id -un)\)/ USER/g" 
 
 # compare with the expected output
 mrProperOutputs misc/$TEST.out

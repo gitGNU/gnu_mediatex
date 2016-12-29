@@ -195,8 +195,8 @@ SetEnv HOME /~mdtx1-coll1
 HeaderName /mediatex/mdtx1/home/mdtx1-coll1/public_html/cacheHeader.shtml
 ReadmeName /mediatex/mdtx1/home/mdtx1-coll1/public_html/footer.html
 
-# login/password
-Require env NO_AUTH
-Require group cache
+# bellow comes from ~mdtx1-coll1/git/apache2/cache.htaccess
+
+Content from git
 [info confTree.c] free configuration
 [info utcommonHtml.c] exit on success

@@ -23,7 +23,7 @@ miscdir = $(datarootdir)@mdtx_mediatexdir@/misc
 dist_misc_DATA = \
 	cron mediatex.conf \
 	supports.txt catalog000.txt extract000.txt servers.txt \
-	index.htaccess score.htaccess cgi.htaccess \
+	index.htaccess cache.htaccess score.htaccess cgi.htaccess \
 	home.htaccess apache-mdtx.conf htgroup \
 	mediatex.css floppy-icon.png \
 	put.shtml put.js put.sh \

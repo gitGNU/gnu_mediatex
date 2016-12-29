@@ -92,6 +92,7 @@ Fait.
           root           root drwxr-xr-x DATAROOTDIR/mediatex
           root           root drwxr-xr-x DATAROOTDIR/mediatex/misc
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
+          root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
           root           root -r--r--r-- DATAROOTDIR/mediatex/misc/cron
@@ -184,6 +185,7 @@ drwxr-xr-x LOCALSTATEDIR/lib/mediatex/ut1-mdtx
 drwxr-xr-x LOCALSTATEDIR/run
 -r--r--r-- SYSCONFDIR/init.d/mediatexd
 -r--r--r-- DATAROOTDIR/mediatex/misc/apache-mdtx.conf
+-r--r--r-- DATAROOTDIR/mediatex/misc/cache.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/catalog000.txt
 -r--r--r-- DATAROOTDIR/mediatex/misc/cgi.htaccess
 -r--r--r-- DATAROOTDIR/mediatex/misc/cron

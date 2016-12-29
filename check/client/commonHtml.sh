@@ -31,6 +31,12 @@ set -e
 TEST=$(basename $0)
 TEST=${TEST%.sh}
 
+# add cache.htaccess file
+mkdir -p $GITCLT/mdtx1-coll1/apache2
+cat > $GITCLT/mdtx1-coll1/apache2/cache.htaccess <<EOF
+Content from git
+EOF
+
 # run the unit test
 client/ut$TEST >client/$TEST.out 2>&1
 

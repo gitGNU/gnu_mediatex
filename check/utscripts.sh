@@ -39,7 +39,7 @@ function UNIT_TEST_populate_datadir()
 	mediatex.css floppy-icon.png apache-mdtx.conf put.sh; do
 	install -o root -g root -m 444 $srcdir/../misc/$f $MISC
     done
-    for t in home index score cgi; do
+    for t in home index cache score cgi; do
 	install -o root -g root -m 444 $srcdir/../misc/$t.htaccess $MISC
     done
 

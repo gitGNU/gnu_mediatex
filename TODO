@@ -1,30 +1,11 @@
 
 *** DONE
 
+- generate cache/.htaccess from a git file
+
 *** TEST
 
-File agregated into a new support wich is still only available from master
-place should not be removed :
-> Please remove theses local supports:
-> - /var/lib/jukebox/galoupinou/ASI-merci-patron.com.mp4: galoupinou
-
-> (file) Provided by servers:
->    fred (10.00)
->    evo.narval.tk (10.00)
->
-> (iso) Comes from:
->    Keny_Arkana-Lusine_a_adulte_-_YouTube.mp4 from ISO (5.00)
-cf updateMotdFromMd5sumsDB // assert it is included into another safe support
-
-looks good but need a new test:
-- regression into utmotd 
-<<<
- - SUPP11_logo.png: coll1
----
- [info upgrade.c] compute support score for 022a34b2f9b893fba5774237e1aa80ea:24075 (SUPP11_logo.png)
- [warning upgrade.c] "SUPP11_logo.png" support have expired since 12784 days
- - SUPP11_logo.png: periodic check
->>>
+- test install and upgrade servers 
 
 *** BUG
 
@@ -32,6 +13,8 @@ looks good but need a new test:
 
 *** TODO
 
+- add DNS roundrobbin hostname into logo (servers.txt)
+- document apache configuration using openId
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 
 *** TODO MAYBE
@@ -45,7 +28,6 @@ looks good but need a new test:
 - add lexems for '<<<<<<<' to detect git conflicts
 - find how to speed-up mediatex when there is no dns available
 - change ring for avl-tree everywhere rgSort() is used (cpu optimisation)
-- add DNS roundrobbin hostname into logo (servers.txt)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
 - add an apache alias for '~' as it is complicated to type on mac keyboard
@@ -54,7 +36,6 @@ looks good but need a new test:
 - refuse "^../" as content extraction rule
 - manage ECDSA keys
 - hook for ~mdtx-hello/cvs/scripts/deliver.sh and cgi templates
-- test an apache configuration using ldap or openId
 - move dirname into extract rule header to reduce metadata size
 - add supp: wait CD doors is locked
 - i10n for french

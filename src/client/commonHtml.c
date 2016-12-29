@@ -758,37 +758,53 @@ serializeHtmlCacheHtaccess(Collection* coll)
 { 
   int rc = TRUE;
   ServerTree* self = 0;
-  char* path = 0;
-  FILE* fd = stdout; 
-
+  char* pathIn = 0;
+  char* pathOut = 0;
+  FILE* fdIn = 0;
+  FILE* fdOut = stdout;
+  char buffer[256];
+  int len = 0;
+ 
   if (!(self = coll->serverTree)) goto error;
-  if (!(path = createString(coll->cacheDir))) goto error;
-  if (!(path = catString(path, "/.htaccess"))) goto error;
-  logMain(LOG_DEBUG, "serialize %s", path);
-  if (!env.dryRun && (fd = fopen(path, "w")) == 0) {
-    logMain(LOG_ERR, "fdopen %s fails: %s", path, strerror(errno)); 
+  if (!(pathIn = createString(coll->gitDir))) goto error;
+  if (!(pathIn = catString(pathIn, "/apache2/cache.htaccess"))) goto error;
+  if (!(pathOut = createString(coll->cacheDir))) goto error;
+  if (!(pathOut = catString(pathOut, "/.htaccess"))) goto error;
+  logMain(LOG_DEBUG, "serialize %s", pathOut);
+
+  if (!(fdIn = fopen(pathIn, "r"))) {
+    logMisc(LOG_ERR, "fopen %s fails: %s", pathIn, strerror(errno));
+    goto error;
+  }
+  
+  if (!env.dryRun && !(fdOut = fopen(pathOut, "w"))) {
+    logMain(LOG_ERR, "fopen %s fails: %s", pathOut, strerror(errno)); 
     goto error;
   }  
-
-  if (!fprintf(fd,
+  
+  if (!fprintf(fdOut,
 	       "# fancy index for cache\n"
 	       "Options +Indexes\n"
 	       "SetEnv HOME /~%s\n"
 	       "HeaderName"
 	       " /mediatex/%s/home/%s/public_html/cacheHeader.shtml\n"
 	       "ReadmeName"
-	       " /mediatex/%s/home/%s/public_html/footer.html\n"
-	       "\n"
-	       "# login/password\n"
-	       "Require env NO_AUTH\n"
-	       "Require group cache\n",
+	       " /mediatex/%s/home/%s/public_html/footer.html\n\n"
+	       "# bellow comes from ~%s/git/apache2/cache.htaccess\n\n",
 	       coll->user,
 	       env.confLabel, coll->user,
-	       env.confLabel, coll->user))
+	       env.confLabel, coll->user,
+	       coll->user))
       goto error;
 
+  // concat user's cache.htaccess content
+  while ((len = fread(buffer, 1, 256, fdIn)) > 0) {
+    fwrite(buffer, 1, len, fdOut);
+  }
+  
+  fclose(fdIn);
   if (!env.dryRun) {
-    fclose(fd);
+    fclose(fdOut);
   } else {
     fflush(stdout);
   }
@@ -797,7 +813,8 @@ serializeHtmlCacheHtaccess(Collection* coll)
   if (!rc) {
     logMain(LOG_ERR, "serializeHtmlCacheHtaccess fails");
   }
-  path = destroyString(path);
+  pathOut = destroyString(pathOut);
+  pathIn = destroyString(pathIn);
   return rc;
 }
 
