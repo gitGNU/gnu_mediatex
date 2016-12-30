@@ -222,14 +222,14 @@ main(int argc, char** argv)
   // export mdtx environment
   if (!setEnv(programName, &env)) goto optError;
 
-  /************************************************************************/
+  /**********************************************************************/
   if (!(fd = fopen(htmlPath, "w"))) {
     logMain(LOG_ERR, "fopen fails: %s", strerror(errno));
     goto error;
   }
 
   if (!htmlMainHead(fd, "Main")) goto error;
-  if (!htmlLeftPageHead(fd, "index")) 
+  if (!htmlLeftPageHead(fd, "index", 0)) 
     goto error;
   if (!htmlLeftPageMiddle(fd)) goto error;
   if (!htmlLeftPageTail(fd)) goto error;
@@ -241,7 +241,7 @@ main(int argc, char** argv)
     logMain(LOG_ERR, "fclose fails: %s", strerror(errno));
     goto error;
   }
-  /************************************************************************/
+  /**********************************************************************/
 
   rc = TRUE;
  error:

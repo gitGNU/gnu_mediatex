@@ -183,6 +183,11 @@ DATE    {YEAR}-{MONTH}-{DAY},{HOUR}:{MIN}:{SEC}
     return(servMASTER);
   }
 
+  dnsHost {
+    BEGIN(USERVALUE);
+    return(servDNSHOST);
+  }
+
   collKey {
     BEGIN(USERVALUE);
     return(servCOLLKEY);

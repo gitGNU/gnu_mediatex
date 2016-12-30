@@ -517,6 +517,7 @@ int
 computeUrls(Collection* coll)
 {
   int rc = FALSE;
+  ServerTree* self = 0;
   Server* server = 0;
   RGIT* curr = 0;
   char url[512];
@@ -524,23 +525,46 @@ computeUrls(Collection* coll)
   checkCollection(coll);
   logCommon(LOG_DEBUG, "computeUrls %s", coll->label);
 
-  while ((server = rgNext_r(coll->serverTree->servers, &curr))) {
+  self = coll->serverTree;
+  
+  while ((server = rgNext_r(self->servers, &curr))) {
     
     // add port into the url if not the default one
-    if ((coll->serverTree->doHttps && server->wwwPort == 443) ||
-	(!coll->serverTree->doHttps && server->wwwPort == 80)) {
+    if ((self->doHttps && server->wwwPort == 443) ||
+	(!self->doHttps && server->wwwPort == 80)) {
       if (sprintf(url, "http%s://%s/~%s",
-		  coll->serverTree->doHttps?"s":"",
+		  self->doHttps?"s":"",
 		  server->host, server->user) <= 0) goto error;
     }
     else {
       if (sprintf(url, "http%s://%s:%i/~%s",
-		  coll->serverTree->doHttps?"s":"",
+		  self->doHttps?"s":"",
 		  server->host, server->wwwPort, server->user) <= 0)
 	goto error;
       
     }
     if (!(server->url = createString(url))) goto error;
+  }
+
+  // do the same for dns entry
+  //  (all hosts must use the same ports and mdtx's label)
+  if (self->dnsHost) {
+
+    // add port into the url if not the default one
+    if ((self->doHttps && self->master->wwwPort == 443) ||
+	(!self->doHttps && self->master->wwwPort == 80)) {
+      if (sprintf(url, "http%s://%s/~%s",
+		  self->doHttps?"s":"",
+		  self->dnsHost, self->master->user) <= 0) goto error;
+    }
+    else {
+      if (sprintf(url, "http%s://%s:%i/~%s",
+		  self->doHttps?"s":"", self->dnsHost,
+		  self->master->wwwPort, self->master->user) <= 0)
+	goto error;
+      
+    }
+    if (!(self->dnsUrl = createString(url))) goto error;
   }
   
   rc = TRUE;

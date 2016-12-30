@@ -416,6 +416,8 @@ ServerTree*
 destroyServerTree(ServerTree* self)
 {
   if(self == 0) goto error;
+  self->dnsUrl = destroyString(self->dnsUrl);
+  
   // do not delete archives objets 
   self->archives = destroyOnlyRing(self->archives);
   self->servers = destroyRing(self->servers, 
@@ -482,7 +484,10 @@ serializeServerTree(Collection* coll)
 	    self->master->sshPort);
     fprintf(fd, "%-10s %s\n", "master", self->master->fingerPrint);
   }
-  
+
+  if (*self->dnsHost) {
+    fprintf(fd, "%-10s %s\n", "dnsHost", self->dnsHost);
+  }
   fprintf(fd, "%-10s %s\n", "collKey", self->aesKey);
   fprintf(fd, "%-10s %s\n", "https", self->doHttps?"yes":"no");
   

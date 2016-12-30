@@ -106,6 +106,7 @@ localhost ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzupGWlTD1QFcjkNoqyWuAMBo386WHH+
 # MediaTeX mdtx1-coll1@localhost:22 servers list:
 
 master     746d6ceeb76e05cfa2dea92a1c5753cd
+dnsHost    dns_name.org
 collKey    1234567890abcdef
 https      yes
 

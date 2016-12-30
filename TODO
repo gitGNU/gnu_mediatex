@@ -1,8 +1,6 @@
 
 *** DONE
 
-- generate cache/.htaccess from a git file
-
 *** TEST
 
 - test install and upgrade servers 
@@ -13,21 +11,15 @@
 
 *** TODO
 
-- add DNS roundrobbin hostname into logo (servers.txt)
-- document apache configuration using openId
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 
 *** TODO MAYBE
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* MAYBE' /dev/null {} \;
-- avl_insert: use EEXIST instead of getter (cf catalogTree.c)
 - cache::loadCache() do not need to load extraction metadata
 - simplify code: is loadCollection alway need EXTR (to use getArchive) ?
-- simplify code: is cleanCacheTree() dead code ?
 - remove \) from extractFile.l : 'STRING  [^[:blank:]\)\n\r]{1,511}' ?
 - add lexems for '<<<<<<<' to detect git conflicts
-- find how to speed-up mediatex when there is no dns available
-- change ring for avl-tree everywhere rgSort() is used (cpu optimisation)
 - rename src/misc/md5sums.c -> checksums.c
 - rename src/memory/cvsprint.c -> gitprint.c
 - add an apache alias for '~' as it is complicated to type on mac keyboard
@@ -41,5 +33,5 @@
 - i10n for french
 - manage signals for all and for each collections
 - replace gethostby*_r by getaddrinfo and co
-- replace ardsm by mqueue (linear list if reverse order link not used)
+- replace ardsm by mqueue (linear list as reverse order is never used)
 - add thread ID to the log

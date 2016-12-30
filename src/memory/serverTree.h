@@ -75,6 +75,8 @@ struct Server {
 };
 
 struct ServerTree {
+  char dnsHost[MAX_SIZE_HOST+1]; // generic DNS hostname
+  char* dnsUrl;                  // generic DNS url
   char aesKey[MAX_SIZE_AES+1];
   Server* master;
   int doHttps;

@@ -167,6 +167,9 @@ main(int argc, char** argv)
     case servWWWPORT:
       strcpy(token, "WWWPORT");
       break;
+    case servDNSHOST:
+      strcpy(token, "DNSHOST");
+      break;
     case servCOLLKEY:
       strcpy(token, "COLLKEY");
       break;

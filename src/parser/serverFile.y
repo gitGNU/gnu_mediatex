@@ -105,6 +105,7 @@ void serv_error(yyscan_t yyscanner, Collection* coll, Server* server,
 %token            servMDTXPORT
 %token            servSSHPORT
 %token            servWWWPORT
+%token            servDNSHOST
 %token            servCOLLKEY
 %token            servUSERKEY
 %token            servHOSTKEY
@@ -168,10 +169,12 @@ header: servMASTER servHASH
   logParser(LOG_DEBUG, "line %-3i master server: %s", LINENO, $2);
   if (!(coll->serverTree->master = addServer(coll, $2))) YYABORT;
 }
+      | servDNSHOST servSTRING
+{
+  strncpy(coll->serverTree->dnsHost, $2, MAX_SIZE_HOST);
+}
       | servCOLLKEY servSTRING
 {
-  strncpy(coll->serverTree->aesKey,
-	  "01234567890abcdef", MAX_SIZE_AES);
   strncpy(coll->serverTree->aesKey, $2, MAX_SIZE_AES);
 }
       | servHTTPS servBOOLEAN

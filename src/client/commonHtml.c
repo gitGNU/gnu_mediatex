@@ -489,8 +489,15 @@ serializeHtmlCacheHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, _("Cache"))) goto error;
-  if (!htmlLeftPageHead(fd, "cache")) goto error;
+  if (!htmlLeftPageHead(fd, "cache", self->dnsUrl)) goto error;
 
+  if (*self->dnsHost) {
+    strcpy(url, self->dnsUrl);
+    strcpy(url + strlen(url), "/cache"); 
+    htmlLink(fd, 0, url, self->dnsHost);
+    fprintf(fd, "&nbsp;:\n");
+  }
+  
   // server links
   if (!isEmptyRing(self->servers)) {
     if (!rgSort(self->servers, cmpServer)) goto error;
@@ -571,7 +578,8 @@ serializeHtmlCgiHeader(Collection* coll)
 
   if (!htmlMainHeadBasic(fd, _("Cache"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cache", localhost->url))
+  if (!htmlLeftPageHeadBasic(fd, "cache",
+			     self->dnsUrl?self->dnsUrl:localhost->url))
     goto error;
 
   // upload link
@@ -654,7 +662,8 @@ serializeHtmlGitHeader(Collection* coll)
 
   if (!htmlMainHeadBasic(fd, _("Version"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/", localhost->url))
+  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/",
+			     self->dnsUrl?self->dnsUrl:localhost->url))
     goto error;
 
   if (!isEmptyRing(self->servers)) {

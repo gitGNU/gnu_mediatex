@@ -14,6 +14,7 @@ coll1 coll2 coll3 coll4
 # MediaTeX mdtx2-coll4@127.0.0.1:22 servers list:
 
 master     6b18ed0194b0fbadd08e0a13cccda00e
+dnsHost    dns_name.org
 collKey    1234567890abcdef
 https      yes
 

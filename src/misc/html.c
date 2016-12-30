@@ -27,8 +27,8 @@
 
 /*=======================================================================
  * Function   : htmlCaps
- * Description: 
- * Synopsis   : 
+ * Description: print HTML upurcase
+ * Synopsis   : int htmlCaps(FILE* fd, char* text)
  * Input      : FILE* fd
  * Output     : TRUE on success
  =======================================================================*/
@@ -69,8 +69,8 @@ htmlCaps(FILE* fd, char* text)
 
 /*=======================================================================
  * Function   : htmlMainHeadBasic
- * Description: 
- * Synopsis   : 
+ * Description: print the HTML header
+ * Synopsis   : int htmlMainHeadBasic(FILE* fd, char* title, char* url)
  * Input      : FILE* fd
  * Output     : TRUE on success
  =======================================================================*/
@@ -121,7 +121,7 @@ htmlMainHeadBasic(FILE* fd, char* title, char* url)
 
 /*=======================================================================
  * Function   : htmlLeftPageTopBasic
- * Description: 
+ * Description: display the logo
  * Synopsis   : 
  * Input      : FILE* fd
  *              char* rep = relative path from HOME

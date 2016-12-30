@@ -41,6 +41,7 @@ Exemple:
 # MediaTeX serv1-hello@@127.0.0.1:22 servers list:
 
 master     a3219b5a0512d08a291aa73b85d81674
+dnsHost    dns.round.robbin.name.org
 collKey    01234567890abcde
 https      yes
 
@@ -106,7 +107,8 @@ file: //empty file
 headers: headers header
        | header
 
-header: COLLKEY string
+header: DNSHOST string
+      | COLLKEY string
       | HTTPS boolean
       | LOGAPACHE boolean
       | LOGGIT boolean

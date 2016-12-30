@@ -73,8 +73,8 @@ int htmlMainTail(FILE* fd, char* date);
 #define SSI_HOME_TEMPLATE "<!--#echo var='HOME' -->"
 #define htmlMainHead(fd, title) \
   htmlMainHeadBasic(fd, title, SSI_HOME_TEMPLATE)
-#define htmlLeftPageHead(fd, rep) \
-  htmlLeftPageHeadBasic(fd, rep, SSI_HOME_TEMPLATE)
+#define htmlLeftPageHead(fd, rep, dnsUrl)				\
+  htmlLeftPageHeadBasic(fd, rep, dnsUrl?dnsUrl:SSI_HOME_TEMPLATE)
 #define htmlRightHead(fd) \
   htmlRightHeadBasic(fd, SSI_HOME_TEMPLATE)
 

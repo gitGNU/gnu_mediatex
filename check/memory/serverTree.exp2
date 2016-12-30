@@ -10,6 +10,7 @@
 # MediaTeX (null)@:0 servers list:
 
 master     6b18ed0194b0fbadd08e0a13cccda00e
+dnsHost    dns_name.org
 collKey    1234567890abcdef
 https      yes
 

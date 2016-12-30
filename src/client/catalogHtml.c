@@ -1317,7 +1317,8 @@ serializeHtmlIndexHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, "Index")) goto error;
-  if (!htmlLeftPageHead(fd, "index")) goto error;
+  if (!htmlLeftPageHead(fd, "index", coll->serverTree->dnsUrl))
+    goto error;
 
   htmlPOpen(fd);
   getDocListUri(url, "<!--#echo var='HOME' -->/index", 1);

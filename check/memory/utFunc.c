@@ -739,6 +739,7 @@ createExempleServerTree(Collection* coll)
   if (!(coll->serverTree)) goto error;
   if (!(coll->serverTree->master = addServer(coll, serverId[1]))) 
     goto error;
+  strncpy(coll->serverTree->dnsHost, "dns_name.org", MAX_SIZE_HOST);
   strncpy(coll->serverTree->aesKey, "1234567890abcdef", MAX_SIZE_AES);
 
   for (i=0; i<3; ++i) {

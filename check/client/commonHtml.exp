@@ -31,10 +31,11 @@
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
 <A NAME='mdtx1'
-HREF='<!--#echo var='HOME' -->/cache'><IMG
-ALIGN='BOTTOM' BORDER='0' SRC='<!--#echo var='HOME' -->/logo'
+HREF='https://dns_name.org:80/~mdtx2-coll1/cache'><IMG
+ALIGN='BOTTOM' BORDER='0' SRC='https://dns_name.org:80/~mdtx2-coll1/logo'
 ALT='top'></A>
 <P>
+<A HREF="https://dns_name.org:80/~mdtx2-coll1/cache">dns_name.org</A>&nbsp;:
 <UL>
 <LI><A HREF="https://127.0.0.1:80/~mdtx2-coll1/cache">127.0.0.1</A></LI>
 <LI><A HREF="https://localhost/~mdtx1-coll1/cache">localhost</A></LI>
@@ -91,8 +92,8 @@ HREF='<!--#echo var='HOME' -->/cgi/cgit.cgi/.git/'>Version</A></TD>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
 <A NAME='mdtx1'
-HREF='https://localhost/~mdtx1-coll1/cache'><IMG
-ALIGN='BOTTOM' BORDER='0' SRC='https://localhost/~mdtx1-coll1/logo'
+HREF='https://dns_name.org:80/~mdtx2-coll1/cache'><IMG
+ALIGN='BOTTOM' BORDER='0' SRC='https://dns_name.org:80/~mdtx2-coll1/logo'
 ALT='top'></A>
 <P>
 <A HREF="https://localhost/~mdtx1-coll1/cgi/put.shtml">Upload</A><UL>
@@ -151,8 +152,8 @@ HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'>Version</A></TD>
 <TR><TD ALIGN='LEFT' VALIGN='TOP' WIDTH=192><TABLE  WIDTH='100%'>
 <TR><TD>
 <A NAME='mdtx1'
-HREF='https://localhost/~mdtx1-coll1/cgi/cgit.cgi/.git/'><IMG
-ALIGN='BOTTOM' BORDER='0' SRC='https://localhost/~mdtx1-coll1/logo'
+HREF='https://dns_name.org:80/~mdtx2-coll1/cgi/cgit.cgi/.git/'><IMG
+ALIGN='BOTTOM' BORDER='0' SRC='https://dns_name.org:80/~mdtx2-coll1/logo'
 ALT='top'></A>
 <P>
 <UL>
