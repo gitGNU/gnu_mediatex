@@ -548,7 +548,7 @@ computeUrls(Collection* coll)
 
   // do the same for dns entry
   //  (all hosts must use the same ports and mdtx's label)
-  if (self->dnsHost) {
+  if (*self->dnsHost) {
 
     // add port into the url if not the default one
     if ((self->doHttps && self->master->wwwPort == 443) ||
