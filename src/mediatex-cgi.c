@@ -160,7 +160,7 @@ int mdtxSearch(RecordTree* rTree, char* reply)
     //if (!server) break;
     logMain(LOG_INFO, "ask  %s/%s server for file",
 	    server->host, server->fingerPrint);
-    if (!queryServer(server, rTree, reply)) goto error;
+    if (!queryServer(server, rTree, reply)) continue;
      
     if (env.dryRun) {
       strcpy(reply, "120 not found");
@@ -213,7 +213,7 @@ int mdtxFind(RecordTree *tree)
   if (!mdtxSearch(tree, reply)) goto error;
   
   // read reply
-  if (sscanf(reply, "%i", &status) < 1) {
+  if (reply[0] && sscanf(reply, "%i", &status) < 1) {
     logMain(LOG_ERR, "error re-reading reply: ",
 	    reply);
     goto error;
