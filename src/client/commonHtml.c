@@ -489,7 +489,7 @@ serializeHtmlCacheHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, _("Cache"))) goto error;
-  if (!htmlLeftPageHead(fd, "cache", self->dnsUrl)) goto error;
+  if (!htmlLeftPageHead(fd, "cache", 0, self->dnsUrl)) goto error;
 
   if (*self->dnsHost) {
     strcpy(url, self->dnsUrl);
@@ -578,7 +578,7 @@ serializeHtmlCgiHeader(Collection* coll)
 
   if (!htmlMainHeadBasic(fd, _("Cache"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cache",
+  if (!htmlLeftPageHeadBasic(fd, "cache", localhost->url,
 			     self->dnsUrl?self->dnsUrl:localhost->url))
     goto error;
 
@@ -662,7 +662,7 @@ serializeHtmlGitHeader(Collection* coll)
 
   if (!htmlMainHeadBasic(fd, _("Version"), localhost->url))
     goto error;
-  if (!htmlLeftPageHeadBasic(fd, "cgi/cgit.cgi/.git/",
+  if (!htmlLeftPageHead(fd, "cgi/cgit.cgi/.git/", localhost->url,
 			     self->dnsUrl?self->dnsUrl:localhost->url))
     goto error;
 

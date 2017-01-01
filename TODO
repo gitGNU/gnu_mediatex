@@ -11,6 +11,8 @@
 
 *** TODO
 
+htmlLeftPageHeadBasic(fd, rep, dnsUrl?dnsUrl:SSI_HOME_TEMPLATE)
+
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 
 *** TODO MAYBE

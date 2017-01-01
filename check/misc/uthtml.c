@@ -229,7 +229,7 @@ main(int argc, char** argv)
   }
 
   if (!htmlMainHead(fd, "Main")) goto error;
-  if (!htmlLeftPageHead(fd, "index", 0)) 
+  if (!htmlLeftPageHead(fd, "index", 0, 0)) 
     goto error;
   if (!htmlLeftPageMiddle(fd)) goto error;
   if (!htmlLeftPageTail(fd)) goto error;

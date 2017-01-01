@@ -65,7 +65,7 @@ int htmlCaps(FILE* fd, char* text);
   if (!fprintf(fd, "%s", "\n</A>")) goto error;				\
 
 int htmlMainHeadBasic(FILE* fd, char* title, char* url);
-int htmlLeftPageHeadBasic(FILE* fd, char* rep, char* url);
+int htmlLeftPageHeadBasic(FILE* fd, char* rep, char* srcUrl, char* dstUrl);
 int htmlLeftPageTail(FILE* fd);
 int htmlRightHeadBasic(FILE* fd, char* url);
 int htmlMainTail(FILE* fd, char* date);
@@ -73,8 +73,10 @@ int htmlMainTail(FILE* fd, char* date);
 #define SSI_HOME_TEMPLATE "<!--#echo var='HOME' -->"
 #define htmlMainHead(fd, title) \
   htmlMainHeadBasic(fd, title, SSI_HOME_TEMPLATE)
-#define htmlLeftPageHead(fd, rep, dnsUrl)				\
-  htmlLeftPageHeadBasic(fd, rep, dnsUrl?dnsUrl:SSI_HOME_TEMPLATE)
+#define htmlLeftPageHead(fd, rep, srcUrl, dstUrl)			\
+  htmlLeftPageHeadBasic(fd, rep,					\
+			srcUrl?srcUrl:SSI_HOME_TEMPLATE,		\
+			dstUrl?dstUrl:SSI_HOME_TEMPLATE)
 #define htmlRightHead(fd) \
   htmlRightHeadBasic(fd, SSI_HOME_TEMPLATE)
 

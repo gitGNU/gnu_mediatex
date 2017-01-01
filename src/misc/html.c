@@ -124,11 +124,13 @@ htmlMainHeadBasic(FILE* fd, char* title, char* url)
  * Description: display the logo
  * Synopsis   : 
  * Input      : FILE* fd
- *              char* rep = relative path from HOME
+ *              char* dstRep = relative path from HOME
+ *              char* srcUrl = base url for image source
+ *              char* dstUrl = target url form image link
  * Output     : TRUE on success
  =======================================================================*/
 int
-htmlLeftPageHeadBasic(FILE* fd, char* rep, char* url)
+htmlLeftPageHeadBasic(FILE* fd, char* dstRep, char* srcUrl, char* dstUrl)
 {
   int rc = FALSE;
 
@@ -144,7 +146,7 @@ htmlLeftPageHeadBasic(FILE* fd, char* rep, char* url)
 	       "SRC='%s/logo'\n"
 	       "ALT='top'></A>\n"
 	       "<P>\n",
-	       url, rep, url)) goto error;
+	       dstUrl, dstRep, srcUrl)) goto error;
 
   rc = TRUE;
  error:

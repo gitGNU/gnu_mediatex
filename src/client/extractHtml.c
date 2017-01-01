@@ -1160,7 +1160,7 @@ serializeHtmlScoreHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, _("Score"))) goto error;
-  if (!htmlLeftPageHead(fd, _("score"), self->dnsUrl)) goto error;
+  if (!htmlLeftPageHead(fd, _("score"), 0, self->dnsUrl)) goto error;
 
   // global score
   if (!fprintf(fd, "(%.2f)\n", coll->extractTree->score)) goto error;

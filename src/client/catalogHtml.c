@@ -1317,7 +1317,7 @@ serializeHtmlIndexHeader(Collection* coll)
   }  
 
   if (!htmlMainHead(fd, "Index")) goto error;
-  if (!htmlLeftPageHead(fd, "index", coll->serverTree->dnsUrl))
+  if (!htmlLeftPageHead(fd, "index", 0, coll->serverTree->dnsUrl))
     goto error;
 
   htmlPOpen(fd);

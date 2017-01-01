@@ -23,6 +23,7 @@ AddHandler cgi-script .cgi
 
 <Files put.*>
        # login/password
+       Require env NO_AUTH
        Require group upload
 </Files>
 
