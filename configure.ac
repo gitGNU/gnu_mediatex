@@ -4,7 +4,7 @@ dnl  *
 dnl  * Process this file with autoconf to produce a configure script.
 dnl 
 dnl  MediaTex is an Electronic Records Management System
-dnl  Copyright (C) 2014 2015 2016 Nicolas Roche
+dnl  Copyright (C) 2014 2015 2016 2017 Nicolas Roche
 dnl 
 dnl  This program is free software: you can redistribute it and/or modify
 dnl  it under the terms of the GNU General Public License as published by
