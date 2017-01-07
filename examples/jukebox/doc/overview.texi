@@ -1,0 +1,12 @@
+The @jukebox{} 
+project provides a script call by @activity{cron}.
+This script backup the @mediatex{}'s data.
+
+It runs on each @mediatexO{}'s hosts so as to backup @mediatexO{}'s cache incomings.
+
+A master instance of this script compress and aggregate data in order to provide all of them as numbered @iso{} files.
+
+@cindex NF Z 42-013
+These @iso{} files should next be burned on @cdrom{} by @mediatexO{}'s @actorPublisher{} and re-add to the @mediatexO{}'s pool of external supports.
+
+@image{jukebox-figures/jukebox,,,,}

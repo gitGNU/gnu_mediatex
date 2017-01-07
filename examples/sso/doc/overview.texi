@@ -1,0 +1,13 @@
+The @sso{} project provides 2 perl scripts, each one packaged into client and server sub-projects.
+
+@itemize
+@item Client:
+The first script is an @apache{} module that rediret the user's browser to the server hosting the second script in order to provide him a @cookie{}.
+Next, when the browser will provides such @cookie{} having good credentials, this script will let him enter.
+
+@item Serveur:
+The second script is a @cgi{} portal that authenticate a client and provide him a @cookie{}.
+
+@end itemize
+
+@image{mdtxSso-figures/mdtxSso,,,,}

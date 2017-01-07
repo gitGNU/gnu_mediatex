@@ -1,0 +1,9 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+Makefile
+# make
+.deps
+*.eps
+*.png
+*.fig.bak

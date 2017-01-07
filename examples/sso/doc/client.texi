@@ -1,0 +1,84 @@
+@cindex client
+
+@menu
+* cltConf::      Configuration
+* cltPerms::     Permissions
+* cltCookie::    Cookie
+@end menu
+
+@sso{}'s client is a @acronym{mod-perl2} module of @apache{}.
+
+It is trigered as a @code{HeaderParserHandler} and so redirect the client as long the @cookie{} it provided does not match the expected permissions.
+
+@page
+@node cltConf
+@section Configuration
+
+The main client configuration is done into @file{/etc/apache2/conf-available/mediatex-sso.cnf} :
+
+@table @code
+
+@item SSO_SERVER_URL
+The @url{} to use in order to redirect user to the @cgi{} server hosting the portal server script.
+
+@item PUB_KEY_FILE
+A @rsa{} public key used to valid server signature.
+
+@item AES_KEY
+A 16 bytes secret string share by clients and servers, used to decrypt permissions from the @cookie{}.
+
+@end table
+
+@page
+@node cltPerms
+@section Permissions
+
+The permissions are set into @file{.htaccess} files :
+@example
+PerlHeaderParserHandler Apache2::mdtxSsoClt
+PerlSetVar GROUP index
+@end example
+
+@itemize
+@item 
+The fist line set our Perl module into the @apache{} callbacks.
+
+@item
+The target collection for wich we check access is deduced from the requested @urlO{}
+@example
+if (!($url =~ /\/~mdtx-([^\/]+)/)) @{
+	$r->log_error("cannot get collection from url: ".$url);
+    	return Apache2::Const::SERVER_ERROR;
+    @}
+$urlColl=$1;
+@end example
+
+@item
+The group we are looking for into permissions is provided as a variable.
+@end itemize
+
+Having theses informations, the Perl module will search matching content into the permission string provided by the @cookie{}:
+@example
+COLL1:group1,group2,...,groupN;COLL2:group1,group2,...,groupN;...;COLLN:group1,group2,...,groupN
+@end example
+
+@page
+@node cltCookie
+@section Cookie
+
+@table @code
+@item URL(``name='' B64(AES(``IP=P'')) B64(RSA(B64(AES(``IP=P'')))) )
+The cookie is transmited by the user's browser.
+It is prefixed by the cookie's name and it is @url{} encoded.
+
+@item B64(AES(``IP=P'')) B64(RSA(B64(AES(``IP=P''))))
+The content consist on 2 base 64 strings.
+The second string must be an @rsa{} signature of the first string.
+
+@item B64(AES(``IP=P''))
+Permission are decrypted using the @aes{} key.
+
+@item ``IP=P''
+The @ip{} that prefix the permissions is check against the user's @ip{} in order to prevent someone to provied a stolen @cookie{}.
+
+@end table

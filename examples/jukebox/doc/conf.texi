@@ -1,0 +1,31 @@
+@cindex jukebof.conf
+
+@file{/etc/mediatex/jukebox.conf}
+@example
+# Mediatex's server instance to manage.
+#CONF_LABEL=mdtx
+
+# Place where the mediatex's mot of the day is stored.
+#MOTD=/etc/motd
+
+# Collections to backup: to set on all hosts.
+# All by default, or collection's labels delimited by spaces.
+#COLLECTIONS=""
+
+# Collections to compress and agregate: to set only on one host.
+# Master collections by default, or collection's labels delimited by spaces.
+# Should be set to "none" or a value that didn't match a collection,
+#  in order to be disabled.
+#MASTER_COLLECTIONS=""
+
+# Maximum iso size to produce (in bytes).
+# 700M by default.
+#MAX_ISO_BYTE=734003200
+
+# Minimum iso size to produce (in bytes).
+# 650M by default.
+#MIN_ISO_BYTE=681574400
+
+# Jukebox directory storage to use.
+#ROOT_WORKING_DIR=/var/lib/jukebox
+@end example

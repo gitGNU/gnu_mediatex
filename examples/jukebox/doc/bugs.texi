@@ -1,0 +1,31 @@
+@cindex Bug
+@cindex Problems
+@cindex Bugs
+
+To report bugs or suggest enhancements for Mediatex, please
+send electronic mail to @email{nroche@@narval.fr.eu.org}.
+
+For bug reports, please include enough information for the maintainers
+to reproduce the problem.  Generally speaking, that means:
+
+@itemize @bullet
+@item The version numbers of Mediatex (which you can find by running
+      @w{@samp{mediatex --version}}) and any other program(s) or
+      manual(s) involved.
+@item Hardware and operating system names and versions.
+@item The contents of any input files necessary to reproduce the bug.
+@item The expected behaviour and/or output.
+@item A description of the problem and samples of any erroneous output.
+@item Options you gave to @command{configure} other than specifying
+      installation directories.
+@item Anything else that you think would be helpful.
+@end itemize
+
+When in doubt whether something is needed or not, include it.  It's
+better to include too much than to leave out something important.
+
+@cindex Patches
+@cindex Contributing
+Patches are welcome; if possible, please make them with @samp{@w{diff
+-c}}.  Please follow the existing coding style.
+

@@ -1,0 +1,1277 @@
+#!/bin/bash
+#set -x
+set -e
+#=======================================================================
+# * Project: MediaTex
+# * Module: jukebox script
+# *
+# * This script deliver the extracted archives
+#
+# MediaTex is an Electronic Records Management System
+# Copyright (C) 2017 Nicolas Roche
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=======================================================================
+
+# lists of content to burn into new supports:
+# (each array index is related to the same ressource)
+declare -a pathToAdd # source path from where the file can be copied
+declare -a hashToAdd # hash of the file
+declare -a sizeToAdd # size of the file
+declare -a destToAdd # path where the file will reside into the cache
+declare -a tmpoToAdd # temporary file delFileToAdd will "rm"
+declare -a suppToAdd # if file is a support already added to mediatex
+
+# lists of support to withdraw from collection or to destroy, if not used
+# (indexes for the two below array are not related to the same ressource)
+declare -a suppToRem # supports to withdraw from the collection
+declare -a suppToDel # support to destroy (no more used by any collection)
+
+# array related to agregate function
+declare -a file  # remind file index
+declare -a size  # input for knapsack
+declare -a value # input for knapsack
+declare -A bag   # internal results for knapsack (item x size)
+declare -A choice # result for knapsack (item x size)
+
+# data do not compress
+gzExcluded=(
+    "compressed data"
+    "RAR archive data"
+    "7-zip archive data"
+    "ISO Media, MP4 Base Media v1 \[IS0 14496-12:2003\]"
+    "ISO Media, MP4 v2 \[ISO 14496-14\]"
+    "ISO 9660 CD-ROM filesystem data"
+)
+NB_GZ_EXCLUDED=6
+
+# data do not compress agregate
+isoExcluded=(
+    "ISO 9660 CD-ROM filesystem data"
+)
+NB_ISO_EXCLUDED=1
+
+# if we are onmaster host
+IS_MASTER_HOST=0
+
+# size for splited files
+SPLIT_SIZE=0
+
+# variable used to limit data's size of iso's content
+DATA_RATE=99
+
+# variable used as return status
+RC=0
+
+# notify a new file to burn
+# $1: related source path
+# $2: optional extraction's cache path
+# $3: optional path to delFiletoAdd will "rm"
+# $4: optional boolean is file is a support
+function addFileToAdd
+{
+    local FILE=$1
+    local DEST=$2
+    local TMPO=$3
+    local SUPP=$4
+    local HASH=""
+    local SIZE=""
+
+    debug "addFileToAdd( '%s', '%s', '%s', '%s' )" "$1" "$2" "$3" "$4"
+    
+    HASH=$(md5sum "$FILE" | cut -d' ' -f 1)
+    if [ -z "$HASH" ]; then exit 1; fi
+    SIZE=$(ls "$FILE" -l | cut -d' ' -f 5)
+    if [ -z "$SIZE" ]; then exit 1; fi
+
+    # if target path is not provided
+    if [ -z "$DEST" ]; then
+	
+	# search target path into the extraction meta-data 
+	DEST=$(grep "$HASH:$SIZE" $CURRENT_RULES_LIST | \
+		      awk '{print $2}')
+    fi
+    if [ -z "$DEST" ]; then
+	if [ ${FILE#$WORKING_DIR/} != ${FILE} ]; then
+	    DEST=${FILE#$WORKING_DIR/}
+	else
+	    DEST=$(basename $FILE)
+	fi
+    fi	
+    
+    pathToAdd[$NB_FILE_TO_ADD]=$FILE
+    hashToAdd[$NB_FILE_TO_ADD]=$HASH
+    sizeToAdd[$NB_FILE_TO_ADD]=$SIZE
+    destToAdd[$NB_FILE_TO_ADD]=$DEST
+    tmpoToAdd[$NB_FILE_TO_ADD]=$TMPO
+    suppToAdd[$NB_FILE_TO_ADD]=$SUPP
+    NB_FILE_TO_ADD=$[NB_FILE_TO_ADD+1]
+}
+
+# notify an old support to withdraw
+# $1: related support's label
+function addSuppToRem
+{
+    debug "addSuppToRem( %s )" $1
+    
+    suppToRem[$NB_SUPP_TO_REM]=$1
+    NB_SUPP_TO_REM=$[NB_SUPP_TO_REM+1]
+}
+
+# notify an old support to destroy
+# $1: related support's label
+function addSuppToDel
+{
+    debug "addSuppToDel( %s )" $1
+    
+    suppToDel[$NB_SUPP_TO_DEL]=$1
+    NB_SUPP_TO_DEL=$[NB_SUPP_TO_DEL+1]
+}
+
+# un-notify a file that is no more to burn
+# $1: file's index to del
+function delFileToAdd
+{
+    debug "delFileToAdd( %s )" ${pathToAdd[$1]}
+    
+    # cleaning
+    if [ ! -z "${tmpoToAdd[$1]}" ]; then
+	
+	# if file is a support
+	if [ x"${suppToAdd[$i]}" == x"yes" ]; then
+	    addSuppToRem ${tmpoToAdd[$i]}
+	    addSuppToDel ${tmpoToAdd[$i]}
+	else
+	    # only rm file coming from this script (double check)
+    	    if [ x"${tmpoToAdd[$1]#$WORKING_DIR}" != x"${tmpoToAdd[$1]}" ];
+    	    then
+    		run "rm -f ${tmpoToAdd[$i]}"
+    	    fi
+	fi
+    fi
+    
+    pathToAdd[$1]=""
+    hashToAdd[$1]=""
+    sizeToAdd[$1]=""
+    destToAdd[$1]=""
+    tmpoToAdd[$1]=""
+}
+
+# check if localhost is the collection's master host
+# as some operation should only be done by one host,
+# else some resulting data files may be redondant.
+function isMasterHost()
+{
+    RC=0
+    local TMP=""
+
+    debug "isMasterHost()"
+    
+    for TMP in $MASTER_COLLECTIONS; do
+	if [ "$TMP" == "$COLL" ]; then
+	    RC=1
+	    break
+	fi
+    done
+
+    if [ $RC -eq 1 ]; then
+	debug "%s" " on master host"
+    else
+	debug "%s" " not on master host"
+    fi
+}
+
+# check if a file is already an iso file
+# $1: file's path to check
+function isIsoFile()
+{
+    RC=0
+    local FILE=$1
+    local TYPE=""
+    local i=0
+
+    debug "isIsoFile( '%s' )" "$1"
+    
+    TYPE=$(file -b $FILE)
+    for ((i=0; i<$NB_ISO_EXCLUDED; i++)); do
+	if (echo $TYPE | grep -q "${isoExcluded[$i]}"); then
+	    break;
+	fi
+    done
+    if [ $i -lt $NB_ISO_EXCLUDED ]; then
+	debug "%s" " is an iso file"
+	RC=1
+    else
+	debug "%s" " is not an iso file"
+    fi
+}
+
+# parse mediatex "mot of the day" to get inputs
+function parseMotd()
+{
+    RC=0
+    local STATE=0 # initial
+    local LINE=""
+    local LABEL=""
+    local TARGET=""
+    local TXT=""
+
+    debug "* parerMotd()"
+    
+    while read LINE; do
+	debug "%2i: %s" $STATE "$LINE"
+
+	case $LINE in
+	    # detect state's changes
+	    "Please provide theses local supports:")
+		STATE=1
+		;;
+	    "Please burn theses files:")
+		STATE=2
+		;;
+	    "- Collection $COLL:")
+		STATE=21
+		;;
+	    "Please remove theses local supports:")
+		STATE=3
+		;;
+
+	    *)
+		# 
+		LABEL=$(echo $LINE | sed -e 's/[- ]*\([^ :]*\).*/\1/')
+		if [ -z "$LABEL" ]; then
+		    continue;
+		fi	
+		
+		case $STATE in
+		    21)
+			# Please burn theses files:
+			TARGET=$WORKING_DIR/$PREF$(basename $LABEL)
+			
+			# not already there
+			if [ -f $TARGET ]; then
+			    debug "$TARGET target file already there," \
+				  "please cleanup"
+			    exit 1
+			fi
+			
+			run "cp $LABEL $TARGET"
+			addFileToAdd "$TARGET" "" "$TARGET"
+			;;
+		    3)
+			# Please remove theses local supports:
+			TXT=$(echo $LINE | cut -d':' -f2 | sed -e 's/,//g')
+			if [ x"$TXT" == x" not used" ]; then
+			    # ...as no more used
+			    addSuppToDel $LABEL
+			else
+			    TXT=" $TXT "
+			    if echo "$TXT" | grep -q " $COLL "; then
+				# ...from COLL
+				addSuppToRem $LABEL
+			    fi
+			fi
+		esac
+		;;
+	esac
+	
+    done <$CURRENT_MOTD
+
+    debugArrays
+    RC=1
+}
+
+# parse mediatex's support to get inputs
+function parseSupportListe()
+{
+    RC=0
+    local STATE=0 # initial
+    local LINE=""
+    local SUPP=""
+    local i=0
+
+    debug "* parseSupportListe()"
+    
+    while read LINE; do
+	debug "%i: %s" $STATE "$LINE"
+	
+	if [ $STATE -eq 0 ]; then
+	    STATE=1
+	    continue;
+	fi
+	
+	SUPP=$(echo $LINE | awk '{print $3}')
+	if [ -z "$SUPP" ]; then
+	    continue;
+	fi
+	
+	# only work on supports managed by this script
+	if [ x"${SUPP#$WORKING_DIR}" == x"$SUPP" ]; then
+	    continue
+	fi
+
+	# exclude iso files (already proceced)
+	isIsoFile $SUPP
+	if [ $RC -eq 1 ]; then
+	    continue;
+	fi
+	RC=0
+
+	# skip if already asked to be withdraw
+	for ((i=0; i<$NB_SUPP_TO_REM; i++)); do
+	    if [ x"${suppToRem[$i]}" = x"$SUPP" ]; then
+		break
+	    fi	   
+	done
+	if [ $i -lt $NB_SUPP_TO_REM ]; then
+	    continue
+	fi
+	
+	# skip if already asked to be removed
+	for ((i=0; i<$NB_SUPP_TO_DEL; i++)); do
+	    if [ x"${suppToDel[$i]}" = x"$SUPP" ]; then
+		break
+	    fi
+	done
+	if [ $i -lt $NB_SUPP_TO_DEL ]; then
+	    continue
+	fi
+	
+	addFileToAdd "$SUPP" "" "$SUPP" "yes"
+	
+    done <$CURRENT_SUPP_LIST
+
+    debugArrays
+    RC=1
+}
+
+# compress input files
+function compressFiles()
+{
+    RC=0
+    local MAX=0
+    local TYPE=""
+    local BASENAME=""
+    local TARGET=""
+    local i=0
+    local j=0
+
+    debug "* compressFiles()"
+    
+    # loop on currents items
+    MAX=NB_FILE_TO_ADD
+    for ((i=0; i<$MAX; i++)); do
+	#echo "$i: ${pathToAdd[$i]}"
+	if [ -z ${pathToAdd[$i]} ]; then
+	   continue
+	fi
+	
+	# exclude already compressed files
+	TYPE=$(file -b ${pathToAdd[$i]})
+	for ((j=0; j<$NB_GZ_EXCLUDED; j++)); do
+	    if (echo $TYPE | grep -q "${gzExcluded[$j]}"); then
+		break
+	    fi
+	done
+	if [ $j -lt $NB_GZ_EXCLUDED ]; then
+	    continue
+	fi
+
+	# need to check extension to exclude already splitted file
+	if echo ${pathToAdd[$i]} | grep -q "_[0-9]\{2\}.cat\$";
+	then
+	    continue
+	fi
+	
+	# create compressed file
+	BASENAME=$PREF$(basename ${pathToAdd[$i]})
+	TARGET=$WORKING_DIR/$BASENAME.gz
+
+	# not already there
+	if [ -f $TARGET ]; then
+	    debug "$TARGET target file already there, please cleanup"
+	    exit 1
+	fi
+
+	run "gzip -c ${pathToAdd[$i]} > $TARGET"
+
+	# add metadata
+	addFileToAdd "$TARGET" "$PREF${destToAdd[$i]}.gz" "$TARGET"
+
+	# check if compression is usefull
+	if [ ${sizeToAdd[$[NB_FILE_TO_ADD-1]]} -ge ${sizeToAdd[$i]} ]; then
+	    delFileToAdd $[NB_FILE_TO_ADD-1]
+	    delFileToAdd $i
+	    continue;
+	fi
+	
+	cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+(GZ 
+ ${hashToAdd[$[NB_FILE_TO_ADD-1]]}:${sizeToAdd[$[NB_FILE_TO_ADD-1]]}
+=>
+ ${hashToAdd[$i]}:${sizeToAdd[$i]} ${destToAdd[$i]}
+)
+EOF
+	delFileToAdd $i
+    done
+
+    debugArrays
+    RC=1
+}
+
+# split inputs files
+function splitFiles()
+{
+    RC=0
+    local MAX=0
+    local BASENAME=""
+    local TARGET=""
+    local SOURCE=""
+    local SUFF=""
+    local i=0
+    local j=0
+    local n=0
+    
+    debug "* splitFiles()"
+    
+    MAX=$NB_FILE_TO_ADD
+    for ((i=0; i<$MAX; i++)); do
+	#echo "$i: ${pathToAdd[$i]}"
+
+	if [ -z ${pathToAdd[$i]} ]; then
+	    continue
+	fi
+
+	# exclude iso files (as potential dead lock)
+	isIsoFile ${pathToAdd[$i]}
+	if [ $RC -eq 1 ]; then
+	    continue;
+	fi
+	RC=0
+
+	# check size
+	if [ ${sizeToAdd[$i]} -lt $MAX_ISO_BYTE ]; then
+	    continue;
+	fi
+
+	# split file
+	BASENAME=$PREF$(basename ${pathToAdd[$i]})
+	run "cd $WORKING_DIR"
+	run "split -b $SPLIT_SIZE -d --additional-suffix=_$BASENAME.cat \
+	      ${pathToAdd[$i]}"
+	run "cd - >/dev/null"
+	
+	# add metadata
+	cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+(CAT
+EOF
+	n=0
+	j=0
+	while [ $n -lt ${sizeToAdd[$i]} ]; do
+	    
+	    # rename files
+	    SOURCE=$(printf "$WORKING_DIR/x%02i_$BASENAME.cat" $j)
+	    SUFF=$(printf "_%02i.cat" $j)
+	    TARGET=$WORKING_DIR/$BASENAME$SUFF
+
+	    # not already there
+	    if [ -f $TARGET ]; then
+		debug "$TARGET target file already there, please cleanup"
+		exit 1
+	    fi
+
+	    run "mv $SOURCE $TARGET"
+
+	    # add meta-data
+	    addFileToAdd "$TARGET" "$PREF${destToAdd[$i]}$SUFF" "$TARGET"
+	    cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+ ${hashToAdd[$[NB_FILE_TO_ADD-1]]}:${sizeToAdd[$[NB_FILE_TO_ADD-1]]}
+EOF
+
+	    n=$[n+$SPLIT_SIZE]
+	    j=$[j+1]
+	done
+	
+	cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+=>
+ ${hashToAdd[$i]}:${sizeToAdd[$i]} ${destToAdd[$i]}
+)
+EOF
+	delFileToAdd $i
+	
+    done
+
+    debugArrays
+    RC=1	
+}
+
+# $1: a
+# $2: b
+# $3: n, the item number
+# $4: s, the maximum size
+# $5: d, then depth call (to indent display)
+# return value max(a,b)
+function max()
+{
+    RC=0
+    local a=$1
+    local b=$2 
+    local n=$3
+    local s=$4
+    local d=$5
+
+    #debug "n=%i s=%i" $n $s
+    
+    choice[$n, $s]="no"
+    
+    if [ $a -ge $b ]; then
+	if [ $a -gt 0 ]; then
+	    choice[$n, $s]="yes"
+	fi
+	RC=$a
+    else
+	RC=$b
+    fi
+
+    debug "%s choice[%i, %i] = %s" "$d" $n $s ${choice[$n, $s]}
+}
+
+# $1: n, the item number
+# $2: s, the maximum size
+# $3: d, then depth call (to indent display)
+function knapSack()
+{
+    RC=0
+    local n=$1
+    local s=$2
+    local d=$3
+    local a=0
+    local b=0
+    
+    if [ $n -lt 0 ]; then
+	#debug "%s knapBag(%i, %i) = 0" "$d" $n $s
+	RC=0
+	return
+    fi
+
+    if [ $s -le 0 ]; then
+	#debug "%s knapBag(%i, %i) = 0" "$d" $n $s
+	RC=0
+	return
+    fi
+
+    debug "%s knapBag(%i, %i)..." "$d" $n $s
+    
+    if [ -n "${bag[$n, $s]}" ]; then
+	debug "%s bag[%i, %i] = %i" "$d" $n $s ${bag[$n, $s]}
+	RC=${bag[$n, $s]}
+	return
+    fi
+    
+    # try to add the n'th item
+    if [ ${size[$n]} -le $s ]; then
+	debug "%s having %i..." "$d" $n
+	knapSack $[n-1] $[s-${size[$n]}] "${d} "
+	a=$[$RC+${value[$n]}]
+    else
+	a=0
+    fi
+
+    # try do not add the n'th item
+    debug "%s without %i..." "$d" $n
+    knapSack $[n-1] $s "$d "
+    b=$RC
+
+    # keep best solution
+    max $a $b $n $s "$d"
+    bag[$n, $s]=$RC
+
+    debug "%s bag[%i, %i] = %i" "$d" $n $s ${bag[$n, $s]}
+    return
+}
+
+# build an iso file
+# $1: maximum items
+# $2: maximum size
+function mkIso()
+{
+    RC=0
+    local maxItem=$1
+    local maxSize=$2
+    local CD_NUMBER=0
+    local DEST_DIR=""
+    local BASENAME=""
+    local TARGET=""
+    local DEST2=""
+    local n=0
+    local s=0
+   
+    debug "* mkIso( %i, %i )" "$1" "$2"
+    
+    # cd number
+    if [ -f $WORKING_DIR/${PREF}__cdNumber.txt ]; then
+	CD_NUMBER=$(cat $WORKING_DIR/${PREF}__cdNumber.txt)
+    fi
+    CD_NUMBER=$[CD_NUMBER+1]
+
+    DEST_DIR="supports"
+    BASENAME=$PREF$(printf "%s_CD%02i" $COLL $CD_NUMBER)
+    TARGET="$WORKING_DIR/$BASENAME.iso"
+
+    # not already there
+    if [ -f $TARGET ]; then
+	debug "$TARGET target file already there, please cleanup"
+	exit 1
+    fi
+    
+    run "mkdir $WORKING_DIR/$BASENAME"
+
+    # loop content
+    n=$[maxItem-1]
+    s=$maxSize
+    while [ $n -ge 0 ]; do
+	debug "choice[%i, %i] = %s" $n $s ${choice[$n, $s]}
+	case ${choice[$n, $s]} in
+	    "yes")
+		i=${file[$n]}
+		DEST2=$(dirname ${destToAdd[$i]})
+		if [ $DEST2 != "." ]; then
+		    run "mkdir -p $WORKING_DIR/$BASENAME/$DEST2"
+		fi
+		DEST2=${destToAdd[$i]}
+		run "cp ${pathToAdd[$i]} $WORKING_DIR/$BASENAME/$DEST2"
+		s=$[s-${size[$n]}]
+		;;
+	    "no")
+		#debug "do not take file %s" ${pathToAdd[$i]}
+		;;
+	    *)
+		echo "error: bad computed value"
+		exit 1
+	esac
+	n=$[n-1]
+    done
+
+    # try to build iso having an acceptable size
+    CMD="genisoimage -rJ -joliet-long -input-charset utf8"
+    CMD="$CMD -V $BASENAME"
+    CMD="$CMD -publisher $(echo $PACKAGE_STRING | sed -e 's/ /_/g')"
+    SIZE=$($CMD -print-size $WORKING_DIR/$BASENAME 2>&1 | tail -n1)
+    debug "iso size estimated to %i" $[SIZE*2048]
+    if [ \( -z "$SIZE" \) -o \( $[SIZE*2048] -gt $MAX_ISO_BYTE \) ]; then
+	debug "iso too big!"
+	run "rm -fr $WORKING_DIR/$BASENAME"
+	return
+    fi
+    run "$CMD -o $TARGET $WORKING_DIR/$BASENAME 2>/dev/null"
+    run "rm -fr $WORKING_DIR/$BASENAME"
+
+    # add metadata
+    addFileToAdd "$TARGET" "$DEST_DIR/$BASENAME.iso" ""
+    cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+(ISO
+ ${hashToAdd[$[NB_FILE_TO_ADD-1]]}:${sizeToAdd[$[NB_FILE_TO_ADD-1]]}
+=>
+EOF
+
+    # loop content
+    n=$[maxItem-1]
+    s=$maxSize
+    while [ $n -ge 0 ]; do
+	case ${choice[$n, $s]} in
+	    "yes")
+		i=${file[$n]}
+		cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+ ${hashToAdd[$i]}:${sizeToAdd[$i]} ${destToAdd[$i]}
+EOF
+		s=$[s-${size[$n]}]
+		delFileToAdd $i
+	esac
+	n=$[n-1]
+    done
+
+    cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+)
+EOF
+    echo $CD_NUMBER > $WORKING_DIR/${PREF}__cdNumber.txt
+
+    debugArrays
+    RC=1
+}
+
+# agregate input files into iso containers
+function agregateFiles()
+{
+    RC=0
+    local isoSize=1000
+    local minSize=0
+    local maxSize=0
+    local TYPE=""
+    local i=0
+    local n=0
+    local s=0
+    
+    debug "* aggregateFiles()"
+
+    debug "iso having only a big file:"
+    for ((i=0; i<$NB_FILE_TO_ADD; i++)); do
+	if [ -z ${pathToAdd[$i]} ]; then
+	    continue
+	fi
+	
+	# exclude iso files (already aggregated)
+	isIsoFile ${pathToAdd[$i]}
+	if [ $RC -eq 1 ]; then
+	    continue;
+	fi
+	RC=0
+
+	# take only big files (first splitted parts above)
+	if [ ${sizeToAdd[$i]} -ne $SPLIT_SIZE ]; then
+	    continue
+	fi
+
+	# simulate knapsack's call
+	file[0]=$i
+	size[0]=$SPLIT_SIZE
+	choice[0, $SPLIT_SIZE]="yes"
+	mkIso 1 $SPLIT_SIZE
+	if [ $RC -eq 2 ]; then
+	    debug "internal parameter error: splitted files too big"
+	    return
+	fi
+    done
+
+    debug "iso having several files:"
+
+    # reduce knapsack arrays size to isoSize cells
+    minSize=$[MIN_ISO_BYTE*isoSize/(MAX_ISO_BYTE+1)+1]
+    if [ $minSize -eq 0 ]; then
+	minSize=1
+    fi
+    
+    while /bin/true; do
+	maxItem=0
+	
+	# initialise inputs
+	debug "knapsack inputs:"
+	for ((i=0; i<$NB_FILE_TO_ADD; i++)); do
+	    if [ -z ${pathToAdd[$i]} ]; then
+		continue
+	    fi
+
+	    # exclude iso files (already aggregated)
+	    isIsoFile ${pathToAdd[$i]}
+	    if [ $RC -eq 1 ]; then
+		continue;
+	    fi
+	    RC=0
+	    
+	    file[$maxItem]=$i
+	    size[$maxItem]=$[sizeToAdd[$i]*isoSize/(MAX_ISO_BYTE+1)+1]
+	    if [ ${size[$maxItem]} -eq 0 ]; then
+		size[$maxItem]=1
+	    fi
+
+	    # special case where the value to optimize IS the size
+	    value[$maxItem]=${size[$maxItem]}
+
+	    debug "- %i: %i (%s)" $maxItem  ${size[$maxItem]} \
+		  ${pathToAdd[${file[$maxItem]}]}
+
+	    maxItem=$[maxItem+1]
+	done
+	
+	if [ $maxItem -eq 0 ]; then
+	    break;
+	fi
+
+	# try to pack an iso using decreasing rates
+	maxSize=$[isoSize - 2] # 99.8%
+	while /bin/true; do	    
+
+	    # reset results
+	    for ((n=0; n<$maxItem; n++)); do
+		choice[$n, 0]="no"
+		for ((s=1; s<=$maxSize; s++)); do
+		    bag[$n, $s]=""
+		    choice[$n, $s]=""
+		done
+	    done
+
+	    # call knapsack
+	    debug "knapsack for [$minSize, $maxSize]" 
+	    knapSack $[maxItem-1] $maxSize ""
+	    
+	    # use results to build an iso
+	    n=$[maxItem-1]
+	    s=$maxSize
+	    if [ ${bag[$n, $s]} -lt $minSize ]; then
+		break
+	    fi
+	    mkIso $maxItem $maxSize
+	    if [ $RC -eq 1 ]; then
+		break;
+	    fi
+
+	    # fix a lower rate if it fails
+	    maxSize=$[maxSize - 2]
+	    if [ $maxSize -le $[isoSize * 90 / 100] ]; then		
+		break
+	    fi
+	done
+
+	# no more iso to build
+	if [ ${bag[$n, $s]} -lt $minSize ]; then
+	    break
+	fi
+    done
+	
+    RC=1
+}
+
+# add files as new supports and
+# upload extraction path for new contents
+function addSupports()
+{
+    RC=0
+    local i=0
+    
+    debug "* addSupports()"
+
+    for ((i=0; i<$NB_FILE_TO_ADD; i++)); do
+	if [ -z "${pathToAdd[$i]}" ]; then
+	    continue
+	fi
+
+	# already there
+	if [ x"${suppToAdd[$i]}" == x"yes" ]; then
+	    continue
+	fi
+
+	# already added ?
+	if ! grep -q "${pathToAdd[$i]}" $CURRENT_SUPP_LIST; then
+	    please "mediatex -c $CONF_LABEL add file ${pathToAdd[$i]}"
+	fi
+
+	# already added to coll ?
+	#if ! $(sed -e "/^Collection $COLL/, /end/ p" /etc/mediatex/$CONF_LABEL.conf |
+	#	      grep -q "${pathToAdd[$i]}"); then
+	    please "mediatex -c $CONF_LABEL add supp ${pathToAdd[$i]}" \
+		   " to coll $COLL"
+	#fi
+    done
+    
+    debug "* uploadRules()"
+    
+    cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+(IMG
+=>
+EOF
+    for ((i=0; i<$NB_FILE_TO_ADD; i++)); do
+	if [ -z "${pathToAdd[$i]}" ]; then
+	    continue;
+	fi
+
+	# already there
+	if [ x"${suppToAdd[$i]}" == x"yes" ]; then
+	    continue
+	fi
+	
+	# add target path if provided
+	if [ ! -z "${destToAdd[$i]}" ]; then	    
+
+	    # and not already there
+	    if ! grep -q "${hashToAdd[$i]}:${sizeToAdd[$i]}" \
+			$CURRENT_RULES_LIST; then
+		cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+ ${hashToAdd[$i]}:${sizeToAdd[$i]} ${destToAdd[$i]}
+EOF
+	    fi
+	fi
+
+	tmpoToAdd[$i]=""
+	delFileToAdd $i
+    done
+
+    cat >>$WORKING_DIR/${PREF}__extract.txt <<EOF
+)
+EOF
+
+    if [ $VERBOSE -eq 1 ]; then
+	cat $WORKING_DIR/${PREF}__extract.txt
+    fi
+    
+    please "mediatex -c $CONF_LABEL upload" \
+	   " rules $WORKING_DIR/${PREF}__extract.txt" \
+	   " to coll $COLL"
+    
+    RC=1
+}
+
+# withdraw some supports from the collection
+function remSupports()
+{
+    RC=0
+    local i=0
+    
+    debug "* remSupports()"
+    
+    for ((i=0; i<$NB_SUPP_TO_REM; i++)); do
+	
+	please "mediatex -c $CONF_LABEL del supp ${suppToRem[$i]}" \
+	       " from coll $COLL || true"
+
+	suppToRem[$i]=""
+    done
+
+    RC=1
+}
+
+# remove some supports no more used
+function delSupports()
+{
+    RC=0
+    local i=0
+    
+    debug "* delSupports()"
+    
+    for ((i=0; i<$NB_SUPP_TO_DEL; i++)); do
+
+	# check supp are managed by this script (double check)
+	if [ x"${suppToDel[$i]#$WORKING_DIR}" == x"${suppToDel[$i]}" ];
+	then
+	    continue;
+	fi
+		
+	please "mediatex -c $CONF_LABEL del supp ${suppToDel[$i]} || true"
+	please "rm -f ${suppToDel[$i]}"
+
+	suppToDel[$i]=""
+    done
+
+    RC=1
+}
+
+# display input arrays
+function debugArrays()
+{
+    local i=0
+    
+    if [ $VERBOSE -eq 0 ]; then
+	return
+    fi
+	
+    debug "* debugArrays()"
+    
+    echo "files to add:"
+    for ((i=0; i<$NB_FILE_TO_ADD; i++)); do
+	if [ -z ${pathToAdd[$i]} ]; then
+	    continue
+	fi
+	printf "%i: %s (%s:%i -> %s)\n" \
+	       $i ${pathToAdd[$i]} \
+	       ${hashToAdd[$i]} ${sizeToAdd[$i]} ${destToAdd[$i]}
+    done
+    
+    echo "supp to rem:"
+    for ((i=0; i<$NB_SUPP_TO_REM; i++)); do
+	if [ -z ${suppToRem[$i]} ]; then
+	    continue
+	fi
+	echo "$i: ${suppToRem[$i]}"
+    done
+	
+    echo "supp to del:"
+    for ((i=0; i<$NB_SUPP_TO_DEL; i++)); do
+	if [ -z ${suppToDel[$i]} ]; then
+	   continue
+	fi
+	echo "$i: ${suppToDel[$i]}"
+    done
+}
+
+function debug
+{
+    BUFF=$(printf -- "$@")
+    
+    # on verbose mode, do print on stderr
+    if [ $VERBOSE -eq 1 ]; then
+	echo "$BUFF" >&2
+    fi
+
+    # on dry mode, do not log using syslog
+    if [ $DRY_RUN -eq 0 ]; then
+	logger -p local3.info -t "[$$]jukebox.sh:${BASH_LINENO[0]}" \
+	       -- "$BUFF"
+    fi
+}
+
+function run
+{
+    debug "> %s" "$@"
+    eval "$@"
+}
+
+function please
+{
+    if [ $DRY_RUN -eq 0 ]; then
+	run "$@"
+    else
+	# force verbose mode
+	printf -- "> %s\n" "$@"
+    fi
+}
+	
+# now do the job
+function main
+{
+    run "mkdir -p $ROOT_WORKING_DIR"
+    
+    CURRENT_SUPP_LIST=$ROOT_WORKING_DIR/supports.txt
+    if [ -z "$SUPP_LIST" ]; then
+	mediatex -c $CONF_LABEL ls supp > $CURRENT_SUPP_LIST
+    else
+	cp $SUPP_LIST $CURRENT_SUPP_LIST
+    fi
+    CURRENT_MOTD=$ROOT_WORKING_DIR/motd.txt
+    cp $MOTD $CURRENT_MOTD
+
+    for COLL in $COLLECTIONS; do
+	debug "Start working on %s collection" $COLL
+	
+	# maximum index for above arrays
+	NB_FILE_TO_ADD=0
+	NB_SUPP_TO_REM=0
+	NB_SUPP_TO_DEL=0
+	
+	# working dir
+	WORKING_DIR=$ROOT_WORKING_DIR/$COLL
+	run "mkdir -p $WORKING_DIR"
+
+	# rule's list
+	CURRENT_RULES_LIST=$WORKING_DIR/${PREF}extract.txt
+	if [ -z "$RULES_LIST" ]; then	    
+	    run "cat ~mdtx-${COLL}/git/extract???.txt | \
+		sed -ne '/(IMG/,/)/ p' > $CURRENT_RULES_LIST"
+	else
+	    cp $RULES_LIST $CURRENT_RULES_LIST
+	fi
+
+	# generated rule's list
+	run "rm -f $WORKING_DIR/${PREF}__extract.txt"
+
+	isMasterHost
+	IS_MASTER_HOST=$RC
+	parseMotd $MOTD
+	
+	# transformations are only done on master host
+	if [ $IS_MASTER_HOST -eq 1 ]; then
+	    parseSupportListe
+	    compressFiles
+	    splitFiles
+	    agregateFiles
+	    if [ $RC -eq 0 ]; then
+		debug "internal error: agregateFiles fails"
+		return
+	    fi
+	fi
+
+	# share working directory with mediatex
+	please "chgrp -R $CONF_LABEL $WORKING_DIR"
+
+	# backup operations done by all hosts
+	addSupports
+	remSupports
+	delSupports
+	
+	debugArrays
+    done
+}
+
+# main
+
+function help
+{
+    echo -e "$PACKAGE_NAME is a mediatex's project script"
+    echo -e "it automate archives backup into iso images"
+
+    echo -e "\nUsage: $(basename $0) -h | -V | [ -l | -m | -c | -C" \
+	" | -a | -z | -d | -n ]\n"
+    
+    echo -e "Options:"
+    echo -e "  -h, --help\t\tdisplay this message"
+    echo -e "  -V, --version\t\tdisplay the version number"
+    echo -e "  -l, --conf-label\tmediatex's label to manage"
+    echo -e "  -m, --motd\t\tplace where the mediatex's mot of the day"\
+	 "is stored"
+    echo -e "  -c, --colls\t\tcollections to backup: to set on all hosts"
+    echo -e "  -C, --master-colls\tcollections to compress and agregate:"\
+	 "to set on one host"
+    echo -e "  -a, --min-iso\t\tmaximum iso size to produce (in bytes)"
+    echo -e "  -z, --max-iso\t\tminimum iso size to produce (in bytes)"
+    echo -e "  -d, --working-dir\tjukebox directory storage to use"
+    echo -e "  -n, --dry-run\t\tsimulate a run (do not finalize anything)"
+    echo -e "\n"
+    
+    echo -e "Files:"
+    echo -e "/etc/mediatex/jukebox.conf\n"
+    echo -e " Configuration file that provides default values for options."
+
+    echo -e "Examples:"
+    echo -e "$ jukebox.sh -v -d/tmp -n\n"
+
+    echo -e "Report bugs to: $PACKAGE_BUGREPORT."
+    echo -e "$PACKAGE_NAME home page: <http://www.nongnu.org/mediatex>"
+    echo -e "General help using GNU software:" \
+	 " <http://www.gnu.org/gethelp/>"    
+    exit 1
+}
+
+function version
+{
+    echo -e "$PACKAGE_STRING\n"
+    echo -e "Copyright (C) 2014 2015 2016 Nicolas Roche."
+    echo -e "License GPLv3+: GNU GPL version 3 or later" \
+	 "<http://www.gnu.org/licenses/gpl.html>"
+    echo -e "This is free software, and you are welcome" \
+	 "to redistribute it."
+    echo -e "There is NO WARRANTY, to the extent permitted by law."
+
+    exit 1
+}
+
+########################################################################
+
+# bellow values comes from automake
+PACKAGE_NAME="{PACKAGE_NAME}"
+PACKAGE_STRING="{PACKAGE_STRING}"
+PACKAGE_BUGREPORT="{PACKAGE_BUGREPORT}"
+SYSCONFDIR={SYSCONFDIR}
+LOCALSTATEDIR={LOCALSTATEDIR}
+
+# read options
+VERBOSE=0
+CONF_FILE=$SYSCONFDIR/mediatex/jukebox.conf
+CONF_LABEL=mdtx
+DRY_RUN=0
+PREF=""
+
+# (copy paste from /usr/share/doc/util-linux/examples/getopt-parse.bash)
+TEMP=`getopt -o hVvnf:l:d:a:z:c:C:m:s:r: \
+ --long help,version,verbose,dry-run,conf-file: \
+ --long conf-label:,working-dir:,min-iso:,max-iso:,colls:,master-colls \
+ --long motd:,supp:,rules: \
+ -n "$0" -- "$@"`
+
+eval set -- "$TEMP"
+while true ; do
+    case "$1" in
+	-v|--verbose) VERBOSE=1 ; shift ;;
+	-f|--conf-file) CONF_FILE=$2 ; shift 2 ;;
+	-l|--conf-label) CONF_LABEL=$2 ; shift 2 ;;
+	--) shift ; break ;;
+	*) shift ;;
+    esac
+done
+
+# load configuration file
+if [ -e $CONF_FILE ]; then
+    debug "Load configuration from '%s'" $CONF_FILE
+    . $CONF_FILE
+else
+    debug "no configuration file found ('%s')" $CONF_FILE
+fi
+
+# re-read option (so as to override configuration file)
+eval set -- "$TEMP"
+
+while true ; do
+    case "$1" in
+	-v|--verbose) : ; shift ;;
+	-f|--conf-file) : ; shift 2 ;;
+	-l|--conf-label) : ; shift 2 ;;
+	-h|--help) help ; shift ;;
+	-V|--version) version ; shift ;;
+	-n|--dry-run) DRY_RUN=1 ; PREF="_dry_"; shift ;;
+	-a|--min-iso) MIN_ISO_BYTE=$2 ; shift 2 ;;
+	-z|--max-iso) MAX_ISO_BYTE=$2 ; shift 2 ;;
+	-d|--working-dir) ROOT_WORKING_DIR=$(realpath $2) ; shift 2 ;;
+	-c|--colls) COLLECTIONS=$2 ; shift 2 ;;
+	-C|--master-colls) MASTER_COLLECTIONS=$2 ; shift 2 ;;
+	-m|--motd) MOTD=$2 ; shift 2 ;;
+	-s|--supp) SUPP_LIST=$2 ; shift 2;;
+	-r|--rules) RULES_LIST=$2 ; shift 2;;
+	--) shift ; break ;;
+	*) help ;;
+    esac
+done			
+
+# default values if not already set
+MEGA=$(echo 1024*1024 | bc)
+: ${MAX_ISO_BYTE:=$[700*$MEGA]}
+: ${MIN_ISO_BYTE:=$[650*$MEGA]}
+: ${ROOT_WORKING_DIR:=$LOCALSTATEDIR/lib/jukebox}
+: ${COLLECTIONS:=$(mediatex -c $CONF_LABEL ls coll)}
+: ${MASTER_COLLECTIONS:=$(mediatex ls -c $CONF_LABEL master coll)}
+: ${MOTD:="/etc/motd"}
+: ${SUPP_LIST:=}
+: ${RULES_LIST:=}
+
+debug "- DRY_RUN=%s\n" $DRY_RUN
+debug "- CONF_FILE=%s\n" $CONF_FILE
+debug "- CONF_LABEL=%s\n" $CONF_LABEL
+debug "- MAX_ISO_BYTE=%s\n" $MAX_ISO_BYTE
+debug "- MIN_ISO_BYTE=%s\n" $MIN_ISO_BYTE
+debug "- ROOT_WORKING_DIR=%s\n" $ROOT_WORKING_DIR
+debug "- COLLECTIONS=%s\n" $COLLECTIONS
+debug "- MASTER_COLLECTIONS=%s\n" $MASTER_COLLECTIONS
+debug "- MOTD=%s\n" $MOTD
+debug "- SUPP_LIST=%s\n" $SUPP_LIST
+debug "- RULES_LIST=%s\n" $RULES_LIST
+
+if [ $MIN_ISO_BYTE -ge $MAX_ISO_BYTE ]; then
+    debug "Configuration error: MAX_ISO_BYTE must be greater" \
+	  " than MIN_ISO_BYTE"
+    exit 1
+fi
+
+# we know an empty iso file is 366ko
+# we hope 1Mo is enought space for single data file's iso metadata
+SPLIT_SIZE=$[MAX_ISO_BYTE - 1024*1024]
+if [ $SPLIT_SIZE -le 0 ]; then
+    debug "Configuration error: MAX_ISO_BYTE must be greater than 1Mo"
+    exit 1
+fi
+
+# we do not expect argument
+if [ ! -z $@ ]; then
+    help
+fi
+
+# do the job
+main
+
+if [ $DRY_RUN -eq 1 ]; then
+    debug "Dry run have prefixed output files by '_dry_'. To remove them:"
+    debug " \$ find $ROOT_WORKING_DIR -name '_dry_*' -delete"
+fi
+
+if [ $RC -eq 0 ]; then
+    debug "Error"
+    exit 1
+else
+    debug "Success"
+    exit 0
+fi

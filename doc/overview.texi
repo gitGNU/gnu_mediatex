@@ -165,8 +165,8 @@ Time-stamps or whatever additional meta-data files may still be provided and sto
 @item 
 it doesn't manage claim-based authentication or any ``single sign on'' mechanism
 (@url{https://en.wikipedia.org/wiki/OpenID}).
-@acronym{APACHE2}'s @file{.htaccess} file directives
-may still be added to the related meta-data file to do so.
+However, @acronym{APACHE2}'s @file{.htaccess} file directives
+may still be added to the related meta-data file to do so (example provided as sub project).
 @end itemize
 
 Time-stamps and claim-based authentication servers which need a static certificate and a static domain name are monolithic servers and so, resides out of this scope. @mediatexO{} system is designed to be crashed anywhere but still alive elsewhere.

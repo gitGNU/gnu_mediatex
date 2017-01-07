@@ -1,0 +1,5 @@
+score      state label
+10.00         ok {BLD}/tmp/test2/gnu.txt
+10.00         ok {BLD}/tmp/test2/to_exclude.iso
+10.00         ok supp1
+10.00         ok supp2

@@ -1,0 +1,32 @@
+# autoreconf -i
+Makefile.in
+texinfo.texi
+mdate-sh
+# ./configure
+Makefile
+stamp-vti
+# make
+texinfo.tex
+version.texi
+mdtxSso.info
+mdtxSso.html
+.am*
+# make all
+mdtxSso.aux
+mdtxSso.cp
+mdtxSso.cps
+mdtxSso.dvi
+mdtxSso.fn
+mdtxSso.ky
+mdtxSso.log
+mdtxSso.op
+mdtxSso.pg
+mdtxSso.toc
+mdtxSso.tp
+mdtxSso.vr
+mdtxSso.pdf
+mdtxSso.ps
+# make pdf
+mdtxSso.t2p
+# make dvi
+mdtxSso.t2d

@@ -1,0 +1,83 @@
+Load configuration from '{SRC}/test1.conf'
+- DRY_RUN=1
+- CONF_FILE={SRC}/test1.conf
+- CONF_LABEL=mdtx
+- MAX_ISO_BYTE=1048577
+- MIN_ISO_BYTE=250
+- ROOT_WORKING_DIR={BLD}/tmp
+- COLLECTIONS=test1
+- MASTER_COLLECTIONS=none
+- MOTD=tmp/test1.motd
+- SUPP_LIST=tmp/test1.supp
+- RULES_LIST=tmp/test1.extr
+> mkdir -p {BLD}/tmp
+Start working on test1 collection
+> mkdir -p {BLD}/tmp/test1
+> rm -f {BLD}/tmp/test1/_dry___extract.txt
+isMasterHost()
+ not on master host
+* parerMotd()
+ 0: *****************************
+ 0: Mediatex's message of the day
+ 0: *****************************
+ 0: Please burn theses files:
+ 2: - Collection test1:
+21: - {SRC}/data/cow1.txt (-1.00)
+> cp {SRC}/data/cow1.txt {BLD}/tmp/test1/_dry_cow1.txt
+addFileToAdd( '{BLD}/tmp/test1/_dry_cow1.txt', '', '{BLD}/tmp/test1/_dry_cow1.txt', '' )
+21: - {SRC}/data/cow2.txt (-1.00)
+> cp {SRC}/data/cow2.txt {BLD}/tmp/test1/_dry_cow2.txt
+addFileToAdd( '{BLD}/tmp/test1/_dry_cow2.txt', '', '{BLD}/tmp/test1/_dry_cow2.txt', '' )
+21: Please remove theses local supports:
+ 3: - supp1: coll, test1, coll
+addSuppToRem( supp1 )
+ 3: - supp2: not used
+addSuppToDel( supp2 )
+ 3: - {BLD}/tmp/test1/file1.iso: coll, test1, coll
+addSuppToRem( {BLD}/tmp/test1/file1.iso )
+ 3: - {BLD}/tmp/test1/file2.iso: not used
+addSuppToDel( {BLD}/tmp/test1/file2.iso )
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test1/_dry_cow1.txt ({HASH}:{SIZE} -> ici/cow.txt)
+1: {BLD}/tmp/test1/_dry_cow2.txt ({HASH}:{SIZE} -> _dry_cow2.txt)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test1/file1.iso
+supp to del:
+0: supp2
+1: {BLD}/tmp/test1/file2.iso
+> chgrp -R mdtx {BLD}/tmp/test1
+* addSupports()
+> mediatex -c mdtx add file {BLD}/tmp/test1/_dry_cow1.txt
+> mediatex -c mdtx add supp {BLD}/tmp/test1/_dry_cow1.txt
+>  to coll test1
+> mediatex -c mdtx add file {BLD}/tmp/test1/_dry_cow2.txt
+> mediatex -c mdtx add supp {BLD}/tmp/test1/_dry_cow2.txt
+>  to coll test1
+* uploadRules()
+delFileToAdd( {BLD}/tmp/test1/_dry_cow1.txt )
+delFileToAdd( {BLD}/tmp/test1/_dry_cow2.txt )
+(IMG
+=>
+ {HASH}:{SIZE} _dry_cow2.txt
+)
+> mediatex -c mdtx upload
+>  rules {BLD}/tmp/test1/_dry___extract.txt
+>  to coll test1
+* remSupports()
+> mediatex -c mdtx del supp supp1
+>  from coll test1
+> mediatex -c mdtx del supp {BLD}/tmp/test1/file1.iso
+>  from coll test1
+* delSupports()
+> mediatex -c mdtx del supp {BLD}/tmp/test1/file2.iso
+> rm {BLD}/tmp/test1/file2.iso
+* debugArrays()
+files to add:
+supp to rem:
+supp to del:
+0: supp2
+Dry run have prefixed output files by '_dry_'. To remove them:
+ $ find {BLD}/tmp -name '_dry_*' -delete
+Success

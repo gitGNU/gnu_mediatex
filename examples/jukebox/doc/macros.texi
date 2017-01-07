@@ -1,0 +1,118 @@
+
+@c Facilities
+
+@macro note
+@strong{Notice:}
+@end macro
+
+@macro todo
+@strong{TODO:}
+@end macro
+
+@macro cdrom
+@acronym{CDROM}
+@end macro
+
+@macro usb
+@acronym{USB}
+@end macro
+
+@macro nfs
+@acronym{NFS}
+@end macro
+
+@macro sss
+@acronym{S3}
+@end macro
+
+@macro api
+@acronym{API}
+@end macro
+
+@macro iso
+@acronym{ISO}
+@end macro
+
+@c Meta
+
+@macro actor{label}
+@sc{\label\}
+@end macro
+
+@macro activity{label}
+@sc{\label\}
+@end macro
+
+@macro process{label}
+@strong{\label\}
+@end macro
+
+@macro state{label}
+@emph{<\label\>}
+@end macro
+
+@macro event{label}
+\label\
+@end macro
+
+@c Actors
+
+@macro actorAdmin
+@actor{Admin}
+@end macro
+
+@macro actorPublisher
+@actor{Publisher}
+@end macro
+
+@macro actorUser
+@actor{User}
+@end macro
+
+@macro actorDate
+@actor{Date}
+@end macro
+
+@c Data
+
+@macro dataConfO
+@file{/etc/@/mediatex/@/mdtx.conf}
+@end macro
+@macro dataConf
+@dataConfO{} (@pxref{jukebox.conf})
+@end macro
+
+@macro dataSuppO
+@file{~mdtx/@/git/@/mdtx/@/supports.txt}
+@end macro
+@macro dataSupp
+@dataSuppO{} (@pxref{supports.txt})
+@end macro
+
+@macro dataChecksumO
+@file{~mdtx/@/md5sums/@/mdtx-COLL.md5}
+@end macro
+@macro dataChecksum
+@dataChecksumO{} (@pxref{mdtxCOLL.md5})
+@end macro
+
+@macro dataExtractO
+@file{/etc/@/mediatex/@/mdtx-COLL/@/extractXXX.txt}
+@end macro
+@macro dataExtract
+@dataExtractO{} (@pxref{extract.txt})
+@end macro
+
+@c Activities
+
+@macro mediatexO
+@activity{Mediatex}
+@end macro
+@macro mediatex
+@mediatexO{}
+(@pxref{Top,,, mediatex, Perennial archive manager})
+@end macro
+
+@macro jukebox
+@activity{Jukebox}
+@end macro

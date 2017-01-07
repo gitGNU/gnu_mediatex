@@ -5,6 +5,7 @@
 * Firewall::    Configuration behind a firewall
 * GitLogs::     Search the metadata history
 * HTTP::        Configure HTTP
+* DNS::         Configure DNS
 * Portail::	Minimal Php inerface
 * Linking::	Library API
 @end menu
@@ -17,6 +18,12 @@ It manage redundancy, consistency and unitary access.
 It divides the application complexity 
 as the ``Administration'' and ``Preservation planing'' functionality
 are already taken into account for many features.
+@end itemize
+
+@file{exemples} directory also provides 2 sub-project :
+@itemize @bullet
+@item @acronym{jukebox}: a @iso{} builder that automate most of the @actorPublisher{}'s job.
+@item @acronym{sso}: a single-sign-on solution for mediatex.
 @end itemize
 
 @node Example
@@ -171,6 +178,79 @@ This extra feature remains protected by password even if authentication is disab
 @example
 QUERY="mediatex upload++"
 @end example
+
+@node DNS
+@section Configure DNS
+@cindex Round-Robbin
+
+@itemize
+@item
+The following @acronym{bind9} configuration provides severals @ip{} addresses for a unique domain name. 
+
+@file{/etc/bind/db.@var{domain-name}}
+@example
+; round-robin
+rr1   	IN	A	@var{IP-1-1}
+rr1   	IN	A	@var{IP-1-2}
+...
+rr1   	IN	A	@var{IP-1-N}
+
+dn1	IN	CNAME	rr1.@var{domain-name}.
+@end example
+
+This domaine name is used by @mediatexO{} @web{} interface. For instance, clicking on the logo will resolve this domain name.
+
+@file{~mdtx-@var{coll}/git/servers.txt}
+@example
+dnsHost    dn1.@var{domain-name}
+@end example
+
+@item
+This second @acronym{bind9} configuration dupplicate the first one in ordr to provide several pool of servers.
+
+@file{/etc/bind/db.@var{domain-name}}
+@example
+dn1	IN	CNAME	rr1.@var{domain-name}.
+dn2	IN	CNAME	rr2.@var{domain-name}.
+@dots{}
+dnN	IN	CNAME	rrN.@var{domain-name}.
+
+www     IN      CNAME   ns.@var{domain-name}.
+@end example
+
+This may be usesefull if a mediatex instance is not enought to handle all collections.
+The @acronym{Apache} configuration will distribute a uniq main domain (www.@var{domain-name}) name to several @mediatex{} instances, by maping collection's name to target domain names:
+
+@itemize
+@item
+@example
+$ cat >map.txt <<EOF
+@var{coll1} dn1
+@var{coll2} dn1
+@dots{}
+@var{collX} dn2
+@dots{}
+@var{collY} dnN
+EOF
+# httxt2dbm -i map.txt -o map.map
+# chown www-data. map.*
+@end example
+
+@item
+@file{/etc/apache2/sites-enabled/000-default.conf}
+@example
+RewriteEngine On
+RewriteCond %@{HTTP_HOST@}   ^www\.(.+)$ [NC]
+RewriteMap dn "dbm:/etc/apache2/map.map"
+RewriteRule "/~mdtx-([^/]*)(.*)" "http://$@{dn:$1@}.%1/~mdtx-$1$2"
+@end example
+
+So @urlO{}s like @code{http://www.@var{domain-name}/~mdtx-@var{collX}/@dots{}}
+will be maped to
+@code{http://dn2.@var{domain-name}/~mdtx-@var{collX}/@dots{}}.
+
+@end itemize
+@end itemize
 
 @page
 @node Portail

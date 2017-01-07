@@ -1,0 +1,134 @@
+
+@c Facilities
+
+@macro note
+@strong{Notice:}
+@end macro
+
+@macro todo
+@strong{TODO:}
+@end macro
+
+@macro api
+@acronym{API}
+@end macro
+
+@macro apache
+@acronym{APACHE}
+@end macro
+
+@macro cgi
+@acronym{CGI}
+@end macro
+
+@macro cookie
+@acronym{COOKIE}
+@end macro
+
+@macro htmlO
+@acronym{HTML}
+@end macro
+
+@macro urlO
+@acronym{URL}
+@end macro
+
+@macro aes
+@acronym{AES}
+@end macro
+
+@macro rsa
+@acronym{RSA}
+@end macro
+
+@macro phpBB
+@acronym{phpBB}
+@end macro
+
+@macro ip
+@acronym{IP}
+@end macro
+
+@c Meta
+
+@macro actor{label}
+@sc{\label\}
+@end macro
+
+@macro activity{label}
+@sc{\label\}
+@end macro
+
+@macro process{label}
+@strong{\label\}
+@end macro
+
+@macro state{label}
+@emph{<\label\>}
+@end macro
+
+@macro event{label}
+\label\
+@end macro
+
+@c Actors
+
+@macro actorAdmin
+@actor{Admin}
+@end macro
+
+@macro actorPublisher
+@actor{Publisher}
+@end macro
+
+@macro actorUser
+@actor{User}
+@end macro
+
+@macro actorDate
+@actor{Date}
+@end macro
+
+@c Data
+
+@macro dataConfO
+@file{/etc/@/mediatex/@/mdtx.conf}
+@end macro
+@macro dataConf
+@dataConfO{} (@pxref{jukebox.conf})
+@end macro
+
+@macro dataSuppO
+@file{~mdtx/@/git/@/mdtx/@/supports.txt}
+@end macro
+@macro dataSupp
+@dataSuppO{} (@pxref{supports.txt})
+@end macro
+
+@macro dataChecksumO
+@file{~mdtx/@/md5sums/@/mdtx-COLL.md5}
+@end macro
+@macro dataChecksum
+@dataChecksumO{} (@pxref{mdtxCOLL.md5})
+@end macro
+
+@macro dataExtractO
+@file{/etc/@/mediatex/@/mdtx-COLL/@/extractXXX.txt}
+@end macro
+@macro dataExtract
+@dataExtractO{} (@pxref{extract.txt})
+@end macro
+
+@c Activities
+
+@macro mediatexO
+@activity{Mediatex}
+@end macro
+@macro mediatex
+@mediatexO{}
+(@pxref{Top,,, mediatex, Perennial archive manager})
+@end macro
+
+@macro sso
+@activity{mdtxSso}
+@end macro

@@ -33,6 +33,18 @@
 @acronym{ISO}
 @end macro
 
+@macro ip
+@acronym{IP}
+@end macro
+
+@macro web
+@acronym{WEB}
+@end macro
+
+@macro urlO
+@acronym{URL}
+@end macro
+
 @c Meta
 
 @macro actor{label}

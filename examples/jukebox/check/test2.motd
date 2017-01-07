@@ -1,0 +1,13 @@
+*****************************
+Mediatex's message of the day
+*****************************
+Please burn theses files:
+- Collection test2:
+ - {SRC}/data/cow1.txt (-1.00)
+ - {SRC}/data/cow2.txt (-1.00)
+ - {SRC}/data/cow_03.cat (-1.00)
+Please remove theses local supports:
+- supp1: coll, test2, coll
+- supp2: not used
+- {BLD}/tmp/test2/file1.iso: coll, test2, coll
+- {BLD}/tmp/test2/file2.iso: not used

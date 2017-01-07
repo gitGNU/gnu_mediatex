@@ -1,0 +1,316 @@
+Load configuration from '{SRC}/test4.conf'
+- DRY_RUN=1
+- CONF_FILE={SRC}/test4.conf
+- CONF_LABEL=mdtx
+- MAX_ISO_BYTE=16105500
+- MIN_ISO_BYTE=14680064
+- ROOT_WORKING_DIR={BLD}/tmp
+- COLLECTIONS=test4
+- MASTER_COLLECTIONS=test4
+- MOTD=tmp/test4.motd
+- SUPP_LIST=tmp/test4.supp
+- RULES_LIST=tmp/test4.extr
+> mkdir -p {BLD}/tmp
+Start working on test4 collection
+> mkdir -p {BLD}/tmp/test4
+> rm -f {BLD}/tmp/test4/_dry___extract.txt
+isMasterHost()
+ on master host
+* parerMotd()
+ 0: *****************************
+ 0: Mediatex's message of the day
+ 0: *****************************
+ 0: Please burn theses files:
+ 2: - Collection test4:
+21: - {BLD}/tmp/test4/zero2.gz (-1.00)
+> cp {BLD}/tmp/test4/zero2.gz {BLD}/tmp/test4/_dry_zero2.gz
+addFileToAdd( '{BLD}/tmp/test4/_dry_zero2.gz', '', '{BLD}/tmp/test4/_dry_zero2.gz', '' )
+21: - {BLD}/tmp/test4/zero3.gz (-1.00)
+> cp {BLD}/tmp/test4/zero3.gz {BLD}/tmp/test4/_dry_zero3.gz
+addFileToAdd( '{BLD}/tmp/test4/_dry_zero3.gz', '', '{BLD}/tmp/test4/_dry_zero3.gz', '' )
+21: - {BLD}/tmp/test4/zero5.gz (-1.00)
+> cp {BLD}/tmp/test4/zero5.gz {BLD}/tmp/test4/_dry_zero5.gz
+addFileToAdd( '{BLD}/tmp/test4/_dry_zero5.gz', '', '{BLD}/tmp/test4/_dry_zero5.gz', '' )
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test4/_dry_zero2.gz ({HASH}:{SIZE} -> _dry_zero2.gz)
+1: {BLD}/tmp/test4/_dry_zero3.gz ({HASH}:{SIZE} -> _dry_zero3.gz)
+2: {BLD}/tmp/test4/_dry_zero5.gz ({HASH}:{SIZE} -> _dry_zero5.gz)
+supp to rem:
+supp to del:
+* parseSupportListe()
+0: score      state label
+1: 10.00         ok {BLD}/tmp/test4/zero7.gz
+isIsoFile( '{BLD}/tmp/test4/zero7.gz' )
+ is not an iso file
+addFileToAdd( '{BLD}/tmp/test4/zero7.gz', '', '{BLD}/tmp/test4/zero7.gz', 'yes' )
+1: 10.00         ok {BLD}/tmp/test4/zero11.gz
+isIsoFile( '{BLD}/tmp/test4/zero11.gz' )
+ is not an iso file
+addFileToAdd( '{BLD}/tmp/test4/zero11.gz', '', '{BLD}/tmp/test4/zero11.gz', 'yes' )
+1: 
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test4/_dry_zero2.gz ({HASH}:{SIZE} -> _dry_zero2.gz)
+1: {BLD}/tmp/test4/_dry_zero3.gz ({HASH}:{SIZE} -> _dry_zero3.gz)
+2: {BLD}/tmp/test4/_dry_zero5.gz ({HASH}:{SIZE} -> _dry_zero5.gz)
+3: {BLD}/tmp/test4/zero7.gz ({HASH}:{SIZE} -> zero7.gz)
+4: {BLD}/tmp/test4/zero11.gz ({HASH}:{SIZE} -> zero11.gz)
+supp to rem:
+supp to del:
+* compressFiles()
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test4/_dry_zero2.gz ({HASH}:{SIZE} -> _dry_zero2.gz)
+1: {BLD}/tmp/test4/_dry_zero3.gz ({HASH}:{SIZE} -> _dry_zero3.gz)
+2: {BLD}/tmp/test4/_dry_zero5.gz ({HASH}:{SIZE} -> _dry_zero5.gz)
+3: {BLD}/tmp/test4/zero7.gz ({HASH}:{SIZE} -> zero7.gz)
+4: {BLD}/tmp/test4/zero11.gz ({HASH}:{SIZE} -> zero11.gz)
+supp to rem:
+supp to del:
+* splitFiles()
+isIsoFile( '{BLD}/tmp/test4/_dry_zero2.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/_dry_zero3.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/_dry_zero5.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/zero7.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/zero11.gz' )
+ is not an iso file
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test4/_dry_zero2.gz ({HASH}:{SIZE} -> _dry_zero2.gz)
+1: {BLD}/tmp/test4/_dry_zero3.gz ({HASH}:{SIZE} -> _dry_zero3.gz)
+2: {BLD}/tmp/test4/_dry_zero5.gz ({HASH}:{SIZE} -> _dry_zero5.gz)
+3: {BLD}/tmp/test4/zero7.gz ({HASH}:{SIZE} -> zero7.gz)
+4: {BLD}/tmp/test4/zero11.gz ({HASH}:{SIZE} -> zero11.gz)
+supp to rem:
+supp to del:
+* aggregateFiles()
+iso having only a big file:
+isIsoFile( '{BLD}/tmp/test4/_dry_zero2.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/_dry_zero3.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/_dry_zero5.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/zero7.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test4/zero11.gz' )
+ is not an iso file
+iso having several files:
+knapsack inputs:
+isIsoFile( '{BLD}/tmp/test4/_dry_zero2.gz' )
+ is not an iso file
+- 0: 131 ({BLD}/tmp/test4/_dry_zero2.gz)
+isIsoFile( '{BLD}/tmp/test4/_dry_zero3.gz' )
+ is not an iso file
+- 1: 196 ({BLD}/tmp/test4/_dry_zero3.gz)
+isIsoFile( '{BLD}/tmp/test4/_dry_zero5.gz' )
+ is not an iso file
+- 2: 326 ({BLD}/tmp/test4/_dry_zero5.gz)
+isIsoFile( '{BLD}/tmp/test4/zero7.gz' )
+ is not an iso file
+- 3: 456 ({BLD}/tmp/test4/zero7.gz)
+isIsoFile( '{BLD}/tmp/test4/zero11.gz' )
+ is not an iso file
+- 4: 717 ({BLD}/tmp/test4/zero11.gz)
+knapsack for [912, 998]
+ knapBag(4, 998)...
+ having 4...
+  knapBag(3, 281)...
+  without 3...
+   knapBag(2, 281)...
+   without 2...
+    knapBag(1, 281)...
+    having 1...
+     knapBag(0, 85)...
+     without 0...
+     choice[0, 85] = no
+     bag[0, 85] = 0
+    without 1...
+     knapBag(0, 281)...
+     having 0...
+     without 0...
+     choice[0, 281] = yes
+     bag[0, 281] = 131
+    choice[1, 281] = yes
+    bag[1, 281] = 196
+   choice[2, 281] = no
+   bag[2, 281] = 196
+  choice[3, 281] = no
+  bag[3, 281] = 196
+ without 4...
+  knapBag(3, 998)...
+  having 3...
+   knapBag(2, 542)...
+   having 2...
+    knapBag(1, 216)...
+    having 1...
+     knapBag(0, 20)...
+     without 0...
+     choice[0, 20] = no
+     bag[0, 20] = 0
+    without 1...
+     knapBag(0, 216)...
+     having 0...
+     without 0...
+     choice[0, 216] = yes
+     bag[0, 216] = 131
+    choice[1, 216] = yes
+    bag[1, 216] = 196
+   without 2...
+    knapBag(1, 542)...
+    having 1...
+     knapBag(0, 346)...
+     having 0...
+     without 0...
+     choice[0, 346] = yes
+     bag[0, 346] = 131
+    without 1...
+     knapBag(0, 542)...
+     having 0...
+     without 0...
+     choice[0, 542] = yes
+     bag[0, 542] = 131
+    choice[1, 542] = yes
+    bag[1, 542] = 327
+   choice[2, 542] = yes
+   bag[2, 542] = 522
+  without 3...
+   knapBag(2, 998)...
+   having 2...
+    knapBag(1, 672)...
+    having 1...
+     knapBag(0, 476)...
+     having 0...
+     without 0...
+     choice[0, 476] = yes
+     bag[0, 476] = 131
+    without 1...
+     knapBag(0, 672)...
+     having 0...
+     without 0...
+     choice[0, 672] = yes
+     bag[0, 672] = 131
+    choice[1, 672] = yes
+    bag[1, 672] = 327
+   without 2...
+    knapBag(1, 998)...
+    having 1...
+     knapBag(0, 802)...
+     having 0...
+     without 0...
+     choice[0, 802] = yes
+     bag[0, 802] = 131
+    without 1...
+     knapBag(0, 998)...
+     having 0...
+     without 0...
+     choice[0, 998] = yes
+     bag[0, 998] = 131
+    choice[1, 998] = yes
+    bag[1, 998] = 327
+   choice[2, 998] = yes
+   bag[2, 998] = 653
+  choice[3, 998] = yes
+  bag[3, 998] = 978
+ choice[4, 998] = no
+ bag[4, 998] = 978
+* mkIso( 5, 998 )
+> mkdir {BLD}/tmp/test4/_dry_test4_CD01
+choice[4, 998] = no
+choice[3, 998] = yes
+> cp {BLD}/tmp/test4/zero7.gz {BLD}/tmp/test4/_dry_test4_CD01/zero7.gz
+choice[2, 542] = yes
+> cp {BLD}/tmp/test4/_dry_zero5.gz {BLD}/tmp/test4/_dry_test4_CD01/_dry_zero5.gz
+choice[1, 216] = yes
+> cp {BLD}/tmp/test4/_dry_zero3.gz {BLD}/tmp/test4/_dry_test4_CD01/_dry_zero3.gz
+choice[0, 20] = no
+iso size estimated to {SIZE}
+> genisoimage -rJ -joliet-long -input-charset utf8 -V _dry_test4_CD01 -publisher jukebox_0.1 -o {BLD}/tmp/test4/_dry_test4_CD01.iso {BLD}/tmp/test4/_dry_test4_CD01 2>/dev/null
+> rm -fr {BLD}/tmp/test4/_dry_test4_CD01
+addFileToAdd( '{BLD}/tmp/test4/_dry_test4_CD01.iso', 'supports/_dry_test4_CD01.iso', '', '' )
+delFileToAdd( {BLD}/tmp/test4/zero7.gz )
+addSuppToRem( {BLD}/tmp/test4/zero7.gz )
+addSuppToDel( {BLD}/tmp/test4/zero7.gz )
+delFileToAdd( {BLD}/tmp/test4/_dry_zero5.gz )
+> rm -f {BLD}/tmp/test4/_dry_zero5.gz
+delFileToAdd( {BLD}/tmp/test4/_dry_zero3.gz )
+> rm -f {BLD}/tmp/test4/_dry_zero3.gz
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test4/_dry_zero2.gz ({HASH}:{SIZE} -> _dry_zero2.gz)
+4: {BLD}/tmp/test4/zero11.gz ({HASH}:{SIZE} -> zero11.gz)
+5: {BLD}/tmp/test4/_dry_test4_CD01.iso ({HASH}:{SIZE} -> supports/_dry_test4_CD01.iso)
+supp to rem:
+0: {BLD}/tmp/test4/zero7.gz
+supp to del:
+0: {BLD}/tmp/test4/zero7.gz
+knapsack inputs:
+isIsoFile( '{BLD}/tmp/test4/_dry_zero2.gz' )
+ is not an iso file
+- 0: 131 ({BLD}/tmp/test4/_dry_zero2.gz)
+isIsoFile( '{BLD}/tmp/test4/zero11.gz' )
+ is not an iso file
+- 1: 717 ({BLD}/tmp/test4/zero11.gz)
+isIsoFile( '{BLD}/tmp/test4/_dry_test4_CD01.iso' )
+ is an iso file
+knapsack for [912, 998]
+ knapBag(1, 998)...
+ having 1...
+  knapBag(0, 281)...
+  having 0...
+  without 0...
+  choice[0, 281] = yes
+  bag[0, 281] = 131
+ without 1...
+  knapBag(0, 998)...
+  having 0...
+  without 0...
+  choice[0, 998] = yes
+  bag[0, 998] = 131
+ choice[1, 998] = yes
+ bag[1, 998] = 848
+> chgrp -R mdtx {BLD}/tmp/test4
+* addSupports()
+> mediatex -c mdtx add file {BLD}/tmp/test4/_dry_zero2.gz
+> mediatex -c mdtx add supp {BLD}/tmp/test4/_dry_zero2.gz
+>  to coll test4
+> mediatex -c mdtx add file {BLD}/tmp/test4/_dry_test4_CD01.iso
+> mediatex -c mdtx add supp {BLD}/tmp/test4/_dry_test4_CD01.iso
+>  to coll test4
+* uploadRules()
+delFileToAdd( {BLD}/tmp/test4/_dry_zero2.gz )
+delFileToAdd( {BLD}/tmp/test4/_dry_test4_CD01.iso )
+(ISO
+ {HASH}:{SIZE}
+=>
+ {HASH}:{SIZE} zero7.gz
+ {HASH}:{SIZE} _dry_zero5.gz
+ {HASH}:{SIZE} _dry_zero3.gz
+)
+(IMG
+=>
+ {HASH}:{SIZE} _dry_zero2.gz
+ {HASH}:{SIZE} supports/_dry_test4_CD01.iso
+)
+> mediatex -c mdtx upload
+>  rules {BLD}/tmp/test4/_dry___extract.txt
+>  to coll test4
+* remSupports()
+> mediatex -c mdtx del supp {BLD}/tmp/test4/zero7.gz
+>  from coll test4
+* delSupports()
+> mediatex -c mdtx del supp {BLD}/tmp/test4/zero7.gz
+> rm {BLD}/tmp/test4/zero7.gz
+* debugArrays()
+files to add:
+4: {BLD}/tmp/test4/zero11.gz ({HASH}:{SIZE} -> zero11.gz)
+supp to rem:
+supp to del:
+Dry run have prefixed output files by '_dry_'. To remove them:
+ $ find {BLD}/tmp -name '_dry_*' -delete
+Success

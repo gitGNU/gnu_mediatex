@@ -1,0 +1,6 @@
+# make check
+test-suite.log
+test*.out
+test*.sh.log
+test*.sh.trs
+tmp/

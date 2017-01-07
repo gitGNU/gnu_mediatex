@@ -1,0 +1,6 @@
+# autoreconf -i
+Makefile.in
+# ./configure
+Makefile
+# make
+jukebox.1

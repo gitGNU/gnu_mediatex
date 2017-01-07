@@ -1,0 +1,49 @@
+@cindex options
+
+@jukebox{} focus on doing the @mediatex{}'s @actorPublisher jobs.
+
+@table @option
+@item -h
+@itemx --help
+Display the help message.
+
+@item -V
+@itemx --version
+Display the jukebox script's version.
+
+@item -v
+@itemx --verbose
+Set the verbose mode.
+
+@item -l
+@itemx --conf-label
+Set the mediatex's label to manage (defalut is @code{mdtx})
+
+@item -m
+@itemx --motd
+Place where the mediatex's mot of the day is stored (default is @file{/etc/motd})
+
+@item -c
+@itemx --colls
+Collections to backup (all by default)
+
+@item -C
+@itemx --master-colls
+Collections to compress and agregate (@mediatex{}'s master collections by default)
+
+@item -a
+@itemx --min-iso
+Maximum iso size to produce in bytes (default is 700Mo)
+
+@item -z
+@itemx --max-iso
+Minimum iso size to produce in bytes (default is 650Mo)
+
+@item -d
+@itemx --working-dir
+Jukebox directory storage to use (default is @file{/var/lib/jukebox})
+
+@item -n
+@itemx --dry-run
+Simulate a run (do not call @mediatexO)
+@end table

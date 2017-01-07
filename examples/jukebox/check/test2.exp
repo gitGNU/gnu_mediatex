@@ -1,0 +1,302 @@
+Load configuration from '{SRC}/test2.conf'
+- DRY_RUN=1
+- CONF_FILE={SRC}/test2.conf
+- CONF_LABEL=mdtx
+- MAX_ISO_BYTE=1048577
+- MIN_ISO_BYTE=250
+- ROOT_WORKING_DIR={BLD}/tmp
+- COLLECTIONS=test2
+- MASTER_COLLECTIONS=test2
+- MOTD=tmp/test2.motd
+- SUPP_LIST=tmp/test2.supp
+- RULES_LIST=tmp/test2.extr
+> mkdir -p {BLD}/tmp
+Start working on test2 collection
+> mkdir -p {BLD}/tmp/test2
+> rm -f {BLD}/tmp/test2/_dry___extract.txt
+isMasterHost()
+ on master host
+* parerMotd()
+ 0: *****************************
+ 0: Mediatex's message of the day
+ 0: *****************************
+ 0: Please burn theses files:
+ 2: - Collection test2:
+21: - {SRC}/data/cow1.txt (-1.00)
+> cp {SRC}/data/cow1.txt {BLD}/tmp/test2/_dry_cow1.txt
+addFileToAdd( '{BLD}/tmp/test2/_dry_cow1.txt', '', '{BLD}/tmp/test2/_dry_cow1.txt', '' )
+21: - {SRC}/data/cow2.txt (-1.00)
+> cp {SRC}/data/cow2.txt {BLD}/tmp/test2/_dry_cow2.txt
+addFileToAdd( '{BLD}/tmp/test2/_dry_cow2.txt', '', '{BLD}/tmp/test2/_dry_cow2.txt', '' )
+21: - {SRC}/data/cow_03.cat (-1.00)
+> cp {SRC}/data/cow_03.cat {BLD}/tmp/test2/_dry_cow_03.cat
+addFileToAdd( '{BLD}/tmp/test2/_dry_cow_03.cat', '', '{BLD}/tmp/test2/_dry_cow_03.cat', '' )
+21: Please remove theses local supports:
+ 3: - supp1: coll, test2, coll
+addSuppToRem( supp1 )
+ 3: - supp2: not used
+addSuppToDel( supp2 )
+ 3: - {BLD}/tmp/test2/file1.iso: coll, test2, coll
+addSuppToRem( {BLD}/tmp/test2/file1.iso )
+ 3: - {BLD}/tmp/test2/file2.iso: not used
+addSuppToDel( {BLD}/tmp/test2/file2.iso )
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test2/_dry_cow1.txt ({HASH}:{SIZE} -> ici/cow.txt)
+1: {BLD}/tmp/test2/_dry_cow2.txt ({HASH}:{SIZE} -> _dry_cow2.txt)
+2: {BLD}/tmp/test2/_dry_cow_03.cat ({HASH}:{SIZE} -> _dry_cow_03.cat)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test2/file1.iso
+supp to del:
+0: supp2
+1: {BLD}/tmp/test2/file2.iso
+* parseSupportListe()
+0: score      state label
+1: 10.00         ok {BLD}/tmp/test2/gnu.txt
+isIsoFile( '{BLD}/tmp/test2/gnu.txt' )
+ is not an iso file
+addFileToAdd( '{BLD}/tmp/test2/gnu.txt', '', '{BLD}/tmp/test2/gnu.txt', 'yes' )
+1: 10.00         ok {BLD}/tmp/test2/to_exclude.iso
+isIsoFile( '{BLD}/tmp/test2/to_exclude.iso' )
+ is an iso file
+1: 10.00         ok supp1
+1: 10.00         ok supp2
+* debugArrays()
+files to add:
+0: {BLD}/tmp/test2/_dry_cow1.txt ({HASH}:{SIZE} -> ici/cow.txt)
+1: {BLD}/tmp/test2/_dry_cow2.txt ({HASH}:{SIZE} -> _dry_cow2.txt)
+2: {BLD}/tmp/test2/_dry_cow_03.cat ({HASH}:{SIZE} -> _dry_cow_03.cat)
+3: {BLD}/tmp/test2/gnu.txt ({HASH}:{SIZE} -> gnu.txt)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test2/file1.iso
+supp to del:
+0: supp2
+1: {BLD}/tmp/test2/file2.iso
+* compressFiles()
+> gzip -c {BLD}/tmp/test2/_dry_cow1.txt > {BLD}/tmp/test2/_dry__dry_cow1.txt.gz
+addFileToAdd( '{BLD}/tmp/test2/_dry__dry_cow1.txt.gz', '_dry_ici/cow.txt.gz', '{BLD}/tmp/test2/_dry__dry_cow1.txt.gz', '' )
+delFileToAdd( {BLD}/tmp/test2/_dry_cow1.txt )
+> rm -f {BLD}/tmp/test2/_dry_cow1.txt
+> gzip -c {BLD}/tmp/test2/_dry_cow2.txt > {BLD}/tmp/test2/_dry__dry_cow2.txt.gz
+addFileToAdd( '{BLD}/tmp/test2/_dry__dry_cow2.txt.gz', '_dry__dry_cow2.txt.gz', '{BLD}/tmp/test2/_dry__dry_cow2.txt.gz', '' )
+delFileToAdd( {BLD}/tmp/test2/_dry_cow2.txt )
+> rm -f {BLD}/tmp/test2/_dry_cow2.txt
+> gzip -c {BLD}/tmp/test2/gnu.txt > {BLD}/tmp/test2/_dry_gnu.txt.gz
+addFileToAdd( '{BLD}/tmp/test2/_dry_gnu.txt.gz', '_dry_gnu.txt.gz', '{BLD}/tmp/test2/_dry_gnu.txt.gz', '' )
+delFileToAdd( {BLD}/tmp/test2/gnu.txt )
+addSuppToRem( {BLD}/tmp/test2/gnu.txt )
+addSuppToDel( {BLD}/tmp/test2/gnu.txt )
+* debugArrays()
+files to add:
+2: {BLD}/tmp/test2/_dry_cow_03.cat ({HASH}:{SIZE} -> _dry_cow_03.cat)
+4: {BLD}/tmp/test2/_dry__dry_cow1.txt.gz ({HASH}:{SIZE} -> _dry_ici/cow.txt.gz)
+5: {BLD}/tmp/test2/_dry__dry_cow2.txt.gz ({HASH}:{SIZE} -> _dry__dry_cow2.txt.gz)
+6: {BLD}/tmp/test2/_dry_gnu.txt.gz ({HASH}:{SIZE} -> _dry_gnu.txt.gz)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test2/file1.iso
+2: {BLD}/tmp/test2/gnu.txt
+supp to del:
+0: supp2
+1: {BLD}/tmp/test2/file2.iso
+2: {BLD}/tmp/test2/gnu.txt
+* splitFiles()
+isIsoFile( '{BLD}/tmp/test2/_dry_cow_03.cat' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow1.txt.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow2.txt.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry_gnu.txt.gz' )
+ is not an iso file
+* debugArrays()
+files to add:
+2: {BLD}/tmp/test2/_dry_cow_03.cat ({HASH}:{SIZE} -> _dry_cow_03.cat)
+4: {BLD}/tmp/test2/_dry__dry_cow1.txt.gz ({HASH}:{SIZE} -> _dry_ici/cow.txt.gz)
+5: {BLD}/tmp/test2/_dry__dry_cow2.txt.gz ({HASH}:{SIZE} -> _dry__dry_cow2.txt.gz)
+6: {BLD}/tmp/test2/_dry_gnu.txt.gz ({HASH}:{SIZE} -> _dry_gnu.txt.gz)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test2/file1.iso
+2: {BLD}/tmp/test2/gnu.txt
+supp to del:
+0: supp2
+1: {BLD}/tmp/test2/file2.iso
+2: {BLD}/tmp/test2/gnu.txt
+* aggregateFiles()
+iso having only a big file:
+isIsoFile( '{BLD}/tmp/test2/_dry_cow_03.cat' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow1.txt.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow2.txt.gz' )
+ is not an iso file
+isIsoFile( '{BLD}/tmp/test2/_dry_gnu.txt.gz' )
+ is not an iso file
+iso having several files:
+knapsack inputs:
+isIsoFile( '{BLD}/tmp/test2/_dry_cow_03.cat' )
+ is not an iso file
+- 0: 1 ({BLD}/tmp/test2/_dry_cow_03.cat)
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow1.txt.gz' )
+ is not an iso file
+- 1: 1 ({BLD}/tmp/test2/_dry__dry_cow1.txt.gz)
+isIsoFile( '{BLD}/tmp/test2/_dry__dry_cow2.txt.gz' )
+ is not an iso file
+- 2: 1 ({BLD}/tmp/test2/_dry__dry_cow2.txt.gz)
+isIsoFile( '{BLD}/tmp/test2/_dry_gnu.txt.gz' )
+ is not an iso file
+- 3: 1 ({BLD}/tmp/test2/_dry_gnu.txt.gz)
+knapsack for [1, 998]
+ knapBag(3, 998)...
+ having 3...
+  knapBag(2, 997)...
+  having 2...
+   knapBag(1, 996)...
+   having 1...
+    knapBag(0, 995)...
+    having 0...
+    without 0...
+    choice[0, 995] = yes
+    bag[0, 995] = 1
+   without 1...
+    knapBag(0, 996)...
+    having 0...
+    without 0...
+    choice[0, 996] = yes
+    bag[0, 996] = 1
+   choice[1, 996] = yes
+   bag[1, 996] = 2
+  without 2...
+   knapBag(1, 997)...
+   having 1...
+    knapBag(0, 996)...
+    bag[0, 996] = 1
+   without 1...
+    knapBag(0, 997)...
+    having 0...
+    without 0...
+    choice[0, 997] = yes
+    bag[0, 997] = 1
+   choice[1, 997] = yes
+   bag[1, 997] = 2
+  choice[2, 997] = yes
+  bag[2, 997] = 3
+ without 3...
+  knapBag(2, 998)...
+  having 2...
+   knapBag(1, 997)...
+   bag[1, 997] = 2
+  without 2...
+   knapBag(1, 998)...
+   having 1...
+    knapBag(0, 997)...
+    bag[0, 997] = 1
+   without 1...
+    knapBag(0, 998)...
+    having 0...
+    without 0...
+    choice[0, 998] = yes
+    bag[0, 998] = 1
+   choice[1, 998] = yes
+   bag[1, 998] = 2
+  choice[2, 998] = yes
+  bag[2, 998] = 3
+ choice[3, 998] = yes
+ bag[3, 998] = 4
+* mkIso( 4, 998 )
+> mkdir {BLD}/tmp/test2/_dry_test2_CD01
+choice[3, 998] = yes
+> cp {BLD}/tmp/test2/_dry_gnu.txt.gz {BLD}/tmp/test2/_dry_test2_CD01/_dry_gnu.txt.gz
+choice[2, 997] = yes
+> cp {BLD}/tmp/test2/_dry__dry_cow2.txt.gz {BLD}/tmp/test2/_dry_test2_CD01/_dry__dry_cow2.txt.gz
+choice[1, 996] = yes
+> mkdir -p {BLD}/tmp/test2/_dry_test2_CD01/_dry_ici
+> cp {BLD}/tmp/test2/_dry__dry_cow1.txt.gz {BLD}/tmp/test2/_dry_test2_CD01/_dry_ici/cow.txt.gz
+choice[0, 995] = yes
+> cp {BLD}/tmp/test2/_dry_cow_03.cat {BLD}/tmp/test2/_dry_test2_CD01/_dry_cow_03.cat
+iso size estimated to {SIZE}
+> genisoimage -rJ -joliet-long -input-charset utf8 -V _dry_test2_CD01 -publisher jukebox_0.1 -o {BLD}/tmp/test2/_dry_test2_CD01.iso {BLD}/tmp/test2/_dry_test2_CD01 2>/dev/null
+> rm -fr {BLD}/tmp/test2/_dry_test2_CD01
+addFileToAdd( '{BLD}/tmp/test2/_dry_test2_CD01.iso', 'supports/_dry_test2_CD01.iso', '', '' )
+delFileToAdd( {BLD}/tmp/test2/_dry_gnu.txt.gz )
+> rm -f {BLD}/tmp/test2/_dry_gnu.txt.gz
+delFileToAdd( {BLD}/tmp/test2/_dry__dry_cow2.txt.gz )
+> rm -f {BLD}/tmp/test2/_dry__dry_cow2.txt.gz
+delFileToAdd( {BLD}/tmp/test2/_dry__dry_cow1.txt.gz )
+> rm -f {BLD}/tmp/test2/_dry__dry_cow1.txt.gz
+delFileToAdd( {BLD}/tmp/test2/_dry_cow_03.cat )
+> rm -f {BLD}/tmp/test2/_dry_cow_03.cat
+* debugArrays()
+files to add:
+7: {BLD}/tmp/test2/_dry_test2_CD01.iso ({HASH}:{SIZE} -> supports/_dry_test2_CD01.iso)
+supp to rem:
+0: supp1
+1: {BLD}/tmp/test2/file1.iso
+2: {BLD}/tmp/test2/gnu.txt
+supp to del:
+0: supp2
+1: {BLD}/tmp/test2/file2.iso
+2: {BLD}/tmp/test2/gnu.txt
+knapsack inputs:
+isIsoFile( '{BLD}/tmp/test2/_dry_test2_CD01.iso' )
+ is an iso file
+> chgrp -R mdtx {BLD}/tmp/test2
+* addSupports()
+> mediatex -c mdtx add file {BLD}/tmp/test2/_dry_test2_CD01.iso
+> mediatex -c mdtx add supp {BLD}/tmp/test2/_dry_test2_CD01.iso
+>  to coll test2
+* uploadRules()
+delFileToAdd( {BLD}/tmp/test2/_dry_test2_CD01.iso )
+(GZ 
+ {HASH}:{SIZE}
+=>
+ {HASH}:{SIZE} ici/cow.txt
+)
+(GZ 
+ {HASH}:{SIZE}
+=>
+ {HASH}:{SIZE} _dry_cow2.txt
+)
+(GZ 
+ {HASH}:{SIZE}
+=>
+ {HASH}:{SIZE} gnu.txt
+)
+(ISO
+ {HASH}:{SIZE}
+=>
+ {HASH}:{SIZE} _dry_gnu.txt.gz
+ {HASH}:{SIZE} _dry__dry_cow2.txt.gz
+ {HASH}:{SIZE} _dry_ici/cow.txt.gz
+ {HASH}:{SIZE} _dry_cow_03.cat
+)
+(IMG
+=>
+ {HASH}:{SIZE} supports/_dry_test2_CD01.iso
+)
+> mediatex -c mdtx upload
+>  rules {BLD}/tmp/test2/_dry___extract.txt
+>  to coll test2
+* remSupports()
+> mediatex -c mdtx del supp supp1
+>  from coll test2
+> mediatex -c mdtx del supp {BLD}/tmp/test2/file1.iso
+>  from coll test2
+> mediatex -c mdtx del supp {BLD}/tmp/test2/gnu.txt
+>  from coll test2
+* delSupports()
+> mediatex -c mdtx del supp {BLD}/tmp/test2/file2.iso
+> rm {BLD}/tmp/test2/file2.iso
+> mediatex -c mdtx del supp {BLD}/tmp/test2/gnu.txt
+> rm {BLD}/tmp/test2/gnu.txt
+* debugArrays()
+files to add:
+supp to rem:
+supp to del:
+0: supp2
+Dry run have prefixed output files by '_dry_'. To remove them:
+ $ find {BLD}/tmp -name '_dry_*' -delete
+Success

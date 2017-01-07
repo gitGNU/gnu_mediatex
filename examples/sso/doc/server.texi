@@ -1,0 +1,109 @@
+@cindex server
+
+@menu
+* srvConf::      Configuration
+* srvPerms::     Permissions
+* srvCookie::    Cookie
+@end menu
+
+@sso{}'s server is a simple @cgi{} script that:
+@itemize
+@item
+provide an @htmlO{} formulary asking for a login and a password,
+@item
+retrieve permissions into a database according to theses credentials,
+@item
+build a @cookie{} providing theses permissions,
+@item
+redirect to the @urlO{} the user was first redirected.
+@end itemize
+
+@page
+@node srvConf
+@section Configuration
+
+This @cgi{} script retrieve permissions from a @phpBB{} forum, wich is not generic.
+By this way, no effort has been done to export configuration variables out of the source code.
+
+into @file{/usr/lib/cgi-bin/mdtxSsoSrv.pl}:
+
+@table @code
+@item $domain
+The domain cover by the cookie.
+All clients and server must be into the same domaine name in order to provide them the same @cookie{}.
+
+@item $dbHost
+@itemx $dbPort
+@itemx $dbName
+@itemx $dbUser
+@itemx $dbPasswd
+The database host, port, database to use, user to login into and password.
+
+@item $aesKey
+A 16 bytes secret string share by clients and servers, used to crypt permissions into the @cookie{}.
+
+@item $privateKey
+A @rsa{} private key used to sign the crypted permissions.
+
+@item $password
+The @rsa{} password of the private key
+@end table
+
+@page
+@node srvPerms
+@section Permissions
+
+Credentials are match to the @phpBB{}'ones :
+@example
+$query1 = "select user_password from phpbb_users where username='".
+	$login."'";
+@end example
+
+@phpBB use the @acronym{phPass} (@url{http://www.openwall.com/phpass/} project's algorithm to hash passwords.
+It only specifies a different letter (H instead of P) into the Id field of the hash string.
+@example
+# check passwd
+substr($row[0], 1, 1) = "P";
+$ppr = Authen::Passphrase::PHPass->from_crypt($row[0]);
+if(! $ppr->match($passwd)) @{
+@end example
+
+Once the credentials are validated, @mediatex{}'s permissions are retrive into the description field of user's groups having name prefixed by `mdtx-'.
+@example
+$query2 = "select group_desc".
+	" from phpbb_users, phpbb_user_group, phpbb_groups".
+	" where username = '".$login."'".
+	" and phpbb_users.user_id = phpbb_user_group.user_id".
+	" and phpbb_groups.group_id = phpbb_user_group.group_id".
+	" and group_name like 'mdtx-%'";
+
+while (@@row = $cursor->fetchrow) @{
+      $permissions=$permissions.$row[0].';';
+@}
+@end example
+
+The final permission provided as a ticket is a single string like :
+@example
+COLL1:group1,group2,...,groupN;COLL2:group1,group2,...,groupN;...;COLLN:group1,group2,...,groupN
+@end example
+
+@page
+@node srvCookie
+@section Cookie
+
+@table @code
+@item ``IP=P''
+The user's @ip{} is add before permissions in order to prevent someone else to reuse its @cookie{}.
+
+@item B64(AES(``IP=P''))
+Permission are crypted using the @aes{} key.
+Result is encoded into base 64.
+
+@item B64(AES(``IP=P'')) B64(RSA(B64(AES(``IP=P''))))
+An @rsa{} signature is added.
+The signature is encode into base 64.
+
+@item URL(``name='' B64(AES(``IP=P'')) B64(RSA(B64(AES(``IP=P'')))) )
+The cookie is transmited to the user's browser.
+Next the browser will retransmit it prefixed by the cookie's name and @url{} encoding it content.
+@end table

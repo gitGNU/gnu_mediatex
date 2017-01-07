@@ -1,0 +1,95 @@
+@cindex install
+
+Get the sources from the @mediatexO{} project:
+@example
+$ git clone git://git.savannah.nongnu.org/mediatex.git
+$ cd example/mdtxSso
+@end example
+
+Software requirements:
+@itemize @bullet
+@item Compilation:
+automake make texinfo transfig 
+@c @item Info documentation:
+@c ghostscript
+@item Documentation in others format than texinfo and man (optional):
+imagemagick texlive
+@item Server's installation:
+libauthen-passphrase-perl libconvert-pem-perl libcrypt-openssl-rsa-perl 
+@item Client's installation:
+libapache2-request-perl libcrypt-openssl-rsa-perl 
+@item Debian package generation:
+libfile-fcntllock-perl
+@end itemize
+@c initramfs-tools 
+
+The perl AES module needed by both server and clients is not provided by debian packages:
+@example
+# apt-get install libssl-dev
+$ cpan Crypt/OpenSSL/AES.pm
+@end example
+
+Here are the steps used to build the project from scratch:
+@example
+$ autoscan
+$ autoreconf -i
+$ ./configure --infodir=/usr/share/info
+$ make V=0
+# make install
+@end example
+
+The same steps have to be done for both @file{server/} and @file{client/} directories as the top project only provide this documentation.
+
+On the server, you will have to activate the deicated configuration:
+@example
+# a2enconf mediatex-sso.conf
+# service apache2 restart
+@end example
+
+On server you may want to edit @file{/etc/apache2/conf-available/serve-cgi-bin.conf}
+@example
+<IfDefine ENABLE_USR_LIB_CGI_BIN>
+        ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+        <Directory "/usr/lib/cgi-bin">
+...
++               <Files mdtxSsoSrv.pl>
++                       SSLOptions +StrictRequire
++                       SSLRequireSSL
++               </Files>
+        </Directory>
+</IfDefine>
+@end example
+
+On client, replace the current @file{.htaccess} protections:
+@example
+# mediatex adm add coll test
+$ mediatex make coll test
+
+$ vi ~mdtx-test/git/apache2/home.htaccess
+<<<
+# uncomment to disable authentication
+#SetEnvIf Request_Protocol "^H" NO_AUTH
+---
+# uncomment to disable authentication
+SetEnvIf Request_Protocol "^H" NO_AUTH
+>>>
+
+$ cat >> ~mdtx-test/git/apache2/index.htaccess <<EOF
+PerlHeaderParserHandler Apache2::mdtxSsoClt
+PerlSetVar GROUP index
+EOF
+@end example
+
+A key pair need to be generated once by server so as to share the public one along all the clients :
+@example
+# openssl genrsa -des3 -out /etc/apache2/mdtxSso.pem 2048
+# openssl rsa -in /etc/ssl/private/mdtxSso.pem -out /etc/ssl/certs/mdtxSso.pem \
+   -outform PEM -pubout
+@end example
+
+Other formats than @acronym{GNU INFO} of this documentation are also available from the sources (optional):
+@example
+$ cd doc
+$ make html pdf
+# make install-html install-pdf
+@end example

@@ -1,0 +1,31 @@
+*~
+# autoscan
+autoscan.log
+configure.scan
+# autoreconf
+INSTALL
+Makefile.in
+aclocal.m4
+autom4te.cache/
+check/Makefile.in
+config.h.in
+configure
+install-sh
+missing
+test-driver
+ABOUT-NLS
+compile
+config.guess
+config.rpath
+config.sub
+m4
+# ./configure
+Makefile
+check/Makefile
+config.h
+config.log
+config.status
+stamp-h1
+# make dist
+/jukebox-*/
+/jukebox-*.tar.gz

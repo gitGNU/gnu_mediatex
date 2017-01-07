@@ -1,0 +1,32 @@
+# autoreconf -i
+Makefile.in
+texinfo.texi
+mdate-sh
+# ./configure
+Makefile
+stamp-vti
+# make
+texinfo.tex
+version.texi
+jukebox.info
+jukebox.html
+.am*
+# make all
+jukebox.aux
+jukebox.cp
+jukebox.cps
+jukebox.dvi
+jukebox.fn
+jukebox.ky
+jukebox.log
+jukebox.op
+jukebox.pg
+jukebox.toc
+jukebox.tp
+jukebox.vr
+jukebox.pdf
+jukebox.ps
+# make pdf
+jukebox.t2p
+# make dvi
+jukebox.t2d

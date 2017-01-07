@@ -1,4 +1,4 @@
-@cindex Client
+@cindex client
 
 @activity{Client} is the front-end for the @sc{Mediatex} system.
 It runs as @code{setuid root} so as to switch between the different
