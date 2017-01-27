@@ -141,17 +141,16 @@ container: orphaneContainer
 }
 ;
 
-
 orphaneContainer: extrTYPE 
 {
   logParser(LOG_DEBUG, "line %i: orphaneContainer: %s", 
 	    LINENO, strEType($1));
   switch ($1) {
   case INC:
-    container = coll->extractTree->incoming;
+    container = coll->extractTree->inc;
     break;
   case IMG:
-    container = coll->extractTree->images;
+    container = coll->extractTree->img;
     break;
   default:
     logParser(LOG_ERR, "line %i: %s", LINENO, 

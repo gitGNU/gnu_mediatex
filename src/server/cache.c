@@ -110,14 +110,13 @@ getFinalSupplyOutPath(Collection* coll, Record* record)
   char* ptrPart2 = 0;
   char* ptrFilename = 0;
   char car = 0;
-  FromAsso* asso = 0;
-  AVLNode* node = 0;
 
   checkCollection(coll);
   checkRecord(record);
   logMain(LOG_DEBUG, "getFinalSupplyOutPath %s", extra);
   extra = record->extra;
   checkLabel(extra);
+  checkArchive(record->archive);
   
   // look for ':' that limit part1 and part2, if there
   for (ptrColon=extra; *ptrColon && *ptrColon != ':'; ++ptrColon);
@@ -130,14 +129,8 @@ getFinalSupplyOutPath(Collection* coll, Record* record)
   *ptrColon = 0;
 
   // look if an IMG rule matchs
-  for (node = coll->extractTree->images->childs->head;
-       node; node = node->next) {
-    asso = node->item;
-    
-    if (asso->archive == record->archive) break;
-  }
-  if (node) {
-    if (!(ptrOut = createString(asso->path))) goto error;
+  if (record->archive->imgExtractionPath) {
+    if (!(ptrOut = createString(record->archive->imgExtractionPath))) goto error;
     goto end;
   }
   

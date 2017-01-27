@@ -373,6 +373,12 @@ diseaseArchive(Collection* coll, Archive* self)
   if (self->remoteSupplies->nbItems >0) goto next;
   if (self->finalSupplies->nbItems >0) goto next;
   if (self->localSupply) goto next;
+
+  // check incoming flag
+  if (self->uploadTime) goto next;
+
+  // check image extraction path's flag
+  if (self->imgExtractionPath) goto next;
   
   // delete archive from collection ring and free it
   avl_delete(coll->archives, self);

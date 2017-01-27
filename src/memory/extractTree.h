@@ -65,8 +65,8 @@ struct ExtractTree {
   AVLTree* containers;
 
   // special container with no parents
-  Container* incoming;   // provides unsafe incomings
-  Container* images;     // provides unknown paths
+  Container* inc;        // provides unsafe incomings
+  Container* img;        // provides top image extraction's path
 
   float score;           // global score for the collection
 };

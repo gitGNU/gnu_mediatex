@@ -390,11 +390,11 @@ addMotdPolicyAll(NotifyData* data)
   
   // add local top containers not handle as local supports
 
-  // look into incomings (that may be safe archive [*])
-  container = coll->extractTree->incoming;
+  // look into incomings
+  container = coll->extractTree->inc;
   for (node = container->childs->head; node; node = node->next) {
       fromAsso = node->item;
-      if (isIncoming(coll, fromAsso->archive)) continue; // [*]
+      if (isIncoming(coll, fromAsso->archive)) continue; // still unsafe
 
       logMain(LOG_INFO, "%s", "ask for local image (from incoming)");
       if (!askForLocalImage(data, fromAsso->archive)) goto error;

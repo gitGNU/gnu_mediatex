@@ -122,7 +122,7 @@ uploadExtract(Collection* upload, char* path)
 
   // assert there is no INC content  
   if (!(self = upload->extractTree)) goto error;
-  if (avl_count(self->incoming->childs) > 0) {
+  if (avl_count(self->inc->childs) > 0) {
     logMain(LOG_ERR, "unexpected incoming rules on upload");
     rc = FALSE;
   }
@@ -197,7 +197,7 @@ uploadContent(Collection* upload, UploadFile* upFile)
 	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
 	  date.tm_hour, date.tm_min, date.tm_sec);
 
-  if (!(container = upload->extractTree->incoming)) goto error;
+  if (!(container = upload->extractTree->inc)) goto error;
   if (!(addFromAsso(upload, archive, container, dateString))) 
     goto error;
 
@@ -213,7 +213,7 @@ uploadContent(Collection* upload, UploadFile* upFile)
       if (!(target = catString(target, ptr+1))) goto error;
     }
     
-    if (!(container = upload->extractTree->images)) goto error;
+    if (!(container = upload->extractTree->img)) goto error;
     if (!(addFromAsso(upload, archive, container, target)))
       goto error;
   }

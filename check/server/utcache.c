@@ -25,7 +25,7 @@
 #include "server/mediatex-server.h"
 #include "server/utFunc.h"
 
-static int addFiles(Collection* coll, char* inputRep)
+static int utAddFiles(Collection* coll, char* inputRep)
 {
   if (!utCopyFileOnCache(coll, inputRep, "logo.png")) goto error;
   if (!utCopyFileOnCache(coll, inputRep, "logo.tgz")) goto error;
@@ -121,12 +121,16 @@ main(int argc, char** argv)
   if (!utCleanCaches()) goto error;
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
  
-  // test getFinalSupplyInPath function
+  // test getFinalSupplyInPath and getFinalSupplyOutPath functions
   utLog("%s", "1) Paths", 0);
-  strcpy(path, "/path/to/file");
   if (!(record = createRecord())) goto error;
   record->extra = path;
+  if (!(archive =
+	getArchive(coll, "de5008799752552b7963a2670dc5eb18", 391168)))
+    goto error;
+  record->archive = archive;
   
+  strcpy(path, "/path/to/file");
   extra = getFinalSupplyInPath(path);
   logMain(LOG_NOTICE, "finalSupply input %s -> %s", path, extra);
   extra = destroyString(extra);
@@ -174,7 +178,7 @@ main(int argc, char** argv)
   
   // test (re-)loading functions
   utLog("%s", "2) API", 0);
-  if (!addFiles(coll, inputRep)) goto error;
+  if (!utAddFiles(coll, inputRep)) goto error;
   utLog("%s", "Begin with:", coll);
 
   utLog("%s", "2.1) Reload the cache:", 0);
@@ -201,7 +205,7 @@ main(int argc, char** argv)
   utLog("%s", "2.5) Clean cat1 and iso1:", 0);
   coll->fileState[iCACH] = LOADED; // force loosing modifications 
   if (!diseaseCollection(coll, CACH)) goto error;
-  if (!addFiles(coll, inputRep)) goto error;
+  if (!utAddFiles(coll, inputRep)) goto error;
   if (!loadCache(coll)) goto error;
   utLog("%s", "Begin with:", coll);
   if (!cleanCache(coll)) goto error;
@@ -210,7 +214,7 @@ main(int argc, char** argv)
   utLog("%s", "2.6) Clean only cat1 (no local image):", 0);
   coll->fileState[iCACH] = LOADED; // force loosing modifications 
   if (!diseaseCollection(coll, CACH)) goto error;
-  if (!addFiles(coll, inputRep)) goto error;
+  if (!utAddFiles(coll, inputRep)) goto error;
   if (!loadCache(coll)) goto error;
 
   // iso1 no more available from local supports 
@@ -231,7 +235,7 @@ main(int argc, char** argv)
 
   utLog("%s", "3) Allocations...", 0);
   if (!(coll = mdtxGetCollection("coll3"))) goto error;
-  if (!addFiles(coll, inputRep)) goto error;
+  if (!utAddFiles(coll, inputRep)) goto error;
   if (!loadCache(coll)) goto error;
   utLog("%s", "Begin with:", coll);
   /*--------------------------------------------------------*/
@@ -265,7 +269,7 @@ main(int argc, char** argv)
   archive->extractScore = 9;
   if (!computeArchiveStatus(coll, archive)) goto error;
   extra = getAbsoluteCachePath(coll, record->extra);
-  fopen(extra, "w"); // something to unlink
+  fclose(fopen(extra, "w")); // something to unlink
   utLog("reply : %i", record?1:0, coll); // 1: already avail
 
   /*--------------------------------------------------------*/

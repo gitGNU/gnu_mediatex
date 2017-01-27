@@ -48,8 +48,9 @@ struct Archive
   RG*        fromContainers; // (FromAsso*)
   Container* toContainer;    // only one: (choose a rule TGZ or TAR+GZ)
   time_t     uploadTime;     // uploaded archive (from INC container)
-  float      extractScore;   // computed value used by cache
+  char*      imgExtractionPath; // image extraction path (from IMG container)
   int        incInherency;   // is a new incoming (even by inherency)
+  float      extractScore;   // computed value used by cache
 
   // documentTree related data
   RG* documents;

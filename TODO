@@ -3,15 +3,9 @@
 
 *** TEST
 
-- test install and upgrade servers 
-
 *** BUG
 
-- server with hight loverage segfault about once a week
-
 *** TODO
-
-htmlLeftPageHeadBasic(fd, rep, dnsUrl?dnsUrl:SSI_HOME_TEMPLATE)
 
 - find . -type f -name "*.[cly]" -exec grep -n ' \* TODO' /dev/null {} \;
 

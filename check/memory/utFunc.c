@@ -422,7 +422,7 @@ int createExempleExtractTree(Collection* coll)
   sprintf(dateString, "%04i-%02i-%02i,%02i:%02i:%02i", 
 	  date.tm_year + 1900, date.tm_mon+1, date.tm_mday,
 	  date.tm_hour, date.tm_min, date.tm_sec);
-  if (!(container = coll->extractTree->incoming)) goto error;
+  if (!(container = coll->extractTree->inc)) goto error;
   if (!(asso = addFromAsso(coll, iso1, container, dateString))) goto error;
   if (!(asso = addFromAsso(coll, iso2, container, "1994-01-01,00:00:00"))) 
     goto error;
@@ -431,7 +431,7 @@ int createExempleExtractTree(Collection* coll)
   if (!(asso = addFromAsso(coll, logo, container, dateString))) goto error;
 
   // IMG
-  if (!(container = coll->extractTree->images)) goto error;
+  if (!(container = coll->extractTree->img)) goto error;
   if (!(asso = addFromAsso(coll, gzip, container,
 			   "here/logo.gz"))) goto error;
 

@@ -195,29 +195,6 @@ destroyContainer(Container* self)
   return (Container*)0;
 }
 
-
-/*=======================================================================
- * Function   : hasExtractionPath
- * Description: check if an IMG's extraction path is already provided
- * Synopsis   : int hasExtractionPath(Archive* self)
- * Input      : Archive* self : what to check
- * Output     : TRUE on success
- =======================================================================*/
-static int 
-hasExtractionPath(Archive* self)
-{
-  FromAsso* fromAsso = 0;
-  RGIT* curr = 0;
-
-  while ((fromAsso = rgNext_r(self->fromContainers, &curr))) {
-    if (fromAsso->container->type == INC ||
-	fromAsso->container->type == IMG) continue;
-    break;
-  }
-  
-  return (fromAsso != 0);
-}
-
 /*=======================================================================
  * Function   : serializeContainer
  * Description: Serialize a Container.
@@ -270,8 +247,8 @@ serializeContainer(Collection* coll, Container* self, CvsFile* fd)
       // remove safe incoming
       if (self->type == INC && !isIncoming(coll, asso->archive)) continue;
 
-      // remove image when path is available from another rule
-      if (self->type == IMG && hasExtractionPath(asso->archive)) continue;
+      // remove image extraction path whan available from another rule
+      if (self->type == IMG && asso->archive->fromContainers->nbItems > 0) continue;
       
       if (!serializeExtractRecord(asso->archive, fd)) goto error;
       fd->print(fd, "\t%s\n", asso->path);
@@ -364,12 +341,12 @@ createExtractTree(void)
     goto error;
 
   // special INC container for newly uploaded files
-  if (!(rc->incoming = createContainer())) goto error;
-  rc->incoming->type = INC;
+  if (!(rc->inc = createContainer())) goto error;
+  rc->inc->type = INC;
 
-  // special IMG container to reminds supports paths (facultative)
-  if (!(rc->images = createContainer())) goto error;
-  rc->images->type = IMG;
+  // special IMG container to reminds supports paths
+  if (!(rc->img = createContainer())) goto error;
+  rc->img->type = IMG;
 
   rc->score = -1;
 
@@ -393,8 +370,8 @@ destroyExtractTree(ExtractTree* self)
   if (!self) goto error;
 
   avl_free_tree(self->containers);
-  self->incoming = destroyContainer(self->incoming);
-  self->images = destroyContainer(self->images);
+  self->inc = destroyContainer(self->inc);
+  self->img = destroyContainer(self->img);
 
   free(self);
 
@@ -449,13 +426,13 @@ serializeExtractTree(Collection* coll, CvsFile* fd)
   //fd->print(fd, "# Version: $" "Id" "$\n");
 
   // serialize INC container if not empty
-  if (avl_count(self->incoming->childs) > 0) {
-    if (!serializeContainer(coll, self->incoming, fd)) goto error;
+  if (avl_count(self->inc->childs) > 0) {
+    if (!serializeContainer(coll, self->inc, fd)) goto error;
   }
 
   // serialize IMG container if not empty
-  if (avl_count(self->images->childs) > 0) {
-    if (!serializeContainer(coll, self->images, fd)) goto error;
+  if (avl_count(self->img->childs) > 0) {
+    if (!serializeContainer(coll, self->img, fd)) goto error;
   }
 
   // serialize all other containers
@@ -586,6 +563,12 @@ delFromArchive(Collection* coll, Container* container, Archive* archive)
 	    0:(long long int)container->parent->size,
 	    archive->hash, (long long int)archive->size);
 
+  if (container->type == INC || container->type == IMG) {
+    logMemory(LOG_ERR, "%s container cannot have parent",
+	      strEType(container->type));
+    goto error;
+  }
+
   // del archive to container's parents ring
   if ((curr = rgHaveItem(container->parents, archive))) {
     rgRemove_r(container->parents, &curr);
@@ -639,7 +622,7 @@ getFromAsso(Container* container, Archive* archive)
 
 /*=======================================================================
  * Function   : addFromAsso
- * Description: Add a fromAsso if not already there
+ * Description: Add a fromAsso if not already into this container
  * Synopsis   : FromAsso* addFromAsso(Collection* coll, Archive* archive
  *                                    Container* container)
  * Input      : Collection* coll : where to add
@@ -647,8 +630,7 @@ getFromAsso(Container* container, Archive* archive)
  *              Container* container : id
  *              char* path : path to file into the container
  * Output     : FromAsso* : the FromAsso we have found/added
- * Note       : archive from container may have multiple instances
- *              (as an archive may comes from severals containers)
+ * Note       : as an archive may comes from severals containers
  =======================================================================*/
 FromAsso* 
 addFromAsso(Collection* coll, Archive* archive, Container* container,
@@ -681,7 +663,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
     break;
 
   case INC:
-    // having 1 inc asso and 1 normal asso => remove the inc asso
+    // having 1 INC asso and 1 normal asso => remove the INC asso
     if (archive->fromContainers->nbItems > 0) {
       logMemory(LOG_NOTICE, 
 		"%s:%lli file is now archived (no more an incoming)",
@@ -707,11 +689,10 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
     if (!archive->uploadTime || archive->uploadTime > time) {
       archive->uploadTime = time;
     }
-
     break;
     
   case IMG:
-    // ignore having several IMG assos if they exacly match
+    // if IMG asso is already, check it match the current's one
     if ((asso = getFromAsso(container, archive))) {
       if (strcmp(asso->path, path)) {
 	logMemory(LOG_ERR,
@@ -721,6 +702,8 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
 	asso = 0;
 	goto error;
       }
+
+      // ignore new IMG asso that match the current's one
       goto end;
     }
     break;
@@ -743,9 +726,14 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
   asso->container = container;
   asso->path = string;
 
-  // incomings do not provides extraction path, and both
-  // incomings and images are not linked to archive
-  if (container->type != INC && container->type != IMG) {
+  switch (container->type) {
+  case INC:
+    break;
+  case IMG:
+    archive->imgExtractionPath = string;
+    break;
+  default:
+    // INC and IMG asso are already linked to archive
     if (!rgInsert(archive->fromContainers, asso)) goto error;
   }
 
@@ -773,7 +761,7 @@ addFromAsso(Collection* coll, Archive* archive, Container* container,
 
 /*=======================================================================
  * Function   : delFromAsso
- * Description: Del an fromAsso if not already there
+ * Description: Del a fromAsso
  * Synopsis   : void delFromAsso(Collection* coll, FromAsso* self)
  * Input      : Collection* coll: where to del
  *              FromAsso* self: association to del
@@ -795,12 +783,15 @@ delFromAsso(Collection* coll, FromAsso* self)
 	    self->container->type == INC || self->container->type == IMG?
 	    0:(long long int)self->container->parent->size);
 
-  // incomings do not provides extraction path
-  if (self->container->type == INC) {
+  // unlink asso from archive
+  switch (self->container->type) {
+  case IMG:
+    self->archive->imgExtractionPath = 0;
+    break;
+  case INC:
     self->archive->uploadTime = 0;
-  }
-  else {
-    // delete asso from archive
+    break;
+  default:
     if ((curr = rgHaveItem(self->archive->fromContainers, self))) {
       rgRemove_r(self->archive->fromContainers, &curr);
     }
@@ -870,7 +861,7 @@ addContainer(Collection* coll, EType type, Archive* parent)
   logMemory(LOG_DEBUG, "addContainer %s", strEType(type));
 
   if (type == INC || type == IMG) {
-    logMemory(LOG_ERR, "%s container always exists and cannot be add",
+    logMemory(LOG_ERR, "%s internal container cannot be add",
 	      strEType(type));
     goto error;
   }
@@ -938,10 +929,11 @@ delContainer(Collection* coll, Container* self)
   }
 
   // delete container link with archives
+  // (INC and IMG do not had parent)
   while ((arch = rgHead(self->parents))) {
     arch->toContainer = 0;
     rgRemove(self->parents);
-  }
+  } 
 
   // delete container from extract tree and free it
   avl_delete(coll->extractTree->containers, self);
@@ -969,8 +961,8 @@ diseaseExtractTree(Collection* coll)
   logMemory(LOG_DEBUG, "diseaseExtractTree %s", coll);
 
   // diseases containers
-  if (!delContainer(coll, coll->extractTree->incoming)) goto error;
-  if (!delContainer(coll, coll->extractTree->images)) goto error;
+  if (!delContainer(coll, coll->extractTree->inc)) goto error;
+  if (!delContainer(coll, coll->extractTree->img)) goto error;
   while ((node = coll->extractTree->containers->head))
     if (!delContainer(coll, node->item)) goto error;
 
