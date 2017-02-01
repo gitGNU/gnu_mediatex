@@ -12,4 +12,7 @@ cgi
 mediatex
 mediatexd
 
-
+# gcov
+*.gcda
+*.gcno
+*.html
