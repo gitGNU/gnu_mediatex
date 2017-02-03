@@ -85,7 +85,14 @@ main(int argc, char** argv)
   /************************************************************************/
   if (!mdtxGetSupport("SUPP11_logo.png")) goto error;
   if (!(coll = mdtxGetCollection("coll1"))) goto error;
+  
   if (!loadCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
+  if (!releaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
+  if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
+
+  // test diseaseArchives()
+  if (!loadCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
+  if (!diseaseArchives(coll)) goto error;
   if (!releaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   if (!diseaseCollection(coll, CTLG|EXTR|SERV|CACH)) goto error;
   /************************************************************************/

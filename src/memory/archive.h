@@ -76,7 +76,6 @@ int cmpArchiveAvl(const void *p1, const void *p2);
 int cmpArchiveScore(const void *p1, const void *p2);
 Archive* getArchive(Collection* coll, char* hash, off_t size);
 Archive* addArchive(Collection* coll, char* hash, off_t size);
-int delArchive(Collection* coll, Archive* archive);
 
 /* Private */
 Archive* createArchive(void);

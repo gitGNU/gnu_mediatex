@@ -270,76 +270,8 @@ addArchive(Collection* coll, char* hash, off_t size)
 }
 
 /*=======================================================================
- * Function   : delArchive
- * Description: Del an archive
- * Synopsis   : int delArchive(Collection* coll, Archive* archive)
- * Input      : Collection* coll : where to del
- *              Archive* archive : the archive to del
- * Output     : TRUE on success
- =======================================================================*/
-int
-delArchive(Collection* coll, Archive* self)
-{
-  int rc = FALSE;
-  Record* rec = 0;
-  Image* img = 0;
-  FromAsso* af = 0;
-  Document* doc = 0;
-  AssoCarac* ac = 0;
-  RGIT* curr = 0;
-  AVLNode* node = 0;
- 
-  checkCollection(coll);
-  checkArchive(self);
-  logMemory(LOG_DEBUG, "delArchive %s:%lli", 
-	  self->hash, (long long int) self->size);
-
-  // delete archive from record ring
-  curr = 0;
-  while ((rec = rgNext_r(self->records, &curr)))
-    if (!delRecord(coll, rec)) goto error;
-
-  // delete archive from image ring
-  curr = 0;
-  while ((img = rgNext_r(self->images, &curr)))
-    if (!delImage(coll, img)) goto error;
-
-  // delete archive from container ring
-  if (!delContainer(coll, self->toContainer)) goto error;
-
-  // delete archive from content association
-  curr = 0;
-  while ((af = rgNext_r(self->fromContainers, &curr)))
-    if (!delFromAsso(coll, af)) goto error;
-  
-  // delete archive from document ring
-  curr = 0;
-  while ((doc = rgNext_r(self->documents, &curr)))
-    if (!delArchiveFromDocument(coll, self, doc)) goto error;
-  
-  // delete archive from assoCarac ring
-  curr = 0;
-  while ((ac = rgNext_r(self->assoCaracs, &curr))) {
-    rgRemove(self->assoCaracs);
-    destroyAssoCarac(ac);
-  }
-
-  // delete archive from collection cache
-  if ((node = avl_search(coll->cacheTree->archives, self))) {
-    avl_delete_node(coll->cacheTree->archives, node);
-  }
-
-  // delete archive from collection ring and free the archive
-  avl_delete(coll->archives, self);
-
-  rc = TRUE;
- error:
-  return rc;
-}
-
-/*=======================================================================
  * Function   : diseaseArchive
- * Description: Disease all archive we can in order to free memory
+ * Description: Delete an archive if no more used
  * Synopsis   : int diseaseArchive(Collection* coll, Archive* arch)
  * Input      : Collection* coll : where to free
  * Output     : TRUE on success
@@ -360,6 +292,12 @@ diseaseArchive(Collection* coll, Archive* self)
   // check container's rings
   if (self->fromContainers->nbItems >0) goto next;
   if (self->toContainer) goto next;
+
+  // check incoming flag
+  if (self->uploadTime) goto next;
+
+  // check image extraction path's flag
+  if (self->imgExtractionPath) goto next;
   
   // check document's rings
   if (self->documents->nbItems >0) goto next;
@@ -373,12 +311,6 @@ diseaseArchive(Collection* coll, Archive* self)
   if (self->remoteSupplies->nbItems >0) goto next;
   if (self->finalSupplies->nbItems >0) goto next;
   if (self->localSupply) goto next;
-
-  // check incoming flag
-  if (self->uploadTime) goto next;
-
-  // check image extraction path's flag
-  if (self->imgExtractionPath) goto next;
   
   // delete archive from collection ring and free it
   avl_delete(coll->archives, self);

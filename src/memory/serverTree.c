@@ -647,7 +647,7 @@ delImage(Collection* coll, Image* image)
   }
 
   // delete image from archive
-  if ((curr = rgHaveItem(image->archive->images, image->archive))) {
+  if ((curr = rgHaveItem(image->archive->images, image))) {
     rgRemove_r(image->archive->images, &curr);
   }
 

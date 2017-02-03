@@ -543,6 +543,8 @@ computeUrls(Collection* coll)
 	goto error;
       
     }
+
+    server->url = destroyString(server->url);
     if (!(server->url = createString(url))) goto error;
   }
 
@@ -564,6 +566,8 @@ computeUrls(Collection* coll)
 	goto error;
       
     }
+    
+    self->dnsUrl = destroyString(self->dnsUrl);
     if (!(self->dnsUrl = createString(url))) goto error;
   }
   

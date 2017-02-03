@@ -127,14 +127,14 @@ main(int argc, char** argv)
   // search an archive
   if (getArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222))
     goto error;
-  if (!(arch1 =
+  if (!(arch2 =
   	addArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222)))
     goto error;
-  if (getArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222) != arch1)
+  if (getArchive(coll, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 22222) != arch2)
     goto error;
 
   if (avl_count(coll->archives) != 2) goto error;
-  if (!(diseaseArchives(coll))) goto error;
+  if (!diseaseArchives(coll)) goto error;
   if (avl_count(coll->archives)) goto error;
   /************************************************************************/
 

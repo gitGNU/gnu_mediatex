@@ -711,7 +711,8 @@ int cleanCacheTree(Collection* coll)
       break;
       
     default:
-      logMemory(LOG_ERR, "cannot unindex %s record", strRecordType(record));
+      logMemory(LOG_ERR, "cannot unindex %s record",
+		strRecordType(record));
       goto error2;
     }
 

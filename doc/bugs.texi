@@ -175,6 +175,7 @@ $ ms_print massif.out.@var{PID} | less
 
 @item @code{gcov} to display code coverage
 @example
+$ find -type f \( -name "*.gcda" -o -name "*.gcno" \) -delete
 $ make clean
 $ make CFLAGS="-fprofile-arcs -ftest-coverage @dots{}"
 $ make CFLAGS="-fprofile-arcs -ftest-coverage @dots{}" check
@@ -184,6 +185,7 @@ $ cd src
 $  gcovr -r .
 TOTAL     20098   13548    67%
 
+$ rm cov.*
 $ gcovr -r . --html --html-details -o cov.html
 @end example
 

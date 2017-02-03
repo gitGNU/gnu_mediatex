@@ -224,7 +224,6 @@ uploadContent(Collection* upload, UploadFile* upFile)
   if (!rc) {
     logMain(LOG_ERR, "uploadExtract fails");
   }
-  if (archive) delArchive(upload, archive);
   if (target) destroyString(target);
   return rc;
 }
