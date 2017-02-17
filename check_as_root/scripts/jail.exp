@@ -115,7 +115,7 @@ fait.
 [info git.sh]'
 [info git.sh] su ut5-mdtx-hello -c 'git commit -a -m "Initial collection setup" 2>&1'
 [master  XXX] Initial collection setup
- 15 files changed, 209 insertions(+)
+ 15 files changed, 210 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 apache2/cache.htaccess
  create mode 100644 apache2/cgi.htaccess

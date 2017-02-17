@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MediaTex 0.1\n"
 "Report-Msgid-Bugs-To: nroche@narval.tk\n"
-"POT-Creation-Date: 2016-11-30 16:54+0100\n"
+"POT-Creation-Date: 2017-01-27 07:09+0100\n"
 "PO-Revision-Date: 2014-02-20 17:45+0100\n"
 "Last-Translator: nroche <nroche@narval.fr.eu.org>\n"
 "Language-Team: French\n"
@@ -137,18 +137,18 @@ msgstr ""
 msgid " server)"
 msgstr ""
 
-#: src/client/catalogHtml.c:1324
+#: src/client/catalogHtml.c:1325
 msgid "All documents"
 msgstr ""
 
-#: src/client/catalogHtml.c:1330
+#: src/client/catalogHtml.c:1331
 #, c-format
 msgid ""
 "\n"
 "Classes:\n"
 msgstr ""
 
-#: src/client/catalogHtml.c:1349
+#: src/client/catalogHtml.c:1350
 msgid "Parteners:"
 msgstr ""
 
@@ -323,10 +323,10 @@ msgid ""
 "Deep %i/%i"
 msgstr ""
 
-#: src/client/commonHtml.c:491 src/client/commonHtml.c:572
+#: src/client/commonHtml.c:491 src/client/commonHtml.c:579
 msgid "Cache"
 msgstr ""
 
-#: src/client/commonHtml.c:655
+#: src/client/commonHtml.c:663
 msgid "Version"
 msgstr ""
