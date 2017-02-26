@@ -182,7 +182,7 @@ $ make CFLAGS="-fprofile-arcs -ftest-coverage @dots{}" check
 
 # apt-get install gcovr
 $ cd src
-$  gcovr -r . -e "parser/.*\.c"
+$ gcovr -r . -e "parser/.*\.c"
 TOTAL      14908   11262    75%
 
 $ rm cov.*
